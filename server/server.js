@@ -7,7 +7,12 @@ import { renderToStaticNodeStream } from 'react-dom/server'
 import React from 'react'
 
 import cookieParser from 'cookie-parser'
+import passport from 'passport'
+import jwt from 'jsonwebtoken'
 import config from './config'
+import connectDatabase from './services/mongoose'
+import passportJWT from './services/passport'
+import User from './model/User.model'
 import Html from '../client/html'
 
 const Root = () => ''
@@ -28,11 +33,14 @@ try {
 
 let connections = []
 
+connectDatabase()
+
 const port = process.env.PORT || 8090
 const server = express()
 
 const middleware = [
   cors(),
+  passport.initialize(),
   express.static(path.resolve(__dirname, '../dist/assets')),
   bodyParser.urlencoded({ limit: '50mb', extended: true, parameterLimit: 50000 }),
   bodyParser.json({ limit: '50mb', extended: true }),
@@ -40,6 +48,34 @@ const middleware = [
 ]
 
 middleware.forEach((it) => server.use(it))
+
+passport.use('jwt', passportJWT.jwt)
+
+// eslint-disable-next-line no-unused-vars
+server.post('/api/v1/auth', async (req, res) => {
+  try {
+    const user = await User.findAndValidateUser(req.body)
+    const payload = { uid: user.id }
+    const token = jwt.sign(payload, config.secret, { expiresIn: '48h' })
+    res.json({ status: 'ok', token })
+  } catch (err) {
+    res.json({ status: 'error', message: `auth error ${err}` })
+  }
+})
+
+server.post('/api/v1/registration', async (req, res) => {
+  const { login, password } = req.body
+  try {
+    const user = new User({
+      login,
+      password
+    })
+    await user.save()
+    res.json({ status: 'ok' })
+  } catch (err) {
+    res.json({ status: 'error', message: `registrate error ${err}` })
+  }
+})
 
 server.use('/api/', (req, res) => {
   res.status(404)
