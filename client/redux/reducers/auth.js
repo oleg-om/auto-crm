@@ -1,4 +1,15 @@
 import axios from 'axios'
+import Cookies from 'universal-cookie'
+// import { history } from '..'
+
+const cookies = new Cookies()
+
+const initialState = {
+  login: '',
+  password: '',
+  token: cookies.get('token'),
+  user: {}
+}
 
 export function updateLogin(login) {
   return {
@@ -15,16 +26,24 @@ export function updatePassword(password) {
 }
 
 function sendLoginPassword(path, login, password) {
-  axios.post(path, { login, password })
+  return axios({
+    method: 'post',
+    url: path,
+    headers: {},
+    data: {
+      login,
+      password
+    }
+  })
 }
 
 export function signIn() {
   return (dispatch, getState) => {
     const { login, password } = getState().auth
     sendLoginPassword('/api/v1/auth', login, password)
-      .then((r) => r.json())
+      .then((r) => r.data)
       .then((data) => {
-        dispatch({ type: 'LOGIN', token: data.token })
+        dispatch({ type: 'LOGIN', token: data.token, user: data.user })
       })
   }
 }
@@ -40,11 +59,6 @@ export function registration() {
   }
 }
 
-const initialState = {
-  login: '',
-  password: ''
-}
-
 export default function auth(state = initialState, action) {
   switch (action.type) {
     case 'UPDATE_LOGIN': {
@@ -52,6 +66,9 @@ export default function auth(state = initialState, action) {
     }
     case 'UPDATE_PASSWORD': {
       return { ...state, password: action.password }
+    }
+    case 'LOGIN': {
+      return { ...state, token: action.token, password: '', user: action.user }
     }
     default:
       return state

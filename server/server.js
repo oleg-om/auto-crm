@@ -39,7 +39,10 @@ const port = process.env.PORT || 8090
 const server = express()
 
 const middleware = [
-  cors(),
+  cors({
+    origin: 'http://localhost:8087/',
+    credentials: true
+  }),
   passport.initialize(),
   express.static(path.resolve(__dirname, '../dist/assets')),
   bodyParser.urlencoded({ limit: '50mb', extended: true, parameterLimit: 50000 }),
@@ -49,15 +52,16 @@ const middleware = [
 
 middleware.forEach((it) => server.use(it))
 
-passport.use('jwt', passportJWT.jwt)
+passport.use('jwt', passportJWT)
 
-// eslint-disable-next-line no-unused-vars
 server.post('/api/v1/auth', async (req, res) => {
   try {
     const user = await User.findAndValidateUser(req.body)
     const payload = { uid: user.id }
     const token = jwt.sign(payload, config.secret, { expiresIn: '48h' })
-    res.json({ status: 'ok', token })
+    delete user.password
+    res.cookie('token', token, { maxAge: 1000 * 60 * 60 * 48 })
+    res.json({ status: 'ok', token, user })
   } catch (err) {
     res.json({ status: 'error', message: `auth error ${err}` })
   }

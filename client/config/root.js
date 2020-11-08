@@ -1,7 +1,7 @@
 /* eslint-disable react/jsx-props-no-spreading */
 import React from 'react'
 import PropTypes from 'prop-types'
-import { Provider } from 'react-redux'
+import { Provider, useSelector } from 'react-redux'
 import { ConnectedRouter } from 'connected-react-router'
 import { Switch, Route, Redirect, StaticRouter } from 'react-router-dom'
 
@@ -17,18 +17,16 @@ import NotFound from '../components/404'
 import Startup from './startup'
 
 const OnlyAnonymousRoute = ({ component: Component, ...rest }) => {
+  const auth = useSelector((s) => s.auth)
   const func = (props) =>
-    !!rest.user && !!rest.user.name && !!rest.token ? (
-      <Redirect to={{ pathname: '/' }} />
-    ) : (
-      <Component {...props} />
-    )
+    !!auth.user && !!auth.token ? <Redirect to={{ pathname: '/chat' }} /> : <Component {...props} />
   return <Route {...rest} render={func} />
 }
 
 const PrivateRoute = ({ component: Component, ...rest }) => {
+  const auth = useSelector((s) => s.auth)
   const func = (props) =>
-    !!rest.user && !!rest.user.name && !!rest.token ? (
+    !!auth.user && !!auth.token ? (
       <Component {...props} />
     ) : (
       <Redirect
@@ -76,9 +74,9 @@ const RootComponent = (props) => {
         <Startup>
           <Switch>
             <Route exact path="/" component={() => <DummyView />} />
-            <Route exact path="/registration" component={() => <Registration />} />
-            <Route exact path="/login" component={() => <LoginForm />} />
-            <Route exact path="/chat" component={() => <ChatView />} />
+            <OnlyAnonymousRoute exact path="/registration" component={() => <Registration />} />
+            <OnlyAnonymousRoute exact path="/login" component={() => <LoginForm />} />
+            <PrivateRoute exact path="/chat" component={() => <ChatView />} />
             <Route exact path="/dashboard" component={() => <Home />} />
             <PrivateRoute exact path="/hidden-route" component={() => <DummyView />} />
             <Route component={() => <NotFound />} />

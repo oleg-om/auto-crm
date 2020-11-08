@@ -1,4 +1,5 @@
 import passportJWT from 'passport-jwt'
+import config from '../config'
 import User from '../model/User.model'
 
 const cookieExtractor = (req) => {
@@ -6,6 +7,7 @@ const cookieExtractor = (req) => {
 }
 
 const jwtOptions = {
+  secretOrKey: config.secret,
   jwtFromRequest: passportJWT.ExtractJwt.fromExtractors([cookieExtractor])
 }
 
