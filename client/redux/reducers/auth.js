@@ -25,22 +25,18 @@ export function updatePassword(password) {
   }
 }
 
-function sendLoginPassword(path, login, password) {
-  return axios({
-    method: 'post',
-    url: path,
-    headers: {},
-    data: {
-      login,
-      password
-    }
-  })
-}
-
-export function signIn() {
+function sendLoginPassword(path) {
   return (dispatch, getState) => {
     const { login, password } = getState().auth
-    sendLoginPassword('/api/v1/auth', login, password)
+    axios({
+      method: 'post',
+      url: path,
+      headers: {},
+      data: {
+        login,
+        password
+      }
+    })
       .then((r) => r.data)
       .then((data) => {
         dispatch({ type: 'LOGIN', token: data.token, user: data.user })
@@ -48,14 +44,23 @@ export function signIn() {
   }
 }
 
+export function signIn() {
+  return (dispatch) => {
+    dispatch(sendLoginPassword('/api/v1/auth'))
+  }
+}
+
 export function registration() {
-  return (dispatch, getState) => {
-    const { login, password } = getState().auth
-    sendLoginPassword('/api/v1/registration', login, password)
-    //   .then((r) => r.json())
-    //   .then((data) => {
-    //     dispatch({ type: 'REGISTRATION', token: data.token })
-    // })
+  return (dispatch) => {
+    dispatch(sendLoginPassword('/api/v1/registration'))
+  }
+}
+
+export function trySignIn() {
+  return (dispatch) => {
+    axios('/api/v1/auth').then(({ data }) =>
+      dispatch({ type: 'LOGIN', token: data.token, user: data.user })
+    )
   }
 }
 

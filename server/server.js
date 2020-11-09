@@ -1,3 +1,4 @@
+/* eslint-disable no-param-reassign */
 import express from 'express'
 import path from 'path'
 import cors from 'cors'
@@ -54,13 +55,39 @@ middleware.forEach((it) => server.use(it))
 
 passport.use('jwt', passportJWT)
 
+function createToken(user) {
+  const payload = { uid: user.id }
+  const token = jwt.sign(payload, config.secret, { expiresIn: '48h' })
+  delete user.password
+  return token
+}
+
+async function getTokenAndUser(data) {
+  const user = await User.findAndValidateUser(data)
+  const token = createToken(user)
+  return { token, user }
+}
+
+function createCookie(token, res) {
+  return res.cookie('token', token, { maxAge: 1000 * 60 * 60 * 48 })
+}
+
+server.get('/api/v1/auth', async (req, res) => {
+  try {
+    const jwtUser = jwt.verify(req.cookies.token, config.secret)
+    const user = await User.findById(jwtUser.uid)
+    const token = createToken(user)
+    createCookie(token, res)
+    res.json({ status: 'ok', token, user })
+  } catch (err) {
+    res.json({ status: 'error', err })
+  }
+})
+
 server.post('/api/v1/auth', async (req, res) => {
   try {
-    const user = await User.findAndValidateUser(req.body)
-    const payload = { uid: user.id }
-    const token = jwt.sign(payload, config.secret, { expiresIn: '48h' })
-    delete user.password
-    res.cookie('token', token, { maxAge: 1000 * 60 * 60 * 48 })
+    const { token, user } = await getTokenAndUser(req.body)
+    createCookie(token, res)
     res.json({ status: 'ok', token, user })
   } catch (err) {
     res.json({ status: 'error', message: `auth error ${err}` })
@@ -70,12 +97,14 @@ server.post('/api/v1/auth', async (req, res) => {
 server.post('/api/v1/registration', async (req, res) => {
   const { login, password } = req.body
   try {
-    const user = new User({
+    const newUser = new User({
       login,
       password
     })
-    await user.save()
-    res.json({ status: 'ok' })
+    await newUser.save()
+    const { token, user } = await getTokenAndUser(req.body)
+    createCookie(token, res)
+    res.json({ status: 'ok', token, user })
   } catch (err) {
     res.json({ status: 'error', message: `registrate error ${err}` })
   }
