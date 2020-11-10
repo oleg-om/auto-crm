@@ -35,6 +35,7 @@ try {
 }
 
 const connections = []
+const userNames = {}
 
 connectDatabase()
 
@@ -98,11 +99,12 @@ server.post('/api/v1/auth', async (req, res) => {
 })
 
 server.post('/api/v1/registration', async (req, res) => {
-  const { login, password } = req.body
+  const { login, password, userName } = req.body
   try {
     const newUser = new User({
       login,
-      password
+      password,
+      userName
     })
     await newUser.save()
     const { token, user } = await getTokenAndUser(req.body)
@@ -150,9 +152,25 @@ serve.listen(port)
 
 io.on('connection', (socket) => {
   connections.push(socket)
-  socket.on('send mess', (msg) => {
-    io.emit('new message', msg)
+
+  socket.on('new login', async (token) => {
+    const user = jwt.verify(token, config.secret)
+    const { userName } = await User.findById(user.uid)
+    userNames[socket.id] = userName
   })
+
+  socket.on('send mess', (msg) => {
+    // console.log(userNames[socket.id])
+    io.emit('new message', { [userNames[socket.id]]: msg })
+  })
+
+  socket.on('disconnect', () => {
+    delete userNames[socket.id]
+  })
+
+  // socket.on('get clients', () => {
+  //   socket.emit('all users', JSON.stringify(userNames))
+  // })
 })
 
 console.log(`Serving at http://localhost:${port}`)

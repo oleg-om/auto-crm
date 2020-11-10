@@ -23,7 +23,10 @@ export default function messages(state = initialState, action) {
       return { ...state, messages: action.message }
     }
     case 'RECEIVED_NEW_MESSAGE': {
-      return { ...state, receivedMess: [...state.receivedMess, action.message] }
+      return {
+        ...state,
+        receivedMess: [...state.receivedMess, action.message]
+      }
     }
     default:
       return state

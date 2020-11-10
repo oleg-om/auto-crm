@@ -11,7 +11,10 @@ const AddMessage = () => {
       <button
         type="button"
         className="text-3xl text-grey px-3 border-r-2 border-grey"
-        onClick={() => socket.emit('send mess', messages)}
+        onClick={() => {
+          socket.emit('send mess', messages)
+          dispatch(addMessage(''))
+        }}
       >
         +
       </button>
@@ -19,6 +22,7 @@ const AddMessage = () => {
         type="text"
         className="w-full px-4"
         placeholder="Message to #general"
+        value={messages}
         onChange={(e) => dispatch(addMessage(e.target.value))}
       />
     </div>

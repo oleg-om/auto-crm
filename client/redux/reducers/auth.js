@@ -1,12 +1,12 @@
 import axios from 'axios'
 import Cookies from 'universal-cookie'
-// import { history } from '..'
 
 const cookies = new Cookies()
 
 const initialState = {
   login: '',
   password: '',
+  userName: '',
   token: cookies.get('token'),
   user: {}
 }
@@ -25,16 +25,24 @@ export function updatePassword(password) {
   }
 }
 
+export function updateUserName(userName) {
+  return {
+    type: 'UPDATE_USERNAME',
+    userName
+  }
+}
+
 function sendLoginPassword(path) {
   return (dispatch, getState) => {
-    const { login, password } = getState().auth
+    const { login, password, userName } = getState().auth
     axios({
       method: 'post',
       url: path,
       headers: {},
       data: {
         login,
-        password
+        password,
+        userName
       }
     })
       .then((r) => r.data)
@@ -74,6 +82,9 @@ export default function auth(state = initialState, action) {
     }
     case 'LOGIN': {
       return { ...state, token: action.token, password: '', user: action.user }
+    }
+    case 'UPDATE_USERNAME': {
+      return { ...state, userName: action.userName }
     }
     default:
       return state

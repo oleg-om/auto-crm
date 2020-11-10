@@ -20,7 +20,20 @@ const composedEnhancers = composeFunc(applyMiddleware(...middleware), ...enhance
 
 const store = createStore(rootReducer(history), initialState, composedEnhancers)
 
-export const socket = io('http://localhost:8090', { transports: ['websocket'] })
+export const socket = io('http://localhost:8090', { transports: ['websocket'], autoConnect: false })
+
 socket.on('new message', (msg) => store.dispatch(receivedNewMessage(msg)))
+
+socket.on('disconnect', (reason) => {
+  if (reason === 'io server disconnect') {
+    socket.connect()
+  }
+})
+
+socket.on('connect', () => {
+  const { token } = store.getState().auth
+  console.log(token)
+  socket.emit('new login', token)
+})
 
 export default store

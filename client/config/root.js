@@ -10,6 +10,7 @@ import store, { history } from '../redux'
 import Home from '../components/home'
 import Registration from '../components/registration'
 import LoginForm from '../components/loginForm'
+import Room from '../components/room'
 import ChatView from '../components/chatView'
 import DummyView from '../components/dummy-view'
 import NotFound from '../components/404'
@@ -19,7 +20,7 @@ import Startup from './startup'
 const OnlyAnonymousRoute = ({ component: Component, ...rest }) => {
   const auth = useSelector((s) => s.auth)
   const func = (props) =>
-    !!auth.user && !!auth.token ? <Redirect to={{ pathname: '/chat' }} /> : <Component {...props} />
+    !!auth.user && !!auth.token ? <Redirect to={{ pathname: '/room' }} /> : <Component {...props} />
   return <Route {...rest} render={func} />
 }
 
@@ -76,6 +77,7 @@ const RootComponent = (props) => {
             <Route exact path="/" component={() => <DummyView />} />
             <OnlyAnonymousRoute exact path="/registration" component={() => <Registration />} />
             <OnlyAnonymousRoute exact path="/login" component={() => <LoginForm />} />
+            <PrivateRoute exact path="/room" component={() => <Room /> } />
             <PrivateRoute exact path="/chat" component={() => <ChatView />} />
             <Route exact path="/dashboard" component={() => <Home />} />
             <PrivateRoute exact path="/hidden-route" component={() => <DummyView />} />
