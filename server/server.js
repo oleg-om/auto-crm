@@ -1,9 +1,11 @@
 /* eslint-disable no-param-reassign */
+/* eslint-disable no-undef */
 import express from 'express'
 import path from 'path'
 import cors from 'cors'
 import bodyParser from 'body-parser'
-import sockjs from 'sockjs'
+import http from 'http'
+import socketServer from 'socket.io'
 import { renderToStaticNodeStream } from 'react-dom/server'
 import React from 'react'
 
@@ -32,17 +34,18 @@ try {
   console.log(' run yarn build:prod to enable ssr')
 }
 
-let connections = []
+const connections = []
 
 connectDatabase()
 
 const port = process.env.PORT || 8090
 const server = express()
+const serve = http.createServer(server)
+const io = socketServer(serve)
 
 const middleware = [
   cors({
-    origin: 'http://localhost:8087/',
-    credentials: true
+    origin: 'http://localhost:8087/'
   }),
   passport.initialize(),
   express.static(path.resolve(__dirname, '../dist/assets')),
@@ -143,18 +146,13 @@ server.get('/*', (req, res) => {
   )
 })
 
-const app = server.listen(port)
+serve.listen(port)
 
-if (config.isSocketsEnabled) {
-  const echo = sockjs.createServer()
-  echo.on('connection', (conn) => {
-    connections.push(conn)
-    conn.on('data', async () => {})
-
-    conn.on('close', () => {
-      connections = connections.filter((c) => c.readyState !== 3)
-    })
+io.on('connection', (socket) => {
+  connections.push(socket)
+  socket.on('send mess', (msg) => {
+    io.emit('new message', msg)
   })
-  echo.installHandlers(app, { prefix: '/ws' })
-}
+})
+
 console.log(`Serving at http://localhost:${port}`)

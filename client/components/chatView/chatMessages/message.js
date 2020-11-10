@@ -1,10 +1,20 @@
 import React from 'react'
+import { useSelector } from 'react-redux'
+import uuid from 'react-uuid'
 
 const Message = () => {
+  const { receivedMess } = useSelector((s) => s.messages)
+  console.log(receivedMess)
   return (
-    <p className="font-light text-md text-grey-darkest pt-1">
-      How are we supposed to control the marquee space without an utility for it? I propose this:
-    </p>
+    <>
+      {receivedMess.map((it) => {
+        return (
+          <p className="font-light text-md text-grey-darkest pt-1" key={uuid()}>
+            {it}
+          </p>
+        )
+      })}
+    </>
   )
 }
 
