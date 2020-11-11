@@ -7,11 +7,11 @@ const Message = () => {
   const { receivedMess } = useSelector((s) => s.messages)
   return (
     <>
-      {receivedMess.map((it) => {
+      {receivedMess.map((message) => {
         return (
           <div key={uuid()}>
-            <UserChatInfo userName={Object.keys(it)} />
-            <p className="font-light text-md text-grey-darkest pt-1">{Object.values(it)}</p>
+            <UserChatInfo userName={Object.keys(message)} />
+            <p className="font-light text-md text-grey-darkest pt-1">{Object.values(message)}</p>
           </div>
         )
       })}

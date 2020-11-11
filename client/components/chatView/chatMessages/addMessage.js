@@ -4,7 +4,7 @@ import { socket } from '../../../redux/index'
 import { addMessage } from '../../../redux/reducers/messages'
 
 const AddMessage = () => {
-  const { messages } = useSelector((s) => s.messages)
+  const { messages, currentRoom } = useSelector((s) => s.messages)
   const dispatch = useDispatch()
   return (
     <div className="flex m-6 rounded-lg border-2 border-grey overflow-hidden">
@@ -12,7 +12,7 @@ const AddMessage = () => {
         type="button"
         className="text-3xl text-grey px-3 border-r-2 border-grey"
         onClick={() => {
-          socket.emit('send mess', messages)
+          socket.emit('send mess', { messages, currentRoom })
           dispatch(addMessage(''))
         }}
       >

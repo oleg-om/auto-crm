@@ -72,6 +72,12 @@ export function trySignIn() {
   }
 }
 
+export function deleteUser() {
+  return {
+    type: 'DELETE_USER'
+  }
+}
+
 export default function auth(state = initialState, action) {
   switch (action.type) {
     case 'UPDATE_LOGIN': {
@@ -85,6 +91,9 @@ export default function auth(state = initialState, action) {
     }
     case 'UPDATE_USERNAME': {
       return { ...state, userName: action.userName }
+    }
+    case 'DELETE_USER': {
+      return { ...state, user: {}, token: '' }
     }
     default:
       return state

@@ -11,6 +11,7 @@ import Home from '../components/home'
 import Registration from '../components/registration'
 import LoginForm from '../components/loginForm'
 import Room from '../components/room'
+import AdminPannel from '../components/adminPannel'
 import ChatView from '../components/chatView'
 import DummyView from '../components/dummy-view'
 import NotFound from '../components/404'
@@ -77,7 +78,8 @@ const RootComponent = (props) => {
             <Route exact path="/" component={() => <DummyView />} />
             <OnlyAnonymousRoute exact path="/registration" component={() => <Registration />} />
             <OnlyAnonymousRoute exact path="/login" component={() => <LoginForm />} />
-            <PrivateRoute exact path="/room" component={() => <Room /> } />
+            <PrivateRoute exact path="/admin" component={() => <AdminPannel />} />
+            <PrivateRoute exact path="/room" component={() => <Room />} />
             <PrivateRoute exact path="/chat" component={() => <ChatView />} />
             <Route exact path="/dashboard" component={() => <Home />} />
             <PrivateRoute exact path="/hidden-route" component={() => <DummyView />} />
