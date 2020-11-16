@@ -1,3 +1,4 @@
+/* eslint-disable import/no-extraneous-dependencies */
 const { resolve } = require('path')
 require('dotenv').config()
 

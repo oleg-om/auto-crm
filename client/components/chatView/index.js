@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
-import { socket } from '../../redux'
+import { socket } from '../../redux/sockets/socketReceivers'
 import { deleteRecivedMessages } from '../../redux/reducers/messages'
 import ChannelList from './channelList'
 import ChatInfo from './topBarChatContent'

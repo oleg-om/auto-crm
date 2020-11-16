@@ -1,6 +1,6 @@
 import React from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { socket } from '../../../redux/index'
+import { socket } from '../../../redux/sockets/socketReceivers'
 import { addMessage } from '../../../redux/reducers/messages'
 
 const AddMessage = () => {
