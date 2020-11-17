@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react'
 import { useSelector } from 'react-redux'
 import uuid from 'react-uuid'
-import { socket } from '../redux/sockets/socketReceivers'
+import { socket } from '../../redux/sockets/socketReceivers'
 
 const AdminPannel = () => {
   const { socketsInfo } = useSelector((s) => s.socketInfoUsers)
