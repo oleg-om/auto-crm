@@ -2,10 +2,10 @@ const initialState = {
   socketsInfo: []
 }
 
-export function updateSocketsInfo(socketsInfo) {
+export function updateSocketsInfo(socketUser) {
   return {
     type: 'UPDATE_SOCKETS_INFO',
-    socketsInfo
+    socketUser
   }
 }
 
@@ -14,7 +14,7 @@ export default function socketInfoUsers(state = initialState, action) {
     case 'UPDATE_SOCKETS_INFO':
       return {
         ...state,
-        socketsInfo: action.socketsInfo
+        socketsInfo: action.socketUser
       }
     default:
       return state

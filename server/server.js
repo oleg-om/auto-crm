@@ -200,6 +200,7 @@ io.on('connection', (socket) => {
   socket.on('disconnect user', (id) => {
     io.to(id).emit('delete cookie')
     io.of('/').sockets.get(id).disconnect()
+    delete userNames[id]
   })
 })
 

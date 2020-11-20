@@ -8,7 +8,7 @@ const AdminPannel = () => {
   useEffect(() => {
     socket.connect()
     socket.emit('get clients')
-  }, [])
+  }, [socketsInfo])
 
   return (
     <div className="w-full flex flex-col">
