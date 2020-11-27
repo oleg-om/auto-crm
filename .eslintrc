@@ -77,7 +77,8 @@
     "jsx-a11y/no-autofocus": "warn",
     "max-classes-per-file": "warn",
     "react/jsx-props-no-spreading": ["off"],
-    "camelcase": "off"
+    "camelcase": "off",
+    "no-plusplus": [2, { "allowForLoopAfterthoughts": true }]
 
   }
 }

@@ -1,0 +1,54 @@
+I make the input row, when I click on the button `Add row`, appears new row. I collect values from rows in one state `inputFields` and the state now is as follows:
+```
+[{addressItem: "first"}, {addressItem: "second"}]
+```
+But the result i want to reach is
+```
+["first", "second"]
+```
+Here is my code below
+```
+  const [inputFields, setInputFields] = useState([{ addressItem: "" }])
+  const handleChangeInput = (index, event) => {
+    const values = [...inputFields]
+    values[index][event.target.name] = event.target.value
+    setInputFields(values)
+  }
+  const handleAddFields = () => {
+    setInputFields([...inputFields, { addressItem: "" }])
+  }
+
+  const handleRemoveFields = (index) => {
+    if (index !== 0) {
+      const values = [...inputFields]
+      values.splice(index, 1)
+      setInputFields(values)
+    }
+  }
+```
+```
+<tbody>
+   {inputFields.map((inputField, index) => (
+   <tr
+      key={index}
+      >
+      <td>
+         <input
+            type="text"
+            name="addressItem"
+            value={inputField.addressItem}
+            onChange={(event) => handleChangeInput(index, event)}
+         />
+      </td>
+      <td>
+         <button
+            onClick={() => handleAddFields()}
+         >
+         Add row
+         </button>
+      </td>
+   </tr>
+   ))}
+</tbody>
+```
+

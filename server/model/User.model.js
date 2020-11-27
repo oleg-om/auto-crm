@@ -10,8 +10,8 @@ const userSchema = new mongoose.Schema(
     },
     userName: {
       type: String,
-      required: true,
-      unique: true
+      required: false,
+      unique: false
     },
     role: {
       type: [String],
@@ -20,6 +20,10 @@ const userSchema = new mongoose.Schema(
     password: {
       type: String,
       required: true
+    },
+    place: {
+      type: String,
+      required: false
     }
   },
   {

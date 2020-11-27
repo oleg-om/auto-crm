@@ -5,15 +5,17 @@ import { signIn } from '../../redux/reducers/auth'
 const ButtonLogin = () => {
   const dispatch = useDispatch()
   return (
-    <button
-      type="submit"
-      className="bg-teal-700 hover:bg-teal-600 text-white font-bold rounded mb-3 h-8 mt-2 items-center flex mr-2  w-full flex justify-center py-2 px-4"
-      onClick={() => {
-        dispatch(signIn())
-      }}
-    >
-      Login
-    </button>
+    <div className="flex items-center justify-between">
+      <button
+        type="submit"
+        className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+        onClick={() => {
+          dispatch(signIn())
+        }}
+      >
+        Войти
+      </button>
+    </div>
   )
 }
 

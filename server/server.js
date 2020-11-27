@@ -19,6 +19,13 @@ import User from './model/User.model'
 import Message from './model/Message.model'
 import Html from '../client/html'
 
+const taskRoutes = require('./routes/api/task.routes')
+const placeRoutes = require('./routes/api/place.routes')
+const employeeRoutes = require('./routes/api/employee.routes')
+const carRoutes = require('./routes/api/car.routes')
+const autopartRoutes = require('./routes/api/autoparts.routes')
+const customerRoutes = require('./routes/api/customer.routes')
+
 const Root = () => ''
 
 try {
@@ -74,6 +81,13 @@ function getFormatMessages(messages) {
   return formatedMessages
 }
 
+server.use('/api/v1', placeRoutes)
+server.use('/api/v1', taskRoutes)
+server.use('/api/v1', employeeRoutes)
+server.use('/api/v1', carRoutes)
+server.use('/api/v1', autopartRoutes)
+server.use('/api/v1', customerRoutes)
+
 server.get('/api/v1/auth', async (req, res) => {
   try {
     const jwtUser = jwt.verify(req.cookies.token, config.secret)
@@ -84,6 +98,34 @@ server.get('/api/v1/auth', async (req, res) => {
   } catch (err) {
     res.json({ status: 'error', err })
   }
+})
+
+server.get('/api/v1/account', async (req, res) => {
+  const list = await User.find({})
+  return res.json({ status: 'ok', data: list })
+})
+
+server.patch('/api/v1/account/:id', async (req, res) => {
+  let account = await User.findOneAndUpdate(
+    { _id: req.params.id },
+    { $set: req.body },
+    { upsert: false, useFindAndModify: false }
+  )
+  await account.save()
+  account = await User.findOne({ _id: req.params.id })
+
+  return res.json({ status: 'ok', data: account })
+})
+
+server.delete('/api/v1/account/:id', async (req, res) => {
+  await User.deleteOne({ _id: req.params.id })
+  return res.json({ status: 'ok', _id: req.params.id })
+})
+
+server.post('/api/v1/account', async (req, res) => {
+  const account = new User(req.body)
+  await account.save()
+  return res.json({ status: 'ok', data: account })
 })
 
 server.post('/api/v1/auth', async (req, res) => {
@@ -150,7 +192,7 @@ serve.listen(port)
 
 io.on('connection', (socket) => {
   connections.push(socket)
-
+  console.log('a user connected')
   socket.on('new login', async ({ token, currentRoom }) => {
     try {
       const user = jwt.verify(token, config.secret)
@@ -201,6 +243,11 @@ io.on('connection', (socket) => {
     io.to(id).emit('delete cookie')
     io.of('/').sockets.get(id).disconnect()
     delete userNames[id]
+  })
+
+  socket.on('new autopart', () => {
+    io.emit('update autopart')
+    console.log('new autopart order')
   })
 })
 

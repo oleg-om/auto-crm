@@ -40,6 +40,10 @@ function Init() {
     cookie.set('token', 0, { path: '/', expires: new Date(Date.now() - 2592000) })
     store.dispatch(deleteUser())
   })
+
+  socket.on('new autopart', (msg) => {
+    store.dispatch(receivedNewMessage(msg))
+  })
 }
 
 export default Init

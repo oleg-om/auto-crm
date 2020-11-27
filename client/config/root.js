@@ -14,12 +14,38 @@ import AdminPannel from '../components/adminPannel'
 import ChatView from '../components/chatView'
 import NotFound from '../components/404'
 
+import AutopartsList from '../scenes/Autoparts/Autoparts.list'
+import AutopartsNew from '../scenes/Autoparts/Autoparts.preorder.create'
+import AutopartEditSimple from '../scenes/Autoparts/Autopaparts.preorder.edit'
+import AutopartEditFull from '../scenes/Autoparts/Autoparts.edit'
+import AutopartView from '../scenes/Autoparts/Autoparts.preorder.view'
+import PlaceList from '../scenes/Places/Places.list'
+import PlaceNew from '../scenes/Places/Places.create'
+import PlaceEdit from '../scenes/Places/Places.edit'
+import EmployeeList from '../scenes/Employees/Employees.list'
+import EmployeeNew from '../scenes/Employees/Employees.create'
+import EmployeeEdit from '../scenes/Employees/Employees.edit'
+import AccountList from '../scenes/Accounts/Accounts.list'
+import AccountNew from '../scenes/Accounts/Accounts.create'
+// import RegisterCommon from '../scenes/Accounts/Register.common'
+import AccountEdit from '../scenes/Accounts/Accounts.edit'
+import CustomerList from '../scenes/Customers/Customers.list'
+import CustomerNew from '../scenes/Customers/Customers.create'
+import CustomerEdit from '../scenes/Customers/Customers.edit'
+import Access from '../scenes/Access'
+import Dashboard from '../scenes/Dashboard'
+import Boss from '../scenes/Boss/Boss'
+
 import Startup from './startup'
 
 const OnlyAnonymousRoute = ({ component: Component, ...rest }) => {
   const auth = useSelector((s) => s.auth)
   const func = (props) =>
-    !!auth.user && !!auth.token ? <Redirect to={{ pathname: '/room' }} /> : <Component {...props} />
+    !!auth.user && !!auth.token ? (
+      <Redirect to={{ pathname: '/login' }} />
+    ) : (
+      <Component {...props} />
+    )
   return <Route {...rest} render={func} />
 }
 
@@ -32,6 +58,36 @@ const PrivateRoute = ({ component: Component, ...rest }) => {
       <Redirect
         to={{
           pathname: '/login'
+        }}
+      />
+    )
+  return <Route {...rest} render={func} />
+}
+
+const AdminRoute = ({ component: Component, ...rest }) => {
+  const auth = useSelector((s) => s.auth)
+  const func = (props) =>
+    !!auth.user && !!auth.token && !!auth.roles.includes('admin') ? (
+      <Component {...props} />
+    ) : (
+      <Redirect
+        to={{
+          pathname: '/access'
+        }}
+      />
+    )
+  return <Route {...rest} render={func} />
+}
+
+const BossRoute = ({ component: Component, ...rest }) => {
+  const auth = useSelector((s) => s.auth)
+  const func = (props) =>
+    !!auth.user && !!auth.token && !!auth.roles.includes('boss') ? (
+      <Component {...props} />
+    ) : (
+      <Redirect
+        to={{
+          pathname: '/access'
         }}
       />
     )
@@ -73,12 +129,34 @@ const RootComponent = (props) => {
       <RouterSelector history={history} location={props.location} context={props.context}>
         <Startup>
           <Switch>
-            <Route exact path="/" component={() => <Registration />} />
-            <OnlyAnonymousRoute exact path="/registration" component={() => <Registration />} />
-            <OnlyAnonymousRoute exact path="/login" component={() => <LoginForm />} />
+            {/* <Route exact path="/" component={() => <Registration />} /> */}
+            <Route exact path="/" component={() => <Dashboard />} />
+            <Route exact path="/registration" component={() => <Registration />} />
+            <Route exact path="/login" component={() => <LoginForm />} />
             <PrivateRoute exact path="/admin" component={() => <AdminPannel />} />
             <PrivateRoute exact path="/room" component={() => <Room />} />
             <PrivateRoute exact path="/chat" component={() => <ChatView />} />
+            <PrivateRoute exact path="/" component={() => <Dashboard />} />
+            <Route exact path="/access" component={() => <Access />} />
+            <BossRoute exact path="/boss" component={() => <Boss />} />
+            <PrivateRoute exact path="/autoparts/order/list" component={AutopartsList} />
+            <PrivateRoute exact path="/autoparts/order/create" component={AutopartsNew} />
+            <PrivateRoute exact path="/autoparts/edit/:id" component={AutopartEditSimple} />
+            <PrivateRoute exact path="/autoparts/editfull/:id" component={AutopartEditFull} />
+            <PrivateRoute exact path="/autoparts/view/:id" component={AutopartView} />
+            <AdminRoute exact path="/place/list" component={PlaceList} />
+            <PrivateRoute exact path="/place/create" component={PlaceNew} />
+            <PrivateRoute exact path="/place/edit/:id" component={PlaceEdit} />
+            <AdminRoute exact path="/employee/list" component={EmployeeList} />
+            <PrivateRoute exact path="/employee/create" component={EmployeeNew} />
+            <PrivateRoute exact path="/employee/edit/:id" component={EmployeeEdit} />
+            <AdminRoute exact path="/account/list" component={AccountList} />
+            <PrivateRoute exact path="/account/create" component={AccountNew} />
+            {/* <Route exact path="/register" component={RegisterCommon} /> */}
+            <PrivateRoute exact path="/account/edit/:id" component={AccountEdit} />
+            <PrivateRoute exact path="/customer/list" component={CustomerList} />
+            <PrivateRoute exact path="/customer/create" component={CustomerNew} />
+            <PrivateRoute exact path="/customer/edit/:id" component={CustomerEdit} />
             <Route component={() => <NotFound />} />
           </Switch>
         </Startup>
