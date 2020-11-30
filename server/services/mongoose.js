@@ -1,5 +1,4 @@
 import mongoose from 'mongoose'
-import config from '../config'
 
 mongoose.connection.on('connected', () => {
   console.log('db is connected')
@@ -10,8 +9,8 @@ mongoose.connection.on('error', (err) => {
   process.exit(1)
 })
 
-const connect = async (mongoURL = config.mongoURL) => {
-  mongoose.connect(mongoURL, {
+const connect = async () => {
+  mongoose.connect('mongodb://localhost:27017/chat', {
     useUnifiedTopology: true,
     useNewUrlParser: true
   })

@@ -52,6 +52,7 @@ function sendLoginPassword(path) {
       .then((r) => r.data)
       .then((data) => {
         dispatch({ type: 'LOGIN', token: data.token, user: data.user })
+        history.push('/')
       })
   }
 }

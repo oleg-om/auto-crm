@@ -130,7 +130,7 @@ const RootComponent = (props) => {
         <Startup>
           <Switch>
             {/* <Route exact path="/" component={() => <Registration />} /> */}
-            <Route exact path="/" component={() => <Dashboard />} />
+            <PrivateRoute exact path="/" component={() => <Dashboard />} />
             <Route exact path="/registration" component={() => <Registration />} />
             <Route exact path="/login" component={() => <LoginForm />} />
             <PrivateRoute exact path="/admin" component={() => <AdminPannel />} />

@@ -1,6 +1,6 @@
 import React from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { Link } from 'react-router-dom'
+// import { Link } from 'react-router-dom'
 import { updateLogin, updatePassword } from '../../redux/reducers/auth'
 import ButtonLogin from './button'
 
@@ -42,11 +42,11 @@ const LoginForm = () => {
           </div>
           <div className="flex items-center justify-between">
             <ButtonLogin />
-            <Link to="/registration">
+            {/* <Link to="/registration">
               <button type="button" className="text-blue-500 hover:text-blue-700">
                 Регистрация
               </button>
-            </Link>
+            </Link> */}
           </div>
         </form>
       </div>

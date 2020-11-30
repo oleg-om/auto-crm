@@ -23,6 +23,11 @@ exports.getAllModels = async (req, res) => {
   const list = await CarModel.find({})
   return res.json({ status: 'ok', data: list })
 }
+exports.createModel = async (req, res) => {
+  const car = new CarModel(req.body)
+  await car.save()
+  return res.json({ status: 'ok', data: car })
+}
 exports.getModelbyMark = async (req, res) => {
   const car = await CarModel.find({ id_car_mark: req.params.id })
   return res.json({ status: 'ok', data: car })
@@ -52,5 +57,10 @@ exports.getModbyGen = async (req, res) => {
 }
 exports.getSerbyGen = async (req, res) => {
   const car = await CarSerie.find({ id_car_generation: req.params.id })
+  return res.json({ status: 'ok', data: car })
+}
+exports.createSer = async (req, res) => {
+  const car = new CarSerie(req.body)
+  await car.save()
   return res.json({ status: 'ok', data: car })
 }
