@@ -14,6 +14,7 @@ import ModalCreate from '../../components/razval/razval.modal.create'
 import ModalEdit from '../../components/razval/razval.modal.edit'
 import AccessModal from '../../components/razval/access.modal'
 import 'react-toastify/dist/ReactToastify.css'
+import { socket } from '../../redux/sockets/socketReceivers'
 
 const RazvalList = () => {
   toast.configure()
@@ -36,6 +37,19 @@ const RazvalList = () => {
   const [activeDay, setActiveDay] = useState(new Date())
   const [activeTime, setActiveTime] = useState('')
   const [activeAdress, setActiveAdress] = useState({})
+
+  socket.connect()
+  // useEffect(() => {
+  //   socket.on('update razval', function () {
+  //     dispatch(getRazvals())
+  //   })
+  // }, [])
+
+  // useEffect(() => {
+  //   socket.on('update oil', function () {
+  //     dispatch(getOils())
+  //   })
+  // }, [])
 
   const openAndEdit = (id, type, address) => {
     setIsOpen(true)
@@ -73,6 +87,7 @@ const RazvalList = () => {
     setIsOpen(false)
     setEditIsOpen(false)
     notify('Данные обновлены')
+    socket.emit('new razval')
     setItemId('')
   }
 
@@ -81,6 +96,7 @@ const RazvalList = () => {
     setIsOpen(false)
     setEditIsOpen(false)
     notify('Данные обновлены')
+    socket.emit('new oil')
     setItemId('')
   }
 
@@ -88,6 +104,7 @@ const RazvalList = () => {
     dispatch(createRazval(name))
     setCreateIsOpen(false)
     notify('Запись на развал-схождение добавлена')
+    socket.emit('new razval')
     setItemId('')
   }
 
@@ -95,6 +112,7 @@ const RazvalList = () => {
     dispatch(createOil(name))
     setCreateIsOpen(false)
     notify('Запись на замену масла добавлена')
+    socket.emit('new oil')
     setItemId('')
   }
 
@@ -102,6 +120,7 @@ const RazvalList = () => {
     dispatch(deleteOil(id))
     setDeleteIsOpen(false)
     notify('Запись удалена')
+    socket.emit('new oil')
     setItemId('')
   }
   const deleteRazvalLocal = (id) => {
@@ -110,12 +129,14 @@ const RazvalList = () => {
       setDeleteIsOpen(false)
       setEditIsOpen(false)
       notify('Запись удалена')
+      socket.emit('new razval')
       setItemId('')
     } else if (itemType === 'Замена масла') {
       dispatch(deleteOil(id))
       setDeleteIsOpen(false)
       setEditIsOpen(false)
       notify('Запись удалена')
+      socket.emit('new oil')
       setItemId('')
     }
   }

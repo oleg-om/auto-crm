@@ -20,11 +20,11 @@ const AutopartsList = () => {
   const employeeList = useSelector((s) => s.employees.list)
   const role = useSelector((s) => s.auth.roles)
   socket.connect()
-  useEffect(() => {
-    socket.on('update autopart', function () {
-      dispatch(getAutoparts())
-    })
-  }, [])
+  // useEffect(() => {
+  //   socket.on('update autopart', function () {
+  //     dispatch(getAutoparts())
+  //   })
+  // }, [])
   const updateStatusLocal = (id, status) => {
     dispatch(updateStatus(id, status))
   }

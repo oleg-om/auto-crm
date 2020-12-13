@@ -253,6 +253,16 @@ io.on('connection', (socket) => {
     io.emit('update autopart')
     console.log('new autopart order')
   })
+
+  socket.on('new razval', () => {
+    io.emit('update razval')
+    console.log('new razval order')
+  })
+
+  socket.on('new oil', () => {
+    io.emit('update oil')
+    console.log('new oil order')
+  })
 })
 
 console.log(`Serving at http://localhost:${port}`)

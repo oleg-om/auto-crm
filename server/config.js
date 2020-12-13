@@ -5,7 +5,7 @@ const options = {
   app: process.env.APP,
   env: process.env.NODE_ENV,
   isSocketsEnabled: process.env.ENABLE_SOCKETS,
-  mongoURL: process.env.MONGO_URL,
+  mongoURL: 'mongodb://localhost:27017/chat',
   secret: process.env.SECRET_JWT || 'secretKey'
 }
 

@@ -66,7 +66,7 @@ const Dashboard = () => {
             </div>
 
             <div className="md:w-1/2 px-3 mb-6 md:mb-0 flex flex-col">
-              <div className="rounded-lg shadow-lg bg-gradient-to-r from-gray-700 to-green-500 h-full">
+              <div className="rounded-lg shadow-lg bg-gradient-to-r from-green-500 to-green-200 h-full">
                 <div className="m-2 p-2 flex flex-row">
                   <div className="w-1/2 px-3">
                     <h2 className="text-3xl text-white font-bold">Развал</h2>

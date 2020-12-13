@@ -1,8 +1,13 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { Link, NavLink } from 'react-router-dom'
 import cx from 'classnames'
 import { useSelector, useDispatch } from 'react-redux'
 import { signOut } from '../redux/reducers/auth'
+
+import { socket } from '../redux/sockets/socketReceivers'
+import { getRazvals } from '../redux/reducers/razvals'
+import { getOils } from '../redux/reducers/oils'
+import { getAutoparts } from '../redux/reducers/autoparts'
 
 const Navbar = () => {
   const dispatch = useDispatch()
@@ -21,6 +26,26 @@ const Navbar = () => {
     }
     return setDropdown(false)
   }
+
+  socket.connect()
+  useEffect(() => {
+    socket.on('update razval', function () {
+      dispatch(getRazvals())
+    })
+  }, [])
+
+  useEffect(() => {
+    socket.on('update oil', function () {
+      dispatch(getOils())
+    })
+  }, [])
+
+  useEffect(() => {
+    socket.on('update autopart', function () {
+      dispatch(getAutoparts())
+    })
+  }, [])
+
   return (
     <nav className="flex items-center justify-between flex-wrap bg-white shadow px-6 py-3 z-20">
       <Link to="/">
