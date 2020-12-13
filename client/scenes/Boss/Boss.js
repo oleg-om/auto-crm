@@ -129,8 +129,11 @@ const Boss = () => {
                 </thead>
                 <tbody>
                   {employeeList
-                    .filter((it) => it.role.includes('запчасти'))
-                    .map((it) => `${it.name} ${it.surname}`)
+                    .filter(
+                      (it) =>
+                        it.role.includes('Прием заказов (запчасти)') ||
+                        it.role.includes('Обработка заказов (запчасти)')
+                    )
                     .map((it) => (
                       <tr
                         key={it.name}
@@ -140,19 +143,19 @@ const Boss = () => {
                           <span className="lg:hidden px-2 py-1 text-xs font-bold uppercase">
                             Имя:
                           </span>
-                          {it}
+                          {it.name} {it.surname}
                         </td>
                         <td className="w-full lg:w-auto p-2 text-gray-800 text-left lg:text-center border border-b block lg:table-cell relative lg:static">
                           <span className="lg:hidden px-2 py-1 text-xs font-bold uppercase">
                             Всего заказов принято:
                           </span>
-                          {report.filter((item) => item.employee === it).length}
+                          {report.filter((item) => item.employee === it.id).length}
                         </td>
                         <td className="w-full lg:w-auto p-2 text-gray-800 text-left lg:text-center border border-b block lg:table-cell relative lg:static">
                           <span className="lg:hidden px-2 py-1 text-xs font-bold uppercase">
                             Всего заказов обработано:
                           </span>
-                          {report.filter((item) => item.process === it).length}
+                          {report.filter((item) => item.process === it.id).length}
                         </td>
                         <td className="w-full lg:w-auto p-2 text-gray-800 text-left lg:text-center border border-b block lg:table-cell relative lg:static">
                           <span className="lg:hidden px-2 py-1 text-xs font-bold uppercase">
@@ -160,7 +163,7 @@ const Boss = () => {
                           </span>
                           {
                             report.filter(
-                              (item) => item.process === it && item.status === taskStatuses[5]
+                              (item) => item.process === it.id && item.status === taskStatuses[5]
                             ).length
                           }
                         </td>
@@ -170,7 +173,7 @@ const Boss = () => {
                           </span>
                           {
                             report.filter(
-                              (item) => item.process === it && item.status === taskStatuses[4]
+                              (item) => item.process === it.id && item.status === taskStatuses[2]
                             ).length
                           }
                         </td>

@@ -119,7 +119,7 @@ const AccountUpdate = (props) => {
                 </option>
                 {employeeList.map((it, index) => {
                   return (
-                    <option key={index}>
+                    <option value={it.id} key={index}>
                       {it.name} {it.surname}
                     </option>
                   )
@@ -155,7 +155,11 @@ const AccountUpdate = (props) => {
                   Общий аккаунт
                 </option>
                 {list.map((it, index) => {
-                  return <option key={index}>{it.name}</option>
+                  return (
+                    <option value={it.id} key={index}>
+                      {it.name}
+                    </option>
+                  )
                 })}
               </select>
               <div className="pointer-events-none absolute top-0 mt-2  right-0 flex items-center px-2 text-gray-600">

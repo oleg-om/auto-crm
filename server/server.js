@@ -25,6 +25,8 @@ const employeeRoutes = require('./routes/api/employee.routes')
 const carRoutes = require('./routes/api/car.routes')
 const autopartRoutes = require('./routes/api/autoparts.routes')
 const customerRoutes = require('./routes/api/customer.routes')
+const razvalRoutes = require('./routes/api/razval.routes')
+const oilRoutes = require('./routes/api/oil.routes')
 
 const Root = () => ''
 
@@ -87,6 +89,8 @@ server.use('/api/v1', employeeRoutes)
 server.use('/api/v1', carRoutes)
 server.use('/api/v1', autopartRoutes)
 server.use('/api/v1', customerRoutes)
+server.use('/api/v1', razvalRoutes)
+server.use('/api/v1', oilRoutes)
 
 server.get('/api/v1/auth', async (req, res) => {
   try {

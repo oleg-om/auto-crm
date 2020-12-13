@@ -13,7 +13,7 @@ const Employee = new mongoose.Schema({
     required: false
   },
   role: {
-    type: String,
+    type: Array,
     required: false
   },
   address: {

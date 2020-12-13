@@ -13,6 +13,7 @@ const AutopartEditFull = () => {
   const list = useSelector((s) => s.autoparts.list).filter(
     (it) => JSON.stringify(it.id_autoparts) === id
   )
+
   const updateAutopartLocal = (idOfItem, name) => {
     dispatch(updateAutopart(idOfItem, name))
     socket.emit('new autopart')

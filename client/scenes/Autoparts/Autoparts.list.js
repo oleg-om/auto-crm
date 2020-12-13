@@ -17,6 +17,7 @@ const AutopartsList = () => {
   const list = useSelector((s) => s.autoparts.list)
   const revList = [].concat(list).reverse()
   const placesList = useSelector((s) => s.places.list)
+  const employeeList = useSelector((s) => s.employees.list)
   const role = useSelector((s) => s.auth.roles)
   socket.connect()
   useEffect(() => {
@@ -467,6 +468,9 @@ const AutopartsList = () => {
                       {...it}
                       updateStatus={updateStatusLocal}
                       role={role}
+                      employeeList={employeeList.find((item) => item.id === it.employee)}
+                      processList={employeeList.find((item) => item.id === it.process)}
+                      placesList={placesList.find((item) => item.id === it.place)}
                     />
                   ))
                 : currentPostsFiltered.map((it, index) => (
@@ -475,6 +479,9 @@ const AutopartsList = () => {
                       {...it}
                       updateStatus={updateStatusLocal}
                       role={role}
+                      employeeList={employeeList.find((item) => item.id === it.employee)}
+                      processList={employeeList.find((item) => item.id === it.process)}
+                      placesList={placesList.find((item) => item.id === it.place)}
                     />
                   ))}
             </tbody>

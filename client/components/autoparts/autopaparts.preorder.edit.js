@@ -17,7 +17,7 @@ const AutopartUpdate = (props) => {
   const notify = (arg) => {
     toast.info(arg, { position: toast.POSITION.BOTTOM_RIGHT })
   }
-  const employeeList = useSelector((s) => s.employees.list)
+  const employeeListLocal = useSelector((s) => s.employees.list)
 
   const dateNow = new Date()
   const dateNew = `${dateNow.getDate()}.${
@@ -139,14 +139,20 @@ const AutopartUpdate = (props) => {
               <div>
                 <ul className="mb-4">
                   <li>
-                    <b>Принял заказ:</b> {props.employee}
+                    <b>Принял заказ: </b>
+                    {props.employeeList
+                      ? `${props.employeeList.name} ${props.employeeList.surname}`
+                      : ''}
                   </li>
                   <li>
-                    <b>Заказ принят на точке:</b> {props.place}
+                    <b>Заказ принят на точке: </b> {props.placesList ? props.placesList.name : ''}
                   </li>
                   <li>
-                    <b>Дата создания заказа:</b>{' '}
-                    {`${createDate.getDate()}.${(createDate.getMonth() + 1)
+                    <b>Дата создания заказа: </b>
+                    {`${createDate
+                      .getDate()
+                      .toString()
+                      .replace(/^(\d)$/, '0$1')}.${(createDate.getMonth() + 1)
                       .toString()
                       .replace(
                         /^(\d)$/,
@@ -157,8 +163,10 @@ const AutopartUpdate = (props) => {
                       .replace(/^(\d)$/, '0$1')}`}
                   </li>
                   <li>
-                    <b>Обработал заказ:</b>{' '}
-                    {props.process ? props.process : 'Заказ еще не обработан'}
+                    <b>Обработал заказ: </b>
+                    {props.processList
+                      ? `${props.processList.name} ${props.processList.surname}`
+                      : 'Заказ еще не обработан'}
                   </li>
                   <li>
                     <b>Предоплата:</b> {props.prepay ? props.prepay : 'Нет'}
@@ -242,11 +250,11 @@ const AutopartUpdate = (props) => {
                   <option value="" disabled selected hidden className="text-gray-800">
                     Выберите сотрудника
                   </option>
-                  {employeeList
-                    .filter((it) => it.role.includes('запчасти' && 'Обработка'))
+                  {employeeListLocal
+                    .filter((it) => it.role.includes('Обработка заказов (запчасти)'))
                     .map((it) => {
                       return (
-                        <option key={it.name}>
+                        <option value={it.id} key={it.name}>
                           {it.name} {it.surname}
                         </option>
                       )
@@ -326,7 +334,10 @@ const AutopartUpdate = (props) => {
                 <ul>
                   <li>
                     <b>Заказ принят: </b>{' '}
-                    {`${createDate.getDate()}.${(createDate.getMonth() + 1)
+                    {`${createDate
+                      .getDate()
+                      .toString()
+                      .replace(/^(\d)$/, '0$1')}.${(createDate.getMonth() + 1)
                       .toString()
                       .replace(
                         /^(\d)$/,
@@ -372,7 +383,9 @@ const AutopartUpdate = (props) => {
               <div className="-mx-3 md:flex mb-2">
                 <div className="overflow-x-auto md:w-auto px-3 mb-6 md:mb-0">
                   {props.preorder.map((it) => (
-                    <p key={it.autopartItem}>{it.autopartItem}</p>
+                    <p key={it.autopartItem}>
+                      {it.autopartItem} {it.quantity ? `- ${it.quantity} шт` : null}
+                    </p>
                   ))}
                 </div>
               </div>

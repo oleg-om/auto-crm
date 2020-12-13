@@ -46,14 +46,21 @@ const AutopartViewOrder = (props) => {
               <div>
                 <ul className="mb-4">
                   <li>
-                    <b>Принял заказ:</b> {props.employee}
+                    <b>Принял заказ: </b>
+                    {props.employeeList
+                      ? `${props.employeeList.name} ${props.employeeList.surname}`
+                      : ''}
                   </li>
                   <li>
-                    <b>Заказ принят на точке:</b> {props.place}
+                    <b>Заказ принят на точке: </b>
+                    {props.placesList ? props.placesList.name : ''}
                   </li>
                   <li>
                     <b>Дата создания заказа:</b>{' '}
-                    {`${createDate.getDate()}.${(createDate.getMonth() + 1)
+                    {`${createDate
+                      .getDate()
+                      .toString()
+                      .replace(/^(\d)$/, '0$1')}.${(createDate.getMonth() + 1)
                       .toString()
                       .replace(
                         /^(\d)$/,
@@ -64,8 +71,10 @@ const AutopartViewOrder = (props) => {
                       .replace(/^(\d)$/, '0$1')}`}
                   </li>
                   <li>
-                    <b>Обработал заказ:</b>{' '}
-                    {props.process ? props.process : 'Заказ еще не обработан'}
+                    <b>Обработал заказ: </b>
+                    {props.processList
+                      ? `${props.processList.name} ${props.processList.surname}`
+                      : 'Заказ еще не обработан'}
                   </li>
                   <li>
                     <b>Предоплата:</b> {props.prepay ? props.prepay : 'Нет'}
@@ -139,13 +148,15 @@ const AutopartViewOrder = (props) => {
               </div>
             </div>
             <div className="px-3">
-              <b>Обработал заказ</b>
+              <b>Обработал заказ </b>
               <div className="flex-shrink w-full inline-block relative mb-3">
                 <div
                   className="block appearance-none w-full bg-white border border-gray-300 focus:border-gray-500 focus:outline-none py-1 px-4 pr-8 rounded"
                   name="process"
                 >
-                  {props.process ? props.process : <p>Заказ еще не обработан</p>}
+                  {props.processList
+                    ? `${props.processList.name} ${props.processList.surname}`
+                    : 'Заказ еще не обработан'}
                 </div>
               </div>
             </div>
@@ -184,7 +195,10 @@ const AutopartViewOrder = (props) => {
                 <ul>
                   <li>
                     <b>Заказ принят: </b>
-                    {`${createDate.getDate()}.${(createDate.getMonth() + 1)
+                    {`${createDate
+                      .getDate()
+                      .toString()
+                      .replace(/^(\d)$/, '0$1')}.${(createDate.getMonth() + 1)
                       .toString()
                       .replace(
                         /^(\d)$/,
@@ -229,8 +243,10 @@ const AutopartViewOrder = (props) => {
               <b>Предварительный заказ</b>
               <div className="-mx-3 md:flex mb-2">
                 <div className="overflow-x-auto md:w-auto px-3 mb-6 md:mb-0">
-                  {props.preorder.map((it, index) => (
-                    <p key={index}>{it.autopartItem}</p>
+                  {props.preorder.map((it) => (
+                    <p key={it.autopartItem}>
+                      {it.autopartItem} {it.quantity ? `- ${it.quantity} шт` : null}
+                    </p>
                   ))}
                 </div>
               </div>

@@ -13,7 +13,7 @@ const NotFound = () => {
         <p className="text-gray-500 mb-0">Кажется такой страницы не существует...</p>
         <br />
         <button
-          className="btn btn-secondary btn-lg"
+          className="bottom-0 py-2 px-4 bg-blue-600 text-white hover:bg-blue-700 hover:text-white rounded-lg lg:my-3 my-0"
           type="button"
           tabIndex="0"
           onClick={() => {
@@ -21,7 +21,7 @@ const NotFound = () => {
           }}
         >
           {' '}
-          Back to Dashboard
+          Вернуться назад
         </button>
       </div>
     </div>

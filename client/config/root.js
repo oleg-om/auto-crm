@@ -35,6 +35,9 @@ import CustomerEdit from '../scenes/Customers/Customers.edit'
 import Access from '../scenes/Access'
 import Dashboard from '../scenes/Dashboard'
 import Boss from '../scenes/Boss/Boss'
+import RazvalList from '../scenes/Razval/Razval.list'
+import RazvalNew from '../scenes/Razval/Razval.create'
+import RazvalEdit from '../scenes/Razval/Razval.edit'
 
 import Startup from './startup'
 
@@ -157,6 +160,9 @@ const RootComponent = (props) => {
             <PrivateRoute exact path="/customer/list" component={CustomerList} />
             <PrivateRoute exact path="/customer/create" component={CustomerNew} />
             <PrivateRoute exact path="/customer/edit/:id" component={CustomerEdit} />
+            <PrivateRoute exact path="/razval/list" component={RazvalList} />
+            <PrivateRoute exact path="/razval/create" component={RazvalNew} />
+            <PrivateRoute exact path="/razval/edit/:id" component={RazvalEdit} />
             <Route component={() => <NotFound />} />
           </Switch>
         </Startup>

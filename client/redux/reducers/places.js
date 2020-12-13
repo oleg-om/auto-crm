@@ -65,9 +65,7 @@ export function updatePlace(id, name) {
       headers: {
         'Content-Type': 'application/json'
       },
-      body: JSON.stringify({
-        name
-      })
+      body: JSON.stringify(name)
     })
       .then((r) => r.json())
       .then(({ data: place }) => {

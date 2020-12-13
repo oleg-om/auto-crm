@@ -10,6 +10,8 @@ import employees from './employees'
 import autoparts from './autoparts'
 import customers from './customers'
 import accounts from './accounts'
+import razvals from './razvals'
+import oils from './oils'
 
 const createRootReducer = (history) =>
   combineReducers({
@@ -22,7 +24,9 @@ const createRootReducer = (history) =>
     employees,
     autoparts,
     customers,
-    accounts
+    accounts,
+    razvals,
+    oils
   })
 
 export default createRootReducer

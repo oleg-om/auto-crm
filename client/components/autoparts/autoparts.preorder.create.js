@@ -33,6 +33,7 @@ const AutopartsCreate = (props) => {
     mod: ''
   })
   const [inputFields, setInputFields] = useState([{ autopartItem: '' }])
+
   const [state, setState] = useState({
     employee: auth.name,
     place: auth.place,
@@ -309,7 +310,6 @@ const AutopartsCreate = (props) => {
             name: '',
             phone: ''
           }
-    console.log(checkCustomer)
     if (!state.employee) notify('Заполните поле Принял заказ')
     if (!state.place) notify('Заполните поле Заказ принят на точке')
     if (!state.regnumber) notify('Заполните поле гос.номер')
@@ -364,7 +364,13 @@ const AutopartsCreate = (props) => {
   }
 
   const handleAddFields = () => {
-    setInputFields([...inputFields, { autopartItem: '' }])
+    setInputFields([
+      ...inputFields,
+      {
+        autopartItem: '',
+        quantity: ''
+      }
+    ])
     setState((prevState) => ({
       ...prevState,
       preorder: inputFields
@@ -408,10 +414,14 @@ const AutopartsCreate = (props) => {
                       Выберете сотрудника
                     </option>
                     {employeeList
-                      .filter((it) => it.role.includes('запчасти'))
+                      .filter(
+                        (it) =>
+                          it.role.includes('Прием заказов (запчасти)') ||
+                          it.role.includes('Обработка заказов (запчасти)')
+                      )
                       .map((it, index) => {
                         return (
-                          <option key={index}>
+                          <option value={it.id} key={index}>
                             {it.name} {it.surname}
                           </option>
                         )
@@ -447,7 +457,11 @@ const AutopartsCreate = (props) => {
                       Выберете место
                     </option>
                     {list.map((it, index) => {
-                      return <option key={index}>{it.name}</option>
+                      return (
+                        <option value={it.id} key={index}>
+                          {it.name}
+                        </option>
+                      )
                     })}
                   </select>
                   <div className="pointer-events-none absolute top-0 mt-2  right-0 flex items-center px-2 text-gray-600">
@@ -761,6 +775,9 @@ const AutopartsCreate = (props) => {
                   <th className="p-3 font-bold uppercase bg-gray-100 text-gray-600 border border-gray-300 table-cell w-full">
                     Запчасти
                   </th>
+                  <th className="p-3 font-bold uppercase bg-gray-100 text-sm text-gray-600 border border-gray-300 table-cell whitespace-no-wrap">
+                    Кол-во
+                  </th>
                   <th className="p-3 font-bold uppercase bg-gray-100 text-gray-600 border border-gray-300 table-cell">
                     Строки
                   </th>
@@ -788,6 +805,16 @@ const AutopartsCreate = (props) => {
                           <option key={indexItem} value={it} />
                         ))}
                       </datalist>
+                    </td>
+                    <td className="p-2 text-gray-800 text-center border border-b table-cell relative">
+                      <input
+                        className="w-32 appearance-none block bg-grey-lighter text-grey-darker border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-1 px-4"
+                        name="quantity"
+                        type="number"
+                        value={inputField.quantity}
+                        autoComplete="off"
+                        onChange={(event) => handleChangeInput(index, event)}
+                      />
                     </td>
                     <td className="w-full lg:w-auto p-2 text-gray-800 text-center border border-b text-center flex flex-row table-cell relative static">
                       <button

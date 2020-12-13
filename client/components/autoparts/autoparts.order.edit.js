@@ -321,15 +321,13 @@ const AutopartsEdit = (props) => {
                     <option value="" disabled selected hidden className="text-gray-800">
                       Выберите сотрудника
                     </option>
-                    {employeeList
-                      .filter((it) => it.role.includes('запчасти'))
-                      .map((it) => {
-                        return (
-                          <option key={it.name}>
-                            {it.name} {it.surname}
-                          </option>
-                        )
-                      })}
+                    {employeeList.map((it) => {
+                      return (
+                        <option value={it.id} key={it.name}>
+                          {it.name} {it.surname}
+                        </option>
+                      )
+                    })}
                   </select>
                 </div>
               </div>
@@ -353,7 +351,11 @@ const AutopartsEdit = (props) => {
                       Выберете место
                     </option>
                     {list.map((it) => {
-                      return <option key={it.name}>{it.name}</option>
+                      return (
+                        <option value={it.id} key={it.name}>
+                          {it.name}
+                        </option>
+                      )
                     })}
                   </select>
                 </div>

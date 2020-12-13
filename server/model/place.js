@@ -22,6 +22,22 @@ const Place = new mongoose.Schema({
         .getMinutes()
         .toString()
         .replace(/^(\d)$/, '0$1')}`
+  },
+  razval: {
+    type: String,
+    required: true
+  },
+  razvalquantity: {
+    type: String,
+    required: true
+  },
+  oil: {
+    type: String,
+    required: true
+  },
+  oilquantity: {
+    type: String,
+    required: true
   }
 })
 

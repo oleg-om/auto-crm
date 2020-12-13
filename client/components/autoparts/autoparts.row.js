@@ -36,15 +36,19 @@ const AutopartsRow = (props) => {
       </td>
       <td className="w-full lg:w-auto p-2 text-gray-800 text-left text-sm lg:text-center border border-b block lg:table-cell relative lg:static">
         <span className="lg:hidden px-2 py-1 text-xs font-bold uppercase">Принял:</span>
-        {props.employee}
+        {props.employeeList ? `${props.employeeList.name} ${props.employeeList.surname}` : ''}
       </td>
       <td className="w-full lg:w-auto p-2 text-gray-800 text-left text-sm lg:text-center border border-b block lg:table-cell relative lg:static">
         <span className="lg:hidden px-2 py-1 text-xs font-bold uppercase">Точка:</span>
-        {props.place}
+        {props.placesList ? props.placesList.name : ''}
       </td>
       <td className="w-full lg:w-auto p-2 text-gray-800 text-left text-sm lg:text-center border border-b block lg:table-cell relative lg:static">
         <span className="lg:hidden px-2 py-1 text-xs font-bold uppercase">Обработал:</span>
-        {props.process ? props.process : <p>Заказ еще не обработан</p>}
+        {props.processList ? (
+          `${props.processList.name} ${props.processList.surname}`
+        ) : (
+          <p>Заказ еще не обработан</p>
+        )}
       </td>
       <td className="w-full lg:w-auto p-2 text-gray-800 text-left text-sm lg:text-center border border-b block lg:table-cell relative lg:static whitespace-no-wrap">
         <span className="lg:hidden px-2 py-1 text-xs font-bold uppercase">Статус:</span>
@@ -63,7 +67,10 @@ const AutopartsRow = (props) => {
       </td>
       <td className="w-full lg:w-auto p-2 text-gray-800 text-left text-sm lg:text-center border border-b block lg:table-cell relative lg:static">
         <span className="lg:hidden px-2 py-1 text-xs font-bold uppercase">Дата:</span>
-        {`${createDate.getDate()}.${(createDate.getMonth() + 1)
+        {`${createDate
+          .getDate()
+          .toString()
+          .replace(/^(\d)$/, '0$1')}.${(createDate.getMonth() + 1)
           .toString()
           .replace(
             /^(\d)$/,

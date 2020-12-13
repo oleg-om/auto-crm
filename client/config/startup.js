@@ -7,6 +7,8 @@ import { getAutoparts } from '../redux/reducers/autoparts'
 import { getPlaces } from '../redux/reducers/places'
 import { getEmployees } from '../redux/reducers/employees'
 import { getAccounts } from '../redux/reducers/accounts'
+import { getRazvals } from '../redux/reducers/razvals'
+import { getOils } from '../redux/reducers/oils'
 
 const Startup = (props) => {
   const dispatch = useDispatch()
@@ -32,6 +34,14 @@ const Startup = (props) => {
 
   useEffect(() => {
     dispatch(getAccounts())
+  }, [dispatch])
+
+  useEffect(() => {
+    dispatch(getRazvals())
+  }, [dispatch])
+
+  useEffect(() => {
+    dispatch(getOils())
   }, [dispatch])
 
   return props.children
