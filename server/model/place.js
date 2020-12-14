@@ -25,19 +25,19 @@ const Place = new mongoose.Schema({
   },
   razval: {
     type: String,
-    required: true
+    required: false
   },
   razvalquantity: {
     type: String,
-    required: true
+    required: false
   },
   oil: {
     type: String,
-    required: true
+    required: false
   },
   oilquantity: {
     type: String,
-    required: true
+    required: false
   }
 })
 
