@@ -73,7 +73,7 @@ const Navbar = () => {
             viewBox="0 0 20 20"
             xmlns="http://www.w3.org/2000/svg"
           >
-            <title>Menu</title>
+            <title>Меню</title>
             <path d="M0 3h20v2H0V3zm0 6h20v2H0V9zm0 6h20v2H0v-2z" />
           </svg>
         </button>
@@ -85,20 +85,29 @@ const Navbar = () => {
         })}
       >
         <div className="text-sm lg:flex-grow">
-          <NavLink
-            to="/autoparts/order/list"
-            className="block mt-4 lg:inline-block lg:mt-0 text-gray-800 hover:text-blue-700 mr-4"
-            activeClassName="text-blue-600 underline font-semibold"
-          >
-            Автозапчасти
-          </NavLink>
-          <NavLink
-            to="/razval/list"
-            className="block mt-4 lg:inline-block lg:mt-0 text-gray-800 hover:text-blue-700 mr-4"
-            activeClassName="text-blue-600 underline font-semibold"
-          >
-            Развал
-          </NavLink>
+          {auth.roles.includes('autopartfull') ||
+          auth.roles.includes('autopartsimple') ||
+          auth.roles.includes('boss') ||
+          auth.roles.includes('admin') ? (
+            <NavLink
+              to="/autoparts/order/list"
+              className="block mt-4 lg:inline-block lg:mt-0 text-gray-800 hover:text-blue-700 mr-4"
+              activeClassName="text-blue-600 underline font-semibold"
+            >
+              Автозапчасти
+            </NavLink>
+          ) : null}
+          {auth.roles.includes('razval') ||
+          auth.roles.includes('boss') ||
+          auth.roles.includes('admin') ? (
+            <NavLink
+              to="/razval/list"
+              className="block mt-4 lg:inline-block lg:mt-0 text-gray-800 hover:text-blue-700 mr-4"
+              activeClassName="text-blue-600 underline font-semibold"
+            >
+              Развал
+            </NavLink>
+          ) : null}
           {/* <NavLink
             to="/place/list"
             className="block mt-4 lg:inline-block lg:mt-0 text-gray-800 hover:text-blue-700 mr-4"
@@ -106,20 +115,28 @@ const Navbar = () => {
           >
             Адреса
           </NavLink> */}
-          <NavLink
-            to="/customer/list"
-            className="block mt-4 lg:inline-block lg:mt-0 text-gray-800 hover:text-blue-700 mr-4"
-            activeClassName="text-blue-600 underline font-semibold"
-          >
-            Клиенты
-          </NavLink>
-          <NavLink
-            to="/place/list"
-            className="block mt-4 lg:inline-block lg:mt-0 text-gray-800 hover:text-blue-700 mr-4"
-            activeClassName="text-blue-600 underline font-semibold"
-          >
-            Администратор
-          </NavLink>
+          {auth.roles.includes('autopartfull') ||
+          auth.roles.includes('autopartsimple') ||
+          auth.roles.includes('razval') ||
+          auth.roles.includes('boss') ||
+          auth.roles.includes('admin') ? (
+            <NavLink
+              to="/customer/list"
+              className="block mt-4 lg:inline-block lg:mt-0 text-gray-800 hover:text-blue-700 mr-4"
+              activeClassName="text-blue-600 underline font-semibold"
+            >
+              Клиенты
+            </NavLink>
+          ) : null}
+          {auth.roles.includes('boss') || auth.roles.includes('admin') ? (
+            <NavLink
+              to="/place/list"
+              className="block mt-4 lg:inline-block lg:mt-0 text-gray-800 hover:text-blue-700 mr-4"
+              activeClassName="text-blue-600 underline font-semibold"
+            >
+              Администратор
+            </NavLink>
+          ) : null}
           {/* <NavLink
             to="/employee/list"
             className="block mt-4 lg:inline-block lg:mt-0 text-gray-800 hover:text-blue-700 mr-4"
@@ -135,13 +152,15 @@ const Navbar = () => {
           >
             Аккаунты
           </NavLink> */}
-          <NavLink
-            to="/boss"
-            className="block mt-4 lg:inline-block lg:mt-0 text-gray-800 hover:text-blue-700 mr-4"
-            activeClassName="text-blue-600 underline font-semibold"
-          >
-            Босс
-          </NavLink>
+          {auth.roles.includes('boss') ? (
+            <NavLink
+              to="/boss"
+              className="block mt-4 lg:inline-block lg:mt-0 text-gray-800 hover:text-blue-700 mr-4"
+              activeClassName="text-blue-600 underline font-semibold"
+            >
+              Босс
+            </NavLink>
+          ) : null}
         </div>
         <div className="relative inline-block text-left">
           <div>
