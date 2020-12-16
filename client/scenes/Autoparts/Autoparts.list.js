@@ -25,6 +25,7 @@ const AutopartsList = () => {
   //     dispatch(getAutoparts())
   //   })
   // }, [])
+  const settings = useSelector((s) => s.settings.list)
   const updateStatusLocal = (id, status) => {
     dispatch(updateStatus(id, status))
   }
@@ -471,6 +472,7 @@ const AutopartsList = () => {
                       employeeList={employeeList.find((item) => item.id === it.employee)}
                       processList={employeeList.find((item) => item.id === it.process)}
                       placesList={placesList.find((item) => item.id === it.place)}
+                      settings={settings}
                     />
                   ))
                 : currentPostsFiltered.map((it, index) => (
@@ -482,6 +484,7 @@ const AutopartsList = () => {
                       employeeList={employeeList.find((item) => item.id === it.employee)}
                       processList={employeeList.find((item) => item.id === it.process)}
                       placesList={placesList.find((item) => item.id === it.place)}
+                      settings={settings}
                     />
                   ))}
             </tbody>

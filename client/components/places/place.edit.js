@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import { Link, useHistory } from 'react-router-dom'
 import { toast } from 'react-toastify'
+import NumberFormat from 'react-number-format'
 import Modal from '../Modal.delete'
 import 'react-toastify/dist/ReactToastify.css'
 
@@ -11,7 +12,9 @@ const PlaceUpdate = (props) => {
     razval: props.razval,
     razvalquantity: props.razvalquantity,
     oil: props.oil,
-    oilquantity: props.oilquantity
+    oilquantity: props.oilquantity,
+    autopartsphone: props.autopartsphone,
+    razvalphone: props.razvalphone
   })
   const history = useHistory()
   toast.configure()
@@ -156,6 +159,50 @@ const PlaceUpdate = (props) => {
               placeholder="Введите количество постов"
               onChange={onChange}
             />
+          </div>
+        </div>
+        <div className="-mx-3 md:flex flex-wrap">
+          <div className="md:w-1/2 px-3 mb-6 md:mb-0 flex flex-col">
+            <label
+              className="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2"
+              htmlFor="grid-first-name"
+            >
+              Автозапчасти - номер телефона
+            </label>
+            <div className="flex-shrink w-full inline-block relative mb-3">
+              <NumberFormat
+                format="+7 (###) ###-##-##"
+                mask="_"
+                className="appearance-none block w-full bg-grey-lighter text-grey-darker border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-3 px-4 mb-3"
+                type="text"
+                placeholder="Автозапчасти - номер телефона"
+                value={state.autopartsphone}
+                name="autopartsphone"
+                id="autopartsphone"
+                onChange={onChange}
+              />
+            </div>
+          </div>
+          <div className="md:w-1/2 px-3 mb-6 md:mb-0 flex flex-col">
+            <label
+              className="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2"
+              htmlFor="grid-first-name"
+            >
+              Развал - номер телефона
+            </label>
+            <div className="flex-shrink w-full inline-block relative mb-3">
+              <NumberFormat
+                format="+7 (###) ###-##-##"
+                mask="_"
+                className="appearance-none block w-full bg-grey-lighter text-grey-darker border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-3 px-4 mb-3"
+                type="text"
+                placeholder="Развал - номер телефона"
+                value={state.razvalphone}
+                name="razvalphone"
+                id="razvalphone"
+                onChange={onChange}
+              />
+            </div>
           </div>
         </div>
       </div>

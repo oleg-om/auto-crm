@@ -38,6 +38,14 @@ const Place = new mongoose.Schema({
   oilquantity: {
     type: String,
     required: false
+  },
+  autopartsphone: {
+    type: String,
+    required: false
+  },
+  razvalphone: {
+    type: String,
+    required: false
   }
 })
 

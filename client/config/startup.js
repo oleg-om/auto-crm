@@ -9,6 +9,8 @@ import { getEmployees } from '../redux/reducers/employees'
 import { getAccounts } from '../redux/reducers/accounts'
 import { getRazvals } from '../redux/reducers/razvals'
 import { getOils } from '../redux/reducers/oils'
+import { getSettings } from '../redux/reducers/settings'
+import { getMaterials } from '../redux/reducers/materials'
 
 const Startup = (props) => {
   const dispatch = useDispatch()
@@ -42,6 +44,14 @@ const Startup = (props) => {
 
   useEffect(() => {
     dispatch(getOils())
+  }, [dispatch])
+
+  useEffect(() => {
+    dispatch(getSettings())
+  }, [dispatch])
+
+  useEffect(() => {
+    dispatch(getMaterials())
   }, [dispatch])
 
   return props.children

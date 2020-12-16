@@ -150,7 +150,7 @@ const RazvalList = () => {
     <div>
       <Navbar />
       <div className="flex flex-row">
-        <RazvalSidebar setActiveDay={setActiveDay} />
+        <RazvalSidebar setActiveDay={setActiveDay} activeDay={activeDay} />
         <div className="w-full mx-auto my-2">
           <div className="rounded-lg relative lg:my-3 mt-1 flex flex-wrap mx-3">
             {place

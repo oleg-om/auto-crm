@@ -29,14 +29,14 @@ const RazvalRow = (props) => {
   return (
     <div className="mx-2 mb-6">
       <div
-        className={cx('rounded-t bg-white py-1 text-center', {
+        className={cx('rounded-t bg-white p-1 text-center', {
           'bg-white': props.activePlace === 'false',
           'bg-orange-500 text-white': props.activePlace === 'true'
         })}
       >
         <h4 className="font-semibold text-center">{props.adress.name}</h4>
       </div>
-      <table className="border-collapse">
+      <table className="border-collapse w-full">
         <thead>
           <tr>
             <th className="p-3 font-bold uppercase bg-gray-100 text-gray-600 border border-gray-300 hidden lg:table-cell">

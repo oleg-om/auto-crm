@@ -16,6 +16,7 @@ const AutopartView = () => {
   const updateAutopartLocal = (idOfItem, name) => {
     dispatch(updateAutopart(idOfItem, name))
   }
+  const settings = useSelector((s) => s.settings.list)
 
   return (
     <div>
@@ -29,6 +30,7 @@ const AutopartView = () => {
             employeeList={employeeList.find((item) => item.id === it.employee)}
             processList={employeeList.find((item) => item.id === it.process)}
             placesList={placesList.find((item) => item.id === it.place)}
+            settings={settings}
           />
         ))}
       </div>

@@ -12,6 +12,8 @@ import customers from './customers'
 import accounts from './accounts'
 import razvals from './razvals'
 import oils from './oils'
+import settings from './settings'
+import materials from './materials'
 
 const createRootReducer = (history) =>
   combineReducers({
@@ -26,7 +28,9 @@ const createRootReducer = (history) =>
     customers,
     accounts,
     razvals,
-    oils
+    oils,
+    settings,
+    materials
   })
 
 export default createRootReducer

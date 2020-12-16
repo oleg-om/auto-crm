@@ -38,6 +38,7 @@ import Boss from '../scenes/Boss/Boss'
 import RazvalList from '../scenes/Razval/Razval.list'
 import RazvalNew from '../scenes/Razval/Razval.create'
 import RazvalEdit from '../scenes/Razval/Razval.edit'
+import SettingEdit from '../scenes/Settings/Settings'
 
 import Startup from './startup'
 
@@ -163,6 +164,7 @@ const RootComponent = (props) => {
             <PrivateRoute exact path="/razval/list" component={RazvalList} />
             <PrivateRoute exact path="/razval/create" component={RazvalNew} />
             <PrivateRoute exact path="/razval/edit/:id" component={RazvalEdit} />
+            <PrivateRoute exact path="/settings" component={SettingEdit} />
             <Route component={() => <NotFound />} />
           </Switch>
         </Startup>

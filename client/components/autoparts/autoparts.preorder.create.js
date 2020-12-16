@@ -476,23 +476,6 @@ const AutopartsCreate = (props) => {
                 </div>
               </div>
             </div>
-            <div className="mb-5">
-              <label
-                className="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2"
-                htmlFor="grid-city"
-              >
-                Гос. номер
-              </label>
-              <input
-                className="appearance-none block w-full bg-grey-lighter text-grey-darker border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-1 px-4 mb-3"
-                type="text"
-                placeholder="Введите гос. номер русскими буквами"
-                value={state.regnumber}
-                name="regnumber"
-                id="regnumber"
-                onChange={onChangeCustomerUppercaseRussian}
-              />
-            </div>
             <div className="md:mb-0">
               <label
                 className="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2"
@@ -508,6 +491,23 @@ const AutopartsCreate = (props) => {
                 name="vinnumber"
                 id="vinnumber"
                 onChange={onChangeCustomerUppercase}
+              />
+            </div>
+            <div className="mb-5">
+              <label
+                className="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2"
+                htmlFor="grid-city"
+              >
+                Гос. номер
+              </label>
+              <input
+                className="appearance-none block w-full bg-grey-lighter text-grey-darker border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-1 px-4 mb-3"
+                type="text"
+                placeholder="Введите гос. номер русскими буквами"
+                value={state.regnumber}
+                name="regnumber"
+                id="regnumber"
+                onChange={onChangeCustomerUppercaseRussian}
               />
             </div>
           </div>
@@ -735,23 +735,6 @@ const AutopartsCreate = (props) => {
               className="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2"
               htmlFor="grid-city"
             >
-              Имя клиента
-            </label>
-            <input
-              className="capitalize appearance-none block w-full bg-grey-lighter text-grey-darker border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-1 px-4 mb-3"
-              type="text"
-              placeholder="Введите имя"
-              value={state.name}
-              name="name"
-              id="name"
-              onChange={onChangeCustomer}
-            />
-          </div>
-          <div className="md:w-1/2 px-3 mb-6 md:mb-0">
-            <label
-              className="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2"
-              htmlFor="grid-city"
-            >
               Номер телефона
             </label>
             <NumberFormat
@@ -763,6 +746,23 @@ const AutopartsCreate = (props) => {
               value={state.phone}
               name="phone"
               id="phone"
+              onChange={onChangeCustomer}
+            />
+          </div>
+          <div className="md:w-1/2 px-3 mb-6 md:mb-0">
+            <label
+              className="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2"
+              htmlFor="grid-city"
+            >
+              Имя клиента
+            </label>
+            <input
+              className="capitalize appearance-none block w-full bg-grey-lighter text-grey-darker border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-1 px-4 mb-3"
+              type="text"
+              placeholder="Введите имя"
+              value={state.name}
+              name="name"
+              id="name"
               onChange={onChangeCustomer}
             />
           </div>

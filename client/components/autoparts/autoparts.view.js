@@ -1,14 +1,21 @@
-import React, { useState } from 'react'
+import React, { useState, useRef } from 'react'
 import { Link, useHistory } from 'react-router-dom'
 import { toast } from 'react-toastify'
 import cx from 'classnames'
+import { useReactToPrint } from 'react-to-print'
 import 'react-toastify/dist/ReactToastify.css'
+import ComponentToPrint from './autoparts.print'
 import malePlaceholder from '../../assets/images/profile_placeholder_male.webp'
 import orderPlaceholder from '../../assets/images/order_placeholder.webp'
 import taskStatuses from '../../lists/task-statuses'
 
 const AutopartViewOrder = (props) => {
   const history = useHistory()
+
+  const componentRef = useRef()
+  const handlePrint = useReactToPrint({
+    content: () => componentRef.current
+  })
 
   toast.configure()
   const notify = (arg) => {
@@ -122,6 +129,56 @@ const AutopartViewOrder = (props) => {
                 >
                   Заказы клиента
                 </Link> */}
+                <button
+                  type="submit"
+                  onClick={handlePrint}
+                  className="py-2 px-3 bg-blue-600 text-white text-sm hover:bg-blue-700 hover:text-white rounded-full h-22 w-22"
+                >
+                  <div className="flex flex-row">
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      version="1.1"
+                      width="20"
+                      height="20"
+                      x="0"
+                      y="0"
+                      viewBox="0 0 512 512"
+                      xmlSpace="preserve"
+                      className="mr-2"
+                    >
+                      <g>
+                        <path
+                          xmlns="http://www.w3.org/2000/svg"
+                          d="m414 80h-316c-5.523 0-10-4.477-10-10v-26c0-24.301 19.699-44 44-44h248c24.301 0 44 19.699 44 44v26c0 5.523-4.477 10-10 10z"
+                          fill="#ffffff"
+                          data-original="#000000"
+                        />
+                        <path
+                          xmlns="http://www.w3.org/2000/svg"
+                          d="m458 112h-404c-29.776 0-54 24.224-54 54v188c0 29.776 24.224 54 54 54h34v-80c0-39.701 32.299-72 72-72h192c39.701 0 72 32.299 72 72v80h34c29.776 0 54-24.224 54-54v-188c0-29.776-24.224-54-54-54zm-361.98 120c-13.255 0-24.005-10.745-24.005-24s10.74-24 23.995-24h.01c13.255 0 24 10.745 24 24s-10.745 24-24 24z"
+                          fill="#ffffff"
+                          data-original="#000000"
+                        />
+                        <path
+                          xmlns="http://www.w3.org/2000/svg"
+                          d="m352 304h-192c-13.255 0-24 10.745-24 24v80 32c0 13.255 10.745 24 24 24h192c13.255 0 24-10.745 24-24v-32-80c0-13.255-10.745-24-24-24z"
+                          fill="#ffffff"
+                          data-original="#000000"
+                        />
+                      </g>
+                    </svg>
+
+                    <p> Печать предчека</p>
+                  </div>
+                </button>
+                <div className="hidden">
+                  <ComponentToPrint
+                    ref={componentRef}
+                    props={props}
+                    helpphone={props.settings.map((it) => it.helpphone)}
+                    placesList={props.placesList}
+                  />
+                </div>
               </div>
             </div>
           </div>

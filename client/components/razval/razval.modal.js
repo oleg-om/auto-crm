@@ -1,6 +1,8 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import { toast } from 'react-toastify'
 import cx from 'classnames'
+import { useReactToPrint } from 'react-to-print'
+import ComponentToPrint from './razval.pre.print'
 import 'react-toastify/dist/ReactToastify.css'
 import statusList from '../../lists/razval.statuses'
 
@@ -18,6 +20,11 @@ const ModalView = ({
 }) => {
   const [changeStatus, setChangeStatus] = useState({
     status: ''
+  })
+
+  const componentRef = useRef()
+  const handlePrint = useReactToPrint({
+    content: () => componentRef.current
   })
 
   useEffect(() => {
@@ -39,6 +46,7 @@ const ModalView = ({
   const openEditModal = () => {
     changeItem()
   }
+
   const propsDate = new Date(itemId.date)
   const propsCreateDate = new Date(itemId.dateofcreate)
   const dateActive = `${propsDate
@@ -84,11 +92,57 @@ const ModalView = ({
           aria-labelledby="modal-headline"
         >
           <div className="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
+            <div className="flex justify-end">
+              <button
+                type="submit"
+                title="Печать предчека"
+                onClick={handlePrint}
+                className="p-1 px-3 bg-gray-200 text-gray-700 hover:text-gray-600 border border-gray-600 hover:bg-gray-400 rounded h-22 w-22"
+              >
+                <div>
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    version="1.1"
+                    width="18"
+                    height="18"
+                    x="0"
+                    y="0"
+                    viewBox="0 0 512 512"
+                    xmlSpace="preserve"
+                    className="block m-auto"
+                  >
+                    <g>
+                      <path
+                        xmlns="http://www.w3.org/2000/svg"
+                        d="m414 80h-316c-5.523 0-10-4.477-10-10v-26c0-24.301 19.699-44 44-44h248c24.301 0 44 19.699 44 44v26c0 5.523-4.477 10-10 10z"
+                        fill="#4a5568"
+                        data-original="#000000"
+                      />
+                      <path
+                        xmlns="http://www.w3.org/2000/svg"
+                        d="m458 112h-404c-29.776 0-54 24.224-54 54v188c0 29.776 24.224 54 54 54h34v-80c0-39.701 32.299-72 72-72h192c39.701 0 72 32.299 72 72v80h34c29.776 0 54-24.224 54-54v-188c0-29.776-24.224-54-54-54zm-361.98 120c-13.255 0-24.005-10.745-24.005-24s10.74-24 23.995-24h.01c13.255 0 24 10.745 24 24s-10.745 24-24 24z"
+                        fill="#4a5568"
+                        data-original="#000000"
+                      />
+                      <path
+                        xmlns="http://www.w3.org/2000/svg"
+                        d="m352 304h-192c-13.255 0-24 10.745-24 24v80 32c0 13.255 10.745 24 24 24h192c13.255 0 24-10.745 24-24v-32-80c0-13.255-10.745-24-24-24z"
+                        fill="#4a5568"
+                        data-original="#000000"
+                      />
+                    </g>
+                  </svg>
+                </div>
+              </button>
+            </div>
             <div className="sm:flex justify-center">
               <div className="mt-3 text-center sm:mt-0 sm:ml-4">
                 <h3 className="text-lg leading-6 font-medium text-gray-900" id="modal-headline">
                   Дата записи: {dateActive} {itemId.time}
                 </h3>
+                <p className="text-sm leading-5 text-gray-900 mt-2 mb-3">
+                  Адрес: {dateCreate ? place.find((it) => it.id === itemId.place).name : null}
+                </p>
                 <div className="mt-2">
                   <div className="flex flex-row appearance-none w-full bg-grey-lighter border border-gray-300 focus:border-gray-500 focus:outline-none py-1 px-4 pr-8 rounded mb-2">
                     <div className="mr-3">
@@ -230,6 +284,16 @@ const ModalView = ({
                 Отмена
               </button>
             </span>
+          </div>
+          <div className="hidden">
+            <ComponentToPrint
+              ref={componentRef}
+              props={itemId}
+              placesList={dateCreate ? place.find((it) => it.id === itemId.place) : null}
+              itemType={itemType}
+              OrderDate={dateActive}
+              OrderTime={itemId.time}
+            />
           </div>
         </div>
       </div>
