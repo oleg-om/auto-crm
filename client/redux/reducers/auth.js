@@ -52,6 +52,7 @@ function sendLoginPassword(path) {
       .then((r) => r.data)
       .then((data) => {
         dispatch({ type: 'LOGIN', token: data.token, user: data.user })
+        dispatch({ type: 'LOGIN_STATUS', status: data.status, message: data.message })
         history.push('/')
       })
   }
@@ -101,6 +102,9 @@ export default function auth(state = initialState, action) {
     }
     case 'UPDATE_PASSWORD': {
       return { ...state, password: action.password }
+    }
+    case 'LOGIN_STATUS': {
+      return { ...state, status: action.status, message: action.message }
     }
     case 'LOGIN': {
       return {

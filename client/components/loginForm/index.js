@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState, useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 // import { Link } from 'react-router-dom'
 import { updateLogin, updatePassword } from '../../redux/reducers/auth'
@@ -6,7 +6,22 @@ import ButtonLogin from './button'
 
 const LoginForm = () => {
   const dispatch = useDispatch()
-  const { login, password } = useSelector((s) => s.auth)
+  const { login, password, message, status } = useSelector((s) => s.auth)
+  const [displayStatus, setDisplayStatus] = useState('')
+  useEffect(() => {
+    if (status === '') {
+      setDisplayStatus('')
+    } else if (status === 'ok') {
+      setDisplayStatus('')
+    } else if (status === 'error') {
+      if (message === 'auth error Error: No Login')
+        setDisplayStatus('Такого пользователя не существует')
+      else if (message === 'auth error Error: No Password') setDisplayStatus('Введите пароль')
+      else if (message === 'auth error Error: No User') setDisplayStatus('Ошибка')
+      else if (message === 'auth error Error: Password Incorrect')
+        setDisplayStatus('Неправильный пароль')
+    }
+  }, [status, message])
   return (
     <div className="w-screen h-screen bg-gray-200 flex justify-center items-center">
       <div className=" max-w-xs ">
@@ -49,6 +64,7 @@ const LoginForm = () => {
             </Link> */}
           </div>
         </form>
+        {displayStatus !== '' ? <p className="text-red-700 text-sm">{displayStatus}</p> : null}
       </div>
     </div>
   )
