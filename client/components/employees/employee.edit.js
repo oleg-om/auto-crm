@@ -72,7 +72,7 @@ const EmployeeUpdate = (props) => {
       }))
     }
   }
-  console.log(state)
+
   return (
     <div>
       <div className="bg-white shadow rounded-lg px-8 pt-6 pb-8 mb-4 flex flex-col my-2">

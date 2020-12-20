@@ -35,6 +35,10 @@ const Razval = new mongoose.Schema({
     type: String,
     required: false
   },
+  regnumber: {
+    type: String,
+    required: false
+  },
   status: {
     type: String,
     default: razvalList[0]

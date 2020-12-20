@@ -7,14 +7,14 @@ import 'react-toastify/dist/ReactToastify.css'
 
 const CustomerUpdate = (props) => {
   const [state, setState] = useState({
-    name: props.name,
-    phone: props.phone,
-    mark: props.mark,
-    model: props.model,
-    gen: props.gen,
-    mod: props.mod,
-    regnumber: props.regnumber,
-    vinnumber: props.vinnumber
+    name: props.name ? props.name : '',
+    phone: props.phone ? props.phone : '',
+    mark: props.mark ? props.mark : '',
+    model: props.model ? props.model : '',
+    gen: props.gen ? props.gen : '',
+    mod: props.mod ? props.mod : '',
+    regnumber: props.regnumber ? props.regnumber : '',
+    vinnumber: props.vinnumber ? props.vinnumber : ''
   })
   const [isOpen, SetIsOpen] = useState(false)
   const history = useHistory()
@@ -189,6 +189,17 @@ const CustomerUpdate = (props) => {
     setState((prevState) => ({
       ...prevState,
       [name]: value.toUpperCase()
+    }))
+  }
+
+  const onChangeCustomerUppercaseRussian = (e) => {
+    const { name, value } = e.target
+    setState((prevState) => ({
+      ...prevState,
+      [name]: value
+        .toUpperCase()
+        .replace(/\s/g, '')
+        .replace(/[^а-яё0-9]/i, '')
     }))
   }
 
@@ -381,7 +392,7 @@ const CustomerUpdate = (props) => {
               placeholder="Введите гос. номер русскими буквами"
               autoComplete="off"
               required
-              onChange={onChangeCustomerUppercase}
+              onChange={onChangeCustomerUppercaseRussian}
             />
           </div>
           <div className="md:w-1/2 px-3 mb-6 md:mb-0 flex flex-col">

@@ -63,6 +63,22 @@ export function createMaterial(name) {
   }
 }
 
+export function importMaterial(name) {
+  return (dispatch) => {
+    fetch('/api/v1/materialimport', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(name)
+    })
+      .then((r) => r.json())
+      .then(({ data: material }) => {
+        dispatch({ type: CREATE_MATERIAL, material })
+      })
+  }
+}
+
 export function updateMaterial(id, name) {
   return (dispatch) => {
     fetch(`/api/v1/material/${id}`, {
@@ -87,6 +103,18 @@ export function deleteMaterial(id) {
       .then((r) => r.json())
       .then(() => {
         dispatch({ type: DELETE_MATERIAL, id })
+      })
+  }
+}
+
+export function deleteMaterialDb() {
+  return (dispatch) => {
+    fetch(`/api/v1/materialdrop/`, {
+      method: 'DELETE'
+    })
+      .then((r) => r.json())
+      .then(() => {
+        dispatch({ type: DELETE_MATERIAL })
       })
   }
 }

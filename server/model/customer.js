@@ -4,7 +4,7 @@ const uuid = require('uuid')
 const Customer = new mongoose.Schema({
   name: {
     type: String,
-    required: true
+    required: false
   },
   surname: {
     type: String,
@@ -16,11 +16,11 @@ const Customer = new mongoose.Schema({
   },
   mark: {
     type: String,
-    required: false
+    required: true
   },
   model: {
     type: String,
-    required: false
+    required: true
   },
   gen: {
     type: String,

@@ -16,6 +16,7 @@ const ModalNew = ({
   employee,
   createRazval,
   createOil,
+  createCust,
   createIsOpen
 }) => {
   toast.configure()
@@ -41,6 +42,7 @@ const ModalNew = ({
   const [state, setState] = useState({
     mark: '',
     model: '',
+    regnumber: '',
     phone: '',
     employeeplace: '',
     employee: '',
@@ -63,6 +65,7 @@ const ModalNew = ({
     return () => {}
   }, [timeActive, activeAdress, employee, OrderDate, state.phone, access, createIsOpen])
   const [search, setSearch] = useState()
+
   const [stateId, setStateId] = useState({
     mark: '',
     model: ''
@@ -71,10 +74,13 @@ const ModalNew = ({
     mark: [],
     model: []
   })
+  const [activeCustomer, setActiveCustomer] = useState('')
   const [customerOptions, setCustomerOptions] = useState([])
   useEffect(() => {
-    if (state.phone !== '') {
-      setCustomerOptions(customerList.filter((it) => it.phone === state.phone))
+    if (state.phone !== '' || state.regnumber !== '') {
+      setCustomerOptions(
+        customerList.filter((it) => it.phone === state.phone || it.regnumber === state.regnumber)
+      )
     } else if (state.phone === '' || state.regnumber === '' || state.vinnumber === '') {
       setCustomerOptions([])
     }
@@ -155,17 +161,52 @@ const ModalNew = ({
       setState((prevState) => ({
         ...prevState,
         mark: newCustomer.mark,
-        model: newCustomer.model
+        model: newCustomer.model,
+        regnumber: newCustomer.regnumber,
+        phone: newCustomer.phone
       }))
+      setActiveCustomer(newCustomer.id)
     }
     return null
   }
+
+  const onChangeCustomerUppercaseRussian = (e) => {
+    const { name, value } = e.target
+    setState((prevState) => ({
+      ...prevState,
+      [name]: value
+        .toUpperCase()
+        .replace(/\s/g, '')
+        .replace(/[^а-яё0-9]/i, '')
+    }))
+  }
+
   const sendData = () => {
     if (itemType === 'Развал-схождение') {
       if (state.phone === '') notify('Поле телефон пустое')
       else if (state.mark === '') notify('Поле марка авто пустое')
       else if (state.model === '') notify('Поле модель авто пустое')
-      else {
+      else if (!activeCustomer) {
+        dispatch(() => createRazval(state))
+        dispatch(() => createCust(state))
+        setState({
+          mark: '',
+          model: '',
+          phone: '',
+          employeeplace: '',
+          employee: '',
+          date: '',
+          time: '',
+          place: '',
+          dateofcreate: ''
+        })
+        setCustomerOptions([])
+        setStateId({
+          mark: '',
+          model: ''
+        })
+        setSearch()
+      } else {
         dispatch(() => createRazval(state))
         setState({
           mark: '',
@@ -189,7 +230,27 @@ const ModalNew = ({
       if (state.phone === '') notify('Поле телефон пустое')
       else if (state.mark === '') notify('Поле марка авто пустое')
       else if (state.model === '') notify('Поле модель авто пустое')
-      else {
+      else if (!activeCustomer) {
+        dispatch(() => createOil(state))
+        dispatch(() => createCust(state))
+        setState({
+          mark: '',
+          model: '',
+          phone: '',
+          employeeplace: '',
+          employee: '',
+          date: '',
+          time: '',
+          place: '',
+          dateofcreate: ''
+        })
+        setCustomerOptions([])
+        setStateId({
+          mark: '',
+          model: ''
+        })
+        setSearch()
+      } else {
         dispatch(() => createOil(state))
         setState({
           mark: '',
@@ -251,6 +312,7 @@ const ModalNew = ({
         employeeplace: '',
         employee: '',
         date: '',
+        regnumber: '',
         time: '',
         place: '',
         dateofcreate: ''
@@ -260,6 +322,26 @@ const ModalNew = ({
   const checkAccess = () => {
     setAccess(true)
     sendAccess()
+  }
+  const closeFunc = () => {
+    onClose()
+    setState({
+      mark: '',
+      model: '',
+      phone: '',
+      employeeplace: '',
+      employee: '',
+      date: '',
+      time: '',
+      place: '',
+      dateofcreate: ''
+    })
+    setCustomerOptions([])
+    setStateId({
+      mark: '',
+      model: ''
+    })
+    setSearch()
   }
   return (
     <div className="fixed z-10 inset-0 overflow-y-auto">
@@ -346,6 +428,25 @@ const ModalNew = ({
                       />
                     </div>
                   </div>
+                  <div className="mt-3 flex flex-col">
+                    <label
+                      className="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2"
+                      htmlFor="phone"
+                    >
+                      Гос. номер
+                    </label>
+                    <div className="flex-shrink w-full inline-block relative">
+                      <input
+                        className="block appearance-none w-full bg-grey-lighter border border-gray-300 focus:border-gray-500 focus:outline-none py-1 px-4 pr-8 rounded"
+                        type="text"
+                        placeholder="Русскими буквами, необязательное поле"
+                        value={state.regnumber}
+                        name="regnumber"
+                        id="regnumber"
+                        onChange={onChangeCustomerUppercaseRussian}
+                      />
+                    </div>
+                  </div>
                   {customerOptions.length >= 1 ? (
                     <div className="mt-4 flex flex-row">
                       <div className="w-full lg:w-auto p-2 text-xs text-gray-800 text-center border border-b block table-cell relative static">
@@ -386,15 +487,38 @@ const ModalNew = ({
                             </svg>
                           </div>
                         </div>
+                        {activeCustomer !== '' ? (
+                          <p className="text-left">✔ Вы выбрали клиента</p>
+                        ) : null}
                       </div>
-                      <div className="w-full lg:w-auto p-2 text-gray-800 text-center border border-b text-center flex items-ends">
-                        <button
-                          onClick={applyCustomer}
-                          type="button"
-                          className="py-1 px-3 bg-green-600 text-white text-xs hover:text-white rounded-lg"
-                        >
-                          Использовать
-                        </button>
+                      <div className="w-full lg:w-auto p-2 text-gray-800 text-center border border-b flex items-ends">
+                        {!search ? (
+                          <button
+                            onClick={() => notify('Выберите клиента')}
+                            type="button"
+                            className="py-1 px-3 bg-blue-600 text-white text-xs hover:text-white rounded-lg"
+                          >
+                            Выберите клиента
+                          </button>
+                        ) : null}
+                        {activeCustomer === '' && search ? (
+                          <button
+                            onClick={applyCustomer}
+                            type="button"
+                            className="py-1 px-3 bg-green-600 text-white text-xs hover:text-white rounded-lg"
+                          >
+                            Использовать
+                          </button>
+                        ) : null}
+                        {activeCustomer !== '' && search ? (
+                          <button
+                            onClick={() => setActiveCustomer('')}
+                            type="button"
+                            className="py-1 px-3 bg-red-600 text-white text-xs hover:text-white rounded-lg"
+                          >
+                            Сбросить
+                          </button>
+                        ) : null}
                       </div>
                     </div>
                   ) : null}
@@ -406,7 +530,7 @@ const ModalNew = ({
                       Марка авто
                     </label>
                     <input
-                      className="appearance-none block w-full bg-grey-lighter text-grey-darker border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-1 px-4 mb-3"
+                      className="appearance-none block w-full bg-grey-lighter text-grey-darker border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-1 px-4"
                       value={state.mark}
                       name="mark"
                       list="mark_list"
@@ -450,6 +574,26 @@ const ModalNew = ({
                       </datalist>
                     ) : null}
                   </div>
+                  {!activeCustomer &&
+                  customerOptions.length === 0 &&
+                  state.phone !== '' &&
+                  state.mark !== '' &&
+                  state.model !== '' ? (
+                    <p className="text-left py-1 px-2 bg-green-200 text-sm text-gray-900 rounded">
+                      Клиент в базе данных не найден. Будет создан новый клиент. Проверте введенные
+                      данные
+                    </p>
+                  ) : null}
+                  {customerOptions.length >= 1 &&
+                  !activeCustomer &&
+                  state.phone !== '' &&
+                  state.mark !== '' &&
+                  state.model !== '' ? (
+                    <p className="text-left py-1 px-2 bg-green-200 text-sm text-gray-900 rounded">
+                      Клиент не выбран. Если нужный клиент найден, выберите из списка. Иначе будет
+                      создан новый клиент
+                    </p>
+                  ) : null}
                 </div>
               </div>
             </div>
@@ -479,7 +623,7 @@ const ModalNew = ({
             <span className="mt-3 flex w-full rounded-md shadow-sm sm:mt-0 sm:w-auto">
               <button
                 type="button"
-                onClick={onClose}
+                onClick={closeFunc}
                 className="inline-flex justify-center w-full rounded-md border border-gray-300 px-4 py-2 bg-white text-base leading-6 font-medium text-gray-700 shadow-sm hover:text-gray-500 focus:outline-none focus:border-blue-300 focus:shadow-outline-blue transition ease-in-out duration-150 sm:text-sm sm:leading-5"
               >
                 Отмена

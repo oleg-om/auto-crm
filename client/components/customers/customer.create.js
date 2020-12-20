@@ -159,6 +159,17 @@ const CustomerCreate = (props) => {
     }))
   }
 
+  const onChangeCustomerUppercaseRussian = (e) => {
+    const { name, value } = e.target
+    setState((prevState) => ({
+      ...prevState,
+      [name]: value
+        .toUpperCase()
+        .replace(/\s/g, '')
+        .replace(/[^а-яё0-9]/i, '')
+    }))
+  }
+
   const sendData = () => {
     if (!state.mod) notify('Заполните поле Объем двигателя')
     if (!state.regnumber) notify('Заполните поле гос.номер')
@@ -373,7 +384,7 @@ const CustomerCreate = (props) => {
               placeholder="Введите гос. номер русскими буквами"
               autoComplete="off"
               required
-              onChange={onChangeCustomerUppercase}
+              onChange={onChangeCustomerUppercaseRussian}
             />
           </div>
           <div className="md:w-1/2 px-3 mb-6 md:mb-0 flex flex-col">

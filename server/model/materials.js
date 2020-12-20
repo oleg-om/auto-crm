@@ -11,20 +11,24 @@ const Material = new mongoose.Schema({
     required: false
   },
   price: {
-    type: String,
-    required: false
+    type: Number,
+    required: true
   },
   quantity: {
-    type: String,
+    type: Number,
     required: false
   },
-  phone: {
+  type: {
     type: String,
-    required: false
+    required: true
+  },
+  category: {
+    type: String,
+    required: true
   },
   date: {
     type: String,
-    required: false
+    default: new Date()
   },
   id: {
     type: String,

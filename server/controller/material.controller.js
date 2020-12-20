@@ -26,7 +26,17 @@ exports.create = async (req, res) => {
   return res.json({ status: 'ok', data: material })
 }
 
+exports.import = async (req, res) => {
+  await req.body.forEach((it) => new Material(it).save())
+  return res.json({ status: 'ok', data: req.body })
+}
+
 exports.delete = async (req, res) => {
   await Material.deleteOne({ id: req.params.id })
   return res.json({ status: 'ok', id: req.params.id })
+}
+
+exports.deleteAll = async (req, res) => {
+  await Material.deleteMany({})
+  return res.json({ status: 'ok' })
 }

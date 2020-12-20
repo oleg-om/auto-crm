@@ -39,6 +39,15 @@ import RazvalList from '../scenes/Razval/Razval.list'
 import RazvalNew from '../scenes/Razval/Razval.create'
 import RazvalEdit from '../scenes/Razval/Razval.edit'
 import SettingEdit from '../scenes/Settings/Settings'
+import MaterialList from '../scenes/Materials/Materials.list'
+import MaterialNew from '../scenes/Materials/Materials.create'
+import MaterialEdit from '../scenes/Materials/Materials.edit'
+import ShinomontazhpriceList from '../scenes/Shinomotazh.prices/Shinomotazh.prices.list'
+import ShinomontazhpriceNew from '../scenes/Shinomotazh.prices/Shinomotazh.prices.create'
+import ShinomontazhpriceEdit from '../scenes/Shinomotazh.prices/Shinomotazh.prices.edit'
+import ShinomontazhsList from '../scenes/Shinomontazhs/Shinomontazhs.list'
+import ShinomontazhsNew from '../scenes/Shinomontazhs/Shinomontazhs.work.create'
+import ShinomontazhEditFull from '../scenes/Shinomontazhs/Shinomontazhs.edit'
 
 import Startup from './startup'
 
@@ -165,6 +174,19 @@ const RootComponent = (props) => {
             <PrivateRoute exact path="/razval/create" component={RazvalNew} />
             <PrivateRoute exact path="/razval/edit/:id" component={RazvalEdit} />
             <PrivateRoute exact path="/settings" component={SettingEdit} />
+            <AdminRoute exact path="/material/list" component={MaterialList} />
+            <PrivateRoute exact path="/material/create" component={MaterialNew} />
+            <PrivateRoute exact path="/material/edit/:id" component={MaterialEdit} />
+            <AdminRoute exact path="/shinomontazhprice/list" component={ShinomontazhpriceList} />
+            <PrivateRoute exact path="/shinomontazhprice/create" component={ShinomontazhpriceNew} />
+            <PrivateRoute
+              exact
+              path="/shinomontazhprice/edit/:id"
+              component={ShinomontazhpriceEdit}
+            />
+            <PrivateRoute exact path="/shinomontazh/list" component={ShinomontazhsList} />
+            <PrivateRoute exact path="/shinomontazh/create" component={ShinomontazhsNew} />
+            <PrivateRoute exact path="/shinomontazh/edit/:id" component={ShinomontazhEditFull} />
             <Route component={() => <NotFound />} />
           </Switch>
         </Startup>

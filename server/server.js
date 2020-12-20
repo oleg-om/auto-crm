@@ -29,6 +29,8 @@ const razvalRoutes = require('./routes/api/razval.routes')
 const oilRoutes = require('./routes/api/oil.routes')
 const settingRoutes = require('./routes/api/setting.routes')
 const materialRoutes = require('./routes/api/material.routes')
+const shinomotazhpriceRoutes = require('./routes/api/shinomotazh.price.routes')
+const shinomotazhRoutes = require('./routes/api/shinomotazh.routes')
 
 const Root = () => ''
 
@@ -95,6 +97,8 @@ server.use('/api/v1', razvalRoutes)
 server.use('/api/v1', oilRoutes)
 server.use('/api/v1', settingRoutes)
 server.use('/api/v1', materialRoutes)
+server.use('/api/v1', shinomotazhpriceRoutes)
+server.use('/api/v1', shinomotazhRoutes)
 
 server.get('/api/v1/auth', async (req, res) => {
   try {

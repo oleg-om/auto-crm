@@ -120,8 +120,9 @@ const CustomerList = () => {
                   className={cx(
                     'block appearance-none w-full bg-grey-lighter border border-gray-300 focus:border-gray-500 focus:outline-none py-1 px-4 pr-8 rounded',
                     {
-                      'border-red-300 focus:border-red-500':
-                        showSearch === true && search.phone.length >= 1
+                      'border-red-300 focus:border-red-500': search.phone
+                        ? showSearch === true && search.phone.length >= 1
+                        : null
                     }
                   )}
                   format="+7 (###) ###-##-##"
@@ -162,8 +163,9 @@ const CustomerList = () => {
                   className={cx(
                     'block appearance-none w-full bg-grey-lighter border border-gray-300 focus:border-gray-500 focus:outline-none py-1 px-4 pr-8 rounded',
                     {
-                      'border-red-300 focus:border-red-500':
-                        search.vinnumber.length >= 1 && showSearch === true
+                      'border-red-300 focus:border-red-500': search.vinnumber
+                        ? search.vinnumber.length >= 1 && showSearch === true
+                        : null
                     }
                   )}
                   name="vinnumber"
@@ -201,8 +203,9 @@ const CustomerList = () => {
                   className={cx(
                     'block appearance-none w-full bg-grey-lighter border border-gray-300 focus:border-gray-500 focus:outline-none py-1 px-4 pr-8 rounded',
                     {
-                      'border-red-300 focus:border-red-500':
-                        search.regnumber.length >= 1 && showSearch === true
+                      'border-red-300 focus:border-red-500': search.regnumber
+                        ? search.regnumber.length >= 1 && showSearch === true
+                        : null
                     }
                   )}
                   name="regnumber"

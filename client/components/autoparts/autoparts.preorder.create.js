@@ -3,7 +3,6 @@ import { Link, useHistory } from 'react-router-dom'
 import { useSelector } from 'react-redux'
 import { toast } from 'react-toastify'
 import NumberFormat from 'react-number-format'
-import cx from 'classnames'
 import 'react-toastify/dist/ReactToastify.css'
 import autopartsList from '../../lists/autoparts-list'
 
@@ -33,7 +32,7 @@ const AutopartsCreate = (props) => {
     mod: ''
   })
   const [inputFields, setInputFields] = useState([{ autopartItem: '' }])
-
+  const [activeCustomer, setActiveCustomer] = useState('')
   const [state, setState] = useState({
     employee: auth.name,
     place: auth.place,
@@ -57,7 +56,8 @@ const AutopartsCreate = (props) => {
     gen: '',
     mod: '',
     name: '',
-    phone: ''
+    phone: '',
+    idOfItem: ''
   })
 
   useEffect(() => {
@@ -164,7 +164,8 @@ const AutopartsCreate = (props) => {
         gen: newCustomer.gen,
         mod: newCustomer.mod,
         name: newCustomer.name,
-        phone: newCustomer.phone
+        phone: newCustomer.phone,
+        idOfItem: newCustomer.id
       }))
       setState((prevState) => ({
         ...prevState,
@@ -177,6 +178,7 @@ const AutopartsCreate = (props) => {
         name: newCustomer.name,
         phone: newCustomer.phone
       }))
+      setActiveCustomer(newCustomer.id)
     }
     return null
   }
@@ -297,6 +299,7 @@ const AutopartsCreate = (props) => {
       mod: value
     }))
   }
+  console.log(customer)
   const sendData = () => {
     const checkCustomer =
       customerList !== []
@@ -343,12 +346,15 @@ const AutopartsCreate = (props) => {
       ) {
         props.create(state)
         history.push('/autoparts/order/list')
-        notify('Запись добавлена')
+        notify('Заказ добавлен')
+      } else if (checkCustomer !== undefined && activeCustomer !== '') {
+        props.openAndUpdate(activeCustomer, customer, state)
       } else {
         props.create(state)
         props.createCust(customer)
         history.push('/autoparts/order/list')
-        notify('Запись добавлена, создан новый клиент')
+        notify('Заказ добавлен')
+        notify('Создан новый клиент')
       }
     }
   }
@@ -576,20 +582,48 @@ const AutopartsCreate = (props) => {
                       </div>
                     </div>
                   </td>
-                  <td className="w-full lg:w-auto p-2 text-gray-800 text-center border border-b text-center block table-cell relative static">
-                    <button
-                      onClick={applyCustomer}
-                      type="button"
-                      className={cx('py-1 px-3 text-white text-xs hover:text-white rounded-lg', {
-                        'bg-green-600 hover:bg-green-700': customerOptions.length >= 1,
-                        'bg-gray-500': customerOptions.length < 1
-                      })}
-                    >
-                      Использовать
-                    </button>
+                  <td className="w-full lg:w-auto p-2 text-gray-800 text-center border border-b block table-cell relative static">
+                    {customerOptions.length < 1 && !customer.idOfItem && !search ? (
+                      <button
+                        type="button"
+                        className="py-1 px-3 text-white text-xs bg-gray-500 hover:text-white rounded-lg"
+                      >
+                        Не найден
+                      </button>
+                    ) : null}
+                    {customerOptions.length >= 1 && activeCustomer === '' && !search ? (
+                      <button
+                        onClick={applyCustomer}
+                        type="button"
+                        className="py-1 px-3 text-white text-xs bg-blue-500 hover:text-white rounded-lg"
+                      >
+                        Выберите клиента
+                      </button>
+                    ) : null}
+                    {customerOptions.length >= 1 && activeCustomer === '' && search ? (
+                      <button
+                        onClick={applyCustomer}
+                        type="button"
+                        className="py-1 px-3 text-white text-xs hover:text-white rounded-lg bg-green-600 hover:bg-green-700"
+                      >
+                        Использовать
+                      </button>
+                    ) : null}
+                    {activeCustomer !== '' && customer.idOfItem && search ? (
+                      <button
+                        onClick={() => setActiveCustomer('')}
+                        type="button"
+                        className="py-1 px-3 text-white text-xs hover:text-white rounded-lg bg-red-600 hover:bg-red-700"
+                      >
+                        Сбросить
+                      </button>
+                    ) : null}
                   </td>
                 </tr>
               </tbody>
+              {customerOptions.length >= 1 && customer.idOfItem && activeCustomer ? (
+                <p className="text-left p-1">✔ Вы выбрали клиента</p>
+              ) : null}
             </table>
           </div>
         </div>

@@ -8,5 +8,7 @@ router.get('/material/:id', materialController.getOne)
 router.post('/material/', materialController.create)
 router.patch('/material/:id', materialController.update)
 router.delete('/material/:id', materialController.delete)
+router.post('/materialimport/', materialController.import)
+router.delete('/materialdrop/', materialController.deleteAll)
 
 module.exports = router

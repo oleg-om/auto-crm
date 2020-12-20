@@ -33,10 +33,10 @@ const AutopartUpdate = (props) => {
     .getMinutes()
     .toString()
     .replace(/^(\d)$/, '0$1')}`
-
+  const auth = useSelector((s) => s.auth)
   const [state, setState] = useState({
     status: props.status,
-    process: props.process,
+    process: props.process ? props.process : auth.name,
     prepay: props.prepay,
     commentOrder: props.commentOrder,
     order: props.order.length !== 0 ? props.order : [{ autopartItem: '' }],
@@ -304,7 +304,7 @@ const AutopartUpdate = (props) => {
                   name="process"
                   onChange={onChange}
                 >
-                  <option value="" disabled selected hidden className="text-gray-800">
+                  <option value="" disabled hidden className="text-gray-800">
                     Выберите сотрудника
                   </option>
                   {employeeListLocal

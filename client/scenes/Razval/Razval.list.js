@@ -6,6 +6,7 @@ import RazvalRow from '../../components/razval/razval'
 import { deleteEmployee } from '../../redux/reducers/employees'
 import { updateRazval, createRazval, deleteRazval } from '../../redux/reducers/razvals'
 import { createOil, updateOil, deleteOil } from '../../redux/reducers/oils'
+import { createCustomer } from '../../redux/reducers/customers'
 import Navbar from '../../components/Navbar'
 import RazvalSidebar from './Razval.sidebar'
 import Modal from '../../components/Modal.delete'
@@ -114,6 +115,11 @@ const RazvalList = () => {
     notify('Запись на замену масла добавлена')
     socket.emit('new oil')
     setItemId('')
+  }
+
+  const createCust = (name) => {
+    dispatch(createCustomer(name))
+    notify('Создан новый клиент')
   }
 
   const deleteOilLocal = (id) => {
@@ -238,6 +244,7 @@ const RazvalList = () => {
           timeActive={activeTime}
           activeAdress={activeAdress}
           createIsOpen={createIsOpen}
+          createCust={createCust}
         />
         <ModalEdit
           open={editIsOpen}

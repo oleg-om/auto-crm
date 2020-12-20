@@ -19,6 +19,7 @@ const AutopartEditSimple = () => {
     dispatch(updateAutopart(idOfItem, name))
     socket.emit('new autopart')
   }
+  const settings = useSelector((s) => s.settings.list)
   return (
     <div>
       <Navbar />
@@ -31,6 +32,7 @@ const AutopartEditSimple = () => {
             employeeList={employeeList.find((item) => item.id === it.employee)}
             processList={employeeList.find((item) => item.id === it.process)}
             placesList={placesList.find((item) => item.id === it.place)}
+            settings={settings}
           />
         ))}
       </div>

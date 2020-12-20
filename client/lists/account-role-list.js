@@ -4,5 +4,6 @@ module.exports = [
   { name: 'Бухгалтер', value: 'bookkeeper' },
   { name: 'Администратор', value: 'admin' },
   { name: 'Развал-схождение', value: 'razval' },
-  { name: 'Начальник', value: 'boss' }
+  { name: 'Начальник', value: 'boss' },
+  { name: 'Работник шиномонтажа', value: 'shinomontazh' }
 ]

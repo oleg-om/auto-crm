@@ -14,6 +14,8 @@ import razvals from './razvals'
 import oils from './oils'
 import settings from './settings'
 import materials from './materials'
+import shinomontazhprices from './shinomotazh.prices'
+import shinomontazhs from './shinomontazhs'
 
 const createRootReducer = (history) =>
   combineReducers({
@@ -30,7 +32,9 @@ const createRootReducer = (history) =>
     razvals,
     oils,
     settings,
-    materials
+    materials,
+    shinomontazhprices,
+    shinomontazhs
   })
 
 export default createRootReducer
