@@ -110,9 +110,9 @@ const AutopartViewOrder = (props) => {
                   <li className="whitespace-normal">
                     <b>Авто:</b> {props.mark} {props.model} {props.gen} {props.mod}
                   </li>
-                  <li>
+                  {props.regnumber ? <li>
                     <b>Гос. номер:</b> {props.regnumber}
-                  </li>
+                  </li> : null}
                   <li>
                     <b>VIN:</b> {props.vinnumber}
                   </li>

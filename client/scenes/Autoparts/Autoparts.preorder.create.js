@@ -15,7 +15,6 @@ const AutopartsNew = () => {
   const dispatch = useDispatch()
   const create = (name) => {
     dispatch(createAutopart(name))
-    socket.emit('new autopart')
   }
   const history = useHistory()
   toast.configure()

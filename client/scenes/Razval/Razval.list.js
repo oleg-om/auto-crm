@@ -88,7 +88,7 @@ const RazvalList = () => {
     setIsOpen(false)
     setEditIsOpen(false)
     notify('Данные обновлены')
-    socket.emit('new razval')
+    socket.emit('edit razval')
     setItemId('')
   }
 
@@ -97,7 +97,7 @@ const RazvalList = () => {
     setIsOpen(false)
     setEditIsOpen(false)
     notify('Данные обновлены')
-    socket.emit('new oil')
+    socket.emit('edit oil')
     setItemId('')
   }
 
@@ -105,7 +105,7 @@ const RazvalList = () => {
     dispatch(createRazval(name))
     setCreateIsOpen(false)
     notify('Запись на развал-схождение добавлена')
-    socket.emit('new razval')
+    // socket.emit('new razval', { name })
     setItemId('')
   }
 
@@ -113,7 +113,7 @@ const RazvalList = () => {
     dispatch(createOil(name))
     setCreateIsOpen(false)
     notify('Запись на замену масла добавлена')
-    socket.emit('new oil')
+    // socket.emit('new oil')
     setItemId('')
   }
 
@@ -126,7 +126,7 @@ const RazvalList = () => {
     dispatch(deleteOil(id))
     setDeleteIsOpen(false)
     notify('Запись удалена')
-    socket.emit('new oil')
+    socket.emit('edit oil')
     setItemId('')
   }
   const deleteRazvalLocal = (id) => {
@@ -135,14 +135,14 @@ const RazvalList = () => {
       setDeleteIsOpen(false)
       setEditIsOpen(false)
       notify('Запись удалена')
-      socket.emit('new razval')
+      socket.emit('edit razval')
       setItemId('')
     } else if (itemType === 'Замена масла') {
       dispatch(deleteOil(id))
       setDeleteIsOpen(false)
       setEditIsOpen(false)
       notify('Запись удалена')
-      socket.emit('new oil')
+      socket.emit('edit oil')
       setItemId('')
     }
   }

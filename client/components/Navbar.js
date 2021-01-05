@@ -35,13 +35,31 @@ const Navbar = () => {
   }, [])
 
   useEffect(() => {
+    socket.on('update edited razval', function () {
+      dispatch(getRazvals())
+    })
+  }, [])
+
+  useEffect(() => {
     socket.on('update oil', function () {
       dispatch(getOils())
     })
   }, [])
 
   useEffect(() => {
+    socket.on('update edited oil', function () {
+      dispatch(getOils())
+    })
+  }, [])
+
+  useEffect(() => {
     socket.on('update autopart', function () {
+      dispatch(getAutoparts())
+    })
+  }, [])
+
+  useEffect(() => {
+    socket.on('update edited autopart', function () {
       dispatch(getAutoparts())
     })
   }, [])

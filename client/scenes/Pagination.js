@@ -9,7 +9,7 @@ const Pagination = ({ postsPerPage, totalPosts, paginate, currentPage, currentPo
   }
 
   return (
-    <nav className="px-5 py-5 bg-white border-t flex flex-col xs:flex-row items-center xs:justify-between">
+    <nav className="px-5 py-5 bg-white border-t flex flex-col xs:flex-row items-center xs:justify-between rounded-lg shadow">
       <ul className="flex">
         <button
           type="button"

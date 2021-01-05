@@ -49,6 +49,7 @@ const ModalNew = ({
     date: '',
     time: '',
     place: '',
+    name: '',
     dateofcreate: ''
   })
   const [access, setAccess] = useState()
@@ -79,7 +80,11 @@ const ModalNew = ({
   useEffect(() => {
     if (state.phone !== '' || state.regnumber !== '') {
       setCustomerOptions(
-        customerList.filter((it) => it.phone === state.phone || it.regnumber === state.regnumber)
+        customerList.filter(
+          (it) =>
+            (it.phone === state.phone && it.phone !== '') ||
+            (it.regnumber === state.regnumber && it.regnumber !== '')
+        )
       )
     } else if (state.phone === '' || state.regnumber === '' || state.vinnumber === '') {
       setCustomerOptions([])
@@ -163,6 +168,7 @@ const ModalNew = ({
         mark: newCustomer.mark,
         model: newCustomer.model,
         regnumber: newCustomer.regnumber,
+        name: newCustomer.name,
         phone: newCustomer.phone
       }))
       setActiveCustomer(newCustomer.id)
@@ -198,6 +204,7 @@ const ModalNew = ({
           date: '',
           time: '',
           place: '',
+          name: '',
           dateofcreate: ''
         })
         setCustomerOptions([])
@@ -206,6 +213,7 @@ const ModalNew = ({
           model: ''
         })
         setSearch()
+        setActiveCustomer('')
       } else {
         dispatch(() => createRazval(state))
         setState({
@@ -217,6 +225,7 @@ const ModalNew = ({
           date: '',
           time: '',
           place: '',
+          name: '',
           dateofcreate: ''
         })
         setCustomerOptions([])
@@ -225,6 +234,7 @@ const ModalNew = ({
           model: ''
         })
         setSearch()
+        setActiveCustomer('')
       }
     } else if (itemType === 'Замена масла') {
       if (state.phone === '') notify('Поле телефон пустое')
@@ -242,6 +252,7 @@ const ModalNew = ({
           date: '',
           time: '',
           place: '',
+          name: '',
           dateofcreate: ''
         })
         setCustomerOptions([])
@@ -261,6 +272,7 @@ const ModalNew = ({
           date: '',
           time: '',
           place: '',
+          name: '',
           dateofcreate: ''
         })
         setCustomerOptions([])
@@ -293,6 +305,7 @@ const ModalNew = ({
         date: '',
         time: '',
         place: '',
+        name: '',
         dateofcreate: ''
       })
     } else if (itemType === 'Замена масла') {
@@ -315,6 +328,7 @@ const ModalNew = ({
         regnumber: '',
         time: '',
         place: '',
+        name: '',
         dateofcreate: ''
       })
     }
@@ -334,6 +348,7 @@ const ModalNew = ({
       date: '',
       time: '',
       place: '',
+      name: '',
       dateofcreate: ''
     })
     setCustomerOptions([])
@@ -414,6 +429,78 @@ const ModalNew = ({
                       className="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2"
                       htmlFor="phone"
                     >
+                      Гос. номер
+                    </label>
+                    <div className="flex-shrink w-full inline-block relative">
+                      <input
+                        className="block appearance-none w-full bg-grey-lighter border border-gray-300 focus:border-gray-500 focus:outline-none py-1 px-4 pr-8 rounded"
+                        type="text"
+                        placeholder="Русскими буквами, необязательное поле"
+                        value={state.regnumber}
+                        name="regnumber"
+                        id="regnumber"
+                        onChange={onChangeCustomerUppercaseRussian}
+                      />
+                    </div>
+                  </div>
+
+                  <div className="mt-3 flex flex-col">
+                    <label
+                      className="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2"
+                      htmlFor="grid-first-name"
+                    >
+                      Марка авто
+                    </label>
+                    <input
+                      className="appearance-none block w-full bg-grey-lighter text-grey-darker border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-1 px-4"
+                      value={state.mark}
+                      name="mark"
+                      list="mark_list"
+                      placeholder="Введите бренд"
+                      autoComplete="off"
+                      required
+                      onChange={onChangeMark}
+                    />
+                    <datalist id="mark_list">
+                      {options.mark.map((it) => (
+                        <option value={it.name} label={it.name_rus} key={it.id_car_mark} />
+                      ))}
+                    </datalist>
+                  </div>
+                  <div className="mt-3 flex flex-col">
+                    <label
+                      className="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2"
+                      htmlFor="grid-first-name"
+                    >
+                      Модель авто
+                    </label>
+                    <input
+                      className="appearance-none block w-full bg-grey-lighter text-grey-darker border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-1 px-4"
+                      value={state.model}
+                      name="model"
+                      id="model"
+                      list="model_list"
+                      placeholder={
+                        state.mark.length < 2 ? 'Сначала выберете марку' : 'Выберите модель'
+                      }
+                      disabled={state.mark.length < 2}
+                      autoComplete="off"
+                      required
+                      onChange={onChangeModel}
+                    />
+                    {stateId.mark ? (
+                      <datalist id="model_list">
+                        {options.model.map((it, index) => (
+                          <option key={index} value={it.name} label={it.name_rus} />
+                        ))}
+                      </datalist>
+                    ) : null}
+                  </div>
+                  <div className="mt-3 flex flex-col">
+                    <label
+                      className="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2"
+                      htmlFor="phone"
+                    >
                       Телефон
                     </label>
                     <div className="flex-shrink w-full inline-block relative">
@@ -433,17 +520,17 @@ const ModalNew = ({
                       className="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2"
                       htmlFor="phone"
                     >
-                      Гос. номер
+                      Имя
                     </label>
                     <div className="flex-shrink w-full inline-block relative">
                       <input
                         className="block appearance-none w-full bg-grey-lighter border border-gray-300 focus:border-gray-500 focus:outline-none py-1 px-4 pr-8 rounded"
                         type="text"
-                        placeholder="Русскими буквами, необязательное поле"
-                        value={state.regnumber}
-                        name="regnumber"
-                        id="regnumber"
-                        onChange={onChangeCustomerUppercaseRussian}
+                        name="name"
+                        id="name"
+                        placeholder="Имя клиента"
+                        value={state.name}
+                        onChange={onChange}
                       />
                     </div>
                   </div>
@@ -522,64 +609,12 @@ const ModalNew = ({
                       </div>
                     </div>
                   ) : null}
-                  <div className="mt-3 flex flex-col">
-                    <label
-                      className="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2"
-                      htmlFor="grid-first-name"
-                    >
-                      Марка авто
-                    </label>
-                    <input
-                      className="appearance-none block w-full bg-grey-lighter text-grey-darker border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-1 px-4"
-                      value={state.mark}
-                      name="mark"
-                      list="mark_list"
-                      placeholder="Введите бренд"
-                      autoComplete="off"
-                      required
-                      onChange={onChangeMark}
-                    />
-                    <datalist id="mark_list">
-                      {options.mark.map((it) => (
-                        <option value={it.name} label={it.name_rus} key={it.id_car_mark} />
-                      ))}
-                    </datalist>
-                  </div>
-                  <div className="mt-3 flex flex-col">
-                    <label
-                      className="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2"
-                      htmlFor="grid-first-name"
-                    >
-                      Модель авто
-                    </label>
-                    <input
-                      className="appearance-none block w-full bg-grey-lighter text-grey-darker border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-1 px-4 mb-3"
-                      value={state.model}
-                      name="model"
-                      id="model"
-                      list="model_list"
-                      placeholder={
-                        state.mark.length < 2 ? 'Сначала выберете марку' : 'Выберите модель'
-                      }
-                      disabled={state.mark.length < 2}
-                      autoComplete="off"
-                      required
-                      onChange={onChangeModel}
-                    />
-                    {stateId.mark ? (
-                      <datalist id="model_list">
-                        {options.model.map((it, index) => (
-                          <option key={index} value={it.name} label={it.name_rus} />
-                        ))}
-                      </datalist>
-                    ) : null}
-                  </div>
                   {!activeCustomer &&
                   customerOptions.length === 0 &&
                   state.phone !== '' &&
                   state.mark !== '' &&
                   state.model !== '' ? (
-                    <p className="text-left py-1 px-2 bg-green-200 text-sm text-gray-900 rounded">
+                    <p className="text-left py-1 mt-3 px-2 bg-green-200 text-sm text-gray-900 rounded">
                       Клиент в базе данных не найден. Будет создан новый клиент. Проверте введенные
                       данные
                     </p>
@@ -589,7 +624,7 @@ const ModalNew = ({
                   state.phone !== '' &&
                   state.mark !== '' &&
                   state.model !== '' ? (
-                    <p className="text-left py-1 px-2 bg-green-200 text-sm text-gray-900 rounded">
+                    <p className="text-left py-1 mt-3 px-2 bg-green-200 text-sm text-gray-900 rounded">
                       Клиент не выбран. Если нужный клиент найден, выберите из списка. Иначе будет
                       создан новый клиент
                     </p>

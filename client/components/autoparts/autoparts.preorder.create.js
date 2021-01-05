@@ -299,7 +299,7 @@ const AutopartsCreate = (props) => {
       mod: value
     }))
   }
-  console.log(customer)
+
   const sendData = () => {
     const checkCustomer =
       customerList !== []
@@ -315,8 +315,8 @@ const AutopartsCreate = (props) => {
           }
     if (!state.employee) notify('Заполните поле Принял заказ')
     if (!state.place) notify('Заполните поле Заказ принят на точке')
-    if (!state.regnumber) notify('Заполните поле гос.номер')
     if (!state.vinnumber) notify('Заполните поле VIN номер')
+    if (!state.regnumber) notify('Заполните поле Гос. номер')
     if (!state.mark) notify('Укажите марку авто')
     if (!state.model) notify('Укажите модель авто')
     if (!state.gen) notify('Укажите год авто')
@@ -325,8 +325,8 @@ const AutopartsCreate = (props) => {
     else if (
       state.employee &&
       state.place &&
-      state.regnumber &&
       state.vinnumber &&
+      state.regnumber &&
       state.mark &&
       state.model &&
       state.gen &&

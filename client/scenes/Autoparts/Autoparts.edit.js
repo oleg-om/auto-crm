@@ -16,7 +16,7 @@ const AutopartEditFull = () => {
 
   const updateAutopartLocal = (idOfItem, name) => {
     dispatch(updateAutopart(idOfItem, name))
-    socket.emit('new autopart')
+    socket.emit('edit autopart')
   }
   return (
     <div>

@@ -1,4 +1,7 @@
 import { GET_RAZVALS, CREATE_RAZVAL, UPDATE_RAZVAL, DELETE_RAZVAL } from '../actions/razvals'
+import { socket } from '../sockets/socketReceivers'
+
+socket.connect()
 
 const initialState = {
   list: []
@@ -53,6 +56,7 @@ export function createRazval(name) {
     })
       .then((r) => r.json())
       .then(({ data: razval }) => {
+        socket.emit('new razval', { razval })
         dispatch({ type: CREATE_RAZVAL, razval })
       })
   }

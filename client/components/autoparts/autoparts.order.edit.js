@@ -237,7 +237,6 @@ const AutopartsEdit = (props) => {
   const sendData = () => {
     if (!state.employee) notify('Заполните поле Принял заказ')
     if (!state.place) notify('Заполните поле Заказ принят на точке')
-    if (!state.regnumber) notify('Заполните поле гос.номер')
     if (!state.vinnumber) notify('Заполните поле VIN номер')
     if (!state.mark) notify('Укажите марку авто')
     if (!state.model) notify('Укажите модель авто')
@@ -247,7 +246,6 @@ const AutopartsEdit = (props) => {
     else if (
       state.employee &&
       state.place &&
-      state.regnumber &&
       state.vinnumber &&
       state.mark &&
       state.model &&

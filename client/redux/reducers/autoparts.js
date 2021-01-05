@@ -4,6 +4,9 @@ import {
   UPDATE_AUTOPART_STATUS,
   UPDATE_AUTOPART
 } from '../actions/autoparts'
+import { socket } from '../sockets/socketReceivers'
+
+socket.connect()
 
 const initialState = {
   list: []
@@ -70,6 +73,7 @@ export function createAutopart(name) {
     })
       .then((r) => r.json())
       .then(({ data: autopart }) => {
+        socket.emit('new autopart', { autopart })
         dispatch({ type: CREATE_AUTOPART, autopart })
       })
   }

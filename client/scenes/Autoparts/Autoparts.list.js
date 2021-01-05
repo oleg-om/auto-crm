@@ -422,8 +422,8 @@ const AutopartsList = () => {
             </button>
           </div>
         ) : null}
-        <div className="overflow-x-auto rounded-lg overflow-y-auto relative lg:my-3 mt-1 lg:shadow lg:px-4">
-          <table className="border-collapse w-full">
+        <div className="mx-auto px-4">
+          <table className="border-collapse w-full rounded-lg shadow">
             <thead>
               <tr>
                 <th className="p-3 font-bold uppercase bg-gray-100 text-gray-600 border border-gray-300 hidden lg:table-cell">
@@ -508,7 +508,7 @@ const AutopartsList = () => {
             </div>
           ) : null}
         </div>
-        <div className="overflow-x-auto mb-2 rounded-lg shadow overflow-y-auto relative mt-3 md:bg-gray-300 sm:bg-gray-300 lg:px-4">
+        <div className="mb-2 rounded-lg relative mt-3 px-4">
           {showSearch === false ? (
             <Pagination
               postsPerPage={postsPerPage}

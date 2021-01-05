@@ -17,7 +17,7 @@ const AutopartEditSimple = () => {
   const placesList = useSelector((s) => s.places.list)
   const updateAutopartLocal = (idOfItem, name) => {
     dispatch(updateAutopart(idOfItem, name))
-    socket.emit('new autopart')
+    socket.emit('edit autopart')
   }
   const settings = useSelector((s) => s.settings.list)
   return (

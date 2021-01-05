@@ -257,18 +257,34 @@ io.on('connection', (socket) => {
     delete userNames[id]
   })
 
-  socket.on('new autopart', () => {
-    io.emit('update autopart')
+  socket.on('new autopart', ({ autopart }) => {
+    io.emit('update autopart', autopart)
     console.log('new autopart order')
   })
 
-  socket.on('new razval', () => {
-    io.emit('update razval')
+  socket.on('edit autopart', () => {
+    io.emit('update edited autopart')
+    console.log('edited autopart order')
+  })
+
+  socket.on('new razval', ({ razval }) => {
+    // io.emit('update razval', { result: razval })
+    io.emit('update razval', razval)
     console.log('new razval order')
   })
 
-  socket.on('new oil', () => {
-    io.emit('update oil')
+  socket.on('edit razval', () => {
+    io.emit('update edited razval')
+    console.log('new razval order')
+  })
+
+  socket.on('new oil', ({ oil }) => {
+    io.emit('update oil', oil)
+    console.log('new oil order')
+  })
+
+  socket.on('edit oil', () => {
+    io.emit('update edited oil')
     console.log('new oil order')
   })
 })

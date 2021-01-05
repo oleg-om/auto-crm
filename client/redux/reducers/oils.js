@@ -1,4 +1,7 @@
 import { GET_OILS, CREATE_OIL, UPDATE_OIL, DELETE_OIL } from '../actions/oils'
+import { socket } from '../sockets/socketReceivers'
+
+socket.connect()
 
 const initialState = {
   list: []
@@ -53,6 +56,7 @@ export function createOil(name) {
     })
       .then((r) => r.json())
       .then(({ data: oil }) => {
+        socket.emit('new oil', { oil })
         dispatch({ type: CREATE_OIL, oil })
       })
   }

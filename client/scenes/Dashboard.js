@@ -63,7 +63,7 @@ const Dashboard = () => {
             auth.roles.includes('autopartsimple') ||
             auth.roles.includes('boss') ||
             auth.roles.includes('admin') ? (
-              <div className="md:w-1/2 px-3 mb-6 md:mb-0 flex flex-col">
+              <div className="md:w-1/2 px-3 mb-6 flex flex-col">
                 <Link
                   to="/autoparts/order/list"
                   className="rounded-lg shadow-lg bg-gradient-to-r from-teal-400 to-blue-500 h-full"
@@ -72,7 +72,7 @@ const Dashboard = () => {
                     <div className="w-1/2 px-3">
                       <h2 className="text-3xl text-white font-bold">Автозапчасти</h2>
                       <p className="my-2 text-white">
-                        Возможность создавать, редактировать заказы по автозпчастям
+                        Возможность создавать, редактировать заказы по автозапчастям
                       </p>
                       <button
                         type="button"
@@ -92,7 +92,7 @@ const Dashboard = () => {
             {auth.roles.includes('razval') ||
             auth.roles.includes('boss') ||
             auth.roles.includes('admin') ? (
-              <div className="md:w-1/2 px-3 mb-6 md:mb-0 flex flex-col">
+              <div className="md:w-1/2 px-3 mb-6 flex flex-col">
                 <Link
                   to="/razval/list"
                   className="rounded-lg shadow-lg bg-gradient-to-r from-green-500 to-green-400 h-full"
@@ -118,7 +118,7 @@ const Dashboard = () => {
               </div>
             ) : null}
 
-            <div className="md:w-1/2 px-3 mb-6 mt-6 md:mb-0 flex flex-col">
+            <div className="md:w-1/2 px-3 mb-6 flex flex-col">
               <Link
                 to="/customer/list"
                 className="rounded-lg shadow-lg bg-gradient-to-r from-purple-600 to-purple-900 h-full"
@@ -144,7 +144,7 @@ const Dashboard = () => {
             </div>
 
             {auth.roles.includes('admin') || auth.roles.includes('boss') ? (
-              <div className="md:w-1/2 px-3 mb-6 mt-6 md:mb-0 flex flex-col">
+              <div className="md:w-1/2 px-3 mb-6 flex flex-col">
                 <Link
                   to="/place/list"
                   className="rounded-lg shadow-lg bg-gradient-to-r from-orange-400 to-red-500 h-full"
@@ -170,7 +170,7 @@ const Dashboard = () => {
               </div>
             ) : null}
             {auth.roles.includes('boss') ? (
-              <div className="md:w-1/2 px-3 mb-6 mt-6 md:mb-0 flex flex-col">
+              <div className="md:w-1/2 px-3 mb-6 flex flex-col">
                 <Link
                   to="/boss"
                   className="rounded-lg shadow-lg bg-gradient-to-r from-red-400 to-yellow-300 h-full"
@@ -194,7 +194,7 @@ const Dashboard = () => {
               </div>
             ) : null}
             {auth.roles.includes('hranenie') ? (
-              <div className="md:w-1/2 px-3 mb-6 mt-6 md:mb-0 flex flex-col">
+              <div className="md:w-1/2 px-3 mb-6 flex flex-col">
                 <Link
                   to="/hranenie"
                   className="rounded-lg shadow-lg bg-gradient-to-r from-green-600 to-green-300 h-full"

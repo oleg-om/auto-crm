@@ -173,6 +173,11 @@ const ModalView = ({
                       <p className="text-sm leading-5 text-gray-900 text-left">
                         Телефон: {itemId.phone}
                       </p>
+                      {itemId.name ? (
+                        <p className="text-sm leading-5 text-gray-900 text-left">
+                          Имя клиента: {itemId.name}
+                        </p>
+                      ) : null}
                     </div>
                   </div>
                   <p className="text-sm leading-5 text-gray-900 mb-2">
