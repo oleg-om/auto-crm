@@ -46,7 +46,8 @@ const AutopartsCreate = (props) => {
     name: '',
     phone: '',
     prepay: '',
-    comment: ''
+    comment: '',
+    date: new Date()
   })
   const [customer, setCustomer] = useState({
     regnumber: '',
@@ -73,40 +74,47 @@ const AutopartsCreate = (props) => {
   }, [])
 
   useEffect(() => {
-    fetch(`/api/v1/carmodel/${stateId.mark}`)
-      .then((res) => res.json())
-      .then((it) => {
-        setOptions((prevState) => ({
-          ...prevState,
-          model: it.data
-        }))
-      })
+    if (stateId.mark !== '') {
+      fetch(`/api/v1/carmodel/${stateId.mark}`)
+        .then((res) => res.json())
+        .then((it) => {
+          setOptions((prevState) => ({
+            ...prevState,
+            model: it.data
+          }))
+        })
+    }
     return () => {}
   }, [stateId.mark])
 
   useEffect(() => {
-    fetch(`/api/v1/cargen/${stateId.model}`)
-      .then((res) => res.json())
-      .then((it) => {
-        setOptions((prevState) => ({
-          ...prevState,
-          gen: it.data
-        }))
-      })
+    if (stateId.model !== '') {
+      fetch(`/api/v1/cargen/${stateId.model}`)
+        .then((res) => res.json())
+        .then((it) => {
+          setOptions((prevState) => ({
+            ...prevState,
+            gen: it.data
+          }))
+        })
+    }
     return () => {}
   }, [stateId.model])
 
   useEffect(() => {
-    fetch(`/api/v1/carmod/${stateId.model}`)
-      .then((res) => res.json())
-      .then((it) => {
-        setOptions((prevState) => ({
-          ...prevState,
-          mod: it.data
-        }))
-      })
+    if (stateId.model !== '') {
+      fetch(`/api/v1/carmod/${stateId.model}`)
+        .then((res) => res.json())
+        .then((it) => {
+          setOptions((prevState) => ({
+            ...prevState,
+            mod: it.data
+          }))
+        })
+    }
     return () => {}
   }, [stateId.model])
+
   useEffect(() => {
     if (state.employee === '' && auth.name) {
       setState((prevState) => ({
@@ -131,9 +139,9 @@ const AutopartsCreate = (props) => {
       setCustomerOptions(
         customerList.filter(
           (it) =>
-            it.phone === state.phone ||
-            it.regnumber === state.regnumber ||
-            it.vinnumber === state.vinnumber
+            (it.phone === state.phone && it.phone !== '' && state.phone !== '') ||
+            (it.regnumber === state.regnumber && it.regnumber !== '' && state.regnumber !== '') ||
+            (it.vinnumber === state.vinnumber && it.vinnumber !== '' && state.vinnumber !== '')
         )
       )
     } else if (state.phone === '' || state.regnumber === '' || state.vinnumber === '') {
@@ -157,26 +165,26 @@ const AutopartsCreate = (props) => {
     if (newCustomer) {
       setCustomer((prevState) => ({
         ...prevState,
-        regnumber: newCustomer.regnumber,
-        vinnumber: newCustomer.vinnumber,
-        mark: newCustomer.mark,
-        model: newCustomer.model,
-        gen: newCustomer.gen,
-        mod: newCustomer.mod,
-        name: newCustomer.name,
-        phone: newCustomer.phone,
+        regnumber: newCustomer.regnumber ? newCustomer.regnumber : '',
+        vinnumber: newCustomer.vinnumber ? newCustomer.vinnumber : '',
+        mark: newCustomer.mark ? newCustomer.mark : '',
+        model: newCustomer.model ? newCustomer.model : '',
+        gen: newCustomer.gen ? newCustomer.gen : '',
+        mod: newCustomer.mod ? newCustomer.mod : '',
+        name: newCustomer.name ? newCustomer.name : '',
+        phone: newCustomer.phone ? newCustomer.phone : '',
         idOfItem: newCustomer.id
       }))
       setState((prevState) => ({
         ...prevState,
-        regnumber: newCustomer.regnumber,
-        vinnumber: newCustomer.vinnumber,
-        mark: newCustomer.mark,
-        model: newCustomer.model,
-        gen: newCustomer.gen,
-        mod: newCustomer.mod,
-        name: newCustomer.name,
-        phone: newCustomer.phone
+        regnumber: newCustomer.regnumber ? newCustomer.regnumber : '',
+        vinnumber: newCustomer.vinnumber ? newCustomer.vinnumber : '',
+        mark: newCustomer.mark ? newCustomer.mark : '',
+        model: newCustomer.model ? newCustomer.model : '',
+        gen: newCustomer.gen ? newCustomer.gen : '',
+        mod: newCustomer.mod ? newCustomer.mod : '',
+        name: newCustomer.name ? newCustomer.name : '',
+        phone: newCustomer.phone ? newCustomer.phone : ''
       }))
       setActiveCustomer(newCustomer.id)
     }
@@ -694,9 +702,9 @@ const AutopartsCreate = (props) => {
               id="gen"
               list="gen_list"
               placeholder={
-                state.model.length < 2 ? 'Сначала выберете модель' : 'Выберите или введите год'
+                state.model.length < 1 ? 'Сначала выберете модель' : 'Выберите или введите год'
               }
-              disabled={state.model.length < 2}
+              disabled={state.model.length < 1}
               autoComplete="off"
               required
               onChange={onChangeGen}

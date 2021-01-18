@@ -37,14 +37,16 @@ const RazvalCreate = (props) => {
   }, [])
 
   useEffect(() => {
-    fetch(`/api/v1/carmodel/${stateId.mark}`)
-      .then((res) => res.json())
-      .then((it) => {
-        setOptions((prevState) => ({
-          ...prevState,
-          model: it.data
-        }))
-      })
+    if (stateId.mark !== '') {
+      fetch(`/api/v1/carmodel/${stateId.mark}`)
+        .then((res) => res.json())
+        .then((it) => {
+          setOptions((prevState) => ({
+            ...prevState,
+            model: it.data
+          }))
+        })
+    }
     return () => {}
   }, [stateId.mark])
   const history = useHistory()

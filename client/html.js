@@ -6,6 +6,8 @@ const Html = ({ body }) => {
       <meta charset="UTF-8">
       <link rel="stylesheet" type="text/css" href="/css/main.css" />
       <meta name="viewport" content="width=device-width, initial-scale=1" />
+      <title>Autodom CRM</title>
+      <link rel="icon" href="/images/icon.png" />
     </head>
     <body>
       <div id="root">${body}</div>

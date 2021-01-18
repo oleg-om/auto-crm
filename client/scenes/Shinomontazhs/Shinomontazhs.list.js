@@ -325,8 +325,8 @@ const ShinomontazhsList = () => {
                     <option value="" disabled hidden>
                       Все
                     </option>
-                    {taskStatuses.map((it, index) => (
-                      <option key={index}>{it}</option>
+                    {taskStatuses.map((it) => (
+                      <option key={it}>{it}</option>
                     ))}
                   </select>
                   <div className="pointer-events-none absolute top-0 mt-2  right-0 flex items-center px-2 text-gray-600">
@@ -363,8 +363,8 @@ const ShinomontazhsList = () => {
                     <option value="" disabled hidden>
                       Все
                     </option>
-                    {placesList.map((it, index) => {
-                      return <option key={index}>{it.name}</option>
+                    {placesList.map((it) => {
+                      return <option key={it.id}>{it.name}</option>
                     })}
                   </select>
                   <div className="pointer-events-none absolute top-0 mt-2  right-0 flex items-center px-2 text-gray-600">
@@ -463,9 +463,9 @@ const ShinomontazhsList = () => {
             </thead>
             <tbody>
               {showSearch === false
-                ? currentPosts.map((it, index) => (
+                ? currentPosts.map((it) => (
                     <ShinomontazhsRow
-                      key={index}
+                      key={it.id}
                       {...it}
                       updateStatus={updateStatusLocal}
                       role={role}
@@ -475,9 +475,9 @@ const ShinomontazhsList = () => {
                       settings={settings}
                     />
                   ))
-                : currentPostsFiltered.map((it, index) => (
+                : currentPostsFiltered.map((it) => (
                     <ShinomontazhsRow
-                      key={index}
+                      key={it.id}
                       {...it}
                       updateStatus={updateStatusLocal}
                       role={role}

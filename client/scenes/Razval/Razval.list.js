@@ -162,10 +162,10 @@ const RazvalList = () => {
             {place
               .filter((it) => it.id === auth.place)
               .filter((it) => it.razval === 'true' || it.oil === 'true')
-              .map((it, id) => (
-                <div key={id}>
+              .map((it) => (
+                <div key={it.id}>
                   <RazvalRow
-                    key={id}
+                    key={it.id}
                     place={place}
                     editItem={openAndEdit}
                     createItem={openAndCreate}
@@ -185,10 +185,10 @@ const RazvalList = () => {
             {place
               .filter((it) => it.id !== auth.place)
               .filter((it) => it.razval === 'true' || it.oil === 'true')
-              .map((it, id) => (
-                <div key={id}>
+              .map((it) => (
+                <div key={it.id}>
                   <RazvalRow
-                    key={id}
+                    key={it.id}
                     place={place}
                     editItem={openAndEdit}
                     createItem={openAndCreate}

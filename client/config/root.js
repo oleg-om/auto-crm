@@ -48,6 +48,9 @@ import ShinomontazhpriceEdit from '../scenes/Shinomotazh.prices/Shinomotazh.pric
 import ShinomontazhsList from '../scenes/Shinomontazhs/Shinomontazhs.list'
 import ShinomontazhsNew from '../scenes/Shinomontazhs/Shinomontazhs.work.create'
 import ShinomontazhEditFull from '../scenes/Shinomontazhs/Shinomontazhs.edit'
+import VendorList from '../scenes/Vendors/Vendors.list'
+import VendorNew from '../scenes/Vendors/Vendors.create'
+import VendorEdit from '../scenes/Vendors/Vendors.edit'
 
 import Startup from './startup'
 
@@ -179,6 +182,9 @@ const RootComponent = (props) => {
             <PrivateRoute exact path="/material/edit/:id" component={MaterialEdit} />
             <AdminRoute exact path="/shinomontazhprice/list" component={ShinomontazhpriceList} />
             <PrivateRoute exact path="/shinomontazhprice/create" component={ShinomontazhpriceNew} />
+            <PrivateRoute exact path="/vendor/list" component={VendorList} />
+            <PrivateRoute exact path="/vendor/create" component={VendorNew} />
+            <PrivateRoute exact path="/vendor/edit/:id" component={VendorEdit} />
             <PrivateRoute
               exact
               path="/shinomontazhprice/edit/:id"

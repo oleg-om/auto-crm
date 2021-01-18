@@ -277,11 +277,11 @@ const CustomerList = () => {
             </thead>
             <tbody>
               {showSearch === false
-                ? currentPosts.map((it, index) => (
-                    <CustomerRow key={index} place={place} deleteCustomer={openAndDelete} {...it} />
+                ? currentPosts.map((it) => (
+                    <CustomerRow key={it.id} place={place} deleteCustomer={openAndDelete} {...it} />
                   ))
-                : currentPostsFiltered.map((it, index) => (
-                    <CustomerRow key={index} place={place} deleteCustomer={openAndDelete} {...it} />
+                : currentPostsFiltered.map((it) => (
+                    <CustomerRow key={it.id} place={place} deleteCustomer={openAndDelete} {...it} />
                   ))}
             </tbody>
           </table>

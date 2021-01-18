@@ -25,11 +25,18 @@ const AutopartUpdate = (props) => {
     toast.info(arg, { position: toast.POSITION.BOTTOM_RIGHT })
   }
   const employeeListLocal = useSelector((s) => s.employees.list)
+  const vendorList = useSelector((s) => s.vendors.list)
 
   const dateNow = new Date()
-  const dateNew = `${dateNow.getDate()}.${
-    dateNow.getMonth() + 1
-  }.${dateNow.getFullYear()} ${dateNow.getHours()}:${dateNow
+  const dateNew = `${dateNow
+    .getDate()
+    .toString()
+    .replace(/^(\d)$/, '0$1')}.${(dateNow.getMonth() + 1)
+    .toString()
+    .replace(/^(\d)$/, '0$1')}.${dateNow.getFullYear()} ${dateNow
+    .getHours()
+    .toString()
+    .replace(/^(\d)$/, '0$1')}:${dateNow
     .getMinutes()
     .toString()
     .replace(/^(\d)$/, '0$1')}`
@@ -88,6 +95,7 @@ const AutopartUpdate = (props) => {
       quantity: it.quantity,
       price: it.price,
       stat: it.stat,
+      vendor: it.vendor,
       come: it.come
     }))
   )
@@ -110,6 +118,7 @@ const AutopartUpdate = (props) => {
         quantity: '',
         price: '',
         stat: '',
+        vendor: '',
         come: ''
       }
     ])
@@ -488,6 +497,9 @@ const AutopartUpdate = (props) => {
                     <th className="p-3 font-bold uppercase bg-gray-100 text-sm text-gray-600 border border-gray-300 table-cell">
                       Статус
                     </th>
+                    <th className="p-3 font-bold uppercase bg-gray-100 text-sm text-gray-600 border border-gray-300 table-cell">
+                      Поставщик
+                    </th>
                     <th className="p-3 font-bold uppercase bg-gray-100 text-sm text-gray-600 border border-gray-300 table-cell whitespace-no-wrap">
                       Дата прибытия
                     </th>
@@ -499,12 +511,12 @@ const AutopartUpdate = (props) => {
                 <tbody>
                   {inputFields.map((inputField, index) => (
                     <tr
-                      key={index}
+                      key={inputField.autopartItem}
                       className="bg-white lg:hover:bg-gray-100 table-row flex-row lg:flex-row flex-wrap mb-10 lg:mb-0"
                     >
-                      <td className="lg:w-7/12 p-2 text-gray-800 text-center border border-b table-cell relative">
+                      <td className="lg:w-6/12 p-2 text-gray-800 text-center border border-b table-cell relative">
                         <input
-                          className="appearance-none block w-full bg-grey-lighter text-grey-darker border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-1 px-4"
+                          className="appearance-none block w-full bg-grey-lighter text-sm text-grey-darker border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-1 px-4"
                           type="text"
                           placeholder="Например: Сайлентблок нижнего рычага задние LEMFORDER"
                           name="autopartItem"
@@ -519,7 +531,7 @@ const AutopartUpdate = (props) => {
                       </td>
                       <td className="p-2 text-gray-800 text-center border border-b table-cell relative">
                         <input
-                          className="w-32 appearance-none block bg-grey-lighter text-grey-darker border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-1 px-4"
+                          className="w-32 appearance-none block bg-grey-lighter text-sm text-grey-darker border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-1 px-4"
                           name="quantity"
                           type="number"
                           value={inputField.quantity}
@@ -534,7 +546,7 @@ const AutopartUpdate = (props) => {
                       </td>
                       <td className="p-2 text-gray-800 text-center border border-b table-cell relative">
                         <input
-                          className="appearance-none block w-full bg-grey-lighter text-grey-darker border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-1 px-4"
+                          className="appearance-none block w-full bg-grey-lighter text-sm text-grey-darker border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-1 px-4"
                           name="price"
                           type="number"
                           value={inputField.price}
@@ -556,7 +568,7 @@ const AutopartUpdate = (props) => {
                       </td>
                       <td className="w-full lg:w-auto p-2 text-gray-800 text-center border border-b table-cell relative">
                         <select
-                          className="appearance-none block w-full bg-grey-lighter text-grey-darker border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-1 px-4"
+                          className="appearance-none block w-full bg-grey-lighter text-sm text-grey-darker border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-1 px-4"
                           name="stat"
                           value={inputField.stat}
                           defaultValue={
@@ -576,8 +588,42 @@ const AutopartUpdate = (props) => {
                         </select>
                       </td>
                       <td className="w-full lg:w-auto p-2 text-gray-800 text-center border border-b table-cell relative">
+                        <select
+                          className="appearance-none block w-full bg-grey-lighter text-sm text-grey-darker border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-1 px-4"
+                          name="vendor"
+                          value={inputField.vendor}
+                          defaultValue={
+                            state.order.find((it, id) => id === index)
+                              ? state.order.find((it, id) => id === index).vendor
+                              : ''
+                          }
+                          autoComplete="off"
+                          onChange={(event) => handleChangeInput(index, event)}
+                        >
+                          <option value="" disabled selected hidden className="text-gray-800">
+                            Выберите поставщика
+                          </option>
+                          {vendorList
+                            .filter((it) => it.type === 'autoparts')
+                            .sort(function sortVendors(a, b) {
+                              if (a.name > b.name) {
+                                return 1
+                              }
+                              if (a.name < b.name) {
+                                return -1
+                              }
+                              return 0
+                            })
+                            .map((it) => (
+                              <option key={it} value={it.value}>
+                                {it.name}
+                              </option>
+                            ))}
+                        </select>
+                      </td>
+                      <td className="w-full lg:w-auto p-2 text-gray-800 text-center border border-b table-cell relative">
                         <input
-                          className="appearance-none block w-full bg-grey-lighter text-grey-darker border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-1 px-4"
+                          className="appearance-none block w-full bg-grey-lighter text-sm text-grey-darker border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-1 px-4"
                           type="text"
                           name="come"
                           value={inputField.come}
@@ -615,7 +661,29 @@ const AutopartUpdate = (props) => {
             </div>
           </div>
         </div>
-
+        {state.order[0].price && state.order[0].quantity ? (
+          <div className="-mx-3 md:flex mb-2">
+            <div className="md:w-1/2 px-3 mb-6 md:mb-0">
+              <label
+                className="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2"
+                htmlFor="grid-city"
+              >
+                Сумма
+              </label>
+              <p className="ml-3">
+                {state.order.length >= 1
+                  ? state.order.reduce(function fullPrice(acc, rec) {
+                      if (rec.price && rec.quantity)
+                        if (rec.price.match(/[0-9]/) && rec.quantity.match(/[0-9]/)) {
+                          return acc + rec.price * rec.quantity
+                        }
+                      return acc
+                    }, 0)
+                  : null}
+              </p>
+            </div>
+          </div>
+        ) : null}
         <div className="-mx-3 md:flex mb-2">
           <div className="md:w-1/2 px-3 mb-6 md:mb-0">
             <label

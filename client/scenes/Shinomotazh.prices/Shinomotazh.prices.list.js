@@ -92,9 +92,9 @@ const ShinomontazhpriceList = () => {
                 </tr>
               </thead>
               <tbody>
-                {list.map((it, id) => (
+                {list.map((it) => (
                   <ShinomontazhpriceRow
-                    key={id}
+                    key={it.id}
                     deleteShinomontazhprice={openAndDelete}
                     ShinomontazhTypeList={ShinomontazhTypeList}
                     ShinomontazhCategoryList={ShinomontazhCategoryList}

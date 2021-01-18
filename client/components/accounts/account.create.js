@@ -22,7 +22,7 @@ const AccountCreate = (props) => {
     userName: '',
     place: ''
   })
-  console.log(state)
+
   const onChange = (e) => {
     const { name, value } = e.target
     setState((prevState) => ({
@@ -114,9 +114,9 @@ const AccountCreate = (props) => {
                 <option value="" className="text-gray-800">
                   Общий аккаунт
                 </option>
-                {employeeList.map((it, index) => {
+                {employeeList.map((it) => {
                   return (
-                    <option value={it.id} key={index}>
+                    <option value={it.id} key={it.id}>
                       {it.name} {it.surname}
                     </option>
                   )
@@ -151,9 +151,9 @@ const AccountCreate = (props) => {
                 <option value="" className="text-gray-800">
                   Общий аккаунт
                 </option>
-                {list.map((it, index) => {
+                {list.map((it) => {
                   return (
-                    <option value={it.id} key={index}>
+                    <option value={it.id} key={it.id}>
                       {it.name}
                     </option>
                   )
@@ -179,8 +179,8 @@ const AccountCreate = (props) => {
             >
               Выберите должность
             </label>
-            {roleList.map((it, index) => (
-              <div key={index} className="mb-2">
+            {roleList.map((it) => (
+              <div key={it.id} className="mb-2">
                 <label htmlFor="role">
                   <input
                     className="mr-2"

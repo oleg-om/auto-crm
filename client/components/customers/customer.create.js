@@ -47,38 +47,44 @@ const CustomerCreate = (props) => {
   }, [])
 
   useEffect(() => {
-    fetch(`/api/v1/carmodel/${stateId.mark}`)
-      .then((res) => res.json())
-      .then((it) => {
-        setOptions((prevState) => ({
-          ...prevState,
-          model: it.data
-        }))
-      })
+    if (stateId.mark !== '') {
+      fetch(`/api/v1/carmodel/${stateId.mark}`)
+        .then((res) => res.json())
+        .then((it) => {
+          setOptions((prevState) => ({
+            ...prevState,
+            model: it.data
+          }))
+        })
+    }
     return () => {}
   }, [stateId.mark])
 
   useEffect(() => {
-    fetch(`/api/v1/cargen/${stateId.model}`)
-      .then((res) => res.json())
-      .then((it) => {
-        setOptions((prevState) => ({
-          ...prevState,
-          gen: it.data
-        }))
-      })
+    if (stateId.model !== '') {
+      fetch(`/api/v1/cargen/${stateId.model}`)
+        .then((res) => res.json())
+        .then((it) => {
+          setOptions((prevState) => ({
+            ...prevState,
+            gen: it.data
+          }))
+        })
+    }
     return () => {}
   }, [stateId.model])
 
   useEffect(() => {
-    fetch(`/api/v1/carmod/${stateId.model}`)
-      .then((res) => res.json())
-      .then((it) => {
-        setOptions((prevState) => ({
-          ...prevState,
-          mod: it.data
-        }))
-      })
+    if (stateId.model !== '') {
+      fetch(`/api/v1/carmod/${stateId.model}`)
+        .then((res) => res.json())
+        .then((it) => {
+          setOptions((prevState) => ({
+            ...prevState,
+            mod: it.data
+          }))
+        })
+    }
     return () => {}
   }, [stateId.model])
 
@@ -301,9 +307,9 @@ const CustomerCreate = (props) => {
               id="gen"
               list="gen_list"
               placeholder={
-                state.model.length < 2 ? 'Сначала выберете модель' : 'Выберите или введите год'
+                state.model.length < 1 ? 'Сначала выберете модель' : 'Выберите или введите год'
               }
-              disabled={state.model.length < 2}
+              disabled={state.model.length < 1}
               autoComplete="off"
               required
               onChange={onChangeGen}

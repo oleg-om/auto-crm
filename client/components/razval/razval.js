@@ -55,9 +55,9 @@ const RazvalRow = (props) => {
           </tr>
         </thead>
         <tbody>
-          {timeList.map((it, id) => (
+          {timeList.map((it) => (
             <tr
-              key={id}
+              key={it}
               className="bg-white lg:hover:bg-gray-100 flex lg:table-row flex-row lg:flex-row flex-wrap lg:flex-no-wrap mb-5 lg:mb-0"
             >
               <td className="w-full lg:w-auto p-2 text-gray-800 text-left lg:text-center border border-b block lg:table-cell relative lg:static">
@@ -82,7 +82,9 @@ const RazvalRow = (props) => {
                               'bg-purple-400 hover:bg-purple-500': item.access === 'false',
                               'bg-green-400 hover:bg-green-500': item.status === statusList[1],
                               'bg-red-400 hover:bg-red-500':
-                                item.status === statusList[2] || item.status === statusList[3],
+                                item.status === statusList[2] ||
+                                item.status === statusList[3] ||
+                                item.status === statusList[4],
                               'bg-blue-400 hover:bg-blue-500':
                                 item.status === statusList[0] &&
                                 item.employeeplace !== props.activeAdress &&
@@ -117,7 +119,9 @@ const RazvalRow = (props) => {
                                 item.status === statusList[1] && item.place === props.activeAdress,
                               'bg-red-400 hover:bg-red-500':
                                 item.place === props.activeAdress &&
-                                (item.status === statusList[2] || item.status === statusList[3]),
+                                (item.status === statusList[2] ||
+                                  item.status === statusList[3] ||
+                                  item.status === statusList[4]),
                               'bg-blue-400 hover:bg-blue-500':
                                 item.status === statusList[0] &&
                                 item.employeeplace !== props.activeAdress &&
@@ -151,7 +155,8 @@ const RazvalRow = (props) => {
                         item.time === it &&
                         item.place === props.adress.id &&
                         item.status !== statusList[2] &&
-                        item.status !== statusList[3]
+                        item.status !== statusList[3] &&
+                        item.status !== statusList[4]
                     ).length !== Number(props.adress.razvalquantity) &&
                     props.razvalList.filter(
                       (item) =>
@@ -200,7 +205,9 @@ const RazvalRow = (props) => {
                               'bg-purple-400 hover:bg-purple-500': item.access === 'false',
                               'bg-green-400 hover:bg-green-500': item.status === statusList[1],
                               'bg-red-400 hover:bg-red-500':
-                                item.status === statusList[2] || item.status === statusList[3],
+                                item.status === statusList[2] ||
+                                item.status === statusList[3] ||
+                                item.status === statusList[4],
                               'bg-blue-400 hover:bg-blue-500':
                                 item.status === statusList[0] &&
                                 item.employeeplace !== props.activeAdress &&
@@ -235,7 +242,9 @@ const RazvalRow = (props) => {
                                 item.status === statusList[1] && item.place === props.activeAdress,
                               'bg-red-400 hover:bg-red-500':
                                 item.place === props.activeAdress &&
-                                (item.status === statusList[2] || item.status === statusList[3]),
+                                (item.status === statusList[2] ||
+                                  item.status === statusList[3] ||
+                                  item.status === statusList[4]),
                               'bg-blue-400 hover:bg-blue-500':
                                 item.status === statusList[0] &&
                                 item.employeeplace !== props.activeAdress &&
@@ -269,7 +278,8 @@ const RazvalRow = (props) => {
                         item.time === it &&
                         item.place === props.adress.id &&
                         item.status !== statusList[2] &&
-                        item.status !== statusList[3]
+                        item.status !== statusList[3] &&
+                        item.status !== statusList[4]
                     ).length !== Number(props.adress.oilquantity) &&
                     props.oilList.filter(
                       (item) =>

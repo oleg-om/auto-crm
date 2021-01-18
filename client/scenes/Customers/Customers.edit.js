@@ -9,7 +9,7 @@ const CustomerEdit = () => {
   const { id } = useParams()
   const dispatch = useDispatch()
   const list = useSelector((s) => s.customers.list).filter((it) => it.id === id)
-  console.log(list)
+
   const updateCustomerLocal = (idOfItem, name) => {
     dispatch(updateCustomer(idOfItem, name))
   }

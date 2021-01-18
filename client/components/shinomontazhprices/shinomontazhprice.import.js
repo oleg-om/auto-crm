@@ -122,9 +122,7 @@ const ShinomontazhpriceImport = (props) => {
           {load === 'loading' ? <p className="text-gray-900">Загрузка...</p> : null}
           {load === 'error' ? <p className="text-red-600">Ошибка</p> : null}
           {load === 'finish' ? (
-            <p className="text-gray-900">
-              Файл загружен, обнаружено {loadingData.length} услуг
-            </p>
+            <p className="text-gray-900">Файл загружен, обнаружено {loadingData.length} услуг</p>
           ) : null}
         </div>
         <div>

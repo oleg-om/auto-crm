@@ -110,9 +110,11 @@ const AutopartViewOrder = (props) => {
                   <li className="whitespace-normal">
                     <b>Авто:</b> {props.mark} {props.model} {props.gen} {props.mod}
                   </li>
-                  {props.regnumber ? <li>
-                    <b>Гос. номер:</b> {props.regnumber}
-                  </li> : null}
+                  {props.regnumber ? (
+                    <li>
+                      <b>Гос. номер:</b> {props.regnumber}
+                    </li>
+                  ) : null}
                   <li>
                     <b>VIN:</b> {props.vinnumber}
                   </li>
@@ -395,7 +397,30 @@ const AutopartViewOrder = (props) => {
             </div>
           </div>
         )}
-
+        {console.log(props.order.length !== 0)}
+        {props.order.length !== 0 ? (
+          <div className="-mx-3 md:flex mb-2">
+            <div className="md:w-1/2 px-3 mb-6 md:mb-0">
+              <label
+                className="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2"
+                htmlFor="grid-city"
+              >
+                Сумма
+              </label>
+              <p className="ml-3">
+                {props.order.length >= 1
+                  ? props.order.reduce(function (acc, rec) {
+                      if (rec.price && rec.quantity)
+                        if (rec.price.match(/[0-9]/) && rec.quantity.match(/[0-9]/)) {
+                          return acc + rec.price * rec.quantity
+                        }
+                      return acc
+                    }, 0)
+                  : null}
+              </p>
+            </div>
+          </div>
+        ) : null}
         <div className="-mx-3 md:flex mb-2">
           <div className="md:w-1/2 px-3 mb-6 md:mb-0">
             <label

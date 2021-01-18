@@ -13,6 +13,7 @@ import { getSettings } from '../redux/reducers/settings'
 import { getMaterials } from '../redux/reducers/materials'
 import { getShinomontazhprices } from '../redux/reducers/shinomotazh.prices'
 import { getShinomontazhs } from '../redux/reducers/shinomontazhs'
+import { getVendors } from '../redux/reducers/vendors'
 
 const Startup = (props) => {
   const dispatch = useDispatch()
@@ -62,6 +63,10 @@ const Startup = (props) => {
 
   useEffect(() => {
     dispatch(getShinomontazhs())
+  }, [dispatch])
+
+  useEffect(() => {
+    dispatch(getVendors())
   }, [dispatch])
 
   return props.children

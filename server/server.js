@@ -31,6 +31,7 @@ const settingRoutes = require('./routes/api/setting.routes')
 const materialRoutes = require('./routes/api/material.routes')
 const shinomotazhpriceRoutes = require('./routes/api/shinomotazh.price.routes')
 const shinomotazhRoutes = require('./routes/api/shinomotazh.routes')
+const vendorRoutes = require('./routes/api/vendor.routes')
 
 const Root = () => ''
 
@@ -67,7 +68,7 @@ passport.use('jwt', passportJWT)
 
 function createToken(user) {
   const payload = { uid: user.id }
-  const token = jwt.sign(payload, config.secret, { expiresIn: '48h' })
+  const token = jwt.sign(payload, config.secret, { expiresIn: '8760h' })
   delete user.password
   return token
 }
@@ -79,7 +80,7 @@ async function getTokenAndUser(data) {
 }
 
 function createCookie(token, res) {
-  return res.cookie('token', token, { maxAge: 1000 * 60 * 60 * 48 })
+  return res.cookie('token', token, { maxAge: 1000 * 60 * 60 * 8760 })
 }
 
 function getFormatMessages(messages) {
@@ -99,6 +100,7 @@ server.use('/api/v1', settingRoutes)
 server.use('/api/v1', materialRoutes)
 server.use('/api/v1', shinomotazhpriceRoutes)
 server.use('/api/v1', shinomotazhRoutes)
+server.use('/api/v1', vendorRoutes)
 
 server.get('/api/v1/auth', async (req, res) => {
   try {

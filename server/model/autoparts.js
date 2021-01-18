@@ -3,7 +3,6 @@ const uuid = require('uuid')
 const AutoIncrement = require('mongoose-sequence')(mongoose)
 const statusTypes = require('../../common/enums/task-statuses')
 
-const dateNow = new Date()
 const Autopart = new mongoose.Schema({
   employee: {
     type: String,
@@ -91,7 +90,7 @@ const Autopart = new mongoose.Schema({
   // },
   date: {
     type: Date,
-    default: () => dateNow
+    required: false
   },
   dateInWork: {
     type: String,

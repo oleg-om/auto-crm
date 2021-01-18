@@ -6,6 +6,7 @@ import cx from 'classnames'
 import 'react-toastify/dist/ReactToastify.css'
 import Employee from './employees'
 import Car from './car'
+import Service from './service'
 
 const ShinomontazhsCreate = (props) => {
   toast.configure()
@@ -32,7 +33,8 @@ const ShinomontazhsCreate = (props) => {
     model: '',
     gen: '',
     mod: '',
-    preorder: [],
+    service: [],
+    order: [{ name: '0ea8f233-a2e2-408e-a40b-30ce6536b6b2', quantity: 1 }],
     name: '',
     phone: '',
     prepay: '',
@@ -152,7 +154,30 @@ const ShinomontazhsCreate = (props) => {
   }
 
   const [active, setActive] = useState('employee')
-  console.log(state.role)
+  const checkboxServiceChange = (e) => {
+    const { name, placeholder, checked } = e.target
+    console.log(e.target)
+    if (checked) {
+      setState((prevState) => ({
+        ...prevState,
+        service: [...prevState.service, { serviceName: name, quantity: 1, price: placeholder }]
+      }))
+    } else {
+      setState((prevState) => ({
+        ...prevState,
+        service: prevState.service.filter((it) => it.serviceName !== name)
+      }))
+    }
+  }
+  const servicePlusChange = (e) => {
+    const { name } = e.target
+    setState((prevState) => ({
+      ...prevState,
+      order: prevState.order.filter((it) => it.serviceName === name)
+    }))
+    console.log('lol')
+  }
+  console.log(state.order)
 
   return (
     <div>
@@ -258,58 +283,13 @@ const ShinomontazhsCreate = (props) => {
             hidden: active !== 'service'
           })}
         >
-          <div className="md:flex md:flex-row -mx-3">
-            <div className="px-3 mb-6 md:mb-0 w-full">
-              <label
-                className="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2"
-                htmlFor="grid-first-name"
-              >
-                Услуги
-              </label>
-              <div className="flex flex-col w-full relative">
-                {shinomontazhprices ? (
-                  shinomontazhprices.map((item) => (
-                    <button
-                      className={cx('mb-3 flex flex-row rounded bg-gray-200 w-full text-xl', {
-                        'bg-green-400 hover:bg-green-500 text-white': state.role.includes(
-                          item.name
-                        ),
-                        'bg-gray-100 hover:bg-gray-300': !state.role.includes(item.name)
-                      })}
-                      key={item.id}
-                      type="button"
-                      name={item.id}
-                      onClick={checkboxRoleChange}
-                    >
-                      <label htmlFor={item.id} className="w-2/3 h-full p-2 text-left inline-block">
-                        <input
-                          className="mr-4"
-                          checked={state.role.index}
-                          key={item.id}
-                          name={item.name}
-                          id={item.id}
-                          defaultChecked={state.role.find((it) => it === item)}
-                          type="checkbox"
-                        />
-                        {item.name}
-                      </label>
-                      <div className="w-1/3 h-full p-2 inline-block bg-gray-200">
-                        <button type="button" className="px-3 bg-red-600">
-                          -
-                        </button>
-                        <input type="number" className="px-3 bg-white" />
-                        <button type="button" className="px-3 bg-blue-600">
-                          +
-                        </button>
-                      </div>
-                    </button>
-                  ))
-                ) : (
-                  <p>Сотрудники не найдены</p>
-                )}
-              </div>
-            </div>
-          </div>
+          <Service
+            employeeList={shinomontazhprices}
+            auth={auth}
+            state={state}
+            checkboxRoleChange={checkboxServiceChange}
+            servicePlusChange={servicePlusChange}
+          />
         </div>
       </div>
       <div className=" flex my-2">

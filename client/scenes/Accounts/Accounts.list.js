@@ -58,8 +58,8 @@ const AccountList = () => {
                 </tr>
               </thead>
               <tbody>
-                {list.map((it, id) => (
-                  <AccountRow key={id} roles={roleList} deleteAccount={openAndDelete} {...it} />
+                {list.map((it) => (
+                  <AccountRow key={it.id} roles={roleList} deleteAccount={openAndDelete} {...it} />
                 ))}
               </tbody>
             </table>

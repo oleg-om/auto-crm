@@ -218,9 +218,9 @@ const ModalView = ({
                           <option value="" disabled hidden className="text-gray-800">
                             Выберите статус
                           </option>
-                          {statusList.map((it, id) => {
+                          {statusList.map((it) => {
                             return (
-                              <option value={it} key={id}>
+                              <option value={it} key={it}>
                                 {it}
                               </option>
                             )
@@ -250,7 +250,9 @@ const ModalView = ({
                           'bg-yellow-400 hover:bg-yellow-500': itemId.status === statusList[0],
                           'bg-green-400 hover:bg-green-500': itemId.status === statusList[1],
                           'bg-red-400 hover:bg-red-500':
-                            itemId.status === statusList[2] || itemId.status === statusList[3]
+                            itemId.status === statusList[2] ||
+                            itemId.status === statusList[3] ||
+                            itemId.status === statusList[4]
                         })}
                       >
                         {changeStatus.status}

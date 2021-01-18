@@ -49,8 +49,8 @@ const PlaceList = () => {
                 </tr>
               </thead>
               <tbody>
-                {list.map((it, id) => (
-                  <PlaceRow key={id} deletePlace={openAndDelete} {...it} />
+                {list.map((it) => (
+                  <PlaceRow key={it.id} deletePlace={openAndDelete} {...it} />
                 ))}
               </tbody>
             </table>

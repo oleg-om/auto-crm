@@ -82,8 +82,8 @@ const ModalNew = ({
       setCustomerOptions(
         customerList.filter(
           (it) =>
-            (it.phone === state.phone && it.phone !== '') ||
-            (it.regnumber === state.regnumber && it.regnumber !== '')
+            (it.phone === state.phone && it.phone !== '' && it.phone) ||
+            (it.regnumber === state.regnumber && it.regnumber !== '' && it.regnumber)
         )
       )
     } else if (state.phone === '' || state.regnumber === '' || state.vinnumber === '') {
@@ -103,14 +103,16 @@ const ModalNew = ({
   }, [])
 
   useEffect(() => {
-    fetch(`/api/v1/carmodel/${stateId.mark}`)
-      .then((res) => res.json())
-      .then((it) => {
-        setOptions((prevState) => ({
-          ...prevState,
-          model: it.data
-        }))
-      })
+    if (stateId.mark !== '') {
+      fetch(`/api/v1/carmodel/${stateId.mark}`)
+        .then((res) => res.json())
+        .then((it) => {
+          setOptions((prevState) => ({
+            ...prevState,
+            model: it.data
+          }))
+        })
+    }
     return () => {}
   }, [stateId.mark])
   if (!open) return null
@@ -261,6 +263,7 @@ const ModalNew = ({
           model: ''
         })
         setSearch()
+        setActiveCustomer('')
       } else {
         dispatch(() => createOil(state))
         setState({
@@ -281,6 +284,7 @@ const ModalNew = ({
           model: ''
         })
         setSearch()
+        setActiveCustomer('')
       }
     }
   }

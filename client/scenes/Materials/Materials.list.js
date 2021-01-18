@@ -64,9 +64,9 @@ const MaterialList = () => {
                 </tr>
               </thead>
               <tbody>
-                {list.map((it, id) => (
+                {list.map((it) => (
                   <MaterialRow
-                    key={id}
+                    key={it.id}
                     materialList={materialList}
                     deleteMaterial={openAndDelete}
                     {...it}
