@@ -156,7 +156,6 @@ const ShinomontazhsCreate = (props) => {
   const [active, setActive] = useState('employee')
   const checkboxServiceChange = (e) => {
     const { name, placeholder, checked } = e.target
-    console.log(e.target)
     if (checked) {
       setState((prevState) => ({
         ...prevState,
@@ -173,11 +172,11 @@ const ShinomontazhsCreate = (props) => {
     const { name } = e.target
     setState((prevState) => ({
       ...prevState,
-      order: prevState.order.filter((it) => it.serviceName === name)
+      order: [...prevState.order, { serviceName: name, quantity: 1 }]
     }))
     console.log('lol')
   }
-  console.log(state.order)
+  console.log(state.service)
 
   return (
     <div>

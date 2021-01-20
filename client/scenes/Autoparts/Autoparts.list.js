@@ -55,52 +55,37 @@ const AutopartsList = () => {
   const [showSearch, setShowSearch] = useState(false)
   const onChangePhone = (e) => {
     const { name, value } = e.target
-    setSearch(() => ({
-      [name]: value,
-      number: '',
-      status: '',
-      vinnumber: '',
-      place: ''
+    setSearch((prevState) => ({
+      ...prevState,
+      [name]: value
     }))
   }
   const onChangeNumber = (e) => {
     const { name, value } = e.target
-    setSearch(() => ({
-      [name]: value,
-      phone: '',
-      status: '',
-      vinnumber: '',
-      place: ''
+    setSearch((prevState) => ({
+      ...prevState,
+      [name]: value
     }))
   }
   const onChangeStatus = (e) => {
     const { name, value } = e.target
-    setSearch(() => ({
-      [name]: value,
-      phone: '',
-      number: '',
-      vinnumber: '',
-      place: ''
+    setSearch((prevState) => ({
+      ...prevState,
+      [name]: value
     }))
   }
   const onChangeVin = (e) => {
     const { name, value } = e.target
-    setSearch(() => ({
-      [name]: value.toUpperCase().replace(/\s/g, ''),
-      phone: '',
-      number: '',
-      status: '',
-      place: ''
+    setSearch((prevState) => ({
+      ...prevState,
+      [name]: value.toUpperCase().replace(/\s/g, '')
     }))
   }
   const onChangePlace = (e) => {
     const { name, value } = e.target
-    setSearch(() => ({
-      [name]: value,
-      phone: '',
-      number: '',
-      status: '',
-      vinnumber: ''
+    setSearch((prevState) => ({
+      ...prevState,
+      [name]: value
     }))
   }
   useEffect(() => {
@@ -111,16 +96,22 @@ const AutopartsList = () => {
     }
     return () => {}
   }, [currentPosts.length, showSearch, loading])
-  const currentPostsFiltered = revList
-    .filter(
-      (it) =>
-        it.phone === search.phone ||
-        JSON.stringify(it.id_autoparts) === search.number ||
-        it.status === search.status ||
-        it.place === search.place ||
-        it.vinnumber === search.vinnumber
-    )
-    .slice(indexOfFirstPost, indexOfLastPost)
+
+  const currentPostsFiltered = revList.filter(
+    (it) =>
+      // (it.phone === search.phone || !search.phone) &&
+      // JSON.stringify(it.id_autoparts) === search.number &&
+      // (it.status === search.status || !search.status) &&
+      // it.place === search.place &&
+      // it.vinnumber === search.vinnumber
+      (JSON.stringify(it.id_autoparts) === search.number || !search.number) &&
+      (it.phone === search.phone || !search.phone) &&
+      (it.vinnumber === search.vinnumber || !search.vinnumber) &&
+      (it.status === search.status || !search.status) &&
+      (it.place === search.place || !search.place)
+  )
+
+  const currentPostsFilteredSliced = currentPostsFiltered.slice(indexOfFirstPost, indexOfLastPost)
 
   const onReset = () => {
     setShowSearch(false)
@@ -140,7 +131,7 @@ const AutopartsList = () => {
       search.vinnumber === '' &&
       search.place === ''
     ) {
-      notify('Заполните хотябы одно поле')
+      notify('Заполните хотябы одно поле фильтра')
     } else {
       setShowSearch(true)
     }
@@ -193,8 +184,7 @@ const AutopartsList = () => {
                     className={cx(
                       'block appearance-none w-full bg-grey-lighter border border-gray-300 focus:border-gray-500 focus:outline-none py-1 px-4 pr-8 rounded',
                       {
-                        'border-red-300 focus:border-red-500':
-                          search.number.length >= 1 && showSearch === true
+                        'border-red-300 focus:border-red-500': search.number && showSearch === true
                       }
                     )}
                     value={search.number}
@@ -233,8 +223,7 @@ const AutopartsList = () => {
                     className={cx(
                       'block appearance-none w-full bg-grey-lighter border border-gray-300 focus:border-gray-500 focus:outline-none py-1 px-4 pr-8 rounded',
                       {
-                        'border-red-300 focus:border-red-500':
-                          search.phone.length >= 1 && showSearch === true
+                        'border-red-300 focus:border-red-500': search.phone && showSearch === true
                       }
                     )}
                     format="+7 (###) ###-##-##"
@@ -276,7 +265,7 @@ const AutopartsList = () => {
                       'block appearance-none w-full bg-grey-lighter border border-gray-300 focus:border-gray-500 focus:outline-none py-1 px-4 pr-8 rounded',
                       {
                         'border-red-300 focus:border-red-500':
-                          search.vinnumber.length >= 1 && showSearch === true
+                          search.vinnumber && showSearch === true
                       }
                     )}
                     name="vinnumber"
@@ -314,8 +303,7 @@ const AutopartsList = () => {
                     className={cx(
                       'block appearance-none w-full bg-grey-lighter border border-gray-300 focus:border-gray-500 focus:outline-none py-1 px-4 pr-8 rounded',
                       {
-                        'border-red-300 focus:border-red-500':
-                          search.status.length >= 1 && showSearch === true
+                        'border-red-300 focus:border-red-500': search.status && showSearch === true
                       }
                     )}
                     value={search.status}
@@ -352,8 +340,7 @@ const AutopartsList = () => {
                     className={cx(
                       'block appearance-none w-full bg-grey-lighter border border-gray-300 focus:border-gray-500 focus:outline-none py-1 px-4 pr-8 rounded',
                       {
-                        'border-red-300 focus:border-red-500':
-                          search.place.length >= 1 && showSearch === true
+                        'border-red-300 focus:border-red-500': search.place && showSearch === true
                       }
                     )}
                     value={search.place}
@@ -479,7 +466,7 @@ const AutopartsList = () => {
                       settings={settings}
                     />
                   ))
-                : currentPostsFiltered.map((it) => (
+                : currentPostsFilteredSliced.map((it) => (
                     <AutopartsRow
                       key={it.id}
                       {...it}
@@ -527,7 +514,7 @@ const AutopartsList = () => {
               totalPosts={currentPostsFiltered.length}
               paginate={paginate}
               currentPage={currentPage}
-              currentPosts={currentPostsFiltered}
+              currentPosts={currentPostsFilteredSliced}
             />
           )}
         </div>

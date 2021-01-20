@@ -619,6 +619,7 @@ const AutopartUpdate = (props) => {
                                 {it.name}
                               </option>
                             ))}
+                          <option value="instock">В наличии</option>
                         </select>
                       </td>
                       <td className="w-full lg:w-auto p-2 text-gray-800 text-center border border-b table-cell relative">

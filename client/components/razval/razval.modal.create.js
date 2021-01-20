@@ -191,7 +191,9 @@ const ModalNew = ({
 
   const sendData = () => {
     if (itemType === 'Развал-схождение') {
-      if (state.phone === '') notify('Поле телефон пустое')
+      if (propsDate > new Date() && state.phone === '') notify('Поле телефон пустое')
+      else if (propsDate < new Date() && state.phone === '' && state.regnumber === '')
+        notify('Поле телефон и гос.номер пустое. Заполните одно из них')
       else if (state.mark === '') notify('Поле марка авто пустое')
       else if (state.model === '') notify('Поле модель авто пустое')
       else if (!activeCustomer) {
@@ -201,6 +203,7 @@ const ModalNew = ({
           mark: '',
           model: '',
           phone: '',
+          regnumber: '',
           employeeplace: '',
           employee: '',
           date: '',
@@ -222,6 +225,7 @@ const ModalNew = ({
           mark: '',
           model: '',
           phone: '',
+          regnumber: '',
           employeeplace: '',
           employee: '',
           date: '',
@@ -249,6 +253,7 @@ const ModalNew = ({
           mark: '',
           model: '',
           phone: '',
+          regnumber: '',
           employeeplace: '',
           employee: '',
           date: '',
@@ -270,6 +275,7 @@ const ModalNew = ({
           mark: '',
           model: '',
           phone: '',
+          regnumber: '',
           employeeplace: '',
           employee: '',
           date: '',
@@ -304,6 +310,7 @@ const ModalNew = ({
         mark: '',
         model: '',
         phone: '',
+        regnumber: '',
         employeeplace: '',
         employee: '',
         date: '',
@@ -347,6 +354,7 @@ const ModalNew = ({
       mark: '',
       model: '',
       phone: '',
+      regnumber: '',
       employeeplace: '',
       employee: '',
       date: '',
@@ -615,7 +623,7 @@ const ModalNew = ({
                   ) : null}
                   {!activeCustomer &&
                   customerOptions.length === 0 &&
-                  state.phone !== '' &&
+                  (state.phone !== '' || state.regnumber !== '') &&
                   state.mark !== '' &&
                   state.model !== '' ? (
                     <p className="text-left py-1 mt-3 px-2 bg-green-200 text-sm text-gray-900 rounded">

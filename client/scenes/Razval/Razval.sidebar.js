@@ -14,7 +14,11 @@ const RazvalSidebar = (props) => {
     <nav className="left-0 top-0 bg-gray-800  w-64 flex flex-col pt-3 sidebar">
       <h5 className="text-white mx-2 font-semibold">Выберите дату</h5>
       <div className="bg-white p-3 m-2 rounded">
-        <Calendar onChange={props.setActiveDay} value={props.activeDay} />
+        <Calendar
+          onChange={props.setActiveDay}
+          value={props.activeDay}
+          minDate={new Date(2021, 0, 1)}
+        />
       </div>
       <div className="text-white mx-2">
         <h5 className="text-white font-semibold">Цвета</h5>

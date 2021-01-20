@@ -604,7 +604,6 @@ const AutopartsEdit = (props) => {
                     if (a.name < b.name) {
                       return -1
                     }
-                    // a должно быть равным b
                     return 0
                   })
                   .map((it) => (
@@ -692,7 +691,7 @@ const AutopartsEdit = (props) => {
                         ))}
                       </datalist>
                     </td>
-                    <td className="w-full lg:w-auto p-2 text-gray-800 text-center border border-b text-center flex flex-row table-cell relative static">
+                    <td className="w-full lg:w-auto p-2 text-gray-800 border border-b text-center flex flex-row table-cell relative static">
                       <button
                         onClick={() => handleRemoveFields(index)}
                         type="button"

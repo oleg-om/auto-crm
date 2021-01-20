@@ -22,7 +22,7 @@ const Register = (props) => {
     name: '',
     address: ''
   })
-  console.log(state)
+
   const onChange = (e) => {
     const { name, value } = e.target
     setState((prevState) => ({
@@ -114,9 +114,9 @@ const Register = (props) => {
                 <option value="" className="text-gray-800">
                   Общий аккаунт
                 </option>
-                {employeeList.map((it, index) => {
+                {employeeList.map((it) => {
                   return (
-                    <option key={index}>
+                    <option key={it.id}>
                       {it.name} {it.surname}
                     </option>
                   )
@@ -151,8 +151,8 @@ const Register = (props) => {
                 <option value="" className="text-gray-800">
                   Общий аккаунт
                 </option>
-                {list.map((it, index) => {
-                  return <option key={index}>{it.name}</option>
+                {list.map((it) => {
+                  return <option key={it.id}>{it.name}</option>
                 })}
               </select>
               <div className="pointer-events-none absolute top-0 mt-2  right-0 flex items-center px-2 text-gray-600">
@@ -175,8 +175,8 @@ const Register = (props) => {
             >
               Выберите должность
             </label>
-            {roleList.map((it, index) => (
-              <div key={index} className="mb-2">
+            {roleList.map((it) => (
+              <div key={it.value} className="mb-2">
                 <label htmlFor="role">
                   <input
                     className="mr-2"

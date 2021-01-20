@@ -6,7 +6,7 @@ const AccountRow = (props) => {
     props.deleteAccount(props._id, e.target.value)
   }
 
-  const newRoleArray = props.role.reduce(function (r, e) {
+  const newRoleArray = props.role.reduce(function roleFind(r, e) {
     const c = props.roles.find((a) => e === a.value)
     if (c) r.push(c.name)
     return r
@@ -24,8 +24,8 @@ const AccountRow = (props) => {
       </td>
       <td className="w-full lg:w-auto p-2 text-gray-800 text-left lg:text-center border border-b block lg:table-cell relative lg:static">
         <span className="lg:hidden px-2 py-1 text-xs font-bold uppercase">Должность:</span>
-        {newRoleArray.map((it, index) => (
-          <p key={index}>{it}</p>
+        {newRoleArray.map((it) => (
+          <p key={it}>{it}</p>
         ))}
       </td>
       <td className="w-full lg:w-auto p-2 text-gray-800 text-left lg:text-center border border-b block lg:table-cell relative lg:static">
