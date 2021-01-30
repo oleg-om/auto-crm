@@ -18,6 +18,7 @@ import passportJWT from './services/passport'
 import User from './model/User.model'
 import Message from './model/Message.model'
 import Html from '../client/html'
+import kerchshinaCheck from './services/kerchshina'
 
 const taskRoutes = require('./routes/api/task.routes')
 const placeRoutes = require('./routes/api/place.routes')
@@ -32,6 +33,7 @@ const materialRoutes = require('./routes/api/material.routes')
 const shinomotazhpriceRoutes = require('./routes/api/shinomotazh.price.routes')
 const shinomotazhRoutes = require('./routes/api/shinomotazh.routes')
 const vendorRoutes = require('./routes/api/vendor.routes')
+const tyreRoutes = require('./routes/api/tyres.routes')
 
 const Root = () => ''
 
@@ -101,6 +103,7 @@ server.use('/api/v1', materialRoutes)
 server.use('/api/v1', shinomotazhpriceRoutes)
 server.use('/api/v1', shinomotazhRoutes)
 server.use('/api/v1', vendorRoutes)
+server.use('/api/v1', tyreRoutes)
 
 server.get('/api/v1/auth', async (req, res) => {
   try {
@@ -292,3 +295,5 @@ io.on('connection', (socket) => {
 })
 
 console.log(`Serving at http://localhost:${port}`)
+
+kerchshinaCheck()

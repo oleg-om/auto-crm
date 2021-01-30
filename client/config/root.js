@@ -51,6 +51,11 @@ import ShinomontazhEditFull from '../scenes/Shinomontazhs/Shinomontazhs.edit'
 import VendorList from '../scenes/Vendors/Vendors.list'
 import VendorNew from '../scenes/Vendors/Vendors.create'
 import VendorEdit from '../scenes/Vendors/Vendors.edit'
+import TyresList from '../scenes/Tyres/Tyres.list'
+import TyresNew from '../scenes/Tyres/Tyres.preorder.create'
+import TyreEditSimple from '../scenes/Tyres/Tyres.preorder.edit'
+import TyreEditFull from '../scenes/Tyres/Tyres.edit'
+import TyreView from '../scenes/Tyres/Tyres.preorder.view'
 
 import Startup from './startup'
 
@@ -193,6 +198,11 @@ const RootComponent = (props) => {
             <PrivateRoute exact path="/shinomontazh/list" component={ShinomontazhsList} />
             <PrivateRoute exact path="/shinomontazh/create" component={ShinomontazhsNew} />
             <PrivateRoute exact path="/shinomontazh/edit/:id" component={ShinomontazhEditFull} />
+            <PrivateRoute exact path="/tyres/order/list" component={TyresList} />
+            <PrivateRoute exact path="/tyres/order/create" component={TyresNew} />
+            <PrivateRoute exact path="/tyres/edit/:id" component={TyreEditSimple} />
+            <PrivateRoute exact path="/tyres/editfull/:id" component={TyreEditFull} />
+            <PrivateRoute exact path="/tyres/view/:id" component={TyreView} />
             <Route component={() => <NotFound />} />
           </Switch>
         </Startup>

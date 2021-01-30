@@ -11,20 +11,34 @@ const Pagination = ({ postsPerPage, totalPosts, paginate, currentPage, currentPo
   return (
     <nav className="px-5 py-5 bg-white border-t flex flex-col xs:flex-row items-center xs:justify-between rounded-lg shadow">
       <ul className="flex">
-        <button
-          type="button"
-          className="mx-1 px-3 py-2 text-xs rounded-lg font-bold bg-gray-200 text-gray-700 hover:text-gray-600 hover:bg-gray-400"
-          onClick={() => (currentPage > 1 ? paginate(currentPage - 1) : null)}
-        >
-          Назад
-        </button>
+        {currentPage >= 4 ? (
+          <button
+            type="button"
+            className="mx-1 px-3 py-2 text-xs rounded-lg font-bold bg-gray-200 text-gray-700 hover:text-gray-600 hover:bg-gray-400"
+            onClick={() => paginate(1)}
+          >
+            Первая
+          </button>
+        ) : null}
+        {currentPage !== 1 ? (
+          <button
+            type="button"
+            className="mx-1 px-3 py-2 text-xs rounded-lg font-bold bg-gray-200 text-gray-700 hover:text-gray-600 hover:bg-gray-400"
+            onClick={() => (currentPage > 1 ? paginate(currentPage - 1) : null)}
+          >
+            Назад
+          </button>
+        ) : null}
         {pageNumbers
           .filter(
             (it) =>
               it === currentPage ||
               it === currentPage + 1 ||
               it === currentPage + 2 ||
-              it === currentPage - 1
+              it === currentPage + 3 ||
+              it === currentPage + 4 ||
+              it === currentPage - 1 ||
+              it === currentPage - 2
           )
           .map((number) => (
             <button
@@ -41,19 +55,30 @@ const Pagination = ({ postsPerPage, totalPosts, paginate, currentPage, currentPo
               {number}
             </button>
           ))}
-        <button
-          type="button"
-          className="mx-1 px-3 py-2 text-xs rounded-lg font-bold bg-gray-200 text-gray-700 hover:text-gray-600 hover:bg-gray-400"
-          onClick={() =>
-            currentPage < totalPosts &&
-            totalPosts > postsPerPage &&
-            currentPosts.length >= postsPerPage
-              ? paginate(currentPage + 1)
-              : null
-          }
-        >
-          Дальше
-        </button>
+        {currentPage !== pageNumbers.slice(-1)[0] ? (
+          <button
+            type="button"
+            className="mx-1 px-3 py-2 text-xs rounded-lg font-bold bg-gray-200 text-gray-700 hover:text-gray-600 hover:bg-gray-400"
+            onClick={() =>
+              currentPage < totalPosts &&
+              totalPosts > postsPerPage &&
+              currentPosts.length >= postsPerPage
+                ? paginate(currentPage + 1)
+                : null
+            }
+          >
+            Дальше
+          </button>
+        ) : null}
+        {currentPage >= 4 && currentPage !== totalPosts / postsPerPage ? (
+          <button
+            type="button"
+            className="mx-1 px-3 py-2 text-xs rounded-lg font-bold bg-gray-200 text-gray-700 hover:text-gray-600 hover:bg-gray-400"
+            onClick={() => paginate(pageNumbers.slice(-1)[0])}
+          >
+            Последняя
+          </button>
+        ) : null}
       </ul>
     </nav>
   )

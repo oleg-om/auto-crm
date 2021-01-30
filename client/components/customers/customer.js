@@ -18,7 +18,7 @@ const CustomerRow = (props) => {
       </td>
       <td className="w-full lg:w-auto p-2 text-gray-800 text-left lg:text-center border border-b block lg:table-cell relative lg:static">
         <span className="lg:hidden px-2 py-1 text-xs font-bold uppercase">Машина:</span>
-        {props.mark} {props.model} {props.mod} [{props.regnumber}]
+        {props.mark} {props.model} {props.mod} {props.regnumber ? `[${props.regnumber}]` : null}
       </td>
       <td className="w-full lg:w-auto p-2 text-gray-800 text-center border border-b block lg:table-cell relative lg:static whitespace-no-wrap">
         <Link

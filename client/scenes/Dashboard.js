@@ -11,6 +11,7 @@ import tyres from '../assets/images/Dashboard/tyres.png'
 import razval from '../assets/images/Dashboard/razval.png'
 import customer from '../assets/images/Dashboard/customer.png'
 import vendor from '../assets/images/Dashboard/vendor.png'
+import tyre from '../assets/images/Dashboard/tyrewheels.png'
 
 const Dashboard = () => {
   toast.configure()
@@ -113,6 +114,36 @@ const Dashboard = () => {
                     </div>
                     <div className="w-1/2">
                       <img src={razval} alt="" className="object-contain h-48 w-full" />
+                    </div>
+                  </div>
+                </Link>
+              </div>
+            ) : null}
+
+            {auth.roles.includes('tyresimple') ||
+            auth.roles.includes('tyrefull') ||
+            auth.roles.includes('boss') ||
+            auth.roles.includes('admin') ? (
+              <div className="md:w-1/2 px-3 mb-6 flex flex-col">
+                <Link
+                  to="/tyres/order/list"
+                  className="rounded-lg shadow-lg bg-gradient-to-r from-indigo-500 to-indigo-400 h-full"
+                >
+                  <div className="m-2 p-2 flex flex-row">
+                    <div className="w-1/2 px-3">
+                      <h2 className="text-3xl text-white font-bold">Шины и диски</h2>
+                      <p className="my-2 text-white">
+                        Возможность создавать, редактировать заказы по автозапчастям
+                      </p>
+                      <button
+                        type="button"
+                        className="bottom-0 py-2 px-4 bg-blue-600 text-white hover:bg-blue-700 hover:text-white rounded-lg lg:my-3 my-0"
+                      >
+                        Перейти
+                      </button>
+                    </div>
+                    <div className="w-1/2">
+                      <img src={tyre} alt="" className="object-contain h-48 w-full" />
                     </div>
                   </div>
                 </Link>

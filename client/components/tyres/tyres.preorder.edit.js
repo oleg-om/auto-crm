@@ -1,18 +1,21 @@
-import React, { useState, useRef } from 'react'
+import React, { useState, useRef, useEffect } from 'react'
 import { Link, useHistory } from 'react-router-dom'
 import { useSelector } from 'react-redux'
 import { toast } from 'react-toastify'
 import cx from 'classnames'
 import { useReactToPrint } from 'react-to-print'
 import 'react-toastify/dist/ReactToastify.css'
-import ComponentToPrint from './autoparts.print'
+import ComponentToPrint from './tyres.print'
 import malePlaceholder from '../../assets/images/profile_placeholder_male.webp'
 import orderPlaceholder from '../../assets/images/order_placeholder.webp'
 import taskStatuses from '../../lists/task-statuses'
 import cancelStatuses from '../../lists/cancel-statuses'
 import autopartStatuses from '../../lists/autoparts-statuses'
+import TyreColumn from './moduls/tyrecolumn'
+import AkbColumn from './moduls/akbcolumn'
+import WheelColumn from './moduls/wheelcolumn'
 
-const AutopartUpdate = (props) => {
+const TyreUpdate = (props) => {
   const history = useHistory()
 
   const componentRef = useRef()
@@ -46,29 +49,29 @@ const AutopartUpdate = (props) => {
     process: props.process ? props.process : auth.name,
     prepay: props.prepay,
     commentOrder: props.commentOrder,
-    order: props.order.length !== 0 ? props.order : [{}],
+    order: props.order.length !== 0 ? props.order : [{ autopartItem: '' }],
     dateInWork: props.dateInWork,
     dateFinish: props.dateFinish,
     dateMiscall: props.dateMiscall,
     dateCancel: props.dateCancel,
     cancelReason: props.cancelReason
   })
-  const changeAutopart = () => {
+  const changeTyre = () => {
     if (!state.process) notify('Поле Обработал заказ пустое')
     else if (!props.dateInWork && state.status === taskStatuses[1]) {
-      props.updateAutopart(props.id, { ...state, dateInWork: dateNew })
+      props.updateTyre(props.id, { ...state, dateInWork: dateNew })
       history.push('/autoparts/order/list')
       notify('Данные о заказе обновлены, заказ в работе')
     } else if (!props.dateFinish && state.status === taskStatuses[2]) {
-      props.updateAutopart(props.id, { ...state, dateFinish: dateNew })
+      props.updateTyre(props.id, { ...state, dateFinish: dateNew })
       history.push('/autoparts/order/list')
       notify('Данные о заказе обновлены, заказ выполнен')
     } else if (!props.dateMiscall && state.status === taskStatuses[4]) {
-      props.updateAutopart(props.id, { ...state, dateMiscall: dateNew })
+      props.updateTyre(props.id, { ...state, dateMiscall: dateNew })
       history.push('/autoparts/order/list')
       notify('Данные о заказе обновлены, клиент отказался от заказа')
     } else if (!props.dateCancel && state.status === taskStatuses[5]) {
-      props.updateAutopart(props.id, {
+      props.updateTyre(props.id, {
         ...state,
         dateCancel: dateNew,
         cancelReason: state.cancelReason
@@ -76,7 +79,7 @@ const AutopartUpdate = (props) => {
       history.push('/autoparts/order/list')
       notify('Данные о заказе обновлены, клиент отказался от заказа')
     } else {
-      props.updateAutopart(props.id, state)
+      props.updateTyre(props.id, state)
       history.push('/autoparts/order/list')
       notify('Данные о заказе обновлены')
     }
@@ -89,16 +92,19 @@ const AutopartUpdate = (props) => {
     }))
   }
 
-  const [inputFields, setInputFields] = useState(
-    state.order.map((it) => ({
-      autopartItem: it.autopartItem,
-      quantity: it.quantity,
-      price: it.price,
-      stat: it.stat,
-      vendor: it.vendor,
-      come: it.come
-    }))
-  )
+  const [inputFields, setInputFields] = useState([
+    { tyreItem: '', type: 'tyre', mode: 'full', brand: '' }
+  ])
+  useEffect(() => {
+    if (
+      props.status === taskStatuses[0] &&
+      props.order.length === 0 &&
+      props.preorder.length !== 0
+    ) {
+      setInputFields(props.preorder.filter((it) => it.mode === 'full'))
+    }
+    return () => {}
+  }, [props.preorder])
 
   const handleChangeInput = (index, event) => {
     const values = [...inputFields]
@@ -114,12 +120,10 @@ const AutopartUpdate = (props) => {
     setInputFields([
       ...inputFields,
       {
-        autopartItem: '',
-        quantity: '',
-        price: '',
-        stat: '',
-        vendor: '',
-        come: ''
+        tyreItem: '',
+        type: 'tyre',
+        mode: 'full',
+        brand: ''
       }
     ])
     setState((prevState) => ({
@@ -140,6 +144,7 @@ const AutopartUpdate = (props) => {
     }
   }
   const createDate = new Date(props.date)
+  console.log(state)
   return (
     <div>
       <div className="bg-white shadow rounded-lg px-8 pt-6 pb-8 mb-4 flex flex-col my-2">
@@ -450,11 +455,77 @@ const AutopartUpdate = (props) => {
               <b>Предварительный заказ</b>
               <div className="-mx-3 md:flex mb-2">
                 <div className="overflow-x-auto md:w-auto px-3 mb-6 md:mb-0">
-                  {props.preorder.map((it) => (
-                    <p key={it.autopartItem}>
-                      {it.autopartItem} {it.quantity ? `- ${it.quantity} шт` : null}
-                    </p>
-                  ))}
+                  {props.preorder
+                    ? props.preorder
+                        .filter((it) => it.mode === 'simple')
+                        .map((it) => (
+                          <p key={it.tyreItem}>
+                            {it.tyreItem} {it.quantity ? `- ${it.quantity} шт` : null}{' '}
+                            {it.price ? `, ${it.price} руб.` : null}
+                          </p>
+                        ))
+                    : null}
+                  {props.preorder
+                    ? props.preorder
+                        .filter((it) => it.mode === 'full' && it.type === 'tyre')
+                        .map((it) => (
+                          <p key={it.tyreItem}>
+                            Шина: {it.brand ? `${it.brand} ` : null}
+                            {it.model ? `${it.model} ` : null}
+                            {it.sizeone ? `${it.sizeone} ` : null}
+                            {it.sizetwo ? `/${it.sizetwo} ` : null}
+                            {it.sizethree ? `R${it.sizethree} ` : null}
+                            {it.indexone ? `${it.indexone} ` : null}
+                            {it.indextwo ? `${it.indextwo} ` : null}
+                            {it.season === 'summer' ? 'летняя ' : null}
+                            {it.season === 'winter' ? 'зимняя ' : null}
+                            {it.season === 'allseason' ? 'всесезонная ' : null}
+                            {it.quantity ? `- ${it.quantity} шт ` : null}
+                            {it.price ? `, ${it.price} руб.` : null}
+                          </p>
+                        ))
+                    : null}
+                  {props.preorder
+                    ? props.preorder
+                        .filter((it) => it.mode === 'full' && it.type === 'akb')
+                        .map((it) => (
+                          <p key={it.tyreItem}>
+                            АКБ: {it.brand ? `${it.brand} ` : null}
+                            {it.model ? `${it.model} ` : null}
+                            {it.tok ? `Пусковой ток: ${it.tok}, ` : null}
+                            {it.emkost ? `${it.emkost} Ah, ` : null}
+                            {it.size ? `Размер: ${it.size}, ` : null}
+                            {it.typeakb === 'euro' ? 'Евро, ' : null}
+                            {it.typeakb === 'asia' ? 'Азия, ' : null}
+                            {it.polar === 'pryamaya' ? 'прямая полярность, ' : null}
+                            {it.polar === 'reversed' ? 'обратная полярность, ' : null}
+                            {it.polar === 'uni' ? 'универсальная полярность, ' : null}
+                            {it.quantity ? `- ${it.quantity} шт` : null}
+                            {it.price ? ` , ${it.price} руб.` : null}
+                          </p>
+                        ))
+                    : null}
+                  {props.preorder
+                    ? props.preorder
+                        .filter((it) => it.mode === 'full' && it.type === 'wheel')
+                        .map((it) => (
+                          <p key={it.tyreItem}>
+                            Диски: {it.brand ? `${it.brand} ` : null}
+                            {it.model ? `${it.model} ` : null}
+                            {it.diametr ? `R${it.diametr} ` : null}
+                            {it.pcd ? `PCD: ${it.pcd}, ` : null}
+                            {it.et ? `ET: ${it.et}, ` : null}
+                            {it.dia ? `ступица: ${it.dia}, ` : null}
+                            {it.wheelwidth ? `${it.wheelwidth}J, ` : null}
+                            {it.typewheel === 'lit' ? 'Литые, ' : null}
+                            {it.typewheel === 'sht' ? 'Штампованные, ' : null}
+                            {it.typewheel === 'kov' ? 'Кованные, ' : null}
+                            {it.color ? `цвет: ${it.color}` : null}
+                            {it.quantity ? ` - ${it.quantity} шт, ` : null}
+                            {it.price ? `, ${it.price} руб.` : null}
+                          </p>
+                        ))
+                    : null}
                 </div>
               </div>
               {props.comment ? (
@@ -482,19 +553,16 @@ const AutopartUpdate = (props) => {
               <table className="border-collapse w-full">
                 <thead>
                   <tr>
+                    <th className="p-3 font-bold uppercase bg-gray-100 text-sm text-gray-600 border border-gray-300 table-cell whitespace-no-wrap">
+                      Тип
+                    </th>
                     <th className="p-3 font-bold uppercase bg-gray-100 text-sm text-gray-600 border border-gray-300 table-cell">
-                      Запчасти
+                      Наименование
                     </th>
                     <th className="p-3 font-bold uppercase bg-gray-100 text-sm text-gray-600 border border-gray-300 table-cell whitespace-no-wrap">
-                      Кол-во
+                      Цена
                     </th>
-                    <th className="p-3 px-3 font-bold uppercase bg-gray-100 text-sm text-gray-600 border border-gray-300 table-cell">
-                      Цена (закупочная)
-                    </th>
-                    <th className="p-3 font-bold uppercase bg-gray-100 text-sm text-gray-600 border border-gray-300 table-cell">
-                      Цена (розница)
-                    </th>
-                    <th className="p-3 font-bold uppercase bg-gray-100 text-sm text-gray-600 border border-gray-300 hidden md:table-cell">
+                    <th className="p-3 px-6 font-bold uppercase bg-gray-100 text-sm text-gray-600 border border-gray-300 hidden md:table-cell">
                       Сумма
                     </th>
                     <th className="p-3 font-bold uppercase bg-gray-100 text-sm text-gray-600 border border-gray-300 table-cell">
@@ -502,9 +570,6 @@ const AutopartUpdate = (props) => {
                     </th>
                     <th className="p-3 font-bold uppercase bg-gray-100 text-sm text-gray-600 border border-gray-300 table-cell">
                       Поставщик
-                    </th>
-                    <th className="p-3 font-bold uppercase bg-gray-100 text-sm text-gray-600 border border-gray-300 table-cell whitespace-no-wrap">
-                      Дата прибытия
                     </th>
                     <th className="p-3 font-bold uppercase bg-gray-100 text-sm text-gray-600 border border-gray-300 table-cell">
                       Строки
@@ -514,68 +579,140 @@ const AutopartUpdate = (props) => {
                 <tbody>
                   {inputFields.map((inputField, index) => (
                     <tr
-                      key={`key-${index}`}
+                      key={inputField.autopartItem}
                       className="bg-white lg:hover:bg-gray-100 table-row flex-row lg:flex-row flex-wrap mb-10 lg:mb-0"
                     >
-                      <td className="lg:w-6/12 p-2 text-gray-800 text-center border border-b table-cell relative">
-                        <input
-                          className="appearance-none block w-full bg-grey-lighter text-sm text-grey-darker border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-1 px-4"
-                          type="text"
-                          placeholder="Например: Сайлентблок нижнего рычага задние LEMFORDER"
-                          name="autopartItem"
-                          value={inputField.autopartItem}
-                          defaultValue={
-                            state.order.find((it, id) => id === index)
-                              ? state.order.find((it, id) => id === index).autopartItem
-                              : ''
-                          }
-                          onChange={(event) => handleChangeInput(index, event)}
-                        />
+                      <td className="lg:w-auto p-2 text-gray-800 text-center border border-b block table-cell relative static">
+                        <div className="flex-shrink w-full">
+                          <label
+                            className="block uppercase tracking-wide text-grey-darker text-xs text-left font-bold mb-2"
+                            htmlFor="grid-first-name"
+                          >
+                            Тип
+                          </label>
+                          <div className="flex-shrink w-full inline-block relative mb-3">
+                            <select
+                              className="appearance-none block w-auto bg-grey-lighter text-grey-darker border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-1 pl-4"
+                              name="type"
+                              value={inputField.type}
+                              onChange={(event) => handleChangeInput(index, event)}
+                            >
+                              <option value="" hidden disabled className="text-gray-800">
+                                Выберите тип
+                              </option>
+                              <option value="tyre" className="text-gray-800">
+                                Шины
+                              </option>
+                              <option value="wheel" className="text-gray-800">
+                                Диски
+                              </option>
+                              <option value="akb" className="text-gray-800">
+                                АКБ
+                              </option>
+                            </select>
+                            <div className="pointer-events-none absolute top-0 mt-2  right-0 flex items-center px-2 text-gray-600">
+                              <svg
+                                className="fill-current h-4 w-4"
+                                xmlns="http://www.w3.org/2000/svg"
+                                viewBox="0 0 20 20"
+                              >
+                                <path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z" />
+                              </svg>
+                            </div>
+                          </div>
+                        </div>
                       </td>
-                      <td className="p-2 text-gray-800 text-center border border-b table-cell relative">
-                        <input
-                          className="lg:w-16 appearance-none block bg-grey-lighter text-sm text-grey-darker border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-1 px-4"
-                          name="quantity"
-                          type="number"
-                          value={inputField.quantity}
-                          defaultValue={
-                            state.order.find((it, id) => id === index)
-                              ? state.order.find((it, id) => id === index).quantity
-                              : ''
-                          }
-                          autoComplete="off"
-                          onChange={(event) => handleChangeInput(index, event)}
+                      {inputField.type === 'tyre' ? (
+                        <TyreColumn
+                          inputField={inputField}
+                          handleChangeInput={handleChangeInput}
+                          index={index}
                         />
-                      </td>
-                      <td className="p-2 text-gray-800 text-center border border-b table-cell relative">
-                        <input
-                          className="appearance-none block w-full bg-grey-lighter text-sm text-grey-darker border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-1 px-4"
-                          name="zakup"
-                          type="number"
-                          value={inputField.zakup}
-                          defaultValue={
-                            state.order.find((it, id) => id === index)
-                              ? state.order.find((it, id) => id === index).zakup
-                              : ''
-                          }
-                          autoComplete="off"
-                          onChange={(event) => handleChangeInput(index, event)}
+                      ) : null}
+                      {inputField.type === 'akb' ? (
+                        <AkbColumn
+                          inputField={inputField}
+                          handleChangeInput={handleChangeInput}
+                          index={index}
                         />
-                      </td>
-                      <td className="p-2 text-gray-800 text-center border border-b table-cell relative">
-                        <input
-                          className="appearance-none block w-full bg-grey-lighter text-sm text-grey-darker border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-1 px-4"
-                          name="price"
-                          type="number"
-                          value={inputField.price}
-                          defaultValue={
-                            state.order.find((it, id) => id === index)
-                              ? state.order.find((it, id) => id === index).price
-                              : ''
-                          }
-                          autoComplete="off"
-                          onChange={(event) => handleChangeInput(index, event)}
+                      ) : null}
+                      {inputField.type === 'wheel' ? (
+                        <WheelColumn
+                          inputField={inputField}
+                          handleChangeInput={handleChangeInput}
+                          index={index}
                         />
+                      ) : null}
+                      <td className="lg:w-auto p-2 text-gray-800 text-center border border-b block table-cell relative static">
+                        <div className="flex-shrink w-full">
+                          <label
+                            className="block uppercase tracking-wide text-grey-darker text-xs text-left font-bold mb-2"
+                            htmlFor="grid-first-name"
+                          >
+                            Цена (закупка)
+                          </label>
+                          <div className="flex-shrink w-full inline-block  mb-3">
+                            <input
+                              className="w-32 appearance-none block bg-grey-lighter text-sm text-grey-darker border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-1 px-4"
+                              name="zakup"
+                              type="number"
+                              value={inputField.zakup}
+                              defaultValue={
+                                state.order.find((it, id) => id === index)
+                                  ? state.order.find((it, id) => id === index).zakup
+                                  : ''
+                              }
+                              autoComplete="off"
+                              onChange={(event) => handleChangeInput(index, event)}
+                            />
+                          </div>
+                        </div>
+                        <div className="flex-shrink w-full">
+                          <label
+                            className="block uppercase tracking-wide text-grey-darker text-xs text-left font-bold mb-2"
+                            htmlFor="grid-first-name"
+                          >
+                            Цена (розница)
+                          </label>
+                          <div className="flex-shrink w-full inline-block  mb-3">
+                            <input
+                              className="w-32 appearance-none block bg-grey-lighter text-sm text-grey-darker border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-1 px-4"
+                              name="price"
+                              type="number"
+                              value={inputField.price}
+                              defaultValue={
+                                state.order.find((it, id) => id === index)
+                                  ? state.order.find((it, id) => id === index).price
+                                  : ''
+                              }
+                              autoComplete="off"
+                              onChange={(event) => handleChangeInput(index, event)}
+                            />
+                          </div>
+                        </div>
+                        <div className="flex-shrink w-full">
+                          <label
+                            className="block uppercase tracking-wide text-grey-darker text-xs text-left font-bold mb-2"
+                            htmlFor="grid-first-name"
+                          >
+                            Количество
+                          </label>
+                          <div className="flex-shrink w-full inline-block  mb-3">
+                            <input
+                              className="w-32 appearance-none block bg-grey-lighter text-sm text-grey-darker border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-1 px-4"
+                              name="quantity"
+                              type="number"
+                              value={inputField.quantity}
+                              defaultValue={
+                                state.order.find((it, id) => id === index)
+                                  ? state.order.find((it, id) => id === index).quantity
+                                  : ''
+                              }
+                              autoComplete="off"
+                              onChange={(event) => handleChangeInput(index, event)}
+                            />
+                          </div>
+                        </div>
                       </td>
                       <td className="w-full lg:w-auto p-2 text-gray-800 text-center border border-b hidden md:table-cell relative">
                         <p>
@@ -586,7 +723,7 @@ const AutopartUpdate = (props) => {
                       </td>
                       <td className="w-full lg:w-auto p-2 text-gray-800 text-center border border-b table-cell relative">
                         <select
-                          className="appearance-none block w-auto bg-grey-lighter text-sm text-grey-darker border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-1 px-4"
+                          className="appearance-none block w-full bg-grey-lighter text-sm text-grey-darker border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-1 px-4"
                           name="stat"
                           value={inputField.stat}
                           defaultValue={
@@ -605,74 +742,74 @@ const AutopartUpdate = (props) => {
                           ))}
                         </select>
                       </td>
-                      <td className="w-full lg:w-auto p-2 text-gray-800 text-center border border-b table-cell relative">
-                        <select
-                          className="appearance-none block bg-grey-lighter text-sm text-grey-darker border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-1 px-4"
-                          name="vendor"
-                          value={inputField.vendor}
-                          defaultValue={
-                            state.order.find((it, id) => id === index)
-                              ? state.order.find((it, id) => id === index).vendor
-                              : ''
-                          }
-                          autoComplete="off"
-                          onChange={(event) => handleChangeInput(index, event)}
-                        >
-                          <option value="" disabled selected hidden className="text-gray-800">
+                      <td className="lg:w-auto p-2 text-gray-800 text-center border border-b block table-cell relative static">
+                        <div className="flex-shrink w-full">
+                          <label
+                            className="block uppercase tracking-wide text-grey-darker text-xs text-left font-bold mb-2"
+                            htmlFor="grid-first-name"
+                          >
                             Поставщик
-                          </option>
-                          {vendorList
-                            .filter((it) => it.type === 'autoparts')
-                            .sort(function sortVendors(a, b) {
-                              if (a.name > b.name) {
-                                return 1
+                          </label>
+                          <div className="flex-shrink w-full inline-block  mb-3">
+                            <select
+                              className="appearance-none block w-full bg-grey-lighter text-sm text-grey-darker border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-1 px-4"
+                              name="vendor"
+                              value={inputField.vendor}
+                              defaultValue={
+                                state.order.find((it, id) => id === index)
+                                  ? state.order.find((it, id) => id === index).vendor
+                                  : ''
                               }
-                              if (a.name < b.name) {
-                                return -1
-                              }
-                              return 0
-                            })
-                            .map((it) => (
-                              <option key={it.value} value={it.value}>
-                                {it.name}
+                              autoComplete="off"
+                              onChange={(event) => handleChangeInput(index, event)}
+                            >
+                              <option value="" disabled selected hidden className="text-gray-800">
+                                Выберите поставщика
                               </option>
-                            ))}
-                          <option value="instock">В наличии</option>
-                        </select>
+                              {vendorList
+                                .filter((it) => it.type === 'autoparts')
+                                .sort(function sortVendors(a, b) {
+                                  if (a.name > b.name) {
+                                    return 1
+                                  }
+                                  if (a.name < b.name) {
+                                    return -1
+                                  }
+                                  return 0
+                                })
+                                .map((it) => (
+                                  <option key={it.value} value={it.value}>
+                                    {it.name}
+                                  </option>
+                                ))}
+                              <option value="instock">В наличии</option>
+                            </select>
+                          </div>
+                        </div>
+                        <div className="flex-shrink w-full">
+                          <label
+                            className="block uppercase tracking-wide text-grey-darker text-xs text-left font-bold mb-2"
+                            htmlFor="grid-first-name"
+                          >
+                            Дата прибытия
+                          </label>
+                          <div className="flex-shrink w-full inline-block  mb-3">
+                            <input
+                              className="appearance-none block w-full bg-grey-lighter text-sm text-grey-darker border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-1 px-4"
+                              type="date"
+                              name="come"
+                              value={inputField.come}
+                              defaultValue={
+                                state.order.find((it, id) => id === index)
+                                  ? state.order.find((it, id) => id === index).come
+                                  : ''
+                              }
+                              autoComplete="off"
+                              onChange={(event) => handleChangeInput(index, event)}
+                            />
+                          </div>
+                        </div>
                       </td>
-                      {props.id_autoparts > 58 ? (
-                        <td className="w-full lg:w-auto p-2 text-gray-800 text-center border border-b table-cell relative">
-                          <input
-                            className="appearance-none block w-full bg-grey-lighter text-sm text-grey-darker border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-1 px-4"
-                            type="date"
-                            name="come"
-                            value={inputField.come}
-                            defaultValue={
-                              state.order.find((it, id) => id === index)
-                                ? state.order.find((it, id) => id === index).come
-                                : ''
-                            }
-                            autoComplete="off"
-                            onChange={(event) => handleChangeInput(index, event)}
-                          />
-                        </td>
-                      ) : (
-                        <td className="w-full lg:w-auto p-2 text-gray-800 text-center border border-b table-cell relative">
-                          <input
-                            className="appearance-none block w-full bg-grey-lighter text-sm text-grey-darker border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-1 px-4"
-                            type="text"
-                            name="come"
-                            value={inputField.come}
-                            defaultValue={
-                              state.order.find((it, id) => id === index)
-                                ? state.order.find((it, id) => id === index).come
-                                : ''
-                            }
-                            autoComplete="off"
-                            onChange={(event) => handleChangeInput(index, event)}
-                          />
-                        </td>
-                      )}
                       <td className="w-full lg:w-auto p-2 text-gray-800 text-center border border-b table-cell">
                         <div className="flex flex-row">
                           <button
@@ -798,7 +935,7 @@ const AutopartUpdate = (props) => {
       </div>
       <div className=" flex my-2">
         <Link
-          to="/autoparts/order/list"
+          to="/tyres/order/list"
           className="my-3 mr-2 py-2 w-1/3 px-3 bg-red-600 text-white text-center hover:bg-red-700 hover:text-white rounded-lg"
         >
           Отмена
@@ -806,7 +943,7 @@ const AutopartUpdate = (props) => {
         <button
           className="my-3 ml-2 py-2 w-2/3 px-3 bg-blue-600 text-white hover:bg-blue-700 hover:text-white rounded-lg"
           type="button"
-          onClick={changeAutopart}
+          onClick={changeTyre}
         >
           Сохранить
         </button>
@@ -815,4 +952,4 @@ const AutopartUpdate = (props) => {
   )
 }
 
-export default AutopartUpdate
+export default TyreUpdate

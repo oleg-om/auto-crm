@@ -4,12 +4,12 @@ import { toast } from 'react-toastify'
 import cx from 'classnames'
 import { useReactToPrint } from 'react-to-print'
 import 'react-toastify/dist/ReactToastify.css'
-import ComponentToPrint from './autoparts.print'
+import ComponentToPrint from './tyres.print'
 import malePlaceholder from '../../assets/images/profile_placeholder_male.webp'
 import orderPlaceholder from '../../assets/images/order_placeholder.webp'
 import taskStatuses from '../../lists/task-statuses'
 
-const AutopartViewOrder = (props) => {
+const TyreViewOrder = (props) => {
   const history = useHistory()
 
   const componentRef = useRef()
@@ -25,8 +25,8 @@ const AutopartViewOrder = (props) => {
     comment: props.comment,
     prepay: props.prepay
   })
-  const changeAutopart = () => {
-    props.updateAutopart(props.id, state)
+  const changeTyre = () => {
+    props.updateTyre(props.id, state)
     history.push('/autoparts/order/list')
     notify('Данные о заказе обновлены')
   }
@@ -497,7 +497,7 @@ const AutopartViewOrder = (props) => {
       </div>
       <div className=" flex my-2">
         <Link
-          to="/autoparts/order/list"
+          to="/tyres/order/list"
           className="my-3 mr-2 py-2 w-1/3 px-3 bg-red-600 text-white text-center hover:bg-red-700 hover:text-white rounded-lg"
         >
           Отмена
@@ -505,7 +505,7 @@ const AutopartViewOrder = (props) => {
         <button
           className="my-3 ml-2 py-2 w-2/3 px-3 bg-blue-600 text-white hover:bg-blue-700 hover:text-white rounded-lg"
           type="button"
-          onClick={changeAutopart}
+          onClick={changeTyre}
         >
           Сохранить
         </button>
@@ -514,4 +514,4 @@ const AutopartViewOrder = (props) => {
   )
 }
 
-export default AutopartViewOrder
+export default TyreViewOrder

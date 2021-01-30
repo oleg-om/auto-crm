@@ -14,6 +14,7 @@ const BossSidebar = (props) => {
           onClickMonth={props.setActiveMonth}
           value={props.activeMonth}
           minDate={new Date(2021, 0, 1)}
+          maxDate={new Date()}
         />
       </div>
       <div className="text-white mx-2">

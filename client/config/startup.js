@@ -14,6 +14,7 @@ import { getMaterials } from '../redux/reducers/materials'
 import { getShinomontazhprices } from '../redux/reducers/shinomotazh.prices'
 import { getShinomontazhs } from '../redux/reducers/shinomontazhs'
 import { getVendors } from '../redux/reducers/vendors'
+import { getTyres } from '../redux/reducers/tyres'
 
 const Startup = (props) => {
   const dispatch = useDispatch()
@@ -67,6 +68,10 @@ const Startup = (props) => {
 
   useEffect(() => {
     dispatch(getVendors())
+  }, [dispatch])
+
+  useEffect(() => {
+    dispatch(getTyres())
   }, [dispatch])
 
   return props.children
