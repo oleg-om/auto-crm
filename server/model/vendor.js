@@ -10,6 +10,10 @@ const Vendor = new mongoose.Schema({
     type: String,
     required: false
   },
+  phone: {
+    type: String,
+    required: false
+  },
   id: {
     type: String,
     unique: true,

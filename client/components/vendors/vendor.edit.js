@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import { Link, useHistory } from 'react-router-dom'
 import { toast } from 'react-toastify'
+import NumberFormat from 'react-number-format'
 import Modal from '../Modal.delete'
 import 'react-toastify/dist/ReactToastify.css'
 import vendorList from '../../lists/vendor-list'
@@ -15,7 +16,8 @@ const VendorUpdate = (props) => {
   }
   const [state, setState] = useState({
     name: props.name,
-    type: props.type
+    type: props.type,
+    phone: props.phone
   })
   const removeVendor = (e) => {
     props.deleteVendor(props.id, e.target.value)
@@ -44,7 +46,7 @@ const VendorUpdate = (props) => {
     <div>
       <div className="bg-white shadow rounded-lg px-8 pt-6 pb-8 mb-4 flex flex-col my-2">
         <div className="-mx-3 md:flex flex-wrap">
-          <div className="md:w-1/2 px-3 mb-6 md:mb-0 flex flex-col">
+          <div className="md:w-1/3 px-3 mb-6 md:mb-0 flex flex-col">
             <label
               className="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2"
               htmlFor="grid-first-name"
@@ -61,7 +63,26 @@ const VendorUpdate = (props) => {
               onChange={onChange}
             />
           </div>
-          <div className="md:w-1/2 px-3 mb-6 md:mb-0 flex flex-col">
+          <div className="md:w-1/3 px-3 mb-6 md:mb-0 flex flex-col">
+            <label
+              className="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2"
+              htmlFor="grid-first-name"
+            >
+              Телефон
+            </label>
+            <NumberFormat
+              format="+7 (###) ###-##-##"
+              mask="_"
+              className="appearance-none block w-full bg-grey-lighter text-grey-darker border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-3 px-4 mb-3"
+              value={state.phone}
+              name="phone"
+              id="phone"
+              placeholder="Введите телефон"
+              required
+              onChange={onChange}
+            />
+          </div>
+          <div className="md:w-1/3 px-3 mb-6 md:mb-0 flex flex-col">
             <label
               className="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2"
               htmlFor="grid-first-name"

@@ -306,4 +306,4 @@ io.on('connection', (socket) => {
 
 console.log(`Serving at http://localhost:${port}`)
 
-setInterval(() => kerchshinaCheck(io), 100000)
+setInterval(() => kerchshinaCheck(io), 900000)

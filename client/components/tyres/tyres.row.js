@@ -1,15 +1,15 @@
-import React, { useRef } from 'react'
+import React from 'react'
 import cx from 'classnames'
 import { Link } from 'react-router-dom'
-import { useReactToPrint } from 'react-to-print'
-import ComponentToPrint from './tyres.print'
+// import { useReactToPrint } from 'react-to-print'
+// import ComponentToPrint from './tyres.print'
 import taskStatuses from '../../lists/task-statuses'
 
 const TyresRow = (props) => {
-  const componentRef = useRef()
-  const handlePrint = useReactToPrint({
-    content: () => componentRef.current
-  })
+  // const componentRef = useRef()
+  // const handlePrint = useReactToPrint({
+  //   content: () => componentRef.current
+  // })
   const createDate = new Date(props.date)
   return (
     <tr className="bg-white lg:hover:bg-gray-100 flex lg:table-row flex-row lg:flex-row flex-wrap lg:flex-no-wrap mb-5 lg:mb-0">
@@ -41,7 +41,7 @@ const TyresRow = (props) => {
                   {it.indextwo ? `${it.indextwo} ` : null}
                   {it.season === 'summer' ? 'летняя ' : null}
                   {it.season === 'winter' ? 'зимняя ' : null}
-                  {it.season === 'allseason' ? 'всесезонная ' : null}
+                  {it.season === 'all' ? 'всесезонная ' : null}
                 </p>
               ))
           : null}
@@ -99,7 +99,7 @@ const TyresRow = (props) => {
         {props.placesList ? props.placesList.name : ''}
         {props.siteNumber ? (
           <div className="rounded py-1 px-3 text-xs font-bold bg-green-600 text-white">
-            Заказ с сайта № {props.siteNumber}
+            Заказ с сайта №{props.siteNumber}
           </div>
         ) : null}
       </td>
@@ -143,7 +143,7 @@ const TyresRow = (props) => {
       </td>
       <td className="w-full lg:w-auto p-2 text-gray-800 text-center border border-b block lg:table-cell relative lg:static whitespace-no-wrap">
         <div className="flex flex-row justify-center">
-          <button
+          {/* <button
             type="submit"
             title="Печать предчека"
             onClick={handlePrint}
@@ -183,7 +183,7 @@ const TyresRow = (props) => {
                 </g>
               </svg>
             </div>
-          </button>
+          </button> */}
           <Link
             to={
               props.role.includes('autopartfull')
@@ -196,14 +196,14 @@ const TyresRow = (props) => {
           </Link>
         </div>
       </td>
-      <div className="hidden">
+      {/* <div className="hidden">
         <ComponentToPrint
           ref={componentRef}
           props={props}
           helpphone={props.settings.map((it) => it.helpphone)}
           placesList={props.placesList}
         />
-      </div>
+      </div> */}
     </tr>
   )
 }

@@ -357,6 +357,7 @@ const TyresList = () => {
                         </option>
                       )
                     })}
+                    <option value="kerchshina.com">Заказы с сайта</option>
                   </select>
                   <div className="pointer-events-none absolute top-0 mt-2  right-0 flex items-center px-2 text-gray-600">
                     <svg

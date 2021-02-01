@@ -93,13 +93,13 @@ const TyreUpdate = (props) => {
   }
 
   const [inputFields, setInputFields] = useState([
-    { tyreItem: '', type: 'tyre', mode: 'full', brand: '' }
+    { tyreItem: '', type: '1', mode: 'full', brand: '' }
   ])
   useEffect(() => {
     if (
       props.status === taskStatuses[0] &&
       props.order.length === 0 &&
-      props.preorder.length !== 0
+      props.preorder.filter((it) => it.mode === 'full').length !== 0
     ) {
       setInputFields(props.preorder.filter((it) => it.mode === 'full'))
     }
@@ -144,7 +144,7 @@ const TyreUpdate = (props) => {
     }
   }
   const createDate = new Date(props.date)
-  console.log(state)
+
   return (
     <div>
       <div className="bg-white shadow rounded-lg px-8 pt-6 pb-8 mb-4 flex flex-col my-2">
@@ -472,10 +472,30 @@ const TyreUpdate = (props) => {
                 <div className="overflow-x-auto md:w-auto px-3 mb-6 md:mb-0">
                   {props.preorder
                     ? props.preorder
-                        .filter((it) => it.mode === 'simple')
+                        .filter((it) => it.mode === 'simple' && it.type === '1')
                         .map((it) => (
                           <p key={it.tyreItem}>
-                            {it.tyreItem} {it.quantity ? `- ${it.quantity} шт` : null}{' '}
+                            Шина: {it.tyreItem} {it.quantity ? `- ${it.quantity} шт` : null}{' '}
+                            {it.price ? `, ${it.price} руб.` : null}
+                          </p>
+                        ))
+                    : null}
+                  {props.preorder
+                    ? props.preorder
+                        .filter((it) => it.mode === 'simple' && it.type === '2')
+                        .map((it) => (
+                          <p key={it.tyreItem}>
+                            Диски: {it.tyreItem} {it.quantity ? `- ${it.quantity} шт` : null}{' '}
+                            {it.price ? `, ${it.price} руб.` : null}
+                          </p>
+                        ))
+                    : null}
+                  {props.preorder
+                    ? props.preorder
+                        .filter((it) => it.mode === 'simple' && it.type === '3')
+                        .map((it) => (
+                          <p key={it.tyreItem}>
+                            АКБ: {it.tyreItem} {it.quantity ? `- ${it.quantity} шт` : null}{' '}
                             {it.price ? `, ${it.price} руб.` : null}
                           </p>
                         ))
@@ -494,7 +514,7 @@ const TyreUpdate = (props) => {
                             {it.indextwo ? `${it.indextwo} ` : null}
                             {it.season === 'summer' ? 'летняя ' : null}
                             {it.season === 'winter' ? 'зимняя ' : null}
-                            {it.season === 'allseason' ? 'всесезонная ' : null}
+                            {it.season === 'all' ? 'всесезонная ' : null}
                             {it.quantity ? `- ${it.quantity} шт ` : null}
                             {it.price ? `, ${it.price} руб.` : null}
                           </p>
@@ -737,25 +757,36 @@ const TyreUpdate = (props) => {
                         </p>
                       </td>
                       <td className="w-full lg:w-auto p-2 text-gray-800 text-center border border-b table-cell relative">
-                        <select
-                          className="appearance-none block w-full bg-grey-lighter text-sm text-grey-darker border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-1 px-4"
-                          name="stat"
-                          value={inputField.stat}
-                          defaultValue={
-                            state.order.find((it, id) => id === index)
-                              ? state.order.find((it, id) => id === index).stat
-                              : ''
-                          }
-                          autoComplete="off"
-                          onChange={(event) => handleChangeInput(index, event)}
-                        >
-                          <option value="" disabled selected hidden className="text-gray-800">
-                            Выберите статус
-                          </option>
-                          {autopartStatuses.map((it) => (
-                            <option key={it}>{it}</option>
-                          ))}
-                        </select>
+                        <div className="flex-shrink w-full inline-block relative">
+                          <select
+                            className="appearance-none block w-full bg-grey-lighter text-sm text-grey-darker border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-1 pl-4 pr-6"
+                            name="stat"
+                            value={inputField.stat}
+                            defaultValue={
+                              state.order.find((it, id) => id === index)
+                                ? state.order.find((it, id) => id === index).stat
+                                : ''
+                            }
+                            autoComplete="off"
+                            onChange={(event) => handleChangeInput(index, event)}
+                          >
+                            <option value="" disabled selected hidden className="text-gray-800">
+                              Выберите статус
+                            </option>
+                            {autopartStatuses.map((it) => (
+                              <option key={it}>{it}</option>
+                            ))}
+                          </select>
+                          <div className="pointer-events-none absolute top-0 mt-2  right-0 flex items-center px-2 text-gray-600">
+                            <svg
+                              className="fill-current h-4 w-4"
+                              xmlns="http://www.w3.org/2000/svg"
+                              viewBox="0 0 20 20"
+                            >
+                              <path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z" />
+                            </svg>
+                          </div>
+                        </div>
                       </td>
                       <td className="lg:w-auto p-2 text-gray-800 text-center border border-b block table-cell relative static">
                         <div className="flex-shrink w-full">
@@ -765,9 +796,9 @@ const TyreUpdate = (props) => {
                           >
                             Поставщик
                           </label>
-                          <div className="flex-shrink w-full inline-block  mb-3">
+                          <div className="flex-shrink w-full inline-block relative mb-3">
                             <select
-                              className="appearance-none block w-full bg-grey-lighter text-sm text-grey-darker border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-1 px-4"
+                              className="appearance-none block w-full bg-grey-lighter text-sm text-grey-darker border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-1 pl-4 pr-6"
                               name="vendor"
                               value={inputField.vendor}
                               defaultValue={
@@ -782,7 +813,7 @@ const TyreUpdate = (props) => {
                                 Выберите поставщика
                               </option>
                               {vendorList
-                                .filter((it) => it.type === 'autoparts')
+                                .filter((it) => it.type === 'tyres')
                                 .sort(function sortVendors(a, b) {
                                   if (a.name > b.name) {
                                     return 1
@@ -799,6 +830,15 @@ const TyreUpdate = (props) => {
                                 ))}
                               <option value="instock">В наличии</option>
                             </select>
+                            <div className="pointer-events-none absolute top-0 mt-2  right-0 flex items-center px-2 text-gray-600">
+                              <svg
+                                className="fill-current h-4 w-4"
+                                xmlns="http://www.w3.org/2000/svg"
+                                viewBox="0 0 20 20"
+                              >
+                                <path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z" />
+                              </svg>
+                            </div>
                           </div>
                         </div>
                         <div className="flex-shrink w-full">

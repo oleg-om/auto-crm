@@ -35,7 +35,7 @@ const TyresCreate = (props) => {
     mod: ''
   })
   const [inputFields, setInputFields] = useState([
-    { tyreItem: '', type: 'tyre', mode: 'full', brand: '' }
+    { tyreItem: '', type: '1', mode: 'full', brand: '' }
   ])
   const [activeCustomer, setActiveCustomer] = useState('')
   const [state, setState] = useState({
@@ -288,19 +288,12 @@ const TyresCreate = (props) => {
   const sendData = () => {
     if (!state.employee) notify('Заполните поле Принял заказ')
     if (!state.place) notify('Заполните поле Заказ принят на точке')
-    if (!state.mark) notify('Укажите марку авто')
-    if (!state.model) notify('Укажите модель авто')
     if (!state.name) notify('Заполните поле Имя клиента')
     if (!state.phone) notify('Заполните поле Телефон')
     if (state.preorder.length === 0) notify('Заполните заказ')
-    else if (
-      state.employee &&
-      state.place &&
-      state.mark &&
-      state.model &&
-      state.name &&
-      state.phone
-    ) {
+    if (state.preorder.filter((it) => it.type === '2').length > 0 && !state.mark && !state.model)
+      notify('Вы заказываете диски. Укажите марку и модель авто')
+    else if (state.employee && state.place && state.name && state.phone) {
       props.create(state)
       history.push('/tyres/order/list')
       notify('Заказ добавлен')
@@ -322,7 +315,7 @@ const TyresCreate = (props) => {
       ...inputFields,
       {
         tyreItem: '',
-        type: 'tyre',
+        type: '1',
         mode: 'full',
         brand: ''
       }
@@ -747,21 +740,21 @@ const TyresCreate = (props) => {
                       handleChangeInput={handleChangeInput}
                       index={index}
                     />
-                    {inputField.type === 'tyre' ? (
+                    {inputField.type === '1' ? (
                       <TyreColumn
                         inputField={inputField}
                         handleChangeInput={handleChangeInput}
                         index={index}
                       />
                     ) : null}
-                    {inputField.type === 'akb' ? (
+                    {inputField.type === '3' ? (
                       <AkbColumn
                         inputField={inputField}
                         handleChangeInput={handleChangeInput}
                         index={index}
                       />
                     ) : null}
-                    {inputField.type === 'wheel' ? (
+                    {inputField.type === '2' ? (
                       <WheelColumn
                         inputField={inputField}
                         handleChangeInput={handleChangeInput}

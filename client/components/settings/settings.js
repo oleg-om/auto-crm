@@ -5,7 +5,8 @@ import 'react-toastify/dist/ReactToastify.css'
 
 const SettingUpdate = (props) => {
   const [state, setState] = useState({
-    helpphone: props.helpphone
+    helpphone: props.helpphone,
+    lastKerchshina: props.lastKerchshina
   })
   toast.configure()
   const notify = (arg) => {

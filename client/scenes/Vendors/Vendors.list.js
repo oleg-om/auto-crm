@@ -45,6 +45,9 @@ const VendorList = () => {
                     Название
                   </th>
                   <th className="p-3 font-bold uppercase bg-gray-100 text-gray-600 border border-gray-300 hidden lg:table-cell">
+                    Телефон
+                  </th>
+                  <th className="p-3 font-bold uppercase bg-gray-100 text-gray-600 border border-gray-300 hidden lg:table-cell">
                     Категория
                   </th>
                   <th className="p-3 font-bold uppercase bg-gray-100 text-gray-600 border border-gray-300 hidden lg:table-cell">
@@ -52,16 +55,50 @@ const VendorList = () => {
                   </th>
                 </tr>
               </thead>
-              <tbody>
-                {list.map((it) => (
-                  <VendorRow
-                    key={it.id}
-                    vendorList={vendorList}
-                    deleteVendor={openAndDelete}
-                    {...it}
-                  />
-                ))}
-              </tbody>
+              {auth.roles.includes('boss') || auth.roles.includes('admin') ? (
+                <tbody>
+                  {list.map((it) => (
+                    <VendorRow
+                      key={it.id}
+                      vendorList={vendorList}
+                      deleteVendor={openAndDelete}
+                      {...it}
+                    />
+                  ))}
+                </tbody>
+              ) : null}
+              {!auth.roles.includes('boss') &&
+              !auth.roles.includes('admin') &&
+              auth.roles.includes('autopartfull') ? (
+                <tbody>
+                  {list
+                    .filter((it) => it.type === 'autoparts')
+                    .map((it) => (
+                      <VendorRow
+                        key={it.id}
+                        vendorList={vendorList}
+                        deleteVendor={openAndDelete}
+                        {...it}
+                      />
+                    ))}
+                </tbody>
+              ) : null}
+              {!auth.roles.includes('boss') &&
+              !auth.roles.includes('admin') &&
+              auth.roles.includes('tyrefull') ? (
+                <tbody>
+                  {list
+                    .filter((it) => it.type === 'tyres')
+                    .map((it) => (
+                      <VendorRow
+                        key={it.id}
+                        vendorList={vendorList}
+                        deleteVendor={openAndDelete}
+                        {...it}
+                      />
+                    ))}
+                </tbody>
+              ) : null}
             </table>
           </div>
           <Link to="/vendor/create">

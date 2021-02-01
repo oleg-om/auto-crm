@@ -13,6 +13,10 @@ const VendorRow = (props) => {
         {props.name}
       </td>
       <td className="w-full lg:w-auto p-2 text-gray-800 text-left lg:text-center border border-b block lg:table-cell relative lg:static">
+        <span className="lg:hidden px-2 py-1 text-xs font-bold uppercase">Телефон:</span>
+        {props.phone}
+      </td>
+      <td className="w-full lg:w-auto p-2 text-gray-800 text-left lg:text-center border border-b block lg:table-cell relative lg:static">
         <span className="lg:hidden px-2 py-1 text-xs font-bold uppercase">Категория:</span>
         {props.vendorList.find((it) => it.value === props.type).name}
       </td>
