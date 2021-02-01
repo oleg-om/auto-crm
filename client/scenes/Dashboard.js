@@ -11,7 +11,7 @@ import tyres from '../assets/images/Dashboard/tyres.png'
 import razval from '../assets/images/Dashboard/razval.png'
 import customer from '../assets/images/Dashboard/customer.png'
 import vendor from '../assets/images/Dashboard/vendor.png'
-import tyre from '../assets/images/Dashboard/tyrewheels.png'
+import tyre from '../assets/images/Dashboard/tyre.png'
 
 const Dashboard = () => {
   toast.configure()
