@@ -292,8 +292,18 @@ io.on('connection', (socket) => {
     io.emit('update edited oil')
     console.log('new oil order')
   })
+
+  socket.on('new tyre', ({ tyre }) => {
+    io.emit('update tyre', tyre)
+    console.log('new tyre order')
+  })
+
+  socket.on('edit tyre', () => {
+    io.emit('update edited tyre')
+    console.log('edited autopart tyre')
+  })
 })
 
 console.log(`Serving at http://localhost:${port}`)
 
-kerchshinaCheck()
+setInterval(() => kerchshinaCheck(io), 100000)

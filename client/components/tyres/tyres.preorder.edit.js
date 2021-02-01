@@ -121,7 +121,7 @@ const TyreUpdate = (props) => {
       ...inputFields,
       {
         tyreItem: '',
-        type: 'tyre',
+        type: '1',
         mode: 'full',
         brand: ''
       }
@@ -156,18 +156,27 @@ const TyreUpdate = (props) => {
               alt="Олег"
             />
             <div className="text-center md:text-left m-3">
-              <h2>Заказ {props.id_autoparts}</h2>
+              <h2>Заказ {props.id_tyres}</h2>
               <div>
                 <ul className="mb-4">
-                  <li>
-                    <b>Принял заказ: </b>
-                    {props.employeeList
-                      ? `${props.employeeList.name} ${props.employeeList.surname}`
-                      : ''}
-                  </li>
-                  <li>
-                    <b>Заказ принят на точке: </b> {props.placesList ? props.placesList.name : ''}
-                  </li>
+                  {!props.siteNumber ? (
+                    <div>
+                      <li>
+                        <b>Принял заказ: </b>
+                        {props.employeeList
+                          ? `${props.employeeList.name} ${props.employeeList.surname}`
+                          : ''}
+                      </li>
+                      <li>
+                        <b>Заказ принят на точке: </b>{' '}
+                        {props.placesList ? props.placesList.name : ''}
+                      </li>
+                    </div>
+                  ) : (
+                    <li>
+                      <b>Заказ с сайта: </b> № {props.siteNumber}
+                    </li>
+                  )}
                   <li>
                     <b>Дата создания заказа: </b>
                     {`${createDate
@@ -212,20 +221,26 @@ const TyreUpdate = (props) => {
               <h2>Клиент</h2>
               <div>
                 <ul className="mb-4">
-                  <li className="whitespace-normal">
-                    <b>Авто:</b> {props.mark} {props.model} {props.gen} {props.mod}
-                  </li>
+                  {props.mark ? (
+                    <li className="whitespace-normal">
+                      <b>Авто:</b> {props.mark} {props.model} {props.gen} {props.mod}
+                    </li>
+                  ) : null}
                   {props.regnumber ? (
                     <li>
                       <b>Гос. номер:</b> {props.regnumber}
                     </li>
                   ) : null}
-                  <li>
-                    <b>VIN:</b> {props.vinnumber}
-                  </li>
-                  <li>
-                    <b>Имя:</b> {props.name}
-                  </li>
+                  {props.vinnumber ? (
+                    <li>
+                      <b>VIN:</b> {props.vinnumber}
+                    </li>
+                  ) : null}
+                  {props.name ? (
+                    <li>
+                      <b>Имя:</b> {props.name}
+                    </li>
+                  ) : null}
                   <li>
                     <b>Телефон:</b> {props.phone}
                   </li>
@@ -467,7 +482,7 @@ const TyreUpdate = (props) => {
                     : null}
                   {props.preorder
                     ? props.preorder
-                        .filter((it) => it.mode === 'full' && it.type === 'tyre')
+                        .filter((it) => it.mode === 'full' && it.type === '1')
                         .map((it) => (
                           <p key={it.tyreItem}>
                             Шина: {it.brand ? `${it.brand} ` : null}
@@ -487,7 +502,7 @@ const TyreUpdate = (props) => {
                     : null}
                   {props.preorder
                     ? props.preorder
-                        .filter((it) => it.mode === 'full' && it.type === 'akb')
+                        .filter((it) => it.mode === 'full' && it.type === '3')
                         .map((it) => (
                           <p key={it.tyreItem}>
                             АКБ: {it.brand ? `${it.brand} ` : null}
@@ -507,7 +522,7 @@ const TyreUpdate = (props) => {
                     : null}
                   {props.preorder
                     ? props.preorder
-                        .filter((it) => it.mode === 'full' && it.type === 'wheel')
+                        .filter((it) => it.mode === 'full' && it.type === '2')
                         .map((it) => (
                           <p key={it.tyreItem}>
                             Диски: {it.brand ? `${it.brand} ` : null}
@@ -600,13 +615,13 @@ const TyreUpdate = (props) => {
                               <option value="" hidden disabled className="text-gray-800">
                                 Выберите тип
                               </option>
-                              <option value="tyre" className="text-gray-800">
+                              <option value="1" className="text-gray-800">
                                 Шины
                               </option>
-                              <option value="wheel" className="text-gray-800">
+                              <option value="2" className="text-gray-800">
                                 Диски
                               </option>
-                              <option value="akb" className="text-gray-800">
+                              <option value="3" className="text-gray-800">
                                 АКБ
                               </option>
                             </select>
@@ -622,21 +637,21 @@ const TyreUpdate = (props) => {
                           </div>
                         </div>
                       </td>
-                      {inputField.type === 'tyre' ? (
+                      {inputField.type === '1' ? (
                         <TyreColumn
                           inputField={inputField}
                           handleChangeInput={handleChangeInput}
                           index={index}
                         />
                       ) : null}
-                      {inputField.type === 'akb' ? (
+                      {inputField.type === '3' ? (
                         <AkbColumn
                           inputField={inputField}
                           handleChangeInput={handleChangeInput}
                           index={index}
                         />
                       ) : null}
-                      {inputField.type === 'wheel' ? (
+                      {inputField.type === '2' ? (
                         <WheelColumn
                           inputField={inputField}
                           handleChangeInput={handleChangeInput}

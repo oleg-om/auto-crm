@@ -46,6 +46,23 @@ const SettingUpdate = (props) => {
               onChange={onChange}
             />
           </div>
+          <div className="md:w-full px-3 mb-6 md:mb-0">
+            <label
+              className="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2"
+              htmlFor="grid-first-name"
+            >
+              Начиная с какого номера грузить заказы по шинам?
+            </label>
+            <input
+              className="appearance-none block w-full bg-grey-lighter text-grey-darker border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-3 px-4 mb-3"
+              type="number"
+              placeholder="Введите номер"
+              value={state.lastKerchshina}
+              name="lastKerchshina"
+              id="lastKerchshina"
+              onChange={onChange}
+            />
+          </div>
         </div>
       </div>
       <div className=" flex my-2">

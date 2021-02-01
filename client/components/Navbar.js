@@ -8,6 +8,7 @@ import { socket } from '../redux/sockets/socketReceivers'
 import { getRazvals } from '../redux/reducers/razvals'
 import { getOils } from '../redux/reducers/oils'
 import { getAutoparts } from '../redux/reducers/autoparts'
+import { getTyres } from '../redux/reducers/tyres'
 
 const Navbar = () => {
   const dispatch = useDispatch()
@@ -61,6 +62,18 @@ const Navbar = () => {
   useEffect(() => {
     socket.on('update edited autopart', function () {
       dispatch(getAutoparts())
+    })
+  }, [])
+
+  useEffect(() => {
+    socket.on('update tyre', function () {
+      dispatch(getTyres())
+    })
+  }, [])
+
+  useEffect(() => {
+    socket.on('update tyre from oline shop', function () {
+      dispatch(getTyres())
     })
   }, [])
 

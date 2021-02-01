@@ -180,10 +180,10 @@ const AkbColumn = ({ inputField, handleChangeInput, index }) => {
                     <option value="" hidden className="text-gray-800">
                       Полярность
                     </option>
-                    <option value="pryamaya" className="text-gray-800">
+                    <option value="L+" className="text-gray-800">
                       Прямая (+/-)
                     </option>
-                    <option value="reversed" className="text-gray-800">
+                    <option value="R+" className="text-gray-800">
                       Обратная (-/+)
                     </option>
                     <option value="uni" className="text-gray-800">

@@ -20,13 +20,13 @@ const FirstColumn = ({ inputField, handleChangeInput, index }) => {
             <option value="" hidden disabled className="text-gray-800">
               Выберите тип
             </option>
-            <option value="tyre" className="text-gray-800">
+            <option value="1" className="text-gray-800">
               Шины
             </option>
-            <option value="wheel" className="text-gray-800">
+            <option value="2" className="text-gray-800">
               Диски
             </option>
-            <option value="akb" className="text-gray-800">
+            <option value="3" className="text-gray-800">
               АКБ
             </option>
           </select>

@@ -6,6 +6,10 @@ const Setting = new mongoose.Schema({
     type: String,
     required: false
   },
+  lastKerchshina: {
+    type: String,
+    required: false
+  },
   id: {
     type: String,
     unique: true,

@@ -28,28 +28,26 @@ const TyresRow = (props) => {
           : props.preorder.slice(0, 3).map((it, index) => <p key={index}>{it.tyreItem}</p>)}
         {props.preorder && props.order.length <= 0
           ? props.preorder
-              .filter((it) => it.mode === 'full' && it.type === 'tyre')
+              .filter((it) => it.mode === 'full' && it.type === '1')
               .slice(0, 3)
               .map((it) => (
                 <p key={it.tyreItem}>
                   Шина: {it.brand ? `${it.brand} ` : null}
                   {it.model ? `${it.model} ` : null}
                   {it.sizeone ? `${it.sizeone} ` : null}
-                  {it.sizetwo ? `/${it.sizetwo} ` : null}
+                  {it.sizetwo ? `/ ${it.sizetwo} ` : null}
                   {it.sizethree ? `R${it.sizethree} ` : null}
                   {it.indexone ? `${it.indexone} ` : null}
                   {it.indextwo ? `${it.indextwo} ` : null}
                   {it.season === 'summer' ? 'летняя ' : null}
                   {it.season === 'winter' ? 'зимняя ' : null}
                   {it.season === 'allseason' ? 'всесезонная ' : null}
-                  {it.quantity ? `- ${it.quantity} шт ` : null}
-                  {it.price ? `, ${it.price} руб.` : null}
                 </p>
               ))
           : null}
         {props.preorder && props.order.length <= 0
           ? props.preorder
-              .filter((it) => it.mode === 'full' && it.type === 'akb')
+              .filter((it) => it.mode === 'full' && it.type === '3')
               .slice(0, 3)
               .map((it) => (
                 <p key={it.tyreItem}>
@@ -60,17 +58,15 @@ const TyresRow = (props) => {
                   {it.size ? `Размер: ${it.size}, ` : null}
                   {it.typeakb === 'euro' ? 'Евро, ' : null}
                   {it.typeakb === 'asia' ? 'Азия, ' : null}
-                  {it.polar === 'pryamaya' ? 'прямая полярность, ' : null}
-                  {it.polar === 'reversed' ? 'обратная полярность, ' : null}
+                  {it.polar === 'L+' ? 'прямая полярность, ' : null}
+                  {it.polar === 'R+' ? 'обратная полярность, ' : null}
                   {it.polar === 'uni' ? 'универсальная полярность, ' : null}
-                  {it.quantity ? `- ${it.quantity} шт` : null}
-                  {it.price ? ` , ${it.price} руб.` : null}
                 </p>
               ))
           : null}
         {props.preorder && props.order.length <= 0
           ? props.preorder
-              .filter((it) => it.mode === 'full' && it.type === 'wheel')
+              .filter((it) => it.mode === 'full' && it.type === '2')
               .slice(0, 3)
               .map((it) => (
                 <p key={it.tyreItem}>
@@ -85,17 +81,11 @@ const TyresRow = (props) => {
                   {it.typewheel === 'sht' ? 'Штампованные, ' : null}
                   {it.typewheel === 'kov' ? 'Кованные, ' : null}
                   {it.color ? `цвет: ${it.color}` : null}
-                  {it.quantity ? ` - ${it.quantity} шт, ` : null}
-                  {it.price ? `, ${it.price} руб.` : null}
                 </p>
               ))
           : null}
       </td>
 
-      <td className="w-full lg:w-auto p-2 text-gray-800 text-left text-sm lg:text-center border border-b block lg:table-cell relative lg:static">
-        <span className="lg:hidden px-2 py-1 text-xs font-bold uppercase">Авто:</span>
-        {props.mark} {props.model}
-      </td>
       <td className="whitespace-no-wrap w-full lg:w-auto p-2 text-gray-800 text-sm text-left lg:text-center border border-b block lg:table-cell relative lg:static">
         <span className="lg:hidden px-2 py-1 text-xs font-bold uppercase">Телефон:</span>
         {props.phone}
@@ -107,6 +97,11 @@ const TyresRow = (props) => {
       <td className="w-full lg:w-auto p-2 text-gray-800 text-left text-sm lg:text-center border border-b block lg:table-cell relative lg:static">
         <span className="lg:hidden px-2 py-1 text-xs font-bold uppercase">Точка:</span>
         {props.placesList ? props.placesList.name : ''}
+        {props.siteNumber ? (
+          <div className="rounded py-1 px-3 text-xs font-bold bg-green-600 text-white">
+            Заказ с сайта № {props.siteNumber}
+          </div>
+        ) : null}
       </td>
       <td className="w-full lg:w-auto p-2 text-gray-800 text-left text-sm lg:text-center border border-b block lg:table-cell relative lg:static">
         <span className="lg:hidden px-2 py-1 text-xs font-bold uppercase">Обработал:</span>
