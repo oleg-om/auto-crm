@@ -3,9 +3,11 @@ import { Link, useHistory } from 'react-router-dom'
 import { useSelector } from 'react-redux'
 import { toast } from 'react-toastify'
 import NumberFormat from 'react-number-format'
-import cx from 'classnames'
 import 'react-toastify/dist/ReactToastify.css'
-import autopartsList from '../../lists/autoparts-list'
+import FirstColumn from './moduls/firstcolumn'
+import TyreColumn from './moduls/tyrecolumn'
+import AkbColumn from './moduls/akbcolumn'
+import WheelColumn from './moduls/wheelcolumn'
 
 const TyresEdit = (props) => {
   toast.configure()
@@ -17,6 +19,7 @@ const TyresEdit = (props) => {
   const list = useSelector((s) => s.places.list)
   const employeeList = useSelector((s) => s.employees.list)
   const customerList = useSelector((s) => s.customers.list)
+  const auth = useSelector((s) => s.auth)
 
   const [options, setOptions] = useState({
     mark: [],
@@ -31,28 +34,32 @@ const TyresEdit = (props) => {
     gen: '',
     mod: ''
   })
-
+  const [inputFields, setInputFields] = useState(props.preorder)
+  const [activeCustomer, setActiveCustomer] = useState('')
   const [state, setState] = useState({
-    employee: props.employee,
+    employee: props.name,
     place: props.place,
-    regnumber: props.regnumber,
-    vinnumber: props.vinnumber,
     mark: props.mark,
     model: props.model,
     gen: props.gen,
     mod: props.mod,
-    preorder: props.preorder.length !== 0 ? props.preorder : [{ autopartItem: '' }],
+    preorder: props.preorder,
     name: props.name,
     phone: props.phone,
     prepay: props.prepay,
     comment: props.comment
   })
-
-  const [inputFields, setInputFields] = useState(
-    state.preorder.map((it) => ({
-      autopartItem: it.autopartItem
-    }))
-  )
+  const [customer, setCustomer] = useState({
+    regnumber: '',
+    vinnumber: '',
+    mark: '',
+    model: '',
+    gen: '',
+    mod: '',
+    name: '',
+    phone: '',
+    idOfItem: ''
+  })
 
   useEffect(() => {
     fetch('/api/v1/carmark')
@@ -107,15 +114,34 @@ const TyresEdit = (props) => {
     }
     return () => {}
   }, [stateId.model])
+
+  useEffect(() => {
+    if (state.employee === '' && auth.name) {
+      setState((prevState) => ({
+        ...prevState,
+        employee: auth.name
+      }))
+    }
+    return () => {}
+  }, [state.employee, auth.name])
+  useEffect(() => {
+    if (state.place === '' && auth.place) {
+      setState((prevState) => ({
+        ...prevState,
+        place: auth.place
+      }))
+    }
+    return () => {}
+  }, [state.place, auth.place])
   const [customerOptions, setCustomerOptions] = useState([])
   useEffect(() => {
     if (state.phone !== '' || state.regnumber !== '' || state.vinnumber !== '') {
       setCustomerOptions(
         customerList.filter(
           (it) =>
-            it.phone === state.phone ||
-            it.regnumber === state.regnumber ||
-            it.vinnumber === state.vinnumber
+            (it.phone === state.phone && it.phone !== '' && state.phone !== '') ||
+            (it.regnumber === state.regnumber && it.regnumber !== '' && state.regnumber !== '') ||
+            (it.vinnumber === state.vinnumber && it.vinnumber !== '' && state.vinnumber !== '')
         )
       )
     } else if (state.phone === '' || state.regnumber === '' || state.vinnumber === '') {
@@ -137,17 +163,30 @@ const TyresEdit = (props) => {
   const applyCustomer = () => {
     const newCustomer = customerList.find((it) => it.id === search)
     if (newCustomer) {
+      setCustomer((prevState) => ({
+        ...prevState,
+        regnumber: newCustomer.regnumber ? newCustomer.regnumber : '',
+        vinnumber: newCustomer.vinnumber ? newCustomer.vinnumber : '',
+        mark: newCustomer.mark ? newCustomer.mark : '',
+        model: newCustomer.model ? newCustomer.model : '',
+        gen: newCustomer.gen ? newCustomer.gen : '',
+        mod: newCustomer.mod ? newCustomer.mod : '',
+        name: newCustomer.name ? newCustomer.name : '',
+        phone: newCustomer.phone ? newCustomer.phone : '',
+        idOfItem: newCustomer.id
+      }))
       setState((prevState) => ({
         ...prevState,
-        regnumber: newCustomer.regnumber,
-        vinnumber: newCustomer.vinnumber,
-        mark: newCustomer.mark,
-        model: newCustomer.model,
-        gen: newCustomer.gen,
-        mod: newCustomer.mod,
-        name: newCustomer.name,
-        phone: newCustomer.phone
+        regnumber: newCustomer.regnumber ? newCustomer.regnumber : '',
+        vinnumber: newCustomer.vinnumber ? newCustomer.vinnumber : '',
+        mark: newCustomer.mark ? newCustomer.mark : '',
+        model: newCustomer.model ? newCustomer.model : '',
+        gen: newCustomer.gen ? newCustomer.gen : '',
+        mod: newCustomer.mod ? newCustomer.mod : '',
+        name: newCustomer.name ? newCustomer.name : '',
+        phone: newCustomer.phone ? newCustomer.phone : ''
       }))
+      setActiveCustomer(newCustomer.id)
     }
     return null
   }
@@ -157,24 +196,9 @@ const TyresEdit = (props) => {
       ...prevState,
       [name]: value
     }))
-  }
-
-  const onChangeCustomerUppercase = (e) => {
-    const { name, value } = e.target
-    setState((prevState) => ({
-      ...prevState,
-      [name]: value.toUpperCase().replace(/\s/g, '')
-    }))
-  }
-
-  const onChangeCustomerUppercaseRussian = (e) => {
-    const { name, value } = e.target
-    setState((prevState) => ({
+    setCustomer((prevState) => ({
       ...prevState,
       [name]: value
-        .toUpperCase()
-        .replace(/\s/g, '')
-        .replace(/[^а-яё0-9]/i, '')
     }))
   }
 
@@ -195,6 +219,10 @@ const TyresEdit = (props) => {
       gen: '',
       mod: ''
     }))
+    setCustomer((prevState) => ({
+      ...prevState,
+      mark: value
+    }))
   }
 
   const onChangeModel = (e) => {
@@ -211,6 +239,10 @@ const TyresEdit = (props) => {
       model: finModel ? finModel.id_car_model : '',
       gen: '',
       mod: ''
+    }))
+    setCustomer((prevState) => ({
+      ...prevState,
+      model: value
     }))
   }
 
@@ -231,6 +263,10 @@ const TyresEdit = (props) => {
       gen: findGen ? findGen.id_car_generation : '',
       mod: ''
     }))
+    setCustomer((prevState) => ({
+      ...prevState,
+      gen: value
+    }))
   }
 
   const onChangeMod = (e) => {
@@ -239,28 +275,22 @@ const TyresEdit = (props) => {
       ...prevState,
       mod: value
     }))
+    setCustomer((prevState) => ({
+      ...prevState,
+      mod: value
+    }))
   }
   const sendData = () => {
     if (!state.employee) notify('Заполните поле Принял заказ')
     if (!state.place) notify('Заполните поле Заказ принят на точке')
-    if (!state.vinnumber) notify('Заполните поле VIN номер')
-    if (!state.mark) notify('Укажите марку авто')
-    if (!state.model) notify('Укажите модель авто')
-    if (!state.gen) notify('Укажите год авто')
     if (!state.name) notify('Заполните поле Имя клиента')
     if (!state.phone) notify('Заполните поле Телефон')
-    else if (
-      state.employee &&
-      state.place &&
-      state.vinnumber &&
-      state.mark &&
-      state.model &&
-      state.gen &&
-      state.name &&
-      state.phone
-    ) {
-      props.updateAutopart(props.id, state)
-      history.push(`/autoparts/edit/${props.id_autoparts}`)
+    if (state.preorder.length === 0) notify('Заполните заказ')
+    if (state.preorder.filter((it) => it.type === '2').length > 0 && !state.mark && !state.model)
+      notify('Вы заказываете диски. Укажите марку и модель авто')
+    else if (state.employee && state.place && state.name && state.phone) {
+      props.updateTyre(props.id, state)
+      history.push(`/tyres/edit/${props.id_tyres}`)
       notify('Данные о заказе обновлены')
     }
   }
@@ -279,7 +309,10 @@ const TyresEdit = (props) => {
     setInputFields([
       ...inputFields,
       {
-        autopartItem: ''
+        tyreItem: '',
+        type: '1',
+        mode: 'full',
+        brand: ''
       }
     ])
     setState((prevState) => ({
@@ -299,14 +332,13 @@ const TyresEdit = (props) => {
       }))
     }
   }
-
   return (
     <div>
       <div className="bg-white shadow rounded-lg px-8 pt-6 pb-8 mb-4 flex flex-col my-2">
-        <div className="md:flex md:flex-row -mx-3 mb-6">
+        <div className="md:flex md:flex-row -mx-3">
           <div className="md:w-1/2 px-3 mb-6 md:mb-0">
             <div className="flex flex-row">
-              <div className="mb-5 w-1/2 pr-3">
+              <div className="mb-3 w-1/2 pr-3">
                 <label
                   className="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2"
                   htmlFor="grid-first-name"
@@ -319,23 +351,37 @@ const TyresEdit = (props) => {
                     value={state.employee}
                     name="employee"
                     id="employee"
-                    disabled="disabled"
                     onChange={onChange}
                   >
-                    <option value="" disabled selected hidden className="text-gray-800">
-                      Выберите сотрудника
+                    <option value="" disabled hidden className="text-gray-800">
+                      Выберете сотрудника
                     </option>
-                    {employeeList.map((it) => {
-                      return (
-                        <option value={it.id} key={it.name}>
-                          {it.name} {it.surname}
-                        </option>
+                    {employeeList
+                      .filter(
+                        (it) =>
+                          it.role.includes('Прием заказов (шины)') ||
+                          it.role.includes('Обработка заказов (шины)')
                       )
-                    })}
+                      .map((it, index) => {
+                        return (
+                          <option value={it.id} key={index}>
+                            {it.name} {it.surname}
+                          </option>
+                        )
+                      })}
                   </select>
+                  <div className="pointer-events-none absolute top-0 mt-2  right-0 flex items-center px-2 text-gray-600">
+                    <svg
+                      className="fill-current h-4 w-4"
+                      xmlns="http://www.w3.org/2000/svg"
+                      viewBox="0 0 20 20"
+                    >
+                      <path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z" />
+                    </svg>
+                  </div>
                 </div>
               </div>
-              <div className="mb-5 w-1/2 pl-3">
+              <div className="mb-3 w-1/2 pl-3">
                 <label
                   className="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2"
                   htmlFor="grid-first-name"
@@ -348,55 +394,65 @@ const TyresEdit = (props) => {
                     value={state.place}
                     name="place"
                     id="place"
-                    disabled="disabled"
                     onChange={onChange}
                   >
-                    <option value="" disabled selected hidden className="text-gray-800">
+                    <option value="" disabled hidden className="text-gray-800">
                       Выберете место
                     </option>
-                    {list.map((it) => {
+                    {list.map((it, index) => {
                       return (
-                        <option value={it.id} key={it.name}>
+                        <option value={it.id} key={index}>
                           {it.name}
                         </option>
                       )
                     })}
                   </select>
+                  <div className="pointer-events-none absolute top-0 mt-2  right-0 flex items-center px-2 text-gray-600">
+                    <svg
+                      className="fill-current h-4 w-4"
+                      xmlns="http://www.w3.org/2000/svg"
+                      viewBox="0 0 20 20"
+                    >
+                      <path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z" />
+                    </svg>
+                  </div>
                 </div>
               </div>
-            </div>
-            <div className="mb-5">
-              <label
-                className="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2"
-                htmlFor="grid-city"
-              >
-                Гос. номер
-              </label>
-              <input
-                className="appearance-none block w-full bg-grey-lighter text-grey-darker border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-1 px-4 mb-3"
-                type="text"
-                placeholder="Введите гос. номер русскими буквами"
-                value={state.regnumber}
-                name="regnumber"
-                id="regnumber"
-                onChange={onChangeCustomerUppercaseRussian}
-              />
             </div>
             <div className="md:mb-0">
               <label
                 className="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2"
                 htmlFor="grid-city"
               >
-                VIN номер
+                Номер телефона
               </label>
-              <input
+              <NumberFormat
+                format="+7 (###) ###-##-##"
+                mask="_"
                 className="appearance-none block w-full bg-grey-lighter text-grey-darker border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-1 px-4 mb-3"
                 type="text"
-                placeholder="Введите VIN"
-                value={state.vinnumber}
-                name="vinnumber"
-                id="vinnumber"
-                onChange={onChangeCustomerUppercase}
+                placeholder="Начинайте ввод с 978"
+                value={state.phone}
+                name="phone"
+                id="phone"
+                onChange={onChangeCustomer}
+              />
+            </div>
+            <div className="mb-5">
+              <label
+                className="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2"
+                htmlFor="grid-city"
+              >
+                Имя клиента
+              </label>
+              <input
+                className="capitalize appearance-none block w-full bg-grey-lighter text-grey-darker border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-1 px-4 mb-3"
+                type="text"
+                placeholder="Введите имя"
+                value={state.name}
+                name="name"
+                id="name"
+                onChange={onChangeCustomer}
               />
             </div>
           </div>
@@ -409,7 +465,7 @@ const TyresEdit = (props) => {
                 Авто в базе данных
               </label>
             </div>
-            <table className="border-collapse w-full h-full auto-search">
+            <table className="border-collapse w-full auto-search">
               <thead>
                 <tr>
                   <th className="p-3 font-bold uppercase bg-gray-100 text-gray-600 border border-gray-300 table-cell w-full">
@@ -422,10 +478,12 @@ const TyresEdit = (props) => {
               </thead>
               <tbody>
                 <tr className="bg-white lg:hover:bg-gray-100 flex table-row flex-row lg:flex-row flex-wrap flex-no-wrap mb-10 lg:mb-0">
-                  <td className="w-full lg:w-auto p-2 text-xs text-gray-800 text-center border border-b block table-cell relative static">
-                    Введите полностью гос. номер, VIN либо номер телефона чтобы найти клиента. Если
-                    клиент отстствует, заполните данные самостоятельно. Новый клиент не будет
-                    создан. Новый клиент создается только при создании нового заказа
+                  <td className="w-full lg:w-auto p-2 lg:py-5 text-xs text-gray-800 text-center border border-b block table-cell relative static">
+                    Введите полностью номер телефона чтобы найти клиента. Если клиент отсутствует,
+                    заполните данные самостоятельно. Вы можете редактировать клиентов на странице{' '}
+                    <Link to="/customer/list" className="underline">
+                      Клиенты
+                    </Link>
                   </td>
                   <td className="w-full lg:w-auto p-2 text-gray-800 text-center border border-b text-center block table-cell relative static" />
                 </tr>
@@ -442,9 +500,9 @@ const TyresEdit = (props) => {
                         <option value="" className="text-gray-800">
                           {customerOptions.length < 1 ? 'Клиентов не найдено' : 'Выберите клиента'}
                         </option>
-                        {customerOptions.map((it) => {
+                        {customerOptions.map((it, index) => {
                           return (
-                            <option key={it.id} value={it.id}>
+                            <option key={index} value={it.id}>
                               {it.name}, {it.mark} {it.model} {it.regnumber},{it.phone}
                             </option>
                           )
@@ -461,20 +519,48 @@ const TyresEdit = (props) => {
                       </div>
                     </div>
                   </td>
-                  <td className="w-full lg:w-auto p-2 text-gray-800 text-center border border-b text-center block table-cell relative static">
-                    <button
-                      onClick={applyCustomer}
-                      type="button"
-                      className={cx('py-1 px-3 text-white text-xs hover:text-white rounded-lg', {
-                        'bg-green-600 hover:bg-green-700': customerOptions.length >= 1,
-                        'bg-gray-500': customerOptions.length < 1
-                      })}
-                    >
-                      Использовать
-                    </button>
+                  <td className="w-full lg:w-auto p-2 text-gray-800 text-center border border-b block table-cell relative static">
+                    {customerOptions.length < 1 && !customer.idOfItem && !search ? (
+                      <button
+                        type="button"
+                        className="py-1 px-3 text-white text-xs bg-gray-500 hover:text-white rounded-lg"
+                      >
+                        Не найден
+                      </button>
+                    ) : null}
+                    {customerOptions.length >= 1 && activeCustomer === '' && !search ? (
+                      <button
+                        onClick={applyCustomer}
+                        type="button"
+                        className="py-1 px-3 text-white text-xs bg-blue-500 hover:text-white rounded-lg"
+                      >
+                        Выберите клиента
+                      </button>
+                    ) : null}
+                    {customerOptions.length >= 1 && activeCustomer === '' && search ? (
+                      <button
+                        onClick={applyCustomer}
+                        type="button"
+                        className="py-1 px-3 text-white text-xs hover:text-white rounded-lg bg-green-600 hover:bg-green-700"
+                      >
+                        Использовать
+                      </button>
+                    ) : null}
+                    {activeCustomer !== '' && customer.idOfItem && search ? (
+                      <button
+                        onClick={() => setActiveCustomer('')}
+                        type="button"
+                        className="py-1 px-3 text-white text-xs hover:text-white rounded-lg bg-red-600 hover:bg-red-700"
+                      >
+                        Сбросить
+                      </button>
+                    ) : null}
                   </td>
                 </tr>
               </tbody>
+              {customerOptions.length >= 1 && customer.idOfItem && activeCustomer ? (
+                <p className="text-left p-1">✔ Вы выбрали клиента</p>
+              ) : null}
             </table>
           </div>
         </div>
@@ -524,8 +610,8 @@ const TyresEdit = (props) => {
             />
             {stateId.mark ? (
               <datalist id="model_list">
-                {options.model.map((it) => (
-                  <option key={it.name} value={it.name} label={it.name_rus} />
+                {options.model.map((it, index) => (
+                  <option key={index} value={it.name} label={it.name_rus} />
                 ))}
               </datalist>
             ) : null}
@@ -553,9 +639,9 @@ const TyresEdit = (props) => {
               onChange={onChangeGen}
             />
             <datalist id="gen_list">
-              {options.gen.map((it) => (
+              {options.gen.map((it, index) => (
                 <option
-                  key={it.name}
+                  key={index}
                   value={
                     it.year_begin && it.year_end
                       ? `${it.name} (${it.year_begin}-${it.year_end})`
@@ -597,7 +683,7 @@ const TyresEdit = (props) => {
                     }
                     return thing
                   }, [])
-                  .sort(function sortItems(a, b) {
+                  .sort(function (a, b) {
                     if (a.name > b.name) {
                       return 1
                     }
@@ -614,50 +700,24 @@ const TyresEdit = (props) => {
           </div>
         </div>
         <div className="-mx-3 md:flex mb-2">
-          <div className="md:w-1/2 px-3 mb-6 md:mb-0">
-            <label
-              className="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2"
-              htmlFor="grid-city"
-            >
-              Имя клиента
-            </label>
-            <input
-              className="capitalize appearance-none block w-full bg-grey-lighter text-grey-darker border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-1 px-4 mb-3"
-              type="text"
-              placeholder="Введите имя"
-              value={state.name}
-              name="name"
-              id="name"
-              onChange={onChangeCustomer}
-            />
-          </div>
-          <div className="md:w-1/2 px-3 mb-6 md:mb-0">
-            <label
-              className="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2"
-              htmlFor="grid-city"
-            >
-              Номер телефона
-            </label>
-            <NumberFormat
-              format="+7 (###) ###-##-##"
-              mask="_"
-              className="appearance-none block w-full bg-grey-lighter text-grey-darker border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-1 px-4 mb-3"
-              type="text"
-              placeholder="Начинайте ввод с 978"
-              value={state.phone}
-              name="phone"
-              id="phone"
-              onChange={onChangeCustomer}
-            />
-          </div>
-        </div>
-        <div className="-mx-3 md:flex mb-2">
           <div className="md:w-full px-3 mb-6 md:mb-0">
             <table className="border-collapse w-full">
               <thead>
                 <tr>
+                  <th className="p-3 font-bold uppercase bg-gray-100 text-gray-600 border border-gray-300 table-cell">
+                    Тип
+                  </th>
                   <th className="p-3 font-bold uppercase bg-gray-100 text-gray-600 border border-gray-300 table-cell w-full">
-                    Запчасти
+                    Наименование
+                  </th>
+                  <th className="p-3 font-bold uppercase bg-gray-100 text-sm text-gray-600 border border-gray-300 table-cell whitespace-no-wrap">
+                    Кол-во
+                  </th>
+                  <th className="p-3 font-bold uppercase bg-gray-100 text-sm text-gray-600 border border-gray-300 table-cell whitespace-no-wrap">
+                    Цена
+                  </th>
+                  <th className="p-3 font-bold uppercase bg-gray-100 text-sm text-gray-600 border border-gray-300 table-cell whitespace-no-wrap">
+                    Сумма
                   </th>
                   <th className="p-3 font-bold uppercase bg-gray-100 text-gray-600 border border-gray-300 table-cell">
                     Строки
@@ -670,26 +730,58 @@ const TyresEdit = (props) => {
                     key={index}
                     className="bg-white lg:hover:bg-gray-100 flex table-row flex-row lg:flex-row flex-wrap flex-no-wrap mb-10 lg:mb-0"
                   >
-                    <td className="w-full lg:w-auto p-2 text-gray-800 text-center border border-b block table-cell relative static">
+                    <FirstColumn
+                      inputField={inputField}
+                      handleChangeInput={handleChangeInput}
+                      index={index}
+                    />
+                    {inputField.type === '1' ? (
+                      <TyreColumn
+                        inputField={inputField}
+                        handleChangeInput={handleChangeInput}
+                        index={index}
+                      />
+                    ) : null}
+                    {inputField.type === '3' ? (
+                      <AkbColumn
+                        inputField={inputField}
+                        handleChangeInput={handleChangeInput}
+                        index={index}
+                      />
+                    ) : null}
+                    {inputField.type === '2' ? (
+                      <WheelColumn
+                        inputField={inputField}
+                        handleChangeInput={handleChangeInput}
+                        index={index}
+                      />
+                    ) : null}
+                    <td className="p-2 text-gray-800 text-center border border-b table-cell relative">
                       <input
-                        className="appearance-none block w-full bg-grey-lighter text-grey-darker border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-1 px-4"
-                        type="text"
-                        placeholder="Например: свечи"
-                        name="autopartItem"
-                        list="autoparts_list"
-                        value={inputField.autopartItem}
-                        defaultValue={
-                          state.preorder.find((it, id) => id === index)
-                            ? state.preorder.find((it, id) => id === index).autopartItem
-                            : ''
-                        }
+                        className="w-32 appearance-none block bg-grey-lighter text-grey-darker border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-1 px-4"
+                        name="quantity"
+                        type="number"
+                        value={inputField.quantity}
+                        autoComplete="off"
                         onChange={(event) => handleChangeInput(index, event)}
                       />
-                      <datalist id="autoparts_list">
-                        {autopartsList.map((it) => (
-                          <option key={it} value={it} />
-                        ))}
-                      </datalist>
+                    </td>
+                    <td className="p-2 text-gray-800 text-center border border-b table-cell relative">
+                      <input
+                        className="w-32 appearance-none block bg-grey-lighter text-grey-darker border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-1 px-4"
+                        name="price"
+                        type="number"
+                        value={inputField.price}
+                        autoComplete="off"
+                        onChange={(event) => handleChangeInput(index, event)}
+                      />
+                    </td>
+                    <td className="p-2 text-gray-800 text-center border border-b table-cell relative">
+                      <p>
+                        {inputField.price && inputField.quantity
+                          ? inputField.price * inputField.quantity
+                          : null}
+                      </p>
                     </td>
                     <td className="w-full lg:w-auto p-2 text-gray-800 border border-b text-center flex flex-row table-cell relative static">
                       <button
@@ -713,6 +805,31 @@ const TyresEdit = (props) => {
             </table>
           </div>
         </div>
+        {state.preorder.length > 1 && state.preorder[0].price && state.preorder[0].quantity ? (
+          <div className="-mx-3 md:flex mb-2 flex-row">
+            <div className="px-3 mb-6 md:mb-0">
+              <div className="flex flex-row">
+                <label
+                  className="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2"
+                  htmlFor="grid-city"
+                >
+                  Общая сумма
+                </label>
+              </div>
+              <p className="ml-3">
+                {state.preorder.length >= 1
+                  ? state.preorder.reduce(function fullPrice(acc, rec) {
+                      if (rec.price && rec.quantity)
+                        if (rec.price.match(/[0-9]/) && rec.quantity.match(/[0-9]/)) {
+                          return acc + rec.price * rec.quantity
+                        }
+                      return acc
+                    }, 0)
+                  : null}
+              </p>
+            </div>
+          </div>
+        ) : null}
         <div className="-mx-3 md:flex mb-2">
           <div className="md:w-1/3 px-3 mb-6 md:mb-0">
             <label
@@ -754,7 +871,7 @@ const TyresEdit = (props) => {
       </div>
       <div className=" flex my-2">
         <Link
-          to={`/tyres/edit/${props.id_autoparts}`}
+          to={`/tyres/edit/${props.id_tyres}`}
           className="my-3 mr-2 py-2 md:w-1/3 px-3 bg-red-600 text-white text-center hover:bg-red-700 hover:text-white rounded-lg"
         >
           Отмена
@@ -765,7 +882,7 @@ const TyresEdit = (props) => {
           onClick={sendData}
           type="submit"
         >
-          Сохранить
+          Создать
         </button>
       </div>
     </div>

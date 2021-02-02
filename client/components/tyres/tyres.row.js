@@ -23,10 +23,13 @@ const TyresRow = (props) => {
       </td>
       <td className="w-full overflow-hidden lg:w-auto max-w-lg p-2 text-gray-800 text-sm text-left lg:text-center border border-b block lg:table-cell relative lg:static">
         <span className="lg:hidden px-2 py-1 text-xs font-bold uppercase">Заказ:</span>
-        {props.order.length > 0
-          ? null
-          : props.preorder.slice(0, 3).map((it, index) => <p key={index}>{it.tyreItem}</p>)}
-        {props.preorder && props.order.length <= 0
+        {props.preorder && props.order.filter((it) => it.price && it.brand).length <= 0
+          ? props.preorder
+              .filter((it) => it.mode === 'simple')
+              .slice(0, 3)
+              .map((it, index) => <p key={index}>{it.tyreItem}</p>)
+          : null}
+        {props.preorder && props.order.filter((it) => it.price && it.brand).length <= 0
           ? props.preorder
               .filter((it) => it.mode === 'full' && it.type === '1')
               .slice(0, 3)
@@ -45,7 +48,7 @@ const TyresRow = (props) => {
                 </p>
               ))
           : null}
-        {props.preorder && props.order.length <= 0
+        {props.preorder && props.order.filter((it) => it.price && it.brand).length <= 0
           ? props.preorder
               .filter((it) => it.mode === 'full' && it.type === '3')
               .slice(0, 3)
@@ -64,8 +67,67 @@ const TyresRow = (props) => {
                 </p>
               ))
           : null}
-        {props.preorder && props.order.length <= 0
+        {props.preorder && props.order.filter((it) => it.price && it.brand).length <= 0
           ? props.preorder
+              .filter((it) => it.mode === 'full' && it.type === '2')
+              .slice(0, 3)
+              .map((it) => (
+                <p key={it.tyreItem}>
+                  Диски: {it.brand ? `${it.brand} ` : null}
+                  {it.model ? `${it.model} ` : null}
+                  {it.diametr ? `R${it.diametr} ` : null}
+                  {it.pcd ? `PCD: ${it.pcd}, ` : null}
+                  {it.et ? `ET: ${it.et}, ` : null}
+                  {it.dia ? `ступица: ${it.dia}, ` : null}
+                  {it.wheelwidth ? `${it.wheelwidth}J, ` : null}
+                  {it.typewheel === 'lit' ? 'Литые, ' : null}
+                  {it.typewheel === 'sht' ? 'Штампованные, ' : null}
+                  {it.typewheel === 'kov' ? 'Кованные, ' : null}
+                  {it.color ? `цвет: ${it.color}` : null}
+                </p>
+              ))
+          : null}
+
+        {props.order.length >= 1 && props.order.filter((it) => it.price && it.brand).length >= 1
+          ? props.order
+              .filter((it) => it.mode === 'full' && it.type === '1')
+              .slice(0, 3)
+              .map((it) => (
+                <p key={it.tyreItem}>
+                  Шина: {it.brand ? `${it.brand} ` : null}
+                  {it.model ? `${it.model} ` : null}
+                  {it.sizeone ? `${it.sizeone} ` : null}
+                  {it.sizetwo ? `/ ${it.sizetwo} ` : null}
+                  {it.sizethree ? `R${it.sizethree} ` : null}
+                  {it.indexone ? `${it.indexone} ` : null}
+                  {it.indextwo ? `${it.indextwo} ` : null}
+                  {it.season === 'summer' ? 'летняя ' : null}
+                  {it.season === 'winter' ? 'зимняя ' : null}
+                  {it.season === 'all' ? 'всесезонная ' : null}
+                </p>
+              ))
+          : null}
+        {props.order.length >= 1 && props.order.filter((it) => it.price && it.brand).length >= 1
+          ? props.order
+              .filter((it) => it.mode === 'full' && it.type === '3')
+              .slice(0, 3)
+              .map((it) => (
+                <p key={it.tyreItem}>
+                  АКБ: {it.brand ? `${it.brand} ` : null}
+                  {it.model ? `${it.model} ` : null}
+                  {it.tok ? `Пусковой ток: ${it.tok}, ` : null}
+                  {it.emkost ? `${it.emkost} Ah, ` : null}
+                  {it.size ? `Размер: ${it.size}, ` : null}
+                  {it.typeakb === 'euro' ? 'Евро, ' : null}
+                  {it.typeakb === 'asia' ? 'Азия, ' : null}
+                  {it.polar === 'L+' ? 'прямая полярность, ' : null}
+                  {it.polar === 'R+' ? 'обратная полярность, ' : null}
+                  {it.polar === 'uni' ? 'универсальная полярность, ' : null}
+                </p>
+              ))
+          : null}
+        {props.order.length >= 1 && props.order.filter((it) => it.price && it.brand).length >= 1
+          ? props.order
               .filter((it) => it.mode === 'full' && it.type === '2')
               .slice(0, 3)
               .map((it) => (
@@ -186,7 +248,7 @@ const TyresRow = (props) => {
           </button> */}
           <Link
             to={
-              props.role.includes('autopartfull')
+              props.role.includes('tyrefull')
                 ? `/tyres/edit/${props.id_tyres}`
                 : `/tyres/view/${props.id_tyres}`
             }

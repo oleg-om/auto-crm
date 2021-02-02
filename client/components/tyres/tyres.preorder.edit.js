@@ -1,11 +1,11 @@
-import React, { useState, useRef, useEffect } from 'react'
+import React, { useState, useEffect } from 'react'
 import { Link, useHistory } from 'react-router-dom'
 import { useSelector } from 'react-redux'
 import { toast } from 'react-toastify'
 import cx from 'classnames'
-import { useReactToPrint } from 'react-to-print'
+// import { useReactToPrint } from 'react-to-print'
 import 'react-toastify/dist/ReactToastify.css'
-import ComponentToPrint from './tyres.print'
+// import ComponentToPrint from './tyres.print'
 import malePlaceholder from '../../assets/images/profile_placeholder_male.webp'
 import orderPlaceholder from '../../assets/images/order_placeholder.webp'
 import taskStatuses from '../../lists/task-statuses'
@@ -18,10 +18,10 @@ import WheelColumn from './moduls/wheelcolumn'
 const TyreUpdate = (props) => {
   const history = useHistory()
 
-  const componentRef = useRef()
-  const handlePrint = useReactToPrint({
-    content: () => componentRef.current
-  })
+  // const componentRef = useRef()
+  // const handlePrint = useReactToPrint({
+  //   content: () => componentRef.current
+  // })
 
   toast.configure()
   const notify = (arg) => {
@@ -49,7 +49,10 @@ const TyreUpdate = (props) => {
     process: props.process ? props.process : auth.name,
     prepay: props.prepay,
     commentOrder: props.commentOrder,
-    order: props.order.length !== 0 ? props.order : [{ autopartItem: '' }],
+    order:
+      props.order.length !== 0
+        ? props.order
+        : [{ tyreItem: '', type: '1', mode: 'full', brand: '' }],
     dateInWork: props.dateInWork,
     dateFinish: props.dateFinish,
     dateMiscall: props.dateMiscall,
@@ -60,15 +63,15 @@ const TyreUpdate = (props) => {
     if (!state.process) notify('Поле Обработал заказ пустое')
     else if (!props.dateInWork && state.status === taskStatuses[1]) {
       props.updateTyre(props.id, { ...state, dateInWork: dateNew })
-      history.push('/autoparts/order/list')
+      history.push('/tyres/order/list')
       notify('Данные о заказе обновлены, заказ в работе')
     } else if (!props.dateFinish && state.status === taskStatuses[2]) {
       props.updateTyre(props.id, { ...state, dateFinish: dateNew })
-      history.push('/autoparts/order/list')
+      history.push('/tyres/order/list')
       notify('Данные о заказе обновлены, заказ выполнен')
     } else if (!props.dateMiscall && state.status === taskStatuses[4]) {
       props.updateTyre(props.id, { ...state, dateMiscall: dateNew })
-      history.push('/autoparts/order/list')
+      history.push('/tyres/order/list')
       notify('Данные о заказе обновлены, клиент отказался от заказа')
     } else if (!props.dateCancel && state.status === taskStatuses[5]) {
       props.updateTyre(props.id, {
@@ -76,11 +79,11 @@ const TyreUpdate = (props) => {
         dateCancel: dateNew,
         cancelReason: state.cancelReason
       })
-      history.push('/autoparts/order/list')
+      history.push('/tyres/order/list')
       notify('Данные о заказе обновлены, клиент отказался от заказа')
     } else {
       props.updateTyre(props.id, state)
-      history.push('/autoparts/order/list')
+      history.push('/tyres/order/list')
       notify('Данные о заказе обновлены')
     }
   }
@@ -91,17 +94,19 @@ const TyreUpdate = (props) => {
       [name]: value
     }))
   }
-
-  const [inputFields, setInputFields] = useState([
-    { tyreItem: '', type: '1', mode: 'full', brand: '' }
-  ])
+  const temp = JSON.parse(JSON.stringify(props.preorder))
+  const [inputFields, setInputFields] = useState(state.order)
   useEffect(() => {
     if (
       props.status === taskStatuses[0] &&
       props.order.length === 0 &&
       props.preorder.filter((it) => it.mode === 'full').length !== 0
     ) {
-      setInputFields(props.preorder.filter((it) => it.mode === 'full'))
+      setInputFields(temp)
+      setState((prevState) => ({
+        ...prevState,
+        order: temp
+      }))
     }
     return () => {}
   }, [props.preorder])
@@ -203,7 +208,7 @@ const TyreUpdate = (props) => {
                   </li>
                 </ul>
                 <Link
-                  to={`/autoparts/editfull/${props.id_autoparts}`}
+                  to={`/tyres/editfull/${props.id_tyres}`}
                   className="py-2 px-3 bg-blue-600 text-white text-sm hover:bg-blue-700 hover:text-white rounded-full h-22 w-22"
                 >
                   Редактировать заказ
@@ -246,12 +251,12 @@ const TyreUpdate = (props) => {
                   </li>
                 </ul>
                 {/* <Link
-                  to={`/autoparts/editfull/${props.id_autoparts}`}
+                  to={`/tyres/editfull/${props.id_autoparts}`}
                   className="py-2 px-3 bg-blue-600 text-white text-sm hover:bg-blue-700 hover:text-white rounded-full h-22 w-22"
                 >
                   Заказы клиента
                 </Link> */}
-                <button
+                {/* <button
                   type="submit"
                   onClick={handlePrint}
                   className="py-2 px-3 bg-blue-600 text-white text-sm hover:bg-blue-700 hover:text-white rounded-full h-22 w-22"
@@ -292,15 +297,15 @@ const TyreUpdate = (props) => {
 
                     <p> Печать предчека</p>
                   </div>
-                </button>
-                <div className="hidden">
+                </button> */}
+                {/* <div className="hidden">
                   <ComponentToPrint
                     ref={componentRef}
                     props={props}
                     helpphone={props.settings.map((it) => it.helpphone)}
                     placesList={props.placesList}
                   />
-                </div>
+                </div> */}
               </div>
             </div>
           </div>
@@ -614,7 +619,7 @@ const TyreUpdate = (props) => {
                 <tbody>
                   {inputFields.map((inputField, index) => (
                     <tr
-                      key={inputField.autopartItem}
+                      key={inputField.tyreItem}
                       className="bg-white lg:hover:bg-gray-100 table-row flex-row lg:flex-row flex-wrap mb-10 lg:mb-0"
                     >
                       <td className="lg:w-auto p-2 text-gray-800 text-center border border-b block table-cell relative static">
@@ -627,7 +632,7 @@ const TyreUpdate = (props) => {
                           </label>
                           <div className="flex-shrink w-full inline-block relative mb-3">
                             <select
-                              className="appearance-none block w-auto bg-grey-lighter text-grey-darker border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-1 pl-4"
+                              className="appearance-none block w-full bg-grey-lighter text-grey-darker border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-1 pl-4 pr-6"
                               name="type"
                               value={inputField.type}
                               onChange={(event) => handleChangeInput(index, event)}
@@ -913,38 +918,40 @@ const TyreUpdate = (props) => {
                   : null}
               </p>
             </div>
-            <div className="px-3 mb-6 md:mb-0">
-              <div className="flex flex-row">
-                <label
-                  className="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2"
-                  htmlFor="grid-city"
-                >
-                  Сумма товаров в работе
-                </label>
-                <button
-                  className="ml-3 px-3 rounded-full text-white bg-blue-600 opacity-75 text-l hover:opacity-100 hover:bg-blue-700"
-                  type="button"
-                  onClick={() =>
-                    notify(
-                      'Общая сумма учитывает все товары. Сумма товаров в рвботе не учитывает товары со статусом "Интересовался"'
-                    )
-                  }
-                >
-                  ?
-                </button>
+            {state.order.filter((it) => it.stat === 'Интересовался').length > 0 ? (
+              <div className="px-3 mb-6 md:mb-0">
+                <div className="flex flex-row">
+                  <label
+                    className="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2"
+                    htmlFor="grid-city"
+                  >
+                    Сумма товаров в работе
+                  </label>
+                  <button
+                    className="ml-3 px-3 rounded-full text-white bg-blue-600 opacity-75 text-l hover:opacity-100 hover:bg-blue-700"
+                    type="button"
+                    onClick={() =>
+                      notify(
+                        'Общая сумма учитывает все товары. Сумма товаров в рвботе не учитывает товары со статусом "Интересовался"'
+                      )
+                    }
+                  >
+                    ?
+                  </button>
+                </div>
+                <p className="ml-3">
+                  {state.order.length >= 1
+                    ? state.order.reduce(function fullPrice(acc, rec) {
+                        if (rec.price && rec.quantity && rec.stat !== 'Интересовался')
+                          if (rec.price.match(/[0-9]/) && rec.quantity.match(/[0-9]/)) {
+                            return acc + rec.price * rec.quantity
+                          }
+                        return acc
+                      }, 0)
+                    : null}
+                </p>
               </div>
-              <p className="ml-3">
-                {state.order.length >= 1
-                  ? state.order.reduce(function fullPrice(acc, rec) {
-                      if (rec.price && rec.quantity && rec.stat !== 'Интересовался')
-                        if (rec.price.match(/[0-9]/) && rec.quantity.match(/[0-9]/)) {
-                          return acc + rec.price * rec.quantity
-                        }
-                      return acc
-                    }, 0)
-                  : null}
-              </p>
-            </div>
+            ) : null}
           </div>
         ) : null}
         <div className="-mx-3 md:flex mb-2">

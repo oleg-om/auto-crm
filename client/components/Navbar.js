@@ -8,7 +8,7 @@ import { socket } from '../redux/sockets/socketReceivers'
 import { getRazvals } from '../redux/reducers/razvals'
 import { getOils } from '../redux/reducers/oils'
 import { getAutoparts } from '../redux/reducers/autoparts'
-import { getTyres } from '../redux/reducers/tyres'
+import { getTyres } from '../redux/reducers/tyres.js'
 
 const Navbar = () => {
   const dispatch = useDispatch()
