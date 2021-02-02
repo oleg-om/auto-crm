@@ -76,7 +76,7 @@ const WheelColumn = ({ inputField, handleChangeInput, index }) => {
                 </label>
                 <input
                   className="w-full appearance-none block bg-grey-lighter text-grey-darker border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-1 px-4"
-                  type="number"
+                  type="text"
                   name="diametr"
                   list="sizethree_list"
                   value={inputField.diametr}
@@ -84,11 +84,9 @@ const WheelColumn = ({ inputField, handleChangeInput, index }) => {
                   onChange={(event) => handleChangeInput(index, event)}
                 />
                 <datalist id="sizethree_list">
-                  {sizeThreeList
-                    .filter((it) => !it.includes('C'))
-                    .map((it, indexItem) => (
-                      <option key={indexItem} value={it} />
-                    ))}
+                  {sizeThreeList.map((it, indexItem) => (
+                    <option key={indexItem} value={it} />
+                  ))}
                 </datalist>
               </div>
               <div className="mr-2 w-1/4">

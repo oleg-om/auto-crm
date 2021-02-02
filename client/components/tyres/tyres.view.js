@@ -1,33 +1,30 @@
-import React, { useState, useRef } from 'react'
+import React, { useState } from 'react'
 import { Link, useHistory } from 'react-router-dom'
 import { toast } from 'react-toastify'
 import cx from 'classnames'
-import { useReactToPrint } from 'react-to-print'
+// import { useReactToPrint } from 'react-to-print'
 import 'react-toastify/dist/ReactToastify.css'
-import ComponentToPrint from './tyres.print'
+// import ComponentToPrint from './tyres.print'
 import malePlaceholder from '../../assets/images/profile_placeholder_male.webp'
 import orderPlaceholder from '../../assets/images/order_placeholder.webp'
 import taskStatuses from '../../lists/task-statuses'
+// import cancelStatuses from '../../lists/cancel-statuses'
 
 const TyreViewOrder = (props) => {
   const history = useHistory()
-
-  const componentRef = useRef()
-  const handlePrint = useReactToPrint({
-    content: () => componentRef.current
-  })
 
   toast.configure()
   const notify = (arg) => {
     toast.info(arg, { position: toast.POSITION.BOTTOM_RIGHT })
   }
+
   const [state, setState] = useState({
-    comment: props.comment,
-    prepay: props.prepay
+    prepay: props.prepay,
+    comment: props.comment
   })
   const changeTyre = () => {
     props.updateTyre(props.id, state)
-    history.push('/autoparts/order/list')
+    history.push('/tyres/order/list')
     notify('Данные о заказе обновлены')
   }
   const onChange = (e) => {
@@ -37,7 +34,9 @@ const TyreViewOrder = (props) => {
       [name]: value
     }))
   }
+
   const createDate = new Date(props.date)
+
   return (
     <div>
       <div className="bg-white shadow rounded-lg px-8 pt-6 pb-8 mb-4 flex flex-col my-2">
@@ -49,21 +48,29 @@ const TyreViewOrder = (props) => {
               alt="Олег"
             />
             <div className="text-center md:text-left m-3">
-              <h2>Заказ {props.id_autoparts}</h2>
+              <h2>Заказ {props.id_tyres}</h2>
               <div>
                 <ul className="mb-4">
+                  {!props.siteNumber ? (
+                    <div>
+                      <li>
+                        <b>Принял заказ: </b>
+                        {props.employeeList
+                          ? `${props.employeeList.name} ${props.employeeList.surname}`
+                          : ''}
+                      </li>
+                      <li>
+                        <b>Заказ принят на точке: </b>{' '}
+                        {props.placesList ? props.placesList.name : ''}
+                      </li>
+                    </div>
+                  ) : (
+                    <li>
+                      <b>Заказ с сайта: </b> № {props.siteNumber}
+                    </li>
+                  )}
                   <li>
-                    <b>Принял заказ: </b>
-                    {props.employeeList
-                      ? `${props.employeeList.name} ${props.employeeList.surname}`
-                      : ''}
-                  </li>
-                  <li>
-                    <b>Заказ принят на точке: </b>
-                    {props.placesList ? props.placesList.name : ''}
-                  </li>
-                  <li>
-                    <b>Дата создания заказа:</b>{' '}
+                    <b>Дата создания заказа: </b>
                     {`${createDate
                       .getDate()
                       .toString()
@@ -87,13 +94,6 @@ const TyreViewOrder = (props) => {
                     <b>Предоплата:</b> {props.prepay ? props.prepay : 'Нет'}
                   </li>
                 </ul>
-                <button
-                  className="py-2 px-3 bg-blue-600 text-white text-sm hover:bg-blue-700 hover:text-white rounded-full h-22 w-22"
-                  type="button"
-                  onClick={() => notify('У вас недостаточно полномочий')}
-                >
-                  Редактировать заказ
-                </button>
               </div>
             </div>
           </div>
@@ -107,31 +107,37 @@ const TyreViewOrder = (props) => {
               <h2>Клиент</h2>
               <div>
                 <ul className="mb-4">
-                  <li className="whitespace-normal">
-                    <b>Авто:</b> {props.mark} {props.model} {props.gen} {props.mod}
-                  </li>
+                  {props.mark ? (
+                    <li className="whitespace-normal">
+                      <b>Авто:</b> {props.mark} {props.model} {props.gen} {props.mod}
+                    </li>
+                  ) : null}
                   {props.regnumber ? (
                     <li>
                       <b>Гос. номер:</b> {props.regnumber}
                     </li>
                   ) : null}
-                  <li>
-                    <b>VIN:</b> {props.vinnumber}
-                  </li>
-                  <li>
-                    <b>Имя:</b> {props.name}
-                  </li>
+                  {props.vinnumber ? (
+                    <li>
+                      <b>VIN:</b> {props.vinnumber}
+                    </li>
+                  ) : null}
+                  {props.name ? (
+                    <li>
+                      <b>Имя:</b> {props.name}
+                    </li>
+                  ) : null}
                   <li>
                     <b>Телефон:</b> {props.phone}
                   </li>
                 </ul>
                 {/* <Link
-                  to={`/autoparts/editfull/${props.id_autoparts}`}
+                  to={`/tyres/editfull/${props.id_autoparts}`}
                   className="py-2 px-3 bg-blue-600 text-white text-sm hover:bg-blue-700 hover:text-white rounded-full h-22 w-22"
                 >
                   Заказы клиента
                 </Link> */}
-                <button
+                {/* <button
                   type="submit"
                   onClick={handlePrint}
                   className="py-2 px-3 bg-blue-600 text-white text-sm hover:bg-blue-700 hover:text-white rounded-full h-22 w-22"
@@ -172,15 +178,15 @@ const TyreViewOrder = (props) => {
 
                     <p> Печать предчека</p>
                   </div>
-                </button>
-                <div className="hidden">
+                </button> */}
+                {/* <div className="hidden">
                   <ComponentToPrint
                     ref={componentRef}
                     props={props}
                     helpphone={props.settings.map((it) => it.helpphone)}
                     placesList={props.placesList}
                   />
-                </div>
+                </div> */}
               </div>
             </div>
           </div>
@@ -207,7 +213,7 @@ const TyreViewOrder = (props) => {
               </div>
             </div>
             <div className="px-3">
-              <b>Обработал заказ </b>
+              <b>Обработал заказ</b>
               <div className="flex-shrink w-full inline-block relative mb-3">
                 <div
                   className="block appearance-none w-full bg-white border border-gray-300 focus:border-gray-500 focus:outline-none py-1 px-4 pr-8 rounded"
@@ -253,7 +259,7 @@ const TyreViewOrder = (props) => {
               <div>
                 <ul>
                   <li>
-                    <b>Заказ принят: </b>
+                    <b>Заказ принят: </b>{' '}
                     {`${createDate
                       .getDate()
                       .toString()
@@ -302,16 +308,102 @@ const TyreViewOrder = (props) => {
               <b>Предварительный заказ</b>
               <div className="-mx-3 md:flex mb-2">
                 <div className="overflow-x-auto md:w-auto px-3 mb-6 md:mb-0">
-                  {props.preorder.map((it) => (
-                    <p key={it.autopartItem}>
-                      {it.autopartItem} {it.quantity ? `- ${it.quantity} шт` : null}
-                    </p>
-                  ))}
+                  {props.preorder
+                    ? props.preorder
+                        .filter((it) => it.mode === 'simple' && it.type === '1')
+                        .map((it) => (
+                          <p key={it.tyreItem}>
+                            Шина: {it.tyreItem} {it.quantity ? `- ${it.quantity} шт` : null}{' '}
+                            {it.price ? `, ${it.price} руб.` : null}
+                          </p>
+                        ))
+                    : null}
+                  {props.preorder
+                    ? props.preorder
+                        .filter((it) => it.mode === 'simple' && it.type === '2')
+                        .map((it) => (
+                          <p key={it.tyreItem}>
+                            Диски: {it.tyreItem} {it.quantity ? `- ${it.quantity} шт` : null}{' '}
+                            {it.price ? `, ${it.price} руб.` : null}
+                          </p>
+                        ))
+                    : null}
+                  {props.preorder
+                    ? props.preorder
+                        .filter((it) => it.mode === 'simple' && it.type === '3')
+                        .map((it) => (
+                          <p key={it.tyreItem}>
+                            АКБ: {it.tyreItem} {it.quantity ? `- ${it.quantity} шт` : null}{' '}
+                            {it.price ? `, ${it.price} руб.` : null}
+                          </p>
+                        ))
+                    : null}
+                  {props.preorder
+                    ? props.preorder
+                        .filter((it) => it.mode === 'full' && it.type === '1')
+                        .map((it) => (
+                          <p key={it.tyreItem}>
+                            Шина: {it.brand ? `${it.brand} ` : null}
+                            {it.model ? `${it.model} ` : null}
+                            {it.sizeone ? `${it.sizeone} ` : null}
+                            {it.sizetwo ? `/${it.sizetwo} ` : null}
+                            {it.sizethree ? `R${it.sizethree} ` : null}
+                            {it.indexone ? `${it.indexone} ` : null}
+                            {it.indextwo ? `${it.indextwo} ` : null}
+                            {it.season === 'summer' ? 'летняя ' : null}
+                            {it.season === 'winter' ? 'зимняя ' : null}
+                            {it.season === 'all' ? 'всесезонная ' : null}
+                            {it.quantity ? `- ${it.quantity} шт ` : null}
+                            {it.price ? `, ${it.price} руб.` : null}
+                          </p>
+                        ))
+                    : null}
+                  {props.preorder
+                    ? props.preorder
+                        .filter((it) => it.mode === 'full' && it.type === '3')
+                        .map((it) => (
+                          <p key={it.tyreItem}>
+                            АКБ: {it.brand ? `${it.brand} ` : null}
+                            {it.model ? `${it.model} ` : null}
+                            {it.tok ? `Пусковой ток: ${it.tok}, ` : null}
+                            {it.emkost ? `${it.emkost} Ah, ` : null}
+                            {it.size ? `Размер: ${it.size}, ` : null}
+                            {it.typeakb === 'euro' ? 'Евро, ' : null}
+                            {it.typeakb === 'asia' ? 'Азия, ' : null}
+                            {it.polar === 'pryamaya' ? 'прямая полярность, ' : null}
+                            {it.polar === 'reversed' ? 'обратная полярность, ' : null}
+                            {it.polar === 'uni' ? 'универсальная полярность, ' : null}
+                            {it.quantity ? `- ${it.quantity} шт` : null}
+                            {it.price ? ` , ${it.price} руб.` : null}
+                          </p>
+                        ))
+                    : null}
+                  {props.preorder
+                    ? props.preorder
+                        .filter((it) => it.mode === 'full' && it.type === '2')
+                        .map((it) => (
+                          <p key={it.tyreItem}>
+                            Диски: {it.brand ? `${it.brand} ` : null}
+                            {it.model ? `${it.model} ` : null}
+                            {it.diametr ? `R${it.diametr} ` : null}
+                            {it.pcd ? `PCD: ${it.pcd}, ` : null}
+                            {it.et ? `ET: ${it.et}, ` : null}
+                            {it.dia ? `ступица: ${it.dia}, ` : null}
+                            {it.wheelwidth ? `${it.wheelwidth}J, ` : null}
+                            {it.typewheel === 'lit' ? 'Литые, ' : null}
+                            {it.typewheel === 'sht' ? 'Штампованные, ' : null}
+                            {it.typewheel === 'kov' ? 'Кованные, ' : null}
+                            {it.color ? `цвет: ${it.color}` : null}
+                            {it.quantity ? ` - ${it.quantity} шт, ` : null}
+                            {it.price ? `, ${it.price} руб.` : null}
+                          </p>
+                        ))
+                    : null}
                 </div>
               </div>
               {props.comment ? (
                 <div>
-                  <b>Комментарий при заказе</b>
+                  <b>Комментарий</b>
                   <div className="-mx-3 md:flex mb-2">
                     <div className="overflow-x-auto md:w-auto px-3 mb-6 md:mb-0">
                       <p>{props.comment}</p>
@@ -319,20 +411,10 @@ const TyreViewOrder = (props) => {
                   </div>
                 </div>
               ) : null}
-              {props.commentOrder ? (
-                <div>
-                  <b>Комментарий при обработке</b>
-                  <div className="-mx-3 md:flex mb-2">
-                    <div className="overflow-x-auto md:w-auto px-3 mb-6 md:mb-0">
-                      <p>{props.commentOrder}</p>
-                    </div>
-                  </div>
-                </div>
-              ) : null}
             </div>
           </div>
         </div>
-        {props.order.length === 0 ? null : (
+        {props.order.length >= 1 && props.order.filter((it) => it.price && it.brand).length >= 1 ? (
           <div className="-mx-3 md:flex mb-2">
             <div className="md:w-full px-3 mb-6 md:mb-0">
               <label
@@ -345,13 +427,13 @@ const TyreViewOrder = (props) => {
                 <table className="border-collapse w-full">
                   <thead>
                     <tr>
+                      <th className="p-3 font-bold uppercase bg-gray-100 text-sm text-gray-600 border border-gray-300 table-cell whitespace-no-wrap">
+                        Тип
+                      </th>
                       <th className="p-3 font-bold uppercase bg-gray-100 text-sm text-gray-600 border border-gray-300 table-cell">
-                        Запчасти
+                        Наименование
                       </th>
                       <th className="p-3 font-bold uppercase bg-gray-100 text-sm text-gray-600 border border-gray-300 table-cell whitespace-no-wrap">
-                        Кол-во
-                      </th>
-                      <th className="p-3 px-8 font-bold uppercase bg-gray-100 text-sm text-gray-600 border border-gray-300 table-cell">
                         Цена
                       </th>
                       <th className="p-3 px-6 font-bold uppercase bg-gray-100 text-sm text-gray-600 border border-gray-300 hidden md:table-cell">
@@ -360,34 +442,91 @@ const TyreViewOrder = (props) => {
                       <th className="p-3 font-bold uppercase bg-gray-100 text-sm text-gray-600 border border-gray-300 table-cell">
                         Статус
                       </th>
-                      <th className="p-3 font-bold uppercase bg-gray-100 text-sm text-gray-600 border border-gray-300 table-cell whitespace-no-wrap">
+                      <th className="p-3 font-bold uppercase bg-gray-100 text-sm text-gray-600 border border-gray-300 table-cell">
                         Дата прибытия
                       </th>
                     </tr>
                   </thead>
                   <tbody>
-                    {props.order.map((it, index) => (
+                    {props.order.map((inputField) => (
                       <tr
-                        key={index}
+                        key={inputField.autopartItem}
                         className="bg-white lg:hover:bg-gray-100 table-row flex-row lg:flex-row flex-wrap mb-10 lg:mb-0"
                       >
-                        <td className="lg:w-7/12 px-4 py-1 text-gray-800 text-left border border-b table-cell relative">
-                          {it.autopartItem}
+                        <td className="lg:w-auto p-2 text-gray-800 text-center border border-b block table-cell relative static">
+                          <p>
+                            {inputField.type === '1' ? 'Шины' : null}
+                            {inputField.type === '2' ? 'Диски' : null}
+                            {inputField.type === '3' ? 'АКБ' : null}
+                          </p>
                         </td>
-                        <td className="px-4 py-1 text-gray-800 text-center border border-b table-cell relative">
-                          {it.quantity}
+                        {inputField.type === '1' && inputField.mode === 'full' ? (
+                          <td className="lg:w-auto p-2 text-gray-800 text-center border border-b block table-cell relative static">
+                            <p>
+                              {inputField.brand ? `${inputField.brand} ` : null}
+                              {inputField.model ? `${inputField.model} ` : null}
+                              {inputField.sizeone ? `${inputField.sizeone} ` : null}
+                              {inputField.sizetwo ? `/ ${inputField.sizetwo} ` : null}
+                              {inputField.sizethree ? `R${inputField.sizethree} ` : null}
+                              {inputField.indexone ? `${inputField.indexone} ` : null}
+                              {inputField.indextwo ? `${inputField.indextwo} ` : null}
+                              {inputField.season === 'summer' ? 'летняя ' : null}
+                              {inputField.season === 'winter' ? 'зимняя ' : null}
+                              {inputField.season === 'all' ? 'всесезонная ' : null}
+                            </p>
+                          </td>
+                        ) : null}
+                        {inputField.type === '3' && inputField.mode === 'full' ? (
+                          <td className="lg:w-auto p-2 text-gray-800 text-center border border-b block table-cell relative static">
+                            <p>
+                              {inputField.brand ? `${inputField.brand} ` : null}
+                              {inputField.model ? `${inputField.model} ` : null}
+                              {inputField.tok ? `Пусковой ток: ${inputField.tok}, ` : null}
+                              {inputField.emkost ? `${inputField.emkost} Ah, ` : null}
+                              {inputField.size ? `Размер: ${inputField.size}, ` : null}
+                              {inputField.typeakb === 'euro' ? 'Евро, ' : null}
+                              {inputField.typeakb === 'asia' ? 'Азия, ' : null}
+                              {inputField.polar === 'L+' ? 'прямая полярность, ' : null}
+                              {inputField.polar === 'R+' ? 'обратная полярность, ' : null}
+                              {inputField.polar === 'uni' ? 'универсальная полярность, ' : null}
+                            </p>
+                          </td>
+                        ) : null}
+                        {inputField.type === '2' && inputField.mode === 'full' ? (
+                          <td className="lg:w-auto p-2 text-gray-800 text-center border border-b block table-cell relative static">
+                            <p>
+                              {it.brand ? `${inputField.brand} ` : null}
+                              {inputField.model ? `${inputField.model} ` : null}
+                              {inputField.diametr ? `R${inputField.diametr} ` : null}
+                              {inputField.pcd ? `PCD: ${inputField.pcd}, ` : null}
+                              {inputField.et ? `ET: ${inputField.et}, ` : null}
+                              {inputField.dia ? `ступица: ${inputField.dia}, ` : null}
+                              {inputField.wheelwidth ? `${inputField.wheelwidth}J, ` : null}
+                              {inputField.typewheel === 'lit' ? 'Литые, ' : null}
+                              {inputField.typewheel === 'sht' ? 'Штампованные, ' : null}
+                              {inputField.typewheel === 'kov' ? 'Кованные, ' : null}
+                              {inputField.color ? `цвет: ${inputField.color}` : null}
+                            </p>
+                          </td>
+                        ) : null}
+                        <td className="lg:w-auto p-2 text-gray-800 text-center border border-b block table-cell relative static">
+                          <p>
+                            {inputField.price ? `${inputField.price} руб` : null}
+                            {inputField.quantity ? `, ${inputField.quantity} шт.` : null}
+                          </p>
                         </td>
-                        <td className="px-4 py-1 text-gray-800 text-center border border-b table-cell relative">
-                          {it.price}
+                        <td className="w-full lg:w-auto p-2 text-gray-800 text-center border border-b hidden md:table-cell relative">
+                          <p>
+                            {inputField.price && inputField.quantity
+                              ? inputField.price * inputField.quantity
+                              : null}
+                          </p>
                         </td>
-                        <td className="w-full lg:w-auto px-4 py-1 text-gray-800 text-center border border-b hidden md:table-cell relative">
-                          <p>{it.price && it.quantity ? it.price * it.quantity : null}</p>
+                        <td className="w-full lg:w-auto p-2 text-gray-800 text-center border border-b table-cell relative">
+                          <p>{inputField.stat}</p>
                         </td>
-                        <td className="w-full lg:w-auto px-4  py-1 text-gray-800 text-center border border-b table-cell relative">
-                          {it.stat}
-                        </td>
-                        <td className="w-full lg:w-auto px-4  py-1 text-gray-800 text-center border border-b table-cell relative">
-                          {it.come}
+                        <td className="lg:w-auto p-2 text-gray-800 text-center border border-b block table-cell relative static">
+                          <p>{inputField.come}</p>
                         </td>
                       </tr>
                     ))}
@@ -396,8 +535,8 @@ const TyreViewOrder = (props) => {
               </div>
             </div>
           </div>
-        )}
-        {props.order.length > 0 ? (
+        ) : null}
+        {props.order[0].price && props.order[0].quantity ? (
           <div className="-mx-3 md:flex mb-2 flex-row">
             <div className="px-3 mb-6 md:mb-0">
               <div className="flex flex-row">
@@ -420,38 +559,40 @@ const TyreViewOrder = (props) => {
                   : null}
               </p>
             </div>
-            <div className="px-3 mb-6 md:mb-0">
-              <div className="flex flex-row">
-                <label
-                  className="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2"
-                  htmlFor="grid-city"
-                >
-                  Сумма товаров в работе
-                </label>
-                <button
-                  className="ml-3 px-3 rounded-full text-white bg-blue-600 opacity-75 text-l hover:opacity-100 hover:bg-blue-700"
-                  type="button"
-                  onClick={() =>
-                    notify(
-                      'Общая сумма учитывает все товары. Сумма товаров в рвботе не учитывает товары со статусом "Интересовался"'
-                    )
-                  }
-                >
-                  ?
-                </button>
+            {props.order.filter((it) => it.stat === 'Интересовался').length > 0 ? (
+              <div className="px-3 mb-6 md:mb-0">
+                <div className="flex flex-row">
+                  <label
+                    className="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2"
+                    htmlFor="grid-city"
+                  >
+                    Сумма товаров в работе
+                  </label>
+                  <button
+                    className="ml-3 px-3 rounded-full text-white bg-blue-600 opacity-75 text-l hover:opacity-100 hover:bg-blue-700"
+                    type="button"
+                    onClick={() =>
+                      notify(
+                        'Общая сумма учитывает все товары. Сумма товаров в рвботе не учитывает товары со статусом "Интересовался"'
+                      )
+                    }
+                  >
+                    ?
+                  </button>
+                </div>
+                <p className="ml-3">
+                  {props.order.length >= 1
+                    ? props.order.reduce(function fullPrice(acc, rec) {
+                        if (rec.price && rec.quantity && rec.stat !== 'Интересовался')
+                          if (rec.price.match(/[0-9]/) && rec.quantity.match(/[0-9]/)) {
+                            return acc + rec.price * rec.quantity
+                          }
+                        return acc
+                      }, 0)
+                    : null}
+                </p>
               </div>
-              <p className="ml-3">
-                {props.order.length >= 1
-                  ? props.order.reduce(function fullPrice(acc, rec) {
-                      if (rec.price && rec.quantity && rec.stat !== 'Интересовался')
-                        if (rec.price.match(/[0-9]/) && rec.quantity.match(/[0-9]/)) {
-                          return acc + rec.price * rec.quantity
-                        }
-                      return acc
-                    }, 0)
-                  : null}
-              </p>
-            </div>
+            ) : null}
           </div>
         ) : null}
         <div className="-mx-3 md:flex mb-2">

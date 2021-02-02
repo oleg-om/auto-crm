@@ -11,7 +11,6 @@ import tyres from '../assets/images/Dashboard/tyres.png'
 import razval from '../assets/images/Dashboard/razval.png'
 import customer from '../assets/images/Dashboard/customer.png'
 import vendor from '../assets/images/Dashboard/vendor.png'
-import tyre from '../assets/images/Dashboard/tyrewheels.png'
 
 const Dashboard = () => {
   toast.configure()
@@ -143,7 +142,7 @@ const Dashboard = () => {
                       </button>
                     </div>
                     <div className="w-1/2">
-                      <img src={tyre} alt="" className="object-contain h-48 w-full" />
+                      <img src={tyres} alt="" className="object-contain h-48 w-full" />
                     </div>
                   </div>
                 </Link>
