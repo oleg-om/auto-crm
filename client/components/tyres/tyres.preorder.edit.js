@@ -344,7 +344,7 @@ const TyreUpdate = (props) => {
                     Выберите сотрудника
                   </option>
                   {employeeListLocal
-                    .filter((it) => it.role.includes('Обработка заказов (запчасти)'))
+                    .filter((it) => it.role.includes('Обработка заказов (шины)'))
                     .map((it) => {
                       return (
                         <option value={it.id} key={it.id}>
