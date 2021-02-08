@@ -10,7 +10,8 @@ const Car = ({
   acceptRegnumber,
   openRegModal,
   state,
-  keyboard
+  keyboard,
+  options
 }) => {
   return (
     <div className="md:flex md:flex-col -mx-3">
@@ -463,13 +464,15 @@ const Car = ({
           <div className="flex-shrink w-full inline-block relative">
             <select
               className="block appearance-none w-full bg-grey-lighter border border-gray-300 focus:border-gray-500 focus:outline-none py-1 px-4 pr-8 rounded"
-              placeholder="Русскими буквами, необязательное поле"
               name="regnumber"
               id="regnumber"
             >
-              {/* {options.mark.map((it) => (
-                <option value={it.name} label={it.name_rus} key={it.id_car_mark} />
-              ))} */}
+              <option value="" hidden>
+                Выберите бренд
+              </option>
+              {options.mark.map((it) => (
+                <option value={it.name} label={it.name} key={it.id_car_mark} />
+              ))}
             </select>
           </div>
         </div>

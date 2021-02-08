@@ -243,7 +243,9 @@ const ModalNew = ({
         setActiveCustomer('')
       }
     } else if (itemType === 'Замена масла') {
-      if (state.phone === '') notify('Поле телефон пустое')
+      if (propsDate > new Date() && state.phone === '') notify('Поле телефон пустое')
+      else if (propsDate < new Date() && state.phone === '' && state.regnumber === '')
+        notify('Поле телефон и гос.номер пустое. Заполните одно из них')
       else if (state.mark === '') notify('Поле марка авто пустое')
       else if (state.model === '') notify('Поле модель авто пустое')
       else if (!activeCustomer) {

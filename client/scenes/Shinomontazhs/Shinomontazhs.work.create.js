@@ -16,7 +16,7 @@ const ShinomontazhsNew = () => {
   return (
     <div>
       <Navbar />
-      <div className="container mx-auto px-4 pt-3">
+      <div className="lg:container w-full mx-auto px-4 pt-3">
         <ShinomontazhsCreate create={create} />
       </div>
     </div>

@@ -42,6 +42,8 @@ const ShinomontazhsCreate = (props) => {
     role: []
   })
 
+  const [service, setService] = useState([])
+
   const onChangeRegNumber = (e) => {
     const { value } = e.target
     setRegNumber((prevState) => [...prevState.concat(value)])
@@ -96,6 +98,80 @@ const ShinomontazhsCreate = (props) => {
     if (keyboard === false) {
       setRegOpen(true)
     }
+  }
+
+  const [options, setOptions] = useState({
+    mark: [],
+    model: []
+  })
+
+  const [stateId, setStateId] = useState({
+    mark: '',
+    model: '',
+    gen: '',
+    mod: ''
+  })
+
+  useEffect(() => {
+    fetch('/api/v1/carmark')
+      .then((res) => res.json())
+      .then((it) => {
+        setOptions((prevState) => ({
+          ...prevState,
+          mark: it.data
+        }))
+      })
+    return () => {}
+  }, [])
+
+  useEffect(() => {
+    if (stateId.mark !== '') {
+      fetch(`/api/v1/carmodel/${stateId.mark}`)
+        .then((res) => res.json())
+        .then((it) => {
+          setOptions((prevState) => ({
+            ...prevState,
+            model: it.data
+          }))
+        })
+    }
+    return () => {}
+  }, [stateId.mark])
+
+  const onChangeMark = (e) => {
+    const { value } = e.target
+    const findCar = options.mark ? options.mark.find((it) => value === it.name) : null
+    setState((prevState) => ({
+      ...prevState,
+      mark: value,
+      model: '',
+      gen: '',
+      mod: ''
+    }))
+    setStateId((prevState) => ({
+      ...prevState,
+      mark: findCar ? findCar.id_car_mark : '',
+      model: '',
+      gen: '',
+      mod: ''
+    }))
+  }
+
+  const onChangeModel = (e) => {
+    const { value } = e.target
+    const finModel = options.model.find((it) => value === it.name)
+    setState((prevState) => ({
+      ...prevState,
+      model: value,
+      gen: '',
+      mod: ''
+    }))
+    setStateId((prevState) => ({
+      ...prevState,
+      model: finModel ? finModel.id_car_model : '',
+      gen: '',
+      mod: ''
+    }))
   }
 
   const sendData = () => {
@@ -157,26 +233,60 @@ const ShinomontazhsCreate = (props) => {
   const checkboxServiceChange = (e) => {
     const { name, placeholder, checked } = e.target
     if (checked) {
-      setState((prevState) => ({
+      setService((prevState) => [
         ...prevState,
-        service: [...prevState.service, { serviceName: name, quantity: 1, price: placeholder }]
-      }))
+        { serviceName: name, quantity: 1, price: placeholder }
+      ])
     } else {
-      setState((prevState) => ({
-        ...prevState,
-        service: prevState.service.filter((it) => it.serviceName !== name)
-      }))
+      setService((prevState) => prevState.filter((it) => it.serviceName !== name))
     }
   }
   const servicePlusChange = (e) => {
     const { name } = e.target
-    setState((prevState) => ({
-      ...prevState,
-      order: [...prevState.order, { serviceName: name, quantity: 1 }]
-    }))
+    setService(
+      service.map((object) => {
+        if (object.serviceName === name) {
+          return {
+            ...object,
+            quantity: object.quantity + 1
+          }
+        }
+        return object
+      })
+    )
     console.log('lol')
   }
-  console.log(state.service)
+
+  const serviceMinusChange = (e) => {
+    const { name } = e.target
+    setService(
+      service.map((object) => {
+        if (object.serviceName === name && object.quantity >= 2) {
+          return {
+            ...object,
+            quantity: object.quantity - 1
+          }
+        }
+        return object
+      })
+    )
+  }
+
+  const nextStep = () => {
+    if (active === 'employee') {
+      setActive('car')
+    } else if (active === 'car') {
+      setActive('service')
+    } else if (active === 'service') {
+      setActive('material')
+    } else if (active === 'material') {
+      setActive('finish')
+    } else if (active === 'finish') {
+      sendData()
+    }
+  }
+
+  console.log(service)
 
   return (
     <div>
@@ -274,6 +384,9 @@ const ShinomontazhsCreate = (props) => {
             openRegModal={openRegModal}
             state={state}
             keyboard={keyboard}
+            onChangeMark={onChangeMark}
+            onChangeModel={onChangeModel}
+            options={options}
           />
         </div>
         <div
@@ -283,11 +396,12 @@ const ShinomontazhsCreate = (props) => {
           })}
         >
           <Service
-            employeeList={shinomontazhprices}
+            shinomontazhprices={shinomontazhprices}
             auth={auth}
-            state={state}
-            checkboxRoleChange={checkboxServiceChange}
+            service={service}
+            checkboxServiceChange={checkboxServiceChange}
             servicePlusChange={servicePlusChange}
+            serviceMinusChange={serviceMinusChange}
           />
         </div>
       </div>
@@ -301,7 +415,7 @@ const ShinomontazhsCreate = (props) => {
 
         <button
           className="my-3 ml-2 py-3 md:w-2/3 px-3 bg-blue-600 text-white hover:bg-blue-700 hover:text-white rounded-lg"
-          onClick={sendData}
+          onClick={nextStep}
           type="submit"
         >
           Далее
