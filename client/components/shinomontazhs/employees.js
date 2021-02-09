@@ -1,7 +1,7 @@
 import React from 'react'
 import cx from 'classnames'
 
-const Employee = ({ employeeList, auth, state, checkboxRoleChange }) => {
+const Employee = ({ employeeList, auth, state, checkboxEmployeeChange }) => {
   return (
     <div className="md:flex md:flex-row -mx-3">
       <div className="px-3 mb-6 md:mb-0 w-full">
@@ -19,23 +19,23 @@ const Employee = ({ employeeList, auth, state, checkboxRoleChange }) => {
               )
               .map((item) => (
                 <button
-                  className={cx('mb-3 flex flex-row rounded bg-gray-200 w-full text-xl', {
-                    'bg-green-400 hover:bg-green-500 text-white': state.role.includes(item.id),
-                    'bg-gray-100 hover:bg-gray-300': !state.role.includes(item.id)
+                  className={cx('mb-3 flex flex-row rounded bg-gray-200 w-full text-lg', {
+                    'bg-green-200 hover:bg-green-300': state.employee.includes(item.id),
+                    'bg-gray-100 hover:bg-gray-300': !state.employee.includes(item.id)
                   })}
                   key={item.id}
                   type="button"
                   name={item.id}
-                  onClick={checkboxRoleChange}
+                  onClick={checkboxEmployeeChange}
                 >
                   <label htmlFor={item.id} className="w-full h-full p-2 text-left inline-block">
                     <input
                       className="mr-4"
-                      checked={state.role.index}
+                      checked={state.employee.index}
                       key={item.id}
                       name={item.id}
                       id={item.id}
-                      defaultChecked={state.role.find((it) => it === item)}
+                      defaultChecked={state.employee.find((it) => it === item)}
                       type="checkbox"
                     />
                     {item.name} {item.surname}

@@ -11,12 +11,23 @@ const Car = ({
   openRegModal,
   state,
   keyboard,
-  options
+  options,
+  onChangeMark,
+  onChangeModel,
+  onSearchChange,
+  search,
+  customer,
+  customerOptions,
+  activeCustomer,
+  setActiveCustomer,
+  applyCustomer,
+  sizeThreeList,
+  onChange
 }) => {
   return (
     <div className="md:flex md:flex-col -mx-3">
       <div className="px-3 mb-6 md:mb-0 w-full">
-        <div className="relative inline-block text-left w-1/2">
+        <div className="relative inline-block text-left lg:w-1/2 w-2/3">
           <div>
             <label
               className="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2"
@@ -28,7 +39,7 @@ const Car = ({
               <input
                 className="block appearance-none w-full bg-grey-lighter border border-gray-300 focus:border-gray-500 focus:outline-none py-2 px-4 pr-8 rounded"
                 type="text"
-                placeholder="Русскими буквами, необязательное поле"
+                placeholder="Русскими буквами"
                 value={state.regnumber}
                 name="regnumber"
                 id="regnumber"
@@ -41,7 +52,7 @@ const Car = ({
 
           <div
             className={cx(
-              'absolute mt-2 p-3 w-full rounded-md shadow bg-gray-200 border-2 border-gray-600 z-50',
+              'absolute p-3 w-full rounded-md shadow bg-gray-200 border-2 border-gray-600 z-50',
               {
                 hidden: regOpen === false,
                 block: regOpen === true
@@ -461,20 +472,280 @@ const Car = ({
           >
             Марка авто
           </label>
-          <div className="flex-shrink w-full inline-block relative">
+          <div className="flex-shrink w-1/2 inline-block relative">
             <select
-              className="block appearance-none w-full bg-grey-lighter border border-gray-300 focus:border-gray-500 focus:outline-none py-1 px-4 pr-8 rounded"
-              name="regnumber"
-              id="regnumber"
+              className="block appearance-none w-full bg-grey-lighter border border-gray-300 focus:border-gray-500 focus:outline-none py-2 px-4 pr-8 rounded"
+              name="mark"
+              id="mark"
+              value={state.mark}
+              autoComplete="off"
+              required
+              onChange={onChangeMark}
             >
               <option value="" hidden>
                 Выберите бренд
               </option>
-              {options.mark.map((it) => (
-                <option value={it.name} label={it.name} key={it.id_car_mark} />
-              ))}
+              {options.mark
+                .sort(function sortMarks(a, b) {
+                  if (a.name > b.name) {
+                    return 1
+                  }
+                  if (a.name < b.name) {
+                    return -1
+                  }
+                  return 0
+                })
+                .map((it) => (
+                  <option value={it.name} label={it.name} key={it.id_car_mark} />
+                ))}
             </select>
+            <div className="pointer-events-none absolute top-0 mt-3 right-0 flex items-center px-2 text-gray-600">
+              <svg
+                className="fill-current h-4 w-4"
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 20 20"
+              >
+                <path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z" />
+              </svg>
+            </div>
           </div>
+        </div>
+        <div className="mt-3 flex flex-col">
+          <label
+            className="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2"
+            htmlFor="phone"
+          >
+            Модель авто
+          </label>
+          <div className="flex-shrink w-1/2 inline-block relative">
+            <select
+              className="block appearance-none w-full bg-grey-lighter border border-gray-300 focus:border-gray-500 focus:outline-none py-2 px-4 pr-8 rounded"
+              value={state.model}
+              name="model"
+              id="model"
+              placeholder={state.mark.length < 2 ? 'Сначала выберете марку' : 'Выберите модель'}
+              disabled={state.mark.length < 2}
+              autoComplete="off"
+              required
+              onChange={onChangeModel}
+            >
+              <option value="" hidden>
+                {state.mark.length < 2 ? 'Сначала выберете марку' : 'Выберите модель'}
+              </option>
+              {state.mark
+                ? options.model
+                    .sort(function sortMarks(a, b) {
+                      if (a.name > b.name) {
+                        return 1
+                      }
+                      if (a.name < b.name) {
+                        return -1
+                      }
+                      return 0
+                    })
+                    .map((it) => <option value={it.name} label={it.name} key={it.id_car_mark} />)
+                : null}
+            </select>
+            <div className="pointer-events-none absolute top-0 mt-3 right-0 flex items-center px-2 text-gray-600">
+              <svg
+                className="fill-current h-4 w-4"
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 20 20"
+              >
+                <path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z" />
+              </svg>
+            </div>
+          </div>
+        </div>
+        <div className="-mx-3 md:flex mb-2 mt-3">
+          <div className="md:w-1/2 px-3 mb-6 md:mb-0">
+            <label
+              className="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2"
+              htmlFor="phone"
+            >
+              Диаметр
+            </label>
+            <div className="flex-shrink w-full inline-block relative">
+              <select
+                className="block appearance-none w-full bg-grey-lighter border border-gray-300 focus:border-gray-500 focus:outline-none py-2 px-4 pr-8 rounded"
+                name="diametr"
+                id="diametr"
+                value={state.diametr}
+                autoComplete="off"
+                required
+                onChange={onChange}
+              >
+                <option value="" hidden>
+                  Выберите диаметр
+                </option>
+                {sizeThreeList.map((it) => (
+                  <option value={it} label={it} key={it} />
+                ))}
+              </select>
+              <div className="pointer-events-none absolute top-0 mt-3 right-0 flex items-center px-2 text-gray-600">
+                <svg
+                  className="fill-current h-4 w-4"
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 20 20"
+                >
+                  <path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z" />
+                </svg>
+              </div>
+            </div>
+          </div>
+          <div className="md:w-1/2 px-3 mb-6 md:mb-0">
+            <label
+              className="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2"
+              htmlFor="phone"
+            >
+              Кузов
+            </label>
+            <div className="flex-shrink w-full inline-block relative">
+              <select
+                className="block appearance-none w-full bg-grey-lighter border border-gray-300 focus:border-gray-500 focus:outline-none py-2 px-4 pr-8 rounded"
+                name="kuzov"
+                id="kuzov"
+                value={state.kuzov}
+                autoComplete="off"
+                required
+                onChange={onChange}
+              >
+                <option value="" hidden>
+                  Выберите кузов
+                </option>
+                <option value="sedan">Седан</option>
+                <option value="crossover">Кроссовер</option>
+                <option value="runflat">RUN FLAT</option>
+                <option value="runflat">Грузовой</option>
+              </select>
+              <div className="pointer-events-none absolute top-0 mt-3 right-0 flex items-center px-2 text-gray-600">
+                <svg
+                  className="fill-current h-4 w-4"
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 20 20"
+                >
+                  <path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z" />
+                </svg>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div className="mt-5 w-full px-3">
+          <div>
+            <label
+              className="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2"
+              htmlFor="grid-city"
+            >
+              Авто в базе данных
+            </label>
+          </div>
+          <table className="border-collapse w-full auto-search">
+            <thead>
+              <tr>
+                <th className="p-3 font-bold uppercase bg-gray-100 text-gray-600 border border-gray-300 table-cell w-full">
+                  Клиент
+                </th>
+                <th className="p-3 font-bold uppercase bg-gray-100 text-gray-600 border border-gray-300 table-cell">
+                  Действия
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr className="bg-white lg:hover:bg-gray-100 flex table-row flex-row lg:flex-row flex-wrap flex-no-wrap mb-10 lg:mb-0">
+                <td className="w-full lg:w-auto p-2 lg:py-5 text-xs text-gray-800 text-center border border-b block table-cell relative static">
+                  Введите полностью гос. номер чтобы найти клиента. Если клиент отстствует,
+                  заполните данные самостоятельно. Тогда в базе данных клиентов появится новый
+                  клиент. Если данные какого-то клиента больше не актуальны, вы можете удалить его
+                  либо изменить данные на странице Клиенты
+                </td>
+                <td className="w-full lg:w-auto p-2 text-gray-800 text-center border border-b text-center block table-cell relative static" />
+              </tr>
+              <tr className="bg-white lg:hover:bg-gray-100 flex table-row flex-row lg:flex-row flex-wrap flex-no-wrap mb-10 lg:mb-0">
+                <td className="w-full lg:w-auto p-2 text-xs text-gray-800 text-center border border-b block table-cell relative static">
+                  <div className="flex-shrink w-full inline-block relative">
+                    <select
+                      className="block appearance-none w-full bg-grey-lighter border border-gray-300 focus:border-gray-500 focus:outline-none py-1 px-4 pr-8 rounded"
+                      value={search}
+                      name="search"
+                      id="searchBlock"
+                      onChange={onSearchChange}
+                    >
+                      <option value="" className="text-gray-800">
+                        {customerOptions.length < 1 ? 'Клиентов не найдено' : 'Выберите клиента'}
+                      </option>
+                      {customerOptions.map((it, index) => {
+                        return (
+                          <option key={index} value={it.id}>
+                            {it.name}, {it.mark} {it.model} {it.regnumber},{it.phone}
+                          </option>
+                        )
+                      })}
+                    </select>
+                    <div className="pointer-events-none absolute top-0 mt-2  right-0 flex items-center px-2 text-gray-600">
+                      <svg
+                        className="fill-current h-4 w-4"
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 20 20"
+                      >
+                        <path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z" />
+                      </svg>
+                    </div>
+                  </div>
+                </td>
+                <td className="w-full lg:w-auto p-2 text-gray-800 text-center border border-b block table-cell relative static">
+                  {customerOptions.length < 1 && !customer.idOfItem && !search ? (
+                    <button
+                      type="button"
+                      className="py-1 px-3 text-white text-xs bg-gray-500 hover:text-white rounded-lg"
+                    >
+                      Не найден
+                    </button>
+                  ) : null}
+                  {customerOptions.length >= 1 && activeCustomer === '' && !search ? (
+                    <button
+                      onClick={applyCustomer}
+                      type="button"
+                      className="py-1 px-3 text-white text-xs bg-blue-500 hover:text-white rounded-lg"
+                    >
+                      Выберите клиента
+                    </button>
+                  ) : null}
+                  {customerOptions.length >= 1 && activeCustomer === '' && search ? (
+                    <button
+                      onClick={applyCustomer}
+                      type="button"
+                      className="py-1 px-3 text-white text-xs hover:text-white rounded-lg bg-green-600 hover:bg-green-700"
+                    >
+                      Использовать
+                    </button>
+                  ) : null}
+                  {activeCustomer !== '' && customer.idOfItem && search ? (
+                    <button
+                      onClick={() => setActiveCustomer('')}
+                      type="button"
+                      className="py-1 px-3 text-white text-xs hover:text-white rounded-lg bg-red-600 hover:bg-red-700"
+                    >
+                      Сбросить
+                    </button>
+                  ) : null}
+                </td>
+              </tr>
+            </tbody>
+            {customerOptions.length >= 1 && customer.idOfItem && activeCustomer ? (
+              <p className="text-left p-1">✔ Вы выбрали клиента</p>
+            ) : null}
+            {customerOptions.length >= 1 && !customer.idOfItem && !activeCustomer ? (
+              <p className="text-left p-1">
+                В базе данных найден клиент но вы не выбрали клиента. Будет создан новый клиент
+              </p>
+            ) : null}
+            {state.regnumber &&
+            customerOptions.length === 0 &&
+            !customer.idOfItem &&
+            !activeCustomer ? (
+              <p className="text-left p-1">Клиентов не найдено. Будет создан новый клиент</p>
+            ) : null}
+          </table>
         </div>
       </div>
     </div>

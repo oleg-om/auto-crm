@@ -37,13 +37,14 @@ const TyresEdit = (props) => {
   const [inputFields, setInputFields] = useState(props.preorder)
   const [activeCustomer, setActiveCustomer] = useState('')
   const [state, setState] = useState({
-    employee: props.name,
+    employee: props.employee,
     place: props.place,
-    mark: props.mark,
-    model: props.model,
-    gen: props.gen,
-    mod: props.mod,
-    preorder: props.preorder,
+    mark: props.mark ? props.mark : '',
+    model: props.model ? props.model : '',
+    gen: props.gen ? props.gen : '',
+    mod: props.mod ? props.mod : '',
+    preorder:
+      props.preorder && props.preorder.length !== 0 ? props.preorder : [{ autopartItem: '' }],
     name: props.name,
     phone: props.phone,
     prepay: props.prepay,
@@ -72,7 +73,7 @@ const TyresEdit = (props) => {
       })
     return () => {}
   }, [])
-
+  console.log(state.preorder)
   useEffect(() => {
     if (stateId.mark !== '') {
       fetch(`/api/v1/carmodel/${stateId.mark}`)
@@ -135,19 +136,16 @@ const TyresEdit = (props) => {
   }, [state.place, auth.place])
   const [customerOptions, setCustomerOptions] = useState([])
   useEffect(() => {
-    if (state.phone !== '' || state.regnumber !== '' || state.vinnumber !== '') {
+    if (state.phone !== '') {
       setCustomerOptions(
         customerList.filter(
-          (it) =>
-            (it.phone === state.phone && it.phone !== '' && state.phone !== '') ||
-            (it.regnumber === state.regnumber && it.regnumber !== '' && state.regnumber !== '') ||
-            (it.vinnumber === state.vinnumber && it.vinnumber !== '' && state.vinnumber !== '')
+          (it) => it.phone === state.phone && it.phone !== '' && state.phone !== ''
         )
       )
-    } else if (state.phone === '' || state.regnumber === '' || state.vinnumber === '') {
+    } else if (state.phone === '') {
       setCustomerOptions([])
     }
-  }, [state.phone, state.regnumber, state.vinnumber, customerList])
+  }, [state.phone, customerList])
 
   const onChange = (e) => {
     const { name, value } = e.target
@@ -351,6 +349,7 @@ const TyresEdit = (props) => {
                     value={state.employee}
                     name="employee"
                     id="employee"
+                    disabled="disabled"
                     onChange={onChange}
                   >
                     <option value="" disabled hidden className="text-gray-800">
@@ -394,6 +393,7 @@ const TyresEdit = (props) => {
                     value={state.place}
                     name="place"
                     id="place"
+                    disabled="disabled"
                     onChange={onChange}
                   >
                     <option value="" disabled hidden className="text-gray-800">

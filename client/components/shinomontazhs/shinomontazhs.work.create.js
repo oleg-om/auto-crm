@@ -7,6 +7,7 @@ import 'react-toastify/dist/ReactToastify.css'
 import Employee from './employees'
 import Car from './car'
 import Service from './service'
+import sizeThreeList from '../../lists/tyres/sizethree'
 
 const ShinomontazhsCreate = (props) => {
   toast.configure()
@@ -25,7 +26,7 @@ const ShinomontazhsCreate = (props) => {
   const [regOpen, setRegOpen] = useState(false)
 
   const [state, setState] = useState({
-    employee: auth.name,
+    employee: [],
     place: auth.place,
     regnumber: regNumber.toString(),
     vinnumber: '',
@@ -39,9 +40,11 @@ const ShinomontazhsCreate = (props) => {
     phone: '',
     prepay: '',
     comment: '',
-    role: []
+    role: [],
+    kuzov: '',
+    diametr: ''
   })
-
+  console.log(state)
   const [service, setService] = useState([])
 
   const onChangeRegNumber = (e) => {
@@ -59,17 +62,17 @@ const ShinomontazhsCreate = (props) => {
     }))
   }, [regNumber])
 
-  const checkboxRoleChange = (e) => {
+  const checkboxEmployeeChange = (e) => {
     const { name, checked } = e.target
     if (checked) {
       setState((prevState) => ({
         ...prevState,
-        role: [...prevState.role, name]
+        employee: [...prevState.employee, name]
       }))
     } else {
       setState((prevState) => ({
         ...prevState,
-        role: prevState.role.filter((it) => it !== name)
+        employee: prevState.employee.filter((it) => it !== name)
       }))
     }
   }
@@ -144,16 +147,12 @@ const ShinomontazhsCreate = (props) => {
     setState((prevState) => ({
       ...prevState,
       mark: value,
-      model: '',
-      gen: '',
-      mod: ''
+      model: ''
     }))
     setStateId((prevState) => ({
       ...prevState,
       mark: findCar ? findCar.id_car_mark : '',
-      model: '',
-      gen: '',
-      mod: ''
+      model: ''
     }))
   }
 
@@ -162,16 +161,82 @@ const ShinomontazhsCreate = (props) => {
     const finModel = options.model.find((it) => value === it.name)
     setState((prevState) => ({
       ...prevState,
-      model: value,
-      gen: '',
-      mod: ''
+      model: value
     }))
     setStateId((prevState) => ({
       ...prevState,
-      model: finModel ? finModel.id_car_model : '',
-      gen: '',
-      mod: ''
+      model: finModel ? finModel.id_car_model : ''
     }))
+  }
+
+  const [search, setSearch] = useState()
+  const [activeCustomer, setActiveCustomer] = useState('')
+  const [customer, setCustomer] = useState({
+    regnumber: '',
+    vinnumber: '',
+    mark: '',
+    model: '',
+    gen: '',
+    mod: '',
+    name: '',
+    phone: '',
+    idOfItem: ''
+  })
+  const [customerOptions, setCustomerOptions] = useState([])
+  useEffect(() => {
+    if (state.regnumber !== '') {
+      setCustomerOptions(
+        customerList.filter(
+          (it) =>
+            (it.phone === state.phone && it.phone !== '' && state.phone !== '') ||
+            (it.regnumber === state.regnumber && it.regnumber !== '' && state.regnumber !== '') ||
+            (it.vinnumber === state.vinnumber && it.vinnumber !== '' && state.vinnumber !== '')
+        )
+      )
+    } else if (state.regnumber === '') {
+      setCustomerOptions([])
+    }
+  }, [state.regnumber, customerList])
+
+  const onSearchChange = (event) => {
+    setSearch(event.target.value)
+  }
+  const onChange = (e) => {
+    const { name, value } = e.target
+    setState((prevState) => ({
+      ...prevState,
+      [name]: value
+    }))
+  }
+  const applyCustomer = () => {
+    const newCustomer = customerList.find((it) => it.id === search)
+    if (newCustomer) {
+      setCustomer((prevState) => ({
+        ...prevState,
+        regnumber: newCustomer.regnumber ? newCustomer.regnumber : '',
+        vinnumber: newCustomer.vinnumber ? newCustomer.vinnumber : '',
+        mark: newCustomer.mark ? newCustomer.mark : '',
+        model: newCustomer.model ? newCustomer.model : '',
+        gen: newCustomer.gen ? newCustomer.gen : '',
+        mod: newCustomer.mod ? newCustomer.mod : '',
+        name: newCustomer.name ? newCustomer.name : '',
+        phone: newCustomer.phone ? newCustomer.phone : '',
+        idOfItem: newCustomer.id
+      }))
+      setState((prevState) => ({
+        ...prevState,
+        regnumber: newCustomer.regnumber ? newCustomer.regnumber : '',
+        vinnumber: newCustomer.vinnumber ? newCustomer.vinnumber : '',
+        mark: newCustomer.mark ? newCustomer.mark : '',
+        model: newCustomer.model ? newCustomer.model : '',
+        gen: newCustomer.gen ? newCustomer.gen : '',
+        mod: newCustomer.mod ? newCustomer.mod : '',
+        name: newCustomer.name ? newCustomer.name : '',
+        phone: newCustomer.phone ? newCustomer.phone : ''
+      }))
+      setActiveCustomer(newCustomer.id)
+    }
+    return null
   }
 
   const sendData = () => {
@@ -274,9 +339,21 @@ const ShinomontazhsCreate = (props) => {
 
   const nextStep = () => {
     if (active === 'employee') {
-      setActive('car')
+      if (state.employee.length < 1) {
+        notify('Сначала выберите сотрудников')
+      } else {
+        setActive('car')
+      }
     } else if (active === 'car') {
-      setActive('service')
+      if (!state.regnumber) {
+        notify('Заполните гос. номер')
+      } else if (!state.mark) {
+        notify('Заполните поле Бренд')
+      } else if (!state.model) {
+        notify('Заполните поле Модель')
+      } else {
+        setActive('service')
+      }
     } else if (active === 'service') {
       setActive('material')
     } else if (active === 'material') {
@@ -365,7 +442,7 @@ const ShinomontazhsCreate = (props) => {
             employeeList={employeeList}
             auth={auth}
             state={state}
-            checkboxRoleChange={checkboxRoleChange}
+            checkboxEmployeeChange={checkboxEmployeeChange}
           />
         </div>
         <div
@@ -387,6 +464,15 @@ const ShinomontazhsCreate = (props) => {
             onChangeMark={onChangeMark}
             onChangeModel={onChangeModel}
             options={options}
+            onSearchChange={onSearchChange}
+            search={search}
+            customer={customer}
+            customerOptions={customerOptions}
+            activeCustomer={activeCustomer}
+            setActiveCustomer={setActiveCustomer}
+            applyCustomer={applyCustomer}
+            sizeThreeList={sizeThreeList}
+            onChange={onChange}
           />
         </div>
         <div
