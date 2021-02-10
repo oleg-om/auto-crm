@@ -207,12 +207,26 @@ const TyreUpdate = (props) => {
                     <b>Предоплата:</b> {props.prepay ? props.prepay : 'Нет'}
                   </li>
                 </ul>
-                <Link
-                  to={`/tyres/editfull/${props.id_tyres}`}
-                  className="py-2 px-3 bg-blue-600 text-white text-sm hover:bg-blue-700 hover:text-white rounded-full h-22 w-22"
-                >
-                  Редактировать заказ
-                </Link>
+                {!props.siteNumber ? (
+                  <Link
+                    to={`/tyres/editfull/${props.id_tyres}`}
+                    className="py-2 px-3 bg-blue-600 text-white text-sm hover:bg-blue-700 hover:text-white rounded-full h-22 w-22"
+                  >
+                    Редактировать заказ
+                  </Link>
+                ) : (
+                  <button
+                    type="button"
+                    onClick={() =>
+                      notify(
+                        'Вы не можете редактировать заказ автоматически импортированный с сайта'
+                      )
+                    }
+                    className="py-2 px-3 bg-blue-600 text-white text-sm hover:bg-blue-700 hover:text-white rounded-full h-22 w-22"
+                  >
+                    Редактировать заказ
+                  </button>
+                )}
               </div>
             </div>
           </div>

@@ -27,7 +27,7 @@ const Car = ({
   return (
     <div className="md:flex md:flex-col -mx-3">
       <div className="px-3 mb-6 md:mb-0 w-full">
-        <div className="relative inline-block text-left lg:w-1/2 w-2/3">
+        <div className="relative inline-block text-left lg:w-1/2 w-3/4">
           <div>
             <label
               className="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2"
@@ -37,7 +37,7 @@ const Car = ({
             </label>
             <div className="flex-shrink w-full inline-block relative">
               <input
-                className="block appearance-none w-full bg-grey-lighter border border-gray-300 focus:border-gray-500 focus:outline-none py-2 px-4 pr-8 rounded"
+                className="block appearance-none w-full bg-grey-lighter border-2 border-black focus:border-gray-500 focus:outline-none py-2 px-4 pr-8 rounded-lg"
                 type="text"
                 placeholder="Русскими буквами"
                 value={state.regnumber}
@@ -465,75 +465,40 @@ const Car = ({
             </div>
           </div>
         </div>
-        <div className="mt-3 flex flex-col">
-          <label
-            className="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2"
-            htmlFor="phone"
-          >
-            Марка авто
-          </label>
-          <div className="flex-shrink w-1/2 inline-block relative">
-            <select
-              className="block appearance-none w-full bg-grey-lighter border border-gray-300 focus:border-gray-500 focus:outline-none py-2 px-4 pr-8 rounded"
-              name="mark"
-              id="mark"
-              value={state.mark}
-              autoComplete="off"
-              required
-              onChange={onChangeMark}
-            >
-              <option value="" hidden>
-                Выберите бренд
-              </option>
-              {options.mark
-                .sort(function sortMarks(a, b) {
-                  if (a.name > b.name) {
-                    return 1
-                  }
-                  if (a.name < b.name) {
-                    return -1
-                  }
-                  return 0
-                })
-                .map((it) => (
-                  <option value={it.name} label={it.name} key={it.id_car_mark} />
-                ))}
-            </select>
-            <div className="pointer-events-none absolute top-0 mt-3 right-0 flex items-center px-2 text-gray-600">
-              <svg
-                className="fill-current h-4 w-4"
-                xmlns="http://www.w3.org/2000/svg"
-                viewBox="0 0 20 20"
-              >
-                <path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z" />
-              </svg>
-            </div>
+        <div className="flex-row flex w-full lg:w-1/2 mt-4 bg-gray-200 rounded-lg shadow p-3">
+          <div className="flex items-center mr-3">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="85" height="85">
+              <g id="_13-car" data-name="13-car">
+                <g id="glyph">
+                  <path d="M120,236a52,52,0,1,0,52,52A52.059,52.059,0,0,0,120,236Zm0,76a24,24,0,1,1,24-24A24,24,0,0,1,120,312Z" />
+                  <path d="M408,236a52,52,0,1,0,52,52A52.059,52.059,0,0,0,408,236Zm0,76a24,24,0,1,1,24-24A24,24,0,0,1,408,312Z" />
+                  <path d="M477.4,193.04,384,176l-79.515-65.975A44.109,44.109,0,0,0,276.526,100H159.38a43.785,43.785,0,0,0-34.359,16.514L74.232,176H40A36.04,36.04,0,0,0,4,212v44a44.049,44.049,0,0,0,44,44h9.145a64,64,0,1,1,125.71,0h162.29a64,64,0,1,1,125.71,0H472a36.04,36.04,0,0,0,36-36V228.632A35.791,35.791,0,0,0,477.4,193.04ZM180,164a12,12,0,0,1-12,12H115.245a6,6,0,0,1-4.563-9.9l34.916-40.9A12,12,0,0,1,154.724,121H168a12,12,0,0,1,12,12Zm60,56H224a12,12,0,0,1,0-24h16a12,12,0,0,1,0,24Zm94.479-43.706-114.507-.266a12,12,0,0,1-11.972-12V133a12,12,0,0,1,12-12h57.548a12,12,0,0,1,7.433,2.58l53.228,42A6,6,0,0,1,334.479,176.294Z" />
+                </g>
+              </g>
+            </svg>
           </div>
-        </div>
-        <div className="mt-3 flex flex-col">
-          <label
-            className="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2"
-            htmlFor="phone"
-          >
-            Модель авто
-          </label>
-          <div className="flex-shrink w-1/2 inline-block relative">
-            <select
-              className="block appearance-none w-full bg-grey-lighter border border-gray-300 focus:border-gray-500 focus:outline-none py-2 px-4 pr-8 rounded"
-              value={state.model}
-              name="model"
-              id="model"
-              placeholder={state.mark.length < 2 ? 'Сначала выберете марку' : 'Выберите модель'}
-              disabled={state.mark.length < 2}
-              autoComplete="off"
-              required
-              onChange={onChangeModel}
-            >
-              <option value="" hidden>
-                {state.mark.length < 2 ? 'Сначала выберете марку' : 'Выберите модель'}
-              </option>
-              {state.mark
-                ? options.model
+          <div className="flex flex-col w-full">
+            <div className="flex flex-col w-full">
+              <label
+                className="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2"
+                htmlFor="phone"
+              >
+                Марка авто
+              </label>
+              <div className="flex-shrink w-full inline-block relative">
+                <select
+                  className="block appearance-none w-full bg-grey-lighter border border-gray-300 focus:border-gray-500 focus:outline-none py-2 px-4 pr-8 rounded"
+                  name="mark"
+                  id="mark"
+                  value={state.mark}
+                  autoComplete="off"
+                  required
+                  onChange={onChangeMark}
+                >
+                  <option value="" hidden>
+                    Выберите бренд
+                  </option>
+                  {options.mark
                     .sort(function sortMarks(a, b) {
                       if (a.name > b.name) {
                         return 1
@@ -543,94 +508,148 @@ const Car = ({
                       }
                       return 0
                     })
-                    .map((it) => <option value={it.name} label={it.name} key={it.id_car_mark} />)
-                : null}
-            </select>
-            <div className="pointer-events-none absolute top-0 mt-3 right-0 flex items-center px-2 text-gray-600">
-              <svg
-                className="fill-current h-4 w-4"
-                xmlns="http://www.w3.org/2000/svg"
-                viewBox="0 0 20 20"
-              >
-                <path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z" />
-              </svg>
-            </div>
-          </div>
-        </div>
-        <div className="-mx-3 md:flex mb-2 mt-3">
-          <div className="md:w-1/2 px-3 mb-6 md:mb-0">
-            <label
-              className="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2"
-              htmlFor="phone"
-            >
-              Диаметр
-            </label>
-            <div className="flex-shrink w-full inline-block relative">
-              <select
-                className="block appearance-none w-full bg-grey-lighter border border-gray-300 focus:border-gray-500 focus:outline-none py-2 px-4 pr-8 rounded"
-                name="diametr"
-                id="diametr"
-                value={state.diametr}
-                autoComplete="off"
-                required
-                onChange={onChange}
-              >
-                <option value="" hidden>
-                  Выберите диаметр
-                </option>
-                {sizeThreeList.map((it) => (
-                  <option value={it} label={it} key={it} />
-                ))}
-              </select>
-              <div className="pointer-events-none absolute top-0 mt-3 right-0 flex items-center px-2 text-gray-600">
-                <svg
-                  className="fill-current h-4 w-4"
-                  xmlns="http://www.w3.org/2000/svg"
-                  viewBox="0 0 20 20"
-                >
-                  <path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z" />
-                </svg>
+                    .map((it) => (
+                      <option value={it.name} label={it.name} key={it.id_car_mark} />
+                    ))}
+                </select>
+                <div className="pointer-events-none absolute top-0 mt-3 right-0 flex items-center px-2 text-gray-600">
+                  <svg
+                    className="fill-current h-4 w-4"
+                    xmlns="http://www.w3.org/2000/svg"
+                    viewBox="0 0 20 20"
+                  >
+                    <path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z" />
+                  </svg>
+                </div>
               </div>
             </div>
-          </div>
-          <div className="md:w-1/2 px-3 mb-6 md:mb-0">
-            <label
-              className="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2"
-              htmlFor="phone"
-            >
-              Кузов
-            </label>
-            <div className="flex-shrink w-full inline-block relative">
-              <select
-                className="block appearance-none w-full bg-grey-lighter border border-gray-300 focus:border-gray-500 focus:outline-none py-2 px-4 pr-8 rounded"
-                name="kuzov"
-                id="kuzov"
-                value={state.kuzov}
-                autoComplete="off"
-                required
-                onChange={onChange}
+            <div className="mt-3 flex flex-col w-full">
+              <label
+                className="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2"
+                htmlFor="phone"
               >
-                <option value="" hidden>
-                  Выберите кузов
-                </option>
-                <option value="sedan">Седан</option>
-                <option value="crossover">Кроссовер</option>
-                <option value="runflat">RUN FLAT</option>
-                <option value="runflat">Грузовой</option>
-              </select>
-              <div className="pointer-events-none absolute top-0 mt-3 right-0 flex items-center px-2 text-gray-600">
-                <svg
-                  className="fill-current h-4 w-4"
-                  xmlns="http://www.w3.org/2000/svg"
-                  viewBox="0 0 20 20"
+                Модель авто
+              </label>
+              <div className="flex-shrink w-full inline-block relative">
+                <select
+                  className="block appearance-none w-full bg-grey-lighter border border-gray-300 focus:border-gray-500 focus:outline-none py-2 px-4 pr-8 rounded"
+                  value={state.model}
+                  name="model"
+                  id="model"
+                  placeholder={state.mark.length < 2 ? 'Сначала выберете марку' : 'Выберите модель'}
+                  disabled={state.mark.length < 2}
+                  autoComplete="off"
+                  required
+                  onChange={onChangeModel}
                 >
-                  <path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z" />
-                </svg>
+                  <option value="" hidden>
+                    {state.mark.length < 2 ? 'Сначала выберете марку' : 'Выберите модель'}
+                  </option>
+                  {state.mark
+                    ? options.model
+                        .sort(function sortMarks(a, b) {
+                          if (a.name > b.name) {
+                            return 1
+                          }
+                          if (a.name < b.name) {
+                            return -1
+                          }
+                          return 0
+                        })
+                        .map((it) => (
+                          <option value={it.name} label={it.name} key={it.id_car_mark} />
+                        ))
+                    : null}
+                </select>
+                <div className="pointer-events-none absolute top-0 mt-3 right-0 flex items-center px-2 text-gray-600">
+                  <svg
+                    className="fill-current h-4 w-4"
+                    xmlns="http://www.w3.org/2000/svg"
+                    viewBox="0 0 20 20"
+                  >
+                    <path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z" />
+                  </svg>
+                </div>
               </div>
             </div>
           </div>
         </div>
-        <div className="mt-5 w-full px-3">
+        <div className="md:flex mb-2 mt-5">
+          <div className="bg-blue-400 rounded shadow p-3 w-full flex flex-row">
+            <div className="w-1/2 px-3 mb-6 md:mb-0">
+              <label
+                className="block uppercase tracking-wide text-white text-xs font-bold mb-2"
+                htmlFor="phone"
+              >
+                Диаметр
+              </label>
+              <div className="flex-shrink w-full inline-block relative">
+                <select
+                  className="block appearance-none w-full bg-grey-lighter border border-gray-300 focus:border-gray-500 focus:outline-none py-2 px-4 pr-8 rounded"
+                  name="diametr"
+                  id="diametr"
+                  value={state.diametr}
+                  autoComplete="off"
+                  required
+                  onChange={onChange}
+                >
+                  <option value="" hidden>
+                    Выберите диаметр
+                  </option>
+                  {sizeThreeList.map((it) => (
+                    <option value={it} label={it} key={it} />
+                  ))}
+                </select>
+                <div className="pointer-events-none absolute top-0 mt-3 right-0 flex items-center px-2 text-gray-600">
+                  <svg
+                    className="fill-current h-4 w-4"
+                    xmlns="http://www.w3.org/2000/svg"
+                    viewBox="0 0 20 20"
+                  >
+                    <path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z" />
+                  </svg>
+                </div>
+              </div>
+            </div>
+            <div className="w-1/2 px-3 mb-6 md:mb-0">
+              <label
+                className="block uppercase tracking-wide text-white text-xs font-bold mb-2"
+                htmlFor="phone"
+              >
+                Кузов
+              </label>
+              <div className="flex-shrink w-full inline-block relative">
+                <select
+                  className="block appearance-none w-full bg-grey-lighter border border-gray-300 focus:border-gray-500 focus:outline-none py-2 px-4 pr-8 rounded"
+                  name="kuzov"
+                  id="kuzov"
+                  value={state.kuzov}
+                  autoComplete="off"
+                  required
+                  onChange={onChange}
+                >
+                  <option value="" hidden>
+                    Выберите кузов
+                  </option>
+                  <option value="sedan">Седан</option>
+                  <option value="crossover">Кроссовер</option>
+                  <option value="runflat">RUN FLAT</option>
+                  <option value="gruz">Грузовой</option>
+                </select>
+                <div className="pointer-events-none absolute top-0 mt-3 right-0 flex items-center px-2 text-gray-600">
+                  <svg
+                    className="fill-current h-4 w-4"
+                    xmlns="http://www.w3.org/2000/svg"
+                    viewBox="0 0 20 20"
+                  >
+                    <path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z" />
+                  </svg>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div className="mt-5 w-full">
           <div>
             <label
               className="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2"
