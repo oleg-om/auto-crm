@@ -37,7 +37,8 @@ async function takeOrderFromKerchshina() {
     if (result) {
       fetch('http://kerchshina.com/api/orders')
         .then((response) => response.json())
-        .then((data) => data.find((it) => it.Order.id === JSON.stringify(result)))
+        // .then((data) => (data.find((it) => it.Order.id === JSON.stringify(result))? data.find((it) => it.Order.id === JSON.stringify(result)) : data.find((it) => it.Order.id === JSON.stringify(result+1))))
+        .then((data) => data.find((it) => Number(it.Order.id) >= result))
         .then((data) => (data ? resolve(data) : console.log('There is no new orders')))
         .catch((err) => console.log(err))
     } else if (!result) {
@@ -204,6 +205,7 @@ async function kerchshinaCheck(io) {
       )
     }
     console.log(finalArr)
+    console.log('new order is added')
     const arrtoDb = new Tyre(finalArr)
     if (finalArr.siteNumber) {
       arrtoDb.save()
