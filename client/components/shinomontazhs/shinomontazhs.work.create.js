@@ -7,6 +7,7 @@ import 'react-toastify/dist/ReactToastify.css'
 import Employee from './employees'
 import Car from './car'
 import Service from './service'
+import Material from './material'
 import sizeThreeList from '../../lists/shinomontazhdiametr'
 
 const ShinomontazhsCreate = (props) => {
@@ -20,6 +21,7 @@ const ShinomontazhsCreate = (props) => {
   const customerList = useSelector((s) => s.customers.list)
   const auth = useSelector((s) => s.auth)
   const shinomontazhprices = useSelector((s) => s.shinomontazhprices.list)
+  const materialprices = useSelector((s) => s.materials.list)
 
   const [regNumber, setRegNumber] = useState([])
   const [keyboard, setKeyboard] = useState(false)
@@ -46,6 +48,7 @@ const ShinomontazhsCreate = (props) => {
   })
 
   const [service, setService] = useState([])
+  const [materials, setMaterials] = useState([])
 
   const onChangeRegNumber = (e) => {
     const { value } = e.target
@@ -255,6 +258,7 @@ const ShinomontazhsCreate = (props) => {
             id: item.id,
             type: item.type,
             category: item.category,
+            number: item.number,
             actualprice: getPrice(item)
           }))
       )
@@ -363,6 +367,62 @@ const ShinomontazhsCreate = (props) => {
     const { value, id } = e.target
     setService(
       service.map((object) => {
+        if (object.serviceName === id) {
+          return {
+            ...object,
+            price: value
+          }
+        }
+        return object
+      })
+    )
+  }
+
+  const checkboxMaterialChange = (e) => {
+    const { name, placeholder, checked } = e.target
+    if (checked) {
+      setMaterials((prevState) => [
+        ...prevState,
+        { serviceName: name, quantity: 1, price: placeholder }
+      ])
+    } else {
+      setMaterials((prevState) => prevState.filter((it) => it.serviceName !== name))
+    }
+  }
+  const materialPlusChange = (e) => {
+    const { name } = e.target
+    setMaterials(
+      materials.map((object) => {
+        if (object.serviceName === name) {
+          return {
+            ...object,
+            quantity: object.quantity + 1
+          }
+        }
+        return object
+      })
+    )
+  }
+
+  const materialMinusChange = (e) => {
+    const { name } = e.target
+    setMaterials(
+      materials.map((object) => {
+        if (object.serviceName === name && object.quantity >= 2) {
+          return {
+            ...object,
+            quantity: object.quantity - 1
+          }
+        }
+        return object
+      })
+    )
+  }
+
+  const materialPriceChange = (e) => {
+    const { value, id } = e.target
+    setMaterials(
+      materials.map((object) => {
         if (object.serviceName === id) {
           return {
             ...object,
@@ -525,6 +585,23 @@ const ShinomontazhsCreate = (props) => {
             servicePlusChange={servicePlusChange}
             serviceMinusChange={serviceMinusChange}
             servicePriceChange={servicePriceChange}
+          />
+        </div>
+        <div
+          className={cx('', {
+            block: active === 'material',
+            hidden: active !== 'material'
+          })}
+        >
+          <Material
+            materialprices={materialprices}
+            auth={auth}
+            materials={materials}
+            state={state}
+            checkboxMaterialChange={checkboxMaterialChange}
+            materialPlusChange={materialPlusChange}
+            materialMinusChange={materialMinusChange}
+            materialPriceChange={materialPriceChange}
           />
         </div>
       </div>
