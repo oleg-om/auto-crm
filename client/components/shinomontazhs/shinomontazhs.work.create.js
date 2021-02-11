@@ -7,7 +7,7 @@ import 'react-toastify/dist/ReactToastify.css'
 import Employee from './employees'
 import Car from './car'
 import Service from './service'
-import sizeThreeList from '../../lists/tyres/sizethree'
+import sizeThreeList from '../../lists/shinomontazhdiametr'
 
 const ShinomontazhsCreate = (props) => {
   toast.configure()
@@ -44,7 +44,7 @@ const ShinomontazhsCreate = (props) => {
     kuzov: '',
     diametr: ''
   })
-  console.log(state)
+
   const [service, setService] = useState([])
 
   const onChangeRegNumber = (e) => {
@@ -238,7 +238,30 @@ const ShinomontazhsCreate = (props) => {
     }
     return null
   }
-
+  const [actualService, setActualService] = useState([])
+  useEffect(() => {
+    const actualDiametr = 'R'.concat(state.diametr)
+    const getPrice = (item) => {
+      return item[actualDiametr]
+    }
+    if (state.diametr && state.kuzov) {
+      setActualService(
+        shinomontazhprices
+          .filter(
+            (it) => it.category === state.kuzov || it.category === 'other' || it.category === 'free'
+          )
+          .map((item) => ({
+            name: item.name,
+            id: item.id,
+            type: item.type,
+            category: item.category,
+            actualprice: getPrice(item)
+          }))
+      )
+    }
+    return () => {}
+  }, [state.diametr, state.kuzov, shinomontazhprices])
+  console.log(service)
   const sendData = () => {
     const checkCustomer =
       customerList !== []
@@ -319,7 +342,6 @@ const ShinomontazhsCreate = (props) => {
         return object
       })
     )
-    console.log('lol')
   }
 
   const serviceMinusChange = (e) => {
@@ -330,6 +352,21 @@ const ShinomontazhsCreate = (props) => {
           return {
             ...object,
             quantity: object.quantity - 1
+          }
+        }
+        return object
+      })
+    )
+  }
+
+  const servicePriceChange = (e) => {
+    const { value, id } = e.target
+    setService(
+      service.map((object) => {
+        if (object.serviceName === id) {
+          return {
+            ...object,
+            price: value
           }
         }
         return object
@@ -362,8 +399,6 @@ const ShinomontazhsCreate = (props) => {
       sendData()
     }
   }
-
-  console.log(service)
 
   return (
     <div>
@@ -482,12 +517,14 @@ const ShinomontazhsCreate = (props) => {
           })}
         >
           <Service
-            shinomontazhprices={shinomontazhprices}
+            actualService={actualService}
             auth={auth}
             service={service}
+            state={state}
             checkboxServiceChange={checkboxServiceChange}
             servicePlusChange={servicePlusChange}
             serviceMinusChange={serviceMinusChange}
+            servicePriceChange={servicePriceChange}
           />
         </div>
       </div>

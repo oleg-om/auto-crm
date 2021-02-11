@@ -450,7 +450,7 @@ const TyreViewOrder = (props) => {
                   <tbody>
                     {props.order.map((inputField) => (
                       <tr
-                        key={inputField.autopartItem}
+                        key={inputField.tyreItem}
                         className="bg-white lg:hover:bg-gray-100 table-row flex-row lg:flex-row flex-wrap mb-10 lg:mb-0"
                       >
                         <td className="lg:w-auto p-2 text-gray-800 text-center border border-b block table-cell relative static">
@@ -536,7 +536,7 @@ const TyreViewOrder = (props) => {
             </div>
           </div>
         ) : null}
-        {props.order[0].price && props.order[0].quantity ? (
+        {props.order.filter((it)=> it.price && it.quantity).length >= 1 ? ( 
           <div className="-mx-3 md:flex mb-2 flex-row">
             <div className="px-3 mb-6 md:mb-0">
               <div className="flex flex-row">

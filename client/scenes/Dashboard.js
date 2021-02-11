@@ -133,7 +133,7 @@ const Dashboard = () => {
                     <div className="w-1/2 px-3">
                       <h2 className="text-3xl text-white font-bold">Шины и диски</h2>
                       <p className="my-2 text-white">
-                        Возможность создавать, редактировать заказы по автозапчастям
+                        Возможность создавать, редактировать заказы по шинам
                       </p>
                       <button
                         type="button"
@@ -251,6 +251,7 @@ const Dashboard = () => {
               </div>
             ) : null}
             {auth.roles.includes('autopartfull') ||
+            auth.roles.includes('tyrefull') ||
             auth.roles.includes('boss') ||
             auth.roles.includes('admin') ? (
               <div className="md:w-1/2 px-3 mb-6 flex flex-col">
