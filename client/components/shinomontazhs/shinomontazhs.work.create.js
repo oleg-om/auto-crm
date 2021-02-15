@@ -597,7 +597,6 @@ const ShinomontazhsCreate = (props) => {
             materialprices={materialprices}
             auth={auth}
             materials={materials}
-            state={state}
             checkboxMaterialChange={checkboxMaterialChange}
             materialPlusChange={materialPlusChange}
             materialMinusChange={materialMinusChange}

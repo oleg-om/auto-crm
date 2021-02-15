@@ -10,6 +10,7 @@ const Service = ({
   servicePriceChange,
   serviceType
 }) => {
+  console.log(actualService)
   return (
     <div className="md:flex md:flex-row -mx-3">
       <div className="px-3 mb-6 md:mb-0 w-full">

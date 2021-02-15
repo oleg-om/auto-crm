@@ -10,16 +10,20 @@ const Material = ({
   materialPriceChange
 }) => {
   const options = Array.from(
-    new Set(materialprices.reduce((acc, rec) => [...acc, rec.category], []))
+    new Set(materialprices.reduce((acc, rec) => [...acc, rec.category.replace(/\s{2,}/g, ' ')], []))
   )
-  const [state, setState] = useState(options[0])
-  const [actualMaterial, setActualMaterial] = useState(
-    materialprices.filter((it) => it.category === options[0])
-  )
+  const [state, setState] = useState('')
+  const [actualMaterial, setActualMaterial] = useState([])
   const onChange = (e) => {
     const { value } = e.target
     setState(value)
   }
+  useEffect(() => {
+    if (state === '' && options !== undefined && options.length > 1) {
+      setState(options.find((it) => it))
+    }
+    return () => {}
+  }, [state, options])
   useEffect(() => {
     if (state) {
       setActualMaterial(materialprices.filter((it) => it.category === state))
@@ -27,24 +31,17 @@ const Material = ({
     return () => {}
   }, [state, materialprices])
   console.log(actualMaterial)
-  console.log(options)
   return (
     <div className="md:flex md:flex-row -mx-3">
       <div className="px-3 mb-6 md:mb-0 w-full">
         <label
-          className="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2"
+          className="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-4"
           htmlFor="grid-first-name"
         >
           Выберите материалы
         </label>
         <div className="flex flex-col w-full relative">
           <div className="w-1/2 px-3 mb-6 md:mb-0">
-            <label
-              className="block uppercase tracking-wide text-white text-xs font-bold mb-2"
-              htmlFor="phone"
-            >
-              Категория материалов
-            </label>
             <div className="flex-shrink w-full inline-block relative">
               <select
                 className="block appearance-none w-full bg-grey-lighter border border-gray-300 focus:border-gray-500 focus:outline-none py-2 px-4 pr-8 rounded"
@@ -53,7 +50,7 @@ const Material = ({
                 onChange={onChange}
               >
                 <option hidden value="">
-                  ntcn
+                  Выберите категорию
                 </option>
                 {options
                   .sort(function (a, b) {
@@ -82,7 +79,7 @@ const Material = ({
               </div>
             </div>
           </div>
-          <table>
+          <table className="mt-4">
             {actualMaterial ? (
               actualMaterial.map((item) => (
                 <tr
