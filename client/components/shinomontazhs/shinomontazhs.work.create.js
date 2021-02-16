@@ -44,12 +44,13 @@ const ShinomontazhsCreate = (props) => {
     prepay: '',
     comment: '',
     role: [],
-    kuzov: '',
-    diametr: ''
+    kuzov: 'crossover',
+    diametr: '17'
   })
 
   const [service, setService] = useState([])
   const [materials, setMaterials] = useState([])
+  const [tyres, setTyres] = useState({})
 
   const onChangeRegNumber = (e) => {
     const { value } = e.target
@@ -114,9 +115,7 @@ const ShinomontazhsCreate = (props) => {
 
   const [stateId, setStateId] = useState({
     mark: '',
-    model: '',
-    gen: '',
-    mod: ''
+    model: ''
   })
 
   useEffect(() => {
@@ -137,7 +136,7 @@ const ShinomontazhsCreate = (props) => {
         .then((res) => res.json())
         .then((it) => {
           setOptions((prevState) => ({
-            ...prevState,
+            mark: prevState.mark,
             model: it.data
           }))
         })
@@ -157,6 +156,10 @@ const ShinomontazhsCreate = (props) => {
       ...prevState,
       mark: findCar ? findCar.id_car_mark : '',
       model: ''
+    }))
+    setOptions((prevState) => ({
+      ...prevState,
+      model: []
     }))
   }
 
@@ -211,6 +214,27 @@ const ShinomontazhsCreate = (props) => {
       ...prevState,
       [name]: value
     }))
+  }
+  const onChangeTyres = (e) => {
+    const { name, value } = e.target
+    setTyres((prevState) => ({
+      ...prevState,
+      [name]: value
+    }))
+  }
+  const checkboxTyresChange = (e) => {
+    const { checked } = e.target
+    if (checked) {
+      setTyres((prevState) => ({
+        ...prevState,
+        sale: 'no'
+      }))
+    } else {
+      setTyres((prevState) => ({
+        ...prevState,
+        sale: 'on'
+      }))
+    }
   }
   const applyCustomer = () => {
     const newCustomer = customerList.find((it) => it.id === search)
@@ -324,12 +348,12 @@ const ShinomontazhsCreate = (props) => {
 
   const [active, setActive] = useState('employee')
   const checkboxServiceChange = (e) => {
-    const { name, placeholder, checked, someName } = e.target
+    const { name, placeholder, checked, attributes } = e.target
     console.log(e.target)
     if (checked) {
       setService((prevState) => [
         ...prevState,
-        { serviceName: name, quantity: 1, price: placeholder, name: someName }
+        { serviceName: name, quantity: 1, price: placeholder, name: attributes.somename.value }
       ])
     } else {
       setService((prevState) => prevState.filter((it) => it.serviceName !== name))
@@ -381,11 +405,11 @@ const ShinomontazhsCreate = (props) => {
   }
 
   const checkboxMaterialChange = (e) => {
-    const { name, placeholder, checked } = e.target
+    const { name, placeholder, checked, attributes } = e.target
     if (checked) {
       setMaterials((prevState) => [
         ...prevState,
-        { serviceName: name, quantity: 1, price: placeholder }
+        { serviceName: name, quantity: 1, price: placeholder, name: attributes.somename.value }
       ])
     } else {
       setMaterials((prevState) => prevState.filter((it) => it.serviceName !== name))
@@ -618,6 +642,10 @@ const ShinomontazhsCreate = (props) => {
             shinomontazhprices={shinomontazhprices}
             state={state}
             service={service}
+            onChange={onChange}
+            onChangeTyres={onChangeTyres}
+            tyres={tyres}
+            checkboxTyresChange={checkboxTyresChange}
           />
         </div>
       </div>

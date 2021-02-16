@@ -10,7 +10,7 @@ const Service = ({
   servicePriceChange,
   serviceType
 }) => {
-  console.log(actualService)
+  console.log(service)
   return (
     <div className="md:flex md:flex-row -mx-3">
       <div className="px-3 mb-6 md:mb-0 w-full">
@@ -59,6 +59,7 @@ const Service = ({
                       >
                         <label
                           htmlFor={item.id}
+                          somename={item.name}
                           className="w-full h-full p-2 text-left inline-block"
                         >
                           <input
@@ -66,8 +67,9 @@ const Service = ({
                             checked={service.find((it) => it.serviceName.includes(item.id))}
                             key={item.id}
                             name={item.id}
-                            id={item.name}
+                            id={item.id}
                             placeholder={item.actualprice}
+                            somename={item.name}
                             type="checkbox"
                           />
                           {item.name}
@@ -85,6 +87,7 @@ const Service = ({
                         >
                           <label
                             htmlFor={item.id}
+                            somename={item.name}
                             className="w-full h-full p-2 text-left inline-block"
                           >
                             {item.actualprice}
@@ -101,13 +104,19 @@ const Service = ({
                             key={item.id}
                             name={item.id}
                             id={item.id}
-                            someName={item.name}
+                            somename={item.name}
                             onChange={servicePriceChange}
                           />
                         ) : (
-                          <div className="py-1 px-4 bg-yellow-400 rounded-lg my-1 mr-3 border-yellow-400 border w-32">
-                            Акция
-                          </div>
+                          <label
+                            htmlFor={item.id}
+                            somename={item.name}
+                            className="w-full h-full p-2 text-left inline-block"
+                          >
+                            <div className="py-1 px-4 bg-yellow-400 rounded-lg my-1 mr-3 border-yellow-400 border w-32">
+                              Акция
+                            </div>
+                          </label>
                         )}
                       </td>
                     )}

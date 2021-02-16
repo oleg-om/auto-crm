@@ -55,6 +55,8 @@ const AutopartUpdate = (props) => {
   })
   const changeAutopart = () => {
     if (!state.process) notify('Поле Обработал заказ пустое')
+    else if (state.status === taskStatuses[6] && !state.cancelReason)
+      notify('Выберите причину отказа')
     else if (props.status !== state.status) {
       props.updateAutopart(props.id, {
         ...state,
@@ -374,6 +376,9 @@ const AutopartUpdate = (props) => {
                     name="cancelReason"
                     onChange={onChange}
                   >
+                    <option hidden value="">
+                      Выберите причину
+                    </option>
                     {cancelStatuses.map((it) => (
                       <option key={it}>{it}</option>
                     ))}
@@ -431,16 +436,16 @@ const AutopartUpdate = (props) => {
                       <b>Отказ от заказа: </b> {props.dateCancel}
                     </li>
                   ) : null}
-                  {props.cancelReason ? (
-                    <li>
-                      <b>Причина отказа: </b> {props.cancelReason}
-                    </li>
-                  ) : null}
                   {props.statusDates.map((it) => (
                     <li key={it.date}>
                       <b>{it.status}: </b> {it.date}
                     </li>
                   ))}
+                  {props.cancelReason && props.status === taskStatuses[6] ? (
+                    <li>
+                      <b>Причина отказа: </b> {props.cancelReason}
+                    </li>
+                  ) : null}
                 </ul>
               </div>
             </div>

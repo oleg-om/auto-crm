@@ -61,6 +61,8 @@ const TyreUpdate = (props) => {
   })
   const changeTyre = () => {
     if (!state.process) notify('Поле Обработал заказ пустое')
+    else if (state.status === taskStatuses[6] && !state.cancelReason)
+      notify('Выберите причину отказа')
     else if (props.status !== state.status) {
       props.updateTyre(props.id, {
         ...state,
@@ -413,6 +415,9 @@ const TyreUpdate = (props) => {
                     name="cancelReason"
                     onChange={onChange}
                   >
+                    <option hidden value="">
+                      Выберите причину
+                    </option>
                     {cancelStatuses.map((it) => (
                       <option key={it}>{it}</option>
                     ))}
