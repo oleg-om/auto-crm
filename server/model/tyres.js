@@ -98,6 +98,10 @@ const Tyre = new mongoose.Schema({
     type: String,
     required: false
   },
+  statusDates: {
+    type: Array,
+    required: false
+  },
   cancelReason: {
     type: String,
     required: false

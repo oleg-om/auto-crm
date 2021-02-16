@@ -8,6 +8,7 @@ import Employee from './employees'
 import Car from './car'
 import Service from './service'
 import Material from './material'
+import Final from './final'
 import sizeThreeList from '../../lists/shinomontazhdiametr'
 
 const ShinomontazhsCreate = (props) => {
@@ -323,11 +324,12 @@ const ShinomontazhsCreate = (props) => {
 
   const [active, setActive] = useState('employee')
   const checkboxServiceChange = (e) => {
-    const { name, placeholder, checked } = e.target
+    const { name, placeholder, checked, someName } = e.target
+    console.log(e.target)
     if (checked) {
       setService((prevState) => [
         ...prevState,
-        { serviceName: name, quantity: 1, price: placeholder }
+        { serviceName: name, quantity: 1, price: placeholder, name: someName }
       ])
     } else {
       setService((prevState) => prevState.filter((it) => it.serviceName !== name))
@@ -603,17 +605,32 @@ const ShinomontazhsCreate = (props) => {
             materialPriceChange={materialPriceChange}
           />
         </div>
+        <div
+          className={cx('', {
+            block: active === 'finish',
+            hidden: active !== 'finish'
+          })}
+        >
+          <Final
+            materialprices={materialprices}
+            auth={auth}
+            materials={materials}
+            shinomontazhprices={shinomontazhprices}
+            state={state}
+            service={service}
+          />
+        </div>
       </div>
       <div className=" flex my-2">
         <Link
           to="/shinomontazh/list"
-          className="my-3 mr-2 py-3 md:w-1/3 px-3 bg-red-600 text-white text-center hover:bg-red-700 hover:text-white rounded-lg"
+          className="my-3 mr-2 py-3 w-1/3 px-3 bg-red-600 text-white text-center hover:bg-red-700 hover:text-white rounded-lg"
         >
           Отмена
         </Link>
 
         <button
-          className="my-3 ml-2 py-3 md:w-2/3 px-3 bg-blue-600 text-white hover:bg-blue-700 hover:text-white rounded-lg"
+          className="my-3 ml-2 py-3 w-2/3 px-3 bg-blue-600 text-white hover:bg-blue-700 hover:text-white rounded-lg"
           onClick={nextStep}
           type="submit"
         >

@@ -635,6 +635,7 @@ const Car = ({
                   <option value="crossover">Кроссовер</option>
                   <option value="runflat">RUN FLAT</option>
                   <option value="gruz">Грузовой</option>
+                  <option value="selhoz">Сельхоз</option>
                 </select>
                 <div className="pointer-events-none absolute top-0 mt-3 right-0 flex items-center px-2 text-gray-600">
                   <svg

@@ -55,22 +55,17 @@ const AutopartUpdate = (props) => {
   })
   const changeAutopart = () => {
     if (!state.process) notify('Поле Обработал заказ пустое')
-    else if (!props.dateInWork && state.status === taskStatuses[1]) {
-      props.updateAutopart(props.id, { ...state, dateInWork: dateNew })
-      history.push('/autoparts/order/list')
-      notify('Данные о заказе обновлены, заказ в работе')
-    } else if (!props.dateFinish && state.status === taskStatuses[2]) {
-      props.updateAutopart(props.id, { ...state, dateFinish: dateNew })
-      history.push('/autoparts/order/list')
-      notify('Данные о заказе обновлены, заказ выполнен')
-    } else if (!props.dateMiscall && state.status === taskStatuses[4]) {
-      props.updateAutopart(props.id, { ...state, dateMiscall: dateNew })
-      history.push('/autoparts/order/list')
-      notify('Данные о заказе обновлены, клиент отказался от заказа')
-    } else if (!props.dateCancel && state.status === taskStatuses[5]) {
+    else if (props.status !== state.status) {
       props.updateAutopart(props.id, {
         ...state,
-        dateCancel: dateNew,
+        statusDates: [...props.statusDates, { status: state.status, date: dateNew }]
+      })
+      history.push('/autoparts/order/list')
+      notify('Данные о заказе обновлены, заказ в работе')
+    } else if (props.status !== state.status && state.status === taskStatuses[6]) {
+      props.updateAutopart(props.id, {
+        ...state,
+        statusDates: [...props.statusDates, { status: state.status, date: dateNew }],
         cancelReason: state.cancelReason
       })
       history.push('/autoparts/order/list')
@@ -293,11 +288,12 @@ const AutopartUpdate = (props) => {
                     <div
                       className={cx('rounded py-1 px-3 text-xs font-bold', {
                         'bg-yellow-400': props.status === taskStatuses[0],
-                        'bg-green-400': props.status === taskStatuses[1],
-                        'bg-blue-400': props.status === taskStatuses[2],
-                        'bg-gray-400': props.status === taskStatuses[3],
-                        'bg-purple-400': props.status === taskStatuses[4],
-                        'bg-red-400': props.status === taskStatuses[5]
+                        'bg-orange-400': props.status === taskStatuses[1],
+                        'bg-green-400': props.status === taskStatuses[2],
+                        'bg-blue-400': props.status === taskStatuses[3],
+                        'bg-gray-400': props.status === taskStatuses[4],
+                        'bg-purple-400': props.status === taskStatuses[5],
+                        'bg-red-400': props.status === taskStatuses[6]
                       })}
                     >
                       {props.status}
@@ -363,7 +359,7 @@ const AutopartUpdate = (props) => {
                 </div>
               </div>
             </div>
-            {state.status === taskStatuses[5] ? (
+            {state.status === taskStatuses[6] ? (
               <div className="px-3">
                 <label
                   className="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2"
@@ -440,6 +436,11 @@ const AutopartUpdate = (props) => {
                       <b>Причина отказа: </b> {props.cancelReason}
                     </li>
                   ) : null}
+                  {props.statusDates.map((it) => (
+                    <li key={it.date}>
+                      <b>{it.status}: </b> {it.date}
+                    </li>
+                  ))}
                 </ul>
               </div>
             </div>

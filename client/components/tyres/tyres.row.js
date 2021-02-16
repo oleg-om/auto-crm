@@ -178,11 +178,12 @@ const TyresRow = (props) => {
         <div
           className={cx('rounded py-1 px-3 text-xs font-bold', {
             'bg-yellow-400': props.status === taskStatuses[0],
-            'bg-green-400': props.status === taskStatuses[1],
-            'bg-blue-400': props.status === taskStatuses[2],
-            'bg-gray-400': props.status === taskStatuses[3],
-            'bg-purple-400': props.status === taskStatuses[4],
-            'bg-red-400': props.status === taskStatuses[5]
+            'bg-orange-400': props.status === taskStatuses[1],
+            'bg-green-400': props.status === taskStatuses[2],
+            'bg-blue-400': props.status === taskStatuses[3],
+            'bg-gray-400': props.status === taskStatuses[4],
+            'bg-purple-400': props.status === taskStatuses[5],
+            'bg-red-400': props.status === taskStatuses[6]
           })}
         >
           {props.status}

@@ -66,7 +66,7 @@ const Service = ({
                             checked={service.find((it) => it.serviceName.includes(item.id))}
                             key={item.id}
                             name={item.id}
-                            id={item.id}
+                            id={item.name}
                             placeholder={item.actualprice}
                             type="checkbox"
                           />
@@ -101,6 +101,7 @@ const Service = ({
                             key={item.id}
                             name={item.id}
                             id={item.id}
+                            someName={item.name}
                             onChange={servicePriceChange}
                           />
                         ) : (

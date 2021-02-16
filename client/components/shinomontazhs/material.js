@@ -30,7 +30,6 @@ const Material = ({
     }
     return () => {}
   }, [state, materialprices])
-  console.log(actualMaterial)
   return (
     <div className="md:flex md:flex-row -mx-3">
       <div className="px-3 mb-6 md:mb-0 w-full">

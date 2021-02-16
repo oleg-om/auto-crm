@@ -61,22 +61,17 @@ const TyreUpdate = (props) => {
   })
   const changeTyre = () => {
     if (!state.process) notify('Поле Обработал заказ пустое')
-    else if (!props.dateInWork && state.status === taskStatuses[1]) {
-      props.updateTyre(props.id, { ...state, dateInWork: dateNew })
-      history.push('/tyres/order/list')
-      notify('Данные о заказе обновлены, заказ в работе')
-    } else if (!props.dateFinish && state.status === taskStatuses[2]) {
-      props.updateTyre(props.id, { ...state, dateFinish: dateNew })
-      history.push('/tyres/order/list')
-      notify('Данные о заказе обновлены, заказ выполнен')
-    } else if (!props.dateMiscall && state.status === taskStatuses[4]) {
-      props.updateTyre(props.id, { ...state, dateMiscall: dateNew })
-      history.push('/tyres/order/list')
-      notify('Данные о заказе обновлены, клиент отказался от заказа')
-    } else if (!props.dateCancel && state.status === taskStatuses[5]) {
+    else if (props.status !== state.status) {
       props.updateTyre(props.id, {
         ...state,
-        dateCancel: dateNew,
+        statusDates: [...props.statusDates, { status: state.status, date: dateNew }]
+      })
+      history.push('/tyres/order/list')
+      notify('Данные о заказе обновлены, заказ в работе')
+    } else if (props.status !== state.status && state.status === taskStatuses[6]) {
+      props.updateTyre(props.id, {
+        ...state,
+        statusDates: [...props.statusDates, { status: state.status, date: dateNew }],
         cancelReason: state.cancelReason
       })
       history.push('/tyres/order/list')
@@ -332,11 +327,12 @@ const TyreUpdate = (props) => {
                     <div
                       className={cx('rounded py-1 px-3 text-xs font-bold', {
                         'bg-yellow-400': props.status === taskStatuses[0],
-                        'bg-green-400': props.status === taskStatuses[1],
-                        'bg-blue-400': props.status === taskStatuses[2],
-                        'bg-gray-400': props.status === taskStatuses[3],
-                        'bg-purple-400': props.status === taskStatuses[4],
-                        'bg-red-400': props.status === taskStatuses[5]
+                        'bg-orange-400': props.status === taskStatuses[1],
+                        'bg-green-400': props.status === taskStatuses[2],
+                        'bg-blue-400': props.status === taskStatuses[3],
+                        'bg-gray-400': props.status === taskStatuses[4],
+                        'bg-purple-400': props.status === taskStatuses[5],
+                        'bg-red-400': props.status === taskStatuses[6]
                       })}
                     >
                       {props.status}
@@ -402,7 +398,7 @@ const TyreUpdate = (props) => {
                 </div>
               </div>
             </div>
-            {state.status === taskStatuses[5] ? (
+            {state.status === taskStatuses[6] ? (
               <div className="px-3">
                 <label
                   className="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2"
@@ -474,7 +470,13 @@ const TyreUpdate = (props) => {
                       <b>Отказ от заказа: </b> {props.dateCancel}
                     </li>
                   ) : null}
-                  {props.cancelReason ? (
+
+                  {props.statusDates.map((it) => (
+                    <li key={it.date}>
+                      <b>{it.status}: </b> {it.date}
+                    </li>
+                  ))}
+                  {props.cancelReason && props.status === taskStatuses[6] ? (
                     <li>
                       <b>Причина отказа: </b> {props.cancelReason}
                     </li>

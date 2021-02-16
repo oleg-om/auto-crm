@@ -199,11 +199,12 @@ const TyreViewOrder = (props) => {
                     <div
                       className={cx('rounded py-1 px-3 text-xs font-bold', {
                         'bg-yellow-400': props.status === taskStatuses[0],
-                        'bg-green-400': props.status === taskStatuses[1],
-                        'bg-blue-400': props.status === taskStatuses[2],
-                        'bg-gray-400': props.status === taskStatuses[3],
-                        'bg-purple-400': props.status === taskStatuses[4],
-                        'bg-red-400': props.status === taskStatuses[5]
+                        'bg-orange-400': props.status === taskStatuses[1],
+                        'bg-green-400': props.status === taskStatuses[2],
+                        'bg-blue-400': props.status === taskStatuses[3],
+                        'bg-gray-400': props.status === taskStatuses[4],
+                        'bg-purple-400': props.status === taskStatuses[5],
+                        'bg-red-400': props.status === taskStatuses[6]
                       })}
                     >
                       {props.status}
@@ -225,7 +226,7 @@ const TyreViewOrder = (props) => {
                 </div>
               </div>
             </div>
-            {props.status === taskStatuses[5] ? (
+            {props.status === taskStatuses[6] ? (
               <div className="px-3">
                 <label
                   className="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2"
@@ -298,6 +299,11 @@ const TyreViewOrder = (props) => {
                       <b>Причина отказа: </b> {props.cancelReason}
                     </li>
                   ) : null}
+                  {props.statusDates.map((it) => (
+                    <li key={it.date}>
+                      <b>{it.status}: </b> {it.date}
+                    </li>
+                  ))}
                 </ul>
               </div>
             </div>
@@ -536,7 +542,7 @@ const TyreViewOrder = (props) => {
             </div>
           </div>
         ) : null}
-        {props.order.filter((it)=> it.price && it.quantity).length >= 1 ? ( 
+        {props.order.filter((it) => it.price && it.quantity).length >= 1 ? (
           <div className="-mx-3 md:flex mb-2 flex-row">
             <div className="px-3 mb-6 md:mb-0">
               <div className="flex flex-row">
