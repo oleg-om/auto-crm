@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import cx from 'classnames'
 
 const Car = ({
@@ -22,12 +22,39 @@ const Car = ({
   setActiveCustomer,
   applyCustomer,
   sizeThreeList,
-  onChange
+  onChange,
+  setOptions,
+  stateId
 }) => {
+  useEffect(() => {
+    fetch('/api/v1/carmark')
+      .then((res) => res.json())
+      .then((it) => {
+        setOptions((prevState) => ({
+          model: prevState.model,
+          mark: it.data
+        }))
+      })
+    return () => {}
+  }, [])
+
+  useEffect(() => {
+    if (stateId.mark !== '') {
+      fetch(`/api/v1/carmodel/${stateId.mark}`)
+        .then((res) => res.json())
+        .then((it) => {
+          setOptions((prevState) => ({
+            mark: prevState.mark,
+            model: it.data
+          }))
+        })
+    }
+    return () => {}
+  }, [stateId.mark])
   return (
     <div className="md:flex md:flex-col -mx-3">
       <div className="px-3 mb-6 md:mb-0 w-full">
-        <div className="relative inline-block text-left lg:w-1/2 w-3/4">
+        <div className="inline-block text-left w-1/2 pr-5">
           <div>
             <label
               className="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2"
@@ -52,7 +79,7 @@ const Car = ({
 
           <div
             className={cx(
-              'absolute p-3 w-full rounded-md shadow bg-gray-200 border-2 border-gray-600 z-50',
+              'absolute p-3 mr-4 max-w-2xl rounded-md shadow bg-gray-200 border-2 border-gray-600 z-50',
               {
                 hidden: regOpen === false,
                 block: regOpen === true
@@ -465,6 +492,98 @@ const Car = ({
             </div>
           </div>
         </div>
+        <div className="relative inline-block text-left w-1/2">
+          <div>
+            <label
+              className="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2"
+              htmlFor="phone"
+            >
+              Авто в базе данных
+            </label>
+            <div className="flex-shrink inline-flex w-full">
+              <div className="w-3/4 relative">
+                <select
+                  className="w-full block appearance-none bg-grey-lighter border border-gray-300 focus:border-gray-500 focus:outline-none py-2 pl-4 pr-6 rounded-l-lg"
+                  value={search}
+                  name="search"
+                  id="searchBlock"
+                  onChange={onSearchChange}
+                >
+                  <option value="" className="text-gray-800">
+                    {customerOptions.length < 1 ? 'Клиентов не найдено' : 'Выберите клиента'}
+                  </option>
+                  {customerOptions.map((it, index) => {
+                    return (
+                      <option key={index} value={it.id}>
+                        {it.name}, {it.mark} {it.model} {it.regnumber},{it.phone}
+                      </option>
+                    )
+                  })}
+                </select>
+                <div className="pointer-events-none absolute top-0 mt-3  right-0 flex items-center px-2 text-gray-600">
+                  <svg
+                    className="fill-current h-4 w-4"
+                    xmlns="http://www.w3.org/2000/svg"
+                    viewBox="0 0 20 20"
+                  >
+                    <path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z" />
+                  </svg>
+                </div>
+              </div>
+              <div className="flex-shrink w-1/4 inline-block relative">
+                {customerOptions.length < 1 && !customer.idOfItem && !search ? (
+                  <button
+                    type="button"
+                    className="md:py-1 px-3 w-full h-full text-white text-xs md:text-sm bg-gray-500 hover:text-white rounded-r-lg"
+                  >
+                    Не найден
+                  </button>
+                ) : null}
+                {customerOptions.length >= 1 && activeCustomer === '' && !search ? (
+                  <button
+                    onClick={applyCustomer}
+                    type="button"
+                    className="md:py-1 px-3 w-full h-full text-white text-xs md:text-sm bg-blue-500 hover:text-white rounded-r-lg"
+                  >
+                    Выберите клиента
+                  </button>
+                ) : null}
+                {customerOptions.length >= 1 && activeCustomer === '' && search ? (
+                  <button
+                    onClick={applyCustomer}
+                    type="button"
+                    className="md:py-1 px-3 w-full h-full text-white text-xs md:text-sm rounded-r-lg bg-green-600 hover:bg-green-700"
+                  >
+                    Использовать
+                  </button>
+                ) : null}
+                {activeCustomer !== '' && customer.idOfItem && search ? (
+                  <button
+                    onClick={() => setActiveCustomer('')}
+                    type="button"
+                    className="md:py-1 px-3 w-full h-full text-white text-xs md:text-sm rounded-r-lg bg-red-600 hover:bg-red-700"
+                  >
+                    Сбросить
+                  </button>
+                ) : null}
+              </div>
+            </div>
+          </div>
+        </div>
+        {customerOptions.length >= 1 && customer.idOfItem && activeCustomer ? (
+          <p className="text-left p-1">✔ Вы выбрали клиента</p>
+        ) : null}
+        {customerOptions.length >= 1 && !customer.idOfItem && !activeCustomer ? (
+          <p className="text-left p-1">
+            В базе данных найден клиент но вы не выбрали клиента. Будет создан новый клиент
+          </p>
+        ) : null}
+        {state.regnumber &&
+        customerOptions.length === 0 &&
+        !customer.idOfItem &&
+        !activeCustomer ? (
+          <p className="text-left p-1">Клиентов не найдено. Будет создан новый клиент</p>
+        ) : null}
         <div className="flex-row flex w-full lg:w-1/2 mt-4 bg-gray-200 rounded-lg shadow p-3">
           <div className="flex items-center mr-3">
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="85" height="85">
@@ -509,7 +628,7 @@ const Car = ({
                       return 0
                     })
                     .map((it) => (
-                      <option value={it.name} label={it.name} key={it.id_car_mark} />
+                      <option value={it.name} label={it.name} key={it.name} />
                     ))}
                 </select>
                 <div className="pointer-events-none absolute top-0 mt-3 right-0 flex items-center px-2 text-gray-600">
@@ -556,9 +675,7 @@ const Car = ({
                           }
                           return 0
                         })
-                        .map((it) => (
-                          <option value={it.name} label={it.name} key={it.id_car_mark} />
-                        ))
+                        .map((it) => <option value={it.name} label={it.name} key={it.name_rus} />)
                     : null}
                 </select>
                 <div className="pointer-events-none absolute top-0 mt-3 right-0 flex items-center px-2 text-gray-600">
@@ -575,7 +692,7 @@ const Car = ({
           </div>
         </div>
         <div className="md:flex mb-2 mt-5">
-          <div className="bg-blue-400 rounded shadow p-3 w-full flex flex-row">
+          <div className="bg-blue-400 rounded shadow p-3 w-full flex flex-row-reverse">
             <div className="w-1/2 px-3 mb-6 md:mb-0">
               <label
                 className="block uppercase tracking-wide text-white text-xs font-bold mb-2"
@@ -650,7 +767,7 @@ const Car = ({
             </div>
           </div>
         </div>
-        <div className="mt-5 w-full">
+        {/* <div className="mt-5 w-full">
           <div>
             <label
               className="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2"
@@ -766,7 +883,7 @@ const Car = ({
               <p className="text-left p-1">Клиентов не найдено. Будет создан новый клиент</p>
             ) : null}
           </table>
-        </div>
+        </div> */}
       </div>
     </div>
   )

@@ -32,20 +32,11 @@ const ShinomontazhsCreate = (props) => {
     employee: [],
     place: auth.place,
     regnumber: regNumber.toString(),
-    vinnumber: '',
     mark: '',
     model: '',
-    gen: '',
-    mod: '',
-    service: [],
-    order: [{ name: '0ea8f233-a2e2-408e-a40b-30ce6536b6b2', quantity: 1 }],
-    name: '',
-    phone: '',
-    prepay: '',
     comment: '',
-    role: [],
-    kuzov: 'crossover',
-    diametr: '17'
+    kuzov: '',
+    diametr: ''
   })
 
   const [service, setService] = useState([])
@@ -118,31 +109,17 @@ const ShinomontazhsCreate = (props) => {
     model: ''
   })
 
-  useEffect(() => {
-    fetch('/api/v1/carmark')
-      .then((res) => res.json())
-      .then((it) => {
-        setOptions((prevState) => ({
-          ...prevState,
-          mark: it.data
-        }))
-      })
-    return () => {}
-  }, [])
-
-  useEffect(() => {
-    if (stateId.mark !== '') {
-      fetch(`/api/v1/carmodel/${stateId.mark}`)
-        .then((res) => res.json())
-        .then((it) => {
-          setOptions((prevState) => ({
-            mark: prevState.mark,
-            model: it.data
-          }))
-        })
-    }
-    return () => {}
-  }, [stateId.mark])
+  const [customer, setCustomer] = useState({
+    regnumber: '',
+    vinnumber: '',
+    mark: '',
+    model: '',
+    gen: '',
+    mod: '',
+    name: '',
+    phone: '',
+    idOfItem: ''
+  })
 
   const onChangeMark = (e) => {
     const { value } = e.target
@@ -157,8 +134,12 @@ const ShinomontazhsCreate = (props) => {
       mark: findCar ? findCar.id_car_mark : '',
       model: ''
     }))
-    setOptions((prevState) => ({
+    setCustomer((prevState) => ({
       ...prevState,
+      mark: value
+    }))
+    setOptions((prevState) => ({
+      mark: prevState.mark,
       model: []
     }))
   }
@@ -174,30 +155,20 @@ const ShinomontazhsCreate = (props) => {
       ...prevState,
       model: finModel ? finModel.id_car_model : ''
     }))
+    setCustomer((prevState) => ({
+      ...prevState,
+      model: value
+    }))
   }
 
   const [search, setSearch] = useState()
   const [activeCustomer, setActiveCustomer] = useState('')
-  const [customer, setCustomer] = useState({
-    regnumber: '',
-    vinnumber: '',
-    mark: '',
-    model: '',
-    gen: '',
-    mod: '',
-    name: '',
-    phone: '',
-    idOfItem: ''
-  })
   const [customerOptions, setCustomerOptions] = useState([])
   useEffect(() => {
     if (state.regnumber !== '') {
       setCustomerOptions(
         customerList.filter(
-          (it) =>
-            (it.phone === state.phone && it.phone !== '' && state.phone !== '') ||
-            (it.regnumber === state.regnumber && it.regnumber !== '' && state.regnumber !== '') ||
-            (it.vinnumber === state.vinnumber && it.vinnumber !== '' && state.vinnumber !== '')
+          (it) => it.regnumber === state.regnumber && it.regnumber !== '' && state.regnumber !== ''
         )
       )
     } else if (state.regnumber === '') {
@@ -227,18 +198,26 @@ const ShinomontazhsCreate = (props) => {
     if (checked) {
       setTyres((prevState) => ({
         ...prevState,
-        sale: 'no'
+        sale: 'yes'
       }))
     } else {
       setTyres((prevState) => ({
         ...prevState,
-        sale: 'on'
+        sale: 'no'
       }))
     }
   }
   const applyCustomer = () => {
     const newCustomer = customerList.find((it) => it.id === search)
+    const findCar = options.mark.find((it) => newCustomer.mark === it.name)
     if (newCustomer) {
+      setStateId((prevState) => ({
+        ...prevState,
+        mark: findCar ? findCar.id_car_mark : '',
+        model: '',
+        gen: '',
+        mod: ''
+      }))
       setCustomer((prevState) => ({
         ...prevState,
         regnumber: newCustomer.regnumber ? newCustomer.regnumber : '',
@@ -290,7 +269,7 @@ const ShinomontazhsCreate = (props) => {
     }
     return () => {}
   }, [state.diametr, state.kuzov, shinomontazhprices])
-  console.log(service)
+
   const sendData = () => {
     const checkCustomer =
       customerList !== []
@@ -299,20 +278,11 @@ const ShinomontazhsCreate = (props) => {
             regnumber: '',
             vinnumber: '',
             mark: '',
-            model: '',
-            gen: '',
-            name: '',
-            phone: ''
+            model: ''
           }
-    if (!state.employee) notify('Заполните поле Принял заказ')
-    if (!state.place) notify('Заполните поле Заказ принят на точке')
     if (!state.regnumber) notify('Заполните поле гос.номер')
-    if (!state.vinnumber) notify('Заполните поле VIN номер')
     if (!state.mark) notify('Укажите марку авто')
     if (!state.model) notify('Укажите модель авто')
-    if (!state.gen) notify('Укажите год авто')
-    if (!state.name) notify('Заполните поле Имя клиента')
-    if (!state.phone) notify('Заполните поле Телефон')
     else if (
       state.employee &&
       state.place &&
@@ -327,7 +297,6 @@ const ShinomontazhsCreate = (props) => {
       if (
         checkCustomer !== undefined &&
         state.regnumber === checkCustomer.regnumber &&
-        state.vinnumber === checkCustomer.vinnumber &&
         state.mark === checkCustomer.mark &&
         state.model === checkCustomer.model &&
         state.gen === checkCustomer.gen &&
@@ -335,21 +304,20 @@ const ShinomontazhsCreate = (props) => {
         state.name === checkCustomer.name &&
         state.phone === checkCustomer.phone
       ) {
-        props.create(state)
+        props.create({ ...state, ...service, ...materials })
         history.push('/shinomontazh/list')
         notify('Запись добавлена')
       } else {
-        props.create(state)
+        props.create({ ...state, service, material: materials })
         history.push('/shinomontazh/list')
         notify('Запись добавлена, создан новый клиент')
       }
     }
   }
-
+  console.log({ ...state, services: service, material: materials, tyre: tyres })
   const [active, setActive] = useState('employee')
   const checkboxServiceChange = (e) => {
     const { name, placeholder, checked, attributes } = e.target
-    console.log(e.target)
     if (checked) {
       setService((prevState) => [
         ...prevState,
@@ -471,18 +439,75 @@ const ShinomontazhsCreate = (props) => {
       if (!state.regnumber) {
         notify('Заполните гос. номер')
       } else if (!state.mark) {
-        notify('Заполните поле Бренд')
+        notify('Заполните поле Марка авто')
       } else if (!state.model) {
-        notify('Заполните поле Модель')
+        notify('Заполните поле Модель авто')
       } else {
         setActive('service')
       }
     } else if (active === 'service') {
-      setActive('material')
+      if (service.length < 1) {
+        notify('Выбериту услугу')
+      } else {
+        setActive('material')
+      }
     } else if (active === 'material') {
       setActive('finish')
     } else if (active === 'finish') {
       sendData()
+    }
+  }
+
+  const changeStep = (wanted) => {
+    if (wanted === 'employee') {
+      setActive('employee')
+    }
+    if (wanted === 'car') {
+      if (state.employee.length < 1) {
+        notify('Сначала выберите сотрудников')
+      } else {
+        setActive('car')
+      }
+    } else if (wanted === 'service') {
+      if (state.employee.length < 1) {
+        notify('Сначала выберите сотрудников')
+      } else if (!state.regnumber) {
+        notify('Заполните гос. номер')
+      } else if (!state.mark) {
+        notify('Заполните поле Марка авто')
+      } else if (!state.model) {
+        notify('Заполните поле Модель авто')
+      } else {
+        setActive('service')
+      }
+    } else if (wanted === 'material') {
+      if (state.employee.length < 1) {
+        notify('Сначала выберите сотрудников')
+      } else if (!state.regnumber) {
+        notify('Заполните гос. номер')
+      } else if (!state.mark) {
+        notify('Заполните поле Марка авто')
+      } else if (!state.model) {
+        notify('Заполните поле Модель авто')
+      } else if (service.length < 1) {
+        notify('Выбериту услугу')
+      } else {
+        setActive('material')
+      }
+    } else if (wanted === 'finish') {
+      if (state.employee.length < 1) {
+        notify('Сначала выберите сотрудников')
+      } else if (!state.regnumber) {
+        notify('Заполните гос. номер')
+      } else if (!state.mark) {
+        notify('Заполните поле Марка авто')
+      } else if (!state.model) {
+        notify('Заполните поле Модель авто')
+      } else if (service.length < 1) {
+        notify('Выбериту услугу')
+      } else {
+        setActive('finish')
+      }
     }
   }
 
@@ -497,7 +522,7 @@ const ShinomontazhsCreate = (props) => {
                 block: active !== 'employee',
                 'border-b-8 border-blue-400': active === 'employee'
               })}
-              onClick={() => setActive('employee')}
+              onClick={() => changeStep('employee')}
             >
               Исполнители
             </button>
@@ -509,7 +534,7 @@ const ShinomontazhsCreate = (props) => {
                 block: active !== 'car',
                 'border-b-8 border-blue-400': active === 'car'
               })}
-              onClick={() => setActive('car')}
+              onClick={() => changeStep('car')}
             >
               Авто
             </button>
@@ -521,7 +546,7 @@ const ShinomontazhsCreate = (props) => {
                 block: active !== 'service',
                 'border-b-8 border-blue-400': active === 'service'
               })}
-              onClick={() => setActive('service')}
+              onClick={() => changeStep('service')}
             >
               Услуги
             </button>
@@ -533,7 +558,7 @@ const ShinomontazhsCreate = (props) => {
                 block: active !== 'material',
                 'border-b-8 border-blue-400': active === 'material'
               })}
-              onClick={() => setActive('material')}
+              onClick={() => changeStep('material')}
             >
               Материалы
             </button>
@@ -545,7 +570,7 @@ const ShinomontazhsCreate = (props) => {
                 block: active !== 'finish',
                 'border-b-8 border-blue-400': active === 'finish'
               })}
-              onClick={() => setActive('finish')}
+              onClick={() => changeStep('finish')}
             >
               Итог
             </button>
@@ -594,6 +619,8 @@ const ShinomontazhsCreate = (props) => {
             applyCustomer={applyCustomer}
             sizeThreeList={sizeThreeList}
             onChange={onChange}
+            setOptions={setOptions}
+            stateId={stateId}
           />
         </div>
         <div
@@ -662,7 +689,7 @@ const ShinomontazhsCreate = (props) => {
           onClick={nextStep}
           type="submit"
         >
-          Далее
+          {active !== 'finish' ? 'Далее' : 'Создать заказ'}
         </button>
       </div>
     </div>

@@ -10,7 +10,6 @@ const Service = ({
   servicePriceChange,
   serviceType
 }) => {
-  console.log(service)
   return (
     <div className="md:flex md:flex-row -mx-3">
       <div className="px-3 mb-6 md:mb-0 w-full">
@@ -50,7 +49,7 @@ const Service = ({
                   >
                     <td className="w-full">
                       <button
-                        className="w-full"
+                        className="w-full h-full"
                         key={item.id}
                         type="button"
                         name={item.id}

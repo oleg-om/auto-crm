@@ -5,7 +5,7 @@ const statusTypes = require('../../common/enums/shinomontazh-statuses')
 
 const Shinomontazh = new mongoose.Schema({
   employee: {
-    type: String,
+    type: Array,
     required: false
   },
   place: {
@@ -29,19 +29,15 @@ const Shinomontazh = new mongoose.Schema({
     type: String,
     required: false
   },
-  phone: {
-    type: String,
-    required: false
-  },
   discount: {
     type: String,
     required: false
   },
-  pricegroup: {
-    type: String,
+  tyre: {
+    type: Array,
     required: false
   },
-  service: {
+  services: {
     type: Array,
     required: false
   },
@@ -53,10 +49,6 @@ const Shinomontazh = new mongoose.Schema({
     type: String,
     required: false
   },
-  commentPreOrder: {
-    type: String,
-    required: false
-  },
   id: {
     type: String,
     unique: true,
@@ -65,10 +57,6 @@ const Shinomontazh = new mongoose.Schema({
   date: {
     type: Date,
     default: () => new Date()
-  },
-  cancel: {
-    type: String,
-    required: false
   }
 })
 

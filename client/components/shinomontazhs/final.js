@@ -11,10 +11,9 @@ const Final = ({
   materials,
   onChange,
   onChangeTyres,
-  tyres,
-  checkboxTyresChange
+  checkboxTyresChange,
+  tyres
 }) => {
-  console.log(tyres)
   const kuzovCheck = () => {
     if (state.kuzov === 'sedan') return 'Седан'
     if (state.kuzov === 'crossover') return 'Кроссовер'
@@ -138,95 +137,108 @@ const Final = ({
           </div>
         </div>
       </div>
-      <div className="flex flex-row">
+      <div className="flex flex-row mt-3">
         <button
           className={cx('mb-3 flex flex-row rounded bg-gray-200 w-full text-lg', {
-            'bg-green-200 hover:bg-green-300': tyres.sale === 'on',
-            'bg-gray-100 hover:bg-gray-300': tyres.sale !== 'on'
+            'bg-green-200 hover:bg-green-300': tyres.sale === 'yes',
+            'bg-gray-100 hover:bg-gray-300': tyres.sale !== 'yes'
           })}
           type="button"
           name="sale"
           onClick={checkboxTyresChange}
         >
           <label htmlFor="sale" className="w-full h-full p-2 text-left inline-block">
-            <input className="mr-4" checked={tyres.sale} name="sale" id="sale" type="checkbox" />
+            <input className="mr-4" value={tyres.sale} name="sale" id="sale" type="checkbox" />
             Шины куплены у нас
           </label>
         </button>
-      </div>
-      <div className="flex flex-row">
-        <div className="mr-2 w-1/2">
-          <label
-            className="block uppercase tracking-wide text-grey-darker text-xs text-left font-bold mb-2"
-            htmlFor="grid-first-name"
-          >
-            Бренд
-          </label>
+        {/* <label htmlFor="sale" className="w-full h-full p-2 text-left inline-block">
           <input
-            className="appearance-none w-full block bg-grey-lighter text-grey-darker border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-1 px-4"
-            type="text"
-            placeholder="Например: Nokian"
-            name="brand"
-            list="tyres_list"
-            value={tyres.brand}
-            autoComplete="off"
-            onChange={onChangeTyres}
+            className="mr-4"
+            value={tyres.sale}
+            name="sale"
+            id="sale"
+            onChange={checkboxTyresChange}
+            type="checkbox"
           />
-          <datalist id="tyres_list">
-            {tyresList
-              .reduce((acc, rec) => [...acc, rec.brand], [])
-              .filter((item, id, array) => array.indexOf(item) === id)
-              .sort(function (a, b) {
-                if (a > b) {
-                  return 1
-                }
-                if (a < b) {
-                  return -1
-                }
-                return 0
-              })
-              .map((it, indexItem) => (
-                <option key={indexItem} value={it} />
-              ))}
-          </datalist>
-        </div>
-        <div className="mr-2 w-1/2">
-          <label
-            className="block uppercase tracking-wide text-grey-darker text-xs text-left font-bold mb-2"
-            htmlFor="grid-first-name"
-          >
-            Модель
-          </label>
-          <input
-            className="appearance-none w-full block bg-grey-lighter text-grey-darker border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-1 px-4"
-            type="text"
-            placeholder="Например: Nordman"
-            name="model"
-            list="tyres_model_list"
-            value={tyres.model}
-            autoComplete="off"
-            onChange={onChangeTyres}
-          />
-          <datalist id="tyres_model_list">
-            {tyresList
-              .filter((item) => item.brand === tyres.brand)
-              .reduce((acc, rec) => [...acc, rec.model], [])
-              .filter((item, id, array) => array.indexOf(item) === id)
-              .sort(function (a, b) {
-                if (a > b) {
-                  return 1
-                }
-                if (a < b) {
-                  return -1
-                }
-                return 0
-              })
-              .map((it, indexItem) => (
-                <option key={indexItem} value={it} />
-              ))}
-          </datalist>
-        </div>
+          Шины куплены у нас
+        </label> */}
       </div>
+      {tyres.sale === 'yes' ? (
+        <div className="flex flex-row">
+          <div className="mr-2 w-1/2">
+            <label
+              className="block uppercase tracking-wide text-grey-darker text-xs text-left font-bold mb-2"
+              htmlFor="grid-first-name"
+            >
+              Бренд
+            </label>
+            <input
+              className="appearance-none w-full block bg-grey-lighter text-grey-darker border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-1 px-4"
+              type="text"
+              placeholder="Например: Nokian"
+              name="brand"
+              list="tyres_list"
+              value={tyres.brand}
+              autoComplete="off"
+              onChange={onChangeTyres}
+            />
+            <datalist id="tyres_list">
+              {tyresList
+                .reduce((acc, rec) => [...acc, rec.brand], [])
+                .filter((item, id, array) => array.indexOf(item) === id)
+                .sort(function (a, b) {
+                  if (a > b) {
+                    return 1
+                  }
+                  if (a < b) {
+                    return -1
+                  }
+                  return 0
+                })
+                .map((it, indexItem) => (
+                  <option key={indexItem} value={it} />
+                ))}
+            </datalist>
+          </div>
+          <div className="mr-2 w-1/2">
+            <label
+              className="block uppercase tracking-wide text-grey-darker text-xs text-left font-bold mb-2"
+              htmlFor="grid-first-name"
+            >
+              Модель
+            </label>
+            <input
+              className="appearance-none w-full block bg-grey-lighter text-grey-darker border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-1 px-4"
+              type="text"
+              placeholder="Например: Nordman"
+              name="model"
+              list="tyres_model_list"
+              value={tyres.model}
+              autoComplete="off"
+              onChange={onChangeTyres}
+            />
+            <datalist id="tyres_model_list">
+              {tyresList
+                .filter((item) => item.brand === tyres.brand)
+                .reduce((acc, rec) => [...acc, rec.model], [])
+                .filter((item, id, array) => array.indexOf(item) === id)
+                .sort(function (a, b) {
+                  if (a > b) {
+                    return 1
+                  }
+                  if (a < b) {
+                    return -1
+                  }
+                  return 0
+                })
+                .map((it, indexItem) => (
+                  <option key={indexItem} value={it} />
+                ))}
+            </datalist>
+          </div>
+        </div>
+      ) : null}
       <div className="flex flex-row -mx-3 mt-5">
         <div className="w-full px-3 mb-6 md:mb-0">
           <label

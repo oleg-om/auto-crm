@@ -30,7 +30,6 @@ const Material = ({
     }
     return () => {}
   }, [state, materialprices])
-  console.log(materials)
   return (
     <div className="md:flex md:flex-row -mx-3">
       <div className="px-3 mb-6 md:mb-0 w-full">
@@ -106,7 +105,7 @@ const Material = ({
                   >
                     <td className="w-full">
                       <button
-                        className="w-full"
+                        className="w-full h-full"
                         key={item.id}
                         type="button"
                         name={item.id}
