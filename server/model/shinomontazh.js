@@ -21,6 +21,14 @@ const Shinomontazh = new mongoose.Schema({
     type: String,
     required: false
   },
+  kuzov: {
+    type: String,
+    required: false
+  },
+  diametr: {
+    type: String,
+    required: false
+  },
   mark: {
     type: String,
     required: false
@@ -55,6 +63,10 @@ const Shinomontazh = new mongoose.Schema({
     default: () => uuid.v4()
   },
   date: {
+    type: Date,
+    default: () => new Date()
+  },
+  dateStart: {
     type: Date,
     default: () => new Date()
   }

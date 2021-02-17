@@ -1,166 +1,81 @@
-import React, { useEffect, useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { Link, useHistory } from 'react-router-dom'
 import { useSelector } from 'react-redux'
 import { toast } from 'react-toastify'
-import NumberFormat from 'react-number-format'
 import cx from 'classnames'
 import 'react-toastify/dist/ReactToastify.css'
+import Employee from './employees'
+import Car from './car'
+import Service from './service'
+import Material from './material'
+import Final from './final'
+import sizeThreeList from '../../lists/shinomontazhdiametr'
 
 const ShinomontazhsEdit = (props) => {
   toast.configure()
   const notify = (arg) => {
     toast.info(arg, { position: toast.POSITION.BOTTOM_RIGHT })
   }
-
+  console.log(props)
   const history = useHistory()
-  const list = useSelector((s) => s.places.list)
   const employeeList = useSelector((s) => s.employees.list)
   const customerList = useSelector((s) => s.customers.list)
+  const auth = useSelector((s) => s.auth)
+  const shinomontazhprices = useSelector((s) => s.shinomontazhprices.list)
+  const materialprices = useSelector((s) => s.materials.list)
 
-  const [options, setOptions] = useState({
-    mark: [],
-    model: [],
-    gen: [],
-    mod: []
-  })
-  const [search, setSearch] = useState()
-  const [stateId, setStateId] = useState({
-    mark: '',
-    model: '',
-    gen: '',
-    mod: ''
-  })
+  const [regNumber, setRegNumber] = useState([])
+  const [keyboard, setKeyboard] = useState(true)
+  const [regOpen, setRegOpen] = useState(false)
 
   const [state, setState] = useState({
     employee: props.employee,
     place: props.place,
     regnumber: props.regnumber,
-    vinnumber: props.vinnumber,
     mark: props.mark,
     model: props.model,
-    gen: props.gen,
-    mod: props.mod,
-    preorder: props.preorder.length !== 0 ? props.preorder : [{ shinomontazhItem: '' }],
-    name: props.name,
-    phone: props.phone,
-    prepay: props.prepay,
-    comment: props.comment
+    comment: props.comment,
+    kuzov: props.kuzov,
+    diametr: props.diametr,
+    dateStart: props.dateStart,
+    dateFinish: new Date()
   })
 
-  const [inputFields, setInputFields] = useState(
-    state.preorder.map((it) => ({
-      shinomontazhItem: it.shinomontazhItem
-    }))
-  )
+  const [service, setService] = useState(props.services ? props.services : [])
+  const [materials, setMaterials] = useState(props.material ? props.material : [])
+  const [tyres, setTyres] = useState(props.tyres ? props.tyres : [])
 
-  useEffect(() => {
-    fetch('/api/v1/carmark')
-      .then((res) => res.json())
-      .then((it) => {
-        setOptions((prevState) => ({
-          ...prevState,
-          mark: it.data
-        }))
-      })
-    return () => {}
-  }, [])
-
-  useEffect(() => {
-    fetch(`/api/v1/carmodel/${stateId.mark}`)
-      .then((res) => res.json())
-      .then((it) => {
-        setOptions((prevState) => ({
-          ...prevState,
-          model: it.data
-        }))
-      })
-    return () => {}
-  }, [stateId.mark])
-
-  useEffect(() => {
-    fetch(`/api/v1/cargen/${stateId.model}`)
-      .then((res) => res.json())
-      .then((it) => {
-        setOptions((prevState) => ({
-          ...prevState,
-          gen: it.data
-        }))
-      })
-    return () => {}
-  }, [stateId.model])
-
-  useEffect(() => {
-    fetch(`/api/v1/carmod/${stateId.model}`)
-      .then((res) => res.json())
-      .then((it) => {
-        setOptions((prevState) => ({
-          ...prevState,
-          mod: it.data
-        }))
-      })
-    return () => {}
-  }, [stateId.model])
-  const [customerOptions, setCustomerOptions] = useState([])
-  useEffect(() => {
-    if (state.phone !== '' || state.regnumber !== '' || state.vinnumber !== '') {
-      setCustomerOptions(
-        customerList.filter(
-          (it) =>
-            it.phone === state.phone ||
-            it.regnumber === state.regnumber ||
-            it.vinnumber === state.vinnumber
-        )
-      )
-    } else if (state.phone === '' || state.regnumber === '' || state.vinnumber === '') {
-      setCustomerOptions([])
-    }
-  }, [state.phone, state.regnumber, state.vinnumber, customerList])
-
-  const onChange = (e) => {
-    const { name, value } = e.target
-    setState((prevState) => ({
-      ...prevState,
-      [name]: value
-    }))
+  const onChangeRegNumber = (e) => {
+    const { value } = e.target
+    setRegNumber((prevState) => [...prevState.concat(value)])
   }
-
-  const onSearchChange = (event) => {
-    setSearch(event.target.value)
+  const onDeleteRegNumber = () => {
+    const removeItem = regNumber.filter((element, index) => index < regNumber.length - 1)
+    setRegNumber(removeItem)
   }
-  const applyCustomer = () => {
-    const newCustomer = customerList.find((it) => it.id === search)
-    if (newCustomer) {
+  // useEffect(() => {
+  //   setState((prevState) => ({
+  //     ...prevState,
+  //     regnumber: regNumber.join('').toString()
+  //   }))
+  // }, [regNumber])
+
+  const checkboxEmployeeChange = (e) => {
+    const { name, checked } = e.target
+    if (checked) {
       setState((prevState) => ({
         ...prevState,
-        regnumber: newCustomer.regnumber,
-        vinnumber: newCustomer.vinnumber,
-        mark: newCustomer.mark,
-        model: newCustomer.model,
-        gen: newCustomer.gen,
-        mod: newCustomer.mod,
-        name: newCustomer.name,
-        phone: newCustomer.phone
+        employee: [...prevState.employee, name]
+      }))
+    } else {
+      setState((prevState) => ({
+        ...prevState,
+        employee: prevState.employee.filter((it) => it !== name)
       }))
     }
-    return null
-  }
-  const onChangeCustomer = (e) => {
-    const { name, value } = e.target
-    setState((prevState) => ({
-      ...prevState,
-      [name]: value
-    }))
   }
 
-  const onChangeCustomerUppercase = (e) => {
-    const { name, value } = e.target
-    setState((prevState) => ({
-      ...prevState,
-      [name]: value.toUpperCase().replace(/\s/g, '')
-    }))
-  }
-
-  const onChangeCustomerUppercaseRussian = (e) => {
+  const onChangeRegnumberUppercaseRussian = (e) => {
     const { name, value } = e.target
     setState((prevState) => ({
       ...prevState,
@@ -171,22 +86,63 @@ const ShinomontazhsEdit = (props) => {
     }))
   }
 
+  const switchKeyboard = () => {
+    setKeyboard(true)
+    setRegOpen(false)
+  }
+
+  const acceptRegnumber = () => {
+    setRegOpen(false)
+  }
+
+  const openRegModal = () => {
+    if (keyboard === false) {
+      setRegOpen(true)
+    }
+  }
+
+  const [options, setOptions] = useState({
+    mark: [],
+    model: []
+  })
+
+  const [stateId, setStateId] = useState({
+    mark: '',
+    model: ''
+  })
+
+  const [customer, setCustomer] = useState({
+    regnumber: '',
+    vinnumber: '',
+    mark: '',
+    model: '',
+    gen: '',
+    mod: '',
+    name: '',
+    phone: '',
+    idOfItem: ''
+  })
+
   const onChangeMark = (e) => {
     const { value } = e.target
     const findCar = options.mark ? options.mark.find((it) => value === it.name) : null
     setState((prevState) => ({
       ...prevState,
       mark: value,
-      model: '',
-      gen: '',
-      mod: ''
+      model: ''
     }))
     setStateId((prevState) => ({
       ...prevState,
       mark: findCar ? findCar.id_car_mark : '',
-      model: '',
-      gen: '',
-      mod: ''
+      model: ''
+    }))
+    setCustomer((prevState) => ({
+      ...prevState,
+      mark: value
+    }))
+    setOptions((prevState) => ({
+      mark: prevState.mark,
+      model: []
     }))
   }
 
@@ -195,568 +151,543 @@ const ShinomontazhsEdit = (props) => {
     const finModel = options.model.find((it) => value === it.name)
     setState((prevState) => ({
       ...prevState,
-      model: value,
-      gen: '',
-      mod: ''
+      model: value
     }))
     setStateId((prevState) => ({
       ...prevState,
-      model: finModel ? finModel.id_car_model : '',
-      gen: '',
-      mod: ''
+      model: finModel ? finModel.id_car_model : ''
+    }))
+    setCustomer((prevState) => ({
+      ...prevState,
+      model: value
     }))
   }
 
-  const onChangeGen = (e) => {
-    const { value } = e.target
-    const findGen = options.gen.find((it) =>
-      value === it.year_begin && it.year_end
-        ? `${it.name} (${it.year_begin}-${it.year_end})`
-        : it.name
-    )
-    setState((prevState) => ({
-      ...prevState,
-      gen: value,
-      mod: ''
-    }))
-    setStateId((prevState) => ({
-      ...prevState,
-      gen: findGen ? findGen.id_car_generation : '',
-      mod: ''
-    }))
-  }
+  const [search, setSearch] = useState()
+  const [activeCustomer, setActiveCustomer] = useState('')
+  const [customerOptions, setCustomerOptions] = useState([])
+  useEffect(() => {
+    if (state.regnumber !== '') {
+      setCustomerOptions(
+        customerList.filter(
+          (it) => it.regnumber === state.regnumber && it.regnumber !== '' && state.regnumber !== ''
+        )
+      )
+    } else if (state.regnumber === '') {
+      setCustomerOptions([])
+    }
+  }, [state.regnumber, customerList])
 
-  const onChangeMod = (e) => {
-    const { value } = e.target
+  const onSearchChange = (event) => {
+    setSearch(event.target.value)
+  }
+  const onChange = (e) => {
+    const { name, value } = e.target
     setState((prevState) => ({
       ...prevState,
-      mod: value
+      [name]: value
     }))
   }
+  const onChangeTyres = (e) => {
+    const { name, value } = e.target
+    setTyres((prevState) => ({
+      ...prevState,
+      [name]: value
+    }))
+  }
+  const checkboxTyresChange = (e) => {
+    const { checked } = e.target
+    if (checked) {
+      setTyres((prevState) => ({
+        ...prevState,
+        sale: 'yes'
+      }))
+    } else {
+      setTyres((prevState) => ({
+        ...prevState,
+        sale: 'no'
+      }))
+    }
+  }
+  const applyCustomer = () => {
+    const newCustomer = customerList.find((it) => it.id === search)
+    const findCar = options.mark.find((it) => newCustomer.mark === it.name)
+    if (newCustomer) {
+      setStateId((prevState) => ({
+        ...prevState,
+        mark: findCar ? findCar.id_car_mark : '',
+        model: '',
+        gen: '',
+        mod: ''
+      }))
+      setCustomer((prevState) => ({
+        ...prevState,
+        regnumber: newCustomer.regnumber ? newCustomer.regnumber : '',
+        vinnumber: newCustomer.vinnumber ? newCustomer.vinnumber : '',
+        mark: newCustomer.mark ? newCustomer.mark : '',
+        model: newCustomer.model ? newCustomer.model : '',
+        gen: newCustomer.gen ? newCustomer.gen : '',
+        mod: newCustomer.mod ? newCustomer.mod : '',
+        name: newCustomer.name ? newCustomer.name : '',
+        phone: newCustomer.phone ? newCustomer.phone : '',
+        idOfItem: newCustomer.id
+      }))
+      setState((prevState) => ({
+        ...prevState,
+        regnumber: newCustomer.regnumber ? newCustomer.regnumber : '',
+        vinnumber: newCustomer.vinnumber ? newCustomer.vinnumber : '',
+        mark: newCustomer.mark ? newCustomer.mark : '',
+        model: newCustomer.model ? newCustomer.model : '',
+        gen: newCustomer.gen ? newCustomer.gen : '',
+        mod: newCustomer.mod ? newCustomer.mod : '',
+        name: newCustomer.name ? newCustomer.name : '',
+        phone: newCustomer.phone ? newCustomer.phone : ''
+      }))
+      setActiveCustomer(newCustomer.id)
+    }
+    return null
+  }
+  const [actualService, setActualService] = useState([])
+  useEffect(() => {
+    const actualDiametr = 'R'.concat(state.diametr)
+    const getPrice = (item) => {
+      return item[actualDiametr]
+    }
+    if (state.diametr && state.kuzov) {
+      setActualService(
+        shinomontazhprices
+          .filter(
+            (it) => it.category === state.kuzov || it.category === 'other' || it.category === 'free'
+          )
+          .map((item) => ({
+            name: item.name,
+            id: item.id,
+            type: item.type,
+            category: item.category,
+            number: item.number,
+            actualprice: getPrice(item)
+          }))
+      )
+    }
+    return () => {}
+  }, [state.diametr, state.kuzov, shinomontazhprices])
+
   const sendData = () => {
-    if (!state.employee) notify('Заполните поле Принял заказ')
-    if (!state.place) notify('Заполните поле Заказ принят на точке')
+    const checkCustomer =
+      customerList !== []
+        ? customerList.find((it) => it.id)
+        : {
+            regnumber: '',
+            vinnumber: '',
+            mark: '',
+            model: ''
+          }
     if (!state.regnumber) notify('Заполните поле гос.номер')
-    if (!state.vinnumber) notify('Заполните поле VIN номер')
     if (!state.mark) notify('Укажите марку авто')
     if (!state.model) notify('Укажите модель авто')
-    if (!state.gen) notify('Укажите год авто')
-    if (!state.name) notify('Заполните поле Имя клиента')
-    if (!state.phone) notify('Заполните поле Телефон')
-    else if (
-      state.employee &&
-      state.place &&
-      state.regnumber &&
-      state.vinnumber &&
-      state.mark &&
-      state.model &&
-      state.gen &&
-      state.name &&
-      state.phone
-    ) {
-      props.updateShinomontazh(props.id, state)
-      history.push(`/shinomontazh/edit/${props.id_shinomontazhs}`)
-      notify('Данные о заказе обновлены')
+    if (!state.place) notify('Укажите место работы')
+    else if (state.employee && state.place && state.regnumber && state.mark && state.model) {
+      if (
+        checkCustomer !== undefined &&
+        state.regnumber === checkCustomer.regnumber &&
+        state.mark === checkCustomer.mark &&
+        state.model === checkCustomer.model
+      ) {
+        props.create({ ...state, services: service, material: materials, tyre: tyres })
+        history.push('/shinomontazh/list')
+        notify('Запись добавлена')
+      } else if (checkCustomer !== undefined && activeCustomer !== '') {
+        props.openAndUpdate(activeCustomer, customer, {
+          ...state,
+          services: service,
+          material: materials,
+          tyre: tyres
+        })
+      } else {
+        props.create({ ...state, services: service, material: materials, tyre: tyres })
+        props.createCust(customer)
+        history.push('/shinomontazh/list')
+        notify('Запись добавлена')
+        notify('Создан новый клиент')
+      }
     }
   }
 
-  const handleChangeInput = (index, event) => {
-    const values = [...inputFields]
-    values[index][event.target.name] = event.target.value
-    setInputFields(values)
-    setState((prevState) => ({
-      ...prevState,
-      preorder: inputFields
-    }))
-  }
-
-  const handleAddFields = () => {
-    setInputFields([
-      ...inputFields,
-      {
-        shinomontazhItem: ''
-      }
-    ])
-    setState((prevState) => ({
-      ...prevState,
-      preorder: inputFields
-    }))
-  }
-
-  const handleRemoveFields = (index) => {
-    if (index !== 0) {
-      const values = [...inputFields]
-      values.splice(index, 1)
-      setInputFields(values)
-      setState((prevState) => ({
+  const [active, setActive] = useState('finish')
+  const checkboxServiceChange = (e) => {
+    const { name, placeholder, checked, attributes } = e.target
+    if (checked) {
+      setService((prevState) => [
         ...prevState,
-        preorder: values
-      }))
+        { serviceName: name, quantity: 1, price: placeholder, name: attributes.somename.value }
+      ])
+    } else {
+      setService((prevState) => prevState.filter((it) => it.serviceName !== name))
+    }
+  }
+  const servicePlusChange = (e) => {
+    const { name } = e.target
+    setService(
+      service.map((object) => {
+        if (object.serviceName === name) {
+          return {
+            ...object,
+            quantity: object.quantity + 1
+          }
+        }
+        return object
+      })
+    )
+  }
+
+  const serviceMinusChange = (e) => {
+    const { name } = e.target
+    setService(
+      service.map((object) => {
+        if (object.serviceName === name && object.quantity >= 2) {
+          return {
+            ...object,
+            quantity: object.quantity - 1
+          }
+        }
+        return object
+      })
+    )
+  }
+
+  const servicePriceChange = (e) => {
+    const { value, id } = e.target
+    setService(
+      service.map((object) => {
+        if (object.serviceName === id) {
+          return {
+            ...object,
+            price: value
+          }
+        }
+        return object
+      })
+    )
+  }
+
+  const checkboxMaterialChange = (e) => {
+    const { name, placeholder, checked, attributes } = e.target
+    if (checked) {
+      setMaterials((prevState) => [
+        ...prevState,
+        { serviceName: name, quantity: 1, price: placeholder, name: attributes.somename.value }
+      ])
+    } else {
+      setMaterials((prevState) => prevState.filter((it) => it.serviceName !== name))
+    }
+  }
+  const materialPlusChange = (e) => {
+    const { name } = e.target
+    setMaterials(
+      materials.map((object) => {
+        if (object.serviceName === name) {
+          return {
+            ...object,
+            quantity: object.quantity + 1
+          }
+        }
+        return object
+      })
+    )
+  }
+
+  const materialMinusChange = (e) => {
+    const { name } = e.target
+    setMaterials(
+      materials.map((object) => {
+        if (object.serviceName === name && object.quantity >= 2) {
+          return {
+            ...object,
+            quantity: object.quantity - 1
+          }
+        }
+        return object
+      })
+    )
+  }
+
+  const materialPriceChange = (e) => {
+    const { value, id } = e.target
+    setMaterials(
+      materials.map((object) => {
+        if (object.serviceName === id) {
+          return {
+            ...object,
+            price: value
+          }
+        }
+        return object
+      })
+    )
+  }
+
+  const nextStep = () => {
+    if (active === 'employee') {
+      if (state.employee.length < 1) {
+        notify('Сначала выберите сотрудников')
+      } else {
+        setActive('car')
+      }
+    } else if (active === 'car') {
+      if (!state.regnumber) {
+        notify('Заполните гос. номер')
+      } else if (!state.mark) {
+        notify('Заполните поле Марка авто')
+      } else if (!state.model) {
+        notify('Заполните поле Модель авто')
+      } else {
+        setActive('service')
+      }
+    } else if (active === 'service') {
+      if (service.length < 1) {
+        notify('Выбериту услугу')
+      } else {
+        setActive('material')
+      }
+    } else if (active === 'material') {
+      setActive('finish')
+    } else if (active === 'finish') {
+      sendData()
+    }
+  }
+
+  const changeStep = (wanted) => {
+    if (wanted === 'employee') {
+      setActive('employee')
+    }
+    if (wanted === 'car') {
+      if (state.employee.length < 1) {
+        notify('Сначала выберите сотрудников')
+      } else {
+        setActive('car')
+      }
+    } else if (wanted === 'service') {
+      if (state.employee.length < 1) {
+        notify('Сначала выберите сотрудников')
+      } else if (!state.regnumber) {
+        notify('Заполните гос. номер')
+      } else if (!state.mark) {
+        notify('Заполните поле Марка авто')
+      } else if (!state.model) {
+        notify('Заполните поле Модель авто')
+      } else {
+        setActive('service')
+      }
+    } else if (wanted === 'material') {
+      if (state.employee.length < 1) {
+        notify('Сначала выберите сотрудников')
+      } else if (!state.regnumber) {
+        notify('Заполните гос. номер')
+      } else if (!state.mark) {
+        notify('Заполните поле Марка авто')
+      } else if (!state.model) {
+        notify('Заполните поле Модель авто')
+      } else if (service.length < 1) {
+        notify('Выбериту услугу')
+      } else {
+        setActive('material')
+      }
+    } else if (wanted === 'finish') {
+      if (state.employee.length < 1) {
+        notify('Сначала выберите сотрудников')
+      } else if (!state.regnumber) {
+        notify('Заполните гос. номер')
+      } else if (!state.mark) {
+        notify('Заполните поле Марка авто')
+      } else if (!state.model) {
+        notify('Заполните поле Модель авто')
+      } else if (service.length < 1) {
+        notify('Выбериту услугу')
+      } else {
+        setActive('finish')
+      }
     }
   }
 
   return (
     <div>
+      <div className="bg-white shadow rounded-lg px-8 py-6 mb-4 flex flex-col my-2">
+        <div className="flex flex-row">
+          <div className="w-1/5 p-2">
+            <button
+              type="button"
+              className={cx('p-4 bg-gray-200 rounded w-full h-full', {
+                block: active !== 'employee',
+                'border-b-8 border-blue-400': active === 'employee'
+              })}
+              onClick={() => changeStep('employee')}
+            >
+              Исполнители
+            </button>
+          </div>
+          <div className="w-1/5 p-2">
+            <button
+              type="button"
+              className={cx('p-4 bg-gray-200 rounded w-full h-full', {
+                block: active !== 'car',
+                'border-b-8 border-blue-400': active === 'car'
+              })}
+              onClick={() => changeStep('car')}
+            >
+              Авто
+            </button>
+          </div>
+          <div className="w-1/5 p-2">
+            <button
+              type="button"
+              className={cx('p-4 bg-gray-200 rounded w-full h-full', {
+                block: active !== 'service',
+                'border-b-8 border-blue-400': active === 'service'
+              })}
+              onClick={() => changeStep('service')}
+            >
+              Услуги
+            </button>
+          </div>
+          <div className="w-1/5 p-2">
+            <button
+              type="button"
+              className={cx('p-4 bg-gray-200 rounded w-full h-full', {
+                block: active !== 'material',
+                'border-b-8 border-blue-400': active === 'material'
+              })}
+              onClick={() => changeStep('material')}
+            >
+              Материалы
+            </button>
+          </div>
+          <div className="w-1/5 p-2">
+            <button
+              type="button"
+              className={cx('p-4 bg-gray-200 rounded w-full h-full', {
+                block: active !== 'finish',
+                'border-b-8 border-blue-400': active === 'finish'
+              })}
+              onClick={() => changeStep('finish')}
+            >
+              Итог
+            </button>
+          </div>
+        </div>
+      </div>
       <div className="bg-white shadow rounded-lg px-8 pt-6 pb-8 mb-4 flex flex-col my-2">
-        <div className="md:flex md:flex-row -mx-3 mb-6">
-          <div className="md:w-1/2 px-3 mb-6 md:mb-0">
-            <div className="flex flex-row">
-              <div className="mb-5 w-1/2 pr-3">
-                <label
-                  className="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2"
-                  htmlFor="grid-first-name"
-                >
-                  Принял заказ
-                </label>
-                <div className="flex-shrink w-full inline-block relative mb-3">
-                  <select
-                    className="block appearance-none w-full bg-grey-lighter border border-gray-300 focus:border-gray-500 focus:outline-none py-1 px-4 pr-8 rounded"
-                    value={state.employee}
-                    name="employee"
-                    id="employee"
-                    disabled="disabled"
-                    onChange={onChange}
-                  >
-                    <option value="" disabled selected hidden className="text-gray-800">
-                      Выберите сотрудника
-                    </option>
-                    {employeeList.map((it) => {
-                      return (
-                        <option value={it.id} key={it.name}>
-                          {it.name} {it.surname}
-                        </option>
-                      )
-                    })}
-                  </select>
-                </div>
-              </div>
-              <div className="mb-5 w-1/2 pl-3">
-                <label
-                  className="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2"
-                  htmlFor="grid-first-name"
-                >
-                  Заказ принят на точке
-                </label>
-                <div className="flex-shrink w-full inline-block relative mb-3">
-                  <select
-                    className="block appearance-none w-full bg-grey-lighter border border-gray-300 focus:border-gray-500 focus:outline-none py-1 px-4 pr-8 rounded"
-                    value={state.place}
-                    name="place"
-                    id="place"
-                    disabled="disabled"
-                    onChange={onChange}
-                  >
-                    <option value="" disabled selected hidden className="text-gray-800">
-                      Выберете место
-                    </option>
-                    {list.map((it) => {
-                      return (
-                        <option value={it.id} key={it.name}>
-                          {it.name}
-                        </option>
-                      )
-                    })}
-                  </select>
-                </div>
-              </div>
-            </div>
-            <div className="mb-5">
-              <label
-                className="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2"
-                htmlFor="grid-city"
-              >
-                Гос. номер
-              </label>
-              <input
-                className="appearance-none block w-full bg-grey-lighter text-grey-darker border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-1 px-4 mb-3"
-                type="text"
-                placeholder="Введите гос. номер русскими буквами"
-                value={state.regnumber}
-                name="regnumber"
-                id="regnumber"
-                onChange={onChangeCustomerUppercaseRussian}
-              />
-            </div>
-            <div className="md:mb-0">
-              <label
-                className="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2"
-                htmlFor="grid-city"
-              >
-                VIN номер
-              </label>
-              <input
-                className="appearance-none block w-full bg-grey-lighter text-grey-darker border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-1 px-4 mb-3"
-                type="text"
-                placeholder="Введите VIN"
-                value={state.vinnumber}
-                name="vinnumber"
-                id="vinnumber"
-                onChange={onChangeCustomerUppercase}
-              />
-            </div>
-          </div>
-          <div className="md:w-1/2 px-3">
-            <div>
-              <label
-                className="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2"
-                htmlFor="grid-city"
-              >
-                Авто в базе данных
-              </label>
-            </div>
-            <table className="border-collapse w-full h-full auto-search">
-              <thead>
-                <tr>
-                  <th className="p-3 font-bold uppercase bg-gray-100 text-gray-600 border border-gray-300 table-cell w-full">
-                    Клиент
-                  </th>
-                  <th className="p-3 font-bold uppercase bg-gray-100 text-gray-600 border border-gray-300 table-cell">
-                    Действия
-                  </th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr className="bg-white lg:hover:bg-gray-100 flex table-row flex-row lg:flex-row flex-wrap flex-no-wrap mb-10 lg:mb-0">
-                  <td className="w-full lg:w-auto p-2 text-xs text-gray-800 text-center border border-b block table-cell relative static">
-                    Введите полностью гос. номер, VIN либо номер телефона чтобы найти клиента. Если
-                    клиент отстствует, заполните данные самостоятельно. Новый клиент не будет
-                    создан. Новый клиент создается только при создании нового заказа
-                  </td>
-                  <td className="w-full lg:w-auto p-2 text-gray-800 text-center border border-b text-center block table-cell relative static" />
-                </tr>
-                <tr className="bg-white lg:hover:bg-gray-100 flex table-row flex-row lg:flex-row flex-wrap flex-no-wrap mb-10 lg:mb-0">
-                  <td className="w-full lg:w-auto p-2 text-xs text-gray-800 text-center border border-b block table-cell relative static">
-                    <div className="flex-shrink w-full inline-block relative">
-                      <select
-                        className="block appearance-none w-full bg-grey-lighter border border-gray-300 focus:border-gray-500 focus:outline-none py-1 px-4 pr-8 rounded"
-                        value={search}
-                        name="search"
-                        id="searchBlock"
-                        onChange={onSearchChange}
-                      >
-                        <option value="" className="text-gray-800">
-                          {customerOptions.length < 1 ? 'Клиентов не найдено' : 'Выберите клиента'}
-                        </option>
-                        {customerOptions.map((it) => {
-                          return (
-                            <option key={it.id} value={it.id}>
-                              {it.name}, {it.mark} {it.model} {it.regnumber},{it.phone}
-                            </option>
-                          )
-                        })}
-                      </select>
-                      <div className="pointer-events-none absolute top-0 mt-2  right-0 flex items-center px-2 text-gray-600">
-                        <svg
-                          className="fill-current h-4 w-4"
-                          xmlns="http://www.w3.org/2000/svg"
-                          viewBox="0 0 20 20"
-                        >
-                          <path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z" />
-                        </svg>
-                      </div>
-                    </div>
-                  </td>
-                  <td className="w-full lg:w-auto p-2 text-gray-800 text-center border border-b text-center block table-cell relative static">
-                    <button
-                      onClick={applyCustomer}
-                      type="button"
-                      className={cx('py-1 px-3 text-white text-xs hover:text-white rounded-lg', {
-                        'bg-green-600 hover:bg-green-700': customerOptions.length >= 1,
-                        'bg-gray-500': customerOptions.length < 1
-                      })}
-                    >
-                      Использовать
-                    </button>
-                  </td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
+        <div
+          className={cx('', {
+            block: active === 'employee',
+            hidden: active !== 'employee'
+          })}
+        >
+          <Employee
+            employeeList={employeeList}
+            auth={auth}
+            state={state}
+            checkboxEmployeeChange={checkboxEmployeeChange}
+          />
         </div>
-        <div className="-mx-3 md:flex flex-wrap mb-3">
-          <div className="md:w-1/4 px-3 mb-6 md:mb-0 flex flex-col">
-            <label
-              className="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2"
-              htmlFor="grid-first-name"
-            >
-              Марка авто
-            </label>
-            <input
-              className="appearance-none block w-full bg-grey-lighter text-grey-darker border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-1 px-4 mb-3"
-              value={state.mark}
-              name="mark"
-              list="mark_list"
-              placeholder="Введите бренд"
-              autoComplete="off"
-              required
-              onChange={onChangeMark}
-            />
-            <datalist id="mark_list">
-              {options.mark.map((it) => (
-                <option value={it.name} label={it.name_rus} key={it.id_car_mark} />
-              ))}
-            </datalist>
-          </div>
-
-          <div className="md:w-1/4 px-3 mb-6 md:mb-0 flex flex-col">
-            <label
-              className="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2"
-              htmlFor="grid-first-name"
-            >
-              Модель авто
-            </label>
-            <input
-              className="appearance-none block w-full bg-grey-lighter text-grey-darker border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-1 px-4 mb-3"
-              value={state.model}
-              name="model"
-              id="model"
-              list="model_list"
-              placeholder={state.mark.length < 2 ? 'Сначала выберете марку' : 'Выберите модель'}
-              disabled={state.mark.length < 2}
-              autoComplete="off"
-              required
-              onChange={onChangeModel}
-            />
-            {stateId.mark ? (
-              <datalist id="model_list">
-                {options.model.map((it) => (
-                  <option key={it.name} value={it.name} label={it.name_rus} />
-                ))}
-              </datalist>
-            ) : null}
-          </div>
-
-          <div className="md:w-1/4 px-3 mb-6 md:mb-0 flex flex-col">
-            <label
-              className="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2"
-              htmlFor="grid-first-name"
-            >
-              Год авто
-            </label>
-            <input
-              className="appearance-none block w-full bg-grey-lighter text-grey-darker border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-1 px-4 mb-3"
-              value={state.gen}
-              name="gen"
-              id="gen"
-              list="gen_list"
-              placeholder={
-                state.model.length < 2 ? 'Сначала выберете модель' : 'Выберите или введите год'
-              }
-              disabled={state.model.length < 2}
-              autoComplete="off"
-              required
-              onChange={onChangeGen}
-            />
-            <datalist id="gen_list">
-              {options.gen.map((it) => (
-                <option
-                  key={it.name}
-                  value={
-                    it.year_begin && it.year_end
-                      ? `${it.name} (${it.year_begin}-${it.year_end})`
-                      : it.name
-                  }
-                  label={it.name_rus}
-                />
-              ))}
-            </datalist>
-          </div>
-          <div className="md:w-1/4 px-3 mb-6 md:mb-0 flex flex-col">
-            <label
-              className="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2"
-              htmlFor="grid-first-name"
-            >
-              Объем двигателя
-            </label>
-            <input
-              className="appearance-none block w-full bg-grey-lighter text-grey-darker border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-1 px-4 mb-3"
-              value={state.mod}
-              name="mod"
-              id="mod"
-              list="mod_list"
-              placeholder={
-                state.gen.length < 2 ? 'Сначала выберете год' : 'Выберите или введите объем'
-              }
-              disabled={state.gen.length < 2}
-              autoComplete="off"
-              required
-              onChange={onChangeMod}
-            />
-            {stateId.gen ? (
-              <datalist id="mod_list">
-                {options.mod
-                  .reduce((thing, current) => {
-                    const x = thing.find((item) => item.name === current.name)
-                    if (!x) {
-                      return thing.concat([current])
-                    }
-                    return thing
-                  }, [])
-                  .sort(function (a, b) {
-                    if (a.name > b.name) {
-                      return 1
-                    }
-                    if (a.name < b.name) {
-                      return -1
-                    }
-                    // a должно быть равным b
-                    return 0
-                  })
-                  .map((it) => (
-                    <option key={it.name} value={it.name} />
-                  ))}
-              </datalist>
-            ) : null}
-          </div>
+        <div
+          className={cx('', {
+            block: active === 'car',
+            hidden: active !== 'car'
+          })}
+        >
+          <Car
+            regOpen={regOpen}
+            onChangeRegNumber={onChangeRegNumber}
+            onDeleteRegNumber={onDeleteRegNumber}
+            onChangeRegnumberUppercaseRussian={onChangeRegnumberUppercaseRussian}
+            switchKeyboard={switchKeyboard}
+            acceptRegnumber={acceptRegnumber}
+            openRegModal={openRegModal}
+            state={state}
+            keyboard={keyboard}
+            onChangeMark={onChangeMark}
+            onChangeModel={onChangeModel}
+            options={options}
+            onSearchChange={onSearchChange}
+            search={search}
+            customer={customer}
+            customerOptions={customerOptions}
+            activeCustomer={activeCustomer}
+            setActiveCustomer={setActiveCustomer}
+            applyCustomer={applyCustomer}
+            sizeThreeList={sizeThreeList}
+            onChange={onChange}
+            setOptions={setOptions}
+            stateId={stateId}
+          />
         </div>
-        <div className="-mx-3 md:flex mb-2">
-          <div className="md:w-1/2 px-3 mb-6 md:mb-0">
-            <label
-              className="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2"
-              htmlFor="grid-city"
-            >
-              Имя клиента
-            </label>
-            <input
-              className="capitalize appearance-none block w-full bg-grey-lighter text-grey-darker border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-1 px-4 mb-3"
-              type="text"
-              placeholder="Введите имя"
-              value={state.name}
-              name="name"
-              id="name"
-              onChange={onChangeCustomer}
-            />
-          </div>
-          <div className="md:w-1/2 px-3 mb-6 md:mb-0">
-            <label
-              className="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2"
-              htmlFor="grid-city"
-            >
-              Номер телефона
-            </label>
-            <NumberFormat
-              format="+7 (###) ###-##-##"
-              mask="_"
-              className="appearance-none block w-full bg-grey-lighter text-grey-darker border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-1 px-4 mb-3"
-              type="text"
-              placeholder="Начинайте ввод с 978"
-              value={state.phone}
-              name="phone"
-              id="phone"
-              onChange={onChangeCustomer}
-            />
-          </div>
+        <div
+          className={cx('', {
+            block: active === 'service',
+            hidden: active !== 'service'
+          })}
+        >
+          <Service
+            actualService={actualService}
+            auth={auth}
+            service={service}
+            state={state}
+            checkboxServiceChange={checkboxServiceChange}
+            servicePlusChange={servicePlusChange}
+            serviceMinusChange={serviceMinusChange}
+            servicePriceChange={servicePriceChange}
+          />
         </div>
-        <div className="-mx-3 md:flex mb-2">
-          <div className="md:w-full px-3 mb-6 md:mb-0">
-            <table className="border-collapse w-full">
-              <thead>
-                <tr>
-                  <th className="p-3 font-bold uppercase bg-gray-100 text-gray-600 border border-gray-300 table-cell w-full">
-                    Запчасти
-                  </th>
-                  <th className="p-3 font-bold uppercase bg-gray-100 text-gray-600 border border-gray-300 table-cell">
-                    Строки
-                  </th>
-                </tr>
-              </thead>
-              <tbody>
-                {inputFields.map((inputField, index) => (
-                  <tr
-                    key={index}
-                    className="bg-white lg:hover:bg-gray-100 flex table-row flex-row lg:flex-row flex-wrap flex-no-wrap mb-10 lg:mb-0"
-                  >
-                    <td className="w-full lg:w-auto p-2 text-gray-800 text-center border border-b block table-cell relative static">
-                      <input
-                        className="appearance-none block w-full bg-grey-lighter text-grey-darker border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-1 px-4"
-                        type="text"
-                        placeholder="Например: свечи"
-                        name="shinomontazhItem"
-                        list="shinomontazhs_list"
-                        value={inputField.shinomontazhItem}
-                        defaultValue={
-                          state.preorder.find((it, id) => id === index)
-                            ? state.preorder.find((it, id) => id === index).shinomontazhItem
-                            : ''
-                        }
-                        onChange={(event) => handleChangeInput(index, event)}
-                      />
-                    </td>
-                    <td className="w-full lg:w-auto p-2 text-gray-800 text-center border border-b text-center flex flex-row table-cell relative static">
-                      <button
-                        onClick={() => handleRemoveFields(index)}
-                        type="button"
-                        className="py-1 px-3 bg-red-500 text-white font-bold hover:bg-red-700 hover:text-white rounded-lg mr-1"
-                      >
-                        -
-                      </button>
-                      <button
-                        onClick={() => handleAddFields()}
-                        type="button"
-                        className="py-1 px-3 bg-blue-500 text-white font-bold hover:bg-blue-700 hover:text-white rounded-lg"
-                      >
-                        +
-                      </button>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
+        <div
+          className={cx('', {
+            block: active === 'material',
+            hidden: active !== 'material'
+          })}
+        >
+          <Material
+            materialprices={materialprices}
+            auth={auth}
+            materials={materials}
+            checkboxMaterialChange={checkboxMaterialChange}
+            materialPlusChange={materialPlusChange}
+            materialMinusChange={materialMinusChange}
+            materialPriceChange={materialPriceChange}
+          />
         </div>
-        <div className="-mx-3 md:flex mb-2">
-          <div className="md:w-1/3 px-3 mb-6 md:mb-0">
-            <label
-              className="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2"
-              htmlFor="grid-city"
-            >
-              Предоплата
-            </label>
-            <div className="flex flex-row">
-              <input
-                className="appearance-none block w-full bg-grey-lighter text-grey-darker border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-1 px-4 mb-3"
-                type="text"
-                placeholder="Вы можете оставить поле пустым"
-                value={state.prepay}
-                name="prepay"
-                id="prepay"
-                onChange={onChange}
-              />
-            </div>
-          </div>
-          <div className="md:w-2/3 px-3 mb-6 md:mb-0">
-            <label
-              className="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2"
-              htmlFor="grid-city"
-            >
-              Комментарий
-            </label>
-            <input
-              className="appearance-none block w-full bg-grey-lighter text-grey-darker border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-1 px-4 mb-3"
-              type="text"
-              placeholder="Оставьте комментарий"
-              value={state.comment}
-              name="comment"
-              id="comment"
-              onChange={onChange}
-            />
-          </div>
+        <div
+          className={cx('', {
+            block: active === 'finish',
+            hidden: active !== 'finish'
+          })}
+        >
+          <Final
+            materialprices={materialprices}
+            auth={auth}
+            materials={materials}
+            shinomontazhprices={shinomontazhprices}
+            state={state}
+            service={service}
+            onChange={onChange}
+            onChangeTyres={onChangeTyres}
+            tyres={tyres}
+            checkboxTyresChange={checkboxTyresChange}
+          />
         </div>
       </div>
       <div className=" flex my-2">
         <Link
-          to={`/shinomontazh/edit/${props.id_shinomontazhs}`}
-          className="my-3 mr-2 py-2 md:w-1/3 px-3 bg-red-600 text-white text-center hover:bg-red-700 hover:text-white rounded-lg"
+          to="/shinomontazh/list"
+          className="my-3 mr-2 py-3 w-1/3 px-3 bg-red-600 text-white text-center hover:bg-red-700 hover:text-white rounded-lg"
         >
           Отмена
         </Link>
 
         <button
-          className="my-3 ml-2 py-2 md:w-2/3 px-3 bg-blue-600 text-white hover:bg-blue-700 hover:text-white rounded-lg"
-          onClick={sendData}
+          className="my-3 ml-2 py-3 w-2/3 px-3 bg-blue-600 text-white hover:bg-blue-700 hover:text-white rounded-lg"
+          onClick={nextStep}
           type="submit"
         >
-          Сохранить
+          {active !== 'finish' ? 'Далее' : 'Создать заказ'}
         </button>
       </div>
     </div>

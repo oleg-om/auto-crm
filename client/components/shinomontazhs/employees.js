@@ -31,11 +31,10 @@ const Employee = ({ employeeList, auth, state, checkboxEmployeeChange }) => {
                   <label htmlFor={item.id} className="w-full h-full p-2 text-left inline-block">
                     <input
                       className="mr-4"
-                      checked={state.employee.index}
                       key={item.id}
                       name={item.id}
                       id={item.id}
-                      defaultChecked={state.employee.find((it) => it === item)}
+                      checked={state.employee.find((it) => it === item.id)}
                       type="checkbox"
                     />
                     {item.name} {item.surname}

@@ -36,7 +36,8 @@ const ShinomontazhsCreate = (props) => {
     model: '',
     comment: '',
     kuzov: '',
-    diametr: ''
+    diametr: '',
+    dateStart: new Date()
   })
 
   const [service, setService] = useState([])
@@ -283,38 +284,34 @@ const ShinomontazhsCreate = (props) => {
     if (!state.regnumber) notify('Заполните поле гос.номер')
     if (!state.mark) notify('Укажите марку авто')
     if (!state.model) notify('Укажите модель авто')
-    else if (
-      state.employee &&
-      state.place &&
-      state.regnumber &&
-      state.vinnumber &&
-      state.mark &&
-      state.model &&
-      state.gen &&
-      state.name &&
-      state.phone
-    ) {
+    if (!state.place) notify('Укажите место работы')
+    else if (state.employee && state.place && state.regnumber && state.mark && state.model) {
       if (
         checkCustomer !== undefined &&
         state.regnumber === checkCustomer.regnumber &&
         state.mark === checkCustomer.mark &&
-        state.model === checkCustomer.model &&
-        state.gen === checkCustomer.gen &&
-        state.mod === checkCustomer.mod &&
-        state.name === checkCustomer.name &&
-        state.phone === checkCustomer.phone
+        state.model === checkCustomer.model
       ) {
-        props.create({ ...state, ...service, ...materials })
+        props.create({ ...state, services: service, material: materials, tyre: tyres })
         history.push('/shinomontazh/list')
         notify('Запись добавлена')
+      } else if (checkCustomer !== undefined && activeCustomer !== '') {
+        props.openAndUpdate(activeCustomer, customer, {
+          ...state,
+          services: service,
+          material: materials,
+          tyre: tyres
+        })
       } else {
-        props.create({ ...state, service, material: materials })
+        props.create({ ...state, services: service, material: materials, tyre: tyres })
+        props.createCust(customer)
         history.push('/shinomontazh/list')
-        notify('Запись добавлена, создан новый клиент')
+        notify('Запись добавлена')
+        notify('Создан новый клиент')
       }
     }
   }
-  console.log({ ...state, services: service, material: materials, tyre: tyres })
+
   const [active, setActive] = useState('employee')
   const checkboxServiceChange = (e) => {
     const { name, placeholder, checked, attributes } = e.target

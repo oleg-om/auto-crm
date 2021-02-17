@@ -2,76 +2,39 @@ import React, { useRef } from 'react'
 import cx from 'classnames'
 import { Link } from 'react-router-dom'
 import { useReactToPrint } from 'react-to-print'
-import taskStatuses from '../../lists/task-statuses'
+import taskStatuses from '../../../common/enums/shinomontazh-statuses'
 
 const ShinomontazhsRow = (props) => {
   const componentRef = useRef()
   const handlePrint = useReactToPrint({
     content: () => componentRef.current
   })
-  const createDate = new Date(props.date)
+  const createDate = new Date(props.dateStart)
+  const finishDate = new Date(props.dateFinish)
   return (
-    <tr className="bg-white lg:hover:bg-gray-100 flex lg:table-row flex-row lg:flex-row flex-wrap lg:flex-no-wrap mb-5 lg:mb-0">
-      <td className="w-full lg:w-auto p-2 text-gray-800 text-left text-sm lg:text-center border border-b block lg:table-cell relative lg:static">
-        <span className="lg:hidden px-2 py-1 text-xs font-bold uppercase">№:</span>
+    <tr className="bg-white hover:bg-gray-100 table-row flex-row flex-no-wrap mb-0">
+      <td className="w-auto p-2 text-gray-800 text-sm text-center border border-b table-cell static">
         {props.id_shinomontazhs}
       </td>
-      <td className="w-full lg:w-auto p-2 text-gray-800 text-left text-sm lg:text-center border border-b block lg:table-cell relative lg:static">
-        <span className="lg:hidden px-2 py-1 text-xs font-bold uppercase">Клиент:</span>
-        {props.name}
-      </td>
-      <td className="w-full overflow-hidden lg:w-auto max-w-lg p-2 text-gray-800 text-sm text-left lg:text-center border border-b block lg:table-cell relative lg:static">
-        <span className="lg:hidden px-2 py-1 text-xs font-bold uppercase">Заказ:</span>
-        {props.order.length !== 0 && props.order[0].shinomontazhItem !== ''
-          ? props.order.slice(0, 2).map((it, index) => (
-              <p key={index} className="overflow-hidden">
-                {it.shinomontazhItem}
-              </p>
-            ))
-          : props.preorder.slice(0, 2).map((it, index) => <p key={index}>{it.shinomontazhItem}</p>)}
-      </td>
-
-      <td className="w-full lg:w-auto p-2 text-gray-800 text-left text-sm lg:text-center border border-b block lg:table-cell relative lg:static">
-        <span className="lg:hidden px-2 py-1 text-xs font-bold uppercase">Авто:</span>
+      <td className="w-auto p-2 text-gray-800 text-sm text-center border border-b table-cell static">
         {props.mark} {props.model}
       </td>
-      <td className="whitespace-no-wrap w-full lg:w-auto p-2 text-gray-800 text-sm text-left lg:text-center border border-b block lg:table-cell relative lg:static">
-        <span className="lg:hidden px-2 py-1 text-xs font-bold uppercase">Телефон:</span>
-        {props.phone}
+      <td className="w-auto p-2 text-gray-800 text-sm text-center border border-b table-cell static">
+        {props.regnumber}
       </td>
-      <td className="w-full lg:w-auto p-2 text-gray-800 text-left text-sm lg:text-center border border-b block lg:table-cell relative lg:static">
-        <span className="lg:hidden px-2 py-1 text-xs font-bold uppercase">Принял:</span>
-        {props.employeeList ? `${props.employeeList.name} ${props.employeeList.surname}` : ''}
-      </td>
-      <td className="w-full lg:w-auto p-2 text-gray-800 text-left text-sm lg:text-center border border-b block lg:table-cell relative lg:static">
-        <span className="lg:hidden px-2 py-1 text-xs font-bold uppercase">Точка:</span>
-        {props.placesList ? props.placesList.name : ''}
-      </td>
-      <td className="w-full lg:w-auto p-2 text-gray-800 text-left text-sm lg:text-center border border-b block lg:table-cell relative lg:static">
-        <span className="lg:hidden px-2 py-1 text-xs font-bold uppercase">Обработал:</span>
-        {props.processList ? (
-          `${props.processList.name} ${props.processList.surname}`
-        ) : (
-          <p>Заказ еще не обработан</p>
-        )}
-      </td>
-      <td className="w-full lg:w-auto p-2 text-gray-800 text-left text-sm lg:text-center border border-b block lg:table-cell relative lg:static whitespace-no-wrap">
-        <span className="lg:hidden px-2 py-1 text-xs font-bold uppercase">Статус:</span>
+      <td className="w-auto p-2 text-gray-800 text-sm text-center border border-b table-cell static">
         <div
           className={cx('rounded py-1 px-3 text-xs font-bold', {
-            'bg-yellow-400': props.status === taskStatuses[0],
+            'bg-orange-400': props.status === taskStatuses[0],
             'bg-green-400': props.status === taskStatuses[1],
             'bg-blue-400': props.status === taskStatuses[2],
-            'bg-gray-400': props.status === taskStatuses[3],
-            'bg-purple-400': props.status === taskStatuses[4],
-            'bg-red-400': props.status === taskStatuses[5]
+            'bg-red-400': props.status === taskStatuses[3]
           })}
         >
           {props.status}
         </div>
       </td>
-      <td className="w-full lg:w-auto p-2 text-gray-800 text-left text-sm lg:text-center border border-b block lg:table-cell relative lg:static">
-        <span className="lg:hidden px-2 py-1 text-xs font-bold uppercase">Дата:</span>
+      <td className="w-auto p-2 text-gray-800 text-sm text-center border border-b table-cell static">
         {`${createDate
           .getDate()
           .toString()
@@ -85,7 +48,23 @@ const ShinomontazhsRow = (props) => {
           .toString()
           .replace(/^(\d)$/, '0$1')}`}
       </td>
-      <td className="w-full lg:w-auto p-2 text-gray-800 text-center border border-b block lg:table-cell relative lg:static whitespace-no-wrap">
+      <td className="w-auto p-2 text-gray-800 text-sm text-center border border-b table-cell static">
+        {props.dateFinish
+          ? `${finishDate
+              .getDate()
+              .toString()
+              .replace(/^(\d)$/, '0$1')}.${(finishDate.getMonth() + 1)
+              .toString()
+              .replace(
+                /^(\d)$/,
+                '0$1'
+              )}.${finishDate.getFullYear()} ${finishDate.getHours()}:${finishDate
+              .getMinutes()
+              .toString()
+              .replace(/^(\d)$/, '0$1')}`
+          : ''}
+      </td>
+      <td className="w-auto p-2 text-gray-800 text-sm text-center border border-b table-cell static">
         <div className="flex flex-row justify-center">
           <button
             type="submit"
@@ -130,9 +109,9 @@ const ShinomontazhsRow = (props) => {
           </button>
           <Link
             to={
-              props.role.includes('shinomontazhfull')
-                ? `/shinomontazhs/edit/${props.id_shinomontazhs}`
-                : `/shinomontazhs/view/${props.id_shinomontazhs}`
+              props.role.includes('shinomotazh')
+                ? `/shinomontazh/edit/${props.id_shinomontazhs}`
+                : `/shinomontazh/view/${props.id_shinomontazhs}`
             }
             className="px-5 py-1 text-xs border-blue-500 border text-blue-500 rounded transition duration-300 hover:bg-blue-700 hover:text-white focus:outline-none"
           >
