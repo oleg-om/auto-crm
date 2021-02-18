@@ -303,7 +303,7 @@ const ShinomontazhsCreate = (props) => {
           tyre: tyres
         })
       } else {
-        props.create({ ...state, services: service, material: materials, tyre: tyres })
+        props.create({ ...state, services: service, material: materials, tyre: [...tyres] })
         props.createCust(customer)
         history.push('/shinomontazh/list')
         notify('Запись добавлена')
@@ -670,6 +670,7 @@ const ShinomontazhsCreate = (props) => {
             onChangeTyres={onChangeTyres}
             tyres={tyres}
             checkboxTyresChange={checkboxTyresChange}
+            dateEnd=""
           />
         </div>
       </div>
@@ -686,7 +687,7 @@ const ShinomontazhsCreate = (props) => {
           onClick={nextStep}
           type="submit"
         >
-          {active !== 'finish' ? 'Далее' : 'Создать заказ'}
+          {active !== 'finish' ? 'Далее' : 'В работу'}
         </button>
       </div>
     </div>

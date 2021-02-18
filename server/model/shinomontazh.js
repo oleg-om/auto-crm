@@ -63,12 +63,17 @@ const Shinomontazh = new mongoose.Schema({
     default: () => uuid.v4()
   },
   date: {
-    type: Date,
-    default: () => new Date()
+    type: Date
   },
   dateStart: {
-    type: Date,
-    default: () => new Date()
+    type: Date
+  },
+  dateFinish: {
+    type: Date
+  },
+  payment: {
+    type: String,
+    required: false
   }
 })
 

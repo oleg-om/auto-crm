@@ -1,6 +1,7 @@
 import React from 'react'
 import cx from 'classnames'
 import tyresList from '../../lists/tyres/tyres'
+import discountList from '../../lists/discounts'
 
 const Final = ({
   //     materialprices,
@@ -12,7 +13,8 @@ const Final = ({
   onChange,
   onChangeTyres,
   checkboxTyresChange,
-  tyres
+  tyres,
+  dateEnd
 }) => {
   const kuzovCheck = () => {
     if (state.kuzov === 'sedan') return 'Седан'
@@ -21,6 +23,15 @@ const Final = ({
     if (state.kuzov === 'gruz') return 'Грузовой'
     if (state.kuzov === 'selhoz') return 'Сельхоз'
     return ''
+  }
+  const total = service.concat(materials).reduce((acc, rec) => acc + rec.price * rec.quantity, 0)
+  const applyDiscount = (number) => {
+    const number_percent = (number / 100) * state.discount
+
+    return Number(number) - Number(number_percent)
+  }
+  function roundTo5(num) {
+    return Math.round(num / 5) * 5
   }
   return (
     <div>
@@ -138,6 +149,78 @@ const Final = ({
         </div>
       </div>
       <div className="flex flex-row mt-3">
+        <p>Сумма: {state.discount ? roundTo5(applyDiscount(total)) : total}</p>
+      </div>
+      {dateEnd ? (
+        <div className="flex flex-row mt-3">
+          <div className="w-1/2 pr-3 mb-6 md:mb-0">
+            <label
+              className="block uppercase tracking-wide text-xs font-bold mb-2"
+              htmlFor="discount"
+            >
+              Выберите скидку
+            </label>
+            <div className="flex-shrink w-full inline-block relative">
+              <select
+                className="block appearance-none w-full bg-grey-lighter border border-gray-300 focus:border-gray-500 focus:outline-none py-2 px-4 pr-8 rounded"
+                name="discount"
+                id="discount"
+                value={state.discount}
+                autoComplete="off"
+                required
+                onChange={onChange}
+              >
+                <option value="">Без скидки</option>
+                {discountList.map((it) => (
+                  <option value={it} label={`${it}%`} key={it} />
+                ))}
+              </select>
+              <div className="pointer-events-none absolute top-0 mt-3 right-0 flex items-center px-2 text-gray-600">
+                <svg
+                  className="fill-current h-4 w-4"
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 20 20"
+                >
+                  <path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z" />
+                </svg>
+              </div>
+            </div>
+          </div>
+          <div className="w-1/2 pl-3 mb-6 md:mb-0">
+            <label
+              className="block uppercase tracking-wide text-xs font-bold mb-2"
+              htmlFor="discount"
+            >
+              Оплачено
+            </label>
+            <div className="flex-shrink w-full inline-block relative">
+              <select
+                className="block appearance-none w-full bg-grey-lighter border border-gray-300 focus:border-gray-500 focus:outline-none py-2 px-4 pr-8 rounded"
+                name="payment"
+                id="payment"
+                value={state.payment}
+                autoComplete="off"
+                required
+                onChange={onChange}
+              >
+                <option value="">Выберите статус оплаты</option>
+                <option value="yes">Оплачено</option>
+                <option value="no">Не оплачено</option>
+              </select>
+              <div className="pointer-events-none absolute top-0 mt-3 right-0 flex items-center px-2 text-gray-600">
+                <svg
+                  className="fill-current h-4 w-4"
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 20 20"
+                >
+                  <path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z" />
+                </svg>
+              </div>
+            </div>
+          </div>
+        </div>
+      ) : null}
+      <div className="flex flex-row mt-3">
         <button
           className={cx('mb-3 flex flex-row rounded bg-gray-200 w-full text-lg', {
             'bg-green-200 hover:bg-green-300': tyres.sale === 'yes',
@@ -148,8 +231,15 @@ const Final = ({
           onClick={checkboxTyresChange}
         >
           <label htmlFor="sale" className="w-full h-full p-2 text-left inline-block">
-            <input className="mr-4" value={tyres.sale} name="sale" id="sale" type="checkbox" />
-            Шины куплены у нас
+            <input
+              className="mr-4"
+              value={tyres.sale}
+              checked={tyres.sale === 'yes'}
+              name="sale"
+              id="sale"
+              type="checkbox"
+            />
+            {tyres.sale !== 'yes' ? 'Шины куплены не у нас' : 'Шины куплены у нас'}
           </label>
         </button>
         {/* <label htmlFor="sale" className="w-full h-full p-2 text-left inline-block">

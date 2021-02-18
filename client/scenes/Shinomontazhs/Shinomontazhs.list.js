@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import { Link } from 'react-router-dom'
-import NumberFormat from 'react-number-format'
-import cx from 'classnames'
+// import NumberFormat from 'react-number-format'
+// import cx from 'classnames'
 import { toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
 import { socket } from '../../redux/sockets/socketReceivers'
@@ -10,7 +10,7 @@ import ShinomontazhsRow from '../../components/shinomontazhs/shinomontazhs.row'
 import { updateStatus, getShinomontazhs } from '../../redux/reducers/shinomontazhs'
 import Navbar from '../../components/Navbar'
 import Pagination from '../Pagination'
-import taskStatuses from '../../lists/task-statuses'
+// import taskStatuses from '../../lists/task-statuses'
 
 const ShinomontazhsList = () => {
   const dispatch = useDispatch()
@@ -20,17 +20,17 @@ const ShinomontazhsList = () => {
   const employeeList = useSelector((s) => s.employees.list)
   const role = useSelector((s) => s.auth.roles)
   socket.connect()
-  // useEffect(() => {
-  //   socket.on('update shinomontazh', function () {
-  //     dispatch(getShinomontazhs())
-  //   })
-  // }, [])
+  useEffect(() => {
+    socket.on('update shinomontazh', function () {
+      dispatch(getShinomontazhs())
+    })
+  }, [])
   const settings = useSelector((s) => s.settings.list)
   const updateStatusLocal = (id, status) => {
     dispatch(updateStatus(id, status))
   }
 
-  const [loading, setLoading] = useState(true)
+  const [loading] = useState(true)
   const [currentPage, setCurrentPage] = useState(1)
   const postsPerPage = 14
   const indexOfLastPost = currentPage * postsPerPage
@@ -41,76 +41,76 @@ const ShinomontazhsList = () => {
   const paginate = (pageNumber) => setCurrentPage(pageNumber)
 
   toast.configure()
-  const notify = (arg) => {
-    toast.info(arg, { position: toast.POSITION.BOTTOM_RIGHT })
-  }
+  // const notify = (arg) => {
+  //   toast.info(arg, { position: toast.POSITION.BOTTOM_RIGHT })
+  // }
 
-  const [search, setSearch] = useState({
+  const [search] = useState({
     phone: '',
     number: '',
     status: '',
     vinnumber: '',
     place: ''
   })
-  const [showSearch, setShowSearch] = useState(false)
-  const onChangePhone = (e) => {
-    const { name, value } = e.target
-    setSearch(() => ({
-      [name]: value,
-      number: '',
-      status: '',
-      vinnumber: '',
-      place: ''
-    }))
-  }
-  const onChangeNumber = (e) => {
-    const { name, value } = e.target
-    setSearch(() => ({
-      [name]: value,
-      phone: '',
-      status: '',
-      vinnumber: '',
-      place: ''
-    }))
-  }
-  const onChangeStatus = (e) => {
-    const { name, value } = e.target
-    setSearch(() => ({
-      [name]: value,
-      phone: '',
-      number: '',
-      vinnumber: '',
-      place: ''
-    }))
-  }
-  const onChangeVin = (e) => {
-    const { name, value } = e.target
-    setSearch(() => ({
-      [name]: value.toUpperCase().replace(/\s/g, ''),
-      phone: '',
-      number: '',
-      status: '',
-      place: ''
-    }))
-  }
-  const onChangePlace = (e) => {
-    const { name, value } = e.target
-    setSearch(() => ({
-      [name]: value,
-      phone: '',
-      number: '',
-      status: '',
-      vinnumber: ''
-    }))
-  }
-  useEffect(() => {
-    if (showSearch === false && currentPosts.length === 0 && loading === true) {
-      setTimeout(() => setLoading(false), 10000)
-    } else {
-      setLoading(true)
-    }
-    return () => {}
-  }, [currentPosts.length, showSearch, loading])
+  const [showSearch] = useState(false)
+  // const onChangePhone = (e) => {
+  //   const { name, value } = e.target
+  //   setSearch(() => ({
+  //     [name]: value,
+  //     number: '',
+  //     status: '',
+  //     vinnumber: '',
+  //     place: ''
+  //   }))
+  // }
+  // const onChangeNumber = (e) => {
+  //   const { name, value } = e.target
+  //   setSearch(() => ({
+  //     [name]: value,
+  //     phone: '',
+  //     status: '',
+  //     vinnumber: '',
+  //     place: ''
+  //   }))
+  // }
+  // const onChangeStatus = (e) => {
+  //   const { name, value } = e.target
+  //   setSearch(() => ({
+  //     [name]: value,
+  //     phone: '',
+  //     number: '',
+  //     vinnumber: '',
+  //     place: ''
+  //   }))
+  // }
+  // const onChangeVin = (e) => {
+  //   const { name, value } = e.target
+  //   setSearch(() => ({
+  //     [name]: value.toUpperCase().replace(/\s/g, ''),
+  //     phone: '',
+  //     number: '',
+  //     status: '',
+  //     place: ''
+  //   }))
+  // }
+  // const onChangePlace = (e) => {
+  //   const { name, value } = e.target
+  //   setSearch(() => ({
+  //     [name]: value,
+  //     phone: '',
+  //     number: '',
+  //     status: '',
+  //     vinnumber: ''
+  //   }))
+  // }
+  // useEffect(() => {
+  //   if (showSearch === false && currentPosts.length === 0 && loading === true) {
+  //     setTimeout(() => setLoading(false), 10000)
+  //   } else {
+  //     setLoading(true)
+  //   }
+  //   return () => {}
+  // }, [currentPosts.length, showSearch, loading])
   const currentPostsFiltered = revList
     .filter(
       (it) =>
@@ -122,35 +122,35 @@ const ShinomontazhsList = () => {
     )
     .slice(indexOfFirstPost, indexOfLastPost)
 
-  const onReset = () => {
-    setShowSearch(false)
-    setSearch(() => ({
-      phone: '',
-      number: '',
-      status: '',
-      vinnumber: '',
-      place: ''
-    }))
-  }
-  const onFilter = () => {
-    if (
-      search.phone === '' &&
-      search.number === '' &&
-      search.status === '' &&
-      search.vinnumber === '' &&
-      search.place === ''
-    ) {
-      notify('Заполните хотябы одно поле')
-    } else {
-      setShowSearch(true)
-    }
-  }
+  // const onReset = () => {
+  //   setShowSearch(false)
+  //   setSearch(() => ({
+  //     phone: '',
+  //     number: '',
+  //     status: '',
+  //     vinnumber: '',
+  //     place: ''
+  //   }))
+  // }
+  // const onFilter = () => {
+  //   if (
+  //     search.phone === '' &&
+  //     search.number === '' &&
+  //     search.status === '' &&
+  //     search.vinnumber === '' &&
+  //     search.place === ''
+  //   ) {
+  //     notify('Заполните хотябы одно поле')
+  //   } else {
+  //     setShowSearch(true)
+  //   }
+  // }
 
   return (
     <div>
       <Navbar />
       <div>
-        <div className="mx-auto px-4">
+        {/* <div className="mx-auto px-4">
           <div className="py-3 px-4 my-3 rounded-lg shadow bg-white">
             <div className="-mx-3 md:flex">
               <button
@@ -421,7 +421,7 @@ const ShinomontazhsList = () => {
               ✖
             </button>
           </div>
-        ) : null}
+        ) : null} */}
         <div className="overflow-x-auto rounded-lg overflow-y-auto relative lg:my-3 mt-1 lg:shadow lg:px-4">
           <table className="border-collapse w-full">
             <thead>

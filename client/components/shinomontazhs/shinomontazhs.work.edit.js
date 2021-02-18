@@ -10,13 +10,14 @@ import Service from './service'
 import Material from './material'
 import Final from './final'
 import sizeThreeList from '../../lists/shinomontazhdiametr'
+import statusList from '../../../common/enums/shinomontazh-statuses'
 
 const ShinomontazhsEdit = (props) => {
   toast.configure()
   const notify = (arg) => {
     toast.info(arg, { position: toast.POSITION.BOTTOM_RIGHT })
   }
-  console.log(props)
+
   const history = useHistory()
   const employeeList = useSelector((s) => s.employees.list)
   const customerList = useSelector((s) => s.customers.list)
@@ -38,13 +39,15 @@ const ShinomontazhsEdit = (props) => {
     kuzov: props.kuzov,
     diametr: props.diametr,
     dateStart: props.dateStart,
-    dateFinish: new Date()
+    dateFinish: props.dateFinish ? props.dateFinish : new Date(),
+    discount: props.discount,
+    payment: props.payment
   })
 
   const [service, setService] = useState(props.services ? props.services : [])
   const [materials, setMaterials] = useState(props.material ? props.material : [])
-  const [tyres, setTyres] = useState(props.tyres ? props.tyres : [])
-
+  const [tyres, setTyres] = useState(props.tyre ? props.tyre[0] : {})
+  console.log(tyres)
   const onChangeRegNumber = (e) => {
     const { value } = e.target
     setRegNumber((prevState) => [...prevState.concat(value)])
@@ -272,47 +275,6 @@ const ShinomontazhsEdit = (props) => {
     return () => {}
   }, [state.diametr, state.kuzov, shinomontazhprices])
 
-  const sendData = () => {
-    const checkCustomer =
-      customerList !== []
-        ? customerList.find((it) => it.id)
-        : {
-            regnumber: '',
-            vinnumber: '',
-            mark: '',
-            model: ''
-          }
-    if (!state.regnumber) notify('Заполните поле гос.номер')
-    if (!state.mark) notify('Укажите марку авто')
-    if (!state.model) notify('Укажите модель авто')
-    if (!state.place) notify('Укажите место работы')
-    else if (state.employee && state.place && state.regnumber && state.mark && state.model) {
-      if (
-        checkCustomer !== undefined &&
-        state.regnumber === checkCustomer.regnumber &&
-        state.mark === checkCustomer.mark &&
-        state.model === checkCustomer.model
-      ) {
-        props.create({ ...state, services: service, material: materials, tyre: tyres })
-        history.push('/shinomontazh/list')
-        notify('Запись добавлена')
-      } else if (checkCustomer !== undefined && activeCustomer !== '') {
-        props.openAndUpdate(activeCustomer, customer, {
-          ...state,
-          services: service,
-          material: materials,
-          tyre: tyres
-        })
-      } else {
-        props.create({ ...state, services: service, material: materials, tyre: tyres })
-        props.createCust(customer)
-        history.push('/shinomontazh/list')
-        notify('Запись добавлена')
-        notify('Создан новый клиент')
-      }
-    }
-  }
-
   const [active, setActive] = useState('finish')
   const checkboxServiceChange = (e) => {
     const { name, placeholder, checked, attributes } = e.target
@@ -425,6 +387,50 @@ const ShinomontazhsEdit = (props) => {
       })
     )
   }
+  const preChangeShinomontazh = () => {
+    if (!state.regnumber) notify('Заполните поле гос.номер')
+    if (!state.mark) notify('Укажите марку авто')
+    if (!state.model) notify('Укажите модель авто')
+    if (!state.place) notify('Укажите место работы')
+    else {
+      props.updateShinomontazh(props.id, {
+        ...state,
+        services: service,
+        material: materials,
+        tyre: [...tyres]
+      })
+      history.push('/shinomontazh/list')
+      notify('Запись изменена')
+    }
+  }
+
+  const changeShinomontazh = () => {
+    if (!state.regnumber) notify('Заполните поле гос.номер')
+    if (!state.mark) notify('Укажите марку авто')
+    if (!state.model) notify('Укажите модель авто')
+    if (!state.place) notify('Укажите место работы')
+    if (!state.payment) {
+      props.updateShinomontazh(props.id, {
+        ...state,
+        services: service,
+        material: materials,
+        tyre: [...tyres],
+        status: statusList[1]
+      })
+      history.push('/shinomontazh/list')
+      notify('Запись изменена')
+    } else {
+      props.updateShinomontazh(props.id, {
+        ...state,
+        services: service,
+        material: materials,
+        tyre: [...tyres],
+        status: statusList[2]
+      })
+      history.push('/shinomontazh/list')
+      notify('Работа выполнена')
+    }
+  }
 
   const nextStep = () => {
     if (active === 'employee') {
@@ -452,7 +458,7 @@ const ShinomontazhsEdit = (props) => {
     } else if (active === 'material') {
       setActive('finish')
     } else if (active === 'finish') {
-      sendData()
+      setActive('finish')
     }
   }
 
@@ -671,6 +677,7 @@ const ShinomontazhsEdit = (props) => {
             onChangeTyres={onChangeTyres}
             tyres={tyres}
             checkboxTyresChange={checkboxTyresChange}
+            dateEnd={props.dateFinish}
           />
         </div>
       </div>
@@ -681,14 +688,42 @@ const ShinomontazhsEdit = (props) => {
         >
           Отмена
         </Link>
-
-        <button
-          className="my-3 ml-2 py-3 w-2/3 px-3 bg-blue-600 text-white hover:bg-blue-700 hover:text-white rounded-lg"
-          onClick={nextStep}
-          type="submit"
-        >
-          {active !== 'finish' ? 'Далее' : 'Создать заказ'}
-        </button>
+        {active !== 'finish' ? (
+          <button
+            className="my-3 ml-2 py-3 w-2/3 px-3 bg-blue-600 text-white hover:bg-blue-700 hover:text-white rounded-lg"
+            onClick={nextStep}
+            type="submit"
+          >
+            Далее
+          </button>
+        ) : null}
+        {active === 'finish' && !props.dateFinish ? (
+          <div className="w-2/3 flex flex-row">
+            <button
+              className="my-3 mx-2 py-3 w-1/2 px-3 bg-blue-600 text-white hover:bg-blue-700 hover:text-white rounded-lg"
+              onClick={preChangeShinomontazh}
+              type="submit"
+            >
+              Сохранить
+            </button>
+            <button
+              className="my-3 ml-2 py-3 w-1/2 px-3 bg-green-600 text-white hover:bg-green-700 hover:text-white rounded-lg"
+              onClick={changeShinomontazh}
+              type="submit"
+            >
+              Завершить
+            </button>
+          </div>
+        ) : null}
+        {active === 'finish' && props.dateFinish ? (
+          <button
+            className="my-3 ml-2 py-3 w-2/3 px-3 bg-blue-600 text-white hover:bg-blue-700 hover:text-white rounded-lg"
+            onClick={changeShinomontazh}
+            type="submit"
+          >
+            Сохранить
+          </button>
+        ) : null}
       </div>
     </div>
   )

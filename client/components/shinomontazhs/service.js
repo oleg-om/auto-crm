@@ -11,7 +11,7 @@ const Service = ({
   serviceType
 }) => {
   return (
-    <div className="md:flex md:flex-row -mx-3">
+    <div className="flex flex-col -mx-3">
       <div className="px-3 mb-6 md:mb-0 w-full">
         <label
           className="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2"
@@ -177,6 +177,21 @@ const Service = ({
               <p>Услуги не найдены</p>
             )}
           </table>
+        </div>
+      </div>
+      <div className="px-3 my-3 md:mb-0 w-full">
+        <label
+          className="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2"
+          htmlFor="grid-first-name"
+        >
+          Выбранные материалы
+        </label>
+        <div className="w-full p-3">
+          {service.map((it) => (
+            <p key={it.id}>
+              {it.name}, {it.price} руб, {it.quantity} шт.
+            </p>
+          ))}
         </div>
       </div>
     </div>

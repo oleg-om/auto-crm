@@ -12,7 +12,12 @@ const ShinomontazhsRow = (props) => {
   const createDate = new Date(props.dateStart)
   const finishDate = new Date(props.dateFinish)
   return (
-    <tr className="bg-white hover:bg-gray-100 table-row flex-row flex-no-wrap mb-0">
+    <tr
+      className={cx('table-row flex-row flex-no-wrap mb-0', {
+        'bg-white hover:bg-gray-100': props.status !== taskStatuses[2],
+        'bg-blue-200 hover:bg-blue-300': props.status === taskStatuses[2]
+      })}
+    >
       <td className="w-auto p-2 text-gray-800 text-sm text-center border border-b table-cell static">
         {props.id_shinomontazhs}
       </td>
