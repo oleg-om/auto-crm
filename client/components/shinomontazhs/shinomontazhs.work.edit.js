@@ -47,7 +47,7 @@ const ShinomontazhsEdit = (props) => {
   const [service, setService] = useState(props.services ? props.services : [])
   const [materials, setMaterials] = useState(props.material ? props.material : [])
   const [tyres, setTyres] = useState(props.tyre ? props.tyre[0] : {})
-  console.log(tyres)
+
   const onChangeRegNumber = (e) => {
     const { value } = e.target
     setRegNumber((prevState) => [...prevState.concat(value)])
@@ -394,7 +394,7 @@ const ShinomontazhsEdit = (props) => {
     if (!state.place) notify('Укажите место работы')
     else {
       props.updateShinomontazh(props.id, {
-        ...state,
+        ...state.filter((it) => it),
         services: service,
         material: materials,
         tyre: [...tyres]
