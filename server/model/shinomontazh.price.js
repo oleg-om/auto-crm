@@ -74,6 +74,110 @@ const ShinomontazhPrice = new mongoose.Schema({
     type: String,
     unique: true,
     default: () => uuid.v4()
+  },
+  R13C: {
+    type: Number,
+    required: false
+  },
+  R14C: {
+    type: Number,
+    required: false
+  },
+  R15C: {
+    type: Number,
+    required: false
+  },
+  R16C: {
+    type: Number,
+    required: false
+  },
+  R17C: {
+    type: Number,
+    required: false
+  },
+  R175: {
+    type: Number,
+    required: false
+  },
+  R195: {
+    type: Number,
+    required: false
+  },
+  R20240: {
+    type: Number,
+    required: false
+  },
+  R20280: {
+    type: Number,
+    required: false
+  },
+  R20320: {
+    type: Number,
+    required: false
+  },
+  R225: {
+    type: Number,
+    required: false
+  },
+  R245: {
+    type: Number,
+    required: false
+  },
+  R8: {
+    type: Number,
+    required: false
+  },
+  R9: {
+    type: Number,
+    required: false
+  },
+  R10: {
+    type: Number,
+    required: false
+  },
+  R12: {
+    type: Number,
+    required: false
+  },
+  R165: {
+    type: Number,
+    required: false
+  },
+  R25: {
+    type: Number,
+    required: false
+  },
+  R26: {
+    type: Number,
+    required: false
+  },
+  R28: {
+    type: Number,
+    required: false
+  },
+  R30: {
+    type: Number,
+    required: false
+  },
+  R32: {
+    type: Number,
+    required: false
+  },
+  R33: {
+    type: Number,
+    required: false
+  },
+  R34: {
+    type: Number,
+    required: false
+  },
+  R38: {
+    type: Number,
+    required: false
+  },
+  R42: {
+    type: Number,
+    required: false
   }
 })
 

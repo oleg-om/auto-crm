@@ -55,7 +55,7 @@ const ShinomontazhpriceNew = () => {
         </div>
         {type === 'single' ? (
           <div>
-            <h1 className="text-3xl py-4 border-b mb-6">Добавить материал</h1>
+            <h1 className="text-3xl py-4 border-b mb-6">Добавить услугу</h1>
             <ShinomontazhpriceCreate create={create} />
           </div>
         ) : (

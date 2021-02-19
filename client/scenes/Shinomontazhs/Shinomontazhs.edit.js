@@ -18,12 +18,27 @@ const ShinomontazhEditFull = () => {
     dispatch(updateShinomontazh(idOfItem, name))
     socket.emit('new shinomontazh')
   }
+
+  const shinomontazhPrintOne = (shinomontazh) => {
+    socket.emit('shinomontazh one print', shinomontazh)
+  }
+
+  const shinomontazhPrintTwo = (shinomontazh) => {
+    socket.emit('shinomontazh two print', shinomontazh)
+  }
+
   return (
     <div>
       <Navbar />
       <div className="container mx-auto px-4 mt-3">
         {list.map((it) => (
-          <ShinomontazhsEdit key={id} {...it} updateShinomontazh={updateShinomontazhLocal} />
+          <ShinomontazhsEdit
+            key={id}
+            {...it}
+            updateShinomontazh={updateShinomontazhLocal}
+            shinomontazhPrintOne={shinomontazhPrintOne}
+            shinomontazhPrintTwo={shinomontazhPrintTwo}
+          />
         ))}
       </div>
     </div>

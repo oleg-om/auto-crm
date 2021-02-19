@@ -302,6 +302,13 @@ io.on('connection', (socket) => {
     io.emit('update edited tyre')
     console.log('edited autopart tyre')
   })
+
+  socket.on('shinomontazh one print', (shinomontazh) => {
+    io.emit('shinoneprint', shinomontazh)
+  })
+  socket.on('shinomontazh two print', (shinomontazh) => {
+    io.emit('shintwoprint', shinomontazh)
+  })
 })
 
 console.log(`Serving at http://localhost:${port}`)

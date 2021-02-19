@@ -515,6 +515,26 @@ const ShinomontazhsEdit = (props) => {
     }
   }
 
+  const printOne = (total) => {
+    props.shinomontazhPrintOne({
+      ...state,
+      services: service,
+      material: materials,
+      tyre: [...tyres],
+      total
+    })
+  }
+
+  const printTwo = (total) => {
+    props.shinomontazhPrintTwo({
+      ...state,
+      services: service,
+      material: materials,
+      tyre: [...tyres],
+      total
+    })
+  }
+
   return (
     <div>
       <div className="bg-white shadow rounded-lg px-8 py-6 mb-4 flex flex-col my-2">
@@ -678,6 +698,8 @@ const ShinomontazhsEdit = (props) => {
             tyres={tyres}
             checkboxTyresChange={checkboxTyresChange}
             dateEnd={props.dateFinish}
+            printOne={printOne}
+            printTwo={printTwo}
           />
         </div>
       </div>

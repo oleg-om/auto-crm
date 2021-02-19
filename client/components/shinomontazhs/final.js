@@ -2,6 +2,8 @@ import React from 'react'
 import cx from 'classnames'
 import tyresList from '../../lists/tyres/tyres'
 import discountList from '../../lists/discounts'
+import sizeOneList from '../../lists/tyres/sizeone'
+import sizeTwoList from '../../lists/tyres/sizetwo'
 
 const Final = ({
   //     materialprices,
@@ -14,7 +16,9 @@ const Final = ({
   onChangeTyres,
   checkboxTyresChange,
   tyres,
-  dateEnd
+  dateEnd,
+  printOne,
+  printTwo
 }) => {
   const kuzovCheck = () => {
     if (state.kuzov === 'sedan') return 'Седан'
@@ -256,7 +260,7 @@ const Final = ({
       </div>
       {tyres.sale === 'yes' ? (
         <div className="flex flex-row">
-          <div className="mr-2 w-1/2">
+          <div className="mr-2 w-1/4">
             <label
               className="block uppercase tracking-wide text-grey-darker text-xs text-left font-bold mb-2"
               htmlFor="grid-first-name"
@@ -291,7 +295,7 @@ const Final = ({
                 ))}
             </datalist>
           </div>
-          <div className="mr-2 w-1/2">
+          <div className="mr-2 w-1/4">
             <label
               className="block uppercase tracking-wide text-grey-darker text-xs text-left font-bold mb-2"
               htmlFor="grid-first-name"
@@ -327,6 +331,61 @@ const Final = ({
                 ))}
             </datalist>
           </div>
+          <div className="mr-2 w-1/4">
+            <label
+              className="block uppercase tracking-wide text-grey-darker text-xs text-left font-bold mb-2"
+              htmlFor="grid-first-name"
+            >
+              Ширина
+            </label>
+            <input
+              className="appearance-none w-full block bg-grey-lighter text-grey-darker border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-1 px-4"
+              type="number"
+              name="sizeone"
+              list="sizeone_list"
+              value={tyres.sizeone}
+              autoComplete="off"
+              onChange={onChangeTyres}
+            />
+            <datalist id="sizeone_list">
+              {sizeOneList.map((it, indexItem) => (
+                <option key={indexItem} value={it} />
+              ))}
+            </datalist>
+          </div>
+          <div className="mr-2 w-1/4">
+            <label
+              className="block uppercase tracking-wide text-grey-darker text-xs text-left font-bold mb-2"
+              htmlFor="grid-first-name"
+            >
+              Высота
+            </label>
+            <input
+              className="appearance-none w-full block bg-grey-lighter text-grey-darker border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-1 px-4"
+              type="number"
+              name="sizetwo"
+              list="sizetwo_list"
+              value={tyres.sizetwo}
+              autoComplete="off"
+              onChange={onChangeTyres}
+            />
+            <datalist id="sizetwo_list">
+              {sizeTwoList.map((it, indexItem) => (
+                <option key={indexItem} value={it} />
+              ))}
+            </datalist>
+          </div>
+          <div className="mr-2 w-auto">
+            <label
+              className="block uppercase tracking-wide text-grey-darker text-xs text-left font-bold mb-2"
+              htmlFor="grid-first-name"
+            >
+              Диаметр
+            </label>
+            <div className="appearance-none w-full block bg-grey-lighter text-grey-darker border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-1 px-4">
+              {state.diametr}
+            </div>
+          </div>
         </div>
       ) : null}
       <div className="flex flex-row -mx-3 mt-5">
@@ -348,6 +407,94 @@ const Final = ({
           />
         </div>
       </div>
+      {dateEnd ? (
+        <div className="flex flex-row -mx-3 mt-5">
+          <button
+            type="submit"
+            className="py-2 px-3 bg-blue-600 text-white text-sm hover:bg-blue-700 hover:text-white rounded-full h-22 w-22"
+            onClick={() => printOne(state.discount ? roundTo5(applyDiscount(total)) : total)}
+          >
+            <div className="flex flex-row">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                version="1.1"
+                width="20"
+                height="20"
+                x="0"
+                y="0"
+                viewBox="0 0 512 512"
+                xmlSpace="preserve"
+                className="mr-2"
+              >
+                <g>
+                  <path
+                    xmlns="http://www.w3.org/2000/svg"
+                    d="m414 80h-316c-5.523 0-10-4.477-10-10v-26c0-24.301 19.699-44 44-44h248c24.301 0 44 19.699 44 44v26c0 5.523-4.477 10-10 10z"
+                    fill="#ffffff"
+                    data-original="#000000"
+                  />
+                  <path
+                    xmlns="http://www.w3.org/2000/svg"
+                    d="m458 112h-404c-29.776 0-54 24.224-54 54v188c0 29.776 24.224 54 54 54h34v-80c0-39.701 32.299-72 72-72h192c39.701 0 72 32.299 72 72v80h34c29.776 0 54-24.224 54-54v-188c0-29.776-24.224-54-54-54zm-361.98 120c-13.255 0-24.005-10.745-24.005-24s10.74-24 23.995-24h.01c13.255 0 24 10.745 24 24s-10.745 24-24 24z"
+                    fill="#ffffff"
+                    data-original="#000000"
+                  />
+                  <path
+                    xmlns="http://www.w3.org/2000/svg"
+                    d="m352 304h-192c-13.255 0-24 10.745-24 24v80 32c0 13.255 10.745 24 24 24h192c13.255 0 24-10.745 24-24v-32-80c0-13.255-10.745-24-24-24z"
+                    fill="#ffffff"
+                    data-original="#000000"
+                  />
+                </g>
+              </svg>
+
+              <p> Печать предчека</p>
+            </div>
+          </button>
+          <button
+            type="submit"
+            onClick={() => printTwo(state.discount ? roundTo5(applyDiscount(total)) : total)}
+            className="ml-3 py-2 px-3 bg-green-600 text-white text-sm hover:bg-green-700 hover:text-white rounded-full h-22 w-22"
+          >
+            <div className="flex flex-row">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                version="1.1"
+                width="20"
+                height="20"
+                x="0"
+                y="0"
+                viewBox="0 0 512 512"
+                xmlSpace="preserve"
+                className="mr-2"
+              >
+                <g>
+                  <path
+                    xmlns="http://www.w3.org/2000/svg"
+                    d="m414 80h-316c-5.523 0-10-4.477-10-10v-26c0-24.301 19.699-44 44-44h248c24.301 0 44 19.699 44 44v26c0 5.523-4.477 10-10 10z"
+                    fill="#ffffff"
+                    data-original="#000000"
+                  />
+                  <path
+                    xmlns="http://www.w3.org/2000/svg"
+                    d="m458 112h-404c-29.776 0-54 24.224-54 54v188c0 29.776 24.224 54 54 54h34v-80c0-39.701 32.299-72 72-72h192c39.701 0 72 32.299 72 72v80h34c29.776 0 54-24.224 54-54v-188c0-29.776-24.224-54-54-54zm-361.98 120c-13.255 0-24.005-10.745-24.005-24s10.74-24 23.995-24h.01c13.255 0 24 10.745 24 24s-10.745 24-24 24z"
+                    fill="#ffffff"
+                    data-original="#000000"
+                  />
+                  <path
+                    xmlns="http://www.w3.org/2000/svg"
+                    d="m352 304h-192c-13.255 0-24 10.745-24 24v80 32c0 13.255 10.745 24 24 24h192c13.255 0 24-10.745 24-24v-32-80c0-13.255-10.745-24-24-24z"
+                    fill="#ffffff"
+                    data-original="#000000"
+                  />
+                </g>
+              </svg>
+
+              <p> Печать двух предчеков</p>
+            </div>
+          </button>
+        </div>
+      ) : null}
     </div>
   )
 }
