@@ -167,6 +167,15 @@ const Navbar = () => {
               Шиномонтаж
             </NavLink>
           ) : null}
+          {auth.roles.includes('boss') ? (
+            <NavLink
+              to="/shinomontazhboss/list"
+              className="block mt-4 lg:inline-block lg:mt-0 text-gray-800 hover:text-blue-700 mr-4"
+              activeClassName="text-blue-600 underline font-semibold"
+            >
+              Шиномонтаж (Босс)
+            </NavLink>
+          ) : null}
           {auth.roles.includes('autopartfull') ||
           auth.roles.includes('autopartsimple') ||
           auth.roles.includes('razval') ||

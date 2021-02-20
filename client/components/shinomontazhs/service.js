@@ -184,7 +184,7 @@ const Service = ({
           className="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2"
           htmlFor="grid-first-name"
         >
-          Выбранные материалы
+          Выбранные услуги
         </label>
         <div className="w-full p-3">
           {service.map((it) => (

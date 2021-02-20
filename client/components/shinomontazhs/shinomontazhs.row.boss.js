@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom'
 // import { useReactToPrint } from 'react-to-print'
 import taskStatuses from '../../../common/enums/shinomontazh-statuses'
 
-const ShinomontazhsRow = (props) => {
+const ShinomontazhsRowBoss = (props) => {
   // const componentRef = useRef()
   // const handlePrint = useReactToPrint({
   //   content: () => componentRef.current
@@ -26,6 +26,9 @@ const ShinomontazhsRow = (props) => {
       </td>
       <td className="w-auto p-2 text-gray-800 text-sm text-center border border-b table-cell static">
         {props.regnumber}
+      </td>
+      <td className="w-auto p-2 text-gray-800 text-sm text-center border border-b table-cell static">
+        {props.placesList ? props.placesList.name : ''}
       </td>
       <td className="w-auto p-2 text-gray-800 text-sm text-center border border-b table-cell static">
         <div
@@ -124,4 +127,4 @@ const ShinomontazhsRow = (props) => {
   )
 }
 
-export default ShinomontazhsRow
+export default ShinomontazhsRowBoss

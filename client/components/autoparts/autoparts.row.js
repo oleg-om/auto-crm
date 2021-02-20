@@ -1,15 +1,15 @@
-import React, { useRef } from 'react'
+import React from 'react'
 import cx from 'classnames'
 import { Link } from 'react-router-dom'
-import { useReactToPrint } from 'react-to-print'
-import ComponentToPrint from './autoparts.print'
+// import { useReactToPrint } from 'react-to-print'
+// import ComponentToPrint from './autoparts.print'
 import taskStatuses from '../../lists/task-statuses'
 
 const AutopartsRow = (props) => {
-  const componentRef = useRef()
-  const handlePrint = useReactToPrint({
-    content: () => componentRef.current
-  })
+  // const componentRef = useRef()
+  // const handlePrint = useReactToPrint({
+  //   content: () => componentRef.current
+  // })
   const createDate = new Date(props.date)
   return (
     <tr className="bg-white lg:hover:bg-gray-100 flex lg:table-row flex-row lg:flex-row flex-wrap lg:flex-no-wrap mb-5 lg:mb-0">
@@ -89,7 +89,7 @@ const AutopartsRow = (props) => {
       </td>
       <td className="w-full lg:w-auto p-2 text-gray-800 text-center border border-b block lg:table-cell relative lg:static whitespace-no-wrap">
         <div className="flex flex-row justify-center">
-          <button
+          {/* <button
             type="submit"
             title="Печать предчека"
             onClick={handlePrint}
@@ -129,7 +129,7 @@ const AutopartsRow = (props) => {
                 </g>
               </svg>
             </div>
-          </button>
+          </button> */}
           <Link
             to={
               props.role.includes('autopartfull')
@@ -142,14 +142,14 @@ const AutopartsRow = (props) => {
           </Link>
         </div>
       </td>
-      <div className="hidden">
+      {/* <div className="hidden">
         <ComponentToPrint
           ref={componentRef}
           props={props}
           helpphone={props.settings.map((it) => it.helpphone)}
           placesList={props.placesList}
         />
-      </div>
+      </div> */}
     </tr>
   )
 }

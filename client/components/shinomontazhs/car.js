@@ -1,5 +1,7 @@
 import React, { useEffect } from 'react'
 import cx from 'classnames'
+import sizeGruz from '../../lists/tyres/sizegruz'
+import sizeSelhoz from '../../lists/tyres/sizeselhoz'
 
 const Car = ({
   regOpen,
@@ -708,14 +710,23 @@ const Car = ({
                   value={state.diametr}
                   autoComplete="off"
                   required
+                  disabled={!state.kuzov}
                   onChange={onChange}
                 >
                   <option value="" hidden>
-                    Выберите диаметр
+                    {state.kuzov ? 'Выберите диаметр' : 'Сначала выберите кузов'}
                   </option>
-                  {sizeThreeList.map((it) => (
-                    <option value={it} label={it} key={it} />
-                  ))}
+                  {state.kuzov === 'sedan' ||
+                  state.kuzov === 'crossover' ||
+                  state.kuzov === 'runflat'
+                    ? sizeThreeList.map((it) => <option value={it} label={it} key={it} />)
+                    : null}
+                  {state.kuzov === 'gruz'
+                    ? sizeGruz.map((it) => <option value={it} label={it} key={it} />)
+                    : null}
+                  {state.kuzov === 'selhoz'
+                    ? sizeSelhoz.map((it) => <option value={it} label={it} key={it} />)
+                    : null}
                 </select>
                 <div className="pointer-events-none absolute top-0 mt-3 right-0 flex items-center px-2 text-gray-600">
                   <svg

@@ -46,6 +46,7 @@ import ShinomontazhpriceList from '../scenes/Shinomotazh.prices/Shinomotazh.pric
 import ShinomontazhpriceNew from '../scenes/Shinomotazh.prices/Shinomotazh.prices.create'
 import ShinomontazhpriceEdit from '../scenes/Shinomotazh.prices/Shinomotazh.prices.edit'
 import ShinomontazhsList from '../scenes/Shinomontazhs/Shinomontazhs.list'
+import ShinomontazhsListBoss from '../scenes/Shinomontazhs/Shinomontazhs.list.boss'
 import ShinomontazhsNew from '../scenes/Shinomontazhs/Shinomontazhs.work.create'
 import ShinomontazhEditFull from '../scenes/Shinomontazhs/Shinomontazhs.edit'
 import VendorList from '../scenes/Vendors/Vendors.list'
@@ -196,6 +197,7 @@ const RootComponent = (props) => {
               component={ShinomontazhpriceEdit}
             />
             <PrivateRoute exact path="/shinomontazh/list" component={ShinomontazhsList} />
+            <PrivateRoute exact path="/shinomontazhboss/list" component={ShinomontazhsListBoss} />
             <PrivateRoute exact path="/shinomontazh/create" component={ShinomontazhsNew} />
             <PrivateRoute exact path="/shinomontazh/edit/:id" component={ShinomontazhEditFull} />
             <PrivateRoute exact path="/tyres/order/list" component={TyresList} />

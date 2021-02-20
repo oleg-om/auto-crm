@@ -46,6 +46,26 @@ const Place = new mongoose.Schema({
   razvalphone: {
     type: String,
     required: false
+  },
+  shinomontazh: {
+    type: String,
+    required: false
+  },
+  shinomontazhquantity: {
+    type: String,
+    required: false
+  },
+  shinostavka: {
+    type: String,
+    required: false
+  },
+  shinomontazhphone: {
+    type: String,
+    required: false
+  },
+  shinomeaning: {
+    type: String,
+    required: false
   }
 })
 

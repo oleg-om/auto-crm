@@ -38,8 +38,19 @@ const AutopartViewOrder = (props) => {
     }))
   }
   const createDate = new Date(props.date)
+
+  const totalInWork =
+    props.order.length >= 1
+      ? props.order.reduce(function fullPrice(acc, rec) {
+          if (rec.price && rec.quantity && rec.stat !== 'Интересовался')
+            if (rec.price.match(/[0-9]/) && rec.quantity.match(/[0-9]/)) {
+              return acc + rec.price * rec.quantity
+            }
+          return acc
+        }, 0)
+      : null
   return (
-    <div>
+    <div className="p-5">
       <div className="bg-white shadow rounded-lg px-8 pt-6 pb-8 mb-4 flex flex-col my-2">
         <div className="-mx-3 md:flex mb-6 flex-wrap">
           <div className="md:m-3 lg:flex rounded-lg px-6 py-2 w-auto shadow bg-gray-100 my-2">
@@ -170,7 +181,7 @@ const AutopartViewOrder = (props) => {
                       </g>
                     </svg>
 
-                    <p> Печать предчека</p>
+                    <p> Печать сметы</p>
                   </div>
                 </button>
                 <div className="hidden">
@@ -179,6 +190,7 @@ const AutopartViewOrder = (props) => {
                     props={props}
                     helpphone={props.settings.map((it) => it.helpphone)}
                     placesList={props.placesList}
+                    total={totalInWork}
                   />
                 </div>
               </div>

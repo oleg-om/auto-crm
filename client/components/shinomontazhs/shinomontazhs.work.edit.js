@@ -24,6 +24,9 @@ const ShinomontazhsEdit = (props) => {
   const auth = useSelector((s) => s.auth)
   const shinomontazhprices = useSelector((s) => s.shinomontazhprices.list)
   const materialprices = useSelector((s) => s.materials.list)
+  const placeList = useSelector((s) => s.places.list)
+
+  const currentPlace = placeList.find((it) => it.id === auth.place)
 
   const [regNumber, setRegNumber] = useState([])
   const [keyboard, setKeyboard] = useState(true)
@@ -181,6 +184,17 @@ const ShinomontazhsEdit = (props) => {
     }
   }, [state.regnumber, customerList])
 
+  useEffect(() => {
+    const findCar = options.mark ? options.mark.find((it) => props.mark === it.name) : null
+    if (props.mark) {
+      setStateId((prevState) => ({
+        ...prevState,
+        mark: findCar ? findCar.id_car_mark : '',
+        model: ''
+      }))
+    }
+  }, [props.mark, options.mark])
+
   const onSearchChange = (event) => {
     setSearch(event.target.value)
   }
@@ -251,16 +265,81 @@ const ShinomontazhsEdit = (props) => {
     return null
   }
   const [actualService, setActualService] = useState([])
+  const applyDiscount = (number, percent) => {
+    const number_percent = (number / 100) * Number(percent)
+
+    return Number(number) - Number(number_percent)
+  }
+  const applyDiscountPlus = (number, percent) => {
+    const number_percent = (number / 100) * Number(percent)
+
+    return Number(number) + Number(number_percent)
+  }
+  function roundTo5(num) {
+    return Math.round(num / 5) * 5
+  }
   useEffect(() => {
-    const actualDiametr = 'R'.concat(state.diametr)
+    const actualDiametr = 'R'.concat(state.diametr.replace(/[^C\d]/g, ''))
+    const percent = currentPlace ? currentPlace.shinostavka : ''
+    const definition = currentPlace ? currentPlace.shinomeaning : ''
     const getPrice = (item) => {
+      if (!percent) {
+        return item[actualDiametr]
+      }
+      if (percent && definition === 'negative') {
+        return roundTo5(applyDiscount(item[actualDiametr], percent))
+      }
+      if (percent && definition === 'positive') {
+        return roundTo5(applyDiscountPlus(item[actualDiametr], percent))
+      }
       return item[actualDiametr]
     }
-    if (state.diametr && state.kuzov) {
+    if (
+      state.diametr &&
+      (state.kuzov === 'sedan' || state.kuzov === 'crossover' || state.kuzov === 'runflat')
+    ) {
       setActualService(
         shinomontazhprices
           .filter(
-            (it) => it.category === state.kuzov || it.category === 'other' || it.category === 'free'
+            (it) =>
+              it.type === 'legk' &&
+              (it.category === state.kuzov || it.category === 'other' || it.category === 'free')
+          )
+          .map((item) => ({
+            name: item.name,
+            id: item.id,
+            type: item.type,
+            category: item.category,
+            number: item.number,
+            actualprice: getPrice(item)
+          }))
+      )
+    }
+    if (state.diametr && state.kuzov === 'gruz') {
+      setActualService(
+        shinomontazhprices
+          .filter(
+            (it) =>
+              it.type === 'gruz' &&
+              (it.category === 'common' || it.category === 'other' || it.category === 'free')
+          )
+          .map((item) => ({
+            name: item.name,
+            id: item.id,
+            type: item.type,
+            category: item.category,
+            number: item.number,
+            actualprice: getPrice(item)
+          }))
+      )
+    }
+    if (state.diametr && state.kuzov === 'selhoz') {
+      setActualService(
+        shinomontazhprices
+          .filter(
+            (it) =>
+              it.type === 'selhoz' &&
+              (it.category === 'common' || it.category === 'other' || it.category === 'free')
           )
           .map((item) => ({
             name: item.name,

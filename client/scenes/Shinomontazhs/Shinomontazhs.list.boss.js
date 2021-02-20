@@ -6,19 +6,18 @@ import { Link } from 'react-router-dom'
 import { toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
 import { socket } from '../../redux/sockets/socketReceivers'
-import ShinomontazhsRow from '../../components/shinomontazhs/shinomontazhs.row'
+import ShinomontazhsRowBoss from '../../components/shinomontazhs/shinomontazhs.row.boss'
 import { updateStatus, getShinomontazhs } from '../../redux/reducers/shinomontazhs'
 import Navbar from '../../components/Navbar'
 import Pagination from '../Pagination'
 // import taskStatuses from '../../lists/task-statuses'
 
-const ShinomontazhsList = () => {
+const ShinomontazhsListBoss = () => {
   const dispatch = useDispatch()
   const list = useSelector((s) => s.shinomontazhs.list)
   const revList = [].concat(list).reverse()
   const placesList = useSelector((s) => s.places.list)
   const employeeList = useSelector((s) => s.employees.list)
-  const auth = useSelector((s) => s.auth)
   const role = useSelector((s) => s.auth.roles)
 
   socket.connect()
@@ -55,10 +54,6 @@ const ShinomontazhsList = () => {
     place: ''
   })
   const [showSearch] = useState(false)
-
-  const dayMilliseconds = 48 * 60 * 60 * 1000
-
-  const currentDate = new Date()
 
   // const onChangePhone = (e) => {
   //   const { name, value } = e.target
@@ -157,14 +152,6 @@ const ShinomontazhsList = () => {
     <div>
       <Navbar />
       <div>
-        {auth.roles.includes('boss') ? (
-          <Link
-            to="/shinomontazhboss/list"
-            className="block mt-4 pt-3 lg:inline-block lg:mt-0 text-gray-800 hover:text-blue-700 ml-4"
-          >
-            ➜ Перейти в режим начальника
-          </Link>
-        ) : null}
         {/* <div className="mx-auto px-4">
           <div className="py-3 px-4 my-3 rounded-lg shadow bg-white">
             <div className="-mx-3 md:flex">
@@ -451,6 +438,9 @@ const ShinomontazhsList = () => {
                   Гос. номер
                 </th>
                 <th className="p-3 font-bold uppercase bg-gray-100 text-gray-600 border border-gray-300 table-cell">
+                  Точка
+                </th>
+                <th className="p-3 font-bold uppercase bg-gray-100 text-gray-600 border border-gray-300 table-cell">
                   Статус
                 </th>
                 <th className="p-3 font-bold uppercase bg-gray-100 text-gray-600 border border-gray-300 table-cell">
@@ -466,27 +456,20 @@ const ShinomontazhsList = () => {
             </thead>
             <tbody>
               {showSearch === false
-                ? currentPosts
-                    .filter((item) => item.place === auth.place)
-                    .filter(
-                      (item) =>
-                        new Date(item.dateStart) >
-                        new Date(currentDate.setTime(currentDate.getTime() - dayMilliseconds))
-                    )
-                    .map((it) => (
-                      <ShinomontazhsRow
-                        key={it.id}
-                        {...it}
-                        updateStatus={updateStatusLocal}
-                        role={role}
-                        employeeList={employeeList.find((item) => item.id === it.employee)}
-                        processList={employeeList.find((item) => item.id === it.process)}
-                        placesList={placesList.find((item) => item.id === it.place)}
-                        settings={settings}
-                      />
-                    ))
+                ? currentPosts.map((it) => (
+                    <ShinomontazhsRowBoss
+                      key={it.id}
+                      {...it}
+                      updateStatus={updateStatusLocal}
+                      role={role}
+                      employeeList={employeeList.find((item) => item.id === it.employee)}
+                      processList={employeeList.find((item) => item.id === it.process)}
+                      placesList={placesList.find((item) => item.id === it.place)}
+                      settings={settings}
+                    />
+                  ))
                 : currentPostsFiltered.map((it) => (
-                    <ShinomontazhsRow
+                    <ShinomontazhsRowBoss
                       key={it.id}
                       {...it}
                       updateStatus={updateStatusLocal}
@@ -541,7 +524,7 @@ const ShinomontazhsList = () => {
         <Link to="/shinomontazh/create">
           <button
             type="button"
-            className="fixed bottom-0 left-0 p-6 shadow bg-blue-600 text-white opacity-75 text-2xl hover:opacity-100 hover:bg-blue-700 hover:text-white rounded-full my-3 mx-3"
+            className="fixed bottom-0 left-0 p-6 shadow bg-blue-600 text-white opacity-75 text-l hover:opacity-100 hover:bg-blue-700 hover:text-white rounded-full my-3 mx-3"
           >
             Новый
             <br />
@@ -553,4 +536,4 @@ const ShinomontazhsList = () => {
   )
 }
 
-export default ShinomontazhsList
+export default ShinomontazhsListBoss

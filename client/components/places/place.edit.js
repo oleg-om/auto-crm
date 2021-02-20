@@ -4,6 +4,7 @@ import { toast } from 'react-toastify'
 import NumberFormat from 'react-number-format'
 import Modal from '../Modal.delete'
 import 'react-toastify/dist/ReactToastify.css'
+import discounts from '../../lists/discounts.full'
 
 const PlaceUpdate = (props) => {
   const [isOpen, SetIsOpen] = useState(false)
@@ -14,7 +15,12 @@ const PlaceUpdate = (props) => {
     oil: props.oil,
     oilquantity: props.oilquantity,
     autopartsphone: props.autopartsphone,
-    razvalphone: props.razvalphone
+    razvalphone: props.razvalphone,
+    shinomontazh: props.shinomontazh,
+    shinomontazhquantity: props.shinomontazhquantity,
+    shinostavka: props.shinostavka,
+    shinomontazhphone: props.shinomontazhphone,
+    shinomeaning: props.shinomeaning
   })
   const history = useHistory()
   toast.configure()
@@ -162,7 +168,117 @@ const PlaceUpdate = (props) => {
           </div>
         </div>
         <div className="-mx-3 md:flex flex-wrap">
-          <div className="md:w-1/2 px-3 mb-6 md:mb-0 flex flex-col">
+          <div className="md:w-1/3 px-3 mb-6 md:mb-0 flex flex-col">
+            <label
+              className="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2"
+              htmlFor="grid-first-name"
+            >
+              Шиномонтаж
+            </label>
+            <div className="flex-shrink w-full inline-block relative mb-3">
+              <select
+                className="appearance-none block w-full bg-grey-lighter text-grey-darker border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-3 px-4 mb-3"
+                value={state.shinomontazh}
+                name="shinomontazh"
+                id="shinomontazh"
+                onChange={onChange}
+              >
+                <option value="false">Нет</option>
+                <option value="true">Да</option>
+              </select>
+              <div className="pointer-events-none absolute top-0 mt-4 right-0 flex items-center px-2 text-gray-600">
+                <svg
+                  className="fill-current h-4 w-4"
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 20 20"
+                >
+                  <path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z" />
+                </svg>
+              </div>
+            </div>
+          </div>
+          <div className="md:w-1/3 px-3 mb-6 md:mb-0 flex flex-col">
+            <label
+              className="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2"
+              htmlFor="grid-first-name"
+            >
+              Количество постов Шиномонтажа
+            </label>
+            <input
+              className="appearance-none block w-full bg-grey-lighter text-grey-darker border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-3 px-4 mb-3"
+              value={state.shinomontazhquantity}
+              name="shinomontazhquantity"
+              id="shinomontazhquantity"
+              type="number"
+              placeholder="Введите количество постов"
+              onChange={onChange}
+            />
+          </div>
+          <div className="md:w-1/3 px-3 mb-6 md:mb-0 flex flex-col">
+            <label
+              className="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2"
+              htmlFor="grid-first-name"
+            >
+              Процентная ставка
+            </label>
+            <div className="flex flex-row w-full">
+              <div className="flex-shrink w-1/3 inline-block relative mb-3">
+                <select
+                  className="appearance-none block w-full bg-grey-lighter text-grey-darker border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-3 px-4 mb-3"
+                  value={state.shinomeaning}
+                  name="shinomeaning"
+                  id="shinomeaning"
+                  onChange={onChange}
+                >
+                  <option disabled value="">
+                    Выберите + или -
+                  </option>
+                  <option value="">Нет</option>
+                  <option value="positive">+</option>
+                  <option value="negative">-</option>
+                </select>
+                <div className="pointer-events-none absolute top-0 mt-4 right-0 flex items-center px-2 text-gray-600">
+                  <svg
+                    className="fill-current h-4 w-4"
+                    xmlns="http://www.w3.org/2000/svg"
+                    viewBox="0 0 20 20"
+                  >
+                    <path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z" />
+                  </svg>
+                </div>
+              </div>
+              <div className="flex-shrink w-2/3 pl-2 inline-block relative mb-3">
+                <select
+                  className="appearance-none block w-full bg-grey-lighter text-grey-darker border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-3 px-4 mb-3"
+                  value={state.shinostavka}
+                  name="shinostavka"
+                  id="shinostavka"
+                  onChange={onChange}
+                >
+                  <option disabled value="">
+                    Выберите процент
+                  </option>
+                  {discounts.map((it) => (
+                    <option key={it.name} value={it.value}>
+                      {it.name}
+                    </option>
+                  ))}
+                </select>
+                <div className="pointer-events-none absolute top-0 mt-4 right-0 flex items-center px-2 text-gray-600">
+                  <svg
+                    className="fill-current h-4 w-4"
+                    xmlns="http://www.w3.org/2000/svg"
+                    viewBox="0 0 20 20"
+                  >
+                    <path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z" />
+                  </svg>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div className="-mx-3 md:flex flex-wrap">
+          <div className="md:w-1/3 px-3 mb-6 md:mb-0 flex flex-col">
             <label
               className="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2"
               htmlFor="grid-first-name"
@@ -183,7 +299,7 @@ const PlaceUpdate = (props) => {
               />
             </div>
           </div>
-          <div className="md:w-1/2 px-3 mb-6 md:mb-0 flex flex-col">
+          <div className="md:w-1/3 px-3 mb-6 md:mb-0 flex flex-col">
             <label
               className="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2"
               htmlFor="grid-first-name"
@@ -200,6 +316,27 @@ const PlaceUpdate = (props) => {
                 value={state.razvalphone}
                 name="razvalphone"
                 id="razvalphone"
+                onChange={onChange}
+              />
+            </div>
+          </div>
+          <div className="md:w-1/3 px-3 mb-6 md:mb-0 flex flex-col">
+            <label
+              className="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2"
+              htmlFor="grid-first-name"
+            >
+              Шиномонтаж - номер телефона
+            </label>
+            <div className="flex-shrink w-full inline-block relative mb-3">
+              <NumberFormat
+                format="+7 (###) ###-##-##"
+                mask="_"
+                className="appearance-none block w-full bg-grey-lighter text-grey-darker border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-3 px-4 mb-3"
+                type="text"
+                placeholder="Шиномонтаж - номер телефона"
+                value={state.shinomontazhphone}
+                name="shinomontazhphone"
+                id="shinomontazhphone"
                 onChange={onChange}
               />
             </div>

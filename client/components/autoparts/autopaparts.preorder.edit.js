@@ -137,6 +137,18 @@ const AutopartUpdate = (props) => {
     }
   }
   const createDate = new Date(props.date)
+
+  const totalInWork =
+    props.order.length >= 1
+      ? props.order.reduce(function fullPrice(acc, rec) {
+          if (rec.price && rec.quantity && rec.stat !== 'Интересовался')
+            if (rec.price.match(/[0-9]/) && rec.quantity.match(/[0-9]/)) {
+              return acc + rec.price * rec.quantity
+            }
+          return acc
+        }, 0)
+      : null
+
   return (
     <div>
       <div className="bg-white shadow rounded-lg px-8 pt-6 pb-8 mb-4 flex flex-col my-2">
@@ -267,7 +279,7 @@ const AutopartUpdate = (props) => {
                       </g>
                     </svg>
 
-                    <p> Печать предчека</p>
+                    <p> Печать сметы</p>
                   </div>
                 </button>
                 <div className="hidden">
@@ -276,6 +288,7 @@ const AutopartUpdate = (props) => {
                     props={props}
                     helpphone={props.settings.map((it) => it.helpphone)}
                     placesList={props.placesList}
+                    total={totalInWork}
                   />
                 </div>
               </div>
@@ -748,8 +761,8 @@ const AutopartUpdate = (props) => {
                 </button>
               </div>
               <p className="ml-3">
-                {state.order.length >= 1
-                  ? state.order.reduce(function fullPrice(acc, rec) {
+                {props.order.length >= 1
+                  ? props.order.reduce(function fullPrice(acc, rec) {
                       if (rec.price && rec.quantity && rec.stat !== 'Интересовался')
                         if (rec.price.match(/[0-9]/) && rec.quantity.match(/[0-9]/)) {
                           return acc + rec.price * rec.quantity
