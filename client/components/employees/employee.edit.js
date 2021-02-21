@@ -19,7 +19,8 @@ const EmployeeUpdate = (props) => {
     name: props.name,
     surname: props.surname,
     role: props.role,
-    address: props.address
+    address: props.address,
+    numberId: props.numberId
   })
   const removeEmployee = (e) => {
     props.deleteEmployee(props.id, e.target.value)
@@ -162,6 +163,25 @@ const EmployeeUpdate = (props) => {
                 </label>
               </div>
             ))}
+          </div>
+        </div>
+        <div className="-mx-3 md:flex flex-wrap mt-3">
+          <div className="md:w-1/2 px-3 mb-6 md:mb-0 flex flex-col">
+            <label
+              className="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2"
+              htmlFor="grid-first-name"
+            >
+              Номер сотрудника (для шиномонтажа и слесарных работ)
+            </label>
+            <input
+              className="appearance-none block w-full bg-grey-lighter text-grey-darker border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-3 px-4 mb-3"
+              value={state.numberId}
+              name="numberId"
+              id="numberId"
+              type="number"
+              placeholder="Введите номер"
+              onChange={onChange}
+            />
           </div>
         </div>
       </div>

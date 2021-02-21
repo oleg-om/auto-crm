@@ -20,6 +20,10 @@ const Employee = new mongoose.Schema({
     type: Array,
     required: false
   },
+  numberId: {
+    type: String,
+    required: false
+  },
   id: {
     type: String,
     unique: true,

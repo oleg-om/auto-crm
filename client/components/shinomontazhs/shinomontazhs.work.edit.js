@@ -65,7 +65,7 @@ const ShinomontazhsEdit = (props) => {
   //     regnumber: regNumber.join('').toString()
   //   }))
   // }, [regNumber])
-
+  console.log(state)
   const checkboxEmployeeChange = (e) => {
     const { name, checked } = e.target
     if (checked) {

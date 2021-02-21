@@ -28,7 +28,7 @@ const Final = ({
     if (state.kuzov === 'selhoz') return 'Сельхоз'
     return ''
   }
-  const total = service.concat(materials).reduce((acc, rec) => acc + rec.price * rec.quantity, 0)
+
   const applyDiscount = (number) => {
     const number_percent = (number / 100) * state.discount
 
@@ -37,6 +37,12 @@ const Final = ({
   function roundTo5(num) {
     return Math.round(num / 5) * 5
   }
+
+  const totalService = service.reduce((acc, rec) => acc + rec.price * rec.quantity, 0)
+  const totalMaterial = materials.reduce((acc, rec) => acc + rec.price * rec.quantity, 0)
+  const totalSumm = totalService + totalMaterial
+  const totalWithDiscount = roundTo5(applyDiscount(totalService)) + totalMaterial
+
   return (
     <div>
       <div className="flex flex-row -mx-3">
@@ -153,8 +159,15 @@ const Final = ({
         </div>
       </div>
       <div className="flex flex-row mt-3">
-        <p>Сумма: {state.discount ? roundTo5(applyDiscount(total)) : total}</p>
+        {materials.length !== 0 ? <p className="mr-3">Услуги: {totalService} руб.</p> : null}
+        {materials.length !== 0 ? <p className="mr-3">Материалы: {totalMaterial} руб.</p> : null}
+        <p className="mr-3">Общая сумма: {totalSumm} руб.</p>
       </div>
+      {state.discount ? (
+        <div className="flex flex-row mt-3">
+          <p>Сумма со скидкой: {totalWithDiscount} руб.</p>
+        </div>
+      ) : null}
       {dateEnd ? (
         <div className="flex flex-row mt-3">
           <div className="w-1/2 pr-3 mb-6 md:mb-0">
@@ -412,7 +425,7 @@ const Final = ({
           <button
             type="submit"
             className="py-2 px-3 bg-blue-600 text-white text-sm hover:bg-blue-700 hover:text-white rounded-full h-22 w-22"
-            onClick={() => printOne(state.discount ? roundTo5(applyDiscount(total)) : total)}
+            onClick={() => printOne(totalSumm, totalWithDiscount)}
           >
             <div className="flex flex-row">
               <svg
@@ -453,7 +466,7 @@ const Final = ({
           </button>
           <button
             type="submit"
-            onClick={() => printTwo(state.discount ? roundTo5(applyDiscount(total)) : total)}
+            onClick={() => printTwo(totalSumm, totalWithDiscount)}
             className="ml-3 py-2 px-3 bg-green-600 text-white text-sm hover:bg-green-700 hover:text-white rounded-full h-22 w-22"
           >
             <div className="flex flex-row">
