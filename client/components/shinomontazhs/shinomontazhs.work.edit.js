@@ -33,7 +33,6 @@ const ShinomontazhsEdit = (props) => {
   const [regOpen, setRegOpen] = useState(false)
 
   const [state, setState] = useState({
-    employee: props.employee,
     place: props.place,
     regnumber: props.regnumber,
     mark: props.mark,
@@ -50,7 +49,7 @@ const ShinomontazhsEdit = (props) => {
   const [service, setService] = useState(props.services ? props.services : [])
   const [materials, setMaterials] = useState(props.material ? props.material : [])
   const [tyres, setTyres] = useState(props.tyre ? props.tyre[0] : {})
-  const [employees, setEmployees] = useState([])
+  const [employees, setEmployees] = useState(props.employee ? props.employee : [])
 
   const onChangeRegNumber = (e) => {
     const { value } = e.target
