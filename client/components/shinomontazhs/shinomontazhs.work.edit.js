@@ -396,7 +396,13 @@ const ShinomontazhsEdit = (props) => {
     if (checked) {
       setService((prevState) => [
         ...prevState,
-        { serviceName: name, quantity: 1, price: placeholder, name: attributes.somename.value }
+        {
+          serviceName: name,
+          quantity: 1,
+          price: placeholder,
+          name: attributes.somename.value,
+          free: attributes.somefree.value
+        }
       ])
     } else {
       setService((prevState) => prevState.filter((it) => it.serviceName !== name))
@@ -632,28 +638,28 @@ const ShinomontazhsEdit = (props) => {
     }
   }
 
-  const printOne = (totalService, totalMaterial, totalSumm, totalWithDiscount) => {
+  const printOne = (totalSumWithoutMaterials, totalMaterial, totalSumm, totalWithDiscount) => {
     props.shinomontazhPrintOne({
       ...state,
       services: service,
       material: materials,
       tyre: [...tyres],
       employee: employees,
-      totalService,
+      totalSumWithoutMaterials,
       totalMaterial,
       totalSumm,
       totalWithDiscount
     })
   }
 
-  const printTwo = (totalService, totalMaterial, totalSumm, totalWithDiscount) => {
+  const printTwo = (totalSumWithoutMaterials, totalMaterial, totalSumm, totalWithDiscount) => {
     props.shinomontazhPrintTwo({
       ...state,
       services: service,
       material: materials,
       tyre: [...tyres],
       employee: employees,
-      totalService,
+      totalSumWithoutMaterials,
       totalMaterial,
       totalSumm,
       totalWithDiscount

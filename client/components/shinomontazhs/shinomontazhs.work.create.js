@@ -387,7 +387,13 @@ const ShinomontazhsCreate = (props) => {
     if (checked) {
       setService((prevState) => [
         ...prevState,
-        { serviceName: name, quantity: 1, price: placeholder, name: attributes.somename.value }
+        {
+          serviceName: name,
+          quantity: 1,
+          price: placeholder,
+          name: attributes.somename.value,
+          free: attributes.somefree.value
+        }
       ])
     } else {
       setService((prevState) => prevState.filter((it) => it.serviceName !== name))

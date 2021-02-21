@@ -10,7 +10,6 @@ const Service = ({
   servicePriceChange,
   serviceType
 }) => {
-  console.log(actualService)
   return (
     <div className="flex flex-col -mx-3">
       <div className="px-3 mb-6 md:mb-0 w-full">
@@ -60,6 +59,7 @@ const Service = ({
                         <label
                           htmlFor={item.id}
                           somename={item.name}
+                          somefree={item.free}
                           className="w-full h-full p-2 text-left inline-block"
                         >
                           <input
@@ -70,6 +70,7 @@ const Service = ({
                             id={item.id}
                             placeholder={item.actualprice}
                             somename={item.name}
+                            somefree={item.free}
                             type="checkbox"
                           />
                           {item.name}
@@ -88,6 +89,7 @@ const Service = ({
                           <label
                             htmlFor={item.id}
                             somename={item.name}
+                            somefree={item.free}
                             className="w-full h-full p-2 text-left inline-block"
                           >
                             {item.actualprice}
@@ -105,12 +107,14 @@ const Service = ({
                             name={item.id}
                             id={item.id}
                             somename={item.name}
+                            somefree={item.free}
                             onChange={servicePriceChange}
                           />
                         ) : (
                           <label
                             htmlFor={item.id}
                             somename={item.name}
+                            somefree={item.free}
                             className="w-full h-full p-2 text-left inline-block"
                           >
                             <div className="py-1 px-4 bg-yellow-400 rounded-lg my-1 mr-3 border-yellow-400 border lg:w-32">
