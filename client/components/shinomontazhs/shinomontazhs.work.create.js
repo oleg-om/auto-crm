@@ -32,7 +32,6 @@ const ShinomontazhsCreate = (props) => {
   const [regOpen, setRegOpen] = useState(false)
 
   const [state, setState] = useState({
-    employee: [],
     place: auth.place,
     regnumber: regNumber.toString(),
     mark: '',
@@ -46,6 +45,7 @@ const ShinomontazhsCreate = (props) => {
   const [service, setService] = useState([])
   const [materials, setMaterials] = useState([])
   const [tyres, setTyres] = useState({})
+  const [employees, setEmployees] = useState([])
 
   const onChangeRegNumber = (e) => {
     const { value } = e.target
@@ -61,21 +61,12 @@ const ShinomontazhsCreate = (props) => {
       regnumber: regNumber.join('').toString()
     }))
   }, [regNumber])
-
-  const checkboxEmployeeChange = (e) => {
-    const { name, checked } = e.target
-    if (checked) {
-      setState((prevState) => ({
-        ...prevState,
-        employee: [...prevState.employee, name]
-      }))
-    } else {
-      setState((prevState) => ({
-        ...prevState,
-        employee: prevState.employee.filter((it) => it !== name)
-      }))
-    }
-  }
+  useEffect(() => {
+    setState((prevState) => ({
+      ...prevState,
+      place: auth.place
+    }))
+  }, [auth])
 
   const onChangeRegnumberUppercaseRussian = (e) => {
     const { name, value } = e.target
@@ -296,7 +287,8 @@ const ShinomontazhsCreate = (props) => {
             type: item.type,
             category: item.category,
             number: item.number,
-            actualprice: getPrice(item)
+            actualprice: getPrice(item),
+            free: item.free
           }))
       )
     }
@@ -314,7 +306,8 @@ const ShinomontazhsCreate = (props) => {
             type: item.type,
             category: item.category,
             number: item.number,
-            actualprice: getPrice(item)
+            actualprice: getPrice(item),
+            free: item.free
           }))
       )
     }
@@ -332,7 +325,8 @@ const ShinomontazhsCreate = (props) => {
             type: item.type,
             category: item.category,
             number: item.number,
-            actualprice: getPrice(item)
+            actualprice: getPrice(item),
+            free: item.free
           }))
       )
     }
@@ -353,7 +347,7 @@ const ShinomontazhsCreate = (props) => {
     if (!state.mark) notify('Укажите марку авто')
     if (!state.model) notify('Укажите модель авто')
     if (!state.place) notify('Укажите место работы')
-    else if (state.employee && state.place && state.regnumber && state.mark && state.model) {
+    else if (employees && state.place && state.regnumber && state.mark && state.model) {
       if (
         checkCustomer !== undefined &&
         state.regnumber === checkCustomer.regnumber &&
@@ -368,10 +362,17 @@ const ShinomontazhsCreate = (props) => {
           ...state,
           services: service,
           material: materials,
-          tyre: tyres
+          tyre: tyres,
+          employee: employees
         })
       } else {
-        props.create({ ...state, services: service, material: materials, tyre: [...tyres] })
+        props.create({
+          ...state,
+          services: service,
+          material: materials,
+          tyre: [...tyres],
+          employee: employees
+        })
         props.createCust(customer)
         history.push('/shinomontazh/list')
         notify('Запись добавлена')
@@ -493,9 +494,80 @@ const ShinomontazhsCreate = (props) => {
     )
   }
 
+  // const checkboxEmployeeChange = (e) => {
+  //   const { name, checked, placeholder, attributes } = e.target
+  //   if (checked) {
+  //     setState((prevState) => ({
+  //       ...prevState,
+  //       employee: [
+  //         ...prevState.employee,
+  //         {
+  //           id: name,
+  //           numberId: placeholder,
+  //           name: attributes.itemName.value,
+  //           surname: attributes.itemSurname.value,
+  //           role: 'second'
+  //         }
+  //       ]
+  //     }))
+  //   } else {
+  //     setState((prevState) => ({
+  //       ...prevState,
+  //       employee: prevState.employee.filter((it) => it.id !== name)
+  //     }))
+  //   }
+  // }
+
+  const checkboxEmployeeChange = (e) => {
+    const { name, placeholder, checked, attributes } = e.target
+    if (checked) {
+      setEmployees((prevState) => [
+        ...prevState,
+        {
+          id: name,
+          numberId: placeholder,
+          name: attributes.itemName.value,
+          surname: attributes.itemSurname.value,
+          role: 'second'
+        }
+      ])
+    } else {
+      setEmployees((prevState) => prevState.filter((it) => it.id !== name))
+    }
+  }
+
+  const checkBoxEmpRoleChange = (e) => {
+    const { id } = e.target
+    if (employees.find((it) => it.id === id).role === 'second') {
+      setEmployees(
+        employees.map((object) => {
+          if (object.id === id) {
+            return {
+              ...object,
+              role: 'main'
+            }
+          }
+          return object
+        })
+      )
+    } else {
+      setEmployees(
+        employees.map((object) => {
+          if (object.id === id) {
+            return {
+              ...object,
+              role: 'second'
+            }
+          }
+          return object
+        })
+      )
+    }
+  }
+
   const nextStep = () => {
     if (active === 'employee') {
-      if (state.employee.length < 1) {
+      if (employees.length < 1) {
         notify('Сначала выберите сотрудников')
       } else {
         setActive('car')
@@ -528,13 +600,13 @@ const ShinomontazhsCreate = (props) => {
       setActive('employee')
     }
     if (wanted === 'car') {
-      if (state.employee.length < 1) {
+      if (employees.length < 1) {
         notify('Сначала выберите сотрудников')
       } else {
         setActive('car')
       }
     } else if (wanted === 'service') {
-      if (state.employee.length < 1) {
+      if (employees.length < 1) {
         notify('Сначала выберите сотрудников')
       } else if (!state.regnumber) {
         notify('Заполните гос. номер')
@@ -546,7 +618,7 @@ const ShinomontazhsCreate = (props) => {
         setActive('service')
       }
     } else if (wanted === 'material') {
-      if (state.employee.length < 1) {
+      if (employees.length < 1) {
         notify('Сначала выберите сотрудников')
       } else if (!state.regnumber) {
         notify('Заполните гос. номер')
@@ -560,7 +632,7 @@ const ShinomontazhsCreate = (props) => {
         setActive('material')
       }
     } else if (wanted === 'finish') {
-      if (state.employee.length < 1) {
+      if (employees.length < 1) {
         notify('Сначала выберите сотрудников')
       } else if (!state.regnumber) {
         notify('Заполните гос. номер')
@@ -583,7 +655,7 @@ const ShinomontazhsCreate = (props) => {
           <div className="w-1/5 p-2">
             <button
               type="button"
-              className={cx('p-4 bg-gray-200 rounded w-full h-full', {
+              className={cx('p-4 bg-gray-200 rounded w-full h-full overflow-hidden', {
                 block: active !== 'employee',
                 'border-b-8 border-blue-400': active === 'employee'
               })}
@@ -595,7 +667,7 @@ const ShinomontazhsCreate = (props) => {
           <div className="w-1/5 p-2">
             <button
               type="button"
-              className={cx('p-4 bg-gray-200 rounded w-full h-full', {
+              className={cx('p-4 bg-gray-200 rounded w-full h-full overflow-hidden', {
                 block: active !== 'car',
                 'border-b-8 border-blue-400': active === 'car'
               })}
@@ -607,7 +679,7 @@ const ShinomontazhsCreate = (props) => {
           <div className="w-1/5 p-2">
             <button
               type="button"
-              className={cx('p-4 bg-gray-200 rounded w-full h-full', {
+              className={cx('p-4 bg-gray-200 rounded w-full h-full overflow-hidden', {
                 block: active !== 'service',
                 'border-b-8 border-blue-400': active === 'service'
               })}
@@ -619,7 +691,7 @@ const ShinomontazhsCreate = (props) => {
           <div className="w-1/5 p-2">
             <button
               type="button"
-              className={cx('p-4 bg-gray-200 rounded w-full h-full', {
+              className={cx('p-4 bg-gray-200 rounded w-full h-full overflow-hidden', {
                 block: active !== 'material',
                 'border-b-8 border-blue-400': active === 'material'
               })}
@@ -631,7 +703,7 @@ const ShinomontazhsCreate = (props) => {
           <div className="w-1/5 p-2">
             <button
               type="button"
-              className={cx('p-4 bg-gray-200 rounded w-full h-full', {
+              className={cx('p-4 bg-gray-200 rounded w-full h-full overflow-hidden', {
                 block: active !== 'finish',
                 'border-b-8 border-blue-400': active === 'finish'
               })}
@@ -642,7 +714,7 @@ const ShinomontazhsCreate = (props) => {
           </div>
         </div>
       </div>
-      <div className="bg-white shadow rounded-lg px-8 pt-6 pb-8 mb-4 flex flex-col my-2">
+      <div className="bg-white shadow rounded-lg px-8 pt-6 lg:pb-8 mb-4 flex flex-col my-2">
         <div
           className={cx('', {
             block: active === 'employee',
@@ -652,8 +724,9 @@ const ShinomontazhsCreate = (props) => {
           <Employee
             employeeList={employeeList}
             auth={auth}
-            state={state}
+            employees={employees}
             checkboxEmployeeChange={checkboxEmployeeChange}
+            checkBoxEmpRoleChange={checkBoxEmpRoleChange}
           />
         </div>
         <div

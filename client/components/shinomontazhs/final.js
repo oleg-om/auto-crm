@@ -34,14 +34,31 @@ const Final = ({
 
     return Number(number) - Number(number_percent)
   }
+
+  const applyDiscountWithFreeService = (number) => {
+    const number_percent = (number / 100) * 100
+
+    return Number(number) - Number(number_percent)
+  }
+
   function roundTo5(num) {
     return Math.round(num / 5) * 5
   }
 
-  const totalService = service.reduce((acc, rec) => acc + rec.price * rec.quantity, 0)
+  const totalFreeService = service
+    .filter((it) => it.free === 'yes')
+    .reduce((acc, rec) => acc + rec.price * rec.quantity, 0)
+  const totalService = service
+    .filter((it) => it.free !== 'yes')
+    .reduce((acc, rec) => acc + rec.price * rec.quantity, 0)
   const totalMaterial = materials.reduce((acc, rec) => acc + rec.price * rec.quantity, 0)
   const totalSumm = totalService + totalMaterial
-  const totalWithDiscount = roundTo5(applyDiscount(totalService)) + totalMaterial
+  // const totalWithDiscount = roundTo5(applyDiscount(totalService)) + totalMaterial
+  console.log(service)
+  const totalWithDiscount =
+    applyDiscountWithFreeService(totalFreeService) +
+    roundTo5(applyDiscount(totalService)) +
+    totalMaterial
 
   return (
     <div>
@@ -163,7 +180,7 @@ const Final = ({
         {materials.length !== 0 ? <p className="mr-3">Материалы: {totalMaterial} руб.</p> : null}
         <p className="mr-3">Общая сумма: {totalSumm} руб.</p>
       </div>
-      {state.discount ? (
+      {state.discount || totalFreeService ? (
         <div className="flex flex-row mt-3">
           <p>Сумма со скидкой: {totalWithDiscount} руб.</p>
         </div>
@@ -192,7 +209,7 @@ const Final = ({
                   <option value={it} label={`${it}%`} key={it} />
                 ))}
               </select>
-              <div className="pointer-events-none absolute top-0 mt-3 right-0 flex items-center px-2 text-gray-600">
+              <div className="pointer-events-none hidden absolute top-0 mt-3 right-0 lg:flex items-center px-2 text-gray-600">
                 <svg
                   className="fill-current h-4 w-4"
                   xmlns="http://www.w3.org/2000/svg"
@@ -224,7 +241,7 @@ const Final = ({
                 <option value="yes">Оплачено</option>
                 <option value="no">Не оплачено</option>
               </select>
-              <div className="pointer-events-none absolute top-0 mt-3 right-0 flex items-center px-2 text-gray-600">
+              <div className="pointer-events-none hidden absolute top-0 mt-3 right-0 lg:flex items-center px-2 text-gray-600">
                 <svg
                   className="fill-current h-4 w-4"
                   xmlns="http://www.w3.org/2000/svg"
@@ -425,7 +442,7 @@ const Final = ({
           <button
             type="submit"
             className="py-2 px-3 bg-blue-600 text-white text-sm hover:bg-blue-700 hover:text-white rounded-full h-22 w-22"
-            onClick={() => printOne(totalSumm, totalWithDiscount)}
+            onClick={() => printOne(totalService, totalMaterial, totalSumm, totalWithDiscount)}
           >
             <div className="flex flex-row">
               <svg
@@ -466,7 +483,7 @@ const Final = ({
           </button>
           <button
             type="submit"
-            onClick={() => printTwo(totalSumm, totalWithDiscount)}
+            onClick={() => printTwo(totalService, totalMaterial, totalSumm, totalWithDiscount)}
             className="ml-3 py-2 px-3 bg-green-600 text-white text-sm hover:bg-green-700 hover:text-white rounded-full h-22 w-22"
           >
             <div className="flex flex-row">

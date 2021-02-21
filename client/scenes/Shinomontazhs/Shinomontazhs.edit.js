@@ -23,7 +23,7 @@ const ShinomontazhEditFull = () => {
 
   const updateShinomontazhLocal = (idOfItem, name) => {
     dispatch(updateShinomontazh(idOfItem, name))
-    socket.emit('new shinomontazh')
+    socket.emit('edit shinomontazh')
   }
 
   const shinomontazhPrintOne = (shinomontazh) => {

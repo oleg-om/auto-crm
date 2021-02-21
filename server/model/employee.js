@@ -24,6 +24,10 @@ const Employee = new mongoose.Schema({
     type: String,
     required: false
   },
+  class: {
+    type: String,
+    required: false
+  },
   id: {
     type: String,
     unique: true,

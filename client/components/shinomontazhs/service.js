@@ -10,6 +10,7 @@ const Service = ({
   servicePriceChange,
   serviceType
 }) => {
+  console.log(actualService)
   return (
     <div className="flex flex-col -mx-3">
       <div className="px-3 mb-6 md:mb-0 w-full">
@@ -75,7 +76,7 @@ const Service = ({
                         </label>
                       </button>
                     </td>
-                    {item.actualprice ? (
+                    {item.actualprice && item.free === 'no' ? (
                       <td>
                         <button
                           className="w-full h-full mr-3"
@@ -95,7 +96,7 @@ const Service = ({
                       </td>
                     ) : (
                       <td>
-                        {item.category !== 'free' ? (
+                        {item.free === 'no' ? (
                           <input
                             className="py-1 px-4 bg-white rounded-lg my-1 mr-3 border-green-500 border w-32"
                             placeholder="Цена"
@@ -112,7 +113,7 @@ const Service = ({
                             somename={item.name}
                             className="w-full h-full p-2 text-left inline-block"
                           >
-                            <div className="py-1 px-4 bg-yellow-400 rounded-lg my-1 mr-3 border-yellow-400 border w-32">
+                            <div className="py-1 px-4 bg-yellow-400 rounded-lg my-1 mr-3 border-yellow-400 border lg:w-32">
                               Акция
                             </div>
                           </label>

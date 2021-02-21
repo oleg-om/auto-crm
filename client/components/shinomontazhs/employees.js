@@ -1,7 +1,13 @@
 import React from 'react'
 import cx from 'classnames'
 
-const Employee = ({ employeeList, auth, state, checkboxEmployeeChange }) => {
+const Employee = ({
+  employeeList,
+  auth,
+  employees,
+  checkboxEmployeeChange,
+  checkBoxEmpRoleChange
+}) => {
   return (
     <div className="md:flex md:flex-row -mx-3">
       <div className="px-3 mb-6 md:mb-0 w-full">
@@ -12,38 +18,78 @@ const Employee = ({ employeeList, auth, state, checkboxEmployeeChange }) => {
           Исполнители
         </label>
         <div className="flex flex-col w-full relative">
-          {employeeList ? (
-            employeeList
-              .filter(
-                (it) => it.role.includes('Работник шиномонтажа') && it.address.includes(auth.place)
-              )
-              .map((item) => (
-                <button
-                  className={cx('mb-3 flex flex-row rounded bg-gray-200 w-full text-lg', {
-                    'bg-green-200 hover:bg-green-300': state.employee.includes(item.id),
-                    'bg-gray-100 hover:bg-gray-300': !state.employee.includes(item.id)
-                  })}
-                  key={item.id}
-                  type="button"
-                  name={item.id}
-                  onClick={checkboxEmployeeChange}
-                >
-                  <label htmlFor={item.id} className="w-full h-full p-2 text-left inline-block">
-                    <input
-                      className="mr-4"
-                      key={item.id}
-                      name={item.id}
-                      id={item.id}
-                      checked={state.employee.find((it) => it === item.id)}
-                      type="checkbox"
-                    />
-                    {item.name} {item.surname}
-                  </label>
-                </button>
-              ))
-          ) : (
-            <p>Сотрудники не найдены</p>
-          )}
+          <table>
+            {employeeList ? (
+              employeeList
+                .filter(
+                  (it) =>
+                    it.role.includes('Работник шиномонтажа') && it.address.includes(auth.place)
+                )
+                .map((item) => (
+                  <tr
+                    className={cx('mb-3 flex flex-row rounded bg-gray-200 w-full text-lg', {
+                      'bg-green-200 hover:bg-green-300': employees.find((it) =>
+                        it.id.includes(item.id)
+                      ),
+                      'bg-gray-100 hover:bg-gray-300': !employees.find((it) =>
+                        it.id.includes(item.id)
+                      )
+                    })}
+                    key={item.id}
+                    type="button"
+                    name={item.id}
+                    placeholder={item.numberId}
+                    itemName={item.name}
+                    itemSurname={item.surname}
+                    onClick={checkboxEmployeeChange}
+                  >
+                    <td className="flex flex-row w-full h-full">
+                      <label
+                        htmlFor={item.id}
+                        placeholder={item.numberId}
+                        itemName={item.name}
+                        itemSurname={item.surname}
+                        className="w-full h-full p-2 text-left inline-block"
+                      >
+                        <input
+                          className="mr-4"
+                          key={item.id}
+                          name={item.id}
+                          id={item.id}
+                          placeholder={item.numberId}
+                          itemName={item.name}
+                          itemSurname={item.surname}
+                          checked={employees.find((it) => it.id.includes(item.id))}
+                          type="checkbox"
+                        />
+                        {item.name} {item.surname} {item.numberId ? `(${item.numberId})` : null}
+                      </label>
+                    </td>
+                    <td>
+                      {employees.find((it) => it.id.includes(item.id)) ? (
+                        <button
+                          type="button"
+                          className={cx('py-1 px-4 rounded-lg my-1 mr-3 border', {
+                            'border-yellow-400 bg-yellow-400':
+                              employees.find((it) => it.id.includes(item.id)).role === 'main',
+                            'border-green-400 bg-green-400':
+                              employees.find((it) => it.id.includes(item.id)).role !== 'main'
+                          })}
+                          id={item.id}
+                          onClick={checkBoxEmpRoleChange}
+                        >
+                          {employees.find((it) => it.id.includes(item.id)).role === 'main'
+                            ? 'Старший'
+                            : 'Исполнитель'}
+                        </button>
+                      ) : null}
+                    </td>
+                  </tr>
+                ))
+            ) : (
+              <p>Сотрудники не найдены</p>
+            )}
+          </table>
         </div>
       </div>
     </div>

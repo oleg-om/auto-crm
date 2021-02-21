@@ -50,6 +50,7 @@ const ShinomontazhsEdit = (props) => {
   const [service, setService] = useState(props.services ? props.services : [])
   const [materials, setMaterials] = useState(props.material ? props.material : [])
   const [tyres, setTyres] = useState(props.tyre ? props.tyre[0] : {})
+  const [employees, setEmployees] = useState([])
 
   const onChangeRegNumber = (e) => {
     const { value } = e.target
@@ -65,19 +66,51 @@ const ShinomontazhsEdit = (props) => {
   //     regnumber: regNumber.join('').toString()
   //   }))
   // }, [regNumber])
-  console.log(state)
+
   const checkboxEmployeeChange = (e) => {
-    const { name, checked } = e.target
+    const { name, placeholder, checked, attributes } = e.target
     if (checked) {
-      setState((prevState) => ({
+      setEmployees((prevState) => [
         ...prevState,
-        employee: [...prevState.employee, name]
-      }))
+        {
+          id: name,
+          numberId: placeholder,
+          name: attributes.itemName.value,
+          surname: attributes.itemSurname.value,
+          role: 'second'
+        }
+      ])
     } else {
-      setState((prevState) => ({
-        ...prevState,
-        employee: prevState.employee.filter((it) => it !== name)
-      }))
+      setEmployees((prevState) => prevState.filter((it) => it.id !== name))
+    }
+  }
+
+  const checkBoxEmpRoleChange = (e) => {
+    const { id } = e.target
+    if (employees.find((it) => it.id === id).role === 'second') {
+      setEmployees(
+        employees.map((object) => {
+          if (object.id === id) {
+            return {
+              ...object,
+              role: 'main'
+            }
+          }
+          return object
+        })
+      )
+    } else {
+      setEmployees(
+        employees.map((object) => {
+          if (object.id === id) {
+            return {
+              ...object,
+              role: 'second'
+            }
+          }
+          return object
+        })
+      )
     }
   }
 
@@ -311,7 +344,8 @@ const ShinomontazhsEdit = (props) => {
             type: item.type,
             category: item.category,
             number: item.number,
-            actualprice: getPrice(item)
+            actualprice: getPrice(item),
+            free: item.free
           }))
       )
     }
@@ -329,7 +363,8 @@ const ShinomontazhsEdit = (props) => {
             type: item.type,
             category: item.category,
             number: item.number,
-            actualprice: getPrice(item)
+            actualprice: getPrice(item),
+            free: item.free
           }))
       )
     }
@@ -347,7 +382,8 @@ const ShinomontazhsEdit = (props) => {
             type: item.type,
             category: item.category,
             number: item.number,
-            actualprice: getPrice(item)
+            actualprice: getPrice(item),
+            free: item.free
           }))
       )
     }
@@ -494,6 +530,7 @@ const ShinomontazhsEdit = (props) => {
         services: service,
         material: materials,
         tyre: [...tyres],
+        employee: employees,
         status: statusList[1]
       })
       history.push('/shinomontazh/list')
@@ -504,6 +541,7 @@ const ShinomontazhsEdit = (props) => {
         services: service,
         material: materials,
         tyre: [...tyres],
+        employee: employees,
         status: statusList[2]
       })
       history.push('/shinomontazh/list')
@@ -513,7 +551,7 @@ const ShinomontazhsEdit = (props) => {
 
   const nextStep = () => {
     if (active === 'employee') {
-      if (state.employee.length < 1) {
+      if (employees.length < 1) {
         notify('Сначала выберите сотрудников')
       } else {
         setActive('car')
@@ -546,13 +584,13 @@ const ShinomontazhsEdit = (props) => {
       setActive('employee')
     }
     if (wanted === 'car') {
-      if (state.employee.length < 1) {
+      if (employees.length < 1) {
         notify('Сначала выберите сотрудников')
       } else {
         setActive('car')
       }
     } else if (wanted === 'service') {
-      if (state.employee.length < 1) {
+      if (employees.length < 1) {
         notify('Сначала выберите сотрудников')
       } else if (!state.regnumber) {
         notify('Заполните гос. номер')
@@ -564,7 +602,7 @@ const ShinomontazhsEdit = (props) => {
         setActive('service')
       }
     } else if (wanted === 'material') {
-      if (state.employee.length < 1) {
+      if (employees.length < 1) {
         notify('Сначала выберите сотрудников')
       } else if (!state.regnumber) {
         notify('Заполните гос. номер')
@@ -578,7 +616,7 @@ const ShinomontazhsEdit = (props) => {
         setActive('material')
       }
     } else if (wanted === 'finish') {
-      if (state.employee.length < 1) {
+      if (employees.length < 1) {
         notify('Сначала выберите сотрудников')
       } else if (!state.regnumber) {
         notify('Заполните гос. номер')
@@ -594,23 +632,31 @@ const ShinomontazhsEdit = (props) => {
     }
   }
 
-  const printOne = (total) => {
+  const printOne = (totalService, totalMaterial, totalSumm, totalWithDiscount) => {
     props.shinomontazhPrintOne({
       ...state,
       services: service,
       material: materials,
       tyre: [...tyres],
-      total
+      employee: employees,
+      totalService,
+      totalMaterial,
+      totalSumm,
+      totalWithDiscount
     })
   }
 
-  const printTwo = (total) => {
+  const printTwo = (totalService, totalMaterial, totalSumm, totalWithDiscount) => {
     props.shinomontazhPrintTwo({
       ...state,
       services: service,
       material: materials,
       tyre: [...tyres],
-      total
+      employee: employees,
+      totalService,
+      totalMaterial,
+      totalSumm,
+      totalWithDiscount
     })
   }
 
@@ -621,7 +667,7 @@ const ShinomontazhsEdit = (props) => {
           <div className="w-1/5 p-2">
             <button
               type="button"
-              className={cx('p-4 bg-gray-200 rounded w-full h-full', {
+              className={cx('p-4 bg-gray-200 rounded w-full h-full overflow-hidden', {
                 block: active !== 'employee',
                 'border-b-8 border-blue-400': active === 'employee'
               })}
@@ -633,7 +679,7 @@ const ShinomontazhsEdit = (props) => {
           <div className="w-1/5 p-2">
             <button
               type="button"
-              className={cx('p-4 bg-gray-200 rounded w-full h-full', {
+              className={cx('p-4 bg-gray-200 rounded w-full h-full overflow-hidden', {
                 block: active !== 'car',
                 'border-b-8 border-blue-400': active === 'car'
               })}
@@ -645,7 +691,7 @@ const ShinomontazhsEdit = (props) => {
           <div className="w-1/5 p-2">
             <button
               type="button"
-              className={cx('p-4 bg-gray-200 rounded w-full h-full', {
+              className={cx('p-4 bg-gray-200 rounded w-full h-full overflow-hidden', {
                 block: active !== 'service',
                 'border-b-8 border-blue-400': active === 'service'
               })}
@@ -657,7 +703,7 @@ const ShinomontazhsEdit = (props) => {
           <div className="w-1/5 p-2">
             <button
               type="button"
-              className={cx('p-4 bg-gray-200 rounded w-full h-full', {
+              className={cx('p-4 bg-gray-200 rounded w-full h-full overflow-hidden', {
                 block: active !== 'material',
                 'border-b-8 border-blue-400': active === 'material'
               })}
@@ -669,7 +715,7 @@ const ShinomontazhsEdit = (props) => {
           <div className="w-1/5 p-2">
             <button
               type="button"
-              className={cx('p-4 bg-gray-200 rounded w-full h-full', {
+              className={cx('p-4 bg-gray-200 rounded w-full h-full overflow-hidden', {
                 block: active !== 'finish',
                 'border-b-8 border-blue-400': active === 'finish'
               })}
@@ -690,8 +736,9 @@ const ShinomontazhsEdit = (props) => {
           <Employee
             employeeList={employeeList}
             auth={auth}
-            state={state}
+            employees={employees}
             checkboxEmployeeChange={checkboxEmployeeChange}
+            checkBoxEmpRoleChange={checkBoxEmpRoleChange}
           />
         </div>
         <div

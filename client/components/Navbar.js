@@ -9,6 +9,7 @@ import { getRazvals } from '../redux/reducers/razvals'
 import { getOils } from '../redux/reducers/oils'
 import { getAutoparts } from '../redux/reducers/autoparts'
 import { getTyres } from '../redux/reducers/tyres'
+import { getShinomontazhs } from '../redux/reducers/shinomontazhs'
 
 const Navbar = () => {
   const dispatch = useDispatch()
@@ -72,8 +73,26 @@ const Navbar = () => {
   }, [])
 
   useEffect(() => {
+    socket.on('update edited tyre', function () {
+      dispatch(getTyres())
+    })
+  }, [])
+
+  useEffect(() => {
     socket.on('update tyre from oline shop', function () {
       dispatch(getTyres())
+    })
+  }, [])
+
+  useEffect(() => {
+    socket.on('update shinomontazh', function () {
+      dispatch(getShinomontazhs())
+    })
+  }, [])
+
+  useEffect(() => {
+    socket.on('update edited shinomontazh', function () {
+      dispatch(getShinomontazhs())
     })
   }, [])
 

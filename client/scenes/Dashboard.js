@@ -150,7 +150,8 @@ const Dashboard = () => {
               </div>
             ) : null}
 
-            {auth.roles.includes('shinomotazh') ||
+            {auth.roles.includes('shinomontazh') ||
+            auth.roles.includes('shinomotazh') ||
             auth.roles.includes('boss') ||
             auth.roles.includes('admin') ? (
               <div className="md:w-1/2 px-3 mb-6 flex flex-col">

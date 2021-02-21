@@ -65,17 +65,30 @@ const Car = ({
               Гос. номер
             </label>
             <div className="flex-shrink w-full inline-block relative">
-              <input
-                className="block appearance-none w-full bg-grey-lighter border-2 border-black focus:border-gray-500 focus:outline-none py-2 px-4 pr-8 rounded-lg"
-                type="text"
-                placeholder="Русскими буквами"
-                value={state.regnumber}
-                name="regnumber"
-                id="regnumber"
-                autoComplete="off"
-                onClick={openRegModal}
-                onChange={keyboard === true ? onChangeRegnumberUppercaseRussian : null}
-              />
+              {keyboard === true ? (
+                <input
+                  className="block appearance-none w-full bg-grey-lighter border-2 border-black focus:border-gray-500 focus:outline-none py-2 px-4 pr-8 rounded-lg"
+                  type="text"
+                  placeholder="Русскими буквами"
+                  value={state.regnumber}
+                  name="regnumber"
+                  id="regnumber"
+                  autoComplete="off"
+                  onClick={openRegModal}
+                  onChange={keyboard === true ? onChangeRegnumberUppercaseRussian : null}
+                />
+              ) : (
+                <button
+                  className="block appearance-none text-left w-full bg-grey-lighter border-2 border-black focus:border-gray-500 focus:outline-none py-2 px-4 pr-8 rounded-lg"
+                  value={state.regnumber}
+                  name="regnumber"
+                  id="regnumber"
+                  type="button"
+                  onClick={openRegModal}
+                >
+                  {state.regnumber ? state.regnumber : 'Нажмите для ввода'}
+                </button>
+              )}
             </div>
           </div>
 
@@ -522,7 +535,7 @@ const Car = ({
                     )
                   })}
                 </select>
-                <div className="pointer-events-none absolute top-0 mt-3  right-0 flex items-center px-2 text-gray-600">
+                <div className="pointer-events-none hidden absolute top-0 mt-3 right-0 lg:flex items-center px-2 text-gray-600">
                   <svg
                     className="fill-current h-4 w-4"
                     xmlns="http://www.w3.org/2000/svg"
@@ -538,7 +551,7 @@ const Car = ({
                     type="button"
                     className="md:py-1 px-3 w-full h-full text-white text-xs md:text-sm bg-gray-500 hover:text-white rounded-r-lg"
                   >
-                    Не найден
+                    Нет
                   </button>
                 ) : null}
                 {customerOptions.length >= 1 && activeCustomer === '' && !search ? (
@@ -633,7 +646,7 @@ const Car = ({
                       <option value={it.name} label={it.name} key={it.name} />
                     ))}
                 </select>
-                <div className="pointer-events-none absolute top-0 mt-3 right-0 flex items-center px-2 text-gray-600">
+                <div className="pointer-events-none hidden absolute top-0 mt-3 right-0 lg:flex items-center px-2 text-gray-600">
                   <svg
                     className="fill-current h-4 w-4"
                     xmlns="http://www.w3.org/2000/svg"
@@ -680,7 +693,7 @@ const Car = ({
                         .map((it) => <option value={it.name} label={it.name} key={it.name_rus} />)
                     : null}
                 </select>
-                <div className="pointer-events-none absolute top-0 mt-3 right-0 flex items-center px-2 text-gray-600">
+                <div className="pointer-events-none hidden absolute top-0 mt-3 right-0 lg:flex items-center px-2 text-gray-600">
                   <svg
                     className="fill-current h-4 w-4"
                     xmlns="http://www.w3.org/2000/svg"
@@ -728,7 +741,7 @@ const Car = ({
                     ? sizeSelhoz.map((it) => <option value={it} label={it} key={it} />)
                     : null}
                 </select>
-                <div className="pointer-events-none absolute top-0 mt-3 right-0 flex items-center px-2 text-gray-600">
+                <div className="pointer-events-none hidden absolute top-0 mt-3 right-0 lg:flex items-center px-2 text-gray-600">
                   <svg
                     className="fill-current h-4 w-4"
                     xmlns="http://www.w3.org/2000/svg"
@@ -765,7 +778,7 @@ const Car = ({
                   <option value="gruz">Грузовой</option>
                   <option value="selhoz">Сельхоз</option>
                 </select>
-                <div className="pointer-events-none absolute top-0 mt-3 right-0 flex items-center px-2 text-gray-600">
+                <div className="pointer-events-none hidden absolute top-0 mt-3 right-0 lg:flex items-center px-2 text-gray-600">
                   <svg
                     className="fill-current h-4 w-4"
                     xmlns="http://www.w3.org/2000/svg"

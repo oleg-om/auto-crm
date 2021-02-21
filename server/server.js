@@ -264,43 +264,35 @@ io.on('connection', (socket) => {
 
   socket.on('new autopart', ({ autopart }) => {
     io.emit('update autopart', autopart)
-    console.log('new autopart order')
   })
 
   socket.on('edit autopart', () => {
     io.emit('update edited autopart')
-    console.log('edited autopart order')
   })
 
   socket.on('new razval', ({ razval }) => {
     // io.emit('update razval', { result: razval })
     io.emit('update razval', razval)
-    console.log('new razval order')
   })
 
   socket.on('edit razval', () => {
     io.emit('update edited razval')
-    console.log('new razval order')
   })
 
   socket.on('new oil', ({ oil }) => {
     io.emit('update oil', oil)
-    console.log('new oil order')
   })
 
   socket.on('edit oil', () => {
     io.emit('update edited oil')
-    console.log('new oil order')
   })
 
   socket.on('new tyre', ({ tyre }) => {
     io.emit('update tyre', tyre)
-    console.log('new tyre order')
   })
 
   socket.on('edit tyre', () => {
     io.emit('update edited tyre')
-    console.log('edited autopart tyre')
   })
 
   socket.on('shinomontazh one print', (shinomontazh) => {
@@ -308,6 +300,14 @@ io.on('connection', (socket) => {
   })
   socket.on('shinomontazh two print', (shinomontazh) => {
     io.emit('shintwoprint', shinomontazh)
+  })
+
+  socket.on('new shinomontazh', () => {
+    io.emit('update shinomontazh')
+  })
+
+  socket.on('edit shinomontazh', () => {
+    io.emit('update edited shinomontazh')
   })
 })
 
