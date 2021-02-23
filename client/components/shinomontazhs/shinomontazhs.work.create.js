@@ -338,33 +338,27 @@ const ShinomontazhsCreate = (props) => {
       customerList !== []
         ? customerList.find((it) => it.id)
         : {
-            regnumber: '',
-            vinnumber: '',
             mark: '',
             model: ''
           }
-    if (!state.regnumber) notify('Заполните поле гос.номер')
     if (!state.mark) notify('Укажите марку авто')
     if (!state.model) notify('Укажите модель авто')
     if (!state.place) notify('Укажите место работы')
-    else if (employees && state.place && state.regnumber && state.mark && state.model) {
+    else if (employees && state.place && state.mark && state.model) {
       if (
         checkCustomer !== undefined &&
-        state.regnumber === checkCustomer.regnumber &&
         state.mark === checkCustomer.mark &&
         state.model === checkCustomer.model
       ) {
-        props.create({ ...state, services: service, material: materials, tyre: tyres })
-        history.push('/shinomontazh/list')
-        notify('Запись добавлена')
-      } else if (checkCustomer !== undefined && activeCustomer !== '') {
-        props.openAndUpdate(activeCustomer, customer, {
+        props.create({
           ...state,
           services: service,
           material: materials,
           tyre: tyres,
           employee: employees
         })
+        history.push('/shinomontazh/list')
+        notify('Запись добавлена')
       } else {
         props.create({
           ...state,

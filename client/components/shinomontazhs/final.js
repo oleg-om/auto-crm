@@ -37,9 +37,7 @@ const Final = ({
   }
 
   const applyDiscountWithFreeService = (number) => {
-    const number_percent = (number / 100) * 100
-
-    return Number(number) - Number(number_percent)
+    return Number(number) - Number(number)
   }
 
   function roundTo5(num) {
@@ -299,6 +297,61 @@ const Final = ({
               className="block uppercase tracking-wide text-grey-darker text-xs text-left font-bold mb-2"
               htmlFor="grid-first-name"
             >
+              Ширина
+            </label>
+            <input
+              className="appearance-none w-full block bg-grey-lighter text-grey-darker border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-1 px-4"
+              type="number"
+              name="sizeone"
+              list="sizeone_list"
+              value={tyres.sizeone}
+              autoComplete="off"
+              onChange={onChangeTyres}
+            />
+            <datalist id="sizeone_list">
+              {sizeOneList.map((it, indexItem) => (
+                <option key={indexItem} value={it} />
+              ))}
+            </datalist>
+          </div>
+          <div className="mr-2 w-1/4">
+            <label
+              className="block uppercase tracking-wide text-grey-darker text-xs text-left font-bold mb-2"
+              htmlFor="grid-first-name"
+            >
+              Высота
+            </label>
+            <input
+              className="appearance-none w-full block bg-grey-lighter text-grey-darker border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-1 px-4"
+              type="number"
+              name="sizetwo"
+              list="sizetwo_list"
+              value={tyres.sizetwo}
+              autoComplete="off"
+              onChange={onChangeTyres}
+            />
+            <datalist id="sizetwo_list">
+              {sizeTwoList.map((it, indexItem) => (
+                <option key={indexItem} value={it} />
+              ))}
+            </datalist>
+          </div>
+          <div className="mr-2 w-auto">
+            <label
+              className="block uppercase tracking-wide text-grey-darker text-xs text-left font-bold mb-2"
+              htmlFor="grid-first-name"
+            >
+              Диаметр
+            </label>
+            <div className="appearance-none w-full block bg-grey-lighter text-grey-darker border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-1 px-4">
+              {state.diametr}
+            </div>
+          </div>
+          <div className="mr-2 w-1/4">
+            <label
+              className="block uppercase tracking-wide text-grey-darker text-xs text-left font-bold mb-2"
+              htmlFor="grid-first-name"
+            >
               Бренд
             </label>
             <input
@@ -364,61 +417,6 @@ const Final = ({
                   <option key={indexItem} value={it} />
                 ))}
             </datalist>
-          </div>
-          <div className="mr-2 w-1/4">
-            <label
-              className="block uppercase tracking-wide text-grey-darker text-xs text-left font-bold mb-2"
-              htmlFor="grid-first-name"
-            >
-              Ширина
-            </label>
-            <input
-              className="appearance-none w-full block bg-grey-lighter text-grey-darker border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-1 px-4"
-              type="number"
-              name="sizeone"
-              list="sizeone_list"
-              value={tyres.sizeone}
-              autoComplete="off"
-              onChange={onChangeTyres}
-            />
-            <datalist id="sizeone_list">
-              {sizeOneList.map((it, indexItem) => (
-                <option key={indexItem} value={it} />
-              ))}
-            </datalist>
-          </div>
-          <div className="mr-2 w-1/4">
-            <label
-              className="block uppercase tracking-wide text-grey-darker text-xs text-left font-bold mb-2"
-              htmlFor="grid-first-name"
-            >
-              Высота
-            </label>
-            <input
-              className="appearance-none w-full block bg-grey-lighter text-grey-darker border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-1 px-4"
-              type="number"
-              name="sizetwo"
-              list="sizetwo_list"
-              value={tyres.sizetwo}
-              autoComplete="off"
-              onChange={onChangeTyres}
-            />
-            <datalist id="sizetwo_list">
-              {sizeTwoList.map((it, indexItem) => (
-                <option key={indexItem} value={it} />
-              ))}
-            </datalist>
-          </div>
-          <div className="mr-2 w-auto">
-            <label
-              className="block uppercase tracking-wide text-grey-darker text-xs text-left font-bold mb-2"
-              htmlFor="grid-first-name"
-            >
-              Диаметр
-            </label>
-            <div className="appearance-none w-full block bg-grey-lighter text-grey-darker border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-1 px-4">
-              {state.diametr}
-            </div>
           </div>
         </div>
       ) : null}
@@ -532,6 +530,11 @@ const Final = ({
             </div>
           </button>
         </div>
+      ) : null}
+      {dateEnd ? (
+        <p className="mt-2">
+          После того как вы заверишили работу, менять услуги и материалы невозможно
+        </p>
       ) : null}
     </div>
   )

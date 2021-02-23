@@ -529,7 +529,7 @@ const ShinomontazhsEdit = (props) => {
     if (!state.mark) notify('Укажите марку авто')
     if (!state.model) notify('Укажите модель авто')
     if (!state.place) notify('Укажите место работы')
-    if (!state.payment) {
+    if (!state.payment && !props.dateFinish) {
       props.updateShinomontazh(props.id, {
         ...state,
         services: service,
@@ -542,11 +542,13 @@ const ShinomontazhsEdit = (props) => {
       notify('Запись изменена')
     } else {
       props.updateShinomontazh(props.id, {
-        ...state,
-        services: service,
-        material: materials,
-        tyre: [...tyres],
-        employee: employees,
+        // ...state,
+        // services: service,
+        // material: materials,
+        // tyre: [...tyres],
+        // employee: employees,
+        discount: state.discount,
+        payment: state.payment,
         status: statusList[2]
       })
       history.push('/shinomontazh/list')
@@ -647,7 +649,8 @@ const ShinomontazhsEdit = (props) => {
       totalSumWithoutMaterials,
       totalMaterial,
       totalSumm,
-      totalWithDiscount
+      totalWithDiscount,
+      id_shinomontazhs: props.id_shinomontazhs
     })
   }
 
@@ -661,7 +664,8 @@ const ShinomontazhsEdit = (props) => {
       totalSumWithoutMaterials,
       totalMaterial,
       totalSumm,
-      totalWithDiscount
+      totalWithDiscount,
+      id_shinomontazhs: props.id_shinomontazhs
     })
   }
 
