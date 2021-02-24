@@ -17,6 +17,7 @@ const MaterialList = () => {
   }
   const dispatch = useDispatch()
   const list = useSelector((s) => s.materials.list)
+  const auth = useSelector((s) => s.auth)
   const [isOpen, setIsOpen] = useState(false)
   const [itemId, setItemId] = useState('')
 
@@ -33,7 +34,7 @@ const MaterialList = () => {
     <div>
       <Navbar />
       <div className="flex flex-row">
-        <Sidebar />
+        {!auth.roles.includes('bookkeeper') ? <Sidebar /> : null}
         <div className="mx-auto px-4">
           <h1 className="text-3xl py-4 border-b mb-6">Материалы</h1>
           <div className="overflow-x-auto rounded-lg overflow-y-auto relative lg:my-3 mt-1 lg:shadow">

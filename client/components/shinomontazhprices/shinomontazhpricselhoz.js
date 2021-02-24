@@ -1,7 +1,7 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
 
-const ShinomontazhpriceRow = (props) => {
+const ShinomontazhpriceSelhozRow = (props) => {
   const removeShinomontazhprice = (e) => {
     props.deleteShinomontazhprice(props.id, e.target.value)
   }
@@ -23,57 +23,55 @@ const ShinomontazhpriceRow = (props) => {
         {props.ShinomontazhCategoryList.find((it) => it.value === props.category)
           ? props.ShinomontazhCategoryList.find((it) => it.value === props.category).name
           : null}
+        {props.category === 'common' ? 'Общее' : null}
       </td>
       <td className="w-full lg:w-auto p-2 text-gray-800 text-left lg:text-center border border-b block lg:table-cell relative lg:static">
-        <span className="lg:hidden px-2 py-1 text-xs font-bold uppercase">R13:</span>
-        {props.R13}
+        <span className="lg:hidden px-2 py-1 text-xs font-bold uppercase">R8:</span>
+        {props.R8}
       </td>
       <td className="w-full lg:w-auto p-2 text-gray-800 text-left lg:text-center border border-b block lg:table-cell relative lg:static">
-        <span className="lg:hidden px-2 py-1 text-xs font-bold uppercase">R14:</span>
-        {props.R14}
+        <span className="lg:hidden px-2 py-1 text-xs font-bold uppercase">R9:</span>
+        {props.R9}
+      </td>
+      <td className="w-full lg:w-auto p-2 text-gray-800 text-left lg:text-center border border-b block lg:table-cell relative lg:static">
+        <span className="lg:hidden px-2 py-1 text-xs font-bold uppercase">R10:</span>
+        {props.R10}
+      </td>
+      <td className="w-full lg:w-auto p-2 text-gray-800 text-left lg:text-center border border-b block lg:table-cell relative lg:static">
+        <span className="lg:hidden px-2 py-1 text-xs font-bold uppercase">R12:</span>
+        {props.R12}
       </td>
       <td className="w-full lg:w-auto p-2 text-gray-800 text-left lg:text-center border border-b block lg:table-cell relative lg:static">
         <span className="lg:hidden px-2 py-1 text-xs font-bold uppercase">R15:</span>
         {props.R15}
       </td>
       <td className="w-full lg:w-auto p-2 text-gray-800 text-left lg:text-center border border-b block lg:table-cell relative lg:static">
-        <span className="lg:hidden px-2 py-1 text-xs font-bold uppercase">R16:</span>
-        {props.R16}
-      </td>
-      <td className="w-full lg:w-auto p-2 text-gray-800 text-left lg:text-center border border-b block lg:table-cell relative lg:static">
-        <span className="lg:hidden px-2 py-1 text-xs font-bold uppercase">R17:</span>
-        {props.R17}
+        <span className="lg:hidden px-2 py-1 text-xs font-bold uppercase">R16,5:</span>
+        {props.R165}
       </td>
       <td className="w-full lg:w-auto p-2 text-gray-800 text-left lg:text-center border border-b block lg:table-cell relative lg:static">
         <span className="lg:hidden px-2 py-1 text-xs font-bold uppercase">R18:</span>
         {props.R18}
       </td>
       <td className="w-full lg:w-auto p-2 text-gray-800 text-left lg:text-center border border-b block lg:table-cell relative lg:static">
-        <span className="lg:hidden px-2 py-1 text-xs font-bold uppercase">R19:</span>
-        {props.R19}
-      </td>
-      <td className="w-full lg:w-auto p-2 text-gray-800 text-left lg:text-center border border-b block lg:table-cell relative lg:static">
         <span className="lg:hidden px-2 py-1 text-xs font-bold uppercase">R20:</span>
         {props.R20}
-      </td>
-      <td className="w-full lg:w-auto p-2 text-gray-800 text-left lg:text-center border border-b block lg:table-cell relative lg:static">
-        <span className="lg:hidden px-2 py-1 text-xs font-bold uppercase">R21:</span>
-        {props.R21}
-      </td>
-      <td className="w-full lg:w-auto p-2 text-gray-800 text-left lg:text-center border border-b block lg:table-cell relative lg:static">
-        <span className="lg:hidden px-2 py-1 text-xs font-bold uppercase">R22:</span>
-        {props.R22}
-      </td>
-      <td className="w-full lg:w-auto p-2 text-gray-800 text-left lg:text-center border border-b block lg:table-cell relative lg:static">
-        <span className="lg:hidden px-2 py-1 text-xs font-bold uppercase">R23:</span>
-        {props.R23}
       </td>
       <td className="w-full lg:w-auto p-2 text-gray-800 text-left lg:text-center border border-b block lg:table-cell relative lg:static">
         <span className="lg:hidden px-2 py-1 text-xs font-bold uppercase">R24:</span>
         {props.R24}
       </td>
       <td className="w-full lg:w-auto p-2 text-gray-800 text-left lg:text-center border border-b block lg:table-cell relative lg:static">
-        <span className="lg:hidden px-2 py-1 text-xs font-bold uppercase">Номер:</span>
+        <span className="lg:hidden px-2 py-1 text-xs font-bold uppercase">R25:</span>
+        {props.R25}
+      </td>
+      <td className="w-full lg:w-auto p-2 text-gray-800 text-left lg:text-center border border-b block lg:table-cell relative lg:static">
+        <span className="lg:hidden px-2 py-1 text-xs font-bold uppercase">R26:</span>
+        {props.R26}
+      </td>
+
+      <td className="w-full lg:w-auto p-2 text-gray-800 text-left lg:text-center border border-b block lg:table-cell relative lg:static">
+        <span className="lg:hidden px-2 py-1 text-xs font-bold uppercase">Номер</span>
         {props.number}
       </td>
       <td className="w-full lg:w-auto p-2 text-gray-800 text-left lg:text-center border border-b block lg:table-cell relative lg:static">
@@ -100,4 +98,4 @@ const ShinomontazhpriceRow = (props) => {
   )
 }
 
-export default ShinomontazhpriceRow
+export default ShinomontazhpriceSelhozRow

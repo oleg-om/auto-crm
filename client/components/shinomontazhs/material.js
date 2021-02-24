@@ -8,6 +8,8 @@ const Material = ({
   materialPlusChange,
   materialMinusChange,
   materialPriceChange,
+  materialEightChange,
+  checkboxMaterialPlusChange,
   dateEnd
 }) => {
   const options = Array.from(
@@ -110,6 +112,7 @@ const Material = ({
                           <label
                             htmlFor={item.id}
                             somename={item.name}
+                            somefree={item.free}
                             className="w-full h-full p-2 text-left inline-block"
                           >
                             <input
@@ -120,6 +123,7 @@ const Material = ({
                               id={item.id}
                               placeholder={item.price}
                               somename={item.name}
+                              somefree={item.free}
                               type="checkbox"
                             />
                             {item.name}
@@ -146,16 +150,30 @@ const Material = ({
                         </td>
                       ) : (
                         <td>
-                          <input
-                            className="py-1 px-4 bg-white rounded-lg my-1 mr-3 border-green-500 border w-32"
-                            placeholder="Цена"
-                            type="number"
-                            key={item.id}
-                            name={item.id}
-                            id={item.id}
-                            somename={item.name}
-                            onChange={materialPriceChange}
-                          />
+                          {item.free === 'no' ? (
+                            <input
+                              className="py-1 px-4 bg-white rounded-lg my-1 mr-3 border-green-500 border w-32"
+                              placeholder="Цена"
+                              type="number"
+                              key={item.id}
+                              name={item.id}
+                              id={item.id}
+                              somename={item.name}
+                              somefree={item.free}
+                              onChange={materialPriceChange}
+                            />
+                          ) : (
+                            <label
+                              htmlFor={item.id}
+                              somename={item.name}
+                              somefree={item.free}
+                              className="w-full h-full p-2 text-left inline-block"
+                            >
+                              <div className="py-1 px-4 bg-yellow-400 rounded-lg my-1 mr-3 border-yellow-400 border lg:w-32">
+                                Акция
+                              </div>
+                            </label>
+                          )}
                         </td>
                       )}
                       <td className="flex flex-row">
@@ -210,6 +228,32 @@ const Material = ({
                           </label>
                           // {/* </label> */}
                         )}
+                        {item.plus === 'yes' &&
+                        materials.find((it) => it.serviceName.includes(item.id)) ? (
+                          <button
+                            type="button"
+                            name={item.id}
+                            placeholder={item.price}
+                            onClick={materialEightChange}
+                            className="py-1 px-4 bg-orange-500 text-white font-bold hover:bg-orange-700 hover:text-white rounded-lg m-1"
+                          >
+                            8
+                          </button>
+                        ) : null}
+                        {item.plus === 'yes' &&
+                        !materials.find((it) => it.serviceName.includes(item.id)) ? (
+                          <button
+                            type="button"
+                            name={item.id}
+                            placeholder={item.price}
+                            onClick={checkboxMaterialPlusChange}
+                            somename={item.name}
+                            somefree={item.free}
+                            className="py-1 px-4 bg-orange-500 text-white font-bold hover:bg-orange-700 hover:text-white rounded-lg m-1"
+                          >
+                            8
+                          </button>
+                        ) : null}
                       </td>
                     </tr>
                   ))
@@ -232,7 +276,7 @@ const Material = ({
                         </label>
                       </button>
                     </td>
-                    {item.price ? (
+                    {item.price && item.free !== 'yes' ? (
                       <td>
                         <button className="w-full h-full mr-3" key={item.id} type="button" disabled>
                           <label
@@ -243,17 +287,19 @@ const Material = ({
                           </label>
                         </button>
                       </td>
-                    ) : (
+                    ) : null}
+                    {item.price && item.free === 'yes' ? (
                       <td>
-                        <input
-                          className="py-1 px-4 bg-white rounded-lg my-1 mr-3 border-green-500 border w-32"
-                          placeholder="Цена"
-                          type="number"
-                          key={item.id}
-                          disabled
-                        />
+                        <label
+                          htmlFor={item.id}
+                          className="w-full h-full p-2 text-left inline-block"
+                        >
+                          <div className="py-1 px-4 bg-yellow-400 rounded-lg my-1 mr-3 border-yellow-400 border lg:w-32">
+                            Акция
+                          </div>
+                        </label>
                       </td>
-                    )}
+                    ) : null}
                     <td className="flex flex-row">
                       {materials.find((it) => it.serviceName.includes(item.id)) ? (
                         <button

@@ -455,7 +455,13 @@ const ShinomontazhsCreate = (props) => {
     if (checked) {
       setMaterials((prevState) => [
         ...prevState,
-        { serviceName: name, quantity: 1, price: placeholder, name: attributes.somename.value }
+        {
+          serviceName: name,
+          quantity: 1,
+          price: placeholder,
+          name: attributes.somename.value,
+          free: attributes.somefree.value
+        }
       ])
     } else {
       setMaterials((prevState) => prevState.filter((it) => it.serviceName !== name))
@@ -474,6 +480,37 @@ const ShinomontazhsCreate = (props) => {
         return object
       })
     )
+  }
+
+  const materialEightChange = (e) => {
+    const { name } = e.target
+    setMaterials(
+      materials.map((object) => {
+        if (object.serviceName === name) {
+          return {
+            ...object,
+            quantity: 8
+          }
+        }
+        return object
+      })
+    )
+  }
+
+  const checkboxMaterialPlusChange = (e) => {
+    const { name, placeholder, attributes } = e.target
+    if (!materials.find((it) => it.serviceName.includes(name))) {
+      setMaterials((prevState) => [
+        ...prevState,
+        {
+          serviceName: name,
+          quantity: 8,
+          price: placeholder,
+          name: attributes.somename.value,
+          free: attributes.somefree.value
+        }
+      ])
+    }
   }
 
   const materialMinusChange = (e) => {
@@ -807,6 +844,8 @@ const ShinomontazhsCreate = (props) => {
             materialMinusChange={materialMinusChange}
             materialPriceChange={materialPriceChange}
             dateEnd=""
+            materialEightChange={materialEightChange}
+            checkboxMaterialPlusChange={checkboxMaterialPlusChange}
           />
         </div>
         <div

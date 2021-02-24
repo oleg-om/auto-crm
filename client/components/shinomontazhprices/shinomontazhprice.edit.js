@@ -54,7 +54,8 @@ const ShinomontazhpriceUpdate = (props) => {
     R34: props.R34,
     R38: props.R38,
     R42: props.R42,
-    number: props.number
+    number: props.number,
+    free: props.free
   })
   const removeShinomontazhprice = (e) => {
     props.deleteShinomontazhprice(props.id, e.target.value)
@@ -178,7 +179,6 @@ const ShinomontazhpriceUpdate = (props) => {
 
                   <option value="common">Основное</option>
                   <option value="other">Другое</option>
-                  <option value="free">Акция</option>
                 </select>
               )}
               <div className="pointer-events-none absolute top-0 mt-4  right-0 flex items-center px-2 text-gray-600">
@@ -201,6 +201,214 @@ const ShinomontazhpriceUpdate = (props) => {
         </label>
         {!state.type ? <p>Сначала выбрите направление и категорию</p> : null}
         {state.type && !state.category ? <p>Выберите категорию</p> : null}
+        {state.type === 'legk' && state.category ? (
+          <div className="-mx-3 md:flex flex-wrap mt-3">
+            <div className="md:w-1/5 px-3 mb-6 md:mb-0 flex flex-col">
+              <label
+                className="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2"
+                htmlFor="grid-first-name"
+              >
+                R13
+              </label>
+              <input
+                className="appearance-none block w-full bg-grey-lighter text-grey-darker border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-3 px-4 mb-3"
+                value={state.R13}
+                name="R13"
+                id="R13"
+                type="number"
+                placeholder="Введите цену"
+                onChange={onChange}
+              />
+            </div>
+            <div className="md:w-1/5 px-3 mb-6 md:mb-0 flex flex-col">
+              <label
+                className="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2"
+                htmlFor="grid-first-name"
+              >
+                R14
+              </label>
+              <input
+                className="appearance-none block w-full bg-grey-lighter text-grey-darker border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-3 px-4 mb-3"
+                value={state.R14}
+                name="R14"
+                id="R14"
+                type="number"
+                placeholder="Введите цену"
+                onChange={onChange}
+              />
+            </div>
+            <div className="md:w-1/5 px-3 mb-6 md:mb-0 flex flex-col">
+              <label
+                className="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2"
+                htmlFor="grid-first-name"
+              >
+                R15
+              </label>
+              <input
+                className="appearance-none block w-full bg-grey-lighter text-grey-darker border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-3 px-4 mb-3"
+                value={state.R15}
+                name="R15"
+                id="R15"
+                type="number"
+                placeholder="Введите цену"
+                onChange={onChange}
+              />
+            </div>
+            <div className="md:w-1/5 px-3 mb-6 md:mb-0 flex flex-col">
+              <label
+                className="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2"
+                htmlFor="grid-first-name"
+              >
+                R16
+              </label>
+              <input
+                className="appearance-none block w-full bg-grey-lighter text-grey-darker border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-3 px-4 mb-3"
+                value={state.R16}
+                name="R16"
+                id="R16"
+                type="number"
+                placeholder="Введите цену"
+                onChange={onChange}
+              />
+            </div>
+            <div className="md:w-1/5 px-3 mb-6 md:mb-0 flex flex-col">
+              <label
+                className="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2"
+                htmlFor="grid-first-name"
+              >
+                R17
+              </label>
+              <input
+                className="appearance-none block w-full bg-grey-lighter text-grey-darker border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-3 px-4 mb-3"
+                value={state.R17}
+                name="R17"
+                id="R17"
+                type="number"
+                placeholder="Введите цену"
+                onChange={onChange}
+              />
+            </div>
+            <div className="md:w-1/5 px-3 mb-6 md:mb-0 flex flex-col">
+              <label
+                className="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2"
+                htmlFor="grid-first-name"
+              >
+                R18
+              </label>
+              <input
+                className="appearance-none block w-full bg-grey-lighter text-grey-darker border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-3 px-4 mb-3"
+                value={state.R18}
+                name="R18"
+                id="R18"
+                type="number"
+                placeholder="Введите цену"
+                onChange={onChange}
+              />
+            </div>
+            <div className="md:w-1/5 px-3 mb-6 md:mb-0 flex flex-col">
+              <label
+                className="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2"
+                htmlFor="grid-first-name"
+              >
+                R19
+              </label>
+              <input
+                className="appearance-none block w-full bg-grey-lighter text-grey-darker border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-3 px-4 mb-3"
+                value={state.R19}
+                name="R19"
+                id="R19"
+                type="number"
+                placeholder="Введите цену"
+                onChange={onChange}
+              />
+            </div>
+            <div className="md:w-1/5 px-3 mb-6 md:mb-0 flex flex-col">
+              <label
+                className="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2"
+                htmlFor="grid-first-name"
+              >
+                R20
+              </label>
+              <input
+                className="appearance-none block w-full bg-grey-lighter text-grey-darker border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-3 px-4 mb-3"
+                value={state.R20}
+                name="R20"
+                id="R20"
+                type="number"
+                placeholder="Введите цену"
+                onChange={onChange}
+              />
+            </div>
+            <div className="md:w-1/5 px-3 mb-6 md:mb-0 flex flex-col">
+              <label
+                className="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2"
+                htmlFor="grid-first-name"
+              >
+                R21
+              </label>
+              <input
+                className="appearance-none block w-full bg-grey-lighter text-grey-darker border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-3 px-4 mb-3"
+                value={state.R21}
+                name="R21"
+                id="R21"
+                type="number"
+                placeholder="Введите цену"
+                onChange={onChange}
+              />
+            </div>
+            <div className="md:w-1/5 px-3 mb-6 md:mb-0 flex flex-col">
+              <label
+                className="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2"
+                htmlFor="grid-first-name"
+              >
+                R22
+              </label>
+              <input
+                className="appearance-none block w-full bg-grey-lighter text-grey-darker border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-3 px-4 mb-3"
+                value={state.R22}
+                name="R22"
+                id="R22"
+                type="number"
+                placeholder="Введите цену"
+                onChange={onChange}
+              />
+            </div>
+            <div className="md:w-1/5 px-3 mb-6 md:mb-0 flex flex-col">
+              <label
+                className="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2"
+                htmlFor="grid-first-name"
+              >
+                R23
+              </label>
+              <input
+                className="appearance-none block w-full bg-grey-lighter text-grey-darker border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-3 px-4 mb-3"
+                value={state.R23}
+                name="R23"
+                id="R23"
+                type="number"
+                placeholder="Введите цену"
+                onChange={onChange}
+              />
+            </div>
+            <div className="md:w-1/5 px-3 mb-6 md:mb-0 flex flex-col">
+              <label
+                className="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2"
+                htmlFor="grid-first-name"
+              >
+                R24
+              </label>
+              <input
+                className="appearance-none block w-full bg-grey-lighter text-grey-darker border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-3 px-4 mb-3"
+                value={state.R24}
+                name="R24"
+                id="R24"
+                type="number"
+                placeholder="Введите цену"
+                onChange={onChange}
+              />
+            </div>
+          </div>
+        ) : null}
         {state.type === 'gruz' ? (
           <div className="-mx-3 md:flex flex-wrap mt-3">
             <div className="md:w-1/5 px-3 mb-6 md:mb-0 flex flex-col">
@@ -787,6 +995,40 @@ const ShinomontazhpriceUpdate = (props) => {
               placeholder="Введите номер"
               onChange={onChange}
             />
+          </div>
+          <div className="md:w-1/3 px-3 mb-6 md:mb-0 flex flex-col">
+            <label
+              className="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2"
+              htmlFor="grid-first-name"
+            >
+              Акция
+            </label>
+            <div className="flex-shrink w-full inline-block relative mb-3">
+              <select
+                className="appearance-none block w-full bg-grey-lighter text-grey-darker border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-3 px-4 mb-3"
+                value={state.free}
+                name="free"
+                id="free"
+                required
+                onChange={onChange}
+              >
+                <option value="" className="text-gray-800">
+                  Выберите вариант
+                </option>
+
+                <option value="yes">Да</option>
+                <option value="no">Нет</option>
+              </select>
+              <div className="pointer-events-none absolute top-0 mt-4  right-0 flex items-center px-2 text-gray-600">
+                <svg
+                  className="fill-current h-4 w-4"
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 20 20"
+                >
+                  <path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z" />
+                </svg>
+              </div>
+            </div>
           </div>
         </div>
       </div>

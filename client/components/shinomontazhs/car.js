@@ -697,7 +697,7 @@ const Car = ({
             </div>
           </div>
         </div>
-        <div className="flex-row flex w-full lg:w-1/2 mt-4 bg-gray-200 rounded-lg shadow p-3">
+        <div className="flex-row flex w-full lg:w-1/2 mt-4 mb-5 lg:mb-0 bg-gray-200 rounded-lg shadow p-3">
           <div className="flex items-center mr-3">
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="85" height="85">
               <g id="_13-car" data-name="13-car">

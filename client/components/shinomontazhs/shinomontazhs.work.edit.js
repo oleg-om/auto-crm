@@ -457,12 +457,35 @@ const ShinomontazhsEdit = (props) => {
     if (checked) {
       setMaterials((prevState) => [
         ...prevState,
-        { serviceName: name, quantity: 1, price: placeholder, name: attributes.somename.value }
+        {
+          serviceName: name,
+          quantity: 1,
+          price: placeholder,
+          name: attributes.somename.value,
+          free: attributes.somefree.value
+        }
       ])
     } else {
       setMaterials((prevState) => prevState.filter((it) => it.serviceName !== name))
     }
   }
+
+  const checkboxMaterialPlusChange = (e) => {
+    const { name, placeholder, attributes } = e.target
+    if (!materials.find((it) => it.serviceName.includes(name))) {
+      setMaterials((prevState) => [
+        ...prevState,
+        {
+          serviceName: name,
+          quantity: 8,
+          price: placeholder,
+          name: attributes.somename.value,
+          free: attributes.somefree.value
+        }
+      ])
+    }
+  }
+
   const materialPlusChange = (e) => {
     const { name } = e.target
     setMaterials(
@@ -486,6 +509,21 @@ const ShinomontazhsEdit = (props) => {
           return {
             ...object,
             quantity: object.quantity - 1
+          }
+        }
+        return object
+      })
+    )
+  }
+
+  const materialEightChange = (e) => {
+    const { name } = e.target
+    setMaterials(
+      materials.map((object) => {
+        if (object.serviceName === name) {
+          return {
+            ...object,
+            quantity: 8
           }
         }
         return object
@@ -833,6 +871,8 @@ const ShinomontazhsEdit = (props) => {
             materialMinusChange={materialMinusChange}
             materialPriceChange={materialPriceChange}
             dateEnd={props.dateFinish}
+            materialEightChange={materialEightChange}
+            checkboxMaterialPlusChange={checkboxMaterialPlusChange}
           />
         </div>
         <div

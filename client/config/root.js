@@ -183,10 +183,10 @@ const RootComponent = (props) => {
             <PrivateRoute exact path="/razval/create" component={RazvalNew} />
             <PrivateRoute exact path="/razval/edit/:id" component={RazvalEdit} />
             <PrivateRoute exact path="/settings" component={SettingEdit} />
-            <AdminRoute exact path="/material/list" component={MaterialList} />
+            <PrivateRoute exact path="/material/list" component={MaterialList} />
             <PrivateRoute exact path="/material/create" component={MaterialNew} />
             <PrivateRoute exact path="/material/edit/:id" component={MaterialEdit} />
-            <AdminRoute exact path="/shinomontazhprice/list" component={ShinomontazhpriceList} />
+            <PrivateRoute exact path="/shinomontazhprice/list" component={ShinomontazhpriceList} />
             <PrivateRoute exact path="/shinomontazhprice/create" component={ShinomontazhpriceNew} />
             <PrivateRoute exact path="/vendor/list" component={VendorList} />
             <PrivateRoute exact path="/vendor/create" component={VendorNew} />

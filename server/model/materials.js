@@ -18,6 +18,14 @@ const Material = new mongoose.Schema({
     type: Number,
     required: false
   },
+  free: {
+    type: String,
+    required: false
+  },
+  plus: {
+    type: String,
+    required: false
+  },
   type: {
     type: String,
     required: true

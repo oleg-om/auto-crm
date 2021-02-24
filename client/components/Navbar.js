@@ -252,6 +252,24 @@ const Navbar = () => {
               Босс
             </NavLink>
           ) : null}
+          {auth.roles.includes('bookkeeper') ? (
+            <NavLink
+              to="/shinomontazhprice/list"
+              className="block mt-4 lg:inline-block lg:mt-0 text-gray-800 hover:text-blue-700 mr-4"
+              activeClassName="text-blue-600 underline font-semibold"
+            >
+              Цены (шиномонтаж)
+            </NavLink>
+          ) : null}
+          {auth.roles.includes('bookkeeper') ? (
+            <NavLink
+              to="/material/list"
+              className="block mt-4 lg:inline-block lg:mt-0 text-gray-800 hover:text-blue-700 mr-4"
+              activeClassName="text-blue-600 underline font-semibold"
+            >
+              Цены (материалы)
+            </NavLink>
+          ) : null}
         </div>
         <div className="relative inline-block text-left">
           <div>
