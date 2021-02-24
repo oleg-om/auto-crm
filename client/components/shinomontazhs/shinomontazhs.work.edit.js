@@ -471,14 +471,14 @@ const ShinomontazhsEdit = (props) => {
   }
 
   const checkboxMaterialPlusChange = (e) => {
-    const { name, placeholder, attributes } = e.target
+    const { name, attributes } = e.target
     if (!materials.find((it) => it.serviceName.includes(name))) {
       setMaterials((prevState) => [
         ...prevState,
         {
           serviceName: name,
           quantity: 8,
-          price: placeholder,
+          price: attributes.someprice.value,
           name: attributes.somename.value,
           free: attributes.somefree.value
         }
@@ -625,6 +625,10 @@ const ShinomontazhsEdit = (props) => {
         notify('Заполните поле Марка авто')
       } else if (!state.model) {
         notify('Заполните поле Модель авто')
+      } else if (!state.kuzov) {
+        notify('Выберите кузов')
+      } else if (!state.diametr) {
+        notify('Выберите диаметр')
       } else {
         setActive('service')
       }
@@ -660,6 +664,10 @@ const ShinomontazhsEdit = (props) => {
         notify('Заполните поле Марка авто')
       } else if (!state.model) {
         notify('Заполните поле Модель авто')
+      } else if (!state.kuzov) {
+        notify('Выберите кузов')
+      } else if (!state.diametr) {
+        notify('Выберите диаметр')
       } else {
         setActive('service')
       }

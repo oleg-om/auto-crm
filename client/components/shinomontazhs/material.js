@@ -234,6 +234,7 @@ const Material = ({
                             type="button"
                             name={item.id}
                             placeholder={item.price}
+                            someprice={item.price}
                             onClick={materialEightChange}
                             className="py-1 px-4 bg-orange-500 text-white font-bold hover:bg-orange-700 hover:text-white rounded-lg m-1"
                           >
@@ -249,6 +250,7 @@ const Material = ({
                             onClick={checkboxMaterialPlusChange}
                             somename={item.name}
                             somefree={item.free}
+                            someprice={item.price}
                             className="py-1 px-4 bg-orange-500 text-white font-bold hover:bg-orange-700 hover:text-white rounded-lg m-1"
                           >
                             8
