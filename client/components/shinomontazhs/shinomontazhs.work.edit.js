@@ -48,7 +48,7 @@ const ShinomontazhsEdit = (props) => {
 
   const [service, setService] = useState(props.services ? props.services : [])
   const [materials, setMaterials] = useState(props.material ? props.material : [])
-  const [tyres, setTyres] = useState(props.tyre ? props.tyre[0] : {})
+  const [tyres, setTyres] = useState(props.tyre ? props.tyre[0] : { sale: 'no' })
   const [employees, setEmployees] = useState(props.employee ? props.employee : [])
 
   const onChangeRegNumber = (e) => {
@@ -514,7 +514,15 @@ const ShinomontazhsEdit = (props) => {
     if (!state.place) notify('Укажите место работы')
     else {
       props.updateShinomontazh(props.id, {
-        ...state.filter((it) => it),
+        place: state.place,
+        regnumber: state.regnumber,
+        mark: state.mark,
+        model: state.model,
+        comment: state.comment,
+        kuzov: state.kuzov,
+        diametr: state.diametr,
+        discount: state.discount,
+        payment: state.payment,
         services: service,
         material: materials,
         tyre: [...tyres]
@@ -531,11 +539,20 @@ const ShinomontazhsEdit = (props) => {
     if (!state.place) notify('Укажите место работы')
     if (!state.payment && !props.dateFinish) {
       props.updateShinomontazh(props.id, {
-        ...state,
+        place: state.place,
+        regnumber: state.regnumber,
+        mark: state.mark,
+        model: state.model,
+        comment: state.comment,
+        kuzov: state.kuzov,
+        diametr: state.diametr,
+        discount: state.discount,
+        payment: state.payment,
         services: service,
         material: materials,
         tyre: [...tyres],
         employee: employees,
+        dateFinish: props.dateFinish ? props.dateFinish : new Date(),
         status: statusList[1]
       })
       history.push('/shinomontazh/list')
@@ -748,6 +765,7 @@ const ShinomontazhsEdit = (props) => {
             employees={employees}
             checkboxEmployeeChange={checkboxEmployeeChange}
             checkBoxEmpRoleChange={checkBoxEmpRoleChange}
+            dateEnd={props.dateFinish}
           />
         </div>
         <div
@@ -797,6 +815,7 @@ const ShinomontazhsEdit = (props) => {
             servicePlusChange={servicePlusChange}
             serviceMinusChange={serviceMinusChange}
             servicePriceChange={servicePriceChange}
+            dateEnd={props.dateFinish}
           />
         </div>
         <div
@@ -813,6 +832,7 @@ const ShinomontazhsEdit = (props) => {
             materialPlusChange={materialPlusChange}
             materialMinusChange={materialMinusChange}
             materialPriceChange={materialPriceChange}
+            dateEnd={props.dateFinish}
           />
         </div>
         <div

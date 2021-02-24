@@ -38,6 +38,14 @@ const Customer = new mongoose.Schema({
     type: String,
     required: false
   },
+  kuzov: {
+    type: String,
+    required: false
+  },
+  diametr: {
+    type: String,
+    required: false
+  },
   id: {
     type: String,
     unique: true,

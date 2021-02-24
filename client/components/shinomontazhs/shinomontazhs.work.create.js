@@ -44,7 +44,7 @@ const ShinomontazhsCreate = (props) => {
 
   const [service, setService] = useState([])
   const [materials, setMaterials] = useState([])
-  const [tyres, setTyres] = useState({})
+  const [tyres, setTyres] = useState({ sale: 'no' })
   const [employees, setEmployees] = useState([])
 
   const onChangeRegNumber = (e) => {
@@ -105,14 +105,8 @@ const ShinomontazhsCreate = (props) => {
   })
 
   const [customer, setCustomer] = useState({
-    regnumber: '',
-    vinnumber: '',
     mark: '',
     model: '',
-    gen: '',
-    mod: '',
-    name: '',
-    phone: '',
     idOfItem: ''
   })
 
@@ -159,6 +153,7 @@ const ShinomontazhsCreate = (props) => {
   const [search, setSearch] = useState()
   const [activeCustomer, setActiveCustomer] = useState('')
   const [customerOptions, setCustomerOptions] = useState([])
+
   useEffect(() => {
     if (state.regnumber !== '') {
       setCustomerOptions(
@@ -202,6 +197,7 @@ const ShinomontazhsCreate = (props) => {
       }))
     }
   }
+
   const applyCustomer = () => {
     const newCustomer = customerList.find((it) => it.id === search)
     const findCar = options.mark.find((it) => newCustomer.mark === it.name)
@@ -209,32 +205,24 @@ const ShinomontazhsCreate = (props) => {
       setStateId((prevState) => ({
         ...prevState,
         mark: findCar ? findCar.id_car_mark : '',
-        model: '',
-        gen: '',
-        mod: ''
+        model: ''
       }))
       setCustomer((prevState) => ({
         ...prevState,
         regnumber: newCustomer.regnumber ? newCustomer.regnumber : '',
-        vinnumber: newCustomer.vinnumber ? newCustomer.vinnumber : '',
         mark: newCustomer.mark ? newCustomer.mark : '',
         model: newCustomer.model ? newCustomer.model : '',
-        gen: newCustomer.gen ? newCustomer.gen : '',
-        mod: newCustomer.mod ? newCustomer.mod : '',
-        name: newCustomer.name ? newCustomer.name : '',
-        phone: newCustomer.phone ? newCustomer.phone : '',
+        kuzov: newCustomer.kuzov ? newCustomer.kuzov : '',
+        diametr: newCustomer.diametr ? newCustomer.diametr : '',
         idOfItem: newCustomer.id
       }))
       setState((prevState) => ({
         ...prevState,
         regnumber: newCustomer.regnumber ? newCustomer.regnumber : '',
-        vinnumber: newCustomer.vinnumber ? newCustomer.vinnumber : '',
         mark: newCustomer.mark ? newCustomer.mark : '',
-        model: newCustomer.model ? newCustomer.model : '',
-        gen: newCustomer.gen ? newCustomer.gen : '',
-        mod: newCustomer.mod ? newCustomer.mod : '',
-        name: newCustomer.name ? newCustomer.name : '',
-        phone: newCustomer.phone ? newCustomer.phone : ''
+        kuzov: newCustomer.kuzov ? newCustomer.kuzov : '',
+        diametr: newCustomer.diametr ? newCustomer.diametr : '',
+        model: newCustomer.model ? newCustomer.model : ''
       }))
       setActiveCustomer(newCustomer.id)
     }
@@ -336,11 +324,15 @@ const ShinomontazhsCreate = (props) => {
   const sendData = () => {
     const checkCustomer =
       customerList !== []
-        ? customerList.find((it) => it.id)
+        ? customerList.find((it) => it.id === search)
         : {
             mark: '',
-            model: ''
+            model: '',
+            regnumber: '',
+            kuzov: '',
+            diametr: ''
           }
+
     if (!state.mark) notify('Укажите марку авто')
     if (!state.model) notify('Укажите модель авто')
     if (!state.place) notify('Укажите место работы')
@@ -348,7 +340,10 @@ const ShinomontazhsCreate = (props) => {
       if (
         checkCustomer !== undefined &&
         state.mark === checkCustomer.mark &&
-        state.model === checkCustomer.model
+        state.model === checkCustomer.model &&
+        state.regnumber === checkCustomer.regnumber &&
+        state.kuzov === checkCustomer.kuzov &&
+        state.diametr === checkCustomer.diametr
       ) {
         props.create({
           ...state,
@@ -359,6 +354,18 @@ const ShinomontazhsCreate = (props) => {
         })
         history.push('/shinomontazh/list')
         notify('Запись добавлена')
+      } else if (checkCustomer !== undefined && activeCustomer !== '') {
+        props.openAndUpdate(
+          activeCustomer,
+          { ...customer, regnumber: state.regnumber, kuzov: state.kuzov, diametr: state.diametr },
+          {
+            ...state,
+            services: service,
+            material: materials,
+            tyre: [...tyres],
+            employee: employees
+          }
+        )
       } else {
         props.create({
           ...state,
@@ -367,7 +374,12 @@ const ShinomontazhsCreate = (props) => {
           tyre: [...tyres],
           employee: employees
         })
-        props.createCust(customer)
+        props.createCust({
+          ...customer,
+          regnumber: state.regnumber,
+          kuzov: state.kuzov,
+          diametr: state.diametr
+        })
         history.push('/shinomontazh/list')
         notify('Запись добавлена')
         notify('Создан новый клиент')
@@ -727,6 +739,7 @@ const ShinomontazhsCreate = (props) => {
             employees={employees}
             checkboxEmployeeChange={checkboxEmployeeChange}
             checkBoxEmpRoleChange={checkBoxEmpRoleChange}
+            dateEnd=""
           />
         </div>
         <div
@@ -776,6 +789,7 @@ const ShinomontazhsCreate = (props) => {
             servicePlusChange={servicePlusChange}
             serviceMinusChange={serviceMinusChange}
             servicePriceChange={servicePriceChange}
+            dateEnd=""
           />
         </div>
         <div
@@ -792,6 +806,7 @@ const ShinomontazhsCreate = (props) => {
             materialPlusChange={materialPlusChange}
             materialMinusChange={materialMinusChange}
             materialPriceChange={materialPriceChange}
+            dateEnd=""
           />
         </div>
         <div

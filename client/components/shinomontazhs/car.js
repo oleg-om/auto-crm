@@ -2,6 +2,7 @@ import React, { useEffect } from 'react'
 import cx from 'classnames'
 import sizeGruz from '../../lists/tyres/sizegruz'
 import sizeSelhoz from '../../lists/tyres/sizeselhoz'
+import gruzCars from '../../lists/gruz-cars'
 
 const Car = ({
   regOpen,
@@ -29,19 +30,26 @@ const Car = ({
   stateId
 }) => {
   useEffect(() => {
-    fetch('/api/v1/carmark')
-      .then((res) => res.json())
-      .then((it) => {
-        setOptions((prevState) => ({
-          model: prevState.model,
-          mark: it.data
-        }))
+    if (state.kuzov !== 'gruz' && state.kuzov !== 'selhoz') {
+      fetch('/api/v1/carmark')
+        .then((res) => res.json())
+        .then((it) => {
+          setOptions((prevState) => ({
+            model: prevState.model,
+            mark: it.data
+          }))
+        })
+    } else if (state.kuzov === 'gruz' || state.kuzov === 'selhoz') {
+      setOptions({
+        mark: gruzCars,
+        model: []
       })
+    }
     return () => {}
-  }, [])
+  }, [state.kuzov, setOptions])
 
   useEffect(() => {
-    if (stateId.mark !== '') {
+    if (stateId.mark !== '' && state.kuzov !== 'gruz' && state.kuzov !== 'selhoz') {
       fetch(`/api/v1/carmodel/${stateId.mark}`)
         .then((res) => res.json())
         .then((it) => {
@@ -50,9 +58,14 @@ const Car = ({
             model: it.data
           }))
         })
+    } else if (state.kuzov === 'gruz' || state.kuzov === 'selhoz') {
+      setOptions(() => ({
+        mark: gruzCars,
+        model: []
+      }))
     }
     return () => {}
-  }, [stateId.mark])
+  }, [stateId.mark, state.kuzov, setOptions])
   return (
     <div className="md:flex md:flex-col -mx-3">
       <div className="px-3 mb-6 md:mb-0 w-full">
@@ -599,6 +612,91 @@ const Car = ({
         !activeCustomer ? (
           <p className="text-left p-1">Клиентов не найдено. Будет создан новый клиент</p>
         ) : null}
+        <div className="md:flex mb-2 mt-5">
+          <div className="bg-blue-400 rounded shadow p-3 w-full flex flex-row-reverse">
+            <div className="w-1/2 px-3 mb-6 md:mb-0">
+              <label
+                className="block uppercase tracking-wide text-white text-xs font-bold mb-2"
+                htmlFor="phone"
+              >
+                Диаметр
+              </label>
+              <div className="flex-shrink w-full inline-block relative">
+                <select
+                  className="block appearance-none w-full bg-grey-lighter border border-gray-300 focus:border-gray-500 focus:outline-none py-2 px-4 pr-8 rounded"
+                  name="diametr"
+                  id="diametr"
+                  value={state.diametr}
+                  autoComplete="off"
+                  required
+                  disabled={!state.kuzov}
+                  onChange={onChange}
+                >
+                  <option value="" hidden>
+                    {state.kuzov ? 'Выберите диаметр' : 'Сначала выберите кузов'}
+                  </option>
+                  {state.kuzov === 'sedan' ||
+                  state.kuzov === 'crossover' ||
+                  state.kuzov === 'runflat'
+                    ? sizeThreeList.map((it) => <option value={it} label={it} key={it} />)
+                    : null}
+                  {state.kuzov === 'gruz'
+                    ? sizeGruz.map((it) => <option value={it} label={it} key={it} />)
+                    : null}
+                  {state.kuzov === 'selhoz'
+                    ? sizeSelhoz.map((it) => <option value={it} label={it} key={it} />)
+                    : null}
+                </select>
+                <div className="pointer-events-none hidden absolute top-0 mt-3 right-0 lg:flex items-center px-2 text-gray-600">
+                  <svg
+                    className="fill-current h-4 w-4"
+                    xmlns="http://www.w3.org/2000/svg"
+                    viewBox="0 0 20 20"
+                  >
+                    <path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z" />
+                  </svg>
+                </div>
+              </div>
+            </div>
+            <div className="w-1/2 px-3 mb-6 md:mb-0">
+              <label
+                className="block uppercase tracking-wide text-white text-xs font-bold mb-2"
+                htmlFor="phone"
+              >
+                Кузов
+              </label>
+              <div className="flex-shrink w-full inline-block relative">
+                <select
+                  className="block appearance-none w-full bg-grey-lighter border border-gray-300 focus:border-gray-500 focus:outline-none py-2 px-4 pr-8 rounded"
+                  name="kuzov"
+                  id="kuzov"
+                  value={state.kuzov}
+                  autoComplete="off"
+                  required
+                  onChange={onChange}
+                >
+                  <option value="" hidden>
+                    Выберите кузов
+                  </option>
+                  <option value="sedan">Седан</option>
+                  <option value="crossover">Кроссовер</option>
+                  <option value="runflat">RUN FLAT</option>
+                  <option value="gruz">Грузовой</option>
+                  <option value="selhoz">Сельхоз</option>
+                </select>
+                <div className="pointer-events-none hidden absolute top-0 mt-3 right-0 lg:flex items-center px-2 text-gray-600">
+                  <svg
+                    className="fill-current h-4 w-4"
+                    xmlns="http://www.w3.org/2000/svg"
+                    viewBox="0 0 20 20"
+                  >
+                    <path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z" />
+                  </svg>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
         <div className="flex-row flex w-full lg:w-1/2 mt-4 bg-gray-200 rounded-lg shadow p-3">
           <div className="flex items-center mr-3">
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="85" height="85">
@@ -690,8 +788,9 @@ const Car = ({
                           }
                           return 0
                         })
-                        .map((it) => <option value={it.name} label={it.name} key={it.name_rus} />)
+                        .map((it) => <option value={it.name} label={it.name} key={it.name} />)
                     : null}
+                  <option value="other">Прочее</option>
                 </select>
                 <div className="pointer-events-none hidden absolute top-0 mt-3 right-0 lg:flex items-center px-2 text-gray-600">
                   <svg
@@ -706,91 +805,7 @@ const Car = ({
             </div>
           </div>
         </div>
-        <div className="md:flex mb-2 mt-5">
-          <div className="bg-blue-400 rounded shadow p-3 w-full flex flex-row-reverse">
-            <div className="w-1/2 px-3 mb-6 md:mb-0">
-              <label
-                className="block uppercase tracking-wide text-white text-xs font-bold mb-2"
-                htmlFor="phone"
-              >
-                Диаметр
-              </label>
-              <div className="flex-shrink w-full inline-block relative">
-                <select
-                  className="block appearance-none w-full bg-grey-lighter border border-gray-300 focus:border-gray-500 focus:outline-none py-2 px-4 pr-8 rounded"
-                  name="diametr"
-                  id="diametr"
-                  value={state.diametr}
-                  autoComplete="off"
-                  required
-                  disabled={!state.kuzov}
-                  onChange={onChange}
-                >
-                  <option value="" hidden>
-                    {state.kuzov ? 'Выберите диаметр' : 'Сначала выберите кузов'}
-                  </option>
-                  {state.kuzov === 'sedan' ||
-                  state.kuzov === 'crossover' ||
-                  state.kuzov === 'runflat'
-                    ? sizeThreeList.map((it) => <option value={it} label={it} key={it} />)
-                    : null}
-                  {state.kuzov === 'gruz'
-                    ? sizeGruz.map((it) => <option value={it} label={it} key={it} />)
-                    : null}
-                  {state.kuzov === 'selhoz'
-                    ? sizeSelhoz.map((it) => <option value={it} label={it} key={it} />)
-                    : null}
-                </select>
-                <div className="pointer-events-none hidden absolute top-0 mt-3 right-0 lg:flex items-center px-2 text-gray-600">
-                  <svg
-                    className="fill-current h-4 w-4"
-                    xmlns="http://www.w3.org/2000/svg"
-                    viewBox="0 0 20 20"
-                  >
-                    <path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z" />
-                  </svg>
-                </div>
-              </div>
-            </div>
-            <div className="w-1/2 px-3 mb-6 md:mb-0">
-              <label
-                className="block uppercase tracking-wide text-white text-xs font-bold mb-2"
-                htmlFor="phone"
-              >
-                Кузов
-              </label>
-              <div className="flex-shrink w-full inline-block relative">
-                <select
-                  className="block appearance-none w-full bg-grey-lighter border border-gray-300 focus:border-gray-500 focus:outline-none py-2 px-4 pr-8 rounded"
-                  name="kuzov"
-                  id="kuzov"
-                  value={state.kuzov}
-                  autoComplete="off"
-                  required
-                  onChange={onChange}
-                >
-                  <option value="" hidden>
-                    Выберите кузов
-                  </option>
-                  <option value="sedan">Седан</option>
-                  <option value="crossover">Кроссовер</option>
-                  <option value="runflat">RUN FLAT</option>
-                  <option value="gruz">Грузовой</option>
-                  <option value="selhoz">Сельхоз</option>
-                </select>
-                <div className="pointer-events-none hidden absolute top-0 mt-3 right-0 lg:flex items-center px-2 text-gray-600">
-                  <svg
-                    className="fill-current h-4 w-4"
-                    xmlns="http://www.w3.org/2000/svg"
-                    viewBox="0 0 20 20"
-                  >
-                    <path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z" />
-                  </svg>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
+
         {/* <div className="mt-5 w-full">
           <div>
             <label
