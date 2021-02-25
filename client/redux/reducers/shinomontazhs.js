@@ -51,6 +51,16 @@ export function getShinomontazhs() {
   }
 }
 
+export function getShinomontazhsLastTwoDays() {
+  return (dispatch) => {
+    fetch('/api/v1/shinomontazhlast')
+      .then((r) => r.json())
+      .then(({ data: shinomontazhs }) => {
+        dispatch({ type: GET_SHINOMONTAZHS, shinomontazhs })
+      })
+  }
+}
+
 export function getShinomontazh() {
   return (dispatch) => {
     fetch('/api/v1/shinomontazh:uuid')

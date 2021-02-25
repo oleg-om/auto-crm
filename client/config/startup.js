@@ -1,5 +1,5 @@
 import { useEffect } from 'react'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import PropTypes from 'prop-types'
 import { trySignIn } from '../redux/reducers/auth'
 import { getCustomers } from '../redux/reducers/customers'
@@ -17,14 +17,23 @@ import { getVendors } from '../redux/reducers/vendors'
 import { getTyres } from '../redux/reducers/tyres'
 
 const Startup = (props) => {
+  const role = useSelector((s) => s.auth.roles)
+
   const dispatch = useDispatch()
   useEffect(() => {
     dispatch(trySignIn())
   }, [dispatch])
 
   useEffect(() => {
-    dispatch(getAutoparts())
-  }, [dispatch])
+    if (
+      role.includes('boss') ||
+      role.includes('admin') ||
+      role.includes('autopartfull') ||
+      role.includes('autopartsimple')
+    ) {
+      dispatch(getAutoparts())
+    }
+  }, [dispatch, role])
 
   useEffect(() => {
     dispatch(getCustomers())
@@ -39,40 +48,74 @@ const Startup = (props) => {
   }, [dispatch])
 
   useEffect(() => {
-    dispatch(getAccounts())
-  }, [dispatch])
+    if (role.includes('boss') || role.includes('admin')) {
+      dispatch(getAccounts())
+    }
+  }, [dispatch, role])
 
   useEffect(() => {
-    dispatch(getRazvals())
-  }, [dispatch])
+    if (role.includes('boss') || role.includes('admin') || role.includes('razval')) {
+      dispatch(getRazvals())
+    }
+  }, [dispatch, role])
 
   useEffect(() => {
-    dispatch(getOils())
-  }, [dispatch])
+    if (role.includes('boss') || role.includes('admin') || role.includes('razval')) {
+      dispatch(getOils())
+    }
+  }, [dispatch, role])
 
   useEffect(() => {
     dispatch(getSettings())
   }, [dispatch])
 
   useEffect(() => {
-    dispatch(getMaterials())
-  }, [dispatch])
+    if (
+      role.includes('boss') ||
+      role.includes('admin') ||
+      role.includes('shinomontazh') ||
+      role.includes('bookkeeper')
+    ) {
+      dispatch(getMaterials())
+    }
+  }, [dispatch, role])
 
   useEffect(() => {
-    dispatch(getShinomontazhprices())
-  }, [dispatch])
+    if (
+      role.includes('boss') ||
+      role.includes('admin') ||
+      role.includes('shinomontazh') ||
+      role.includes('bookkeeper')
+    ) {
+      dispatch(getShinomontazhprices())
+    }
+  }, [dispatch, role])
 
   useEffect(() => {
-    dispatch(getShinomontazhs())
-  }, [dispatch])
+    if (
+      role.includes('boss') ||
+      role.includes('admin') ||
+      role.includes('shinomontazh') ||
+      role.includes('bookkeeper')
+    ) {
+      dispatch(getShinomontazhs())
+    }
+  }, [dispatch, role])
 
   useEffect(() => {
     dispatch(getVendors())
   }, [dispatch])
 
   useEffect(() => {
-    dispatch(getTyres())
-  }, [dispatch])
+    if (
+      role.includes('boss') ||
+      role.includes('admin') ||
+      role.includes('tyrefull') ||
+      role.includes('tyresimple')
+    ) {
+      dispatch(getTyres())
+    }
+  }, [dispatch, role])
 
   return props.children
 }

@@ -14,6 +14,7 @@ import { getShinomontazhs } from '../redux/reducers/shinomontazhs'
 const Navbar = () => {
   const dispatch = useDispatch()
   const auth = useSelector((s) => s.auth)
+  const role = useSelector((s) => s.auth.roles)
   const [toggle, setToggle] = useState(false)
   const toggleOpen = () => {
     if (toggle === false) {
@@ -32,67 +33,124 @@ const Navbar = () => {
   socket.connect()
   useEffect(() => {
     socket.on('update razval', function () {
-      dispatch(getRazvals())
+      if (role.includes('boss') || role.includes('admin') || role.includes('razval')) {
+        dispatch(getRazvals())
+      }
     })
-  }, [])
+  }, [dispatch, role])
 
   useEffect(() => {
     socket.on('update edited razval', function () {
-      dispatch(getRazvals())
+      if (role.includes('boss') || role.includes('admin') || role.includes('razval')) {
+        dispatch(getRazvals())
+      }
     })
-  }, [])
+  }, [dispatch, role])
 
   useEffect(() => {
     socket.on('update oil', function () {
-      dispatch(getOils())
+      if (role.includes('boss') || role.includes('admin') || role.includes('razval')) {
+        dispatch(getOils())
+      }
     })
-  }, [])
+  }, [dispatch, role])
 
   useEffect(() => {
     socket.on('update edited oil', function () {
-      dispatch(getOils())
+      if (role.includes('boss') || role.includes('admin') || role.includes('razval')) {
+        dispatch(getOils())
+      }
     })
-  }, [])
+  }, [dispatch, role])
 
   useEffect(() => {
     socket.on('update autopart', function () {
-      dispatch(getAutoparts())
+      if (
+        role.includes('boss') ||
+        role.includes('admin') ||
+        role.includes('autopartfull') ||
+        role.includes('autopartsimple')
+      ) {
+        dispatch(getAutoparts())
+      }
     })
-  }, [])
+  }, [dispatch, role])
 
   useEffect(() => {
     socket.on('update edited autopart', function () {
-      dispatch(getAutoparts())
+      if (
+        role.includes('boss') ||
+        role.includes('admin') ||
+        role.includes('autopartfull') ||
+        role.includes('autopartsimple')
+      ) {
+        dispatch(getAutoparts())
+      }
     })
-  }, [])
+  }, [dispatch, role])
 
   useEffect(() => {
     socket.on('update tyre', function () {
-      dispatch(getTyres())
+      if (
+        role.includes('boss') ||
+        role.includes('admin') ||
+        role.includes('tyrefull') ||
+        role.includes('tyresimple')
+      ) {
+        dispatch(getTyres())
+      }
     })
-  }, [])
+  }, [dispatch, role])
 
   useEffect(() => {
     socket.on('update edited tyre', function () {
-      dispatch(getTyres())
+      if (
+        role.includes('boss') ||
+        role.includes('admin') ||
+        role.includes('tyrefull') ||
+        role.includes('tyresimple')
+      ) {
+        dispatch(getTyres())
+      }
     })
-  }, [])
+  }, [dispatch, role])
 
   useEffect(() => {
     socket.on('update tyre from oline shop', function () {
-      dispatch(getTyres())
+      if (
+        role.includes('boss') ||
+        role.includes('admin') ||
+        role.includes('tyrefull') ||
+        role.includes('tyresimple')
+      ) {
+        dispatch(getTyres())
+      }
     })
-  }, [])
+  }, [dispatch, role])
 
   useEffect(() => {
     socket.on('update shinomontazh', function () {
-      dispatch(getShinomontazhs())
+      if (
+        role.includes('boss') ||
+        role.includes('admin') ||
+        role.includes('shinomontazh') ||
+        role.includes('bookkeeper')
+      ) {
+        dispatch(getShinomontazhs())
+      }
     })
-  }, [])
+  }, [dispatch, role])
 
   useEffect(() => {
     socket.on('update edited shinomontazh', function () {
-      dispatch(getShinomontazhs())
+      if (
+        role.includes('boss') ||
+        role.includes('admin') ||
+        role.includes('shinomontazh') ||
+        role.includes('bookkeeper')
+      ) {
+        dispatch(getShinomontazhs())
+      }
     })
   }, [])
 

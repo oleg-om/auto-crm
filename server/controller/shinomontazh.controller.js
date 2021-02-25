@@ -5,6 +5,14 @@ exports.getAll = async (req, res) => {
   return res.json({ status: 'ok', data: list })
 }
 
+exports.getLastTwoDays = async (req, res) => {
+  const list = await Shinomontazh.find({
+    dateFinish: { $gte: new Date(Date.now() - 172800000).toLocaleDateString() }
+  })
+
+  return res.json({ status: 'ok', data: list })
+}
+
 exports.getOne = async (req, res) => {
   const shinomontazh = await Shinomontazh.findOne(
     { id: req.params.id },
