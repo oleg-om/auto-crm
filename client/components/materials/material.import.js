@@ -171,6 +171,12 @@ const MaterialImport = (props) => {
                 автомобилей
               </p>
               <p className="text-sm">
+                <b>free</b> - Акционная позиция либо нет, варианты использования - yes, no
+              </p>
+              <p className="text-sm">
+                <b>plus</b> - Появляется цифра 8 рядом со строкой, варианты использования - yes, no
+              </p>
+              <p className="text-sm">
                 <b>type</b> - Направление, существуют следующие типы:{' '}
                 {materialList.map((it) => (
                   <p key={it.value} className="ml-2">
@@ -179,7 +185,10 @@ const MaterialImport = (props) => {
                 ))}
                 <p className="text-sm mt-2">
                   В таблице все указанные значения пишем английскими буквами без пробелов,
-                  маленькими буквами
+                  маленькими буквами.{' '}
+                  <a href="https://cloud.mail.ru/public/e9BR/CmE1RYZe6" className="underline">
+                    Пример
+                  </a>
                 </p>
               </p>
             </div>

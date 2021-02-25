@@ -69,7 +69,7 @@ const ShinomontazhpriceImport = (props) => {
     if (loadingData === undefined) notify('Загрузите файл')
     else {
       props.create(loadingData)
-      history.push('/shinomontazhprice/list')
+      history.push(`/shinomontazhprice/list/legk`)
       notify('Услуги добавлены')
       props.getShinomontazhprice()
     }
@@ -150,29 +150,12 @@ const ShinomontazhpriceImport = (props) => {
             </div>
             <div>
               <p className="font-bold">Прочтите перед загрузкой прайса</p>
-              <p className="text-sm">Сформируйте таблицу:</p>
-              <p className="text-sm">
-                <b>name</b> - Наименование
-              </p>
-              <p className="text-sm">
-                <b>artikul</b> - Артикул
-              </p>
-              <p className="text-sm">
-                <b>price</b> - Розничная цена
-              </p>
-              <p className="text-sm">
-                <b>quantity</b> - Количество
-              </p>
-              <p className="text-sm">
-                <b>category</b> - Категория, например: Латки универсальные, Вентили для легковых
-                автомобилей
-              </p>
-              <p className="text-sm">
-                <b>type</b> - Направление, существуют следующие типы:{' '}
-                <p className="text-sm mt-2">
-                  В таблице все указанные значения пишем английскими буквами без пробелов,
-                  маленькими буквами
-                </p>
+              <p className="text-sm mt-2">
+                В таблице все указанные значения пишем английскими буквами без пробелов, маленькими
+                буквами. Лучше всего для понимания посмотреть
+                <a href="https://cloud.mail.ru/public/e9BR/CmE1RYZe6" className="underline">
+                  Пример
+                </a>
               </p>
             </div>
           </div>
@@ -180,7 +163,7 @@ const ShinomontazhpriceImport = (props) => {
       </div>
       <div className=" flex my-2">
         <Link
-          to="/shinomontazhprice/list"
+          to="/shinomontazhprice/list/legk"
           className="my-3 mr-2 py-2 md:w-1/3 px-3 bg-red-600 text-white text-center hover:bg-red-700 hover:text-white rounded-lg"
         >
           Отмена

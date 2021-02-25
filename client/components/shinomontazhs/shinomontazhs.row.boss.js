@@ -28,6 +28,38 @@ const ShinomontazhsRowBoss = (props) => {
         {props.regnumber}
       </td>
       <td className="w-auto p-2 text-gray-800 text-sm text-center border border-b table-cell static">
+        {props.employee
+          .filter((it) => it.role === 'main')
+          .map((it) => (
+            <p className="text-sm font-bold" key={it.id}>
+              {it.name} {it.surname}
+            </p>
+          ))}
+        {props.employee
+          .filter((it) => it.role !== 'main')
+          .map((it) => (
+            <p className="text-sm" key={it.id}>
+              {it.name} {it.surname}
+            </p>
+          ))}
+      </td>
+      <td className="w-auto p-2 text-gray-800 text-sm text-center border border-b table-cell static">
+        {props.services
+          .filter((it) => it.free === 'yes')
+          .map((it) => (
+            <p className="text-sm font-bold" key={it.id}>
+              {it.name}
+            </p>
+          ))}
+        {props.services
+          .filter((it) => it.free !== 'yes')
+          .map((it) => (
+            <p className="text-sm" key={it.id}>
+              {it.name}
+            </p>
+          ))}
+      </td>
+      <td className="w-auto p-2 text-gray-800 text-sm text-center border border-b table-cell static">
         {props.placesList ? props.placesList.name : ''}
       </td>
       <td className="w-auto p-2 text-gray-800 text-sm text-center border border-b table-cell static">
@@ -116,7 +148,7 @@ const ShinomontazhsRowBoss = (props) => {
             </div>
           </button> */}
           <Link
-            to={`/shinomontazh/edit/${props.id_shinomontazhs}`}
+            to={`/shinomontazhboss/edit/${props.id_shinomontazhs}`}
             className="px-5 py-1 text-xs border-blue-500 border text-blue-500 rounded transition duration-300 hover:bg-blue-700 hover:text-white focus:outline-none"
           >
             Подробнее

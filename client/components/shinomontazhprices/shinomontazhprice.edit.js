@@ -59,7 +59,7 @@ const ShinomontazhpriceUpdate = (props) => {
   })
   const removeShinomontazhprice = (e) => {
     props.deleteShinomontazhprice(props.id, e.target.value)
-    history.push('/shinomontazhprice/list')
+    history.push(`/shinomontazhprice/list/${props.type}`)
     notify('Материал удален')
   }
   const changeShinomontazhprice = () => {
@@ -68,7 +68,7 @@ const ShinomontazhpriceUpdate = (props) => {
     else if (!state.type) notify('Поле Тип пустое')
     else {
       props.updateShinomontazhprice(props.id, state)
-      history.push('/shinomontazhprice/list')
+      history.push(`/shinomontazhprice/list/${props.type}`)
       notify('Данные изменены')
     }
   }
@@ -1034,7 +1034,7 @@ const ShinomontazhpriceUpdate = (props) => {
       </div>
       <div className=" flex my-2">
         <Link
-          to="/shinomontazhprice/list"
+          to={`/shinomontazhprice/list/${props.type}`}
           className="my-3 mr-2 py-2 w-1/3 px-3 bg-green-600 text-white text-center hover:bg-green-700 hover:text-white rounded-lg"
         >
           Отмена

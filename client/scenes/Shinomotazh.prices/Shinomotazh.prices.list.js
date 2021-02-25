@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
-import { Link } from 'react-router-dom'
+import { Link, useParams } from 'react-router-dom'
 import { toast } from 'react-toastify'
 import ShinomontazhpriceRow from '../../components/shinomontazhprices/shinomontazhprice'
 import ShinomontazhpriceGruzRow from '../../components/shinomontazhprices/shinomontazhpricgruz'
@@ -18,12 +18,13 @@ const ShinomontazhpriceList = () => {
   const notify = (arg) => {
     toast.info(arg, { position: toast.POSITION.BOTTOM_RIGHT })
   }
+  const { type } = useParams()
   const dispatch = useDispatch()
   const list = useSelector((s) => s.shinomontazhprices.list)
   const auth = useSelector((s) => s.auth)
   const [isOpen, setIsOpen] = useState(false)
   const [itemId, setItemId] = useState('')
-  const [active, setActive] = useState('legk')
+  const [active, setActive] = useState(type)
   const openAndDelete = (id) => {
     setIsOpen(true)
     setItemId(id)
@@ -150,6 +151,7 @@ const ShinomontazhpriceList = () => {
                         deleteShinomontazhprice={openAndDelete}
                         ShinomontazhTypeList={ShinomontazhTypeList}
                         ShinomontazhCategoryList={ShinomontazhCategoryList}
+                        type={type}
                         {...it}
                       />
                     ))}
@@ -222,6 +224,7 @@ const ShinomontazhpriceList = () => {
                         deleteShinomontazhprice={openAndDelete}
                         ShinomontazhTypeList={ShinomontazhTypeList}
                         ShinomontazhCategoryList={ShinomontazhCategoryList}
+                        type={type}
                         {...it}
                       />
                     ))}
@@ -294,6 +297,7 @@ const ShinomontazhpriceList = () => {
                         deleteShinomontazhprice={openAndDelete}
                         ShinomontazhTypeList={ShinomontazhTypeList}
                         ShinomontazhCategoryList={ShinomontazhCategoryList}
+                        type={type}
                         {...it}
                       />
                     ))}

@@ -13,13 +13,22 @@ import Pagination from '../Pagination'
 // import taskStatuses from '../../lists/task-statuses'
 
 const ShinomontazhsList = () => {
+  const dayMilliseconds = 48 * 60 * 60 * 1000
+  const currentDate = new Date()
+
   const dispatch = useDispatch()
-  const list = useSelector((s) => s.shinomontazhs.list)
-  const revList = [].concat(list).reverse()
   const placesList = useSelector((s) => s.places.list)
   const employeeList = useSelector((s) => s.employees.list)
   const auth = useSelector((s) => s.auth)
   const role = useSelector((s) => s.auth.roles)
+  const list = useSelector((s) => s.shinomontazhs.list)
+    .filter((item) => item.place === auth.place)
+    .filter(
+      (item) =>
+        new Date(item.dateStart) >
+        new Date(currentDate.setTime(currentDate.getTime() - dayMilliseconds))
+    )
+  const revList = [].concat(list).reverse()
 
   socket.connect()
   useEffect(() => {
@@ -55,10 +64,6 @@ const ShinomontazhsList = () => {
     place: ''
   })
   const [showSearch] = useState(false)
-
-  const dayMilliseconds = 48 * 60 * 60 * 1000
-
-  const currentDate = new Date()
 
   // const onChangePhone = (e) => {
   //   const { name, value } = e.target
@@ -466,25 +471,18 @@ const ShinomontazhsList = () => {
             </thead>
             <tbody>
               {showSearch === false
-                ? currentPosts
-                    .filter((item) => item.place === auth.place)
-                    .filter(
-                      (item) =>
-                        new Date(item.dateStart) >
-                        new Date(currentDate.setTime(currentDate.getTime() - dayMilliseconds))
-                    )
-                    .map((it) => (
-                      <ShinomontazhsRow
-                        key={it.id}
-                        {...it}
-                        updateStatus={updateStatusLocal}
-                        role={role}
-                        employeeList={employeeList.find((item) => item.id === it.employee)}
-                        processList={employeeList.find((item) => item.id === it.process)}
-                        placesList={placesList.find((item) => item.id === it.place)}
-                        settings={settings}
-                      />
-                    ))
+                ? currentPosts.map((it) => (
+                    <ShinomontazhsRow
+                      key={it.id}
+                      {...it}
+                      updateStatus={updateStatusLocal}
+                      role={role}
+                      employeeList={employeeList.find((item) => item.id === it.employee)}
+                      processList={employeeList.find((item) => item.id === it.process)}
+                      placesList={placesList.find((item) => item.id === it.place)}
+                      settings={settings}
+                    />
+                  ))
                 : currentPostsFiltered.map((it) => (
                     <ShinomontazhsRow
                       key={it.id}

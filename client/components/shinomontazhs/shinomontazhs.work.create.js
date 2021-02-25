@@ -18,6 +18,7 @@ const ShinomontazhsCreate = (props) => {
   }
 
   const history = useHistory()
+
   const employeeList = useSelector((s) => s.employees.list)
   const customerList = useSelector((s) => s.customers.list)
   const auth = useSelector((s) => s.auth)
@@ -352,7 +353,11 @@ const ShinomontazhsCreate = (props) => {
           tyre: tyres,
           employee: employees
         })
-        history.push('/shinomontazh/list')
+        if (props.checkLink) {
+          history.push('/shinomontazhboss/list')
+        } else {
+          history.push('/shinomontazh/list')
+        }
         notify('Запись добавлена')
       } else if (checkCustomer !== undefined && activeCustomer !== '') {
         props.openAndUpdate(
@@ -380,7 +385,11 @@ const ShinomontazhsCreate = (props) => {
           kuzov: state.kuzov,
           diametr: state.diametr
         })
-        history.push('/shinomontazh/list')
+        if (props.checkLink) {
+          history.push('/shinomontazhboss/list')
+        } else {
+          history.push('/shinomontazh/list')
+        }
         notify('Запись добавлена')
         notify('Создан новый клиент')
       }
@@ -879,7 +888,7 @@ const ShinomontazhsCreate = (props) => {
       </div>
       <div className=" flex my-2">
         <Link
-          to="/shinomontazh/list"
+          to={props.checkLink ? '/shinomontazhboss/list' : '/shinomontazh/list'}
           className="my-3 mr-2 py-3 w-1/3 px-3 bg-red-600 text-white text-center hover:bg-red-700 hover:text-white rounded-lg"
         >
           Отмена

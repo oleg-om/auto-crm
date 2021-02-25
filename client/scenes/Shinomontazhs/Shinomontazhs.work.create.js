@@ -19,6 +19,7 @@ const ShinomontazhsNew = () => {
   }
 
   const history = useHistory()
+  const checkLink = () => history.location.pathname.split('/').includes('shinomontazhboss')
   toast.configure()
   const notify = (arg) => {
     toast.info(arg, { position: toast.POSITION.BOTTOM_RIGHT })
@@ -38,14 +39,22 @@ const ShinomontazhsNew = () => {
     setModalIsOpen(false)
     notify('Данные клиента изменены')
     create(order)
-    history.push('/shinomontazh/list')
+    if (checkLink()) {
+      history.push('/shinomontazhboss/list')
+    } else {
+      history.push('/shinomontazh/list')
+    }
     notify('Запись добавлена')
   }
 
   const disUpdateCust = () => {
     setModalIsOpen(false)
     create(order)
-    history.push('/shinomontazh/list')
+    if (checkLink()) {
+      history.push('/shinomontazhboss/list')
+    } else {
+      history.push('/shinomontazh/list')
+    }
     notify('Запись добавлена')
   }
 
@@ -65,6 +74,7 @@ const ShinomontazhsNew = () => {
           createCust={createCust}
           openAndUpdate={openAndUpdate}
           setModalIsOpen={setModalIsOpen}
+          checkLink={checkLink()}
         />
       </div>
       <UpdateModal

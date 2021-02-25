@@ -186,20 +186,30 @@ const RootComponent = (props) => {
             <PrivateRoute exact path="/material/list" component={MaterialList} />
             <PrivateRoute exact path="/material/create" component={MaterialNew} />
             <PrivateRoute exact path="/material/edit/:id" component={MaterialEdit} />
-            <PrivateRoute exact path="/shinomontazhprice/list" component={ShinomontazhpriceList} />
+            <PrivateRoute
+              exact
+              path="/shinomontazhprice/list/:type"
+              component={ShinomontazhpriceList}
+            />
             <PrivateRoute exact path="/shinomontazhprice/create" component={ShinomontazhpriceNew} />
             <PrivateRoute exact path="/vendor/list" component={VendorList} />
             <PrivateRoute exact path="/vendor/create" component={VendorNew} />
             <PrivateRoute exact path="/vendor/edit/:id" component={VendorEdit} />
             <PrivateRoute
               exact
-              path="/shinomontazhprice/edit/:id"
+              path="/shinomontazhprice/:type/edit/:id"
               component={ShinomontazhpriceEdit}
             />
             <PrivateRoute exact path="/shinomontazh/list" component={ShinomontazhsList} />
             <PrivateRoute exact path="/shinomontazhboss/list" component={ShinomontazhsListBoss} />
             <PrivateRoute exact path="/shinomontazh/create" component={ShinomontazhsNew} />
+            <PrivateRoute exact path="/shinomontazhboss/create" component={ShinomontazhsNew} />
             <PrivateRoute exact path="/shinomontazh/edit/:id" component={ShinomontazhEditFull} />
+            <PrivateRoute
+              exact
+              path="/shinomontazhboss/edit/:id"
+              component={ShinomontazhEditFull}
+            />
             <PrivateRoute exact path="/tyres/order/list" component={TyresList} />
             <PrivateRoute exact path="/tyres/order/create" component={TyresNew} />
             <PrivateRoute exact path="/tyres/edit/:id" component={TyreEditSimple} />

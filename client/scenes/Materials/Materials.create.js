@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import cx from 'classnames'
 import MaterialCreate from '../../components/materials/material.create'
 import MaterialImport from '../../components/materials/material.import'
@@ -13,6 +13,7 @@ import Navbar from '../../components/Navbar'
 
 const MaterialNew = () => {
   const dispatch = useDispatch()
+  const materialsFull = useSelector((s) => s.materials.list)
   const create = (name) => {
     dispatch(createMaterial(name))
   }
@@ -56,7 +57,7 @@ const MaterialNew = () => {
         {type === 'single' ? (
           <div>
             <h1 className="text-3xl py-4 border-b mb-6">Добавить материал</h1>
-            <MaterialCreate create={create} />
+            <MaterialCreate create={create} materialsFull={materialsFull} />
           </div>
         ) : (
           <div>

@@ -9,6 +9,7 @@ const MaterialEdit = () => {
   const { id } = useParams()
   const dispatch = useDispatch()
   const list = useSelector((s) => s.materials.list).filter((it) => it.id === id)
+  const materialsFull = useSelector((s) => s.materials.list)
   const updateMaterialLocal = (idOfItem, name) => {
     dispatch(updateMaterial(idOfItem, name))
   }
@@ -26,6 +27,7 @@ const MaterialEdit = () => {
             {...it}
             deleteMaterial={deleteMaterialLocal}
             updateMaterial={updateMaterialLocal}
+            materialsFull={materialsFull}
           />
         ))}
       </div>

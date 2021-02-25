@@ -12,6 +12,7 @@ import ShinomontazhCategoryList from '../../lists/shinomontazhprice-list'
 
 const ShinomontazhpriceEdit = () => {
   const { id } = useParams()
+  const { type } = useParams()
   const dispatch = useDispatch()
   const list = useSelector((s) => s.shinomontazhprices.list).filter((it) => it.id === id)
   const updateShinomontazhpriceLocal = (idOfItem, name) => {
@@ -33,6 +34,7 @@ const ShinomontazhpriceEdit = () => {
             ShinomontazhCategoryList={ShinomontazhCategoryList}
             deleteShinomontazhprice={deleteShinomontazhpriceLocal}
             updateShinomontazhprice={updateShinomontazhpriceLocal}
+            type={type}
           />
         ))}
       </div>

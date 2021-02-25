@@ -19,6 +19,8 @@ const ShinomontazhsEdit = (props) => {
   }
 
   const history = useHistory()
+  const checkLink = () => history.location.pathname.split('/').includes('shinomontazhboss')
+  console.log(checkLink())
   const employeeList = useSelector((s) => s.employees.list)
   const customerList = useSelector((s) => s.customers.list)
   const auth = useSelector((s) => s.auth)
@@ -565,7 +567,11 @@ const ShinomontazhsEdit = (props) => {
         material: materials,
         tyre: [...tyres]
       })
-      history.push('/shinomontazh/list')
+      if (checkLink()) {
+        history.push('/shinomontazhboss/list')
+      } else {
+        history.push('/shinomontazh/list')
+      }
       notify('Запись изменена')
     }
   }
@@ -593,9 +599,13 @@ const ShinomontazhsEdit = (props) => {
         dateFinish: props.dateFinish ? props.dateFinish : new Date(),
         status: statusList[1]
       })
-      history.push('/shinomontazh/list')
+      if (checkLink()) {
+        history.push('/shinomontazhboss/list')
+      } else {
+        history.push('/shinomontazh/list')
+      }
       notify('Запись изменена')
-    } else {
+    } else if (state.payment === 'yes') {
       props.updateShinomontazh(props.id, {
         // ...state,
         // services: service,
@@ -606,8 +616,28 @@ const ShinomontazhsEdit = (props) => {
         payment: state.payment,
         status: statusList[2]
       })
-      history.push('/shinomontazh/list')
-      notify('Работа выполнена')
+      if (checkLink()) {
+        history.push('/shinomontazhboss/list')
+      } else {
+        history.push('/shinomontazh/list')
+      }
+      notify('Работа оплачена')
+    } else {
+      props.updateShinomontazh(props.id, {
+        // ...state,
+        // services: service,
+        // material: materials,
+        // tyre: [...tyres],
+        // employee: employees,
+        discount: state.discount,
+        payment: state.payment
+      })
+      if (checkLink()) {
+        history.push('/shinomontazhboss/list')
+      } else {
+        history.push('/shinomontazh/list')
+      }
+      notify('Запись изменена')
     }
   }
 
@@ -908,7 +938,7 @@ const ShinomontazhsEdit = (props) => {
       </div>
       <div className=" flex my-2">
         <Link
-          to="/shinomontazh/list"
+          to={checkLink() ? '/shinomontazhboss/list' : '/shinomontazh/list'}
           className="my-3 mr-2 py-3 w-1/3 px-3 bg-red-600 text-white text-center hover:bg-red-700 hover:text-white rounded-lg"
         >
           Отмена

@@ -438,6 +438,12 @@ const ShinomontazhsListBoss = () => {
                   Гос. номер
                 </th>
                 <th className="p-3 font-bold uppercase bg-gray-100 text-gray-600 border border-gray-300 table-cell">
+                  Исп
+                </th>
+                <th className="p-3 font-bold uppercase bg-gray-100 text-gray-600 border border-gray-300 table-cell">
+                  Усл
+                </th>
+                <th className="p-3 font-bold uppercase bg-gray-100 text-gray-600 border border-gray-300 table-cell">
                   Точка
                 </th>
                 <th className="p-3 font-bold uppercase bg-gray-100 text-gray-600 border border-gray-300 table-cell">
@@ -521,7 +527,7 @@ const ShinomontazhsListBoss = () => {
           )}
         </div>
 
-        <Link to="/shinomontazh/create">
+        <Link to="/shinomontazhboss/create">
           <button
             type="button"
             className="fixed bottom-0 left-0 p-6 shadow bg-blue-600 text-white opacity-75 text-l hover:opacity-100 hover:bg-blue-700 hover:text-white rounded-full my-3 mx-3"
