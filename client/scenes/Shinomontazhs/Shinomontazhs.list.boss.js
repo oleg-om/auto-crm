@@ -441,9 +441,6 @@ const ShinomontazhsListBoss = () => {
                   Исп
                 </th>
                 <th className="p-3 font-bold uppercase bg-gray-100 text-gray-600 border border-gray-300 table-cell">
-                  Усл
-                </th>
-                <th className="p-3 font-bold uppercase bg-gray-100 text-gray-600 border border-gray-300 table-cell">
                   Точка
                 </th>
                 <th className="p-3 font-bold uppercase bg-gray-100 text-gray-600 border border-gray-300 table-cell">

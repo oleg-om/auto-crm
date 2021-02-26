@@ -7,7 +7,7 @@ exports.getAll = async (req, res) => {
 
 exports.getLastTwoDays = async (req, res) => {
   const list = await Shinomontazh.find({
-    dateFinish: { $gte: new Date(Date.now() - 172800000).toLocaleDateString() }
+    dateStart: { $gte: new Date(Date.now() - 172800000).toLocaleDateString() }
   })
 
   return res.json({ status: 'ok', data: list })

@@ -1,5 +1,6 @@
 import {
   GET_SHINOMONTAZHS,
+  GET_SHINOMONTAZHS_LAST_TWO_DAYS,
   CREATE_SHINOMONTAZH,
   UPDATE_SHINOMONTAZH_STATUS,
   UPDATE_SHINOMONTAZH
@@ -12,6 +13,9 @@ const initialState = {
 export default (state = initialState, action) => {
   switch (action.type) {
     case GET_SHINOMONTAZHS: {
+      return { ...state, list: action.shinomontazhs }
+    }
+    case GET_SHINOMONTAZHS_LAST_TWO_DAYS: {
       return { ...state, list: action.shinomontazhs }
     }
     case CREATE_SHINOMONTAZH: {
@@ -56,7 +60,7 @@ export function getShinomontazhsLastTwoDays() {
     fetch('/api/v1/shinomontazhlast')
       .then((r) => r.json())
       .then(({ data: shinomontazhs }) => {
-        dispatch({ type: GET_SHINOMONTAZHS, shinomontazhs })
+        dispatch({ type: GET_SHINOMONTAZHS_LAST_TWO_DAYS, shinomontazhs })
       })
   }
 }

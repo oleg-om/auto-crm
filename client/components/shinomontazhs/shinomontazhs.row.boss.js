@@ -44,22 +44,6 @@ const ShinomontazhsRowBoss = (props) => {
           ))}
       </td>
       <td className="w-auto p-2 text-gray-800 text-sm text-center border border-b table-cell static">
-        {props.services
-          .filter((it) => it.free === 'yes')
-          .map((it) => (
-            <p className="text-sm font-bold" key={it.id}>
-              {it.name}
-            </p>
-          ))}
-        {props.services
-          .filter((it) => it.free !== 'yes')
-          .map((it) => (
-            <p className="text-sm" key={it.id}>
-              {it.name}
-            </p>
-          ))}
-      </td>
-      <td className="w-auto p-2 text-gray-800 text-sm text-center border border-b table-cell static">
         {props.placesList ? props.placesList.name : ''}
       </td>
       <td className="w-auto p-2 text-gray-800 text-sm text-center border border-b table-cell static">

@@ -12,7 +12,7 @@ import { getOils } from '../redux/reducers/oils'
 import { getSettings } from '../redux/reducers/settings'
 import { getMaterials } from '../redux/reducers/materials'
 import { getShinomontazhprices } from '../redux/reducers/shinomotazh.prices'
-import { getShinomontazhs } from '../redux/reducers/shinomontazhs'
+import { getShinomontazhs, getShinomontazhsLastTwoDays } from '../redux/reducers/shinomontazhs'
 import { getVendors } from '../redux/reducers/vendors'
 import { getTyres } from '../redux/reducers/tyres'
 
@@ -92,13 +92,19 @@ const Startup = (props) => {
   }, [dispatch, role])
 
   useEffect(() => {
-    if (
-      role.includes('boss') ||
-      role.includes('admin') ||
-      role.includes('shinomontazh') ||
-      role.includes('bookkeeper')
-    ) {
+    if (role.includes('boss') || role.includes('admin') || role.includes('bookkeeper')) {
       dispatch(getShinomontazhs())
+    }
+  }, [dispatch, role])
+
+  useEffect(() => {
+    if (
+      role.includes('shinomontazh') &&
+      !role.includes('boss') &&
+      !role.includes('admin') &&
+      !role.includes('bookkeeper')
+    ) {
+      dispatch(getShinomontazhsLastTwoDays())
     }
   }, [dispatch, role])
 

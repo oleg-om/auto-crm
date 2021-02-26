@@ -19,14 +19,17 @@ const ShinomontazhsList = () => {
   const auth = useSelector((s) => s.auth)
   const role = useSelector((s) => s.auth.roles)
 
-  function secondsDiff(d1, d2) {
-    const secDiff = Math.floor((d2 - d1) / 1000)
-    return secDiff
-  }
+  // function secondsDiff(d1, d2) {
+  //   const secDiff = Math.floor((d2 - d1) / 1000)
+  //   return secDiff
+  // }
   const list = useSelector((s) => s.shinomontazhs.list)
+
+  const revList = []
+    .concat(list)
     .filter((item) => item.place === auth.place)
-    .filter((item) => secondsDiff(Date.now(), new Date(item.dateFinish)) > -172800)
-  const revList = [].concat(list).reverse()
+    // .filter((item) => secondsDiff(Date.now(), new Date(item.dateFinish)) > -172800)
+    .reverse()
 
   socket.connect()
   useEffect(() => {

@@ -9,7 +9,7 @@ import { getRazvals } from '../redux/reducers/razvals'
 import { getOils } from '../redux/reducers/oils'
 import { getAutoparts } from '../redux/reducers/autoparts'
 import { getTyres } from '../redux/reducers/tyres'
-import { getShinomontazhs } from '../redux/reducers/shinomontazhs'
+import { getShinomontazhs, getShinomontazhsLastTwoDays } from '../redux/reducers/shinomontazhs'
 
 const Navbar = () => {
   const dispatch = useDispatch()
@@ -130,29 +130,33 @@ const Navbar = () => {
 
   useEffect(() => {
     socket.on('update shinomontazh', function () {
-      if (
-        role.includes('boss') ||
-        role.includes('admin') ||
-        role.includes('shinomontazh') ||
-        role.includes('bookkeeper')
-      ) {
+      if (role.includes('boss') || role.includes('admin') || role.includes('bookkeeper')) {
         dispatch(getShinomontazhs())
+      } else if (
+        role.includes('shinomontazh') &&
+        !role.includes('boss') &&
+        !role.includes('admin') &&
+        !role.includes('bookkeeper')
+      ) {
+        dispatch(getShinomontazhsLastTwoDays())
       }
     })
   }, [dispatch, role])
 
   useEffect(() => {
     socket.on('update edited shinomontazh', function () {
-      if (
-        role.includes('boss') ||
-        role.includes('admin') ||
-        role.includes('shinomontazh') ||
-        role.includes('bookkeeper')
-      ) {
+      if (role.includes('boss') || role.includes('admin') || role.includes('bookkeeper')) {
         dispatch(getShinomontazhs())
+      } else if (
+        role.includes('shinomontazh') &&
+        !role.includes('boss') &&
+        !role.includes('admin') &&
+        !role.includes('bookkeeper')
+      ) {
+        dispatch(getShinomontazhsLastTwoDays())
       }
     })
-  }, [])
+  }, [dispatch, role])
 
   return (
     <nav className="flex items-center justify-between flex-wrap bg-white shadow px-6 py-3 z-20">
