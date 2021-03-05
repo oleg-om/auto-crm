@@ -27,7 +27,7 @@ const AutopartViewOrder = (props) => {
   })
   const changeAutopart = () => {
     props.updateAutopart(props.id, state)
-    history.push('/autoparts/order/list')
+    history.push(`/autoparts/order/list/${props.num ? props.num : ''}`)
     notify('Данные о заказе обновлены')
   }
   const onChange = (e) => {
@@ -501,7 +501,7 @@ const AutopartViewOrder = (props) => {
       </div>
       <div className=" flex my-2">
         <Link
-          to="/autoparts/order/list"
+          to={`/autoparts/order/list/${props.num ? props.num : ''}`}
           className="my-3 mr-2 py-2 w-1/3 px-3 bg-red-600 text-white text-center hover:bg-red-700 hover:text-white rounded-lg"
         >
           Отмена

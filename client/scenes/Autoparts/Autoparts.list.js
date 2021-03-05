@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
-import { Link } from 'react-router-dom'
+import { Link, useParams, useHistory } from 'react-router-dom'
 import NumberFormat from 'react-number-format'
 import cx from 'classnames'
 import { toast } from 'react-toastify'
@@ -31,14 +31,21 @@ const AutopartsList = () => {
   }
 
   const [loading, setLoading] = useState(true)
-  const [currentPage, setCurrentPage] = useState(1)
+
+  const history = useHistory()
+  const { num } = useParams(1)
+
+  const [currentPage, setCurrentPage] = useState(num ? Number(num) : 1)
   const postsPerPage = 14
   const indexOfLastPost = currentPage * postsPerPage
   const indexOfFirstPost = indexOfLastPost - postsPerPage
 
   const currentPosts = revList.slice(indexOfFirstPost, indexOfLastPost)
 
-  const paginate = (pageNumber) => setCurrentPage(pageNumber)
+  const paginate = (pageNumber) => {
+    setCurrentPage(pageNumber)
+    history.push(`/autoparts/order/list/${pageNumber}`)
+  }
 
   toast.configure()
   const notify = (arg) => {
@@ -464,6 +471,7 @@ const AutopartsList = () => {
                       processList={employeeList.find((item) => item.id === it.process)}
                       placesList={placesList.find((item) => item.id === it.place)}
                       settings={settings}
+                      num={num}
                     />
                   ))
                 : currentPostsFilteredSliced.map((it) => (
@@ -476,6 +484,7 @@ const AutopartsList = () => {
                       processList={employeeList.find((item) => item.id === it.process)}
                       placesList={placesList.find((item) => item.id === it.place)}
                       settings={settings}
+                      num={num}
                     />
                   ))}
             </tbody>
@@ -519,7 +528,7 @@ const AutopartsList = () => {
           )}
         </div>
 
-        <Link to="/autoparts/order/create">
+        <Link to={`/autoparts/order/create/${num ? Number(num) : ''}`}>
           <button
             type="button"
             className="fixed bottom-0 left-0 p-6 shadow bg-blue-600 text-white opacity-75 text-l hover:opacity-100 hover:bg-blue-700 hover:text-white rounded-full my-3 mx-3"

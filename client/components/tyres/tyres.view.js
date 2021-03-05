@@ -630,7 +630,7 @@ const TyreViewOrder = (props) => {
       </div>
       <div className=" flex my-2">
         <Link
-          to="/tyres/order/list"
+          to={`/tyres/order/list/${props.num ? props.num : ''}`}
           className="my-3 mr-2 py-2 w-1/3 px-3 bg-red-600 text-white text-center hover:bg-red-700 hover:text-white rounded-lg"
         >
           Отмена

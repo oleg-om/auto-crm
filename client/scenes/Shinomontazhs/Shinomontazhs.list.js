@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
-import { Link } from 'react-router-dom'
+import { Link, useParams, useHistory } from 'react-router-dom'
 // import NumberFormat from 'react-number-format'
 // import cx from 'classnames'
 import { toast } from 'react-toastify'
@@ -18,6 +18,9 @@ const ShinomontazhsList = () => {
   const employeeList = useSelector((s) => s.employees.list)
   const auth = useSelector((s) => s.auth)
   const role = useSelector((s) => s.auth.roles)
+
+  const history = useHistory()
+  const { num } = useParams(1)
 
   // function secondsDiff(d1, d2) {
   //   const secDiff = Math.floor((d2 - d1) / 1000)
@@ -43,15 +46,17 @@ const ShinomontazhsList = () => {
   }
 
   const [loading] = useState(true)
-  const [currentPage, setCurrentPage] = useState(1)
+  const [currentPage, setCurrentPage] = useState(num ? Number(num) : 1)
   const postsPerPage = 14
   const indexOfLastPost = currentPage * postsPerPage
   const indexOfFirstPost = indexOfLastPost - postsPerPage
 
   const currentPosts = revList.slice(indexOfFirstPost, indexOfLastPost)
 
-  const paginate = (pageNumber) => setCurrentPage(pageNumber)
-
+  const paginate = (pageNumber) => {
+    setCurrentPage(pageNumber)
+    history.push(`/shinomontazh/list/${pageNumber}`)
+  }
   toast.configure()
   // const notify = (arg) => {
   //   toast.info(arg, { position: toast.POSITION.BOTTOM_RIGHT })
@@ -482,6 +487,7 @@ const ShinomontazhsList = () => {
                       processList={employeeList.find((item) => item.id === it.process)}
                       placesList={placesList.find((item) => item.id === it.place)}
                       settings={settings}
+                      num={num}
                     />
                   ))
                 : currentPostsFiltered.map((it) => (
@@ -494,6 +500,7 @@ const ShinomontazhsList = () => {
                       processList={employeeList.find((item) => item.id === it.process)}
                       placesList={placesList.find((item) => item.id === it.place)}
                       settings={settings}
+                      num={num}
                     />
                   ))}
             </tbody>
@@ -537,7 +544,7 @@ const ShinomontazhsList = () => {
           )}
         </div>
 
-        <Link to="/shinomontazh/create">
+        <Link to={`/shinomontazh/create/${num ? Number(num) : ''}`}>
           <button
             type="button"
             className="fixed bottom-0 left-0 p-6 shadow bg-blue-600 text-white opacity-75 text-2xl hover:opacity-100 hover:bg-blue-700 hover:text-white rounded-full my-3 mx-3"

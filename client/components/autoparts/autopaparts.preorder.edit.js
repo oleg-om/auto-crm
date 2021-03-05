@@ -62,7 +62,7 @@ const AutopartUpdate = (props) => {
         ...state,
         statusDates: [...props.statusDates, { status: state.status, date: dateNew }]
       })
-      history.push('/autoparts/order/list')
+      history.push(`/autoparts/order/list/${props.num ? props.num : ''}`)
       notify('Данные о заказе обновлены, заказ в работе')
     } else if (props.status !== state.status && state.status === taskStatuses[6]) {
       props.updateAutopart(props.id, {
@@ -70,11 +70,11 @@ const AutopartUpdate = (props) => {
         statusDates: [...props.statusDates, { status: state.status, date: dateNew }],
         cancelReason: state.cancelReason
       })
-      history.push('/autoparts/order/list')
+      history.push(`/autoparts/order/list/${props.num ? props.num : ''}`)
       notify('Данные о заказе обновлены, клиент отказался от заказа')
     } else {
       props.updateAutopart(props.id, state)
-      history.push('/autoparts/order/list')
+      history.push(`/autoparts/order/list/${props.num ? props.num : ''}`)
       notify('Данные о заказе обновлены')
     }
   }
@@ -198,7 +198,7 @@ const AutopartUpdate = (props) => {
                   </li>
                 </ul>
                 <Link
-                  to={`/autoparts/editfull/${props.id_autoparts}`}
+                  to={`/autoparts/editfull/${props.id_autoparts}/${props.num ? props.num : ''}`}
                   className="py-2 px-3 bg-blue-600 text-white text-sm hover:bg-blue-700 hover:text-white rounded-full h-22 w-22"
                 >
                   Редактировать заказ
@@ -817,7 +817,7 @@ const AutopartUpdate = (props) => {
       </div>
       <div className=" flex my-2">
         <Link
-          to="/autoparts/order/list"
+          to={`/autoparts/order/list/${props.num ? props.num : ''}`}
           className="my-3 mr-2 py-2 w-1/3 px-3 bg-red-600 text-white text-center hover:bg-red-700 hover:text-white rounded-lg"
         >
           Отмена

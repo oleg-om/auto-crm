@@ -250,8 +250,8 @@ const TyresRow = (props) => {
           <Link
             to={
               props.role.includes('tyrefull')
-                ? `/tyres/edit/${props.id_tyres}`
-                : `/tyres/view/${props.id_tyres}`
+                ? `/tyres/edit/${props.id_tyres}/${props.num ? props.num : ''}`
+                : `/tyres/view/${props.id_tyres}/${props.num ? props.num : ''}`
             }
             className="px-5 py-1 text-xs border-blue-500 border text-blue-500 rounded transition duration-300 hover:bg-blue-700 hover:text-white focus:outline-none"
           >

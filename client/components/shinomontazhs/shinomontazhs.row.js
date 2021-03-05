@@ -113,7 +113,7 @@ const ShinomontazhsRow = (props) => {
             </div>
           </button> */}
           <Link
-            to={`/shinomontazh/edit/${props.id_shinomontazhs}`}
+            to={`/shinomontazh/edit/${props.id_shinomontazhs}/${props.num ? props.num : ''}`}
             className="px-5 py-1 text-xs border-blue-500 border text-blue-500 rounded transition duration-300 hover:bg-blue-700 hover:text-white focus:outline-none"
           >
             Подробнее

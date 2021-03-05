@@ -9,12 +9,12 @@ import { getRazvals } from '../redux/reducers/razvals'
 import { getOils } from '../redux/reducers/oils'
 import { getAutoparts } from '../redux/reducers/autoparts'
 import { getTyres } from '../redux/reducers/tyres'
-import { getShinomontazhs, getShinomontazhsLastTwoDays } from '../redux/reducers/shinomontazhs'
+import { getShinomontazhs } from '../redux/reducers/shinomontazhs'
 
 const Navbar = () => {
   const dispatch = useDispatch()
   const auth = useSelector((s) => s.auth)
-  const role = useSelector((s) => s.auth.roles)
+  // const role = useSelector((s) => s.auth.roles)
   const [toggle, setToggle] = useState(false)
   const toggleOpen = () => {
     if (toggle === false) {
@@ -31,132 +31,198 @@ const Navbar = () => {
   }
 
   socket.connect()
+  // useEffect(() => {
+  //   socket.on('update razval', function () {
+  //     if (role.includes('boss') || role.includes('admin') || role.includes('razval')) {
+  //       dispatch(getRazvals())
+  //     }
+  //   })
+  // }, [dispatch, role])
+
+  // useEffect(() => {
+  //   socket.on('update edited razval', function () {
+  //     if (role.includes('boss') || role.includes('admin') || role.includes('razval')) {
+  //       dispatch(getRazvals())
+  //     }
+  //   })
+  // }, [dispatch, role])
+
+  // useEffect(() => {
+  //   socket.on('update oil', function () {
+  //     if (role.includes('boss') || role.includes('admin') || role.includes('razval')) {
+  //       dispatch(getOils())
+  //     }
+  //   })
+  // }, [dispatch, role])
+
+  // useEffect(() => {
+  //   socket.on('update edited oil', function () {
+  //     if (role.includes('boss') || role.includes('admin') || role.includes('razval')) {
+  //       dispatch(getOils())
+  //     }
+  //   })
+  // }, [dispatch, role])
+
+  // useEffect(() => {
+  //   socket.on('update autopart', function () {
+  //     if (
+  //       role.includes('boss') ||
+  //       role.includes('admin') ||
+  //       role.includes('autopartfull') ||
+  //       role.includes('autopartsimple')
+  //     ) {
+  //       dispatch(getAutoparts())
+  //     }
+  //   })
+  // }, [dispatch, role])
+
+  // useEffect(() => {
+  //   socket.on('update edited autopart', function () {
+  //     if (
+  //       role.includes('boss') ||
+  //       role.includes('admin') ||
+  //       role.includes('autopartfull') ||
+  //       role.includes('autopartsimple')
+  //     ) {
+  //       dispatch(getAutoparts())
+  //     }
+  //   })
+  // }, [dispatch, role])
+
+  // useEffect(() => {
+  //   socket.on('update tyre', function () {
+  //     if (
+  //       role.includes('boss') ||
+  //       role.includes('admin') ||
+  //       role.includes('tyrefull') ||
+  //       role.includes('tyresimple')
+  //     ) {
+  //       dispatch(getTyres())
+  //     }
+  //   })
+  // }, [dispatch, role])
+
+  // useEffect(() => {
+  //   socket.on('update edited tyre', function () {
+  //     if (
+  //       role.includes('boss') ||
+  //       role.includes('admin') ||
+  //       role.includes('tyrefull') ||
+  //       role.includes('tyresimple')
+  //     ) {
+  //       dispatch(getTyres())
+  //     }
+  //   })
+  // }, [dispatch, role])
+
+  // useEffect(() => {
+  //   socket.on('update tyre from oline shop', function () {
+  //     if (
+  //       role.includes('boss') ||
+  //       role.includes('admin') ||
+  //       role.includes('tyrefull') ||
+  //       role.includes('tyresimple')
+  //     ) {
+  //       dispatch(getTyres())
+  //     }
+  //   })
+  // }, [dispatch, role])
+
+  // useEffect(() => {
+  //   socket.on('update shinomontazh', function () {
+  //     if (role.includes('boss') || role.includes('admin') || role.includes('bookkeeper')) {
+  //       dispatch(getShinomontazhs())
+  //     } else if (
+  //       role.includes('shinomontazh') &&
+  //       !role.includes('boss') &&
+  //       !role.includes('admin') &&
+  //       !role.includes('bookkeeper')
+  //     ) {
+  //       dispatch(getShinomontazhsLastTwoDays())
+  //     }
+  //   })
+  // }, [dispatch, role])
+
+  // useEffect(() => {
+  //   socket.on('update edited shinomontazh', function () {
+  //     if (role.includes('boss') || role.includes('admin') || role.includes('bookkeeper')) {
+  //       dispatch(getShinomontazhs())
+  //     } else if (
+  //       role.includes('shinomontazh') &&
+  //       !role.includes('boss') &&
+  //       !role.includes('admin') &&
+  //       !role.includes('bookkeeper')
+  //     ) {
+  //       dispatch(getShinomontazhsLastTwoDays())
+  //     }
+  //   })
+  // }, [dispatch, role])
+
   useEffect(() => {
     socket.on('update razval', function () {
-      if (role.includes('boss') || role.includes('admin') || role.includes('razval')) {
-        dispatch(getRazvals())
-      }
+      dispatch(getRazvals())
     })
-  }, [dispatch, role])
+  }, [])
 
   useEffect(() => {
     socket.on('update edited razval', function () {
-      if (role.includes('boss') || role.includes('admin') || role.includes('razval')) {
-        dispatch(getRazvals())
-      }
+      dispatch(getRazvals())
     })
-  }, [dispatch, role])
+  }, [])
 
   useEffect(() => {
     socket.on('update oil', function () {
-      if (role.includes('boss') || role.includes('admin') || role.includes('razval')) {
-        dispatch(getOils())
-      }
+      dispatch(getOils())
     })
-  }, [dispatch, role])
+  }, [])
 
   useEffect(() => {
     socket.on('update edited oil', function () {
-      if (role.includes('boss') || role.includes('admin') || role.includes('razval')) {
-        dispatch(getOils())
-      }
+      dispatch(getOils())
     })
-  }, [dispatch, role])
+  }, [])
 
   useEffect(() => {
     socket.on('update autopart', function () {
-      if (
-        role.includes('boss') ||
-        role.includes('admin') ||
-        role.includes('autopartfull') ||
-        role.includes('autopartsimple')
-      ) {
-        dispatch(getAutoparts())
-      }
+      dispatch(getAutoparts())
     })
-  }, [dispatch, role])
+  }, [])
 
   useEffect(() => {
     socket.on('update edited autopart', function () {
-      if (
-        role.includes('boss') ||
-        role.includes('admin') ||
-        role.includes('autopartfull') ||
-        role.includes('autopartsimple')
-      ) {
-        dispatch(getAutoparts())
-      }
+      dispatch(getAutoparts())
     })
-  }, [dispatch, role])
+  }, [])
 
   useEffect(() => {
     socket.on('update tyre', function () {
-      if (
-        role.includes('boss') ||
-        role.includes('admin') ||
-        role.includes('tyrefull') ||
-        role.includes('tyresimple')
-      ) {
-        dispatch(getTyres())
-      }
+      dispatch(getTyres())
     })
-  }, [dispatch, role])
+  }, [])
 
   useEffect(() => {
     socket.on('update edited tyre', function () {
-      if (
-        role.includes('boss') ||
-        role.includes('admin') ||
-        role.includes('tyrefull') ||
-        role.includes('tyresimple')
-      ) {
-        dispatch(getTyres())
-      }
+      dispatch(getTyres())
     })
-  }, [dispatch, role])
+  }, [])
 
   useEffect(() => {
     socket.on('update tyre from oline shop', function () {
-      if (
-        role.includes('boss') ||
-        role.includes('admin') ||
-        role.includes('tyrefull') ||
-        role.includes('tyresimple')
-      ) {
-        dispatch(getTyres())
-      }
+      dispatch(getTyres())
     })
-  }, [dispatch, role])
+  }, [])
 
   useEffect(() => {
     socket.on('update shinomontazh', function () {
-      if (role.includes('boss') || role.includes('admin') || role.includes('bookkeeper')) {
-        dispatch(getShinomontazhs())
-      } else if (
-        role.includes('shinomontazh') &&
-        !role.includes('boss') &&
-        !role.includes('admin') &&
-        !role.includes('bookkeeper')
-      ) {
-        dispatch(getShinomontazhsLastTwoDays())
-      }
+      dispatch(getShinomontazhs())
     })
-  }, [dispatch, role])
+  }, [])
 
   useEffect(() => {
     socket.on('update edited shinomontazh', function () {
-      if (role.includes('boss') || role.includes('admin') || role.includes('bookkeeper')) {
-        dispatch(getShinomontazhs())
-      } else if (
-        role.includes('shinomontazh') &&
-        !role.includes('boss') &&
-        !role.includes('admin') &&
-        !role.includes('bookkeeper')
-      ) {
-        dispatch(getShinomontazhsLastTwoDays())
-      }
+      dispatch(getShinomontazhs())
     })
-  }, [dispatch, role])
+  }, [])
 
   return (
     <nav className="flex items-center justify-between flex-wrap bg-white shadow px-6 py-3 z-20">

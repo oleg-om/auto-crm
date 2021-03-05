@@ -9,6 +9,7 @@ import { updateAutopart } from '../../redux/reducers/autoparts'
 const AutopartEditFull = () => {
   socket.connect()
   const { id } = useParams()
+  const { num } = useParams(1)
   const dispatch = useDispatch()
   const list = useSelector((s) => s.autoparts.list).filter(
     (it) => JSON.stringify(it.id_autoparts) === id
@@ -23,7 +24,7 @@ const AutopartEditFull = () => {
       <Navbar />
       <div className="container mx-auto px-4 mt-3">
         {list.map((it) => (
-          <AutopartsEdit key={id} {...it} updateAutopart={updateAutopartLocal} />
+          <AutopartsEdit key={id} {...it} updateAutopart={updateAutopartLocal} num={num} />
         ))}
       </div>
     </div>

@@ -7,6 +7,7 @@ import { updateAutopart } from '../../redux/reducers/autoparts'
 
 const AutopartView = () => {
   const { id } = useParams()
+  const { num } = useParams(1)
   const dispatch = useDispatch()
   const list = useSelector((s) => s.autoparts.list).filter(
     (it) => JSON.stringify(it.id_autoparts) === id
@@ -31,6 +32,7 @@ const AutopartView = () => {
             processList={employeeList.find((item) => item.id === it.process)}
             placesList={placesList.find((item) => item.id === it.place)}
             settings={settings}
+            num={num}
           />
         ))}
       </div>

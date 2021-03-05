@@ -133,8 +133,8 @@ const AutopartsRow = (props) => {
           <Link
             to={
               props.role.includes('autopartfull')
-                ? `/autoparts/edit/${props.id_autoparts}`
-                : `/autoparts/view/${props.id_autoparts}`
+                ? `/autoparts/edit/${props.id_autoparts}/${props.num ? props.num : ''}`
+                : `/autoparts/view/${props.id_autoparts}/${props.num ? props.num : ''}`
             }
             className="px-5 py-1 text-xs border-blue-500 border text-blue-500 rounded transition duration-300 hover:bg-blue-700 hover:text-white focus:outline-none"
           >

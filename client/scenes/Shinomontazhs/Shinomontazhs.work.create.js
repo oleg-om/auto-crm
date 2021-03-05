@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { useDispatch } from 'react-redux'
-import { useHistory } from 'react-router-dom'
+import { useHistory, useParams } from 'react-router-dom'
 import { toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
 import { socket } from '../../redux/sockets/socketReceivers'
@@ -17,6 +17,7 @@ const ShinomontazhsNew = () => {
     dispatch(createShinomontazh(name))
     socket.emit('new shinomontazh')
   }
+  const { num } = useParams(1)
 
   const history = useHistory()
   const checkLink = () => history.location.pathname.split('/').includes('shinomontazhboss')
@@ -75,6 +76,7 @@ const ShinomontazhsNew = () => {
           openAndUpdate={openAndUpdate}
           setModalIsOpen={setModalIsOpen}
           checkLink={checkLink()}
+          num={num}
         />
       </div>
       <UpdateModal

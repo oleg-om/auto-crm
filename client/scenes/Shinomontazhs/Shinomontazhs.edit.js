@@ -11,6 +11,7 @@ import { updateShinomontazh } from '../../redux/reducers/shinomontazhs'
 const ShinomontazhEditFull = () => {
   socket.connect()
   const { id } = useParams()
+  const { num } = useParams(1)
   const dispatch = useDispatch()
   const list = useSelector((s) => s.shinomontazhs.list).filter(
     (it) => JSON.stringify(it.id_shinomontazhs) === id
@@ -47,6 +48,7 @@ const ShinomontazhEditFull = () => {
             updateShinomontazh={updateShinomontazhLocal}
             shinomontazhPrintOne={shinomontazhPrintOne}
             shinomontazhPrintTwo={shinomontazhPrintTwo}
+            num={num}
           />
         ))}
       </div>

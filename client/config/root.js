@@ -161,10 +161,15 @@ const RootComponent = (props) => {
             <PrivateRoute exact path="/" component={() => <Dashboard />} />
             <Route exact path="/access" component={() => <Access />} />
             <BossRoute exact path="/boss" component={() => <Boss />} />
-            <PrivateRoute exact path="/autoparts/order/list" component={AutopartsList} />
+            <PrivateRoute exact path="/autoparts/order/list/:num" component={AutopartsList} />
+            <PrivateRoute exact path="/autoparts/order/list/" component={AutopartsList} />
+            <PrivateRoute exact path="/autoparts/order/create/:num" component={AutopartsNew} />
             <PrivateRoute exact path="/autoparts/order/create" component={AutopartsNew} />
+            <PrivateRoute exact path="/autoparts/edit/:id/:num" component={AutopartEditSimple} />
             <PrivateRoute exact path="/autoparts/edit/:id" component={AutopartEditSimple} />
+            <PrivateRoute exact path="/autoparts/editfull/:id/:num" component={AutopartEditFull} />
             <PrivateRoute exact path="/autoparts/editfull/:id" component={AutopartEditFull} />
+            <PrivateRoute exact path="/autoparts/view/:id/:num" component={AutopartView} />
             <PrivateRoute exact path="/autoparts/view/:id" component={AutopartView} />
             <AdminRoute exact path="/place/list" component={PlaceList} />
             <PrivateRoute exact path="/place/create" component={PlaceNew} />
@@ -200,20 +205,43 @@ const RootComponent = (props) => {
               path="/shinomontazhprice/:type/edit/:id"
               component={ShinomontazhpriceEdit}
             />
+            <PrivateRoute exact path="/shinomontazh/list/:num" component={ShinomontazhsList} />
             <PrivateRoute exact path="/shinomontazh/list" component={ShinomontazhsList} />
+            <PrivateRoute
+              exact
+              path="/shinomontazhboss/list/:num"
+              component={ShinomontazhsListBoss}
+            />
             <PrivateRoute exact path="/shinomontazhboss/list" component={ShinomontazhsListBoss} />
+            <PrivateRoute exact path="/shinomontazh/create/:num" component={ShinomontazhsNew} />
             <PrivateRoute exact path="/shinomontazh/create" component={ShinomontazhsNew} />
+            <PrivateRoute exact path="/shinomontazhboss/create/:num" component={ShinomontazhsNew} />
             <PrivateRoute exact path="/shinomontazhboss/create" component={ShinomontazhsNew} />
+            <PrivateRoute
+              exact
+              path="/shinomontazh/edit/:id/:num"
+              component={ShinomontazhEditFull}
+            />
             <PrivateRoute exact path="/shinomontazh/edit/:id" component={ShinomontazhEditFull} />
+            <PrivateRoute
+              exact
+              path="/shinomontazhboss/edit/:id/:num"
+              component={ShinomontazhEditFull}
+            />
             <PrivateRoute
               exact
               path="/shinomontazhboss/edit/:id"
               component={ShinomontazhEditFull}
             />
+            <PrivateRoute exact path="/tyres/order/list/:num" component={TyresList} />
             <PrivateRoute exact path="/tyres/order/list" component={TyresList} />
+            <PrivateRoute exact path="/tyres/order/create/:num" component={TyresNew} />
             <PrivateRoute exact path="/tyres/order/create" component={TyresNew} />
+            <PrivateRoute exact path="/tyres/edit/:id/:num" component={TyreEditSimple} />
             <PrivateRoute exact path="/tyres/edit/:id" component={TyreEditSimple} />
+            <PrivateRoute exact path="/tyres/editfull/:id/:num" component={TyreEditFull} />
             <PrivateRoute exact path="/tyres/editfull/:id" component={TyreEditFull} />
+            <PrivateRoute exact path="/tyres/view/:id/:num" component={TyreView} />
             <PrivateRoute exact path="/tyres/view/:id" component={TyreView} />
             <Route component={() => <NotFound />} />
           </Switch>

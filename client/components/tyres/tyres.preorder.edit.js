@@ -68,7 +68,7 @@ const TyreUpdate = (props) => {
         ...state,
         statusDates: [...props.statusDates, { status: state.status, date: dateNew }]
       })
-      history.push('/tyres/order/list')
+      history.push(`/tyres/order/list/${props.num ? props.num : ''}`)
       notify('Данные о заказе обновлены, заказ в работе')
     } else if (props.status !== state.status && state.status === taskStatuses[6]) {
       props.updateTyre(props.id, {
@@ -76,11 +76,11 @@ const TyreUpdate = (props) => {
         statusDates: [...props.statusDates, { status: state.status, date: dateNew }],
         cancelReason: state.cancelReason
       })
-      history.push('/tyres/order/list')
+      history.push(`/tyres/order/list/${props.num ? props.num : ''}`)
       notify('Данные о заказе обновлены, клиент отказался от заказа')
     } else {
       props.updateTyre(props.id, state)
-      history.push('/tyres/order/list')
+      history.push(`/tyres/order/list/${props.num ? props.num : ''}`)
       notify('Данные о заказе обновлены')
     }
   }
@@ -206,7 +206,7 @@ const TyreUpdate = (props) => {
                 </ul>
                 {!props.siteNumber ? (
                   <Link
-                    to={`/tyres/editfull/${props.id_tyres}`}
+                    to={`/tyres/editfull/${props.id_tyres}/${props.num ? props.num : ''}`}
                     className="py-2 px-3 bg-blue-600 text-white text-sm hover:bg-blue-700 hover:text-white rounded-full h-22 w-22"
                   >
                     Редактировать заказ
@@ -1018,7 +1018,7 @@ const TyreUpdate = (props) => {
       </div>
       <div className=" flex my-2">
         <Link
-          to="/tyres/order/list"
+          to={`/tyres/order/list/${props.num ? props.num : ''}`}
           className="my-3 mr-2 py-2 w-1/3 px-3 bg-red-600 text-white text-center hover:bg-red-700 hover:text-white rounded-lg"
         >
           Отмена
