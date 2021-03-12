@@ -1,11 +1,11 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import { Link, useHistory } from 'react-router-dom'
 import { useSelector } from 'react-redux'
 import { toast } from 'react-toastify'
 import cx from 'classnames'
-// import { useReactToPrint } from 'react-to-print'
+import { useReactToPrint } from 'react-to-print'
 import 'react-toastify/dist/ReactToastify.css'
-// import ComponentToPrint from './tyres.print'
+import ComponentToPrint from './tyres.print'
 import malePlaceholder from '../../assets/images/profile_placeholder_male.webp'
 import orderPlaceholder from '../../assets/images/order_placeholder.webp'
 import taskStatuses from '../../lists/task-statuses'
@@ -18,10 +18,10 @@ import WheelColumn from './moduls/wheelcolumn'
 const TyreUpdate = (props) => {
   const history = useHistory()
 
-  // const componentRef = useRef()
-  // const handlePrint = useReactToPrint({
-  //   content: () => componentRef.current
-  // })
+  const componentRef = useRef()
+  const handlePrint = useReactToPrint({
+    content: () => componentRef.current
+  })
 
   toast.configure()
   const notify = (arg) => {
@@ -43,6 +43,14 @@ const TyreUpdate = (props) => {
     .getMinutes()
     .toString()
     .replace(/^(\d)$/, '0$1')}`
+
+  const handlePrintPlusUpdateStatus = () => {
+    handlePrint()
+    props.updateTyre(props.id, {
+      statusDates: [...props.statusDates, { status: 'Печать сметы', date: dateNew }]
+    })
+  }
+
   const auth = useSelector((s) => s.auth)
   const [state, setState] = useState({
     status: props.status,
@@ -146,6 +154,17 @@ const TyreUpdate = (props) => {
     }
   }
   const createDate = new Date(props.date)
+
+  const totalInWork =
+    props.order.length >= 1
+      ? props.order.reduce(function fullPrice(acc, rec) {
+          if (rec.price && rec.quantity && rec.stat !== 'Интересовался')
+            if (rec.price.match(/[0-9]/) && rec.quantity.match(/[0-9]/)) {
+              return acc + rec.price * rec.quantity
+            }
+          return acc
+        }, 0)
+      : null
 
   return (
     <div>
@@ -267,9 +286,9 @@ const TyreUpdate = (props) => {
                 >
                   Заказы клиента
                 </Link> */}
-                {/* <button
+                <button
                   type="submit"
-                  onClick={handlePrint}
+                  onClick={handlePrintPlusUpdateStatus}
                   className="py-2 px-3 bg-blue-600 text-white text-sm hover:bg-blue-700 hover:text-white rounded-full h-22 w-22"
                 >
                   <div className="flex flex-row">
@@ -306,17 +325,19 @@ const TyreUpdate = (props) => {
                       </g>
                     </svg>
 
-                    <p> Печать предчека</p>
+                    <p> Печать сметы</p>
                   </div>
-                </button> */}
-                {/* <div className="hidden">
+                </button>
+                <div className="hidden">
                   <ComponentToPrint
                     ref={componentRef}
                     props={props}
                     helpphone={props.settings.map((it) => it.helpphone)}
                     placesList={props.placesList}
+                    employeeListLocal={employeeListLocal}
+                    total={totalInWork}
                   />
-                </div> */}
+                </div>
               </div>
             </div>
           </div>

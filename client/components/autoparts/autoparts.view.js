@@ -1,5 +1,6 @@
 import React, { useState, useRef } from 'react'
 import { Link, useHistory } from 'react-router-dom'
+import { useSelector } from 'react-redux'
 import { toast } from 'react-toastify'
 import cx from 'classnames'
 import { useReactToPrint } from 'react-to-print'
@@ -17,6 +18,28 @@ const AutopartViewOrder = (props) => {
     content: () => componentRef.current
   })
 
+  const dateNow = new Date()
+  const dateNew = `${dateNow
+    .getDate()
+    .toString()
+    .replace(/^(\d)$/, '0$1')}.${(dateNow.getMonth() + 1)
+    .toString()
+    .replace(/^(\d)$/, '0$1')}.${dateNow.getFullYear()} ${dateNow
+    .getHours()
+    .toString()
+    .replace(/^(\d)$/, '0$1')}:${dateNow
+    .getMinutes()
+    .toString()
+    .replace(/^(\d)$/, '0$1')}`
+
+  const handlePrintPlusUpdateStatus = () => {
+    handlePrint()
+    props.updateAutopart(props.id, {
+      statusDates: [...props.statusDates, { status: 'Печать сметы', date: dateNew }]
+    })
+  }
+
+  const employeeListLocal = useSelector((s) => s.employees.list)
   toast.configure()
   const notify = (arg) => {
     toast.info(arg, { position: toast.POSITION.BOTTOM_RIGHT })
@@ -144,7 +167,7 @@ const AutopartViewOrder = (props) => {
                 </Link> */}
                 <button
                   type="submit"
-                  onClick={handlePrint}
+                  onClick={handlePrintPlusUpdateStatus}
                   className="py-2 px-3 bg-blue-600 text-white text-sm hover:bg-blue-700 hover:text-white rounded-full h-22 w-22"
                 >
                   <div className="flex flex-row">
@@ -190,6 +213,7 @@ const AutopartViewOrder = (props) => {
                     props={props}
                     helpphone={props.settings.map((it) => it.helpphone)}
                     placesList={props.placesList}
+                    employeeListLocal={employeeListLocal}
                     total={totalInWork}
                   />
                 </div>

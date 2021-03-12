@@ -108,6 +108,10 @@ const Autopart = new mongoose.Schema({
     type: String,
     required: false
   },
+  datePrint: {
+    type: String,
+    required: false
+  },
   statusDates: {
     type: Array,
     required: false

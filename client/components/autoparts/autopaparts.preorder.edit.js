@@ -16,6 +16,7 @@ const AutopartUpdate = (props) => {
   const history = useHistory()
 
   const componentRef = useRef()
+
   const handlePrint = useReactToPrint({
     content: () => componentRef.current
   })
@@ -40,6 +41,14 @@ const AutopartUpdate = (props) => {
     .getMinutes()
     .toString()
     .replace(/^(\d)$/, '0$1')}`
+
+  const handlePrintPlusUpdateStatus = () => {
+    handlePrint()
+    props.updateAutopart(props.id, {
+      statusDates: [...props.statusDates, { status: 'Печать сметы', date: dateNew }]
+    })
+  }
+
   const auth = useSelector((s) => s.auth)
   const [state, setState] = useState({
     status: props.status,
@@ -242,7 +251,7 @@ const AutopartUpdate = (props) => {
                 </Link> */}
                 <button
                   type="submit"
-                  onClick={handlePrint}
+                  onClick={handlePrintPlusUpdateStatus}
                   className="py-2 px-3 bg-blue-600 text-white text-sm hover:bg-blue-700 hover:text-white rounded-full h-22 w-22"
                 >
                   <div className="flex flex-row">
@@ -288,6 +297,7 @@ const AutopartUpdate = (props) => {
                     props={props}
                     helpphone={props.settings.map((it) => it.helpphone)}
                     placesList={props.placesList}
+                    employeeListLocal={employeeListLocal}
                     total={totalInWork}
                   />
                 </div>
