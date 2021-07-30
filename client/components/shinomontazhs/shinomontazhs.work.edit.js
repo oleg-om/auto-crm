@@ -20,7 +20,7 @@ const ShinomontazhsEdit = (props) => {
 
   const history = useHistory()
   const checkLink = () => history.location.pathname.split('/').includes('shinomontazhboss')
-  console.log(checkLink())
+
   const employeeList = useSelector((s) => s.employees.list)
   const customerList = useSelector((s) => s.customers.list)
   const auth = useSelector((s) => s.auth)
@@ -95,6 +95,18 @@ const ShinomontazhsEdit = (props) => {
             return {
               ...object,
               role: 'main'
+            }
+          }
+          return object
+        })
+      )
+    } else if (employees.find((it) => it.id === id).role === 'main') {
+      setEmployees(
+        employees.map((object) => {
+          if (object.id === id) {
+            return {
+              ...object,
+              role: 'student'
             }
           }
           return object
@@ -568,9 +580,9 @@ const ShinomontazhsEdit = (props) => {
         tyre: [...tyres]
       })
       if (checkLink()) {
-        history.push('/shinomontazhboss/list')
+        history.push(`/shinomontazhboss/list/${props.num ? props.num : ''}`)
       } else {
-        history.push('/shinomontazh/list')
+        history.push(`/shinomontazh/list/${props.num ? props.num : ''}`)
       }
       notify('Запись изменена')
     }
@@ -600,28 +612,47 @@ const ShinomontazhsEdit = (props) => {
         status: statusList[1]
       })
       if (checkLink()) {
-        history.push('/shinomontazhboss/list')
+        history.push(`/shinomontazhboss/list/${props.num ? props.num : ''}`)
       } else {
-        history.push('/shinomontazh/list')
+        history.push(`/shinomontazh/list/${props.num ? props.num : ''}`)
       }
       notify('Запись изменена')
     } else if (state.payment === 'yes') {
       props.updateShinomontazh(props.id, {
-        // ...state,
-        // services: service,
-        // material: materials,
-        // tyre: [...tyres],
-        // employee: employees,
         discount: state.discount,
         payment: state.payment,
         status: statusList[2]
       })
       if (checkLink()) {
-        history.push('/shinomontazhboss/list')
+        history.push(`/shinomontazhboss/list/${props.num ? props.num : ''}`)
       } else {
-        history.push('/shinomontazh/list')
+        history.push(`/shinomontazh/list/${props.num ? props.num : ''}`)
       }
       notify('Работа оплачена')
+    } else if (state.payment === 'card') {
+      props.updateShinomontazh(props.id, {
+        discount: state.discount,
+        payment: state.payment,
+        status: statusList[3]
+      })
+      if (checkLink()) {
+        history.push(`/shinomontazhboss/list/${props.num ? props.num : ''}`)
+      } else {
+        history.push(`/shinomontazh/list/${props.num ? props.num : ''}`)
+      }
+      notify('Работа оплачена (безнал)')
+    } else if (state.payment === 'terminal') {
+      props.updateShinomontazh(props.id, {
+        discount: state.discount,
+        payment: state.payment,
+        status: statusList[4]
+      })
+      if (checkLink()) {
+        history.push(`/shinomontazhboss/list/${props.num ? props.num : ''}`)
+      } else {
+        history.push(`/shinomontazh/list/${props.num ? props.num : ''}`)
+      }
+      notify('Работа оплачена (терминал)')
     } else {
       props.updateShinomontazh(props.id, {
         // ...state,
@@ -633,9 +664,9 @@ const ShinomontazhsEdit = (props) => {
         payment: state.payment
       })
       if (checkLink()) {
-        history.push('/shinomontazhboss/list')
+        history.push(`/shinomontazhboss/list/${props.num ? props.num : ''}`)
       } else {
-        history.push('/shinomontazh/list')
+        history.push(`/shinomontazh/list/${props.num ? props.num : ''}`)
       }
       notify('Запись изменена')
     }
@@ -933,12 +964,17 @@ const ShinomontazhsEdit = (props) => {
             dateEnd={props.dateFinish}
             printOne={printOne}
             printTwo={printTwo}
+            id_shinomontazhs={props.id_shinomontazhs}
           />
         </div>
       </div>
       <div className=" flex my-2">
         <Link
-          to={checkLink() ? '/shinomontazhboss/list' : '/shinomontazh/list'}
+          to={
+            checkLink()
+              ? `/shinomontazhboss/list/${props.num ? props.num : ''}`
+              : `/shinomontazh/list/${props.num ? props.num : ''}`
+          }
           className="my-3 mr-2 py-3 w-1/3 px-3 bg-red-600 text-white text-center hover:bg-red-700 hover:text-white rounded-lg"
         >
           Отмена

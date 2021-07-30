@@ -730,6 +730,7 @@ const Car = ({
                   <option value="" hidden>
                     Выберите бренд
                   </option>
+                  <option value="н" label="н" key="н" />
                   {options.mark
                     .sort(function sortMarks(a, b) {
                       if (a.name > b.name) {
@@ -768,14 +769,14 @@ const Car = ({
                   value={state.model}
                   name="model"
                   id="model"
-                  placeholder={state.mark.length < 2 ? 'Сначала выберете марку' : 'Выберите модель'}
-                  disabled={state.mark.length < 2}
+                  placeholder={state.mark.length < 1 ? 'Сначала выберете марку' : 'Выберите модель'}
+                  disabled={state.mark.length < 1}
                   autoComplete="off"
                   required
                   onChange={onChangeModel}
                 >
                   <option value="" hidden>
-                    {state.mark.length < 2 ? 'Сначала выберете марку' : 'Выберите модель'}
+                    {state.mark.length < 1 ? 'Сначала выберете марку' : 'Выберите модель'}
                   </option>
                   {state.mark
                     ? options.model

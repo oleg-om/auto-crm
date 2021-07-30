@@ -5,10 +5,13 @@ import { socket } from '../../redux/sockets/socketReceivers'
 import AutopartUpdate from '../../components/autoparts/autopaparts.preorder.edit'
 import Navbar from '../../components/Navbar'
 import { updateAutopart } from '../../redux/reducers/autoparts'
+import onLoad from './Onload'
 
 const AutopartEditSimple = () => {
+  onLoad()
   socket.connect()
   const { id } = useParams()
+  const { num } = useParams(1)
   const dispatch = useDispatch()
   const list = useSelector((s) => s.autoparts.list).filter(
     (it) => JSON.stringify(it.id_autoparts) === id
@@ -33,6 +36,7 @@ const AutopartEditSimple = () => {
             processList={employeeList.find((item) => item.id === it.process)}
             placesList={placesList.find((item) => item.id === it.place)}
             settings={settings}
+            num={num}
           />
         ))}
       </div>

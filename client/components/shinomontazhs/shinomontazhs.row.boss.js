@@ -15,7 +15,9 @@ const ShinomontazhsRowBoss = (props) => {
     <tr
       className={cx('table-row flex-row flex-no-wrap mb-0', {
         'bg-white hover:bg-gray-100': props.status !== taskStatuses[2],
-        'bg-blue-200 hover:bg-blue-300': props.status === taskStatuses[2]
+        'bg-blue-200 hover:bg-blue-300': props.status === taskStatuses[2],
+        'bg-yellow-200 hover:bg-yellow-300': props.status === taskStatuses[3],
+        'bg-purple-200 hover:bg-purple-300': props.status === taskStatuses[4]
       })}
     >
       <td className="w-auto p-2 text-gray-800 text-sm text-center border border-b table-cell static">
@@ -52,7 +54,8 @@ const ShinomontazhsRowBoss = (props) => {
             'bg-orange-400': props.status === taskStatuses[0],
             'bg-green-400': props.status === taskStatuses[1],
             'bg-blue-400': props.status === taskStatuses[2],
-            'bg-red-400': props.status === taskStatuses[3]
+            'bg-yellow-400': props.status === taskStatuses[3],
+            'bg-purple-400': props.status === taskStatuses[4]
           })}
         >
           {props.status}
@@ -132,7 +135,7 @@ const ShinomontazhsRowBoss = (props) => {
             </div>
           </button> */}
           <Link
-            to={`/shinomontazhboss/edit/${props.id_shinomontazhs}`}
+            to={`/shinomontazhboss/edit/${props.id_shinomontazhs}/${props.num ? props.num : ''}`}
             className="px-5 py-1 text-xs border-blue-500 border text-blue-500 rounded transition duration-300 hover:bg-blue-700 hover:text-white focus:outline-none"
           >
             Подробнее

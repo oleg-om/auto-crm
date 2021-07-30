@@ -9,6 +9,7 @@ import { updateTyre } from '../../redux/reducers/tyres'
 const TyreEditFull = () => {
   socket.connect()
   const { id } = useParams()
+  const { num } = useParams(1)
   const dispatch = useDispatch()
   const list = useSelector((s) => s.tyres.list).filter((it) => JSON.stringify(it.id_tyres) === id)
 
@@ -21,7 +22,7 @@ const TyreEditFull = () => {
       <Navbar />
       <div className="container mx-auto px-4 mt-3">
         {list.map((it) => (
-          <TyresEdit key={id} {...it} updateTyre={updateTyreLocal} />
+          <TyresEdit key={id} {...it} updateTyre={updateTyreLocal} num={num} />
         ))}
       </div>
     </div>

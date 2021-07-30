@@ -74,14 +74,22 @@ const Employee = ({
                               'border-yellow-400 bg-yellow-400':
                                 employees.find((it) => it.id.includes(item.id)).role === 'main',
                               'border-green-400 bg-green-400':
-                                employees.find((it) => it.id.includes(item.id)).role !== 'main'
+                                employees.find((it) => it.id.includes(item.id)).role === 'second',
+                              'border-red-400 bg-red-400':
+                                employees.find((it) => it.id.includes(item.id)).role === 'student'
                             })}
                             id={item.id}
                             onClick={checkBoxEmpRoleChange}
                           >
                             {employees.find((it) => it.id.includes(item.id)).role === 'main'
                               ? 'Старший'
-                              : 'Исполнитель'}
+                              : ''}
+                            {employees.find((it) => it.id.includes(item.id)).role === 'second'
+                              ? 'Исполнитель'
+                              : ''}
+                            {employees.find((it) => it.id.includes(item.id)).role === 'student'
+                              ? 'Студент'
+                              : ''}
                           </button>
                         ) : null}
                       </td>
@@ -107,12 +115,15 @@ const Employee = ({
                         type="button"
                         className={cx('py-1 px-4 rounded-lg my-1 mr-3 border', {
                           'border-yellow-400 bg-yellow-400': item.role === 'main',
-                          'border-green-400 bg-green-400': item.role !== 'main'
+                          'border-green-400 bg-green-400': item.role === 'second',
+                          'border-red-400 bg-red-400': item.role === 'student'
                         })}
                         id={item.id}
                         onClick={checkBoxEmpRoleChange}
                       >
-                        {item.role === 'main' ? 'Старший' : 'Исполнитель'}
+                        {item.role === 'main' ? 'Старший' : ''}
+                        {item.role === 'second' ? 'Исполнитель' : ''}
+                        {item.role === 'student' ? 'Студент' : ''}
                       </button>
                     </td>
                   </tr>

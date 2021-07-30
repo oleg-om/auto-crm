@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { useDispatch } from 'react-redux'
-import { useHistory } from 'react-router-dom'
+import { useHistory, useParams } from 'react-router-dom'
 import { toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
 import { socket } from '../../redux/sockets/socketReceivers'
@@ -16,6 +16,7 @@ const AutopartsNew = () => {
   const create = (name) => {
     dispatch(createAutopart(name))
   }
+  const { num } = useParams(1)
   const history = useHistory()
   toast.configure()
   const notify = (arg) => {
@@ -36,14 +37,14 @@ const AutopartsNew = () => {
     setModalIsOpen(false)
     notify('Данные клиента изменены')
     create(order)
-    history.push('/autoparts/order/list')
+    history.push(`/autoparts/order/list`)
     notify('Заказ добавлен')
   }
 
   const disUpdateCust = () => {
     setModalIsOpen(false)
     create(order)
-    history.push('/autoparts/order/list')
+    history.push(`/autoparts/order/list`)
     notify('Заказ добавлен')
   }
 
@@ -63,6 +64,7 @@ const AutopartsNew = () => {
           createCust={createCust}
           openAndUpdate={openAndUpdate}
           setModalIsOpen={setModalIsOpen}
+          num={num}
         />
       </div>
       <UpdateModal
@@ -71,6 +73,7 @@ const AutopartsNew = () => {
         onSubmit={() => updateCust(activeCustomerId, activeCustomerName)}
         onDisSubmit={() => disUpdateCust()}
         activeCustomerName={activeCustomerName}
+        num={num}
       />
     </div>
   )

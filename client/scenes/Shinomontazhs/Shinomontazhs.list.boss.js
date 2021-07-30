@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
-import { Link } from 'react-router-dom'
-// import NumberFormat from 'react-number-format'
-// import cx from 'classnames'
+import { Link, useParams, useHistory } from 'react-router-dom'
+import NumberFormat from 'react-number-format'
+import cx from 'classnames'
 import { toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
 import { socket } from '../../redux/sockets/socketReceivers'
@@ -10,15 +10,20 @@ import ShinomontazhsRowBoss from '../../components/shinomontazhs/shinomontazhs.r
 import { updateStatus, getShinomontazhs } from '../../redux/reducers/shinomontazhs'
 import Navbar from '../../components/Navbar'
 import Pagination from '../Pagination'
+import onLoad from './Onload'
 // import taskStatuses from '../../lists/task-statuses'
 
 const ShinomontazhsListBoss = () => {
+  onLoad()
   const dispatch = useDispatch()
   const list = useSelector((s) => s.shinomontazhs.list)
   const revList = [].concat(list).reverse()
   const placesList = useSelector((s) => s.places.list)
   const employeeList = useSelector((s) => s.employees.list)
   const role = useSelector((s) => s.auth.roles)
+
+  const history = useHistory()
+  const { num } = useParams(1)
 
   socket.connect()
   useEffect(() => {
@@ -31,50 +36,54 @@ const ShinomontazhsListBoss = () => {
     dispatch(updateStatus(id, status))
   }
 
-  const [loading] = useState(true)
-  const [currentPage, setCurrentPage] = useState(1)
+  const [currentPage, setCurrentPage] = useState(num ? Number(num) : 1)
   const postsPerPage = 14
   const indexOfLastPost = currentPage * postsPerPage
   const indexOfFirstPost = indexOfLastPost - postsPerPage
 
   const currentPosts = revList.slice(indexOfFirstPost, indexOfLastPost)
 
-  const paginate = (pageNumber) => setCurrentPage(pageNumber)
+  const paginate = (pageNumber) => {
+    setCurrentPage(pageNumber)
+    history.push(`/shinomontazhboss/list/${pageNumber}`)
+  }
 
   toast.configure()
-  // const notify = (arg) => {
-  //   toast.info(arg, { position: toast.POSITION.BOTTOM_RIGHT })
-  // }
+  const notify = (arg) => {
+    toast.info(arg, { position: toast.POSITION.BOTTOM_RIGHT })
+  }
 
-  const [search] = useState({
+  const [loading, setLoading] = useState(true)
+
+  const [search, setSearch] = useState({
     phone: '',
     number: '',
     status: '',
     vinnumber: '',
     place: ''
   })
-  const [showSearch] = useState(false)
+  const [showSearch, setShowSearch] = useState(false)
 
-  // const onChangePhone = (e) => {
-  //   const { name, value } = e.target
-  //   setSearch(() => ({
-  //     [name]: value,
-  //     number: '',
-  //     status: '',
-  //     vinnumber: '',
-  //     place: ''
-  //   }))
-  // }
-  // const onChangeNumber = (e) => {
-  //   const { name, value } = e.target
-  //   setSearch(() => ({
-  //     [name]: value,
-  //     phone: '',
-  //     status: '',
-  //     vinnumber: '',
-  //     place: ''
-  //   }))
-  // }
+  const onChangePhone = (e) => {
+    const { name, value } = e.target
+    setSearch(() => ({
+      [name]: value,
+      number: '',
+      status: '',
+      vinnumber: '',
+      place: ''
+    }))
+  }
+  const onChangeNumber = (e) => {
+    const { name, value } = e.target
+    setSearch(() => ({
+      [name]: value,
+      phone: '',
+      status: '',
+      vinnumber: '',
+      place: ''
+    }))
+  }
   // const onChangeStatus = (e) => {
   //   const { name, value } = e.target
   //   setSearch(() => ({
@@ -95,24 +104,24 @@ const ShinomontazhsListBoss = () => {
   //     place: ''
   //   }))
   // }
-  // const onChangePlace = (e) => {
-  //   const { name, value } = e.target
-  //   setSearch(() => ({
-  //     [name]: value,
-  //     phone: '',
-  //     number: '',
-  //     status: '',
-  //     vinnumber: ''
-  //   }))
-  // }
-  // useEffect(() => {
-  //   if (showSearch === false && currentPosts.length === 0 && loading === true) {
-  //     setTimeout(() => setLoading(false), 10000)
-  //   } else {
-  //     setLoading(true)
-  //   }
-  //   return () => {}
-  // }, [currentPosts.length, showSearch, loading])
+  const onChangePlace = (e) => {
+    const { name, value } = e.target
+    setSearch(() => ({
+      [name]: value,
+      phone: '',
+      number: '',
+      status: '',
+      vinnumber: ''
+    }))
+  }
+  useEffect(() => {
+    if (showSearch === false && currentPosts.length === 0 && loading === true) {
+      setTimeout(() => setLoading(false), 10000)
+    } else {
+      setLoading(true)
+    }
+    return () => {}
+  }, [currentPosts.length, showSearch, loading])
   const currentPostsFiltered = revList
     .filter(
       (it) =>
@@ -124,35 +133,35 @@ const ShinomontazhsListBoss = () => {
     )
     .slice(indexOfFirstPost, indexOfLastPost)
 
-  // const onReset = () => {
-  //   setShowSearch(false)
-  //   setSearch(() => ({
-  //     phone: '',
-  //     number: '',
-  //     status: '',
-  //     vinnumber: '',
-  //     place: ''
-  //   }))
-  // }
-  // const onFilter = () => {
-  //   if (
-  //     search.phone === '' &&
-  //     search.number === '' &&
-  //     search.status === '' &&
-  //     search.vinnumber === '' &&
-  //     search.place === ''
-  //   ) {
-  //     notify('Заполните хотябы одно поле')
-  //   } else {
-  //     setShowSearch(true)
-  //   }
-  // }
+  const onReset = () => {
+    setShowSearch(false)
+    setSearch(() => ({
+      phone: '',
+      number: '',
+      status: '',
+      vinnumber: '',
+      place: ''
+    }))
+  }
+  const onFilter = () => {
+    if (
+      search.phone === '' &&
+      search.number === '' &&
+      search.status === '' &&
+      search.vinnumber === '' &&
+      search.place === ''
+    ) {
+      notify('Заполните хотябы одно поле')
+    } else {
+      setShowSearch(true)
+    }
+  }
 
   return (
     <div>
       <Navbar />
       <div>
-        {/* <div className="mx-auto px-4">
+        <div className="mx-auto px-4">
           <div className="py-3 px-4 my-3 rounded-lg shadow bg-white">
             <div className="-mx-3 md:flex">
               <button
@@ -265,7 +274,7 @@ const ShinomontazhsListBoss = () => {
                   </div>
                 </div>
               </div>
-              <div className="md:w-1/2 px-3 mb-6 md:mb-0">
+              {/* <div className="md:w-1/2 px-3 mb-6 md:mb-0">
                 <label
                   className="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2"
                   htmlFor="grid-first-name"
@@ -303,8 +312,8 @@ const ShinomontazhsListBoss = () => {
                     </svg>
                   </div>
                 </div>
-              </div>
-              <div className="md:w-1/2 px-3 mb-6 md:mb-0">
+              </div> */}
+              {/* <div className="md:w-1/2 px-3 mb-6 md:mb-0">
                 <label
                   className="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2"
                   htmlFor="grid-first-name"
@@ -341,7 +350,7 @@ const ShinomontazhsListBoss = () => {
                     </svg>
                   </div>
                 </div>
-              </div>
+              </div> */}
               <div className="md:w-1/2 px-3 mb-6 md:mb-0">
                 <label
                   className="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2"
@@ -366,7 +375,11 @@ const ShinomontazhsListBoss = () => {
                       Все
                     </option>
                     {placesList.map((it) => {
-                      return <option key={it.id}>{it.name}</option>
+                      return (
+                        <option key={it.id} value={it.id}>
+                          {it.name}
+                        </option>
+                      )
                     })}
                   </select>
                   <div className="pointer-events-none absolute top-0 mt-2  right-0 flex items-center px-2 text-gray-600">
@@ -380,7 +393,7 @@ const ShinomontazhsListBoss = () => {
                   </div>
                 </div>
               </div>
-              <div className="md:w-1/2 px-3 mb-6 md:mb-0">
+              {/* <div className="md:w-1/2 px-3 mb-6 md:mb-0">
                 <label
                   className="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2"
                   htmlFor="grid-first-name"
@@ -395,7 +408,7 @@ const ShinomontazhsListBoss = () => {
                     {revList.filter((it) => it.status === taskStatuses[0]).length}
                   </button>
                 </div>
-              </div>
+              </div> */}
 
               <div className="flex content-end  px-3 mb-6 md:mb-0">
                 <button
@@ -423,7 +436,7 @@ const ShinomontazhsListBoss = () => {
               ✖
             </button>
           </div>
-        ) : null} */}
+        ) : null}
         <div className="overflow-x-auto rounded-lg overflow-y-auto relative lg:my-3 mt-1 lg:shadow lg:mx-4">
           <table className="border-collapse w-full">
             <thead>
@@ -469,6 +482,7 @@ const ShinomontazhsListBoss = () => {
                       processList={employeeList.find((item) => item.id === it.process)}
                       placesList={placesList.find((item) => item.id === it.place)}
                       settings={settings}
+                      num={num}
                     />
                   ))
                 : currentPostsFiltered.map((it) => (
@@ -481,6 +495,7 @@ const ShinomontazhsListBoss = () => {
                       processList={employeeList.find((item) => item.id === it.process)}
                       placesList={placesList.find((item) => item.id === it.place)}
                       settings={settings}
+                      num={num}
                     />
                   ))}
             </tbody>
@@ -524,7 +539,7 @@ const ShinomontazhsListBoss = () => {
           )}
         </div>
 
-        <Link to="/shinomontazhboss/create">
+        <Link to={`/shinomontazhboss/create/${num ? Number(num) : ''}`}>
           <button
             type="button"
             className="fixed bottom-0 left-0 p-6 shadow bg-blue-600 text-white opacity-75 text-l hover:opacity-100 hover:bg-blue-700 hover:text-white rounded-full my-3 mx-3"

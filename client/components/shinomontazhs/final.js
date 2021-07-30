@@ -241,6 +241,8 @@ const Final = ({
               >
                 <option value="">Выберите статус оплаты</option>
                 <option value="yes">Оплачено</option>
+                <option value="card">Безнал</option>
+                <option value="terminal">Терминал</option>
                 <option value="no">Не оплачено</option>
               </select>
               <div className="pointer-events-none hidden absolute top-0 mt-3 right-0 lg:flex items-center px-2 text-gray-600">

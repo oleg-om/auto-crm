@@ -5,10 +5,13 @@ import { socket } from '../../redux/sockets/socketReceivers'
 import TyreUpdate from '../../components/tyres/tyres.preorder.edit'
 import Navbar from '../../components/Navbar'
 import { updateTyre } from '../../redux/reducers/tyres'
+import onLoad from './Onload'
 
 const TyreEditSimple = () => {
+  onLoad()
   socket.connect()
   const { id } = useParams()
+  const { num } = useParams(1)
   const dispatch = useDispatch()
   const list = useSelector((s) => s.tyres.list).filter((it) => JSON.stringify(it.id_tyres) === id)
   const employeeList = useSelector((s) => s.employees.list)
@@ -31,6 +34,7 @@ const TyreEditSimple = () => {
             processList={employeeList.find((item) => item.id === it.process)}
             placesList={placesList.find((item) => item.id === it.place)}
             settings={settings}
+            num={num}
           />
         ))}
       </div>

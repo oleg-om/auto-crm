@@ -1,0 +1,4 @@
+export const GET_TYRES = 'GET_TYRES'
+export const CREATE_TYRE = 'CREATE_TYRE'
+export const UPDATE_TYRE = 'UPDATE_TYRE'
+export const UPDATE_TYRE_STATUS = 'UPDATE_TYRE_STATUS'

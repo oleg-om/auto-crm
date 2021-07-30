@@ -1,20 +1,15 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState } from 'react'
 import { Link, NavLink } from 'react-router-dom'
 import cx from 'classnames'
 import { useSelector, useDispatch } from 'react-redux'
 import { signOut } from '../redux/reducers/auth'
 
 import { socket } from '../redux/sockets/socketReceivers'
-import { getRazvals } from '../redux/reducers/razvals'
-import { getOils } from '../redux/reducers/oils'
-import { getAutoparts } from '../redux/reducers/autoparts'
-import { getTyres } from '../redux/reducers/tyres'
-import { getShinomontazhs, getShinomontazhsLastTwoDays } from '../redux/reducers/shinomontazhs'
 
 const Navbar = () => {
   const dispatch = useDispatch()
   const auth = useSelector((s) => s.auth)
-  const role = useSelector((s) => s.auth.roles)
+  // const role = useSelector((s) => s.auth.roles)
   const [toggle, setToggle] = useState(false)
   const toggleOpen = () => {
     if (toggle === false) {
@@ -31,132 +26,132 @@ const Navbar = () => {
   }
 
   socket.connect()
-  useEffect(() => {
-    socket.on('update razval', function () {
-      if (role.includes('boss') || role.includes('admin') || role.includes('razval')) {
-        dispatch(getRazvals())
-      }
-    })
-  }, [dispatch, role])
+  // useEffect(() => {
+  //   socket.on('update razval', function () {
+  //     if (role.includes('boss') || role.includes('admin') || role.includes('razval')) {
+  //       dispatch(getRazvals())
+  //     }
+  //   })
+  // }, [dispatch, role])
 
-  useEffect(() => {
-    socket.on('update edited razval', function () {
-      if (role.includes('boss') || role.includes('admin') || role.includes('razval')) {
-        dispatch(getRazvals())
-      }
-    })
-  }, [dispatch, role])
+  // useEffect(() => {
+  //   socket.on('update edited razval', function () {
+  //     if (role.includes('boss') || role.includes('admin') || role.includes('razval')) {
+  //       dispatch(getRazvals())
+  //     }
+  //   })
+  // }, [dispatch, role])
 
-  useEffect(() => {
-    socket.on('update oil', function () {
-      if (role.includes('boss') || role.includes('admin') || role.includes('razval')) {
-        dispatch(getOils())
-      }
-    })
-  }, [dispatch, role])
+  // useEffect(() => {
+  //   socket.on('update oil', function () {
+  //     if (role.includes('boss') || role.includes('admin') || role.includes('razval')) {
+  //       dispatch(getOils())
+  //     }
+  //   })
+  // }, [dispatch, role])
 
-  useEffect(() => {
-    socket.on('update edited oil', function () {
-      if (role.includes('boss') || role.includes('admin') || role.includes('razval')) {
-        dispatch(getOils())
-      }
-    })
-  }, [dispatch, role])
+  // useEffect(() => {
+  //   socket.on('update edited oil', function () {
+  //     if (role.includes('boss') || role.includes('admin') || role.includes('razval')) {
+  //       dispatch(getOils())
+  //     }
+  //   })
+  // }, [dispatch, role])
 
-  useEffect(() => {
-    socket.on('update autopart', function () {
-      if (
-        role.includes('boss') ||
-        role.includes('admin') ||
-        role.includes('autopartfull') ||
-        role.includes('autopartsimple')
-      ) {
-        dispatch(getAutoparts())
-      }
-    })
-  }, [dispatch, role])
+  // useEffect(() => {
+  //   socket.on('update autopart', function () {
+  //     if (
+  //       role.includes('boss') ||
+  //       role.includes('admin') ||
+  //       role.includes('autopartfull') ||
+  //       role.includes('autopartsimple')
+  //     ) {
+  //       dispatch(getAutoparts())
+  //     }
+  //   })
+  // }, [dispatch, role])
 
-  useEffect(() => {
-    socket.on('update edited autopart', function () {
-      if (
-        role.includes('boss') ||
-        role.includes('admin') ||
-        role.includes('autopartfull') ||
-        role.includes('autopartsimple')
-      ) {
-        dispatch(getAutoparts())
-      }
-    })
-  }, [dispatch, role])
+  // useEffect(() => {
+  //   socket.on('update edited autopart', function () {
+  //     if (
+  //       role.includes('boss') ||
+  //       role.includes('admin') ||
+  //       role.includes('autopartfull') ||
+  //       role.includes('autopartsimple')
+  //     ) {
+  //       dispatch(getAutoparts())
+  //     }
+  //   })
+  // }, [dispatch, role])
 
-  useEffect(() => {
-    socket.on('update tyre', function () {
-      if (
-        role.includes('boss') ||
-        role.includes('admin') ||
-        role.includes('tyrefull') ||
-        role.includes('tyresimple')
-      ) {
-        dispatch(getTyres())
-      }
-    })
-  }, [dispatch, role])
+  // useEffect(() => {
+  //   socket.on('update tyre', function () {
+  //     if (
+  //       role.includes('boss') ||
+  //       role.includes('admin') ||
+  //       role.includes('tyrefull') ||
+  //       role.includes('tyresimple')
+  //     ) {
+  //       dispatch(getTyres())
+  //     }
+  //   })
+  // }, [dispatch, role])
 
-  useEffect(() => {
-    socket.on('update edited tyre', function () {
-      if (
-        role.includes('boss') ||
-        role.includes('admin') ||
-        role.includes('tyrefull') ||
-        role.includes('tyresimple')
-      ) {
-        dispatch(getTyres())
-      }
-    })
-  }, [dispatch, role])
+  // useEffect(() => {
+  //   socket.on('update edited tyre', function () {
+  //     if (
+  //       role.includes('boss') ||
+  //       role.includes('admin') ||
+  //       role.includes('tyrefull') ||
+  //       role.includes('tyresimple')
+  //     ) {
+  //       dispatch(getTyres())
+  //     }
+  //   })
+  // }, [dispatch, role])
 
-  useEffect(() => {
-    socket.on('update tyre from oline shop', function () {
-      if (
-        role.includes('boss') ||
-        role.includes('admin') ||
-        role.includes('tyrefull') ||
-        role.includes('tyresimple')
-      ) {
-        dispatch(getTyres())
-      }
-    })
-  }, [dispatch, role])
+  // useEffect(() => {
+  //   socket.on('update tyre from oline shop', function () {
+  //     if (
+  //       role.includes('boss') ||
+  //       role.includes('admin') ||
+  //       role.includes('tyrefull') ||
+  //       role.includes('tyresimple')
+  //     ) {
+  //       dispatch(getTyres())
+  //     }
+  //   })
+  // }, [dispatch, role])
 
-  useEffect(() => {
-    socket.on('update shinomontazh', function () {
-      if (role.includes('boss') || role.includes('admin') || role.includes('bookkeeper')) {
-        dispatch(getShinomontazhs())
-      } else if (
-        role.includes('shinomontazh') &&
-        !role.includes('boss') &&
-        !role.includes('admin') &&
-        !role.includes('bookkeeper')
-      ) {
-        dispatch(getShinomontazhsLastTwoDays())
-      }
-    })
-  }, [dispatch, role])
+  // useEffect(() => {
+  //   socket.on('update shinomontazh', function () {
+  //     if (role.includes('boss') || role.includes('admin') || role.includes('bookkeeper')) {
+  //       dispatch(getShinomontazhs())
+  //     } else if (
+  //       role.includes('shinomontazh') &&
+  //       !role.includes('boss') &&
+  //       !role.includes('admin') &&
+  //       !role.includes('bookkeeper')
+  //     ) {
+  //       dispatch(getShinomontazhsLastTwoDays())
+  //     }
+  //   })
+  // }, [dispatch, role])
 
-  useEffect(() => {
-    socket.on('update edited shinomontazh', function () {
-      if (role.includes('boss') || role.includes('admin') || role.includes('bookkeeper')) {
-        dispatch(getShinomontazhs())
-      } else if (
-        role.includes('shinomontazh') &&
-        !role.includes('boss') &&
-        !role.includes('admin') &&
-        !role.includes('bookkeeper')
-      ) {
-        dispatch(getShinomontazhsLastTwoDays())
-      }
-    })
-  }, [dispatch, role])
+  // useEffect(() => {
+  //   socket.on('update edited shinomontazh', function () {
+  //     if (role.includes('boss') || role.includes('admin') || role.includes('bookkeeper')) {
+  //       dispatch(getShinomontazhs())
+  //     } else if (
+  //       role.includes('shinomontazh') &&
+  //       !role.includes('boss') &&
+  //       !role.includes('admin') &&
+  //       !role.includes('bookkeeper')
+  //     ) {
+  //       dispatch(getShinomontazhsLastTwoDays())
+  //     }
+  //   })
+  // }, [dispatch, role])
 
   return (
     <nav className="flex items-center justify-between flex-wrap bg-white shadow px-6 py-3 z-20">
@@ -248,13 +243,25 @@ const Navbar = () => {
               Шиномонтаж
             </NavLink>
           ) : null}
-          {auth.roles.includes('boss') ? (
+          {auth.roles.includes('boss') || auth.roles.includes('bookkeeper') ? (
             <NavLink
               to="/shinomontazhboss/list"
               className="block mt-4 lg:inline-block lg:mt-0 text-gray-800 hover:text-blue-700 mr-4"
               activeClassName="text-blue-600 underline font-semibold"
             >
               Шиномонтаж (Босс)
+            </NavLink>
+          ) : null}
+          {auth.roles.includes('kassa') ||
+          auth.roles.includes('boss') ||
+          auth.roles.includes('hranenie') ||
+          auth.roles.includes('admin') ? (
+            <NavLink
+              to="/storages/order/list"
+              className="block mt-4 lg:inline-block lg:mt-0 text-gray-800 hover:text-blue-700 mr-4"
+              activeClassName="text-blue-600 underline font-semibold"
+            >
+              Хранение
             </NavLink>
           ) : null}
           {auth.roles.includes('autopartfull') ||
@@ -305,7 +312,7 @@ const Navbar = () => {
           >
             Аккаунты
           </NavLink> */}
-          {auth.roles.includes('boss') ? (
+          {/* {auth.roles.includes('boss') ? (
             <NavLink
               to="/boss"
               className="block mt-4 lg:inline-block lg:mt-0 text-gray-800 hover:text-blue-700 mr-4"
@@ -313,7 +320,7 @@ const Navbar = () => {
             >
               Босс
             </NavLink>
-          ) : null}
+          ) : null} */}
           {auth.roles.includes('bookkeeper') ? (
             <NavLink
               to="/shinomontazhprice/list/legk"
@@ -330,6 +337,15 @@ const Navbar = () => {
               activeClassName="text-blue-600 underline font-semibold"
             >
               Цены (материалы)
+            </NavLink>
+          ) : null}
+          {auth.roles.includes('bookkeeper') || auth.roles.includes('boss') ? (
+            <NavLink
+              to="/report"
+              className="block mt-4 lg:inline-block lg:mt-0 text-gray-800 hover:text-blue-700 mr-4"
+              activeClassName="text-blue-600 underline font-semibold"
+            >
+              Отчет
             </NavLink>
           ) : null}
         </div>

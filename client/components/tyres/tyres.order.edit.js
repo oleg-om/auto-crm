@@ -73,7 +73,7 @@ const TyresEdit = (props) => {
       })
     return () => {}
   }, [])
-  console.log(state.preorder)
+
   useEffect(() => {
     if (stateId.mark !== '') {
       fetch(`/api/v1/carmodel/${stateId.mark}`)
@@ -288,7 +288,7 @@ const TyresEdit = (props) => {
       notify('Вы заказываете диски. Укажите марку и модель авто')
     else if (state.employee && state.place && state.name && state.phone) {
       props.updateTyre(props.id, state)
-      history.push(`/tyres/edit/${props.id_tyres}`)
+      history.push(`/tyres/edit/${props.id_tyres}/${props.num ? props.num : ''}`)
       notify('Данные о заказе обновлены')
     }
   }
@@ -871,7 +871,7 @@ const TyresEdit = (props) => {
       </div>
       <div className=" flex my-2">
         <Link
-          to={`/tyres/edit/${props.id_tyres}`}
+          to={`/tyres/edit/${props.id_tyres}/${props.num ? props.num : ''}`}
           className="my-3 mr-2 py-2 md:w-1/3 px-3 bg-red-600 text-white text-center hover:bg-red-700 hover:text-white rounded-lg"
         >
           Отмена
