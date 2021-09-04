@@ -35,13 +35,20 @@ const Service = ({
                   .map((item) => (
                     <tr
                       key={item.id}
-                      className={cx('mb-3 flex flex-row rounded bg-gray-200 w-full text-lg', {
+                      className={cx('mb-3 flex flex-row rounded w-full text-lg', {
                         'bg-green-200 hover:bg-green-300': service.find((it) =>
                           it.serviceName.includes(item.id)
                         ),
-                        'bg-gray-100 hover:bg-gray-300':
+                        'bg-gray-200 hover:bg-gray-300':
                           !service.find((it) => it.serviceName.includes(item.id)) &&
                           item.category !== 'other',
+                        'bg-red-200 hover:bg-red-300':
+                          !service.find((it) => it.serviceName.includes(item.id)) &&
+                          item.category !== 'other' &&
+                          (item.name.toLowerCase().includes('груженый') ||
+                            item.name.toLowerCase().includes('гружёный') ||
+                            item.name.toLowerCase().includes('груженный') ||
+                            item.name.toLowerCase().includes('гружённый')),
                         'bg-blue-100 hover:bg-blue-300':
                           !service.find((it) => it.serviceName.includes(item.id)) &&
                           item.category === 'other'

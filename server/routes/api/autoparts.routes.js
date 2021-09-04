@@ -4,6 +4,7 @@ const autopartsController = require('../../controller/autoparts.controller')
 const router = express.Router()
 
 router.get('/autopart/', autopartsController.getAll)
+router.get('/autopartlast/', autopartsController.getLastOneHundred)
 router.get('/autopart/:id', autopartsController.getOne)
 router.post('/autopart/', autopartsController.create)
 router.patch('/autopart/:id', autopartsController.update)

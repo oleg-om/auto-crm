@@ -1,0 +1,12 @@
+const express = require('express')
+const storagesController = require('../../controller/storage.controller')
+
+const router = express.Router()
+
+router.get('/storage/', storagesController.getAll)
+router.get('/storage/:id', storagesController.getOne)
+router.post('/storage/', storagesController.create)
+router.patch('/storage/:id', storagesController.update)
+router.delete('/storage/:id', storagesController.delete)
+
+module.exports = router

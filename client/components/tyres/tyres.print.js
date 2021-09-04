@@ -35,11 +35,14 @@ export default class ComponentToPrint extends React.PureComponent {
                       <td className="w-full px-2 py-1 text-sm text-left border border-gray-600 table-cell relative">
                         <p key={it.tyreItem} className="w-full">
                           Шина: {it.brand ? `${it.brand} ` : null}
-                          {it.model ? `${it.model} ` : null}
-                          {it.sizeone ? `${it.sizeone} ` : null}
-                          {it.sizetwo ? `/ ${it.sizetwo} ` : null}
-                          {it.sizethree ? `R${it.sizethree} ` : null}
-                          {it.indexone ? `${it.indexone} ` : null}
+                          {it.model ? `${it.model} ` : null}&nbsp;&nbsp;
+                          <b>
+                            {it.sizeone ? `${it.sizeone}      ` : null}
+                            {it.sizetwo ? `/  ${it.sizetwo}   ` : null}
+                            {it.sizethree ? `R${it.sizethree} ` : null}
+                          </b>
+                          &nbsp;&nbsp;
+                          {it.indexone ? `  ${it.indexone} ` : null}
                           {it.indextwo ? `${it.indextwo} ` : null}
                           {it.season === 'summer' ? 'летняя ' : null}
                           {it.season === 'winter' ? 'зимняя ' : null}
@@ -182,7 +185,7 @@ export default class ComponentToPrint extends React.PureComponent {
         <div className="w-full flex flex-row">
           <div className="w-1/2 flex justify-start flex-col justify-items-start mr-auto">
             {this.props.props.employee ? (
-              <div className="flex justify-between text-sm w-3/5 sm:w-auto mr-auto">
+              <div className="flex justify-between text-sm w-4/5 sm:w-auto mr-auto">
                 <p className="mr-5">Принял заказ:</p>
 
                 <p>
@@ -199,7 +202,7 @@ export default class ComponentToPrint extends React.PureComponent {
               ''
             )}
             {this.props.props.process ? (
-              <div className="flex justify-between text-sm w-3/5 mr-auto mb-2">
+              <div className="flex justify-between text-sm w-4/5 mr-auto mb-2">
                 <p className="mr-5">Обработал заказ:</p>
                 <p>
                   {this.props.employeeListLocal.find((it) => it.id === this.props.props.process)

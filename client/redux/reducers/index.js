@@ -18,6 +18,7 @@ import shinomontazhprices from './shinomotazh.prices'
 import shinomontazhs from './shinomontazhs'
 import vendors from './vendors'
 import tyres from './tyres'
+import storage from './storage'
 
 const createRootReducer = (history) =>
   combineReducers({
@@ -38,7 +39,8 @@ const createRootReducer = (history) =>
     shinomontazhprices,
     shinomontazhs,
     vendors,
-    tyres
+    tyres,
+    storage
   })
 
 export default createRootReducer

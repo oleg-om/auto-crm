@@ -5,8 +5,10 @@ import { socket } from '../../redux/sockets/socketReceivers'
 import AutopartUpdate from '../../components/autoparts/autopaparts.preorder.edit'
 import Navbar from '../../components/Navbar'
 import { updateAutopart } from '../../redux/reducers/autoparts'
+import onLoad from './Onload'
 
 const AutopartEditSimple = () => {
+  onLoad()
   socket.connect()
   const { id } = useParams()
   const { num } = useParams(1)

@@ -7,5 +7,7 @@ module.exports = [
   { name: 'Начальник', value: 'boss' },
   { name: 'Работник шиномонтажа', value: 'shinomontazh' },
   { name: 'Прием заказов (шины)', value: 'tyresimple' },
-  { name: 'Обработка заказов (шины)', value: 'tyrefull' }
+  { name: 'Обработка заказов (шины)', value: 'tyrefull' },
+  { name: 'Хранение', value: 'hranenie' },
+  { name: 'Кассир', value: 'kassa' }
 ]

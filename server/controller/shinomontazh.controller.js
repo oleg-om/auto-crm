@@ -6,8 +6,11 @@ exports.getAll = async (req, res) => {
 }
 
 exports.getLastTwoDays = async (req, res) => {
+  const date = new Date()
+  const yerstaday = new Date(date.setDate(date.getDate() - 2))
   const list = await Shinomontazh.find({
-    dateStart: { $gte: new Date(Date.now() - 172800000).toLocaleDateString() }
+    dateStart: { $gte: new Date(yerstaday).toString() }
+    // dateStart: { $gte: new Date(Date.now().getTime() - 24 * 60 * 60 * 1000).toISOString() }
   })
 
   return res.json({ status: 'ok', data: list })

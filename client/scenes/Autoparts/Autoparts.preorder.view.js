@@ -4,8 +4,10 @@ import { useParams } from 'react-router-dom'
 import AutopartViewOrder from '../../components/autoparts/autoparts.view'
 import Navbar from '../../components/Navbar'
 import { updateAutopart } from '../../redux/reducers/autoparts'
+import onLoad from './Onload'
 
 const AutopartView = () => {
+  onLoad()
   const { id } = useParams()
   const { num } = useParams(1)
   const dispatch = useDispatch()

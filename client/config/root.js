@@ -57,6 +57,12 @@ import TyresNew from '../scenes/Tyres/Tyres.preorder.create'
 import TyreEditSimple from '../scenes/Tyres/Tyres.preorder.edit'
 import TyreEditFull from '../scenes/Tyres/Tyres.edit'
 import TyreView from '../scenes/Tyres/Tyres.preorder.view'
+import Report from '../scenes/Report/Report'
+import StoragesList from '../scenes/Storage/Storage.list'
+import StoragesNew from '../scenes/Storage/Storage.preorder.create'
+import StorageEditSimple from '../scenes/Storage/Storage.preorder.edit'
+import StorageEditFull from '../scenes/Storage/Storage.edit'
+import StorageView from '../scenes/Storage/Storage.preorder.view'
 
 import Startup from './startup'
 
@@ -243,6 +249,17 @@ const RootComponent = (props) => {
             <PrivateRoute exact path="/tyres/editfull/:id" component={TyreEditFull} />
             <PrivateRoute exact path="/tyres/view/:id/:num" component={TyreView} />
             <PrivateRoute exact path="/tyres/view/:id" component={TyreView} />
+            <PrivateRoute exact path="/report" component={Report} />
+            <PrivateRoute exact path="/storages/order/list/:num" component={StoragesList} />
+            <PrivateRoute exact path="/storages/order/list/" component={StoragesList} />
+            <PrivateRoute exact path="/storages/order/create/:num" component={StoragesNew} />
+            <PrivateRoute exact path="/storages/order/create" component={StoragesNew} />
+            <PrivateRoute exact path="/storages/edit/:id/:num" component={StorageEditSimple} />
+            <PrivateRoute exact path="/storages/edit/:id" component={StorageEditSimple} />
+            <PrivateRoute exact path="/storages/editfull/:id/:num" component={StorageEditFull} />
+            <PrivateRoute exact path="/storages/editfull/:id" component={StorageEditFull} />
+            <PrivateRoute exact path="/storages/view/:id/:num" component={StorageView} />
+            <PrivateRoute exact path="/storages/view/:id" component={StorageView} />
             <Route component={() => <NotFound />} />
           </Switch>
         </Startup>

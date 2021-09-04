@@ -16,8 +16,10 @@ import ModalEdit from '../../components/razval/razval.modal.edit'
 import AccessModal from '../../components/razval/access.modal'
 import 'react-toastify/dist/ReactToastify.css'
 import { socket } from '../../redux/sockets/socketReceivers'
+import onLoad from './Onload'
 
 const RazvalList = () => {
+  onLoad()
   toast.configure()
   const notify = (arg) => {
     toast.info(arg, { position: toast.POSITION.BOTTOM_RIGHT })

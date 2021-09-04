@@ -34,6 +34,7 @@ const shinomotazhpriceRoutes = require('./routes/api/shinomotazh.price.routes')
 const shinomotazhRoutes = require('./routes/api/shinomotazh.routes')
 const vendorRoutes = require('./routes/api/vendor.routes')
 const tyreRoutes = require('./routes/api/tyres.routes')
+const storageRoutes = require('./routes/api/storage.routes')
 
 const Root = () => ''
 
@@ -104,6 +105,7 @@ server.use('/api/v1', shinomotazhpriceRoutes)
 server.use('/api/v1', shinomotazhRoutes)
 server.use('/api/v1', vendorRoutes)
 server.use('/api/v1', tyreRoutes)
+server.use('/api/v1', storageRoutes)
 
 server.get('/api/v1/auth', async (req, res) => {
   try {
@@ -208,8 +210,8 @@ server.get('/*', (req, res) => {
 serve.listen(port)
 
 io.on('connection', (socket) => {
+  console.log('new user')
   connections.push(socket)
-  console.log('a user connected')
   socket.on('new login', async ({ token, currentRoom }) => {
     try {
       const user = jwt.verify(token, config.secret)
@@ -262,38 +264,38 @@ io.on('connection', (socket) => {
     delete userNames[id]
   })
 
-  socket.on('new autopart', ({ autopart }) => {
-    io.emit('update autopart', autopart)
-  })
+  // socket.on('new autopart', ({ autopart }) => {
+  //   io.emit('update autopart', autopart)
+  // })
 
-  socket.on('edit autopart', () => {
-    io.emit('update edited autopart')
-  })
+  // socket.on('edit autopart', () => {
+  //   io.emit('update edited autopart')
+  // })
 
-  socket.on('new razval', ({ razval }) => {
-    // io.emit('update razval', { result: razval })
-    io.emit('update razval', razval)
-  })
+  // socket.on('new razval', ({ razval }) => {
+  //   // io.emit('update razval', { result: razval })
+  //   io.emit('update razval', razval)
+  // })
 
-  socket.on('edit razval', () => {
-    io.emit('update edited razval')
-  })
+  // socket.on('edit razval', () => {
+  //   io.emit('update edited razval')
+  // })
 
-  socket.on('new oil', ({ oil }) => {
-    io.emit('update oil', oil)
-  })
+  // socket.on('new oil', ({ oil }) => {
+  //   io.emit('update oil', oil)
+  // })
 
-  socket.on('edit oil', () => {
-    io.emit('update edited oil')
-  })
+  // socket.on('edit oil', () => {
+  //   io.emit('update edited oil')
+  // })
 
-  socket.on('new tyre', ({ tyre }) => {
-    io.emit('update tyre', tyre)
-  })
+  // socket.on('new tyre', ({ tyre }) => {
+  //   io.emit('update tyre', tyre)
+  // })
 
-  socket.on('edit tyre', () => {
-    io.emit('update edited tyre')
-  })
+  // socket.on('edit tyre', () => {
+  //   io.emit('update edited tyre')
+  // })
 
   socket.on('shinomontazh one print', (shinomontazh) => {
     io.emit('shinoneprint', shinomontazh)
@@ -302,15 +304,23 @@ io.on('connection', (socket) => {
     io.emit('shintwoprint', shinomontazh)
   })
 
-  socket.on('new shinomontazh', () => {
-    io.emit('update shinomontazh')
-  })
+  // socket.on('new shinomontazh', () => {
+  //   io.emit('update shinomontazh')
+  // })
 
-  socket.on('edit shinomontazh', () => {
-    io.emit('update edited shinomontazh')
-  })
+  // socket.on('edit shinomontazh', () => {
+  //   io.emit('update edited shinomontazh')
+  // })
+
+  // socket.on('new storage', ({ storage }) => {
+  //   io.emit('update storage', storage)
+  // })
+
+  // socket.on('edit storage', () => {
+  //   io.emit('update edited storage')
+  // })
 })
 
 console.log(`Serving at http://localhost:${port}`)
 
-setInterval(() => kerchshinaCheck(io), 900000)
+setInterval(() => kerchshinaCheck(io), 1800000)

@@ -45,6 +45,7 @@ const ShinomontazhsCreate = (props) => {
 
   const [service, setService] = useState([])
   const [materials, setMaterials] = useState([])
+
   const [tyres, setTyres] = useState({ sale: 'no' })
   const [employees, setEmployees] = useState([])
 
@@ -608,6 +609,18 @@ const ShinomontazhsCreate = (props) => {
           return object
         })
       )
+    } else if (employees.find((it) => it.id === id).role === 'main') {
+      setEmployees(
+        employees.map((object) => {
+          if (object.id === id) {
+            return {
+              ...object,
+              role: 'student'
+            }
+          }
+          return object
+        })
+      )
     } else {
       setEmployees(
         employees.map((object) => {
@@ -713,7 +726,10 @@ const ShinomontazhsCreate = (props) => {
       }
     }
   }
-
+  const [termCash] = useState({
+    terminal: 0,
+    cash: 0
+  })
   return (
     <div>
       <div className="bg-white shadow rounded-lg px-8 py-6 mb-4 flex flex-col my-2">
@@ -883,6 +899,7 @@ const ShinomontazhsCreate = (props) => {
             tyres={tyres}
             checkboxTyresChange={checkboxTyresChange}
             dateEnd=""
+            termCash={termCash}
           />
         </div>
       </div>

@@ -620,7 +620,7 @@ const ShinomontazhpriceUpdate = (props) => {
                 className="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2"
                 htmlFor="grid-first-name"
               >
-                R23
+                R22,5 (спец шина)
               </label>
               <input
                 className="appearance-none block w-full bg-grey-lighter text-grey-darker border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-3 px-4 mb-3"

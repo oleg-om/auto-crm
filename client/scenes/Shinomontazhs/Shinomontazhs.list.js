@@ -10,9 +10,11 @@ import ShinomontazhsRow from '../../components/shinomontazhs/shinomontazhs.row'
 import { updateStatus, getShinomontazhs } from '../../redux/reducers/shinomontazhs'
 import Navbar from '../../components/Navbar'
 import Pagination from '../Pagination'
+import onLoad from './Onload'
 // import taskStatuses from '../../lists/task-statuses'
 
 const ShinomontazhsList = () => {
+  onLoad()
   const dispatch = useDispatch()
   const placesList = useSelector((s) => s.places.list)
   const employeeList = useSelector((s) => s.employees.list)
@@ -35,11 +37,7 @@ const ShinomontazhsList = () => {
     .reverse()
 
   socket.connect()
-  useEffect(() => {
-    socket.on('update shinomontazh', function () {
-      dispatch(getShinomontazhs())
-    })
-  }, [])
+
   const settings = useSelector((s) => s.settings.list)
   const updateStatusLocal = (id, status) => {
     dispatch(updateStatus(id, status))
@@ -70,6 +68,12 @@ const ShinomontazhsList = () => {
     place: ''
   })
   const [showSearch] = useState(false)
+
+  useEffect(() => {
+    if (currentPage !== 1) {
+      dispatch(getShinomontazhs())
+    }
+  }, [currentPage])
 
   // const onChangePhone = (e) => {
   //   const { name, value } = e.target
@@ -471,6 +475,9 @@ const ShinomontazhsList = () => {
                   Конец
                 </th>
                 <th className="p-1 lg:p-3 lg:font-bold lg:uppercase bg-gray-100 text-gray-600 border border-gray-300 table-cell">
+                  Cумма
+                </th>
+                <th className="p-1 lg:p-3 lg:font-bold lg:uppercase bg-gray-100 text-gray-600 border border-gray-300 table-cell">
                   Действия
                 </th>
               </tr>
@@ -512,7 +519,7 @@ const ShinomontazhsList = () => {
           ) : null}
           {showSearch === false && currentPosts.length === 0 && loading === true ? (
             <div className="w-full bg-white py-2 flex justify-center">
-              <b className="text-center text-gray-700">Записей не найдено</b>
+              <b className="text-center text-gray-700">Загрузка...</b>
             </div>
           ) : null}
           {showSearch === false && currentPosts.length === 0 && loading === false ? (

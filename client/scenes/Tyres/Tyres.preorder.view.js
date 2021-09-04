@@ -4,8 +4,10 @@ import { useParams } from 'react-router-dom'
 import TyreViewOrder from '../../components/tyres/tyres.view'
 import Navbar from '../../components/Navbar'
 import { updateTyre } from '../../redux/reducers/tyres'
+import onLoad from './Onload'
 
 const TyreView = () => {
+  onLoad()
   const { id } = useParams()
   const { num } = useParams(1)
   const dispatch = useDispatch()

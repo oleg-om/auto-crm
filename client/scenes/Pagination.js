@@ -55,14 +55,15 @@ const Pagination = ({ postsPerPage, totalPosts, paginate, currentPage, currentPo
               {number}
             </button>
           ))}
-        {currentPage !== pageNumbers.slice(-1)[0] ? (
+        {currentPage !== pageNumbers.slice(-1)[0] || currentPage === 1 ? (
           <button
             type="button"
             className="mx-1 px-3 py-2 text-xs rounded-lg font-bold bg-gray-200 text-gray-700 hover:text-gray-600 hover:bg-gray-400"
             onClick={() =>
-              currentPage < totalPosts &&
-              totalPosts > postsPerPage &&
-              currentPosts.length >= postsPerPage
+              (currentPage < totalPosts &&
+                totalPosts > postsPerPage &&
+                currentPosts.length >= postsPerPage) ||
+              currentPage === 1
                 ? paginate(currentPage + 1)
                 : null
             }

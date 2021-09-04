@@ -11,8 +11,10 @@ import { updateStatus, getTyres } from '../../redux/reducers/tyres'
 import Navbar from '../../components/Navbar'
 import Pagination from '../Pagination'
 import taskStatuses from '../../lists/task-statuses'
+import onLoad from './Onload'
 
 const TyresList = () => {
+  onLoad()
   const dispatch = useDispatch()
   const list = useSelector((s) => s.tyres.list)
   const revList = [].concat(list).reverse()

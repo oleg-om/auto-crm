@@ -5,8 +5,10 @@ import { socket } from '../../redux/sockets/socketReceivers'
 import TyreUpdate from '../../components/tyres/tyres.preorder.edit'
 import Navbar from '../../components/Navbar'
 import { updateTyre } from '../../redux/reducers/tyres'
+import onLoad from './Onload'
 
 const TyreEditSimple = () => {
+  onLoad()
   socket.connect()
   const { id } = useParams()
   const { num } = useParams(1)

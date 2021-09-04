@@ -5,6 +5,11 @@ exports.getAll = async (req, res) => {
   return res.json({ status: 'ok', data: list })
 }
 
+exports.getLastOneHundred = async (req, res) => {
+  const list = await Autopart.find().sort({ _id: -1 }).limit(20)
+  return res.json({ status: 'ok', data: list.reverse() })
+}
+
 exports.getOne = async (req, res) => {
   const autopart = await Autopart.findOne(
     { id: req.params.id },
