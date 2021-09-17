@@ -1,7 +1,7 @@
 import { useEffect } from 'react'
 import { useDispatch } from 'react-redux'
-import { socket } from '../../redux/sockets/socketReceivers'
-import { getShinomontazhs } from '../../redux/reducers/shinomontazhs'
+import { socket } from '../../../redux/sockets/socketReceivers'
+import { getShinomontazhs } from '../../../redux/reducers/shinomontazhs'
 
 const OnLoad = () => {
   const dispatch = useDispatch()

@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react'
+import React, { useState, useRef, useEffect } from 'react'
 import { Link, useHistory } from 'react-router-dom'
 import { useSelector } from 'react-redux'
 import { toast } from 'react-toastify'
@@ -25,6 +25,12 @@ const AutopartUpdate = (props) => {
   const notify = (arg) => {
     toast.info(arg, { position: toast.POSITION.BOTTOM_RIGHT })
   }
+  useEffect(() => {
+    notify(
+      'Не забудь указать закупку и дату прибытия. Если эти поля есть будет считаться зарплата :)'
+    )
+  }, [history])
+
   const employeeListLocal = useSelector((s) => s.employees.list)
   const vendorList = useSelector((s) => s.vendors.list)
 
@@ -97,12 +103,13 @@ const AutopartUpdate = (props) => {
 
   const [inputFields, setInputFields] = useState(
     state.order.map((it) => ({
-      autopartItem: it.autopartItem,
-      quantity: it.quantity,
-      price: it.price,
-      stat: it.stat,
-      vendor: it.vendor,
-      come: it.come
+      autopartItem: it.autopartItem ? it.autopartItem : '',
+      quantity: it.quantity ? it.quantity : '',
+      price: it.price ? it.price : '',
+      stat: it.stat ? it.stat : '',
+      vendor: it.vendor ? it.vendor : '',
+      come: it.come ? it.come : '',
+      zakup: it.zakup ? it.zakup : ''
     }))
   )
 
@@ -125,7 +132,8 @@ const AutopartUpdate = (props) => {
         price: '',
         stat: '',
         vendor: '',
-        come: ''
+        come: '',
+        zakup: ''
       }
     ])
     setState((prevState) => ({

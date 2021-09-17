@@ -1,23 +1,18 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, Suspense } from 'react'
 import { useSelector } from 'react-redux'
 import cx from 'classnames'
 import Navbar from '../../components/Navbar'
-import taskStatuses from '../../lists/task-statuses'
 import ReportSidebar from './Report.sidebar'
-import Salary from './Salary'
-import Material from './Material'
-import onLoad from './Onload'
-import statuses from '../../../common/enums/shinomontazh-statuses'
+import Shinomontazh from './shinomontazh/wrapper'
+
+const Autoparts = React.lazy(() => import('./Autoparts/wrapper'))
 
 const Report = () => {
-  onLoad()
-  const shinList = useSelector((s) => s.shinomontazhs.list)
   const placeList = useSelector((s) => s.places.list)
   const employeeList = useSelector((s) => s.employees.list)
   const auth = useSelector((s) => s.auth)
 
   const [checkIsAdmin, setCheckIsAdmin] = useState(true)
-  const [report, setReport] = useState([])
 
   const [calendarType, setCalendarType] = useState('month')
 
@@ -26,8 +21,6 @@ const Report = () => {
   const [activeDay, setActiveDay] = useState(new Date())
   const [active, setActive] = useState('salary')
 
-  const [bossPercent, setBossPercent] = useState(30)
-  const [isMaterial, setIsMaterial] = useState('yes')
   useEffect(() => {
     if (auth.roles.length > 0 && !auth.roles.includes('boss') && !auth.roles.includes('admin')) {
       setPlace(auth.place)
@@ -37,153 +30,13 @@ const Report = () => {
     return () => {}
   }, [auth.roles, auth.place])
 
-  useEffect(() => {
-    if (calendarType === 'month') {
-      setReport(
-        shinList
-          .filter((it) => (place ? place === it.place : it))
-          .filter(
-            (it) =>
-              it.status === statuses[1] ||
-              it.status === statuses[2] ||
-              it.status === statuses[3] ||
-              it.status === statuses[4] ||
-              it.status === statuses[6]
-          )
-          // .filter((it) => it.payment === 'yes')
-          .filter(
-            (item) =>
-              new Date(item.dateFinish).getFullYear() === activeMonth.getFullYear() &&
-              new Date(item.dateFinish).getMonth() + 1 === activeMonth.getMonth() + 1
-          )
-      )
-    }
-    if (calendarType === 'day') {
-      // console.log('day')
-      setReport(
-        shinList
-          .filter((it) => (place ? place === it.place : it))
-          .filter(
-            (it) =>
-              it.status === statuses[1] ||
-              it.status === statuses[2] ||
-              it.status === statuses[3] ||
-              it.status === statuses[4] ||
-              it.status === statuses[6]
-          )
-          // .filter((it) => it.payment === 'yes')
-          .filter(
-            (item) =>
-              new Date(item.dateFinish).getFullYear() === activeDay.getFullYear() &&
-              new Date(item.dateFinish).getMonth() + 1 === activeDay.getMonth() + 1 &&
-              new Date(item.dateFinish).getDate() === activeDay.getDate()
-          )
-      )
-    }
-    return () => {}
-  }, [shinList, activeMonth, activeDay, place])
-
   const [timeStart, setSimeStart] = useState('')
   const [timeFinish, setTimeFinish] = useState('')
 
-  useEffect(() => {
-    if (calendarType === 'month') {
-      setReport(
-        shinList
-          .filter(
-            (it) =>
-              it.status === statuses[1] ||
-              it.status === statuses[2] ||
-              it.status === statuses[3] ||
-              it.status === statuses[4] ||
-              it.status === statuses[6]
-          )
-          .filter((it) => (place ? place === it.place : it))
-          // .filter((it) => it.payment === 'yes')
-          .filter(
-            (item) =>
-              new Date(item.dateFinish).getFullYear() === activeMonth.getFullYear() &&
-              new Date(item.dateFinish).getMonth() + 1 === activeMonth.getMonth() + 1
-          )
-      )
-    }
-    if (calendarType === 'day' && !timeStart && !timeFinish) {
-      setReport(
-        shinList
-          .filter(
-            (it) =>
-              it.status === statuses[1] ||
-              it.status === statuses[2] ||
-              it.status === statuses[3] ||
-              it.status === statuses[4] ||
-              it.status === statuses[6]
-          )
-          .filter((it) => (place ? place === it.place : it))
-          // .filter((it) => it.payment === 'yes')
-          .filter(
-            (item) =>
-              new Date(item.dateFinish).getFullYear() === activeDay.getFullYear() &&
-              new Date(item.dateFinish).getMonth() + 1 === activeDay.getMonth() + 1 &&
-              new Date(item.dateFinish).getDate() === activeDay.getDate()
-          )
-      )
-    }
-    if (calendarType === 'day' && timeStart && timeFinish) {
-      setReport(
-        shinList
-          .filter(
-            (it) =>
-              it.status === statuses[1] ||
-              it.status === statuses[2] ||
-              it.status === statuses[3] ||
-              it.status === statuses[4] ||
-              it.status === statuses[6]
-          )
-          .filter((it) => (place ? place === it.place : it))
-          // .filter((it) => it.payment === 'yes')
-          .filter(
-            (item) =>
-              new Date(item.dateFinish).getFullYear() === activeDay.getFullYear() &&
-              new Date(item.dateFinish).getMonth() + 1 === activeDay.getMonth() + 1 &&
-              new Date(item.dateFinish).getDate() === activeDay.getDate() &&
-              new Date(item.dateFinish).getHours() >=
-                new Date(
-                  `${activeDay.getFullYear()}.${
-                    activeDay.getMonth() + 1
-                  }.${activeDay.getDate()} ${timeStart}`
-                ).getHours() &&
-              (timeFinish !== '24:00'
-                ? new Date(item.dateFinish).getHours() <=
-                  new Date(
-                    `${activeDay.getFullYear()}.${
-                      activeDay.getMonth() + 1
-                    }.${activeDay.getDate()} ${timeFinish}`
-                  ).getHours()
-                : 24)
-          )
-      )
-    }
-    return () => {}
-  }, [shinList, activeMonth, activeDay, place, timeStart, timeFinish])
-  console.log(
-    new Date(
-      `${activeDay.getFullYear()}.${activeDay.getMonth() + 1}.${activeDay.getDate()} 24:00`
-    ).getHours()
-  )
   const onChangePlace = (e) => {
     setPlace(e.target.value)
   }
 
-  //   useEffect(() => {
-  //     setReportRazval(
-  //       razvalList.filter(
-  //         (item) =>
-  //           new Date(item.date).getFullYear() === activeMonth.getFullYear() &&
-  //           new Date(item.date).getMonth() + 1 === activeMonth.getMonth() + 1
-  //       )
-  //     )
-  //     return () => {}
-  //   }, [razvalList, activeMonth])
   const onChangeTimeStart = (e) => {
     setSimeStart(e.target.value)
   }
@@ -235,38 +88,66 @@ const Report = () => {
                   })}
                   onClick={() => setActive('material')}
                 >
-                  Материалы(шиномонтаж)
+                  Материалы
                 </button>
               </div>
+              <div className="w-1/5 p-2">
+                <button
+                  type="button"
+                  className={cx('p-4 bg-gray-200 rounded w-full h-full', {
+                    block: active !== 'autopart',
+                    'border-b-8 border-blue-400': active === 'autopart'
+                  })}
+                  onClick={() => setActive('autopart')}
+                >
+                  Автозапчасти
+                </button>
+              </div>
+              {checkIsAdmin ? (
+                <div className="w-1/5 p-2">
+                  <a
+                    href="https://docs.google.com/spreadsheets/d/1L6mR3e0bmu13y7OqIlMQbziWb4a7Ev0k9X_zu-kEBTg/edit?usp=sharing"
+                    target="_blank"
+                    rel="noreferrer"
+                    className={cx('p-4 bg-gray-200 rounded w-full h-full block text-center', {})}
+                  >
+                    Программа
+                  </a>
+                </div>
+              ) : null}
             </div>
-            <div
-              className={cx('', {
-                block: active === 'salary',
-                hidden: active !== 'salary'
-              })}
-            >
-              <Salary
-                employeeList={employeeList}
-                report={report}
-                taskStatuses={taskStatuses}
-                shinList={shinList}
-                place={place}
-                bossPercent={bossPercent}
-                setBossPercent={setBossPercent}
-                isMaterial={isMaterial}
-                setIsMaterial={setIsMaterial}
-                timeStart={timeStart}
-                timeFinish={timeFinish}
-              />
-            </div>
-            <div
-              className={cx('', {
-                block: active === 'material',
-                hidden: active !== 'material'
-              })}
-            >
-              <Material report={report} />
-            </div>
+            <Shinomontazh
+              calendarType={calendarType}
+              place={place}
+              activeMonth={activeMonth}
+              activeDay={activeDay}
+              timeFinish={timeFinish}
+              employeeList={employeeList}
+              timeStart={timeStart}
+              active={active}
+            />
+            {active === 'autopart' ? (
+              <div
+                className={cx('', {
+                  block: active === 'autopart',
+                  hidden: active !== 'autopart'
+                })}
+              >
+                {' '}
+                <Suspense fallback={<div>Загрузка...</div>}>
+                  <Autoparts
+                    calendarType={calendarType}
+                    place={place}
+                    activeMonth={activeMonth}
+                    activeDay={activeDay}
+                    timeFinish={timeFinish}
+                    employeeList={employeeList}
+                    timeStart={timeStart}
+                    active={active}
+                  />
+                </Suspense>
+              </div>
+            ) : null}
           </div>
         </div>
       </div>
