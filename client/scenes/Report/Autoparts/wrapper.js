@@ -17,6 +17,7 @@ const Autoparts = ({
 }) => {
   onLoad()
   const autoList = useSelector((s) => s.autoparts.list)
+  const isLoaded = useSelector((s) => s.autoparts.isLoaded)
   const employeeListFull = useSelector((s) => s.employees.list)
   //   const autoList = () => {
   //     if (autosProps) {
@@ -160,7 +161,23 @@ const Autoparts = ({
   //     }
   //     return () => {}
   //   }, [autoList, activeMonth, activeDay, place, timeStart, timeFinish])
-
+  const loading = () => {
+    return (
+      <div className="flex w-100 justify-center my-3">
+        <button
+          type="button"
+          className="bg-blue-500 p-3 text-white rounded flex items-center"
+          disabled
+        >
+          <div className=" flex justify-center items-center pr-3">
+            <div className="animate-spin rounded-full h-4 w-4 border-b-4 border-white" />
+          </div>
+          Загрузка...
+        </button>
+      </div>
+    )
+  }
+  console.log(report)
   return (
     <>
       <div
@@ -169,13 +186,18 @@ const Autoparts = ({
           hidden: active !== 'autopart'
         })}
       >
-        <Salary
-          employeeList={employeeList}
-          report={report}
-          autoList={autoList}
-          place={place}
-          employeeListFull={employeeListFull}
-        />
+        {' '}
+        {isLoaded ? null : loading()}
+        {report.length > 0 && isLoaded ? (
+          <Salary
+            employeeList={employeeList}
+            report={report}
+            autoList={autoList}
+            place={place}
+            employeeListFull={employeeListFull}
+          />
+        ) : null}
+        {isLoaded && report.length <= 0 ? <p className="my-3">Записей нет</p> : null}
       </div>
     </>
   )

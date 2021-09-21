@@ -18,7 +18,7 @@ exports.getLastTwoDays = async (req, res) => {
 
 exports.getOne = async (req, res) => {
   const shinomontazh = await Shinomontazh.findOne(
-    { id: req.params.id },
+    { id_shinomontazhs: req.params.id },
     { upsert: false, useFindAndModify: false }
   )
   return res.json({ status: 'ok', data: shinomontazh })

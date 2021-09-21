@@ -251,6 +251,13 @@ const Salary = ({ report, employeeListFull }) => {
           </tr>
         </tbody>
       </table>
+      <div className="md:m-3 lg:flex flex-col rounded-lg px-6 py-2 w-auto shadow bg-gray-100 my-2">
+        <div className="text-center md:text-left m-3">
+          <b>При каких условиях считается зарплата?</b>
+          <p>В заказе должны быть указаны поля: </p>
+          <p>Количество, закупка, розница, дата прибытия</p>
+        </div>
+      </div>
       <h2 className="text-xl font-semibold my-2">Пошло бы в зарплату но не указана закупка:</h2>
 
       <table className="border-collapse w-full">

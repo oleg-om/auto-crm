@@ -27,7 +27,7 @@ const AutopartUpdate = (props) => {
   }
   useEffect(() => {
     notify(
-      'Не забудь указать закупку и дату прибытия. Если эти поля есть будет считаться зарплата :)'
+      'Не забудь указать кол-во, закупку, розницу и дату выдачи. Если эти поля есть будет считаться зарплата :)'
     )
   }, [history])
 
@@ -541,7 +541,7 @@ const AutopartUpdate = (props) => {
                       Поставщик
                     </th>
                     <th className="p-3 font-bold uppercase bg-gray-100 text-sm text-gray-600 border border-gray-300 table-cell whitespace-no-wrap">
-                      Дата прибытия
+                      Дата выдачи
                     </th>
                     <th className="p-3 font-bold uppercase bg-gray-100 text-sm text-gray-600 border border-gray-300 table-cell">
                       Строки

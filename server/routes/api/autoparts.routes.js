@@ -5,6 +5,8 @@ const router = express.Router()
 
 router.get('/autopart/', autopartsController.getAll)
 router.get('/autopartlast/', autopartsController.getLastOneHundred)
+router.get('/autopartsbypage/:page', autopartsController.getByPage)
+router.get('/autopartsfilter/', autopartsController.getFiltered)
 router.get('/autopart/:id', autopartsController.getOne)
 router.post('/autopart/', autopartsController.create)
 router.patch('/autopart/:id', autopartsController.update)

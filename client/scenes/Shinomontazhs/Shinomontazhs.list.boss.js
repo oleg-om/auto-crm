@@ -17,6 +17,7 @@ const ShinomontazhsListBoss = () => {
   onLoad()
   const dispatch = useDispatch()
   const list = useSelector((s) => s.shinomontazhs.list)
+  const isLoaded = useSelector((s) => s.shinomontazhs.isLoaded)
   const revList = [].concat(list).reverse()
   const placesList = useSelector((s) => s.places.list)
   const employeeList = useSelector((s) => s.employees.list)
@@ -159,6 +160,23 @@ const ShinomontazhsListBoss = () => {
     } else {
       setShowSearch(true)
     }
+  }
+
+  const loadingComponent = () => {
+    return (
+      <div className="flex w-100 justify-center my-3">
+        <button
+          type="button"
+          className="bg-blue-500 p-3 text-white rounded flex items-center"
+          disabled
+        >
+          <div className=" flex justify-center items-center pr-3">
+            <div className="animate-spin rounded-full h-4 w-4 border-b-4 border-white" />
+          </div>
+          Загрузка...
+        </button>
+      </div>
+    )
   }
 
   return (
@@ -507,21 +525,17 @@ const ShinomontazhsListBoss = () => {
                   ))}
             </tbody>
           </table>
-          {showSearch === true && currentPostsFiltered.length === 0 ? (
+          {isLoaded && showSearch === true && currentPostsFiltered.length === 0 ? (
             <div className="w-full bg-white py-2 flex justify-center">
               <b className="text-center text-gray-700">Записей не найдено</b>
             </div>
           ) : null}
-          {showSearch === false && currentPosts.length === 0 && loading === true ? (
-            <div className="w-full bg-white py-2 flex justify-center">
-              <b className="text-center text-gray-700">Загрузка...</b>
-            </div>
-          ) : null}
-          {showSearch === false && currentPosts.length === 0 && loading === false ? (
+          {!isLoaded ? loadingComponent() : null}
+          {showSearch === false && currentPosts.length === 0 && isLoaded ? (
             <div className="w-full bg-white py-2 flex justify-center">
               <b className="text-center text-gray-700">
-                Что-то пошло не так. Возможно нет ни одного заказа, попробуйте создать первый. Если
-                заказы есть, перезагрузите страницу
+                Нет заказов за последние несколько дней. Создайте новый заказ либо нажмите Дальше
+                для загрузки старых заказов
               </b>
             </div>
           ) : null}

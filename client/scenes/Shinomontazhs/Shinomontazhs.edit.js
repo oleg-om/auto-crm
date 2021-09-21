@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import { useParams } from 'react-router-dom'
 import { toast } from 'react-toastify'
@@ -6,16 +6,18 @@ import 'react-toastify/dist/ReactToastify.css'
 import { socket } from '../../redux/sockets/socketReceivers'
 import ShinomontazhsEdit from '../../components/shinomontazhs/shinomontazhs.work.edit'
 import Navbar from '../../components/Navbar'
-import { updateShinomontazh } from '../../redux/reducers/shinomontazhs'
+import { updateShinomontazh, getShinomontazh } from '../../redux/reducers/shinomontazhs'
 
 const ShinomontazhEditFull = () => {
   socket.connect()
   const { id } = useParams()
   const { num } = useParams(1)
   const dispatch = useDispatch()
-  const list = useSelector((s) => s.shinomontazhs.list).filter(
-    (it) => JSON.stringify(it.id_shinomontazhs) === id
-  )
+  useEffect(() => {
+    dispatch(getShinomontazh(id))
+  }, [dispatch, id])
+
+  const list = useSelector((s) => s.shinomontazhs.item)
 
   toast.configure()
   const notify = (arg) => {
@@ -40,10 +42,10 @@ const ShinomontazhEditFull = () => {
   return (
     <div>
       <Navbar />
-      <div className="container mx-auto px-4 mt-3">
+      <div className="container mx-auto px-4 mt-3" key={id}>
         {list.map((it) => (
           <ShinomontazhsEdit
-            key={id}
+            key={it.id_shinomontazhs}
             {...it}
             updateShinomontazh={updateShinomontazhLocal}
             shinomontazhPrintOne={shinomontazhPrintOne}

@@ -269,6 +269,7 @@ const Salary = ({ report, isMaterial, setIsMaterial }) => {
   return (
     <div className="mb-3">
       <h2 className="text-xl font-semibold mb-2">Зарплаты</h2>
+
       {/* <p>Процент фирмы (остальная сумма разбивается на кол-во человек):</p>
       <input
         className="appearance-none block bg-grey-lighter text-sm text-grey-darker border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-1 px-4"

@@ -1,5 +1,6 @@
 import {
   GET_AUTOPARTS,
+  GET_AUTOPART,
   CREATE_AUTOPART,
   UPDATE_AUTOPART_STATUS,
   UPDATE_AUTOPART
@@ -15,7 +16,16 @@ const initialState = {
 export default (state = initialState, action) => {
   switch (action.type) {
     case GET_AUTOPARTS: {
-      return { ...state, list: action.autoparts }
+      return {
+        ...state,
+        list: action.autoparts,
+        isLoaded: action.isLoaded,
+        currentPage: action.currentPage,
+        numberOfPages: action.numberOfPages
+      }
+    }
+    case GET_AUTOPART: {
+      return { ...state, item: [action.autopart], isLoaded: action.isLoaded }
     }
     case CREATE_AUTOPART: {
       return { ...state, list: [...state.list, action.autopart] }
@@ -47,17 +57,43 @@ export function getAutoparts() {
     fetch('/api/v1/autopart')
       .then((r) => r.json())
       .then(({ data: autoparts }) => {
-        dispatch({ type: GET_AUTOPARTS, autoparts })
+        dispatch({ type: GET_AUTOPARTS, autoparts, isLoaded: true })
       })
   }
 }
 
-export function getAutopart() {
+export function getAutopartsByPage(page) {
   return (dispatch) => {
-    fetch('/api/v1/autopart:uuid')
+    fetch(`/api/v1/autopartsbypage/${page}`)
+      .then((r) => r.json())
+      .then(({ data: autoparts, currentPage, numberOfPages }) => {
+        dispatch({ type: GET_AUTOPARTS, autoparts, currentPage, numberOfPages, isLoaded: true })
+      })
+  }
+}
+
+export function getAutopartsFiltered(page, status, process, place, phone, number) {
+  return (dispatch) => {
+    fetch(
+      `/api/v1/autopartsfilter${page ? `?page=${page}` : ''}${status ? `&status=${status}` : ''}${
+        process ? `&process=${process}` : ''
+      }${place ? `&place=${place}` : ''}${phone ? `&phone=${phone}` : ''}${
+        number ? `&number=${number}` : ''
+      }`
+    )
+      .then((r) => r.json())
+      .then(({ data: autoparts, currentPage, numberOfPages }) => {
+        dispatch({ type: GET_AUTOPARTS, autoparts, currentPage, numberOfPages, isLoaded: true })
+      })
+  }
+}
+
+export function getAutopart(id) {
+  return (dispatch) => {
+    fetch(`/api/v1/autopart/${id}`)
       .then((r) => r.json())
       .then(({ data: autopart }) => {
-        dispatch({ type: GET_AUTOPARTS, autopart })
+        dispatch({ type: GET_AUTOPART, autopart })
       })
   }
 }

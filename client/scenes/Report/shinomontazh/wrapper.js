@@ -19,6 +19,7 @@ const Shinomontazh = ({
 }) => {
   onLoad()
   const shinList = useSelector((s) => s.shinomontazhs.list)
+  const isLoaded = useSelector((s) => s.shinomontazhs.isLoaded)
 
   const [report, setReport] = useState([])
 
@@ -151,6 +152,23 @@ const Shinomontazh = ({
     return () => {}
   }, [shinList, activeMonth, activeDay, place, timeStart, timeFinish])
 
+  const loading = () => {
+    return (
+      <div className="flex w-100 justify-center my-3">
+        <button
+          type="button"
+          className="bg-blue-500 p-3 text-white rounded flex items-center"
+          disabled
+        >
+          <div className=" flex justify-center items-center pr-3">
+            <div className="animate-spin rounded-full h-4 w-4 border-b-4 border-white" />
+          </div>
+          Загрузка...
+        </button>
+      </div>
+    )
+  }
+
   return (
     <>
       <div
@@ -159,19 +177,23 @@ const Shinomontazh = ({
           hidden: active !== 'salary'
         })}
       >
-        <Salary
-          employeeList={employeeList}
-          report={report}
-          taskStatuses={taskStatuses}
-          shinList={shinList}
-          place={place}
-          bossPercent={bossPercent}
-          setBossPercent={setBossPercent}
-          isMaterial={isMaterial}
-          setIsMaterial={setIsMaterial}
-          timeStart={timeStart}
-          timeFinish={timeFinish}
-        />
+        {isLoaded ? null : loading()}
+        {report.length > 0 && isLoaded ? (
+          <Salary
+            employeeList={employeeList}
+            report={report}
+            taskStatuses={taskStatuses}
+            shinList={shinList}
+            place={place}
+            bossPercent={bossPercent}
+            setBossPercent={setBossPercent}
+            isMaterial={isMaterial}
+            setIsMaterial={setIsMaterial}
+            timeStart={timeStart}
+            timeFinish={timeFinish}
+          />
+        ) : null}
+        {isLoaded && report.length > 0 ? <p className="my-3">Записей нет</p> : null}
       </div>
       <div
         className={cx('', {
@@ -179,7 +201,12 @@ const Shinomontazh = ({
           hidden: active !== 'material'
         })}
       >
-        <Material report={report} />
+        {' '}
+        {isLoaded ? null : loading()}
+        {report.length > 0 && isLoaded ? (
+          <Material report={report} isLoaded={shinList.isLoaded} />
+        ) : null}
+        {isLoaded && report.length <= 0 ? <p className="my-3">Записей нет</p> : null}
       </div>
     </>
   )
