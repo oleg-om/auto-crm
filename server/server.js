@@ -264,30 +264,30 @@ io.on('connection', (socket) => {
     delete userNames[id]
   })
 
-  // socket.on('new autopart', ({ autopart }) => {
-  //   io.emit('update autopart', autopart)
-  // })
+  socket.on('new autopart', () => {
+    io.emit('update autopart')
+  })
 
-  // socket.on('edit autopart', () => {
-  //   io.emit('update edited autopart')
-  // })
+  socket.on('edit autopart', () => {
+    io.emit('update edited autopart')
+  })
 
-  // socket.on('new razval', ({ razval }) => {
-  //   // io.emit('update razval', { result: razval })
-  //   io.emit('update razval', razval)
-  // })
+  socket.on('new razval', ({ razval }) => {
+    // io.emit('update razval', { result: razval })
+    io.emit('update razval', razval)
+  })
 
-  // socket.on('edit razval', () => {
-  //   io.emit('update edited razval')
-  // })
+  socket.on('edit razval', () => {
+    io.emit('update edited razval')
+  })
 
-  // socket.on('new oil', ({ oil }) => {
-  //   io.emit('update oil', oil)
-  // })
+  socket.on('new oil', ({ oil }) => {
+    io.emit('update oil', oil)
+  })
 
-  // socket.on('edit oil', () => {
-  //   io.emit('update edited oil')
-  // })
+  socket.on('edit oil', () => {
+    io.emit('update edited oil')
+  })
 
   // socket.on('new tyre', ({ tyre }) => {
   //   io.emit('update tyre', tyre)

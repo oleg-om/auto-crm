@@ -1,15 +1,18 @@
 import { useEffect } from 'react'
 import { useDispatch } from 'react-redux'
 import { socket } from '../../redux/sockets/socketReceivers'
-import { getTyres } from '../../redux/reducers/tyres'
+// import { getTyres } from '../../redux/reducers/tyres'
+import { getItemsByPage } from '../../redux/reducers/tyres'
 import { getVendors } from '../../redux/reducers/vendors'
 
-const OnLoad = () => {
+const OnLoad = (page, showSearch) => {
   const dispatch = useDispatch()
 
   useEffect(() => {
-    dispatch(getTyres())
-  }, [dispatch])
+    if (!showSearch) {
+      dispatch(getItemsByPage(page))
+    }
+  }, [dispatch, page, showSearch])
 
   useEffect(() => {
     dispatch(getVendors())
@@ -17,19 +20,19 @@ const OnLoad = () => {
 
   useEffect(() => {
     socket.on('update tyre', function () {
-      dispatch(getTyres())
+      dispatch(getItemsByPage(page))
     })
   }, [])
 
   useEffect(() => {
     socket.on('update edited tyre', function () {
-      dispatch(getTyres())
+      dispatch(getItemsByPage(page))
     })
   }, [])
 
   useEffect(() => {
     socket.on('update tyre from oline shop', function () {
-      dispatch(getTyres())
+      dispatch(getItemsByPage(page))
     })
   }, [])
 }

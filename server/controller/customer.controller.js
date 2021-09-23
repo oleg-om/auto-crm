@@ -50,3 +50,49 @@ exports.delete = async (req, res) => {
   await Customer.deleteOne({ id: req.params.id })
   return res.json({ status: 'ok', id: req.params.id })
 }
+exports.getFiltered = async (req, res) => {
+  const { page, reg, vin, phone } = req.query
+
+  try {
+    const LIMIT = 14
+    const startIndex = (Number(page) - 1) * LIMIT // get the starting index of every page
+
+    const posts = await Customer.find({
+      phone: req.query.phone ? { $regex: `${phone.toString()}`, $options: 'i' } : { $exists: true },
+      vinnumber: req.query.vin ? { $regex: `${vin.toString()}`, $options: 'i' } : { $exists: true },
+      regnumber: req.query.reg ? { $regex: `${reg.toString()}`, $options: 'i' } : { $exists: true }
+    })
+      .sort({ id: -1 })
+      .limit(LIMIT)
+      .skip(startIndex)
+
+    res.json({
+      status: 'ok',
+      data: posts,
+      currentPage: Number(page),
+      numberOfPages: Math.ceil(posts.length / LIMIT)
+    })
+  } catch (error) {
+    res.status(404).json({ message: error.message })
+  }
+}
+exports.getByPage = async (req, res) => {
+  const { page } = req.params
+
+  try {
+    const LIMIT = 14
+    const startIndex = (Number(page) - 1) * LIMIT // get the starting index of every page
+
+    const total = await Customer.countDocuments({})
+    const posts = await Customer.find().sort({ id: -1 }).limit(LIMIT).skip(startIndex)
+
+    res.json({
+      status: 'ok',
+      data: posts,
+      currentPage: Number(page),
+      numberOfPages: Math.ceil(total / LIMIT)
+    })
+  } catch (error) {
+    res.status(404).json({ message: error.message })
+  }
+}

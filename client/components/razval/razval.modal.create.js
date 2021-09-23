@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react'
-import { useSelector, useDispatch } from 'react-redux'
+import { useDispatch } from 'react-redux'
 import NumberFormat from 'react-number-format'
 import { useReactToPrint } from 'react-to-print'
 import { toast } from 'react-toastify'
@@ -36,7 +36,7 @@ const ModalNew = ({
     .getDate()
     .toString()
     .replace(/^(\d)$/, '0$1')}`.toString()
-  const customerList = useSelector((s) => s.customers.list)
+
   const dispatch = useDispatch()
 
   const [state, setState] = useState({
@@ -77,19 +77,41 @@ const ModalNew = ({
   })
   const [activeCustomer, setActiveCustomer] = useState('')
   const [customerOptions, setCustomerOptions] = useState([])
+  // useEffect(() => {
+  //   if (state.phone !== '' || state.regnumber !== '') {
+  //     setCustomerOptions(
+  //       customerList.filter(
+  //         (it) =>
+  //           (it.phone === state.phone && it.phone !== '' && it.phone) ||
+  //           (it.regnumber === state.regnumber && it.regnumber !== '' && it.regnumber)
+  //       )
+  //     )
+  //   } else if (state.phone === '' || state.regnumber === '' || state.vinnumber === '') {
+  //     setCustomerOptions([])
+  //   }
+  // }, [state.phone, state.regnumber, state.vinnumber, customerList])
+
   useEffect(() => {
-    if (state.phone !== '' || state.regnumber !== '') {
-      setCustomerOptions(
-        customerList.filter(
-          (it) =>
-            (it.phone === state.phone && it.phone !== '' && it.phone) ||
-            (it.regnumber === state.regnumber && it.regnumber !== '' && it.regnumber)
-        )
+    const phoneArray = state.phone.split(' ')
+    const phoneToRest = phoneArray[phoneArray.length - 1].replace(/_/g, '')
+    if (
+      (state.phone !== '' && phoneToRest.length > 6) ||
+      (state.regnumber !== '' && state.regnumber.length > 4)
+    ) {
+      fetch(
+        `/api/v1/customerfind/${state.regnumber ? state.regnumber : 'reg'}/${
+          state.vinnumber ? state.vinnumber : 'vin'
+        }/${state.phone ? phoneToRest : 'phone'}`
       )
-    } else if (state.phone === '' || state.regnumber === '' || state.vinnumber === '') {
+        .then((res) => res.json())
+        .then((it) => {
+          setCustomerOptions(it.data)
+        })
+    } else if (state.phone === '' && state.regnumber === '') {
       setCustomerOptions([])
     }
-  }, [state.phone, state.regnumber, state.vinnumber, customerList])
+  }, [state.phone, state.regnumber, state.vinnumber])
+
   useEffect(() => {
     fetch('/api/v1/carmark')
       .then((res) => res.json())
@@ -163,7 +185,7 @@ const ModalNew = ({
     setSearch(event.target.value)
   }
   const applyCustomer = () => {
-    const newCustomer = customerList.find((it) => it.id === search)
+    const newCustomer = customerOptions.find((it) => it.id === search)
     if (newCustomer) {
       setState((prevState) => ({
         ...prevState,

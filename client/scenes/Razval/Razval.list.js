@@ -19,7 +19,8 @@ import { socket } from '../../redux/sockets/socketReceivers'
 import onLoad from './Onload'
 
 const RazvalList = () => {
-  onLoad()
+  const [activeDay, setActiveDay] = useState(new Date())
+  onLoad(activeDay)
   toast.configure()
   const notify = (arg) => {
     toast.info(arg, { position: toast.POSITION.BOTTOM_RIGHT })
@@ -37,7 +38,7 @@ const RazvalList = () => {
   const [accessIsOpen, setAccessIsOpen] = useState(false)
   const [itemId, setItemId] = useState('')
   const [itemType, setItemType] = useState('')
-  const [activeDay, setActiveDay] = useState(new Date())
+
   const [activeTime, setActiveTime] = useState('')
   const [activeAdress, setActiveAdress] = useState({})
 
@@ -154,6 +155,7 @@ const RazvalList = () => {
     setIsOpen(false)
     notify('Сотрудник удален')
   }
+  console.log(activeDay)
   return (
     <div>
       <Navbar />

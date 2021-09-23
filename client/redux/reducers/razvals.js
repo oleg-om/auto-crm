@@ -89,3 +89,13 @@ export function deleteRazval(id) {
       })
   }
 }
+
+export function getByMonth(yearmonth) {
+  return (dispatch) => {
+    fetch(`/api/v1/razvalmonth?yearmonth=${yearmonth}`)
+      .then((r) => r.json())
+      .then(({ data: razvals }) => {
+        dispatch({ type: GET_RAZVALS, razvals })
+      })
+  }
+}

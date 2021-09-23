@@ -15,7 +15,7 @@ const AutopartsCreate = (props) => {
   const history = useHistory()
   const list = useSelector((s) => s.places.list)
   const employeeList = useSelector((s) => s.employees.list)
-  const customerList = useSelector((s) => s.customers.list)
+
   const auth = useSelector((s) => s.auth)
 
   const [options, setOptions] = useState({
@@ -215,7 +215,7 @@ const AutopartsCreate = (props) => {
     setSearch(event.target.value)
   }
   const applyCustomer = () => {
-    const newCustomer = customerList.find((it) => it.id === search)
+    const newCustomer = customerOptions.find((it) => it.id === search)
     if (newCustomer) {
       setCustomer((prevState) => ({
         ...prevState,
@@ -364,8 +364,8 @@ const AutopartsCreate = (props) => {
 
   const sendData = () => {
     const checkCustomer =
-      customerList !== []
-        ? customerList.find((it) => it.id === search)
+      customerOptions !== []
+        ? customerOptions.find((it) => it.id === search)
         : {
             regnumber: '',
             vinnumber: '',

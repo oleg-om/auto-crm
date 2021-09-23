@@ -1,21 +1,22 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import { useParams } from 'react-router-dom'
 import { socket } from '../../redux/sockets/socketReceivers'
 import StorageUpdate from '../../components/storage/storage.preorder.edit'
 import Navbar from '../../components/Navbar'
-import { updateStorage } from '../../redux/reducers/storage'
-import onLoad from './Onload'
+import { getStorage, updateStorage } from '../../redux/reducers/storage'
 
 const StorageEditSimple = () => {
-  onLoad()
-  socket.connect()
   const { id } = useParams()
   const { num } = useParams(1)
   const dispatch = useDispatch()
-  const list = useSelector((s) => s.storage.list).filter(
-    (it) => JSON.stringify(it.id_storages) === id
-  )
+  useEffect(() => {
+    dispatch(getStorage(id))
+  }, [dispatch, id])
+
+  const list = useSelector((s) => s.storage.item)
+  socket.connect()
+
   const employeeList = useSelector((s) => s.employees.list)
   const placesList = useSelector((s) => s.places.list)
   const updateStorageLocal = (idOfItem, name) => {

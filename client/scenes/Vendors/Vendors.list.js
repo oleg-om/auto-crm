@@ -9,8 +9,10 @@ import Sidebar from '../../components/Sidebar'
 import Modal from '../../components/Modal.delete'
 import 'react-toastify/dist/ReactToastify.css'
 import vendorList from '../../lists/vendor-list'
+import OnLoad from './Onload'
 
 const VendorList = () => {
+  OnLoad()
   toast.configure()
   const notify = (arg) => {
     toast.info(arg, { position: toast.POSITION.BOTTOM_RIGHT })

@@ -1,19 +1,20 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import { useParams } from 'react-router-dom'
 import { socket } from '../../redux/sockets/socketReceivers'
 import TyreUpdate from '../../components/tyres/tyres.preorder.edit'
 import Navbar from '../../components/Navbar'
-import { updateTyre } from '../../redux/reducers/tyres'
-import onLoad from './Onload'
+import { updateTyre, getTyre } from '../../redux/reducers/tyres'
 
 const TyreEditSimple = () => {
-  onLoad()
   socket.connect()
   const { id } = useParams()
-  const { num } = useParams(1)
   const dispatch = useDispatch()
-  const list = useSelector((s) => s.tyres.list).filter((it) => JSON.stringify(it.id_tyres) === id)
+  useEffect(() => {
+    dispatch(getTyre(id))
+  }, [dispatch, id])
+  const { num } = useParams(1)
+  const list = useSelector((s) => s.tyres.item)
   const employeeList = useSelector((s) => s.employees.list)
   const placesList = useSelector((s) => s.places.list)
   const updateTyreLocal = (idOfItem, name) => {

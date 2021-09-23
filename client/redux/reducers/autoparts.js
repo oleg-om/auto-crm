@@ -27,8 +27,9 @@ export default (state = initialState, action) => {
     case GET_AUTOPART: {
       return { ...state, item: [action.autopart], isLoaded: action.isLoaded }
     }
+
     case CREATE_AUTOPART: {
-      return { ...state, list: [...state.list, action.autopart] }
+      return { ...state, list: [action.autopart, ...state.list] }
     }
     case UPDATE_AUTOPART: {
       return {

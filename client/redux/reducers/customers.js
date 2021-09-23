@@ -1,18 +1,29 @@
 import {
   GET_CUSTOMERS,
+  GET_CUSTOMER,
   CREATE_CUSTOMER,
   UPDATE_CUSTOMER,
   DELETE_CUSTOMER
 } from '../actions/customer'
 
 const initialState = {
-  list: []
+  list: [],
+  item: []
 }
 
 export default (state = initialState, action) => {
   switch (action.type) {
     case GET_CUSTOMERS: {
-      return { ...state, list: action.customers }
+      return {
+        ...state,
+        list: action.customers,
+        isLoaded: action.isLoaded,
+        currentPage: action.currentPage,
+        numberOfPages: action.numberOfPages
+      }
+    }
+    case GET_CUSTOMER: {
+      return { ...state, item: [action.customer], isLoaded: action.isLoaded }
     }
     case CREATE_CUSTOMER: {
       return { ...state, list: [...state.list, action.customer] }
@@ -87,6 +98,39 @@ export function deleteCustomer(id) {
       .then((r) => r.json())
       .then(() => {
         dispatch({ type: DELETE_CUSTOMER, id })
+      })
+  }
+}
+export function getCustomer(id) {
+  return (dispatch) => {
+    fetch(`/api/v1/customer/${id}`)
+      .then((r) => r.json())
+      .then(({ data: customer }) => {
+        dispatch({ type: GET_CUSTOMER, customer, isLoaded: true })
+      })
+  }
+}
+
+export function getItemsByPage(page) {
+  return (dispatch) => {
+    fetch(`/api/v1/customerbypage/${page}`)
+      .then((r) => r.json())
+      .then(({ data: customers, currentPage, numberOfPages }) => {
+        dispatch({ type: GET_CUSTOMERS, customers, currentPage, numberOfPages, isLoaded: true })
+      })
+  }
+}
+
+export function getItemsFiltered(page, vin, reg, phone) {
+  return (dispatch) => {
+    fetch(
+      `/api/v1/customerfilter${page ? `?page=${page}` : ''}${reg ? `&reg=${reg}` : ''}${
+        vin ? `&vin=${vin}` : ''
+      }${phone ? `&phone=${phone}` : ''}`
+    )
+      .then((r) => r.json())
+      .then(({ data: customers, currentPage, numberOfPages }) => {
+        dispatch({ type: GET_CUSTOMERS, customers, currentPage, numberOfPages, isLoaded: true })
       })
   }
 }

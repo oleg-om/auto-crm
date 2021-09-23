@@ -1,14 +1,18 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import { useParams } from 'react-router-dom'
 import CustomerUpdate from '../../components/customers/customer.edit'
 import Navbar from '../../components/Navbar'
-import { updateCustomer, deleteCustomer } from '../../redux/reducers/customers'
+import { updateCustomer, deleteCustomer, getCustomer } from '../../redux/reducers/customers'
 
 const CustomerEdit = () => {
   const { id } = useParams()
   const dispatch = useDispatch()
-  const list = useSelector((s) => s.customers.list).filter((it) => it.id === id)
+  useEffect(() => {
+    dispatch(getCustomer(id))
+  }, [dispatch, id])
+
+  const list = useSelector((s) => s.customers.item)
 
   const updateCustomerLocal = (idOfItem, name) => {
     dispatch(updateCustomer(idOfItem, name))

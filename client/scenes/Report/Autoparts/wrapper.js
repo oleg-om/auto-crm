@@ -3,7 +3,6 @@ import { useSelector } from 'react-redux'
 import cx from 'classnames'
 // import taskStatuses from '../../../lists/task-statuses'
 import Salary from './autoparts'
-import onLoad from './Onload'
 
 const Autoparts = ({
   calendarType,
@@ -15,9 +14,33 @@ const Autoparts = ({
   active,
   employeeList
 }) => {
-  onLoad()
-  const autoList = useSelector((s) => s.autoparts.list)
-  const isLoaded = useSelector((s) => s.autoparts.isLoaded)
+  const [autoList, setShinList] = useState([])
+  const [isLoaded, setIsLoaded] = useState(false)
+  useEffect(() => {
+    const year = (dt) => dt.getFullYear()
+    const month = (dt) => `0${dt.getMonth() + 1}`.slice(-2)
+    const yearmonth = (dt) => `${year(dt)}-${month(dt)}`
+    if (activeMonth && calendarType === 'month') {
+      setIsLoaded(false)
+      fetch(`api/v1/autopartsmonth?yearmonth=${yearmonth(activeMonth)}`)
+        .then((res) => res.json())
+        .then((it) => {
+          setShinList(it.data)
+          setIsLoaded(true)
+        })
+    }
+    if (activeDay && calendarType === 'day') {
+      setIsLoaded(false)
+      fetch(`api/v1/autopartsmonth?yearmonth=${yearmonth(activeDay)}`)
+        .then((res) => res.json())
+        .then((it) => {
+          setShinList(it.data)
+          setIsLoaded(true)
+        })
+    }
+    return () => {}
+  }, [activeMonth.getMonth(), activeDay.getMonth()])
+
   const employeeListFull = useSelector((s) => s.employees.list)
   //   const autoList = () => {
   //     if (autosProps) {

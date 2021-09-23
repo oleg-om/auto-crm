@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react'
-import { useSelector } from 'react-redux'
 import cx from 'classnames'
 import taskStatuses from '../../../lists/task-statuses'
 import Salary from './Salary'
@@ -18,8 +17,36 @@ const Shinomontazh = ({
   employeeList
 }) => {
   onLoad()
-  const shinList = useSelector((s) => s.shinomontazhs.list)
-  const isLoaded = useSelector((s) => s.shinomontazhs.isLoaded)
+  const [shinList, setShinList] = useState([])
+  const [isLoaded, setIsLoaded] = useState(false)
+
+  useEffect(() => {
+    if (activeMonth && calendarType === 'month') {
+      setIsLoaded(false)
+      fetch(
+        `api/v1/shinomontazhmonth?month=${
+          activeMonth.getMonth() + 1
+        }&year=${activeMonth.getFullYear()}`
+      )
+        .then((res) => res.json())
+        .then((it) => {
+          setShinList(it.data)
+          setIsLoaded(true)
+        })
+    }
+    if (activeDay && calendarType === 'day') {
+      setIsLoaded(false)
+      fetch(
+        `api/v1/shinomontazhmonth?month=${activeDay.getMonth() + 1}&year=${activeDay.getFullYear()}`
+      )
+        .then((res) => res.json())
+        .then((it) => {
+          setShinList(it.data)
+          setIsLoaded(true)
+        })
+    }
+    return () => {}
+  }, [activeMonth.getMonth(), activeDay.getMonth()])
 
   const [report, setReport] = useState([])
 

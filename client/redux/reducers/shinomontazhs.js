@@ -15,7 +15,13 @@ const initialState = {
 export default (state = initialState, action) => {
   switch (action.type) {
     case GET_SHINOMONTAZHS: {
-      return { ...state, list: action.shinomontazhs, isLoaded: action.isLoaded }
+      return {
+        ...state,
+        list: action.shinomontazhs,
+        isLoaded: action.isLoaded,
+        currentPage: action.currentPage,
+        numberOfPages: action.numberOfPages
+      }
     }
     case GET_SHINOMONTAZH: {
       return { ...state, item: [action.shinomontazhs], isLoaded: action.isLoaded }
@@ -24,7 +30,7 @@ export default (state = initialState, action) => {
       return { ...state, list: action.shinomontazhs, isLoaded: action.isLoaded }
     }
     case CREATE_SHINOMONTAZH: {
-      return { ...state, list: [...state.list, action.shinomontazh] }
+      return { ...state, list: [action.shinomontazh, ...state.list] }
     }
     case UPDATE_SHINOMONTAZH: {
       return {
@@ -76,6 +82,42 @@ export function getShinomontazh(id) {
       .then((r) => r.json())
       .then(({ data: shinomontazhs }) => {
         dispatch({ type: GET_SHINOMONTAZH, shinomontazhs })
+      })
+  }
+}
+
+export function getItemsByPage(page) {
+  return (dispatch) => {
+    fetch(`/api/v1/shinomontazhbypage/${page}`)
+      .then((r) => r.json())
+      .then(({ data: shinomontazhs, currentPage, numberOfPages }) => {
+        dispatch({
+          type: GET_SHINOMONTAZHS,
+          shinomontazhs,
+          currentPage,
+          numberOfPages,
+          isLoaded: true
+        })
+      })
+  }
+}
+
+export function getItemsFiltered(page, place, number) {
+  return (dispatch) => {
+    fetch(
+      `/api/v1/shinomontazhfilter${page ? `?page=${page}` : ''}${place ? `&place=${place}` : ''}${
+        number ? `&number=${number}` : ''
+      }`
+    )
+      .then((r) => r.json())
+      .then(({ data: shinomontazhs, currentPage, numberOfPages }) => {
+        dispatch({
+          type: GET_SHINOMONTAZHS,
+          shinomontazhs,
+          currentPage,
+          numberOfPages,
+          isLoaded: true
+        })
       })
   }
 }
