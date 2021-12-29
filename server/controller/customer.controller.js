@@ -57,10 +57,31 @@ exports.getFiltered = async (req, res) => {
     const LIMIT = 14
     const startIndex = (Number(page) - 1) * LIMIT // get the starting index of every page
 
+    // const total = await Customer.countDocuments({
+    //   phone: req.query.phone ? { $regex: `${phone.toString()}`, $options: 'i' } : { $regex: '' },
+    //   vinnumber: req.query.vin ? { $regex: `${vin.toString()}`, $options: 'i' } : { $regex: '' },
+    //   regnumber: req.query.reg ? { $regex: `${reg.toString()}`, $options: 'i' } : { $regex: '' }
+    // })
+
+    const total = await Customer.countDocuments({
+      $or: [
+        { phone: { $regex: `${phone ? phone.toString() : 'undefined'}`, $options: 'i' } },
+        { vinnumber: { $regex: `${vin ? vin.toString() : 'undefined'}`, $options: 'i' } },
+        { regnumber: { $regex: `${reg ? reg.toString() : 'undefined'}`, $options: 'i' } }
+      ]
+    })
+
+    // const posts = await Customer.find({
+    //   phone: req.query.phone ? { $regex: `${phone.toString()}`, $options: 'i' } : '',
+    //   vinnumber: req.query.vin ? { $regex: `${vin.toString()}`, $options: 'i' } : '',
+    //   regnumber: req.query.reg ? { $regex: `${reg.toString()}`, $options: 'i' } : ''
+    // })
     const posts = await Customer.find({
-      phone: req.query.phone ? { $regex: `${phone.toString()}`, $options: 'i' } : { $exists: true },
-      vinnumber: req.query.vin ? { $regex: `${vin.toString()}`, $options: 'i' } : { $exists: true },
-      regnumber: req.query.reg ? { $regex: `${reg.toString()}`, $options: 'i' } : { $exists: true }
+      $or: [
+        { phone: { $regex: `${phone ? phone.toString() : 'undefined'}`, $options: 'i' } },
+        { vinnumber: { $regex: `${vin ? vin.toString() : 'undefined'}`, $options: 'i' } },
+        { regnumber: { $regex: `${reg ? reg.toString() : 'undefined'}`, $options: 'i' } }
+      ]
     })
       .sort({ id: -1 })
       .limit(LIMIT)
@@ -70,7 +91,7 @@ exports.getFiltered = async (req, res) => {
       status: 'ok',
       data: posts,
       currentPage: Number(page),
-      numberOfPages: Math.ceil(posts.length / LIMIT)
+      numberOfPages: Math.ceil(total / LIMIT)
     })
   } catch (error) {
     res.status(404).json({ message: error.message })

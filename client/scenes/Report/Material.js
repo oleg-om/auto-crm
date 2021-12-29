@@ -1,5 +1,4 @@
 import React from 'react'
-import ExportCSV from '../../../components/excel'
 
 const Material = ({ report }) => {
   const materialNums = report
@@ -15,24 +14,6 @@ const Material = ({ report }) => {
         ...acc.filter((it) => it.name !== rec.name)
       ]
     }, [])
-
-  const toExcel = (items) => {
-    if (items) {
-      return items.reduce((acc, rec) => {
-        return [
-          ...acc,
-          {
-            Название: rec.name,
-            Акционный: rec.free === 'yes' ? 'Да' : 'Нет',
-            Цена: rec.price,
-            'Кол-во': rec.quantity,
-            Сумма: rec.price * rec.quantity
-          }
-        ]
-      }, [])
-    }
-    return []
-  }
 
   return (
     <div className="mb-3">
@@ -87,7 +68,6 @@ const Material = ({ report }) => {
           ))}
         </tbody>
       </table>
-      <ExportCSV csvData={toExcel(materialNums)} fileName="материалы" />
     </div>
   )
 }

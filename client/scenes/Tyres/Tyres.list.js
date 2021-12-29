@@ -115,7 +115,7 @@ const TyresList = () => {
       ) {
         dispatch(
           getItemsFiltered(
-            1,
+            num ? Number(num) : 1,
             search.status ? search.status : '',
             search.vin ? search.vin : '',
             search.place ? search.place : '',
@@ -136,6 +136,7 @@ const TyresList = () => {
       vinnumber: '',
       place: ''
     }))
+    history.push(`/tyres/order/list/1`)
   }
   const onFilter = () => {
     if (
@@ -148,6 +149,7 @@ const TyresList = () => {
       notify('Заполните хотябы одно поле фильтра')
     } else {
       setShowSearch(true)
+      history.push(`/tyres/order/list/1`)
     }
   }
 

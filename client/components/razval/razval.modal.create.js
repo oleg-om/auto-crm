@@ -92,7 +92,7 @@ const ModalNew = ({
   // }, [state.phone, state.regnumber, state.vinnumber, customerList])
 
   useEffect(() => {
-    const phoneArray = state.phone.split(' ')
+    const phoneArray = state.phone ? state.phone.split(' ') : ['', '']
     const phoneToRest = phoneArray[phoneArray.length - 1].replace(/_/g, '')
     if (
       (state.phone !== '' && phoneToRest.length > 6) ||

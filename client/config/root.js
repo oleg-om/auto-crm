@@ -63,7 +63,7 @@ import StoragesNew from '../scenes/Storage/Storage.preorder.create'
 import StorageEditSimple from '../scenes/Storage/Storage.preorder.edit'
 import StorageEditFull from '../scenes/Storage/Storage.edit'
 import StorageView from '../scenes/Storage/Storage.preorder.view'
-
+import ScrollToTop from '../components/ScrollToTop'
 import Startup from './startup'
 
 const OnlyAnonymousRoute = ({ component: Component, ...rest }) => {
@@ -156,6 +156,7 @@ const RootComponent = (props) => {
     <Provider store={store}>
       <RouterSelector history={history} location={props.location} context={props.context}>
         <Startup>
+          <ScrollToTop />
           <Switch>
             {/* <Route exact path="/" component={() => <Registration />} /> */}
             <PrivateRoute exact path="/" component={() => <Dashboard />} />

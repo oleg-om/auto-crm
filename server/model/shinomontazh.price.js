@@ -95,6 +95,10 @@ const ShinomontazhPrice = new mongoose.Schema({
     type: Number,
     required: false
   },
+  R16Camb: {
+    type: Number,
+    required: false
+  },
   R17C: {
     type: Number,
     required: false

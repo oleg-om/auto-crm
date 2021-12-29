@@ -99,7 +99,7 @@ const StoragesList = () => {
       ) {
         dispatch(
           getItemsFiltered(
-            1,
+            num ? Number(num) : 1,
             search.status ? search.status : '',
             search.place ? search.place : '',
             phoneToRest && search.phone ? phoneToRest : '',
@@ -137,6 +137,7 @@ const StoragesList = () => {
       vinnumber: '',
       place: ''
     }))
+    history.push(`/storages/order/list/1`)
   }
   const onFilter = () => {
     if (
@@ -149,6 +150,7 @@ const StoragesList = () => {
       notify('Заполните хотябы одно поле фильтра')
     } else {
       setShowSearch(true)
+      history.push(`/storages/order/list/1`)
     }
   }
 

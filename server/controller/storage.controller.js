@@ -61,6 +61,13 @@ exports.getFiltered = async (req, res) => {
     const LIMIT = 14
     const startIndex = (Number(page) - 1) * LIMIT // get the starting index of every page
 
+    const total = await Storage.countDocuments({
+      id_storages: req.query.number ? `${number.toString()}` : { $exists: true },
+      place: req.query.place ? `${place.toString()}` : { $exists: true },
+      status: req.query.status ? `${status.toString()}` : { $exists: true },
+      phone: req.query.phone ? { $regex: `${phone.toString()}`, $options: 'i' } : { $exists: true }
+    })
+
     const posts = await Storage.find({
       id_storages: req.query.number ? `${number.toString()}` : { $exists: true },
       place: req.query.place ? `${place.toString()}` : { $exists: true },
@@ -75,7 +82,7 @@ exports.getFiltered = async (req, res) => {
       status: 'ok',
       data: posts,
       currentPage: Number(page),
-      numberOfPages: Math.ceil(posts.length / LIMIT)
+      numberOfPages: Math.ceil(total / LIMIT)
     })
   } catch (error) {
     res.status(404).json({ message: error.message })

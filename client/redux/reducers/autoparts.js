@@ -73,14 +73,14 @@ export function getAutopartsByPage(page) {
   }
 }
 
-export function getAutopartsFiltered(page, status, process, place, phone, number) {
+export function getAutopartsFiltered(page, status, process, place, phone, number, reg) {
   return (dispatch) => {
     fetch(
       `/api/v1/autopartsfilter${page ? `?page=${page}` : ''}${status ? `&status=${status}` : ''}${
         process ? `&process=${process}` : ''
       }${place ? `&place=${place}` : ''}${phone ? `&phone=${phone}` : ''}${
         number ? `&number=${number}` : ''
-      }`
+      }${reg ? `&reg=${reg}` : ''}`
     )
       .then((r) => r.json())
       .then(({ data: autoparts, currentPage, numberOfPages }) => {

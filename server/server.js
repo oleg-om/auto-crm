@@ -265,11 +265,11 @@ io.on('connection', (socket) => {
   })
 
   socket.on('new autopart', () => {
-    io.emit('update autopart')
+    io.emit('update autopart', { status: 'test', place: 'test' })
   })
 
   socket.on('edit autopart', () => {
-    io.emit('update edited autopart')
+    io.emit('update edited autopart', { status: 'test', place: 'test' })
   })
 
   socket.on('new razval', ({ razval }) => {

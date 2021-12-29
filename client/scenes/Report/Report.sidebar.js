@@ -1,109 +1,11 @@
 import React from 'react'
+import cx from 'classnames'
 import Calendar from 'react-calendar'
 import 'react-calendar/dist/Calendar.css'
 
 const ReportSidebar = (props) => {
   const propsDate = new Date(props.activeMonth)
   const OrderDate = `${propsDate.toLocaleString('default', { month: 'long' })}`.toString()
-
-  // const timeOptions = [
-  //   '00:00',
-  //   '00:15',
-  //   '00:30',
-  //   '00:45',
-  //   '01:00',
-  //   '01:15',
-  //   '01:30',
-  //   '01:45',
-  //   '02:00',
-  //   '02:15',
-  //   '02:30',
-  //   '02:45',
-  //   '03:00',
-  //   '03:15',
-  //   '03:30',
-  //   '03:45',
-  //   '04:00',
-  //   '04:15',
-  //   '04:30',
-  //   '04:45',
-  //   '05:00',
-  //   '05:15',
-  //   '05:30',
-  //   '05:45',
-  //   '06:00',
-  //   '06:15',
-  //   '06:30',
-  //   '06:45',
-  //   '07:00',
-  //   '07:15',
-  //   '07:30',
-  //   '07:45',
-  //   '08:00',
-  //   '08:15',
-  //   '08:30',
-  //   '08:45',
-  //   '09:00',
-  //   '09:15',
-  //   '09:30',
-  //   '09:45',
-  //   '10:00',
-  //   '10:15',
-  //   '10:30',
-  //   '10:45',
-  //   '11:00',
-  //   '11:15',
-  //   '11:30',
-  //   '11:45',
-  //   '12:00',
-  //   '12:15',
-  //   '12:30',
-  //   '12:45',
-  //   '13:00',
-  //   '13:15',
-  //   '13:30',
-  //   '13:45',
-  //   '14:00',
-  //   '14:15',
-  //   '14:30',
-  //   '14:45',
-  //   '15:00',
-  //   '15:15',
-  //   '15:30',
-  //   '15:45',
-  //   '16:00',
-  //   '16:15',
-  //   '16:30',
-  //   '16:45',
-  //   '17:00',
-  //   '17:15',
-  //   '17:30',
-  //   '17:45',
-  //   '18:00',
-  //   '18:15',
-  //   '18:30',
-  //   '18:45',
-  //   '19:00',
-  //   '19:15',
-  //   '19:30',
-  //   '19:45',
-  //   '20:00',
-  //   '20:15',
-  //   '20:30',
-  //   '20:45',
-  //   '21:00',
-  //   '21:15',
-  //   '21:30',
-  //   '21:45',
-  //   '22:00',
-  //   '22:15',
-  //   '22:30',
-  //   '22:45',
-  //   '23:00',
-  //   '23:15',
-  //   '23:30',
-  //   '23:45'
-  // ]
 
   const timeOptions = [
     '00:00',
@@ -155,30 +57,76 @@ const ReportSidebar = (props) => {
     '23:00',
     '24:00'
   ]
+
   return (
     <nav className="left-0 top-0 bg-gray-800 w-72 flex flex-col pt-3 sidebar">
-      <button
-        type="button"
-        onClick={() =>
-          props.calendarType === 'month'
-            ? props.setCalendarType('day')
-            : props.setCalendarType('month')
-        }
-        className="text-white mx-2 font-semibold"
-      >
-        Выберите {props.calendarType === 'month' ? 'месяц' : 'день'} (нажмите для изменения)
-      </button>
-      <div className="bg-white p-3 m-2 rounded">
-        <Calendar
-          view={props.calendarType === 'month' ? 'year' : 'month'}
-          onClickMonth={props.setActiveMonth}
-          onClickDay={props.setActiveDay}
-          value={props.calendarType === 'month' ? props.activeMonth : props.activeDay}
-          minDate={new Date(2021, 0, 1)}
-          maxDate={new Date()}
-        />
+      <div className="flex flex-row justify-around">
+        <button
+          type="button"
+          onClick={() => props.setCalendarType('month')}
+          className={cx(' mx-2 font-semibold', {
+            'text-white': props.calendarType !== 'month',
+            'text-yellow-500 underline': props.calendarType === 'month'
+          })}
+        >
+          Месяц
+        </button>
+        <button
+          type="button"
+          onClick={() => props.setCalendarType('day')}
+          className={cx(' mx-2 font-semibold', {
+            'text-white': props.calendarType !== 'day',
+            'text-yellow-500 underline': props.calendarType === 'day'
+          })}
+        >
+          День
+        </button>
+        {props.active === 'material' ? (
+          <button
+            type="button"
+            onClick={() => props.setCalendarType('diapason')}
+            className={cx(' mx-2 font-semibold', {
+              'text-white': props.calendarType !== 'diapason',
+              'text-yellow-500 underline': props.calendarType === 'diapason'
+            })}
+          >
+            Диапазон
+          </button>
+        ) : null}
       </div>
-      {props.calendarType !== 'month' ? (
+      <div className="bg-white p-3 m-2 rounded">
+        {props.calendarType === 'month' ? (
+          <Calendar
+            view="year"
+            onClickMonth={props.setActiveMonth}
+            onClickDay={props.setActiveDay}
+            value={props.activeMonth}
+            minDate={new Date(2021, 0, 1)}
+            maxDate={new Date()}
+          />
+        ) : null}
+        {props.calendarType === 'day' ? (
+          <Calendar
+            view="month"
+            onClickMonth={props.setActiveMonth}
+            onClickDay={props.setActiveDay}
+            value={props.activeDay}
+            minDate={new Date(2021, 0, 1)}
+            maxDate={new Date()}
+          />
+        ) : null}
+        {props.calendarType === 'diapason' ? (
+          <Calendar
+            view="month"
+            onChange={(dt) => props.setRange(dt)}
+            value={props.range}
+            minDate={new Date(2021, 0, 1)}
+            maxDate={new Date()}
+            selectRange
+          />
+        ) : null}
+      </div>
+      {props.calendarType !== 'month' && props.calendarType !== 'diapason' ? (
         <div className="bg-white p-3 m-2 rounded">
           <div className="px-3">
             <label
@@ -283,15 +231,22 @@ const ReportSidebar = (props) => {
                 className="block appearance-none w-full bg-grey-lighter border border-gray-300 focus:border-gray-500 focus:outline-none py-1 px-4 pr-8 rounded"
                 value={props.place}
                 name="cancelReason"
-                disabled
                 onChange={props.onChangePlace}
               >
                 <option value="">Все</option>
-                {props.placeList.map((it) => (
-                  <option key={it} value={it.id}>
-                    {it.name}
-                  </option>
-                ))}
+                {props.placeList
+                  .filter(
+                    (it) =>
+                      it.id === props.place ||
+                      it.name.includes('Чкалова') ||
+                      it.name.includes('Новониколаевка') ||
+                      it.name.includes('Вокзальное шоссе 44')
+                  )
+                  .map((it) => (
+                    <option key={it} value={it.id}>
+                      {it.name}
+                    </option>
+                  ))}
               </select>
             )}
             <div className="pointer-events-none absolute top-0 mt-2 right-0 flex items-center px-2 text-gray-600">
@@ -306,12 +261,38 @@ const ReportSidebar = (props) => {
           </div>
         </div>
       </div>
-      <div className="text-white mx-2">
-        <h5 className="text-white font-semibold">Выбранный месяц</h5>
-        <p className="bg-white rounded text-gray-900 p-2 my-2 text-center border-l-8 border-blue-600 font-bold">
-          {OrderDate}
-        </p>
-      </div>
+      {props.calendarType !== 'diapason' ? (
+        <div className="text-white mx-2">
+          <h5 className="text-white font-semibold">Выбранный месяц</h5>
+          <p className="bg-white rounded text-gray-900 p-2 my-2 text-center border-l-8 border-blue-600 font-bold">
+            {OrderDate}
+          </p>
+        </div>
+      ) : null}
+      {props.calendarType === 'diapason' ? (
+        <div className="text-white mx-2">
+          <h5 className="text-white font-semibold">С дня</h5>
+          <p className="bg-white rounded text-gray-900 p-2 my-2 text-center border-l-8 border-blue-600 font-bold">
+            {`${props.range[0].toLocaleString('default', {
+              day: 'numeric',
+              month: 'long',
+              year: 'numeric'
+            })}`.toString()}
+          </p>
+        </div>
+      ) : null}
+      {props.calendarType === 'diapason' ? (
+        <div className="text-white mx-2">
+          <h5 className="text-white font-semibold">По день</h5>
+          <p className="bg-white rounded text-gray-900 p-2 my-2 text-center border-l-8 border-blue-600 font-bold">
+            {`${props.range[1].toLocaleString('default', {
+              day: 'numeric',
+              month: 'long',
+              year: 'numeric'
+            })}`.toString()}
+          </p>
+        </div>
+      ) : null}
     </nav>
   )
 }

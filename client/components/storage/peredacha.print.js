@@ -16,7 +16,16 @@ export default class PeredachaToPrint extends React.PureComponent {
                 .toString()
                 .replace(/^(\d)$/, '0$1')}.${(new Date(this.props.props.dateStart).getMonth() + 1)
                 .toString()
-                .replace(/^(\d)$/, '0$1')}.${new Date(this.props.props.dateStart).getFullYear()}`}
+                .replace(/^(\d)$/, '0$1')}.${new Date(
+                this.props.props.dateStart
+              ).getFullYear()}`}{' '}
+              до{' '}
+              {`${new Date(this.props.props.dateStart)
+                .getDate()
+                .toString()
+                .replace(/^(\d)$/, '0$1')}.${(new Date(this.props.props.dateFinish).getMonth() + 1)
+                .toString()
+                .replace(/^(\d)$/, '0$1')}.${new Date(this.props.props.dateFinish).getFullYear()}`}
             </strong>
           </p>
           <p>
@@ -122,6 +131,7 @@ export default class PeredachaToPrint extends React.PureComponent {
                             {it.wheels === 'yes' ? (
                               <p>С дисками {it.wheelsquan ? `, ${it.wheelsquan} шт.` : ''}</p>
                             ) : null}
+                            {it.kolp === 'yes' ? <p> (+ колпачки)</p> : null}
                           </td>
                           <td width="113" className="border border-black text-center">
                             <p>{it.quantity} шт.</p>

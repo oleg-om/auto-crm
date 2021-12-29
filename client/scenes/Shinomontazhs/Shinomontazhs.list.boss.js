@@ -57,7 +57,8 @@ const ShinomontazhsListBoss = () => {
     number: '',
     status: '',
     vinnumber: '',
-    place: ''
+    place: '',
+    regnumber: ''
   })
 
   // const onChangePhone = (e) => {
@@ -77,7 +78,8 @@ const ShinomontazhsListBoss = () => {
       phone: '',
       status: '',
       vinnumber: '',
-      place: ''
+      place: '',
+      regnumber: ''
     }))
   }
 
@@ -88,7 +90,8 @@ const ShinomontazhsListBoss = () => {
       phone: '',
       number: '',
       status: '',
-      vinnumber: ''
+      vinnumber: '',
+      regnumber: ''
     }))
   }
 
@@ -101,10 +104,16 @@ const ShinomontazhsListBoss = () => {
         search.status ||
         search.vin ||
         search.place ||
-        search.number
+        search.number ||
+        search.regnumber
       ) {
         dispatch(
-          getItemsFiltered(1, search.place ? search.place : '', search.number ? search.number : '')
+          getItemsFiltered(
+            num ? Number(num) : 1,
+            search.place ? search.place : '',
+            search.number ? search.number : '',
+            search.regnumber ? search.regnumber : ''
+          )
         )
       }
     }
@@ -117,8 +126,10 @@ const ShinomontazhsListBoss = () => {
       number: '',
       status: '',
       vinnumber: '',
-      place: ''
+      place: '',
+      regnumber: ''
     }))
+    history.push(`/shinomontazhboss/list/1`)
   }
   const onFilter = () => {
     if (
@@ -126,12 +137,25 @@ const ShinomontazhsListBoss = () => {
       search.number === '' &&
       search.status === '' &&
       search.vinnumber === '' &&
-      search.place === ''
+      search.place === '' &&
+      search.regnumber === ''
     ) {
       notify('Заполните хотябы одно поле')
     } else {
       setShowSearch(true)
+      history.push(`/shinomontazhboss/list/1`)
     }
+  }
+
+  const onChangeCustomerUppercaseRussian = (e) => {
+    const { name, value } = e.target
+    setSearch((prevState) => ({
+      ...prevState,
+      [name]: value
+        .toUpperCase()
+        .replace(/\s/g, '')
+        .replace(/[^а-яё0-9]/i, '')
+    }))
   }
 
   const loadingComponent = () => {
@@ -355,6 +379,46 @@ const ShinomontazhsListBoss = () => {
                       viewBox="0 0 20 20"
                     >
                       <path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z" />
+                    </svg>
+                  </div>
+                </div>
+              </div>
+              <div className="md:w-1/2 px-3 mb-6 md:mb-0">
+                <label
+                  className="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2"
+                  htmlFor="grid-first-name"
+                >
+                  Гос номер
+                </label>
+                <div className="flex-shrink w-full inline-block relative">
+                  <input
+                    className={cx(
+                      'block appearance-none w-full bg-grey-lighter border border-gray-300 focus:border-gray-500 focus:outline-none py-1 px-4 pr-8 rounded',
+                      {
+                        'border-red-300 focus:border-red-500':
+                          search.regnumber && showSearch === true
+                      }
+                    )}
+                    value={search.regnumber}
+                    name="regnumber"
+                    type="regnumber"
+                    onChange={onChangeCustomerUppercaseRussian}
+                  />
+                  <div className="pointer-events-none absolute top-0 mt-2  right-0 flex items-center px-2 text-gray-600">
+                    <svg
+                      version="1.1"
+                      className="fill-current h-4 w-4"
+                      xmlns="http://www.w3.org/2000/svg "
+                      xlink="http://www.w3.org/1999/xlink "
+                      x="0px "
+                      y="0px "
+                      viewBox="0 0 52.966 52.966 "
+                      space="preserve "
+                    >
+                      <path
+                        d="M51.704,51.273L36.845,35.82c3.79-3.801,6.138-9.041,6.138-14.82c0-11.58-9.42-21-21-21s-21,9.42-21,21s9.42,21,21,21 c5.083,0,9.748-1.817,13.384-4.832l14.895,15.491c0.196,0.205,0.458,0.307,0.721,0.307c0.25,0,0.499-0.093,0.693-0.279 C52.074,52.304,52.086,51.671,51.704,51.273z
+                            M21.983,40c-10.477,0-19-8.523-19-19s8.523-19,19-19s19,8.523,19,19 S32.459,40,21.983,40z "
+                      />
                     </svg>
                   </div>
                 </div>

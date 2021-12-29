@@ -102,12 +102,12 @@ export function getItemsByPage(page) {
   }
 }
 
-export function getItemsFiltered(page, place, number) {
+export function getItemsFiltered(page, place, number, reg) {
   return (dispatch) => {
     fetch(
       `/api/v1/shinomontazhfilter${page ? `?page=${page}` : ''}${place ? `&place=${place}` : ''}${
         number ? `&number=${number}` : ''
-      }`
+      }${reg ? `&reg=${reg}` : ''}`
     )
       .then((r) => r.json())
       .then(({ data: shinomontazhs, currentPage, numberOfPages }) => {

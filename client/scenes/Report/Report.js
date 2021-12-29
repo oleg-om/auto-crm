@@ -14,12 +14,14 @@ const Report = () => {
 
   const [checkIsAdmin, setCheckIsAdmin] = useState(true)
 
-  const [calendarType, setCalendarType] = useState('month')
+  const [calendarType, setCalendarType] = useState('day')
 
   const [place, setPlace] = useState('')
   const [activeMonth, setActiveMonth] = useState(new Date())
   const [activeDay, setActiveDay] = useState(new Date())
   const [active, setActive] = useState('salary')
+
+  const [range, setRange] = useState([new Date(), new Date()])
 
   useEffect(() => {
     if (auth.roles.length > 0 && !auth.roles.includes('boss') && !auth.roles.includes('admin')) {
@@ -62,6 +64,9 @@ const Report = () => {
           onChangeTimeStart={onChangeTimeStart}
           timeFinish={timeFinish}
           onChangeTimeFinish={onChangeTimeFinish}
+          range={range}
+          setRange={setRange}
+          active={active}
         />
         <div className="w-full mx-auto px-4">
           <h1 className="text-3xl py-4 border-b mb-6">Статистика</h1>
@@ -125,6 +130,7 @@ const Report = () => {
               employeeList={employeeList}
               timeStart={timeStart}
               active={active}
+              range={range}
             />
             {active === 'autopart' ? (
               <div

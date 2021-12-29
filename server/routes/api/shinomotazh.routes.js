@@ -12,5 +12,6 @@ router.post('/shinomontazh/', shinomontazhsController.create)
 router.patch('/shinomontazh/:id', shinomontazhsController.update)
 router.delete('/shinomontazh/:id', shinomontazhsController.delete)
 router.get('/shinomontazhlast/', shinomontazhsController.getLastTwoDays)
+router.get('/shinomontazhrange/', shinomontazhsController.getRange)
 
 module.exports = router

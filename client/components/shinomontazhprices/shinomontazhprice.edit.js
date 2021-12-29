@@ -32,6 +32,7 @@ const ShinomontazhpriceUpdate = (props) => {
     R14C: props.R14C,
     R15C: props.R15C,
     R16C: props.R16C,
+    R16Camb: props.R16Camb,
     R17C: props.R17C,
     R175: props.R175,
     R195: props.R195,
@@ -474,6 +475,23 @@ const ShinomontazhpriceUpdate = (props) => {
                 value={state.R16C}
                 name="R16C"
                 id="R16C"
+                type="number"
+                placeholder="Введите цену"
+                onChange={onChange}
+              />
+            </div>
+            <div className="md:w-1/5 px-3 mb-6 md:mb-0 flex flex-col">
+              <label
+                className="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2"
+                htmlFor="grid-first-name"
+              >
+                R16С (скорая)
+              </label>
+              <input
+                className="appearance-none block w-full bg-grey-lighter text-grey-darker border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-3 px-4 mb-3"
+                value={state.R16Camb}
+                name="R16Camb"
+                id="R16Camb"
                 type="number"
                 placeholder="Введите цену"
                 onChange={onChange}

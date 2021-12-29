@@ -338,7 +338,16 @@ const ShinomontazhsEdit = (props) => {
     return Math.round(num / 5) * 5
   }
   useEffect(() => {
-    const actualDiametr = 'R'.concat(state.diametr.replace(/[^C\d]/g, ''))
+    const helpToGetDiametr = (item) => {
+      if (item === 'R16С (скорая)') {
+        return '16Camb'
+      }
+      if (item === '22.5 (спец шина)') {
+        return '23'
+      }
+      return item.replace(/[^C\d]/g, '')
+    }
+    const actualDiametr = 'R'.concat(helpToGetDiametr(state.diametr))
     const percent = currentPlace ? currentPlace.shinostavka : ''
     const definition = currentPlace ? currentPlace.shinomeaning : ''
     const getPrice = (item) => {

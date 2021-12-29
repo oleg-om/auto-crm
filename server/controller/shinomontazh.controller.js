@@ -68,15 +68,21 @@ exports.getByPage = async (req, res) => {
   }
 }
 exports.getFiltered = async (req, res) => {
-  const { page, number, place } = req.query
+  const { page, number, place, reg } = req.query
 
   try {
     const LIMIT = 14
     const startIndex = (Number(page) - 1) * LIMIT // get the starting index of every page
 
+    const total = await Shinomontazh.countDocuments({
+      id_shinomontazhs: req.query.number ? `${number.toString()}` : { $exists: true },
+      place: req.query.place ? `${place.toString()}` : { $exists: true },
+      regnumber: req.query.reg ? { $regex: `${reg.toString()}`, $options: 'i' } : { $exists: true }
+    })
     const posts = await Shinomontazh.find({
       id_shinomontazhs: req.query.number ? `${number.toString()}` : { $exists: true },
-      place: req.query.place ? `${place.toString()}` : { $exists: true }
+      place: req.query.place ? `${place.toString()}` : { $exists: true },
+      regnumber: req.query.reg ? { $regex: `${reg.toString()}`, $options: 'i' } : { $exists: true }
     })
       .sort({ id_shinomontazhs: -1 })
       .limit(LIMIT)
@@ -86,7 +92,8 @@ exports.getFiltered = async (req, res) => {
       status: 'ok',
       data: posts,
       currentPage: Number(page),
-      numberOfPages: Math.ceil(posts.length / LIMIT)
+      num: posts.length,
+      numberOfPages: Math.ceil(total / LIMIT)
     })
   } catch (error) {
     res.status(404).json({ message: error.message })
@@ -105,4 +112,36 @@ exports.getMonth = async (req, res) => {
   })
 
   return res.json({ status: 'ok', data: list })
+}
+exports.getRange = async (req, res) => {
+  const { month, year, secMonth, secYear } = req.query
+  // const { month, year } = req.query
+  const getMonth = (mn) => {
+    if (Number(mn) < 10) {
+      return `0${mn}`
+    }
+    return mn
+  }
+
+  const getDate = (mon, yer) => `${yer}-${getMonth(mon)}-01T00:00:00.000Z`
+  const getDateSec = (mon, yer) => `${yer}-${getMonth(mon)}-31T23:59:00.000Z`
+  // const list = await Shinomontazh.find({
+  //   dateFinish: {
+  //     $gte: new Date(getDate(month, year))
+  //     // $lt: new Date(getDate(secMonth, secYear))
+  //     // $lt: new Date(getDate(secMonth, secYear))
+  //   }
+  // })
+  // const dtt = getDate(secMonth, secYear)
+
+  const list = await Shinomontazh.find({
+    dateFinish: { $gte: getDate(month, year), $lt: getDateSec(secMonth, secYear) }
+  })
+
+  return res.json({
+    status: 'ok',
+    date1: getDate(month, year),
+    date2: getDateSec(secMonth, secYear),
+    data: list
+  })
 }

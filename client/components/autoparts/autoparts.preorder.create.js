@@ -460,6 +460,44 @@ const AutopartsCreate = (props) => {
   return (
     <div>
       <div className="bg-white shadow rounded-lg px-8 pt-6 pb-8 mb-4 flex flex-col my-2">
+        <div className="-mx-3 md:flex mb-2">
+          <div className="md:w-1/2 px-3 mb-6 md:mb-0">
+            <label
+              className="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2"
+              htmlFor="grid-city"
+            >
+              Номер телефона
+            </label>
+            <NumberFormat
+              format="+7 (###) ###-##-##"
+              mask="_"
+              className="appearance-none block w-full bg-grey-lighter text-grey-darker border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-1 px-4 mb-3"
+              type="text"
+              placeholder="Начинайте ввод с 978"
+              value={state.phone}
+              name="phone"
+              id="phone"
+              onChange={onChangeCustomer}
+            />
+          </div>
+          <div className="md:w-1/2 px-3 mb-6 md:mb-0">
+            <label
+              className="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2"
+              htmlFor="grid-city"
+            >
+              Имя клиента
+            </label>
+            <input
+              className="capitalize appearance-none block w-full bg-grey-lighter text-grey-darker border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-1 px-4 mb-3"
+              type="text"
+              placeholder="Введите имя"
+              value={state.name}
+              name="name"
+              id="name"
+              onChange={onChangeCustomer}
+            />
+          </div>
+        </div>
         <div className="md:flex md:flex-row -mx-3 mb-6">
           <div className="md:w-1/2 px-3 mb-6 md:mb-0">
             <div className="flex flex-row">
@@ -544,6 +582,7 @@ const AutopartsCreate = (props) => {
                 </div>
               </div>
             </div>
+
             <div className="md:mb-0">
               <label
                 className="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2"
@@ -825,7 +864,7 @@ const AutopartsCreate = (props) => {
             ) : null}
           </div>
         </div>
-        <div className="-mx-3 md:flex mb-2">
+        {/* <div className="-mx-3 md:flex mb-2">
           <div className="md:w-1/2 px-3 mb-6 md:mb-0">
             <label
               className="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2"
@@ -862,7 +901,7 @@ const AutopartsCreate = (props) => {
               onChange={onChangeCustomer}
             />
           </div>
-        </div>
+        </div> */}
         <div className="-mx-3 md:flex mb-2">
           <div className="md:w-full px-3 mb-6 md:mb-0">
             <table className="border-collapse w-full">

@@ -1,63 +1,77 @@
-import React, { useState, useRef } from "react";
-import { Link, useHistory } from "react-router-dom";
-import { useSelector } from "react-redux";
-import { toast } from "react-toastify";
-import { useReactToPrint } from "react-to-print";
-import NumberFormat from "react-number-format";
-import ComponentToPrint from "./dogovor.print";
-import PeredachaToPrint from "./peredacha.print";
-import VozvratToPrint from "./vozvrat.print";
-import NakleikaPrint from "./nakleika.print";
-import UslToPrint from "./usl.print";
-import "react-toastify/dist/ReactToastify.css";
+import React, { useState, useRef } from 'react'
+import { Link, useHistory } from 'react-router-dom'
+import { useSelector } from 'react-redux'
+import { toast } from 'react-toastify'
+import { useReactToPrint } from 'react-to-print'
+import NumberFormat from 'react-number-format'
+import ComponentToPrint from './dogovor.print'
+import PeredachaToPrint from './peredacha.print'
+import VozvratToPrint from './vozvrat.print'
+import NakleikaPrint from './nakleika.print'
+import UslToPrint from './usl.print'
+import 'react-toastify/dist/ReactToastify.css'
 // import tyresList from '../../lists/tyres/tyres'
 // import sizeOneList from '../../lists/tyres/sizeone'
 // import sizeTwoList from '../../lists/tyres/sizetwo'
 // import sizeThreeList from '../../lists/tyres/sizethree'
-import FirstColumn from "./moduls/firstcolumn";
-import TyreColumn from "./moduls/tyrecolumn";
-import Statuses from "../../lists/storages-statuses";
+import FirstColumn from './moduls/firstcolumn'
+import TyreColumn from './moduls/tyrecolumn'
+import Statuses from '../../lists/storages-statuses'
 
 const StoragesUpdate = (props) => {
-  toast.configure();
+  toast.configure()
   const notify = (arg) => {
-    toast.info(arg, { position: toast.POSITION.BOTTOM_RIGHT });
-  };
+    toast.info(arg, { position: toast.POSITION.BOTTOM_RIGHT })
+  }
 
   // const componentRef = useRef()
-  const dogovorRef = useRef();
-  const peredachaRef = useRef();
-  const vozratRef = useRef();
-  const nakleikaRef = useRef();
-  const uslRef = useRef();
+  const dogovorRef = useRef()
+  const peredachaRef = useRef()
+  const vozratRef = useRef()
+  const nakleikaRef = useRef()
+  const uslRef = useRef()
 
   // const handlePrint = useReactToPrint({
   //   content: () => componentRef.current
   // })
   const handlePrintDogovor = useReactToPrint({
-    content: () => dogovorRef.current,
-  });
+    content: () => dogovorRef.current
+  })
   const handlePrintPeredacha = useReactToPrint({
-    content: () => peredachaRef.current,
-  });
+    content: () => peredachaRef.current
+  })
 
   const handlePrintVozvrat = useReactToPrint({
-    content: () => vozratRef.current,
-  });
+    content: () => vozratRef.current
+  })
 
   const handlePrintNakleika = useReactToPrint({
-    content: () => nakleikaRef.current,
-  });
+    content: () => nakleikaRef.current
+  })
 
   const handlePrintUsl = useReactToPrint({
-    content: () => uslRef.current,
-  });
+    content: () => uslRef.current
+  })
 
-  const history = useHistory();
-  const list = useSelector((s) => s.places.list);
-  const employeeList = useSelector((s) => s.employees.list);
+  const history = useHistory()
+  const list = useSelector((s) => s.places.list)
+  const employeeList = useSelector((s) => s.employees.list)
 
-  const [inputFields, setInputFields] = useState(props.preorder);
+  const dateNow = new Date()
+  const dateNew = `${dateNow
+    .getDate()
+    .toString()
+    .replace(/^(\d)$/, '0$1')}.${(dateNow.getMonth() + 1)
+    .toString()
+    .replace(/^(\d)$/, '0$1')}.${dateNow.getFullYear()} ${dateNow
+    .getHours()
+    .toString()
+    .replace(/^(\d)$/, '0$1')}:${dateNow
+    .getMinutes()
+    .toString()
+    .replace(/^(\d)$/, '0$1')}`
+
+  const [inputFields, setInputFields] = useState(props.preorder)
 
   const [state, setState] = useState({
     employee: props.employee,
@@ -73,47 +87,47 @@ const StoragesUpdate = (props) => {
     dateStart: props.dateStart,
     dateFinish: props.dateFinish,
     currentplace: props.currentplace,
-    status: props.status,
-  });
+    status: props.status
+  })
 
   const onChange = (e) => {
-    const { name, value } = e.target;
+    const { name, value } = e.target
     setState((prevState) => ({
       ...prevState,
-      [name]: value,
-    }));
-  };
+      [name]: value
+    }))
+  }
 
   const onChangeCustomer = (e) => {
-    const { name, value } = e.target;
+    const { name, value } = e.target
     setState((prevState) => ({
       ...prevState,
-      [name]: value,
-    }));
-  };
+      [name]: value
+    }))
+  }
 
   const onChangeDateFinish = (e) => {
-    const { id } = e.target;
-    const date = new Date(state.dateStart);
-    const modifiedDate = date.setMonth(Number(date.getMonth()) + Number(id));
-    const today = new Date(modifiedDate).toISOString().substr(0, 10);
+    const { id } = e.target
+    const date = new Date(state.dateStart)
+    const modifiedDate = date.setMonth(Number(date.getMonth()) + Number(id))
+    const today = new Date(modifiedDate).toISOString().substr(0, 10)
     setState((prevState) => ({
       ...prevState,
-      dateFinish: today,
-    }));
-  };
+      dateFinish: today
+    }))
+  }
 
   const sendData = () => {
-    if (!state.employee) notify("Заполните поле Принял заказ");
-    if (!state.place) notify("Заполните поле Заказ принят на точке");
-    if (!state.regnumber) notify("Заполните поле Гос. номер");
-    if (!state.mark) notify("Укажите марку авто");
-    if (!state.model) notify("Укажите модель авто");
-    if (!state.name) notify("Заполните поле ФИО клиента");
-    if (!state.phone) notify("Заполните поле Телефон");
-    if (!state.dateStart) notify("Заполните обе даты");
-    if (!state.dateFinish) notify("Заполните обе даты");
-    if (state.preorder.length === 0) notify("Заполните хранение");
+    if (!state.employee) notify('Заполните поле Принял заказ')
+    if (!state.place) notify('Заполните поле Заказ принят на точке')
+    if (!state.regnumber) notify('Заполните поле Гос. номер')
+    if (!state.mark) notify('Укажите марку авто')
+    if (!state.model) notify('Укажите модель авто')
+    if (!state.name) notify('Заполните поле ФИО клиента')
+    if (!state.phone) notify('Заполните поле Телефон')
+    if (!state.dateStart) notify('Заполните обе даты')
+    if (!state.dateFinish) notify('Заполните обе даты')
+    if (state.preorder.length === 0) notify('Заполните хранение')
     else if (
       state.employee &&
       state.place &&
@@ -123,49 +137,79 @@ const StoragesUpdate = (props) => {
       state.name &&
       state.phone
     ) {
-      props.updateStorage(props.id, state);
-      history.push("/storages/order/list");
-      notify("Хранение обновлено");
+      if (state.status === props.status && state.currentplace === props.currentplace) {
+        props.updateStorage(props.id, state)
+      } else if (state.status !== props.status && state.currentplace === props.currentplace) {
+        props.updateStorage(props.id, {
+          ...state,
+          statusDates: [...props.statusDates, { status: state.status, date: dateNew }]
+        })
+      } else if (state.status === props.status && state.currentplace !== props.currentplace) {
+        props.updateStorage(props.id, {
+          ...state,
+          statusDates: [
+            ...props.statusDates,
+            {
+              status: `Перемещение на ${list.find((pl) => pl.id === state.currentplace).name}`,
+              date: dateNew
+            }
+          ]
+        })
+      } else if (state.status !== props.status && state.currentplace !== props.currentplace) {
+        props.updateStorage(props.id, {
+          ...state,
+          statusDates: [
+            ...props.statusDates,
+            {
+              status: `Перемещение на ${list.find((pl) => pl.id === state.currentplace).name}`,
+              date: dateNew
+            },
+            { status: state.status, date: dateNew }
+          ]
+        })
+      }
+      history.push('/storages/order/list')
+      notify('Хранение обновлено')
     }
-  };
+  }
 
   const handleChangeInput = (index, event) => {
-    const values = [...inputFields];
-    values[index][event.target.name] = event.target.value;
-    setInputFields(values);
+    const values = [...inputFields]
+    values[index][event.target.name] = event.target.value
+    setInputFields(values)
     setState((prevState) => ({
       ...prevState,
-      preorder: inputFields,
-    }));
-  };
+      preorder: inputFields
+    }))
+  }
 
   const handleAddFields = () => {
     setInputFields([
       ...inputFields,
       {
-        tyreItem: "",
-        type: "1",
-        mode: "full",
-        brand: "",
-      },
-    ]);
+        tyreItem: '',
+        type: '1',
+        mode: 'full',
+        brand: ''
+      }
+    ])
     setState((prevState) => ({
       ...prevState,
-      preorder: inputFields,
-    }));
-  };
+      preorder: inputFields
+    }))
+  }
 
   const handleRemoveFields = (index) => {
     if (index !== 0) {
-      const values = [...inputFields];
-      values.splice(index, 1);
-      setInputFields(values);
+      const values = [...inputFields]
+      values.splice(index, 1)
+      setInputFields(values)
       setState((prevState) => ({
         ...prevState,
-        preorder: values,
-      }));
+        preorder: values
+      }))
     }
-  };
+  }
 
   return (
     <div>
@@ -194,22 +238,17 @@ const StoragesUpdate = (props) => {
                         disabled
                         onChange={onChange}
                       >
-                        <option
-                          value=""
-                          disabled
-                          hidden
-                          className="text-gray-800"
-                        >
+                        <option value="" disabled hidden className="text-gray-800">
                           Выберете сотрудника
                         </option>
                         {employeeList
-                          .filter((it) => it.role.includes("Хранение"))
+                          .filter((it) => it.role.includes('Хранение'))
                           .map((it, index) => {
                             return (
                               <option value={it.id} key={index}>
                                 {it.name} {it.surname}
                               </option>
-                            );
+                            )
                           })}
                       </select>
                     </div>
@@ -230,12 +269,7 @@ const StoragesUpdate = (props) => {
                         disabled
                         onChange={onChange}
                       >
-                        <option
-                          value=""
-                          disabled
-                          hidden
-                          className="text-gray-800"
-                        >
+                        <option value="" disabled hidden className="text-gray-800">
                           Выберете место
                         </option>
                         {list.map((it, index) => {
@@ -243,7 +277,7 @@ const StoragesUpdate = (props) => {
                             <option value={it.id} key={index}>
                               {it.name}
                             </option>
-                          );
+                          )
                         })}
                       </select>
                     </div>
@@ -576,7 +610,7 @@ const StoragesUpdate = (props) => {
                     <option value={it.id} key={index}>
                       {it.name}
                     </option>
-                  );
+                  )
                 })}
               </select>
               <div className="pointer-events-none absolute top-0 mt-2  right-0 flex items-center px-2 text-gray-600">
@@ -979,10 +1013,39 @@ const StoragesUpdate = (props) => {
             />
           </div>
         </div>
+        <div className="md:m-3 lg:flex rounded-lg px-6 py-2 w-auto shadow bg-gray-100 my-2">
+          <div className="text-center md:text-left m-3">
+            <h2>История хранения</h2>
+            <div>
+              <ul>
+                <li>
+                  <b>Хранение принято: </b>{' '}
+                  {`${new Date(props.date)
+                    .getDate()
+                    .toString()
+                    .replace(/^(\d)$/, '0$1')}.${(new Date(props.date).getMonth() + 1)
+                    .toString()
+                    .replace(/^(\d)$/, '0$1')}.${new Date(props.date).getFullYear()} ${new Date(
+                    props.date
+                  ).getHours()}:${new Date(props.date)
+                    .getMinutes()
+                    .toString()
+                    .replace(/^(\d)$/, '0$1')}`}
+                </li>
+
+                {props.statusDates.map((it) => (
+                  <li key={it.date}>
+                    <b>{it.status}: </b> {it.date}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </div>
+        </div>
       </div>
       <div className=" flex my-2">
         <Link
-          to={`/storages/order/list/${props.num ? props.num : ""}`}
+          to={`/storages/order/list/${props.num ? props.num : ''}`}
           className="my-3 mr-2 py-2 md:w-1/3 px-3 bg-red-600 text-white text-center hover:bg-red-700 hover:text-white rounded-lg"
         >
           Отмена
@@ -997,7 +1060,7 @@ const StoragesUpdate = (props) => {
         </button>
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default StoragesUpdate;
+export default StoragesUpdate

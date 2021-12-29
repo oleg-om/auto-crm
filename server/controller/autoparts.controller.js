@@ -32,7 +32,7 @@ exports.getByPage = async (req, res) => {
 }
 
 exports.getFiltered = async (req, res) => {
-  const { page, number, place, status, process, phone } = req.query
+  const { page, number, place, status, process, phone, reg } = req.query
 
   try {
     const LIMIT = 14
@@ -53,13 +53,23 @@ exports.getFiltered = async (req, res) => {
     //     { upsert: false, useFindAndModify: false }
     //   ]
     // })
+    const total = await Autopart.countDocuments({
+      id_autoparts: req.query.number ? number : { $exists: true },
+      place: req.query.place ? `${place.toString()}` : { $exists: true },
+      status: req.query.status ? `${decodeURIComponent(status).toString()}` : { $exists: true },
+      process: req.query.process ? `${process.toString()}` : { $exists: true },
+      phone: req.query.phone ? { $regex: `${phone.toString()}`, $options: 'i' } : { $exists: true },
+      regnumber: req.query.reg ? { $regex: `${reg.toString()}`, $options: 'i' } : { $exists: true }
+    })
+
     const posts = await Autopart.find({
       // status: `${decodeURIComponent(req.query.status ? status : '').toString()}`,
       id_autoparts: req.query.number ? number : { $exists: true },
       place: req.query.place ? `${place.toString()}` : { $exists: true },
       status: req.query.status ? `${decodeURIComponent(status).toString()}` : { $exists: true },
       process: req.query.process ? `${process.toString()}` : { $exists: true },
-      phone: req.query.phone ? { $regex: `${phone.toString()}`, $options: 'i' } : { $exists: true }
+      phone: req.query.phone ? { $regex: `${phone.toString()}`, $options: 'i' } : { $exists: true },
+      regnumber: req.query.reg ? { $regex: `${reg.toString()}`, $options: 'i' } : { $exists: true }
       // {
       //   process: req.query.process ? `${process.toString()}` : 'smth'
       // },
@@ -76,7 +86,7 @@ exports.getFiltered = async (req, res) => {
       status: 'ok',
       data: posts,
       currentPage: Number(page),
-      numberOfPages: Math.ceil(posts.length / LIMIT)
+      numberOfPages: Math.ceil(total / LIMIT)
     })
   } catch (error) {
     res.status(404).json({ message: error.message })

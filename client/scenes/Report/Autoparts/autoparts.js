@@ -1,4 +1,5 @@
 import React, { useState } from 'react'
+import { Link } from 'react-router-dom'
 
 const Salary = ({ report, employeeListFull }) => {
   const employeeArray = report
@@ -54,8 +55,16 @@ const Salary = ({ report, employeeListFull }) => {
   //   return
   // },[])
 
-  const getVal = (id) => {
-    return report
+  const reportInStock = report.reduce((acc, rec) => {
+    return [...acc, { ...rec, order: rec.order.filter((it) => it.vendor === 'instock') }]
+  }, [])
+
+  const reportOrder = report.reduce((acc, rec) => {
+    return [...acc, { ...rec, order: rec.order.filter((it) => it.vendor !== 'instock') }]
+  }, [])
+
+  const getVal = (id, data) => {
+    return data
       .reduce((acc, rec) => {
         if (rec.process === id) {
           return [...acc, rec]
@@ -124,8 +133,8 @@ const Salary = ({ report, employeeListFull }) => {
       .reduce((acc, rec) => acc + rec, 0)
   }
 
-  const getValfull = () => {
-    return report
+  const getValfull = (data) => {
+    return data
       .reduce((acc, rec) => {
         return [
           ...acc,
@@ -179,6 +188,12 @@ const Salary = ({ report, employeeListFull }) => {
               Вал
             </th>
             <th className="p-3 font-bold bg-gray-100 text-gray-600 border border-gray-300 hidden lg:table-cell">
+              Вал (под заказ)
+            </th>
+            <th className="p-3 font-bold bg-gray-100 text-gray-600 border border-gray-300 hidden lg:table-cell">
+              Вал (в наличии)
+            </th>
+            <th className="p-3 font-bold bg-gray-100 text-gray-600 border border-gray-300 hidden lg:table-cell">
               Прибыль
             </th>
             <th className="p-3 font-bold bg-gray-100 text-gray-600 border border-gray-300 hidden lg:table-cell">
@@ -208,7 +223,19 @@ const Salary = ({ report, employeeListFull }) => {
               </td>
               <td className="w-full lg:w-auto p-2 text-gray-800 text-left lg:text-center border border-b block lg:table-cell relative lg:static">
                 <span className="lg:hidden px-2 py-1 text-xs font-bold uppercase">Вал:</span>
-                {Math.round(getVal(it.id))} руб.
+                {Math.round(getVal(it.id, report))} руб.
+              </td>
+              <td className="w-full lg:w-auto p-2 text-gray-800 text-left lg:text-center border border-b block lg:table-cell relative lg:static">
+                <span className="lg:hidden px-2 py-1 text-xs font-bold uppercase">
+                  Вал (под заказ):
+                </span>
+                {Math.round(getVal(it.id, reportOrder))} руб.
+              </td>
+              <td className="w-full lg:w-auto p-2 text-gray-800 text-left lg:text-center border border-b block lg:table-cell relative lg:static">
+                <span className="lg:hidden px-2 py-1 text-xs font-bold uppercase">
+                  Вал (в наличии):
+                </span>
+                {Math.round(getVal(it.id, reportInStock))} руб.
               </td>
               <td className="w-full lg:w-auto p-2 text-gray-800 text-left lg:text-center border border-b block lg:table-cell relative lg:static">
                 <span className="lg:hidden px-2 py-1 text-xs font-bold uppercase">Прибыль:</span>
@@ -235,7 +262,19 @@ const Salary = ({ report, employeeListFull }) => {
             </td>
             <td className="w-full lg:w-auto p-2 text-gray-800 text-left lg:text-center border border-b block lg:table-cell relative lg:static">
               <span className="lg:hidden px-2 py-1 bg-purple-100 font-bold uppercase">Вал:</span>
-              {Math.round(getValfull(''), '')} руб.
+              {Math.round(getValfull(report), '')} руб.
+            </td>
+            <td className="w-full lg:w-auto p-2 text-gray-800 text-left lg:text-center border border-b block lg:table-cell relative lg:static">
+              <span className="lg:hidden px-2 py-1 bg-purple-100 font-bold uppercase">
+                Вал (под заказ):
+              </span>
+              {Math.round(getValfull(reportOrder), '')} руб.
+            </td>
+            <td className="w-full lg:w-auto p-2 text-gray-800 text-left lg:text-center border border-b block lg:table-cell relative lg:static">
+              <span className="lg:hidden px-2 py-1 bg-purple-100 font-bold uppercase">
+                Вал (в наличии):
+              </span>
+              {Math.round(getValfull(reportInStock), '')} руб.
             </td>
             <td className="w-full lg:w-auto p-2 text-gray-800 text-left lg:text-center border border-b block lg:table-cell relative lg:static">
               <span className="lg:hidden px-2 py-1 bg-purple-100 font-bold uppercase">
@@ -293,7 +332,10 @@ const Salary = ({ report, employeeListFull }) => {
               >
                 <td className="w-full lg:w-auto p-2 text-gray-800 text-left border border-b block lg:table-cell relative lg:static">
                   <span className="lg:hidden px-2 py-1 text-xs font-bold uppercase">Номер:</span>
-                  {it.id_autoparts}
+
+                  <Link to={`/autoparts/edit/${it.id_autoparts}`} className="hover:underline">
+                    {it.id_autoparts}
+                  </Link>
                 </td>
                 <td className="w-full lg:w-auto p-2 text-gray-800 text-left border border-b block lg:table-cell relative lg:static">
                   <span className="lg:hidden px-2 py-1 text-xs font-bold uppercase">Имя:</span>
@@ -304,7 +346,9 @@ const Salary = ({ report, employeeListFull }) => {
                   <span className="lg:hidden px-2 py-1 text-xs font-bold uppercase">Запчасти:</span>
                   {it.fail.map((at) => (
                     <p key={Math.random()}>
-                      {at.autopartItem} {at.vendor ? `(${at.vendor})` : ''}
+                      {at.autopartItem}{' '}
+                      {at.vendor && at.vendor !== 'instock' ? `(${at.vendor})` : ''}{' '}
+                      {at.vendor && at.vendor === 'instock' ? `(в наличии)` : ''}
                     </p>
                   ))}
                 </td>

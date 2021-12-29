@@ -3,7 +3,7 @@ import cx from 'classnames'
 import taskStatuses from '../../../lists/task-statuses'
 import Salary from './Salary'
 import Material from './Material'
-import onLoad from './Onload'
+// import onLoad from './Onload'
 import statuses from '../../../../common/enums/shinomontazh-statuses'
 
 const Shinomontazh = ({
@@ -14,9 +14,10 @@ const Shinomontazh = ({
   timeFinish,
   timeStart,
   active,
-  employeeList
+  employeeList,
+  range
 }) => {
-  onLoad()
+  // onLoad()
   const [shinList, setShinList] = useState([])
   const [isLoaded, setIsLoaded] = useState(false)
 
@@ -45,8 +46,30 @@ const Shinomontazh = ({
           setIsLoaded(true)
         })
     }
+    if (activeDay && calendarType === 'diapason') {
+      const getDtWithTime = (today, hr, tm, sec) =>
+        new Date(today.getFullYear(), today.getMonth(), today.getDate(), hr, tm, sec)
+      const firstDt = getDtWithTime(range[0], 0, 0, 0)
+      const secDt = getDtWithTime(range[1], 23, 59, 0)
+
+      const getFilteredByRange = (cont) =>
+        cont.filter((arr) => new Date(arr.dateFinish) > firstDt && new Date(arr.dateFinish) < secDt)
+      setIsLoaded(false)
+      fetch(
+        `api/v1/shinomontazhrange?month=${
+          firstDt.getMonth() + 1
+        }&year=${firstDt.getFullYear()}&secMonth=${
+          secDt.getMonth() + 1
+        }&secYear=${secDt.getFullYear()}`
+      )
+        .then((res) => res.json())
+        .then((it) => {
+          setShinList(getFilteredByRange(it.data))
+          setIsLoaded(true)
+        })
+    }
     return () => {}
-  }, [activeMonth.getMonth(), activeDay.getMonth()])
+  }, [activeMonth.getMonth(), activeDay.getMonth(), range, calendarType])
 
   const [report, setReport] = useState([])
 
@@ -176,6 +199,18 @@ const Shinomontazh = ({
           )
       )
     }
+    if (activeDay && calendarType === 'diapason') {
+      const getDtWithTime = (today, hr, tm, sec) =>
+        new Date(today.getFullYear(), today.getMonth(), today.getDate(), hr, tm, sec)
+      const firstDt = getDtWithTime(range[0], 0, 0, 0)
+      const secDt = getDtWithTime(range[1], 23, 59, 0)
+
+      const getFilteredByRange = (cont) =>
+        cont
+          .filter((arr) => new Date(arr.dateFinish) > firstDt && new Date(arr.dateFinish) < secDt)
+          .filter((it) => (place ? place === it.place : it))
+      setReport(getFilteredByRange(shinList))
+    }
     return () => {}
   }, [shinList, activeMonth, activeDay, place, timeStart, timeFinish])
 
@@ -195,7 +230,25 @@ const Shinomontazh = ({
       </div>
     )
   }
-
+  // const repFinal = report
+  //   ? report.reduce((acc, rec) => {
+  //       return [
+  //         ...acc,
+  //         {
+  //           ...rec,
+  //           services: rec.services.reduce((bat, cur) => {
+  //             if (cur.free === 'yes') {
+  //               return [...bat, { ...cur, price: 0 }]
+  //             }
+  //             if (cur.free !== 'yes') {
+  //               return [...bat, cur]
+  //             }
+  //             return bat
+  //           }, [])
+  //         }
+  //       ]
+  //     }, [])
+  //   : []
   return (
     <>
       <div
@@ -205,10 +258,11 @@ const Shinomontazh = ({
         })}
       >
         {isLoaded ? null : loading()}
-        {report.length > 0 && isLoaded ? (
+        {report.length > 0 && report && isLoaded ? (
           <Salary
             employeeList={employeeList}
             report={report}
+            // reportWithDiscount={repFinal}
             taskStatuses={taskStatuses}
             shinList={shinList}
             place={place}
@@ -218,9 +272,10 @@ const Shinomontazh = ({
             setIsMaterial={setIsMaterial}
             timeStart={timeStart}
             timeFinish={timeFinish}
+            calendarType={calendarType}
           />
         ) : null}
-        {isLoaded && report.length > 0 ? <p className="my-3">Записей нет</p> : null}
+        {/* {isLoaded && report.length > 0 ? <p className="my-3">Записей нет</p> : null} */}
       </div>
       <div
         className={cx('', {

@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
+import { Link } from 'react-router-dom'
 
-const Salary = ({ report, isMaterial, setIsMaterial }) => {
+const Salary = ({ report, isMaterial, setIsMaterial, calendarType }) => {
   const employeeArray = report
     ? report
         .reduce((acc, rec) => [...acc, ...rec.employee], [])
@@ -62,178 +63,377 @@ const Salary = ({ report, isMaterial, setIsMaterial }) => {
     return Number(number) - Number(number_percent)
   }
 
-  const getSalary = (id, filterBy, CombFilterBy) => {
-    return report
-      .reduce((acc, rec) => {
-        if (rec.employee.filter((it) => (id ? it.id === id : it)).length > 0) {
-          return [...acc, rec]
-        }
-        return acc
-      }, [])
-      .reduce((acc, rec) => {
-        if (rec.employee.filter((it) => (id ? it.id === id : it)).length > 0) {
-          return [
-            ...acc,
-            {
-              ...rec,
-              employee: rec.employee.filter(
-                (it) =>
-                  !it.name.toLowerCase().includes('студент') &&
-                  !it.surname.toLowerCase().includes('студент')
-              )
-            }
-          ]
-        }
-        return acc
-      }, [])
+  const getSalary = (id, filterBy, CombFilterBy, discountType) => {
+    return (
+      report
+        .reduce((acc, rec) => {
+          if (rec.employee.filter((it) => (id ? it.id === id : it)).length > 0) {
+            return [...acc, rec]
+          }
+          return acc
+        }, [])
+        .reduce((acc, rec) => {
+          if (rec.employee.filter((it) => (id ? it.id === id : it)).length > 0) {
+            return [
+              ...acc,
+              {
+                ...rec,
+                employee: rec.employee.filter(
+                  (it) =>
+                    !it.name.toLowerCase().includes('студент') &&
+                    !it.surname.toLowerCase().includes('студент')
+                )
+              }
+            ]
+          }
+          return acc
+        }, [])
 
-      .filter((it) => it.employee.length > 0)
-      .filter((it) => (filterBy ? it.status === filterBy || it.status === CombFilterBy : it))
-      .reduce((acc, rec) => {
-        if (isMaterial !== 'yes' && rec.status !== CombFilterBy) {
-          return [
-            ...acc,
-            rec.services.reduce(
-              (bat, cur) =>
-                bat + commonDiscount(Number(cur.price) * cur.quantity, rec) / rec.employee.length,
-              0
-            )
-          ]
-        }
-        if (isMaterial !== 'yes' && rec.status === CombFilterBy && filterBy === 'Оплачено') {
-          return [
-            ...acc,
-            Number(rec.combCash) / rec.employee.length -
-              rec.material.reduce(
-                (bat, cur) => bat + (Number(cur.price) * cur.quantity) / rec.employee.length,
-                0
-              ) /
-                2
-          ]
-        }
-        if (isMaterial !== 'yes' && rec.status === CombFilterBy && filterBy === 'Терминал') {
-          return [
-            ...acc,
-            Number(rec.combTerm) / rec.employee.length -
-              rec.material.reduce(
-                (bat, cur) => bat + (Number(cur.price) * cur.quantity) / rec.employee.length,
-                0
-              ) /
-                2
-          ]
-        }
-        if (isMaterial === 'yes' && rec.status !== CombFilterBy) {
-          return [
-            ...acc,
-            rec.services.reduce(
-              (bat, cur) =>
-                bat + commonDiscount(Number(cur.price) * cur.quantity, rec) / rec.employee.length,
-              0
-            ) +
-              rec.material.reduce(
-                (bat, cur) => bat + (Number(cur.price) * cur.quantity) / rec.employee.length,
+        .filter((it) => it.employee.length > 0)
+
+        .filter((it) => (filterBy ? it.status === filterBy || it.status === CombFilterBy : it))
+        // .map((it, ind, arr) => {
+        //   if (calendarType === 'day' && discountType === 'summa') {
+        //     return arr.reduce((acc, rec) => {
+        //       return [
+        //         ...acc,
+        //         {
+        //           ...rec,
+        //           services: rec.services.reduce((bat, cur) => {
+        //             if (cur.free === 'yes') {
+        //               return [...bat, { ...cur, price: 0 }]
+        //             }
+        //             if (cur.free !== 'yes') {
+        //               return [...bat, cur]
+        //             }
+        //             return bat
+        //           }, [])
+        //         }
+        //       ]
+        //     }, [])
+        //   }
+        //   if (calendarType === 'day' && discountType === 'discountonly') {
+        //     return arr.reduce((acc, rec) => {
+        //       return [
+        //         ...acc,
+        //         {
+        //           ...rec,
+        //           material: [],
+        //           services: rec.services.reduce((bat, cur) => {
+        //             if (cur.free === 'yes') {
+        //               return [...bat, { ...cur }]
+        //             }
+        //             if (cur.free !== 'yes') {
+        //               return [...bat]
+        //             }
+        //             return bat
+        //           }, [])
+        //         }
+        //       ]
+        //     }, [])
+        //   }
+        //   return arr
+        // })
+        .reduce((acc, rec) => {
+          if (calendarType === 'day' && discountType === 'summa') {
+            return [
+              ...acc,
+              {
+                ...rec,
+                services: rec.services.reduce((bat, cur) => {
+                  if (cur.free === 'yes') {
+                    return [...bat, { ...cur, price: 0 }]
+                  }
+                  if (cur.free !== 'yes') {
+                    return [...bat, cur]
+                  }
+                  return bat
+                }, [])
+              }
+            ]
+          }
+          if (calendarType === 'day' && discountType === 'discountonly') {
+            return [
+              ...acc,
+              {
+                ...rec,
+                material: [],
+                services: rec.services.reduce((bat, cur) => {
+                  if (cur.free === 'yes') {
+                    return [...bat, { ...cur }]
+                  }
+                  if (cur.free !== 'yes') {
+                    return [...bat]
+                  }
+                  return bat
+                }, [])
+              }
+            ]
+          }
+          return [...acc, rec]
+        }, [])
+        // .reduce((previousValue, currentValue) => {
+        //   if (calendarType === 'day' && discountType === 'summa') {
+        //     return [...previousValue, currentValue].reduce((acc, rec) => {
+        //       return [
+        //         ...acc,
+        //         {
+        //           ...rec,
+        //           services: rec.services.reduce((bat, cur) => {
+        //             if (cur.free === 'yes') {
+        //               return [...bat, { ...cur, price: 0 }]
+        //             }
+        //             if (cur.free !== 'yes') {
+        //               return [...bat, cur]
+        //             }
+        //             return bat
+        //           }, [])
+        //         }
+        //       ]
+        //     }, [])
+        //   }
+        //   if (calendarType === 'day' && discountType === 'discountonly') {
+        //     return [...previousValue, currentValue].reduce((acc, rec) => {
+        //       return [
+        //         ...acc,
+        //         {
+        //           ...rec,
+        //           material: [],
+        //           services: rec.services.reduce((bat, cur) => {
+        //             if (cur.free === 'yes') {
+        //               return [...bat, { ...cur }]
+        //             }
+        //             if (cur.free !== 'yes') {
+        //               return [...bat]
+        //             }
+        //             return bat
+        //           }, [])
+        //         }
+        //       ]
+        //     }, [])
+        //   }
+        //   return [...previousValue, currentValue]
+        // }, [])
+        .reduce((acc, rec) => {
+          if (isMaterial !== 'yes' && rec.status !== CombFilterBy) {
+            return [
+              ...acc,
+              rec.services.reduce(
+                (bat, cur) =>
+                  bat + commonDiscount(Number(cur.price) * cur.quantity, rec) / rec.employee.length,
                 0
               )
-          ]
-        }
-        if (isMaterial === 'yes' && rec.status === CombFilterBy && filterBy === 'Оплачено') {
-          return [...acc, Number(rec.combCash) / rec.employee.length]
-        }
-        if (isMaterial === 'yes' && rec.status === CombFilterBy && filterBy === 'Терминал') {
-          return [...acc, Number(rec.combTerm) / rec.employee.length]
-        }
-        return acc
-      }, [])
-      .reduce((acc, rec) => acc + rec, 0)
+            ]
+          }
+          if (isMaterial !== 'yes' && rec.status === CombFilterBy && filterBy === 'Оплачено') {
+            return [
+              ...acc,
+              Number(rec.combCash) / rec.employee.length -
+                rec.material.reduce(
+                  (bat, cur) => bat + (Number(cur.price) * cur.quantity) / rec.employee.length,
+                  0
+                ) /
+                  2
+            ]
+          }
+          if (isMaterial !== 'yes' && rec.status === CombFilterBy && filterBy === 'Терминал') {
+            return [
+              ...acc,
+              Number(rec.combTerm) / rec.employee.length -
+                rec.material.reduce(
+                  (bat, cur) => bat + (Number(cur.price) * cur.quantity) / rec.employee.length,
+                  0
+                ) /
+                  2
+            ]
+          }
+          if (isMaterial === 'yes' && rec.status !== CombFilterBy) {
+            return [
+              ...acc,
+              rec.services.reduce(
+                (bat, cur) =>
+                  bat + commonDiscount(Number(cur.price) * cur.quantity, rec) / rec.employee.length,
+                0
+              ) +
+                rec.material.reduce(
+                  (bat, cur) => bat + (Number(cur.price) * cur.quantity) / rec.employee.length,
+                  0
+                )
+            ]
+          }
+          if (isMaterial === 'yes' && rec.status === CombFilterBy && filterBy === 'Оплачено') {
+            return [...acc, Number(rec.combCash) / rec.employee.length]
+          }
+          if (isMaterial === 'yes' && rec.status === CombFilterBy && filterBy === 'Терминал') {
+            return [...acc, Number(rec.combTerm) / rec.employee.length]
+          }
+          return acc
+        }, [])
+        .reduce((acc, rec) => acc + rec, 0)
+    )
   }
 
-  const getSalaryfull = (id, filterBy, CombFilterBy) => {
-    return report
-      .reduce((acc, rec) => {
-        if (rec.employee.filter((it) => (id ? it.id === id : it)).length > 0) {
-          return [...acc, rec]
-        }
-        return acc
-      }, [])
-      .reduce((acc, rec) => {
-        if (rec.employee.filter((it) => (id ? it.id === id : it)).length > 0) {
-          return [
-            ...acc,
-            {
-              ...rec,
-              employee: rec.employee.filter(
-                (it) =>
-                  !it.name.toLowerCase().includes('студент') &&
-                  !it.surname.toLowerCase().includes('студент')
-              )
-            }
-          ]
-        }
-        return acc
-      }, [])
-      .filter((it) => it.employee.length > 0)
-      .filter((it) => (filterBy ? it.status === filterBy || it.status === CombFilterBy : it))
-      .reduce((acc, rec) => {
-        // if (isMaterial !== 'yes') {
-        //   return [
-        //     ...acc,
-        //     rec.services.reduce(
-        //       (bat, cur) => bat + commonDiscount(Number(cur.price) * cur.quantity, rec),
-        //       0
-        //     )
-        //   ]
-        // }
-        if (isMaterial !== 'yes' && rec.status !== CombFilterBy) {
-          return [
-            ...acc,
-            rec.services.reduce(
-              (bat, cur) => bat + commonDiscount(Number(cur.price) * cur.quantity, rec),
-              0
-            )
-          ]
-        }
-        if (isMaterial !== 'yes' && rec.status === CombFilterBy && filterBy === 'Оплачено') {
-          return [
-            ...acc,
-            Number(rec.combCash) -
-              rec.material.reduce((bat, cur) => bat + Number(cur.price) * cur.quantity, 0) / 2
-          ]
-        }
-        if (isMaterial !== 'yes' && rec.status === CombFilterBy && filterBy === 'Терминал') {
-          return [
-            ...acc,
-            Number(rec.combTerm) -
-              rec.material.reduce((bat, cur) => bat + Number(cur.price) * cur.quantity, 0) / 2
-          ]
-        }
-        // if (isMaterial === 'yes') {
-        //   return [
-        //     ...acc,
-        //     rec.services.reduce(
-        //       (bat, cur) => bat + commonDiscount(Number(cur.price) * cur.quantity, rec),
-        //       0
-        //     ) + rec.material.reduce((bat, cur) => bat + Number(cur.price) * cur.quantity, 0)
-        //   ]
-        // }
-        if (isMaterial === 'yes' && rec.status !== CombFilterBy) {
-          return [
-            ...acc,
-            rec.services.reduce(
-              (bat, cur) => bat + commonDiscount(Number(cur.price) * cur.quantity, rec),
-              0
-            ) + rec.material.reduce((bat, cur) => bat + Number(cur.price) * cur.quantity, 0)
-          ]
-        }
-        if (isMaterial === 'yes' && rec.status === CombFilterBy && filterBy === 'Оплачено') {
-          return [...acc, Number(rec.combCash)]
-        }
-        if (isMaterial === 'yes' && rec.status === CombFilterBy && filterBy === 'Терминал') {
-          return [...acc, Number(rec.combTerm)]
-        }
-        return acc
-      }, [])
+  const getSalaryfull = (id, filterBy, CombFilterBy, discountType) => {
+    return (
+      report
+        .reduce((acc, rec) => {
+          if (rec.employee.filter((it) => (id ? it.id === id : it)).length > 0) {
+            return [...acc, rec]
+          }
+          return acc
+        }, [])
+        .reduce((acc, rec) => {
+          if (rec.employee.filter((it) => (id ? it.id === id : it)).length > 0) {
+            return [
+              ...acc,
+              {
+                ...rec,
+                employee: rec.employee.filter(
+                  (it) =>
+                    !it.name.toLowerCase().includes('студент') &&
+                    !it.surname.toLowerCase().includes('студент')
+                )
+              }
+            ]
+          }
+          return acc
+        }, [])
+        .filter((it) => it.employee.length > 0)
+        .filter((it) => (filterBy ? it.status === filterBy || it.status === CombFilterBy : it))
 
-      .reduce((acc, rec) => acc + rec, 0)
+        // .reduce((previousValue, currentValue) => {
+        //   if (calendarType === 'day' && discountType === 'summa') {
+        //     return [...previousValue, currentValue].reduce((acc, rec) => {
+        //       return [
+        //         ...acc,
+        //         {
+        //           ...rec,
+        //           services: rec.services.reduce((bat, cur) => {
+        //             if (cur.free === 'yes') {
+        //               return [...bat, { ...cur, price: 0 }]
+        //             }
+        //             if (cur.free !== 'yes') {
+        //               return [...bat, cur]
+        //             }
+        //             return bat
+        //           }, [])
+        //         }
+        //       ]
+        //     }, [])
+        //   }
+        //   if (calendarType === 'day' && discountType === 'discountonly') {
+        //     return [...previousValue, currentValue].reduce((acc, rec) => {
+        //       return [
+        //         ...acc,
+        //         {
+        //           ...rec,
+        //           material: [],
+        //           services: rec.services.reduce((bat, cur) => {
+        //             if (cur.free === 'yes') {
+        //               return [...bat, { ...cur }]
+        //             }
+        //             if (cur.free !== 'yes') {
+        //               return [...bat]
+        //             }
+        //             return bat
+        //           }, [])
+        //         }
+        //       ]
+        //     }, [])
+        //   }
+        //   return [...previousValue, currentValue]
+        // }, [])
+        .reduce((acc, rec) => {
+          if (calendarType === 'day' && discountType === 'summa') {
+            return [
+              ...acc,
+              {
+                ...rec,
+                services: rec.services.reduce((bat, cur) => {
+                  if (cur.free === 'yes') {
+                    return [...bat, { ...cur, price: 0 }]
+                  }
+                  if (cur.free !== 'yes') {
+                    return [...bat, cur]
+                  }
+                  return bat
+                }, [])
+              }
+            ]
+          }
+          if (calendarType === 'day' && discountType === 'discountonly') {
+            return [
+              ...acc,
+              {
+                ...rec,
+                material: [],
+                services: rec.services.reduce((bat, cur) => {
+                  if (cur.free === 'yes') {
+                    return [...bat, { ...cur }]
+                  }
+                  if (cur.free !== 'yes') {
+                    return [...bat]
+                  }
+                  return bat
+                }, [])
+              }
+            ]
+          }
+          return [...acc, rec]
+        }, [])
+        .reduce((acc, rec) => {
+          if (isMaterial !== 'yes' && rec.status !== CombFilterBy) {
+            return [
+              ...acc,
+              rec.services.reduce(
+                (bat, cur) => bat + commonDiscount(Number(cur.price) * cur.quantity, rec),
+                0
+              )
+            ]
+          }
+          if (isMaterial !== 'yes' && rec.status === CombFilterBy && filterBy === 'Оплачено') {
+            return [
+              ...acc,
+              Number(rec.combCash) -
+                rec.material.reduce((bat, cur) => bat + Number(cur.price) * cur.quantity, 0) / 2
+            ]
+          }
+          if (isMaterial !== 'yes' && rec.status === CombFilterBy && filterBy === 'Терминал') {
+            return [
+              ...acc,
+              Number(rec.combTerm) -
+                rec.material.reduce((bat, cur) => bat + Number(cur.price) * cur.quantity, 0) / 2
+            ]
+          }
+          // if (isMaterial === 'yes') {
+          //   return [
+          //     ...acc,
+          //     rec.services.reduce(
+          //       (bat, cur) => bat + commonDiscount(Number(cur.price) * cur.quantity, rec),
+          //       0
+          //     ) + rec.material.reduce((bat, cur) => bat + Number(cur.price) * cur.quantity, 0)
+          //   ]
+          // }
+          if (isMaterial === 'yes' && rec.status !== CombFilterBy) {
+            return [
+              ...acc,
+              rec.services.reduce(
+                (bat, cur) => bat + commonDiscount(Number(cur.price) * cur.quantity, rec),
+                0
+              ) + rec.material.reduce((bat, cur) => bat + Number(cur.price) * cur.quantity, 0)
+            ]
+          }
+          if (isMaterial === 'yes' && rec.status === CombFilterBy && filterBy === 'Оплачено') {
+            return [...acc, Number(rec.combCash)]
+          }
+          if (isMaterial === 'yes' && rec.status === CombFilterBy && filterBy === 'Терминал') {
+            return [...acc, Number(rec.combTerm)]
+          }
+          return acc
+        }, [])
+
+        .reduce((acc, rec) => acc + rec, 0)
+    )
   }
 
   const [userPercent, setUserPercent] = useState({})
@@ -307,6 +507,16 @@ const Salary = ({ report, isMaterial, setIsMaterial }) => {
             <th className="p-3 font-bold bg-gray-100 text-gray-600 border border-gray-300 hidden lg:table-cell">
               Наличка
             </th>
+            {calendarType === 'day' ? (
+              <th className="p-3 font-bold bg-gray-100 text-gray-600 border border-gray-300 hidden lg:table-cell">
+                Сумма
+              </th>
+            ) : null}
+            {calendarType === 'day' ? (
+              <th className="p-3 font-bold bg-gray-100 text-gray-600 border border-gray-300 hidden lg:table-cell">
+                Акция
+              </th>
+            ) : null}
             <th className="p-3 font-bold bg-gray-100 text-gray-600 border border-gray-300 hidden lg:table-cell">
               Вал
             </th>
@@ -356,6 +566,18 @@ const Salary = ({ report, isMaterial, setIsMaterial }) => {
                 )}{' '}
                 руб.
               </td>
+              {calendarType === 'day' ? (
+                <td className="w-full lg:w-auto p-2 text-gray-800 text-left lg:text-center border border-b block lg:table-cell relative lg:static">
+                  <span className="lg:hidden px-2 py-1 text-xs font-bold uppercase">Сумма:</span>
+                  {Math.round(getSalary(it.id, '', '', 'summa'), userPercent[it.id])} руб.
+                </td>
+              ) : null}
+              {calendarType === 'day' ? (
+                <td className="w-full lg:w-auto p-2 text-gray-800 text-left lg:text-center border border-b block lg:table-cell relative lg:static">
+                  <span className="lg:hidden px-2 py-1 text-xs font-bold uppercase">Акция:</span>
+                  {Math.round(getSalary(it.id, '', '', 'discountonly'), userPercent[it.id])} руб.
+                </td>
+              ) : null}
               <td className="w-full lg:w-auto p-2 text-gray-800 text-left lg:text-center border border-b block lg:table-cell relative lg:static">
                 <span className="lg:hidden px-2 py-1 text-xs font-bold uppercase">Вал:</span>
                 {Math.round(getSalary(it.id), userPercent[it.id])} руб.
@@ -395,6 +617,22 @@ const Salary = ({ report, isMaterial, setIsMaterial }) => {
               </span>
               {Math.round(getSalaryfull('', 'Оплачено', 'Комбинированный'), '')} руб.
             </td>
+            {calendarType === 'day' ? (
+              <td className="w-full lg:w-auto p-2 text-gray-800 text-left lg:text-center border border-b block lg:table-cell relative lg:static">
+                <span className="lg:hidden px-2 py-1 bg-purple-100 font-bold uppercase">
+                  Сумма:
+                </span>
+                {Math.round(getSalaryfull('', '', '', 'summa'), '')} руб.
+              </td>
+            ) : null}
+            {calendarType === 'day' ? (
+              <td className="w-full lg:w-auto p-2 text-gray-800 text-left lg:text-center border border-b block lg:table-cell relative lg:static">
+                <span className="lg:hidden px-2 py-1 bg-purple-100 font-bold uppercase">
+                  Акция:
+                </span>
+                {Math.round(getSalaryfull('', '', '', 'discountonly'), '')} руб.
+              </td>
+            ) : null}
             <td className="w-full lg:w-auto p-2 text-gray-800 text-left lg:text-center border border-b block lg:table-cell relative lg:static">
               <span className="lg:hidden px-2 py-1 bg-purple-100 font-bold uppercase">Вал:</span>
               {Math.round(getSalaryfull(''), '')} руб.
@@ -407,114 +645,132 @@ const Salary = ({ report, isMaterial, setIsMaterial }) => {
           </tr>
         </tbody>
       </table>
-      <h2 className="text-xl font-semibold mb-2">Разбивка по дням:</h2>
-      {dateArray.map((date) => (
-        <div key={date}>
-          <h3 key={date}>
-            {new Date(date).getDate()}.{new Date(date).getMonth() + 1}.
-            {new Date(date).getFullYear()}
-          </h3>
-          <table className="border-collapse w-full" key={date}>
-            <thead>
-              <tr>
-                <th className="p-3 font-bold bg-gray-100 text-gray-600 border border-gray-300 hidden lg:table-cell">
-                  Талон №
-                </th>
-                <th className="p-3 font-bold bg-gray-100 text-gray-600 border border-gray-300 hidden lg:table-cell">
-                  Имя
-                </th>
-                <th className="p-3 font-bold bg-gray-100 text-gray-600 border border-gray-300 hidden lg:table-cell">
-                  Время
-                </th>
-                <th className="p-3 font-bold bg-gray-100 text-gray-600 border border-gray-300 hidden lg:table-cell">
-                  Услуги
-                </th>
-                <th className="p-3 font-bold bg-gray-100 text-gray-600 border border-gray-300 hidden lg:table-cell">
-                  Материалы
-                </th>
-                <th className="p-3 font-bold bg-gray-100 text-gray-600 border border-gray-300 hidden lg:table-cell">
-                  Скидка
-                </th>
-                <th className="p-3 font-bold bg-gray-100 text-gray-600 border border-gray-300 hidden lg:table-cell">
-                  Cумма
-                </th>
-              </tr>
-            </thead>
-            <tbody>
-              {report
-                .filter((it) => new Date(it.dateStart).getDate() === new Date(date).getDate())
-                .map((it) => (
-                  <tr
-                    key={it.id}
-                    className="bg-white lg:hover:bg-gray-100 flex lg:table-row flex-row lg:flex-row flex-wrap lg:flex-no-wrap mb-5 lg:mb-0"
-                  >
-                    <td className="w-full lg:w-auto p-2 text-gray-800 text-left border border-b block lg:table-cell relative lg:static">
-                      <span className="lg:hidden px-2 py-1 text-xs font-bold uppercase">
-                        Номер:
-                      </span>
-                      {it.id_shinomontazhs}
-                    </td>
-                    <td className="w-full lg:w-auto p-2 text-gray-800 text-left border border-b block lg:table-cell relative lg:static">
-                      <span className="lg:hidden px-2 py-1 text-xs font-bold uppercase">Имя:</span>
-                      {it.employee
-                        .reduce((acc, rec) => acc.concat(rec), [])
-                        .reduce((acc, rec) => {
-                          const x = acc.find((item) => item.id === rec.id)
-                          if (!x) {
-                            return acc.concat([rec])
-                          }
-                          return acc
-                        }, [])
-                        .map((man) => (
-                          <p key={man.id}>
-                            {man.name} {man.surname}
-                          </p>
-                        ))}
-                    </td>
-                    <td className="w-full lg:w-auto p-2 text-gray-800 text-left lg:text-center border border-b block lg:table-cell relative lg:static">
-                      <span className="lg:hidden px-2 py-1 text-xs font-bold uppercase">
-                        Время:
-                      </span>
-                      <p>
-                        {new Date(it.dateFinish).getHours()}:
-                        {new Date(it.dateFinish)
-                          .getMinutes()
-                          .toString()
-                          .replace(/^(\d)$/, '0$1')}
-                      </p>
-                    </td>
-                    <td className="w-full lg:w-auto p-2 text-gray-800 text-left lg:text-center border border-b block lg:table-cell relative lg:static">
-                      <span className="lg:hidden px-2 py-1 text-xs font-bold uppercase">
-                        Услуги:
-                      </span>
-                      {it.services.reduce((acc, rec) => acc + Number(rec.price) * rec.quantity, 0)}{' '}
-                      руб.
-                    </td>
-                    <td className="w-full lg:w-auto p-2 text-gray-800 text-left lg:text-center border border-b block lg:table-cell relative lg:static">
-                      <span className="lg:hidden px-2 py-1 text-xs font-bold uppercase">
-                        Материалы:
-                      </span>
-                      {it.material.reduce((acc, rec) => acc + Number(rec.price) * rec.quantity, 0)}{' '}
-                      руб.
-                    </td>
-                    <td className="w-full lg:w-auto p-2 text-gray-800 text-left lg:text-center border border-b block lg:table-cell relative lg:static">
-                      <span className="lg:hidden px-2 py-1 text-xs font-bold uppercase">
-                        Скидка:
-                      </span>
-                      {it.discount ? `${it.discount}%` : ''}
-                    </td>
-                    <td className="w-full lg:w-auto p-2 text-gray-800 text-left lg:text-center border border-b block lg:table-cell relative lg:static">
-                      <span className="lg:hidden px-2 py-1 text-xs font-bold uppercase">
-                        Сумма:
-                      </span>
-                      {totalWithDiscount(it)}
-                    </td>
+      {calendarType === 'day' ? (
+        <>
+          <h2 className="text-xl font-semibold mb-2">Разбивка по дням:</h2>
+          {dateArray.map((date) => (
+            <div key={date}>
+              <h3 key={date}>
+                {new Date(date).getDate()}.{new Date(date).getMonth() + 1}.
+                {new Date(date).getFullYear()}
+              </h3>
+              <table className="border-collapse w-full" key={date}>
+                <thead>
+                  <tr>
+                    <th className="p-3 font-bold bg-gray-100 text-gray-600 border border-gray-300 hidden lg:table-cell">
+                      Талон №
+                    </th>
+                    <th className="p-3 font-bold bg-gray-100 text-gray-600 border border-gray-300 hidden lg:table-cell">
+                      Имя
+                    </th>
+                    <th className="p-3 font-bold bg-gray-100 text-gray-600 border border-gray-300 hidden lg:table-cell">
+                      Время
+                    </th>
+                    <th className="p-3 font-bold bg-gray-100 text-gray-600 border border-gray-300 hidden lg:table-cell">
+                      Услуги
+                    </th>
+                    <th className="p-3 font-bold bg-gray-100 text-gray-600 border border-gray-300 hidden lg:table-cell">
+                      Материалы
+                    </th>
+                    <th className="p-3 font-bold bg-gray-100 text-gray-600 border border-gray-300 hidden lg:table-cell">
+                      Скидка
+                    </th>
+                    <th className="p-3 font-bold bg-gray-100 text-gray-600 border border-gray-300 hidden lg:table-cell">
+                      Cумма
+                    </th>
                   </tr>
-                ))}
-            </tbody>
-          </table>
-        </div>
-      ))}
+                </thead>
+                <tbody>
+                  {report
+                    .filter((it) => new Date(it.dateStart).getDate() === new Date(date).getDate())
+                    .map((it) => (
+                      <tr
+                        key={it.id}
+                        className="bg-white lg:hover:bg-gray-100 flex lg:table-row flex-row lg:flex-row flex-wrap lg:flex-no-wrap mb-5 lg:mb-0"
+                      >
+                        <td className="w-full lg:w-auto p-2 text-gray-800 text-left border border-b block lg:table-cell relative lg:static">
+                          <span className="lg:hidden px-2 py-1 text-xs font-bold uppercase">
+                            Номер:
+                          </span>
+
+                          <Link
+                            to={`/shinomontazh/edit/${it.id_shinomontazhs}`}
+                            className="hover:underline"
+                          >
+                            {it.id_shinomontazhs}
+                          </Link>
+                        </td>
+                        <td className="w-full lg:w-auto p-2 text-gray-800 text-left border border-b block lg:table-cell relative lg:static">
+                          <span className="lg:hidden px-2 py-1 text-xs font-bold uppercase">
+                            Имя:
+                          </span>
+                          {it.employee
+                            .reduce((acc, rec) => acc.concat(rec), [])
+                            .reduce((acc, rec) => {
+                              const x = acc.find((item) => item.id === rec.id)
+                              if (!x) {
+                                return acc.concat([rec])
+                              }
+                              return acc
+                            }, [])
+                            .map((man) => (
+                              <p key={man.id}>
+                                {man.name} {man.surname}
+                              </p>
+                            ))}
+                        </td>
+                        <td className="w-full lg:w-auto p-2 text-gray-800 text-left lg:text-center border border-b block lg:table-cell relative lg:static">
+                          <span className="lg:hidden px-2 py-1 text-xs font-bold uppercase">
+                            Время:
+                          </span>
+                          <p>
+                            {new Date(it.dateFinish).getHours()}:
+                            {new Date(it.dateFinish)
+                              .getMinutes()
+                              .toString()
+                              .replace(/^(\d)$/, '0$1')}
+                          </p>
+                        </td>
+                        <td className="w-full lg:w-auto p-2 text-gray-800 text-left lg:text-center border border-b block lg:table-cell relative lg:static">
+                          <span className="lg:hidden px-2 py-1 text-xs font-bold uppercase">
+                            Услуги:
+                          </span>
+                          {it.services.reduce(
+                            (acc, rec) => acc + Number(rec.price) * rec.quantity,
+                            0
+                          )}{' '}
+                          руб.
+                        </td>
+                        <td className="w-full lg:w-auto p-2 text-gray-800 text-left lg:text-center border border-b block lg:table-cell relative lg:static">
+                          <span className="lg:hidden px-2 py-1 text-xs font-bold uppercase">
+                            Материалы:
+                          </span>
+                          {it.material.reduce(
+                            (acc, rec) => acc + Number(rec.price) * rec.quantity,
+                            0
+                          )}{' '}
+                          руб.
+                        </td>
+                        <td className="w-full lg:w-auto p-2 text-gray-800 text-left lg:text-center border border-b block lg:table-cell relative lg:static">
+                          <span className="lg:hidden px-2 py-1 text-xs font-bold uppercase">
+                            Скидка:
+                          </span>
+                          {it.discount ? `${it.discount}%` : ''}
+                        </td>
+                        <td className="w-full lg:w-auto p-2 text-gray-800 text-left lg:text-center border border-b block lg:table-cell relative lg:static">
+                          <span className="lg:hidden px-2 py-1 text-xs font-bold uppercase">
+                            Сумма:
+                          </span>
+                          {totalWithDiscount(it)}
+                        </td>
+                      </tr>
+                    ))}
+                </tbody>
+              </table>
+            </div>
+          ))}
+        </>
+      ) : null}
     </div>
   )
 }
