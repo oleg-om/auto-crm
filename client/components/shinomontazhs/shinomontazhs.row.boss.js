@@ -11,13 +11,42 @@ const ShinomontazhsRowBoss = (props) => {
   // })
   const createDate = new Date(props.dateStart)
   const finishDate = new Date(props.dateFinish)
+
+  const totalFreeService = props.services
+    .filter((it) => it.free === 'yes')
+    .reduce((acc, rec) => acc + rec.price * rec.quantity, 0)
+  const totalService = props.services
+    .filter((it) => it.free !== 'yes')
+    .reduce((acc, rec) => acc + rec.price * rec.quantity, 0)
+
+  const applyDiscount = (number) => {
+    const disc = props.discount ? props.discount : 0
+    const number_percent = (number / 100) * disc
+
+    return Number(number) - Number(number_percent)
+  }
+
+  const applyDiscountWithFreeService = (number) => {
+    return Number(number) - Number(number)
+  }
+  function roundTo5(num) {
+    return Math.round(num / 5) * 5
+  }
+  const totalMaterial = props.material.reduce((acc, rec) => acc + rec.price * rec.quantity, 0)
+  const totalWithDiscount =
+    applyDiscountWithFreeService(totalFreeService) +
+    roundTo5(applyDiscount(totalService)) +
+    totalMaterial
+
   return (
     <tr
       className={cx('table-row flex-row flex-no-wrap mb-0', {
         'bg-white hover:bg-gray-100': props.status !== taskStatuses[2],
         'bg-blue-200 hover:bg-blue-300': props.status === taskStatuses[2],
         'bg-yellow-200 hover:bg-yellow-300': props.status === taskStatuses[3],
-        'bg-purple-200 hover:bg-purple-300': props.status === taskStatuses[4]
+        'bg-purple-200 hover:bg-purple-300':
+          props.status === taskStatuses[4] || props.status === taskStatuses[6],
+        'bg-red-300 hover:bg-red-400': props.status === taskStatuses[5]
       })}
     >
       <td className="w-auto p-2 text-gray-800 text-sm text-center border border-b table-cell static">
@@ -55,7 +84,8 @@ const ShinomontazhsRowBoss = (props) => {
             'bg-green-400': props.status === taskStatuses[1],
             'bg-blue-400': props.status === taskStatuses[2],
             'bg-yellow-400': props.status === taskStatuses[3],
-            'bg-purple-400': props.status === taskStatuses[4]
+            'bg-purple-400': props.status === taskStatuses[4] || props.status === taskStatuses[6],
+            'bg-red-500': props.status === taskStatuses[5]
           })}
         >
           {props.status}
@@ -90,6 +120,9 @@ const ShinomontazhsRowBoss = (props) => {
               .toString()
               .replace(/^(\d)$/, '0$1')}`
           : ''}
+      </td>
+      <td className="w-auto p-2 text-gray-800 text-sm text-center border border-b table-cell static">
+        {totalWithDiscount} руб
       </td>
       <td className="w-auto p-2 text-gray-800 text-sm text-center border border-b table-cell static">
         <div className="flex flex-row justify-center">

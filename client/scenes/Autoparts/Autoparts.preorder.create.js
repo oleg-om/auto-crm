@@ -15,6 +15,7 @@ const AutopartsNew = () => {
   const dispatch = useDispatch()
   const create = (name) => {
     dispatch(createAutopart(name))
+    socket.emit('new autopart')
   }
   const { num } = useParams(1)
   const history = useHistory()

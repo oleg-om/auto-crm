@@ -11,3 +11,12 @@ body {
 .sidebar {
   min-height: calc(100vh - 64px);
 }
+
+@media print {
+  .page-break {
+    margin-top: 1rem;
+    display: block;
+    page-break-before: always;
+    page-break-after: always
+  }
+}

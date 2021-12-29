@@ -8,5 +8,6 @@ module.exports = [
   { name: 'Работник шиномонтажа', value: 'shinomontazh' },
   { name: 'Прием заказов (шины)', value: 'tyresimple' },
   { name: 'Обработка заказов (шины)', value: 'tyrefull' },
-  { name: 'Хранение', value: 'hranenie' }
+  { name: 'Хранение', value: 'hranenie' },
+  { name: 'Кассир', value: 'kassa' }
 ]

@@ -1,147 +1,174 @@
-import React, { useState, useEffect } from "react";
-import { useSelector, useDispatch } from "react-redux";
-import { Link, useParams, useHistory } from "react-router-dom";
-import NumberFormat from "react-number-format";
-import cx from "classnames";
-import { toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
-import { socket } from "../../redux/sockets/socketReceivers";
-import AutopartsRow from "../../components/autoparts/autoparts.row";
-import { updateStatus, getAutoparts } from "../../redux/reducers/autoparts";
-import Navbar from "../../components/Navbar";
-import Pagination from "../Pagination";
-import taskStatuses from "../../lists/task-statuses";
-import onLoad from "./Onload";
+import React, { useState, useEffect } from 'react'
+import { useSelector, useDispatch } from 'react-redux'
+import { Link, useParams, useHistory } from 'react-router-dom'
+import NumberFormat from 'react-number-format'
+import cx from 'classnames'
+import { toast } from 'react-toastify'
+import 'react-toastify/dist/ReactToastify.css'
+import { socket } from '../../redux/sockets/socketReceivers'
+import AutopartsRow from '../../components/autoparts/autoparts.row'
+import { updateStatus, getAutopartsFiltered } from '../../redux/reducers/autoparts'
+import Navbar from '../../components/Navbar'
+import Pagination from '../Pagination'
+import taskStatuses from '../../lists/task-statuses'
+import onLoad from './Onload'
 
 const AutopartsList = () => {
-  onLoad();
-  const dispatch = useDispatch();
-  const list = useSelector((s) => s.autoparts.list);
-  const revList = [].concat(list).reverse();
-  const placesList = useSelector((s) => s.places.list);
-  const employeeList = useSelector((s) => s.employees.list);
-  const role = useSelector((s) => s.auth.roles);
-  socket.connect();
+  const { num } = useParams(1)
+  const [showSearch, setShowSearch] = useState(false)
+  onLoad(num ? Number(num) : 1, showSearch)
+  const dispatch = useDispatch()
+  const list = useSelector((s) => s.autoparts.list)
+  const curPage = useSelector((s) => s.autoparts.currentPage)
+  const totalPages = useSelector((s) => s.autoparts.numberOfPages)
+  const isLoaded = useSelector((s) => s.autoparts.isLoaded)
+  const revList = [].concat(list).reverse()
+  const placesList = useSelector((s) => s.places.list)
+  const employeeList = useSelector((s) => s.employees.list)
+  const role = useSelector((s) => s.auth.roles)
+  socket.connect()
   // useEffect(() => {
   //   socket.on('update autopart', function () {
   //     dispatch(getAutoparts())
   //   })
   // }, [])
-  const settings = useSelector((s) => s.settings.list);
+  const settings = useSelector((s) => s.settings.list)
   const updateStatusLocal = (id, status) => {
-    dispatch(updateStatus(id, status));
-  };
+    dispatch(updateStatus(id, status))
+  }
 
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(true)
 
-  const history = useHistory();
-  const { num } = useParams(1);
+  const history = useHistory()
 
-  const [currentPage, setCurrentPage] = useState(num ? Number(num) : 1);
-  const postsPerPage = 14;
-  const indexOfLastPost = currentPage * postsPerPage;
-  const indexOfFirstPost = indexOfLastPost - postsPerPage;
+  const [currentPage, setCurrentPage] = useState(num ? Number(num) : 1)
+  const postsPerPage = 14
+  const indexOfLastPost = currentPage * postsPerPage
+  const indexOfFirstPost = indexOfLastPost - postsPerPage
 
-  const currentPosts = revList.slice(indexOfFirstPost, indexOfLastPost);
+  const currentPosts = revList.slice(indexOfFirstPost, indexOfLastPost)
 
   const paginate = (pageNumber) => {
-    setCurrentPage(pageNumber);
-    history.push(`/autoparts/order/list/${pageNumber}`);
-  };
+    setCurrentPage(pageNumber)
+    history.push(`/autoparts/order/list/${pageNumber}`)
+  }
 
-  toast.configure();
+  toast.configure()
   const notify = (arg) => {
-    toast.info(arg, { position: toast.POSITION.BOTTOM_RIGHT });
-  };
+    toast.info(arg, { position: toast.POSITION.BOTTOM_RIGHT })
+  }
 
   const [search, setSearch] = useState({
-    phone: "",
-    number: "",
-    status: "",
-    process: "",
-    place: "",
-  });
-  const [showSearch, setShowSearch] = useState(false);
+    phone: '',
+    number: '',
+    status: '',
+    process: '',
+    place: ''
+  })
+
   const onChangePhone = (e) => {
-    const { name, value } = e.target;
+    const { name, value } = e.target
     setSearch((prevState) => ({
       ...prevState,
-      [name]: value,
-    }));
-  };
+      [name]: value
+    }))
+  }
   const onChangeNumber = (e) => {
-    const { name, value } = e.target;
+    const { name, value } = e.target
     setSearch((prevState) => ({
       ...prevState,
-      [name]: value,
-    }));
-  };
+      [name]: value
+    }))
+  }
   const onChangeStatus = (e) => {
-    const { name, value } = e.target;
+    const { name, value } = e.target
     setSearch((prevState) => ({
       ...prevState,
-      [name]: value,
-    }));
-  };
+      [name]: value
+    }))
+  }
 
   const onChangePlace = (e) => {
-    const { name, value } = e.target;
+    const { name, value } = e.target
     setSearch((prevState) => ({
       ...prevState,
-      [name]: value,
-    }));
-  };
+      [name]: value
+    }))
+  }
   useEffect(() => {
     if (showSearch === false && currentPosts.length === 0 && loading === true) {
-      setTimeout(() => setLoading(false), 10000);
+      setTimeout(() => setLoading(false), 10000)
     } else {
-      setLoading(true);
+      setLoading(true)
     }
-    return () => {};
-  }, [currentPosts.length, showSearch, loading]);
+    return () => {}
+  }, [currentPosts.length, showSearch, loading])
 
-  const currentPostsFiltered = revList.filter(
-    (it) =>
-      // (it.phone === search.phone || !search.phone) &&
-      // JSON.stringify(it.id_autoparts) === search.number &&
-      // (it.status === search.status || !search.status) &&
-      // it.place === search.place &&
-      // it.vinnumber === search.vinnumber
-      (JSON.stringify(it.id_autoparts) === search.number || !search.number) &&
-      (it.phone === search.phone || !search.phone) &&
-      (it.process === search.process || !search.process) &&
-      (it.status === search.status || !search.status) &&
-      (it.place === search.place || !search.place)
-  );
-
-  const currentPostsFilteredSliced = currentPostsFiltered.slice(
-    indexOfFirstPost,
-    indexOfLastPost
-  );
+  useEffect(() => {
+    if (showSearch) {
+      const phoneArray = search.phone.split(' ')
+      const phoneToRest = phoneArray[phoneArray.length - 1].replace(/_/g, '')
+      if (
+        (search.phone !== '' && phoneToRest.length > 6) ||
+        search.status ||
+        search.process ||
+        search.place ||
+        search.number
+      ) {
+        dispatch(
+          getAutopartsFiltered(
+            1,
+            search.status ? search.status : '',
+            search.process ? search.process : '',
+            search.place ? search.place : '',
+            phoneToRest && search.phone ? phoneToRest : '',
+            search.number ? search.number : ''
+          )
+        )
+      }
+    }
+  }, [dispatch, num, showSearch, search])
 
   const onReset = () => {
-    setShowSearch(false);
+    setShowSearch(false)
     setSearch(() => ({
-      phone: "",
-      number: "",
-      status: "",
-      process: "",
-      place: "",
-    }));
-  };
+      phone: '',
+      number: '',
+      status: '',
+      process: '',
+      place: ''
+    }))
+  }
   const onFilter = () => {
     if (
-      search.phone === "" &&
-      search.number === "" &&
-      search.status === "" &&
-      search.process === "" &&
-      search.place === ""
+      search.phone === '' &&
+      search.number === '' &&
+      search.status === '' &&
+      search.process === '' &&
+      search.place === ''
     ) {
-      notify("Заполните хотябы одно поле фильтра");
+      notify('Заполните хотябы одно поле фильтра')
     } else {
-      setShowSearch(true);
+      setShowSearch(true)
     }
-  };
+  }
+
+  const loadingComponent = () => {
+    return (
+      <div className="flex w-100 justify-center my-3">
+        <button
+          type="button"
+          className="bg-blue-500 p-3 text-white rounded flex items-center"
+          disabled
+        >
+          <div className=" flex justify-center items-center pr-3">
+            <div className="animate-spin rounded-full h-4 w-4 border-b-4 border-white" />
+          </div>
+          Загрузка...
+        </button>
+      </div>
+    )
+  }
 
   return (
     <div>
@@ -150,34 +177,6 @@ const AutopartsList = () => {
         <div className="mx-auto px-4">
           <div className="py-3 px-4 my-3 rounded-lg shadow bg-white">
             <div className="-mx-3 md:flex">
-              <button
-                type="button"
-                className="text-sm py-1 px-3 mt-3 ml-3 mb-2 md:mb-0 lg:mt-6 bg-blue-600 text-white hover:bg-blue-700 hover:text-white rounded-lg"
-                onClick={() => dispatch(getAutoparts())}
-              >
-                <svg
-                  version="1.1"
-                  id="Capa_1"
-                  xmlns="http://www.w3.org/2000/svg"
-                  x="0px"
-                  y="0px"
-                  width="20"
-                  height="20"
-                  viewBox="0 0 28.265 28.265"
-                  xmlSpace="preserve"
-                  className="fill-current text-white"
-                >
-                  <g>
-                    <path
-                      d="M14.133,28.265c-7.061,0-12.805-5.75-12.805-12.809c0-7.06,5.744-12.807,12.805-12.807c0.469,0,0.943,0.027,1.414,0.08
-		v-2.07c0-0.266,0.164-0.508,0.406-0.611c0.252-0.098,0.531-0.043,0.723,0.148l4.537,4.547c0.258,0.258,0.258,0.67,0,0.932
-		l-4.535,4.557c-0.193,0.188-0.473,0.246-0.725,0.143c-0.242-0.104-0.406-0.344-0.406-0.609V7.47
-		c-0.469-0.086-0.941-0.125-1.414-0.125c-4.473,0-8.113,3.639-8.113,8.111c0,4.471,3.641,8.113,8.113,8.113s8.111-3.643,8.111-8.113
-		c0-0.363,0.295-0.66,0.662-0.66h3.369c0.365,0,0.662,0.297,0.662,0.66C26.937,22.515,21.189,28.265,14.133,28.265z"
-                    />
-                  </g>
-                </svg>
-              </button>
               <div className="md:w-1/2 px-3 mb-6 md:mb-0">
                 <label
                   className="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2"
@@ -188,10 +187,9 @@ const AutopartsList = () => {
                 <div className="flex-shrink w-full inline-block relative">
                   <input
                     className={cx(
-                      "block appearance-none w-full bg-grey-lighter border border-gray-300 focus:border-gray-500 focus:outline-none py-1 px-4 pr-8 rounded",
+                      'block appearance-none w-full bg-grey-lighter border border-gray-300 focus:border-gray-500 focus:outline-none py-1 px-4 pr-8 rounded',
                       {
-                        "border-red-300 focus:border-red-500":
-                          search.number && showSearch === true,
+                        'border-red-300 focus:border-red-500': search.number && showSearch === true
                       }
                     )}
                     value={search.number}
@@ -228,10 +226,9 @@ const AutopartsList = () => {
                 <div className="flex-shrink w-full inline-block relative">
                   <NumberFormat
                     className={cx(
-                      "block appearance-none w-full bg-grey-lighter border border-gray-300 focus:border-gray-500 focus:outline-none py-1 px-4 pr-8 rounded",
+                      'block appearance-none w-full bg-grey-lighter border border-gray-300 focus:border-gray-500 focus:outline-none py-1 px-4 pr-8 rounded',
                       {
-                        "border-red-300 focus:border-red-500":
-                          search.phone && showSearch === true,
+                        'border-red-300 focus:border-red-500': search.phone && showSearch === true
                       }
                     )}
                     format="+7 (###) ###-##-##"
@@ -270,10 +267,9 @@ const AutopartsList = () => {
                 <div className="flex-shrink w-full inline-block relative">
                   <select
                     className={cx(
-                      "block appearance-none w-full bg-grey-lighter border border-gray-300 focus:border-gray-500 focus:outline-none py-1 px-4 pr-8 rounded",
+                      'block appearance-none w-full bg-grey-lighter border border-gray-300 focus:border-gray-500 focus:outline-none py-1 px-4 pr-8 rounded',
                       {
-                        "border-red-300 focus:border-red-500":
-                          search.status && showSearch === true,
+                        'border-red-300 focus:border-red-500': search.status && showSearch === true
                       }
                     )}
                     value={search.process}
@@ -284,15 +280,13 @@ const AutopartsList = () => {
                       Все
                     </option>
                     {employeeList
-                      .filter((it) =>
-                        it.role.includes("Обработка заказов (запчасти)")
-                      )
+                      .filter((it) => it.role.includes('Обработка заказов (запчасти)'))
                       .map((it) => {
                         return (
                           <option key={it.id} value={it.id}>
                             {it.name} {it.surname}
                           </option>
-                        );
+                        )
                       })}
                   </select>
                   <div className="pointer-events-none absolute top-0 mt-2  right-0 flex items-center px-2 text-gray-600">
@@ -316,13 +310,13 @@ const AutopartsList = () => {
                 <div className="flex-shrink w-full inline-block relative">
                   <select
                     className={cx(
-                      "block appearance-none w-full bg-grey-lighter border border-gray-300 focus:border-gray-500 focus:outline-none py-1 px-4 pr-8 rounded",
+                      'block appearance-none w-full bg-grey-lighter border border-gray-300 focus:border-gray-500 focus:outline-none py-1 px-4 pr-8 rounded',
                       {
-                        "border-red-300 focus:border-red-500":
-                          search.status && showSearch === true,
+                        'border-red-300 focus:border-red-500':
+                          search && search.status && showSearch === true
                       }
                     )}
-                    value={search.status}
+                    value={search && search.status ? search.status : ''}
                     name="status"
                     onChange={onChangeStatus}
                   >
@@ -354,10 +348,9 @@ const AutopartsList = () => {
                 <div className="flex-shrink w-full inline-block relative">
                   <select
                     className={cx(
-                      "block appearance-none w-full bg-grey-lighter border border-gray-300 focus:border-gray-500 focus:outline-none py-1 px-4 pr-8 rounded",
+                      'block appearance-none w-full bg-grey-lighter border border-gray-300 focus:border-gray-500 focus:outline-none py-1 px-4 pr-8 rounded',
                       {
-                        "border-red-300 focus:border-red-500":
-                          search.place && showSearch === true,
+                        'border-red-300 focus:border-red-500': search.place && showSearch === true
                       }
                     )}
                     value={search.place}
@@ -372,7 +365,7 @@ const AutopartsList = () => {
                         <option key={it.id} value={it.id}>
                           {it.name}
                         </option>
-                      );
+                      )
                     })}
                   </select>
                   <div className="pointer-events-none absolute top-0 mt-2  right-0 flex items-center px-2 text-gray-600">
@@ -398,10 +391,7 @@ const AutopartsList = () => {
                     type="button"
                     className="appearance-none w-full text-left bg-grey-lighter border border-yellow-500 focus:outline-none py-1 px-4 pr-8 rounded"
                   >
-                    {
-                      revList.filter((it) => it.status === taskStatuses[0])
-                        .length
-                    }
+                    {list ? list.filter((it) => it.status === taskStatuses[0]).length : 0}
                   </button>
                 </div>
               </div>
@@ -428,11 +418,7 @@ const AutopartsList = () => {
         {showSearch ? (
           <div className="mx-2">
             <b className="text-gray-700">Вы применили фильтр</b>
-            <button
-              type="button"
-              className="mx-1 hover:text-blue-600"
-              onClick={onReset}
-            >
+            <button type="button" className="mx-1 hover:text-blue-600" onClick={onReset}>
               ✖
             </button>
           </div>
@@ -477,91 +463,49 @@ const AutopartsList = () => {
               </tr>
             </thead>
             <tbody>
-              {showSearch === false
-                ? currentPosts.map((it) => (
+              {list && list.length > 0
+                ? list.map((it) => (
                     <AutopartsRow
                       key={it.id}
                       {...it}
                       updateStatus={updateStatusLocal}
                       role={role}
-                      employeeList={employeeList.find(
-                        (item) => item.id === it.employee
-                      )}
-                      processList={employeeList.find(
-                        (item) => item.id === it.process
-                      )}
-                      placesList={placesList.find(
-                        (item) => item.id === it.place
-                      )}
+                      employeeList={employeeList.find((item) => item.id === it.employee)}
+                      processList={employeeList.find((item) => item.id === it.process)}
+                      placesList={placesList.find((item) => item.id === it.place)}
                       settings={settings}
                       num={num}
                     />
                   ))
-                : currentPostsFilteredSliced.map((it) => (
-                    <AutopartsRow
-                      key={it.id}
-                      {...it}
-                      updateStatus={updateStatusLocal}
-                      role={role}
-                      employeeList={employeeList.find(
-                        (item) => item.id === it.employee
-                      )}
-                      processList={employeeList.find(
-                        (item) => item.id === it.process
-                      )}
-                      placesList={placesList.find(
-                        (item) => item.id === it.place
-                      )}
-                      settings={settings}
-                      num={num}
-                    />
-                  ))}
+                : null}
             </tbody>
           </table>
-          {showSearch === true && currentPostsFiltered.length === 0 ? (
+          {showSearch === true && isLoaded && list && list.length === 0 ? (
             <div className="w-full bg-white py-2 flex justify-center">
               <b className="text-center text-gray-700">Записей не найдено</b>
             </div>
           ) : null}
-          {showSearch === false &&
-          currentPosts.length === 0 &&
-          loading === true ? (
-            <div className="w-full bg-white py-2 flex justify-center">
-              <b className="text-center text-gray-700">Идет загрузка...</b>
-            </div>
-          ) : null}
-          {showSearch === false &&
-          currentPosts.length === 0 &&
-          loading === false ? (
+          {!isLoaded ? loadingComponent() : null}
+          {showSearch === false && list && list.length === 0 && isLoaded ? (
             <div className="w-full bg-white py-2 flex justify-center">
               <b className="text-center text-gray-700">
-                Что-то пошло не так. Возможно нет ни одного заказа, попробуйте
-                создать первый. Если заказы есть, перезагрузите страницу
+                Что-то пошло не так. Возможно нет ни одного заказа, попробуйте создать первый. Если
+                заказы есть, перезагрузите страницу
               </b>
             </div>
           ) : null}
         </div>
         <div className="mb-2 rounded-lg relative mt-3 px-4">
-          {showSearch === false ? (
-            <Pagination
-              postsPerPage={postsPerPage}
-              totalPosts={revList.length}
-              paginate={paginate}
-              currentPage={currentPage}
-              currentPosts={currentPosts}
-            />
-          ) : (
-            <Pagination
-              postsPerPage={postsPerPage}
-              totalPosts={currentPostsFiltered.length}
-              paginate={paginate}
-              currentPage={currentPage}
-              currentPosts={currentPostsFilteredSliced}
-            />
-          )}
+          <Pagination
+            postsPerPage={postsPerPage}
+            totalPosts={postsPerPage * totalPages}
+            paginate={paginate}
+            currentPage={curPage ? Number(curPage) : 1}
+            currentPosts={list}
+          />
         </div>
 
-        <Link to={`/autoparts/order/create/${num ? Number(num) : ""}`}>
+        <Link to={`/autoparts/order/create/${num ? Number(num) : ''}`}>
           <button
             type="button"
             className="fixed bottom-0 left-0 p-6 shadow bg-blue-600 text-white opacity-75 text-l hover:opacity-100 hover:bg-blue-700 hover:text-white rounded-full my-3 mx-3"
@@ -573,7 +517,7 @@ const AutopartsList = () => {
         </Link>
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default AutopartsList;
+export default AutopartsList

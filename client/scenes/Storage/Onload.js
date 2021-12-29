@@ -1,24 +1,26 @@
 import { useEffect } from 'react'
 import { useDispatch } from 'react-redux'
 import { socket } from '../../redux/sockets/socketReceivers'
-import { getStorages } from '../../redux/reducers/storage'
+import { getItemsByPage } from '../../redux/reducers/storage'
 
-const OnLoad = () => {
+const OnLoad = (page, showSearch) => {
   const dispatch = useDispatch()
 
   useEffect(() => {
-    dispatch(getStorages())
-  }, [dispatch])
+    if (!showSearch) {
+      dispatch(getItemsByPage(page))
+    }
+  }, [dispatch, page, showSearch])
 
   useEffect(() => {
     socket.on('update storage', function () {
-      dispatch(getStorages())
+      dispatch(getItemsByPage(page))
     })
   }, [])
 
   useEffect(() => {
     socket.on('update edited storage', function () {
-      dispatch(getStorages())
+      dispatch(getItemsByPage(page))
     })
   }, [])
 }

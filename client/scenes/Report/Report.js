@@ -1,60 +1,67 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, Suspense } from 'react'
 import { useSelector } from 'react-redux'
 import cx from 'classnames'
 import Navbar from '../../components/Navbar'
-import taskStatuses from '../../lists/task-statuses'
 import ReportSidebar from './Report.sidebar'
-import Salary from './Salary'
-import Material from './Material'
+import Shinomontazh from './shinomontazh/wrapper'
+
+const Autoparts = React.lazy(() => import('./Autoparts/wrapper'))
 
 const Report = () => {
-  const shinList = useSelector((s) => s.shinomontazhs.list)
   const placeList = useSelector((s) => s.places.list)
   const employeeList = useSelector((s) => s.employees.list)
-  const [report, setReport] = useState([])
+  const auth = useSelector((s) => s.auth)
+
+  const [checkIsAdmin, setCheckIsAdmin] = useState(true)
+
+  const [calendarType, setCalendarType] = useState('month')
 
   const [place, setPlace] = useState('')
   const [activeMonth, setActiveMonth] = useState(new Date())
+  const [activeDay, setActiveDay] = useState(new Date())
   const [active, setActive] = useState('salary')
+
   useEffect(() => {
-    setReport(
-      shinList
-        .filter((it) => (place ? place === it.place : it))
-        .filter((it) => it.status === 'Оплачено')
-        .filter(
-          (item) =>
-            new Date(item.dateStart).getFullYear() === activeMonth.getFullYear() &&
-            new Date(item.dateStart).getMonth() + 1 === activeMonth.getMonth() + 1
-        )
-    )
+    if (auth.roles.length > 0 && !auth.roles.includes('boss') && !auth.roles.includes('admin')) {
+      setPlace(auth.place)
+      setCheckIsAdmin(false)
+    }
+
     return () => {}
-  }, [shinList, activeMonth, place])
+  }, [auth.roles, auth.place])
+
+  const [timeStart, setSimeStart] = useState('')
+  const [timeFinish, setTimeFinish] = useState('')
 
   const onChangePlace = (e) => {
     setPlace(e.target.value)
   }
-  console.log(place)
-  //   useEffect(() => {
-  //     setReportRazval(
-  //       razvalList.filter(
-  //         (item) =>
-  //           new Date(item.date).getFullYear() === activeMonth.getFullYear() &&
-  //           new Date(item.date).getMonth() + 1 === activeMonth.getMonth() + 1
-  //       )
-  //     )
-  //     return () => {}
-  //   }, [razvalList, activeMonth])
 
+  const onChangeTimeStart = (e) => {
+    setSimeStart(e.target.value)
+  }
+  const onChangeTimeFinish = (e) => {
+    setTimeFinish(e.target.value)
+  }
   return (
     <div>
       <Navbar />
       <div className="flex flex-row">
         <ReportSidebar
           setActiveMonth={setActiveMonth}
+          setActiveDay={setActiveDay}
+          activeDay={activeDay}
           activeMonth={activeMonth}
           placeList={placeList}
           place={place}
           onChangePlace={onChangePlace}
+          calendarType={calendarType}
+          setCalendarType={setCalendarType}
+          checkIsAdmin={checkIsAdmin}
+          timeStart={timeStart}
+          onChangeTimeStart={onChangeTimeStart}
+          timeFinish={timeFinish}
+          onChangeTimeFinish={onChangeTimeFinish}
         />
         <div className="w-full mx-auto px-4">
           <h1 className="text-3xl py-4 border-b mb-6">Статистика</h1>
@@ -81,32 +88,66 @@ const Report = () => {
                   })}
                   onClick={() => setActive('material')}
                 >
-                  Материалы(шиномонтаж)
+                  Материалы
                 </button>
               </div>
+              <div className="w-1/5 p-2">
+                <button
+                  type="button"
+                  className={cx('p-4 bg-gray-200 rounded w-full h-full', {
+                    block: active !== 'autopart',
+                    'border-b-8 border-blue-400': active === 'autopart'
+                  })}
+                  onClick={() => setActive('autopart')}
+                >
+                  Автозапчасти
+                </button>
+              </div>
+              {checkIsAdmin ? (
+                <div className="w-1/5 p-2">
+                  <a
+                    href="https://docs.google.com/spreadsheets/d/1L6mR3e0bmu13y7OqIlMQbziWb4a7Ev0k9X_zu-kEBTg/edit?usp=sharing"
+                    target="_blank"
+                    rel="noreferrer"
+                    className={cx('p-4 bg-gray-200 rounded w-full h-full block text-center', {})}
+                  >
+                    Программа
+                  </a>
+                </div>
+              ) : null}
             </div>
-            <div
-              className={cx('', {
-                block: active === 'salary',
-                hidden: active !== 'salary'
-              })}
-            >
-              <Salary
-                employeeList={employeeList}
-                report={report}
-                taskStatuses={taskStatuses}
-                shinList={shinList}
-                place={place}
-              />
-            </div>
-            <div
-              className={cx('', {
-                block: active === 'material',
-                hidden: active !== 'material'
-              })}
-            >
-              <Material report={report} />
-            </div>
+            <Shinomontazh
+              calendarType={calendarType}
+              place={place}
+              activeMonth={activeMonth}
+              activeDay={activeDay}
+              timeFinish={timeFinish}
+              employeeList={employeeList}
+              timeStart={timeStart}
+              active={active}
+            />
+            {active === 'autopart' ? (
+              <div
+                className={cx('', {
+                  block: active === 'autopart',
+                  hidden: active !== 'autopart'
+                })}
+              >
+                {' '}
+                <Suspense fallback={<div>Загрузка...</div>}>
+                  <Autoparts
+                    calendarType={calendarType}
+                    place={place}
+                    activeMonth={activeMonth}
+                    activeDay={activeDay}
+                    timeFinish={timeFinish}
+                    employeeList={employeeList}
+                    timeStart={timeStart}
+                    active={active}
+                  />
+                </Suspense>
+              </div>
+            ) : null}
           </div>
         </div>
       </div>

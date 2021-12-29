@@ -1,23 +1,31 @@
 import React, { useState, useEffect } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
-import { Link } from 'react-router-dom'
+import { Link, useParams, useHistory } from 'react-router-dom'
 import NumberFormat from 'react-number-format'
 import cx from 'classnames'
 import { toast } from 'react-toastify'
 import CustomerRow from '../../components/customers/customer'
-import { deleteCustomer } from '../../redux/reducers/customers'
+import { deleteCustomer, getItemsFiltered } from '../../redux/reducers/customers'
 import Navbar from '../../components/Navbar'
 import Modal from '../../components/Modal.delete'
 import 'react-toastify/dist/ReactToastify.css'
 import Pagination from '../Pagination'
+import onLoad from './Onload'
 
 const CustomerList = () => {
+  const { num } = useParams(1)
+  const [showSearch, setShowSearch] = useState(false)
+  onLoad(num ? Number(num) : 1, showSearch)
+  const dispatch = useDispatch()
+  const list = useSelector((s) => s.customers.list)
+  const curPage = useSelector((s) => s.customers.currentPage)
+  const totalPages = useSelector((s) => s.customers.numberOfPages)
+  const isLoaded = useSelector((s) => s.customers.isLoaded)
+  const history = useHistory()
   toast.configure()
   const notify = (arg) => {
     toast.info(arg, { position: toast.POSITION.BOTTOM_RIGHT })
   }
-  const dispatch = useDispatch()
-  const list = useSelector((s) => s.customers.list)
   const place = useSelector((s) => s.places.list)
   const [isOpen, setIsOpen] = useState(false)
   const [itemId, setItemId] = useState('')
@@ -36,7 +44,24 @@ const CustomerList = () => {
     vinnumber: '',
     regnumber: ''
   })
-  const [showSearch, setShowSearch] = useState(false)
+
+  useEffect(() => {
+    if (showSearch) {
+      const phoneArray = search.phone.split(' ')
+      const phoneToRest = phoneArray[phoneArray.length - 1].replace(/_/g, '')
+      if ((search.phone !== '' && phoneToRest.length > 6) || search.vinnumber || search.regnumber) {
+        dispatch(
+          getItemsFiltered(
+            1,
+            search.vinnumber ? search.vinnumber : '',
+            search.regnumber ? search.regnumber : '',
+            phoneToRest && search.phone ? phoneToRest : ''
+          )
+        )
+      }
+    }
+  }, [dispatch, num, showSearch, search])
+
   const onChangePhone = (e) => {
     const { name, value } = e.target
     setSearch(() => ({
@@ -76,31 +101,30 @@ const CustomerList = () => {
       setShowSearch(true)
     }
   }
-  const [loading, setLoading] = useState(true)
-  const [currentPage, setCurrentPage] = useState(1)
   const postsPerPage = 14
-  const indexOfLastPost = currentPage * postsPerPage
-  const indexOfFirstPost = indexOfLastPost - postsPerPage
 
-  const currentPosts = list.slice(indexOfFirstPost, indexOfLastPost)
-  useEffect(() => {
-    if (showSearch === false && currentPosts.length === 0 && loading === true) {
-      setTimeout(() => setLoading(false), 10000)
-    } else {
-      setLoading(true)
-    }
-    return () => {}
-  }, [currentPosts.length, showSearch, loading])
-  const currentPostsFiltered = list
-    .filter(
-      (it) =>
-        it.phone === search.phone ||
-        it.regnumber === search.regnumber ||
-        it.vinnumber === search.vinnumber
-    )
-    .slice(indexOfFirstPost, indexOfLastPost)
-  const paginate = (pageNumber) => setCurrentPage(pageNumber)
+  const paginate = (pageNumber) => {
+    history.push(`/customer/list/${pageNumber}`)
+  }
   // console.log(search.phone.length)
+
+  const loadingComponent = () => {
+    return (
+      <div className="flex w-100 justify-center my-3">
+        <button
+          type="button"
+          className="bg-blue-500 p-3 text-white rounded flex items-center"
+          disabled
+        >
+          <div className=" flex justify-center items-center pr-3">
+            <div className="animate-spin rounded-full h-4 w-4 border-b-4 border-white" />
+          </div>
+          Загрузка...
+        </button>
+      </div>
+    )
+  }
+
   return (
     <div>
       <Navbar />
@@ -276,30 +300,24 @@ const CustomerList = () => {
               </tr>
             </thead>
             <tbody>
-              {showSearch === false
-                ? currentPosts.map((it) => (
+              {list && list.length > 0
+                ? list.map((it) => (
                     <CustomerRow key={it.id} place={place} deleteCustomer={openAndDelete} {...it} />
                   ))
-                : currentPostsFiltered.map((it) => (
-                    <CustomerRow key={it.id} place={place} deleteCustomer={openAndDelete} {...it} />
-                  ))}
+                : null}
             </tbody>
           </table>
-          {showSearch === true && currentPostsFiltered.length === 0 ? (
+          {showSearch === true && isLoaded && list && list.length === 0 ? (
             <div className="w-full bg-white py-2 flex justify-center">
               <b className="text-center text-gray-700">Записей не найдено</b>
             </div>
           ) : null}
-          {showSearch === false && currentPosts.length === 0 && loading === true ? (
-            <div className="w-full bg-white py-2 flex justify-center">
-              <b className="text-center text-gray-700">Идет загрузка...</b>
-            </div>
-          ) : null}
-          {showSearch === false && currentPosts.length === 0 && loading === false ? (
+          {!isLoaded ? loadingComponent() : null}
+          {showSearch === false && list && list.length === 0 && isLoaded ? (
             <div className="w-full bg-white py-2 flex justify-center">
               <b className="text-center text-gray-700">
-                Что-то пошло не так. Возможно нет ни одной записи, попробуйте создать первую. Если
-                записи есть, перезагрузите страницу
+                Что-то пошло не так. Возможно нет ни одного заказа, попробуйте создать первый. Если
+                заказы есть, перезагрузите страницу
               </b>
             </div>
           ) : null}
@@ -307,10 +325,10 @@ const CustomerList = () => {
         <div className="overflow-x-auto mb-2 rounded-lg shadow overflow-y-auto relative mt-3 md:bg-gray-300 sm:bg-gray-300 ">
           <Pagination
             postsPerPage={postsPerPage}
-            totalPosts={list.length}
+            totalPosts={postsPerPage * totalPages}
             paginate={paginate}
-            currentPage={currentPage}
-            currentPosts={currentPosts}
+            currentPage={curPage ? Number(curPage) : 1}
+            currentPosts={list}
           />
         </div>
         {/* <Link to="/customer/create">

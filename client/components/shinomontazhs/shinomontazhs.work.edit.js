@@ -45,7 +45,8 @@ const ShinomontazhsEdit = (props) => {
     dateStart: props.dateStart,
     dateFinish: props.dateFinish ? props.dateFinish : new Date(),
     discount: props.discount,
-    payment: props.payment
+    payment: props.payment,
+    talon: props.id_shinomontazhs
   })
 
   const [service, setService] = useState(props.services ? props.services : [])
@@ -258,6 +259,18 @@ const ShinomontazhsEdit = (props) => {
       [name]: value
     }))
   }
+  const [termCash, setTermCash] = useState({
+    terminal: props.combTerm ? props.combTerm : 0,
+    cash: props.combCash ? props.combCash : 0
+  })
+  const onChangeTermCash = (e) => {
+    const { name, value } = e.target
+    setTermCash((prevState) => ({
+      ...prevState,
+      [name]: value
+    }))
+  }
+
   const checkboxTyresChange = (e) => {
     const { checked } = e.target
     if (checked) {
@@ -621,6 +634,7 @@ const ShinomontazhsEdit = (props) => {
       props.updateShinomontazh(props.id, {
         discount: state.discount,
         payment: state.payment,
+        comment: state.comment,
         status: statusList[2]
       })
       if (checkLink()) {
@@ -633,6 +647,7 @@ const ShinomontazhsEdit = (props) => {
       props.updateShinomontazh(props.id, {
         discount: state.discount,
         payment: state.payment,
+        comment: state.comment,
         status: statusList[3]
       })
       if (checkLink()) {
@@ -645,6 +660,7 @@ const ShinomontazhsEdit = (props) => {
       props.updateShinomontazh(props.id, {
         discount: state.discount,
         payment: state.payment,
+        comment: state.comment,
         status: statusList[4]
       })
       if (checkLink()) {
@@ -653,6 +669,34 @@ const ShinomontazhsEdit = (props) => {
         history.push(`/shinomontazh/list/${props.num ? props.num : ''}`)
       }
       notify('Работа оплачена (терминал)')
+    } else if (state.payment === 'termandcash') {
+      props.updateShinomontazh(props.id, {
+        discount: state.discount,
+        payment: state.payment,
+        comment: state.comment,
+        status: statusList[6],
+        combTerm: termCash.terminal,
+        combCash: termCash.cash
+      })
+      if (checkLink()) {
+        history.push(`/shinomontazhboss/list/${props.num ? props.num : ''}`)
+      } else {
+        history.push(`/shinomontazh/list/${props.num ? props.num : ''}`)
+      }
+      notify('Работа оплачена (терминал + наличные)')
+    } else if (state.payment === 'cancel') {
+      props.updateShinomontazh(props.id, {
+        discount: state.discount,
+        payment: state.payment,
+        comment: state.comment,
+        status: statusList[5]
+      })
+      if (checkLink()) {
+        history.push(`/shinomontazhboss/list/${props.num ? props.num : ''}`)
+      } else {
+        history.push(`/shinomontazh/list/${props.num ? props.num : ''}`)
+      }
+      notify('Работа отменена')
     } else {
       props.updateShinomontazh(props.id, {
         // ...state,
@@ -661,7 +705,8 @@ const ShinomontazhsEdit = (props) => {
         // tyre: [...tyres],
         // employee: employees,
         discount: state.discount,
-        payment: state.payment
+        payment: state.payment,
+        comment: state.comment
       })
       if (checkLink()) {
         history.push(`/shinomontazhboss/list/${props.num ? props.num : ''}`)
@@ -960,11 +1005,14 @@ const ShinomontazhsEdit = (props) => {
             onChange={onChange}
             onChangeTyres={onChangeTyres}
             tyres={tyres}
+            onChangeTermCash={onChangeTermCash}
+            termCash={termCash}
             checkboxTyresChange={checkboxTyresChange}
             dateEnd={props.dateFinish}
             printOne={printOne}
             printTwo={printTwo}
             id_shinomontazhs={props.id_shinomontazhs}
+            setTermCash={setTermCash}
           />
         </div>
       </div>

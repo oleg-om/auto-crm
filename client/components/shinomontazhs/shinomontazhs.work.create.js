@@ -20,7 +20,6 @@ const ShinomontazhsCreate = (props) => {
   const history = useHistory()
 
   const employeeList = useSelector((s) => s.employees.list)
-  const customerList = useSelector((s) => s.customers.list)
   const auth = useSelector((s) => s.auth)
   const shinomontazhprices = useSelector((s) => s.shinomontazhprices.list)
   const materialprices = useSelector((s) => s.materials.list)
@@ -45,6 +44,7 @@ const ShinomontazhsCreate = (props) => {
 
   const [service, setService] = useState([])
   const [materials, setMaterials] = useState([])
+
   const [tyres, setTyres] = useState({ sale: 'no' })
   const [employees, setEmployees] = useState([])
 
@@ -153,19 +153,6 @@ const ShinomontazhsCreate = (props) => {
 
   const [search, setSearch] = useState()
   const [activeCustomer, setActiveCustomer] = useState('')
-  const [customerOptions, setCustomerOptions] = useState([])
-
-  useEffect(() => {
-    if (state.regnumber !== '') {
-      setCustomerOptions(
-        customerList.filter(
-          (it) => it.regnumber === state.regnumber && it.regnumber !== '' && state.regnumber !== ''
-        )
-      )
-    } else if (state.regnumber === '') {
-      setCustomerOptions([])
-    }
-  }, [state.regnumber, customerList])
 
   const onSearchChange = (event) => {
     setSearch(event.target.value)
@@ -198,6 +185,22 @@ const ShinomontazhsCreate = (props) => {
       }))
     }
   }
+  const [customerList, setCustomerOptions] = useState([])
+  useEffect(() => {
+    if (state.regnumber !== '' && state.regnumber.length > 4) {
+      fetch(
+        `/api/v1/customerfind/${state.regnumber ? state.regnumber : 'reg'}/${
+          state.vinnumber ? state.vinnumber : 'vin'
+        }/${state.phone ? state.phone : 'phone'}`
+      )
+        .then((res) => res.json())
+        .then((it) => {
+          setCustomerOptions(it.data)
+        })
+    } else if (state.regnumber === '') {
+      setCustomerOptions([])
+    }
+  }, [state.regnumber])
 
   const applyCustomer = () => {
     const newCustomer = customerList.find((it) => it.id === search)
@@ -243,6 +246,7 @@ const ShinomontazhsCreate = (props) => {
   function roundTo5(num) {
     return Math.round(num / 5) * 5
   }
+
   useEffect(() => {
     const actualDiametr = 'R'.concat(state.diametr.replace(/[^C\d]/g, ''))
     const percent = currentPlace ? currentPlace.shinostavka : ''
@@ -725,7 +729,10 @@ const ShinomontazhsCreate = (props) => {
       }
     }
   }
-
+  const [termCash] = useState({
+    terminal: 0,
+    cash: 0
+  })
   return (
     <div>
       <div className="bg-white shadow rounded-lg px-8 py-6 mb-4 flex flex-col my-2">
@@ -830,7 +837,7 @@ const ShinomontazhsCreate = (props) => {
             onSearchChange={onSearchChange}
             search={search}
             customer={customer}
-            customerOptions={customerOptions}
+            customerOptions={customerList}
             activeCustomer={activeCustomer}
             setActiveCustomer={setActiveCustomer}
             applyCustomer={applyCustomer}
@@ -895,6 +902,7 @@ const ShinomontazhsCreate = (props) => {
             tyres={tyres}
             checkboxTyresChange={checkboxTyresChange}
             dateEnd=""
+            termCash={termCash}
           />
         </div>
       </div>

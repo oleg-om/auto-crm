@@ -1,0 +1,4 @@
+export const GET_COMMONS = 'GET_COMMONS'
+export const CREATE_COMMON = 'CREATE_COMMON'
+export const UPDATE_COMMON = 'UPDATE_COMMON'
+export const DELETE_COMMON = 'DELETE_COMMON'

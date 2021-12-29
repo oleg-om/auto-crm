@@ -1,5 +1,6 @@
 import {
   GET_STORAGES,
+  GET_STORAGE,
   CREATE_STORAGE,
   UPDATE_STORAGE_STATUS,
   UPDATE_STORAGE
@@ -9,16 +10,26 @@ import { socket } from '../sockets/socketReceivers'
 socket.connect()
 
 const initialState = {
-  list: []
+  list: [],
+  item: []
 }
 
 export default (state = initialState, action) => {
   switch (action.type) {
     case GET_STORAGES: {
-      return { ...state, list: action.storages }
+      return {
+        ...state,
+        list: action.storages,
+        isLoaded: action.isLoaded,
+        currentPage: action.currentPage,
+        numberOfPages: action.numberOfPages
+      }
+    }
+    case GET_STORAGE: {
+      return { ...state, item: [action.storage], isLoaded: action.isLoaded }
     }
     case CREATE_STORAGE: {
-      return { ...state, list: [...state.list, action.storage] }
+      return { ...state, list: [action.storage, ...state.list] }
     }
     case UPDATE_STORAGE: {
       return {
@@ -52,12 +63,12 @@ export function getStorages() {
   }
 }
 
-export function getStorage() {
+export function getStorage(id) {
   return (dispatch) => {
-    fetch('/api/v1/storage:uuid')
+    fetch(`/api/v1/storage/${id}`)
       .then((r) => r.json())
       .then(({ data: storage }) => {
-        dispatch({ type: GET_STORAGES, storage })
+        dispatch({ type: GET_STORAGE, storage })
       })
   }
 }
@@ -109,6 +120,30 @@ export function updateStorage(id, name) {
       .then((r) => r.json())
       .then(({ data: storage }) => {
         dispatch({ type: UPDATE_STORAGE, storage })
+      })
+  }
+}
+
+export function getItemsByPage(page) {
+  return (dispatch) => {
+    fetch(`/api/v1/storagebypage/${page}`)
+      .then((r) => r.json())
+      .then(({ data: storages, currentPage, numberOfPages }) => {
+        dispatch({ type: GET_STORAGES, storages, currentPage, numberOfPages, isLoaded: true })
+      })
+  }
+}
+
+export function getItemsFiltered(page, status, place, phone, number) {
+  return (dispatch) => {
+    fetch(
+      `/api/v1/storagefilter${page ? `?page=${page}` : ''}${status ? `&status=${status}` : ''}${
+        place ? `&place=${place}` : ''
+      }${phone ? `&phone=${phone}` : ''}${number ? `&number=${number}` : ''}`
+    )
+      .then((r) => r.json())
+      .then(({ data: storages, currentPage, numberOfPages }) => {
+        dispatch({ type: GET_STORAGES, storages, currentPage, numberOfPages, isLoaded: true })
       })
   }
 }

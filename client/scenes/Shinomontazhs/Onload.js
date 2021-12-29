@@ -1,24 +1,26 @@
 import { useEffect } from 'react'
 import { useDispatch } from 'react-redux'
 import { socket } from '../../redux/sockets/socketReceivers'
-import { getShinomontazhs } from '../../redux/reducers/shinomontazhs'
+import { getItemsByPage } from '../../redux/reducers/shinomontazhs'
 
-const OnLoad = () => {
+const OnLoad = (page, showSearch) => {
   const dispatch = useDispatch()
 
   useEffect(() => {
-    dispatch(getShinomontazhs())
-  }, [dispatch])
+    if (!showSearch) {
+      dispatch(getItemsByPage(page))
+    }
+  }, [dispatch, page, showSearch])
 
   useEffect(() => {
     socket.on('update shinomontazh', function () {
-      dispatch(getShinomontazhs())
+      dispatch(getItemsByPage(page))
     })
   }, [])
 
   useEffect(() => {
     socket.on('update edited shinomontazh', function () {
-      dispatch(getShinomontazhs())
+      dispatch(getItemsByPage(page))
     })
   }, [])
 }

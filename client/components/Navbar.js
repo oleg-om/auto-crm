@@ -339,7 +339,9 @@ const Navbar = () => {
               Цены (материалы)
             </NavLink>
           ) : null}
-          {auth.roles.includes('bookkeeper') || auth.roles.includes('boss') ? (
+          {auth.roles.includes('kassa') ||
+          auth.roles.includes('bookkeeper') ||
+          auth.roles.includes('boss') ? (
             <NavLink
               to="/report"
               className="block mt-4 lg:inline-block lg:mt-0 text-gray-800 hover:text-blue-700 mr-4"

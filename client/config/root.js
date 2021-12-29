@@ -188,6 +188,7 @@ const RootComponent = (props) => {
             {/* <Route exact path="/register" component={RegisterCommon} /> */}
             <PrivateRoute exact path="/account/edit/:id" component={AccountEdit} />
             <PrivateRoute exact path="/customer/list" component={CustomerList} />
+            <PrivateRoute exact path="/customer/list/:num" component={CustomerList} />
             <PrivateRoute exact path="/customer/create" component={CustomerNew} />
             <PrivateRoute exact path="/customer/edit/:id" component={CustomerEdit} />
             <PrivateRoute exact path="/razval/list" component={RazvalList} />

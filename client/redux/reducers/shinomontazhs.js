@@ -1,5 +1,6 @@
 import {
   GET_SHINOMONTAZHS,
+  GET_SHINOMONTAZH,
   GET_SHINOMONTAZHS_LAST_TWO_DAYS,
   CREATE_SHINOMONTAZH,
   UPDATE_SHINOMONTAZH_STATUS,
@@ -7,19 +8,29 @@ import {
 } from '../actions/shinomontazhs'
 
 const initialState = {
-  list: []
+  list: [],
+  item: []
 }
 
 export default (state = initialState, action) => {
   switch (action.type) {
     case GET_SHINOMONTAZHS: {
-      return { ...state, list: action.shinomontazhs }
+      return {
+        ...state,
+        list: action.shinomontazhs,
+        isLoaded: action.isLoaded,
+        currentPage: action.currentPage,
+        numberOfPages: action.numberOfPages
+      }
+    }
+    case GET_SHINOMONTAZH: {
+      return { ...state, item: [action.shinomontazhs], isLoaded: action.isLoaded }
     }
     case GET_SHINOMONTAZHS_LAST_TWO_DAYS: {
-      return { ...state, list: action.shinomontazhs }
+      return { ...state, list: action.shinomontazhs, isLoaded: action.isLoaded }
     }
     case CREATE_SHINOMONTAZH: {
-      return { ...state, list: [...state.list, action.shinomontazh] }
+      return { ...state, list: [action.shinomontazh, ...state.list] }
     }
     case UPDATE_SHINOMONTAZH: {
       return {
@@ -50,7 +61,7 @@ export function getShinomontazhs() {
     fetch('/api/v1/shinomontazh')
       .then((r) => r.json())
       .then(({ data: shinomontazhs }) => {
-        dispatch({ type: GET_SHINOMONTAZHS, shinomontazhs })
+        dispatch({ type: GET_SHINOMONTAZHS, shinomontazhs, isLoaded: true })
       })
   }
 }
@@ -60,17 +71,53 @@ export function getShinomontazhsLastTwoDays() {
     fetch('/api/v1/shinomontazhlast')
       .then((r) => r.json())
       .then(({ data: shinomontazhs }) => {
-        dispatch({ type: GET_SHINOMONTAZHS_LAST_TWO_DAYS, shinomontazhs })
+        dispatch({ type: GET_SHINOMONTAZHS_LAST_TWO_DAYS, shinomontazhs, isLoaded: true })
       })
   }
 }
 
-export function getShinomontazh() {
+export function getShinomontazh(id) {
   return (dispatch) => {
-    fetch('/api/v1/shinomontazh:uuid')
+    fetch(`/api/v1/shinomontazh/${id}`)
       .then((r) => r.json())
-      .then(({ data: shinomontazh }) => {
-        dispatch({ type: GET_SHINOMONTAZHS, shinomontazh })
+      .then(({ data: shinomontazhs }) => {
+        dispatch({ type: GET_SHINOMONTAZH, shinomontazhs })
+      })
+  }
+}
+
+export function getItemsByPage(page) {
+  return (dispatch) => {
+    fetch(`/api/v1/shinomontazhbypage/${page}`)
+      .then((r) => r.json())
+      .then(({ data: shinomontazhs, currentPage, numberOfPages }) => {
+        dispatch({
+          type: GET_SHINOMONTAZHS,
+          shinomontazhs,
+          currentPage,
+          numberOfPages,
+          isLoaded: true
+        })
+      })
+  }
+}
+
+export function getItemsFiltered(page, place, number) {
+  return (dispatch) => {
+    fetch(
+      `/api/v1/shinomontazhfilter${page ? `?page=${page}` : ''}${place ? `&place=${place}` : ''}${
+        number ? `&number=${number}` : ''
+      }`
+    )
+      .then((r) => r.json())
+      .then(({ data: shinomontazhs, currentPage, numberOfPages }) => {
+        dispatch({
+          type: GET_SHINOMONTAZHS,
+          shinomontazhs,
+          currentPage,
+          numberOfPages,
+          isLoaded: true
+        })
       })
   }
 }

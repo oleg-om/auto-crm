@@ -5,9 +5,87 @@ exports.getAll = async (req, res) => {
   return res.json({ status: 'ok', data: list })
 }
 
+exports.getLastOneHundred = async (req, res) => {
+  const list = await Autopart.find().sort({ id_autoparts: -1 }).limit(20)
+  return res.json({ status: 'ok', data: list.reverse() })
+}
+
+exports.getByPage = async (req, res) => {
+  const { page } = req.params
+
+  try {
+    const LIMIT = 14
+    const startIndex = (Number(page) - 1) * LIMIT // get the starting index of every page
+
+    const total = await Autopart.countDocuments({})
+    const posts = await Autopart.find().sort({ id_autoparts: -1 }).limit(LIMIT).skip(startIndex)
+
+    res.json({
+      status: 'ok',
+      data: posts,
+      currentPage: Number(page),
+      numberOfPages: Math.ceil(total / LIMIT)
+    })
+  } catch (error) {
+    res.status(404).json({ message: error.message })
+  }
+}
+
+exports.getFiltered = async (req, res) => {
+  const { page, number, place, status, process, phone } = req.query
+
+  try {
+    const LIMIT = 14
+    const startIndex = (Number(page) - 1) * LIMIT // get the starting index of every page
+
+    // const posts = await Autopart.find({
+    //   $or: [
+    //     {
+    //       status: `${decodeURIComponent(req.query.status ? status : '').toString()}`
+    //     },
+    //     { id_autoparts: number },
+    //     {
+    //       process: req.query.process ? `${process.toString()}` : 'smth'
+    //     },
+    //     { phone: { $regex: req.query.phone ? `${phone.toString()}` : 'smth', $options: 'i' } },
+
+    //     { place: req.query.place ? `${place.toString()}` : 'smth' },
+    //     { upsert: false, useFindAndModify: false }
+    //   ]
+    // })
+    const posts = await Autopart.find({
+      // status: `${decodeURIComponent(req.query.status ? status : '').toString()}`,
+      id_autoparts: req.query.number ? number : { $exists: true },
+      place: req.query.place ? `${place.toString()}` : { $exists: true },
+      status: req.query.status ? `${decodeURIComponent(status).toString()}` : { $exists: true },
+      process: req.query.process ? `${process.toString()}` : { $exists: true },
+      phone: req.query.phone ? { $regex: `${phone.toString()}`, $options: 'i' } : { $exists: true }
+      // {
+      //   process: req.query.process ? `${process.toString()}` : 'smth'
+      // },
+      // { phone: { $regex: req.query.phone ? `${phone.toString()}` : 'smth', $options: 'i' } },
+
+      // upsert: false,
+      // useFindAndModify: false
+    })
+      .sort({ id_autoparts: -1 })
+      .limit(LIMIT)
+      .skip(startIndex)
+
+    res.json({
+      status: 'ok',
+      data: posts,
+      currentPage: Number(page),
+      numberOfPages: Math.ceil(posts.length / LIMIT)
+    })
+  } catch (error) {
+    res.status(404).json({ message: error.message })
+  }
+}
+
 exports.getOne = async (req, res) => {
   const autopart = await Autopart.findOne(
-    { id: req.params.id },
+    { id_autoparts: req.params.id },
     { upsert: false, useFindAndModify: false }
   )
   return res.json({ status: 'ok', data: autopart })
@@ -32,4 +110,14 @@ exports.create = async (req, res) => {
 exports.delete = async (req, res) => {
   await Autopart.deleteOne({ id: req.params.id })
   return res.json({ status: 'ok', id: req.params.id })
+}
+
+exports.getMonth = async (req, res) => {
+  const { yearmonth } = req.query
+
+  const list = await Autopart.find({
+    'order.come': { $regex: `${yearmonth.toString()}`, $options: 'i' }
+  })
+
+  return res.json({ status: 'ok', data: list })
 }

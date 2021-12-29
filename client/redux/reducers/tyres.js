@@ -1,19 +1,29 @@
-import { GET_TYRES, CREATE_TYRE, UPDATE_TYRE_STATUS, UPDATE_TYRE } from '../actions/tyres'
+import { GET_TYRES, GET_TYRE, CREATE_TYRE, UPDATE_TYRE_STATUS, UPDATE_TYRE } from '../actions/tyres'
 import { socket } from '../sockets/socketReceivers'
 
 socket.connect()
 
 const initialState = {
-  list: []
+  list: [],
+  item: []
 }
 
 export default (state = initialState, action) => {
   switch (action.type) {
     case GET_TYRES: {
-      return { ...state, list: action.tyres }
+      return {
+        ...state,
+        list: action.tyres,
+        isLoaded: action.isLoaded,
+        currentPage: action.currentPage,
+        numberOfPages: action.numberOfPages
+      }
+    }
+    case GET_TYRE: {
+      return { ...state, item: [action.tyre], isLoaded: action.isLoaded }
     }
     case CREATE_TYRE: {
-      return { ...state, list: [...state.list, action.tyre] }
+      return { ...state, list: [action.tyre, ...state.list] }
     }
     case UPDATE_TYRE: {
       return {
@@ -47,12 +57,38 @@ export function getTyres() {
   }
 }
 
-export function getTyre() {
+export function getTyre(id) {
   return (dispatch) => {
-    fetch('/api/v1/tyre:uuid')
+    fetch(`/api/v1/tyre/${id}`)
       .then((r) => r.json())
       .then(({ data: tyre }) => {
-        dispatch({ type: GET_TYRES, tyre })
+        dispatch({ type: GET_TYRE, tyre })
+      })
+  }
+}
+
+export function getItemsByPage(page) {
+  return (dispatch) => {
+    fetch(`/api/v1/tyrebypage/${page}`)
+      .then((r) => r.json())
+      .then(({ data: tyres, currentPage, numberOfPages }) => {
+        dispatch({ type: GET_TYRES, tyres, currentPage, numberOfPages, isLoaded: true })
+      })
+  }
+}
+
+export function getItemsFiltered(page, status, vin, place, phone, number) {
+  return (dispatch) => {
+    fetch(
+      `/api/v1/tyrefilter${page ? `?page=${page}` : ''}${status ? `&status=${status}` : ''}${
+        vin ? `&vin=${vin}` : ''
+      }${place ? `&place=${place}` : ''}${phone ? `&phone=${phone}` : ''}${
+        number ? `&number=${number}` : ''
+      }`
+    )
+      .then((r) => r.json())
+      .then(({ data: tyres, currentPage, numberOfPages }) => {
+        dispatch({ type: GET_TYRES, tyres, currentPage, numberOfPages, isLoaded: true })
       })
   }
 }
@@ -68,7 +104,8 @@ export function createTyre(name) {
     })
       .then((r) => r.json())
       .then(({ data: tyre }) => {
-        socket.emit('new tyre', { tyre })
+        console.log(tyre)
+        // socket.emit('new tyre', { tyre })
         dispatch({ type: CREATE_TYRE, tyre })
       })
   }

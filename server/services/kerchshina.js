@@ -28,11 +28,8 @@ function takeOrderNumberFromSettings() {
 
 // 2. Create an async function
 async function takeOrderFromKerchshina() {
-  console.log('before promise call')
   const result = await takeOrderNumber()
   const resultSecond = await takeOrderNumberFromSettings()
-  console.log(JSON.stringify(result))
-  console.log('next step')
   return new Promise((resolve) => {
     if (result) {
       fetch('http://kerchshina.com/api/orders')
@@ -53,9 +50,7 @@ async function takeOrderFromKerchshina() {
 
 async function takeProducts() {
   const order = await takeOrderFromKerchshina()
-  console.log('next step')
   const idsArray = order.OrderProduct.reduce((acc, rec) => [...acc, rec.product_id], [])
-  console.log(idsArray)
   return new Promise((resolve) => {
     if (!idsArray.includes('six654321')) {
       fetch('http://kerchshina.com/api/products')
@@ -68,10 +63,7 @@ async function takeProducts() {
 
 async function takeBrands() {
   const products = await takeProducts()
-  console.log(JSON.stringify(products))
-  console.log('next step')
   const idsArray = products.reduce((acc, rec) => [...acc, rec.Product.brand_id], [])
-  console.log(idsArray)
   return new Promise((resolve) => {
     fetch('http://kerchshina.com/api/brands')
       .then((response) => response.json())
@@ -82,12 +74,7 @@ async function takeBrands() {
 
 async function takeModels() {
   const products = await takeProducts()
-  const brands = await takeBrands()
-  console.log(JSON.stringify(products))
-  console.log(JSON.stringify(brands))
-  console.log('next step')
   const idsArray = products.reduce((acc, rec) => [...acc, rec.Product.model_id], [])
-  console.log(idsArray)
   return new Promise((resolve) => {
     fetch('http://kerchshina.com/api/models')
       .then((response) => response.json())
@@ -101,7 +88,6 @@ async function kerchshinaCheck(io) {
   const products = await takeProducts()
   const brands = await takeBrands()
   const models = await takeModels()
-  console.log('next step')
   return new Promise(() => {
     const productssnew = products.reduce((acc, rec) => [...acc, rec.Product], [])
     const brandsnew = brands.reduce((acc, rec) => [...acc, rec.Brand], [])
@@ -117,7 +103,6 @@ async function kerchshinaCheck(io) {
         order.Order.city ? ` город: ${order.Order.city}` : ''
       }${order.Order.address ? `, адрес: ${order.Order.address}` : ''}`
     }
-    console.log(resultOrder)
     const finalArr = {
       ...resultOrder,
       preorder: order.OrderProduct.reduce(
@@ -204,8 +189,6 @@ async function kerchshinaCheck(io) {
         []
       )
     }
-    console.log(finalArr)
-    console.log('new order is added')
     const arrtoDb = new Tyre(finalArr)
     if (finalArr.siteNumber) {
       arrtoDb.save()

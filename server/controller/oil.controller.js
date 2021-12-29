@@ -30,3 +30,12 @@ exports.delete = async (req, res) => {
   await Oil.deleteOne({ id: req.params.id })
   return res.json({ status: 'ok', id: req.params.id })
 }
+exports.getMonth = async (req, res) => {
+  const { yearmonth } = req.query
+
+  const list = await Oil.find({
+    date: { $regex: `${yearmonth.toString()}`, $options: 'i' }
+  })
+
+  return res.json({ status: 'ok', data: list })
+}

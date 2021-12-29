@@ -6,7 +6,7 @@ const TaskRow = (props) => {
   const changeStatus = (e) => {
     props.updateStatus(props.id, e.target.value)
   }
-  console.log(props.id)
+
   return (
     <div
       className={cx('py-3 w-full  flex md:flex-row flex-col  justify-between px-5 shadow-xl my-2', {

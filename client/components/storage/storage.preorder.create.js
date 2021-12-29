@@ -1,310 +1,324 @@
-import React, { useEffect, useState } from "react";
-import { Link, useHistory } from "react-router-dom";
-import { useSelector } from "react-redux";
-import { toast } from "react-toastify";
-import NumberFormat from "react-number-format";
-import cx from "classnames";
-import "react-toastify/dist/ReactToastify.css";
+import React, { useEffect, useState } from 'react'
+import { Link, useHistory } from 'react-router-dom'
+import { useSelector } from 'react-redux'
+import { toast } from 'react-toastify'
+import NumberFormat from 'react-number-format'
+import cx from 'classnames'
+import 'react-toastify/dist/ReactToastify.css'
 // import tyresList from '../../lists/tyres/tyres'
 // import sizeOneList from '../../lists/tyres/sizeone'
 // import sizeTwoList from '../../lists/tyres/sizetwo'
 // import sizeThreeList from '../../lists/tyres/sizethree'
-import FirstColumn from "./moduls/firstcolumn";
-import TyreColumn from "./moduls/tyrecolumn";
-import Statuses from "../../lists/storages-statuses";
+import FirstColumn from './moduls/firstcolumn'
+import TyreColumn from './moduls/tyrecolumn'
+import Statuses from '../../lists/storages-statuses'
 
 const StoragesCreate = (props) => {
-  toast.configure();
+  toast.configure()
   const notify = (arg) => {
-    toast.info(arg, { position: toast.POSITION.BOTTOM_RIGHT });
-  };
+    toast.info(arg, { position: toast.POSITION.BOTTOM_RIGHT })
+  }
 
-  const history = useHistory();
-  const list = useSelector((s) => s.places.list);
-  const employeeList = useSelector((s) => s.employees.list);
-  const customerList = useSelector((s) => s.customers.list);
-  const auth = useSelector((s) => s.auth);
+  const history = useHistory()
+  const list = useSelector((s) => s.places.list)
+  const employeeList = useSelector((s) => s.employees.list)
+  // const customerList = useSelector((s) => s.customers.list)
+  const auth = useSelector((s) => s.auth)
 
   const [inputFields, setInputFields] = useState([
-    { tyreItem: "", type: "1", mode: "full", brand: "" },
-  ]);
+    { tyreItem: '', type: '1', mode: 'full', brand: '' }
+  ])
 
-  const [regNumber, setRegNumber] = useState([]);
-  const [keyboard, setKeyboard] = useState(true);
-  const [regOpen, setRegOpen] = useState(false);
+  const [regNumber, setRegNumber] = useState([])
+  const [keyboard, setKeyboard] = useState(true)
+  const [regOpen, setRegOpen] = useState(false)
 
   const [options, setOptions] = useState({
     mark: [],
     model: [],
     gen: [],
-    mod: [],
-  });
-  const [search, setSearch] = useState();
+    mod: []
+  })
+  const [search, setSearch] = useState()
   const [stateId, setStateId] = useState({
-    mark: "",
-    model: "",
-    gen: "",
-    mod: "",
-  });
+    mark: '',
+    model: '',
+    gen: '',
+    mod: ''
+  })
 
-  const [activeCustomer, setActiveCustomer] = useState("");
+  const [activeCustomer, setActiveCustomer] = useState('')
   const [state, setState] = useState({
     employee: auth.name,
     place: auth.place,
-    regnumber: "",
-    mark: "",
-    model: "",
+    regnumber: '',
+    mark: '',
+    model: '',
     preorder: [],
-    gen: "",
-    mod: "",
-    name: "",
-    phone: "",
-    comment: "",
+    gen: '',
+    mod: '',
+    name: '',
+    phone: '',
+    comment: '',
     date: new Date(),
-    payment: "no",
-    dateStart: "",
-    dateFinish: "",
-  });
+    payment: 'no',
+    dateStart: '',
+    dateFinish: ''
+  })
   const [customer, setCustomer] = useState({
-    regnumber: "",
-    mark: "",
-    model: "",
-    name: "",
-    phone: "",
-    idOfItem: "",
-  });
+    regnumber: '',
+    mark: '',
+    model: '',
+    name: '',
+    phone: '',
+    idOfItem: ''
+  })
 
   useEffect(() => {
-    fetch("/api/v1/carmark")
+    fetch('/api/v1/carmark')
       .then((res) => res.json())
       .then((it) => {
         setOptions((prevState) => ({
           ...prevState,
-          mark: it.data,
-        }));
-      });
-    return () => {};
-  }, []);
+          mark: it.data
+        }))
+      })
+    return () => {}
+  }, [])
 
   useEffect(() => {
-    if (stateId.mark !== "") {
+    if (stateId.mark !== '') {
       fetch(`/api/v1/carmodel/${stateId.mark}`)
         .then((res) => res.json())
         .then((it) => {
           setOptions((prevState) => ({
             ...prevState,
-            model: it.data,
-          }));
-        });
+            model: it.data
+          }))
+        })
     }
-    return () => {};
-  }, [stateId.mark]);
+    return () => {}
+  }, [stateId.mark])
 
   useEffect(() => {
-    if (state.employee === "" && auth.name) {
+    if (state.employee === '' && auth.name) {
       setState((prevState) => ({
         ...prevState,
-        employee: auth.name,
-      }));
+        employee: auth.name
+      }))
     }
-    return () => {};
-  }, [state.employee, auth.name]);
+    return () => {}
+  }, [state.employee, auth.name])
   useEffect(() => {
-    if (state.place === "" && auth.place) {
+    if (state.place === '' && auth.place) {
       setState((prevState) => ({
         ...prevState,
-        place: auth.place,
-      }));
+        place: auth.place
+      }))
     }
-    return () => {};
-  }, [state.place, auth.place]);
+    return () => {}
+  }, [state.place, auth.place])
 
   useEffect(() => {
-    const date = new Date();
-    const today = date.toISOString().substr(0, 10);
+    const date = new Date()
+    const today = date.toISOString().substr(0, 10)
     setState((prevState) => ({
       ...prevState,
-      dateStart: today,
-    }));
+      dateStart: today
+    }))
 
-    return () => {};
-  }, []);
+    return () => {}
+  }, [])
 
   useEffect(() => {
     setState((prevState) => ({
       ...prevState,
       name: prevState.name.replace(/( |^)[а-яёa-z]/g, function (x) {
-        return x.toUpperCase();
-      }),
-    }));
+        return x.toUpperCase()
+      })
+    }))
 
-    return () => {};
-  }, [state.name]);
+    return () => {}
+  }, [state.name])
 
-  const [customerOptions, setCustomerOptions] = useState([]);
+  const [customerOptions, setCustomerOptions] = useState([])
+  // useEffect(() => {
+  //   if (state.phone !== '' || state.regnumber !== '') {
+  //     setCustomerOptions(
+  //       customerList.filter(
+  //         (it) =>
+  //           (it.phone === state.phone && it.phone !== '' && state.phone !== '') ||
+  //           (it.regnumber === state.regnumber && it.regnumber !== '' && state.regnumber !== '')
+  //       )
+  //     )
+  //   } else if (state.phone === '' || state.regnumber === '') {
+  //     setCustomerOptions([])
+  //   }
+  // }, [state.phone, state.regnumber, customerList])
+
   useEffect(() => {
-    if (state.phone !== "" || state.regnumber !== "") {
-      setCustomerOptions(
-        customerList.filter(
-          (it) =>
-            (it.phone === state.phone &&
-              it.phone !== "" &&
-              state.phone !== "") ||
-            (it.regnumber === state.regnumber &&
-              it.regnumber !== "" &&
-              state.regnumber !== "")
-        )
-      );
-    } else if (state.phone === "" || state.regnumber === "") {
-      setCustomerOptions([]);
+    const phoneArray = state.phone.split(' ')
+    const phoneToRest = phoneArray[phoneArray.length - 1].replace(/_/g, '')
+    if (
+      (state.phone !== '' && phoneToRest.length > 6) ||
+      (state.regnumber !== '' && state.regnumber.length > 4)
+    ) {
+      fetch(
+        `/api/v1/customerfind/${state.regnumber ? state.regnumber : 'reg'}/vin/${
+          state.phone ? phoneToRest : 'phone'
+        }`
+      )
+        .then((res) => res.json())
+        .then((it) => {
+          setCustomerOptions(it.data)
+        })
+    } else if (state.phone === '' && state.regnumber === '' && state.vinnumber === '') {
+      setCustomerOptions([])
     }
-  }, [state.phone, state.regnumber, customerList]);
+  }, [state.phone, state.regnumber, state.vinnumber])
 
   const onChange = (e) => {
-    const { name, value } = e.target;
+    const { name, value } = e.target
     setState((prevState) => ({
       ...prevState,
-      [name]: value,
-    }));
-  };
+      [name]: value
+    }))
+  }
 
   const onSearchChange = (event) => {
-    setSearch(event.target.value);
-  };
+    setSearch(event.target.value)
+  }
   const applyCustomer = () => {
-    const newCustomer = customerList.find((it) => it.id === search);
+    const newCustomer = customerOptions.find((it) => it.id === search)
     if (newCustomer) {
       setCustomer((prevState) => ({
         ...prevState,
-        regnumber: newCustomer.regnumber ? newCustomer.regnumber : "",
-        mark: newCustomer.mark ? newCustomer.mark : "",
-        model: newCustomer.model ? newCustomer.model : "",
-        name: newCustomer.name ? newCustomer.name : "",
-        phone: newCustomer.phone ? newCustomer.phone : "",
-        idOfItem: newCustomer.id,
-      }));
+        regnumber: newCustomer.regnumber ? newCustomer.regnumber : '',
+        mark: newCustomer.mark ? newCustomer.mark : '',
+        model: newCustomer.model ? newCustomer.model : '',
+        name: newCustomer.name ? newCustomer.name : '',
+        phone: newCustomer.phone ? newCustomer.phone : '',
+        idOfItem: newCustomer.id
+      }))
       setState((prevState) => ({
         ...prevState,
-        regnumber: newCustomer.regnumber ? newCustomer.regnumber : "",
-        mark: newCustomer.mark ? newCustomer.mark : "",
-        model: newCustomer.model ? newCustomer.model : "",
-        name: newCustomer.name ? newCustomer.name : "",
-        phone: newCustomer.phone ? newCustomer.phone : "",
-      }));
-      setActiveCustomer(newCustomer.id);
+        regnumber: newCustomer.regnumber ? newCustomer.regnumber : '',
+        mark: newCustomer.mark ? newCustomer.mark : '',
+        model: newCustomer.model ? newCustomer.model : '',
+        name: newCustomer.name ? newCustomer.name : '',
+        phone: newCustomer.phone ? newCustomer.phone : ''
+      }))
+      setActiveCustomer(newCustomer.id)
     }
-    return null;
-  };
+    return null
+  }
   const onChangeCustomer = (e) => {
-    const { name, value } = e.target;
+    const { name, value } = e.target
     setState((prevState) => ({
       ...prevState,
-      [name]: value,
-    }));
+      [name]: value
+    }))
     setCustomer((prevState) => ({
       ...prevState,
-      [name]: value,
-    }));
-  };
+      [name]: value
+    }))
+  }
 
   const onChangeRegnumberUppercaseRussian = (e) => {
-    const { name, value } = e.target;
+    const { name, value } = e.target
     setState((prevState) => ({
       ...prevState,
       [name]: value
         .toUpperCase()
-        .replace(/\s/g, "")
-        .replace(/[^а-яё0-9]/i, ""),
-    }));
-  };
+        .replace(/\s/g, '')
+        .replace(/[^а-яё0-9]/i, '')
+    }))
+  }
 
   const switchKeyboard = () => {
-    setKeyboard(true);
-    setRegOpen(false);
-  };
+    setKeyboard(true)
+    setRegOpen(false)
+  }
 
   const acceptRegnumber = () => {
-    setRegOpen(false);
-  };
+    setRegOpen(false)
+  }
 
   const openRegModal = () => {
     if (keyboard === false) {
-      setRegOpen(true);
+      setRegOpen(true)
     }
-  };
+  }
 
   const onChangeMark = (e) => {
-    const { value } = e.target;
-    const findCar = options.mark
-      ? options.mark.find((it) => value === it.name)
-      : null;
+    const { value } = e.target
+    const findCar = options.mark ? options.mark.find((it) => value === it.name) : null
     setState((prevState) => ({
       ...prevState,
       mark: value,
-      model: "",
-    }));
+      model: ''
+    }))
     setStateId((prevState) => ({
       ...prevState,
-      mark: findCar ? findCar.id_car_mark : "",
-      model: "",
-    }));
+      mark: findCar ? findCar.id_car_mark : '',
+      model: ''
+    }))
     setCustomer((prevState) => ({
       ...prevState,
-      mark: value,
-    }));
-  };
+      mark: value
+    }))
+  }
 
   const onChangeDateFinish = (e) => {
-    const { id } = e.target;
-    const date = new Date(state.dateStart);
-    const modifiedDate = date.setMonth(Number(date.getMonth()) + Number(id));
-    const today = new Date(modifiedDate).toISOString().substr(0, 10);
+    const { id } = e.target
+    const date = new Date(state.dateStart)
+    const modifiedDate = date.setMonth(Number(date.getMonth()) + Number(id))
+    const today = new Date(modifiedDate).toISOString().substr(0, 10)
     setState((prevState) => ({
       ...prevState,
-      dateFinish: today,
-    }));
-  };
+      dateFinish: today
+    }))
+  }
 
   const onChangeModel = (e) => {
-    const { value } = e.target;
-    const finModel = options.model.find((it) => value === it.name);
+    const { value } = e.target
+    const finModel = options.model.find((it) => value === it.name)
     setState((prevState) => ({
       ...prevState,
-      model: value,
-    }));
+      model: value
+    }))
     setStateId((prevState) => ({
       ...prevState,
-      model: finModel ? finModel.id_car_model : "",
-    }));
+      model: finModel ? finModel.id_car_model : ''
+    }))
     setCustomer((prevState) => ({
       ...prevState,
-      model: value,
-    }));
-  };
+      model: value
+    }))
+  }
 
   const sendData = () => {
     const checkCustomer =
-      customerList !== []
-        ? customerList.find((it) => it.id === search)
+      customerOptions !== []
+        ? customerOptions.find((it) => it.id === search)
         : {
-            regnumber: "",
-            mark: "",
-            model: "",
-            name: "",
-            phone: "",
-          };
-    if (!state.employee) notify("Заполните поле Принял заказ");
-    if (!state.place) notify("Заполните поле Заказ принят на точке");
-    if (!state.regnumber) notify("Заполните поле Гос. номер");
-    if (!state.mark) notify("Укажите марку авто");
-    if (!state.model) notify("Укажите модель авто");
-    if (!state.name) notify("Заполните поле ФИО клиента");
-    if (!state.phone) notify("Заполните поле Телефон");
-    if (!state.dateStart) notify("Заполните обе даты");
-    if (!state.dateFinish) notify("Заполните обе даты");
-    if (state.preorder.length === 0) notify("Заполните хранение");
-    if (state.preorder.length > 0 && !state.preorder[0].quantity)
-      notify("Укажите количество");
+            regnumber: '',
+            mark: '',
+            model: '',
+            name: '',
+            phone: ''
+          }
+    if (!state.employee) notify('Заполните поле Принял заказ')
+    if (!state.place) notify('Заполните поле Заказ принят на точке')
+    if (!state.regnumber) notify('Заполните поле Гос. номер')
+    if (!state.mark) notify('Укажите марку авто')
+    if (!state.model) notify('Укажите модель авто')
+    if (!state.name) notify('Заполните поле ФИО клиента')
+    if (!state.phone) notify('Заполните поле Телефон')
+    if (!state.dateStart) notify('Заполните обе даты')
+    if (!state.dateFinish) notify('Заполните обе даты')
+    if (state.preorder.length === 0) notify('Заполните хранение')
+    if (state.preorder.length > 0 && !state.preorder[0].quantity) notify('Укажите количество')
     else if (
       state.employee &&
       state.place &&
@@ -322,104 +336,102 @@ const StoragesCreate = (props) => {
         state.regnumber === checkCustomer.regnumber &&
         state.phone === checkCustomer.phone
       ) {
-        if (state.payment === "yes") {
+        if (state.payment === 'yes') {
           props.create({
             ...state,
             status: Statuses[0],
-            currentplace: state.place,
-          });
-          history.push("/storages/order/list");
-          notify("Хранение добавлено");
+            currentplace: state.place
+          })
+          history.push('/storages/order/list')
+          notify('Хранение добавлено')
         } else {
           props.create({
             ...state,
             status: Statuses[1],
-            currentplace: state.place,
-          });
-          history.push("/storages/order/list");
-          notify("Хранение добавлено");
+            currentplace: state.place
+          })
+          history.push('/storages/order/list')
+          notify('Хранение добавлено')
         }
       } else {
-        if (state.payment === "yes") {
+        if (state.payment === 'yes') {
           props.create({
             ...state,
             status: Statuses[0],
-            currentplace: state.place,
-          });
+            currentplace: state.place
+          })
           // props.createCust(customer)
-          history.push("/storages/order/list");
-          notify("Хранение добавлено");
+          history.push('/storages/order/list')
+          notify('Хранение добавлено')
           // notify('Создан новый клиент')
         }
-        if (state.payment !== "yes") {
+        if (state.payment !== 'yes') {
           props.create({
             ...state,
             status: Statuses[1],
-            currentplace: state.place,
-          });
+            currentplace: state.place
+          })
           // props.createCust(customer)
-          history.push("/storages/order/list");
-          notify("Хранение добавлено");
+          history.push('/storages/order/list')
+          notify('Хранение добавлено')
           // notify('Создан новый клиент')
         }
       }
     }
-  };
+  }
 
   const handleChangeInput = (index, event) => {
-    const values = [...inputFields];
-    values[index][event.target.name] = event.target.value;
-    setInputFields(values);
+    const values = [...inputFields]
+    values[index][event.target.name] = event.target.value
+    setInputFields(values)
     setState((prevState) => ({
       ...prevState,
-      preorder: inputFields,
-    }));
-  };
+      preorder: inputFields
+    }))
+  }
 
   const handleAddFields = () => {
     setInputFields([
       ...inputFields,
       {
-        tyreItem: "",
-        type: "1",
-        mode: "full",
-        brand: "",
-      },
-    ]);
+        tyreItem: '',
+        type: '1',
+        mode: 'full',
+        brand: ''
+      }
+    ])
     setState((prevState) => ({
       ...prevState,
-      preorder: inputFields,
-    }));
-  };
+      preorder: inputFields
+    }))
+  }
 
   const handleRemoveFields = (index) => {
     if (index !== 0) {
-      const values = [...inputFields];
-      values.splice(index, 1);
-      setInputFields(values);
+      const values = [...inputFields]
+      values.splice(index, 1)
+      setInputFields(values)
       setState((prevState) => ({
         ...prevState,
-        preorder: values,
-      }));
+        preorder: values
+      }))
     }
-  };
+  }
 
   const onChangeRegNumber = (e) => {
-    const { value } = e.target;
-    setRegNumber((prevState) => [...prevState.concat(value)]);
-  };
+    const { value } = e.target
+    setRegNumber((prevState) => [...prevState.concat(value)])
+  }
   const onDeleteRegNumber = () => {
-    const removeItem = regNumber.filter(
-      (element, index) => index < regNumber.length - 1
-    );
-    setRegNumber(removeItem);
-  };
+    const removeItem = regNumber.filter((element, index) => index < regNumber.length - 1)
+    setRegNumber(removeItem)
+  }
   useEffect(() => {
     setState((prevState) => ({
       ...prevState,
-      regnumber: regNumber.join("").toString(),
-    }));
-  }, [regNumber]);
+      regnumber: regNumber.join('').toString()
+    }))
+  }, [regNumber])
 
   return (
     <div>
@@ -446,13 +458,13 @@ const StoragesCreate = (props) => {
                       Выберете сотрудника
                     </option>
                     {employeeList
-                      .filter((it) => it.role.includes("Хранение"))
+                      .filter((it) => it.role.includes('Хранение'))
                       .map((it, index) => {
                         return (
                           <option value={it.id} key={index}>
                             {it.name} {it.surname}
                           </option>
-                        );
+                        )
                       })}
                   </select>
                   <div className="pointer-events-none absolute top-0 mt-2  right-0 flex items-center px-2 text-gray-600">
@@ -489,7 +501,7 @@ const StoragesCreate = (props) => {
                         <option value={it.id} key={index}>
                           {it.name}
                         </option>
-                      );
+                      )
                     })}
                   </select>
                   <div className="pointer-events-none absolute top-0 mt-2  right-0 flex items-center px-2 text-gray-600">
@@ -535,7 +547,7 @@ const StoragesCreate = (props) => {
                       type="button"
                       onClick={openRegModal}
                     >
-                      {state.regnumber ? state.regnumber : "Нажмите для ввода"}
+                      {state.regnumber ? state.regnumber : 'Нажмите для ввода'}
                     </button>
                   )}
                 </div>
@@ -543,10 +555,10 @@ const StoragesCreate = (props) => {
 
               <div
                 className={cx(
-                  "absolute p-3 mr-4 max-w-2xl rounded-md shadow bg-gray-200 border-2 border-gray-600 z-50",
+                  'absolute p-3 mr-4 max-w-2xl rounded-md shadow bg-gray-200 border-2 border-gray-600 z-50',
                   {
                     hidden: regOpen === false,
-                    block: regOpen === true,
+                    block: regOpen === true
                   }
                 )}
               >
@@ -995,17 +1007,14 @@ const StoragesCreate = (props) => {
                         onChange={onSearchChange}
                       >
                         <option value="" className="text-gray-800">
-                          {customerOptions.length < 1
-                            ? "Клиентов не найдено"
-                            : "Выберите клиента"}
+                          {customerOptions.length < 1 ? 'Клиентов не найдено' : 'Выберите клиента'}
                         </option>
                         {customerOptions.map((it, index) => {
                           return (
                             <option key={index} value={it.id}>
-                              {it.name}, {it.mark} {it.model} {it.regnumber},
-                              {it.phone}
+                              {it.name}, {it.mark} {it.model} {it.regnumber},{it.phone}
                             </option>
-                          );
+                          )
                         })}
                       </select>
                       <div className="pointer-events-none absolute top-0 mt-2  right-0 flex items-center px-2 text-gray-600">
@@ -1020,9 +1029,7 @@ const StoragesCreate = (props) => {
                     </div>
                   </td>
                   <td className="w-full lg:w-auto p-2 text-gray-800 text-center border border-b block table-cell relative static">
-                    {customerOptions.length < 1 &&
-                    !customer.idOfItem &&
-                    !search ? (
+                    {customerOptions.length < 1 && !customer.idOfItem && !search ? (
                       <button
                         type="button"
                         className="py-1 px-3 text-white text-xs bg-gray-500 hover:text-white rounded-lg"
@@ -1030,9 +1037,7 @@ const StoragesCreate = (props) => {
                         Не найден
                       </button>
                     ) : null}
-                    {customerOptions.length >= 1 &&
-                    activeCustomer === "" &&
-                    !search ? (
+                    {customerOptions.length >= 1 && activeCustomer === '' && !search ? (
                       <button
                         onClick={applyCustomer}
                         type="button"
@@ -1041,9 +1046,7 @@ const StoragesCreate = (props) => {
                         Выберите клиента
                       </button>
                     ) : null}
-                    {customerOptions.length >= 1 &&
-                    activeCustomer === "" &&
-                    search ? (
+                    {customerOptions.length >= 1 && activeCustomer === '' && search ? (
                       <button
                         onClick={applyCustomer}
                         type="button"
@@ -1052,9 +1055,9 @@ const StoragesCreate = (props) => {
                         Использовать
                       </button>
                     ) : null}
-                    {activeCustomer !== "" && customer.idOfItem && search ? (
+                    {activeCustomer !== '' && customer.idOfItem && search ? (
                       <button
-                        onClick={() => setActiveCustomer("")}
+                        onClick={() => setActiveCustomer('')}
                         type="button"
                         className="py-1 px-3 text-white text-xs hover:text-white rounded-lg bg-red-600 hover:bg-red-700"
                       >
@@ -1064,9 +1067,7 @@ const StoragesCreate = (props) => {
                   </td>
                 </tr>
               </tbody>
-              {customerOptions.length >= 1 &&
-              customer.idOfItem &&
-              activeCustomer ? (
+              {customerOptions.length >= 1 && customer.idOfItem && activeCustomer ? (
                 <p className="text-left p-1">✔ Вы выбрали клиента</p>
               ) : null}
             </table>
@@ -1092,11 +1093,7 @@ const StoragesCreate = (props) => {
             />
             <datalist id="mark_list">
               {options.mark.map((it) => (
-                <option
-                  value={it.name}
-                  label={it.name_rus}
-                  key={it.id_car_mark}
-                />
+                <option value={it.name} label={it.name_rus} key={it.id_car_mark} />
               ))}
             </datalist>
           </div>
@@ -1114,11 +1111,7 @@ const StoragesCreate = (props) => {
               name="model"
               id="model"
               list="model_list"
-              placeholder={
-                state.mark.length < 2
-                  ? "Сначала выберете марку"
-                  : "Выберите модель"
-              }
+              placeholder={state.mark.length < 2 ? 'Сначала выберете марку' : 'Выберите модель'}
               disabled={state.mark.length < 2}
               autoComplete="off"
               required
@@ -1259,10 +1252,10 @@ const StoragesCreate = (props) => {
             <div className="flex-shrink w-full inline-block relative">
               <select
                 className={cx(
-                  "block appearance-none w-full bg-grey-lighter border border-gray-300 focus:border-gray-500 focus:outline-none py-1 px-4 mb-3 rounded",
+                  'block appearance-none w-full bg-grey-lighter border border-gray-300 focus:border-gray-500 focus:outline-none py-1 px-4 mb-3 rounded',
                   {
-                    "bg-green-200": state.payment === "yes",
-                    "bg-red-200": state.payment !== "yes",
+                    'bg-green-200': state.payment === 'yes',
+                    'bg-red-200': state.payment !== 'yes'
                   }
                 )}
                 name="payment"
@@ -1529,7 +1522,7 @@ const StoragesCreate = (props) => {
       </div>
       <div className=" flex my-2">
         <Link
-          to={`/storages/order/list/${props.num ? props.num : ""}`}
+          to={`/storages/order/list/${props.num ? props.num : ''}`}
           className="my-3 mr-2 py-2 md:w-1/3 px-3 bg-red-600 text-white text-center hover:bg-red-700 hover:text-white rounded-lg"
         >
           Отмена
@@ -1544,7 +1537,7 @@ const StoragesCreate = (props) => {
         </button>
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default StoragesCreate;
+export default StoragesCreate

@@ -74,6 +74,14 @@ const Shinomontazh = new mongoose.Schema({
   payment: {
     type: String,
     required: false
+  },
+  combTerm: {
+    type: String,
+    required: false
+  },
+  combCash: {
+    type: String,
+    required: false
   }
 })
 

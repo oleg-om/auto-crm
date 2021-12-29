@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import cx from 'classnames'
 import tyresList from '../../lists/tyres/tyres'
 import discountList from '../../lists/discounts'
@@ -16,6 +16,9 @@ const Final = ({
   onChangeTyres,
   checkboxTyresChange,
   tyres,
+  onChangeTermCash,
+  setTermCash,
+  termCash,
   dateEnd,
   printOne,
   printTwo
@@ -60,10 +63,30 @@ const Final = ({
     roundTo5(applyDiscount(totalService)) +
     totalMaterial
 
+  useEffect(() => {
+    if (state.payment === 'termandcash') {
+      if (termCash.terminal !== 0) {
+        setTermCash((prevState) => ({
+          ...prevState,
+          cash:
+            Number(state.discount || totalFreeService ? totalWithDiscount : totalSumm) -
+            (termCash.terminal ? Number(termCash.terminal) : totalWithDiscount)
+        }))
+      }
+      if (termCash.terminal === 0) {
+        setTermCash((prevState) => ({
+          ...prevState,
+          cash: totalWithDiscount
+        }))
+      }
+    }
+    return () => {}
+  }, [state.payment, termCash.terminal])
+
   return (
     <div>
       <div className="flex flex-row -mx-3">
-        <div className="px-3 mb-6 md:mb-0 w-1/3">
+        <div className="px-3 mb-6 md:mb-0 w-1/4">
           <label
             className="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2"
             htmlFor="grid-first-name"
@@ -76,7 +99,7 @@ const Final = ({
             </div>
           </div>
         </div>
-        <div className="px-3 mb-6 md:mb-0 w-1/3">
+        <div className="px-3 mb-6 md:mb-0 w-1/4">
           <label
             className="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2"
             htmlFor="grid-first-name"
@@ -89,7 +112,7 @@ const Final = ({
             </div>
           </div>
         </div>
-        <div className="px-3 mb-6 md:mb-0 w-1/3">
+        <div className="px-3 mb-6 md:mb-0 w-1/4">
           <label
             className="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2"
             htmlFor="grid-first-name"
@@ -100,6 +123,17 @@ const Final = ({
             <div className="py-1 px-2 w-auto">
               R{state.diametr}, {kuzovCheck()}
             </div>
+          </div>
+        </div>
+        <div className="px-3 mb-6 md:mb-0 w-1/4">
+          <label
+            className="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2"
+            htmlFor="grid-first-name"
+          >
+            Номер талона
+          </label>
+          <div className="flex flex-col relative">
+            <div className="py-1 px-2 w-auto">№ {state.talon ? state.talon : ''}</div>
           </div>
         </div>
       </div>
@@ -243,7 +277,9 @@ const Final = ({
                 <option value="yes">Оплачено</option>
                 <option value="card">Безнал</option>
                 <option value="terminal">Терминал</option>
+                <option value="termandcash">Терминал + наличные</option>
                 <option value="no">Не оплачено</option>
+                <option value="cancel">Отмена</option>
               </select>
               <div className="pointer-events-none hidden absolute top-0 mt-3 right-0 lg:flex items-center px-2 text-gray-600">
                 <svg
@@ -255,6 +291,41 @@ const Final = ({
                 </svg>
               </div>
             </div>
+          </div>
+        </div>
+      ) : null}
+      {state.payment === 'termandcash' ? (
+        <div className="flex flex-row">
+          <div className="mr-2 w-1/4">
+            <label
+              className="block uppercase tracking-wide text-grey-darker text-xs text-left font-bold mb-2"
+              htmlFor="grid-first-name"
+            >
+              Терминал
+            </label>
+            <input
+              className="appearance-none w-full block bg-grey-lighter text-grey-darker border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-1 px-4"
+              type="number"
+              name="terminal"
+              value={termCash.terminal ? termCash.terminal : 0}
+              autoComplete="off"
+              onChange={onChangeTermCash}
+            />
+          </div>
+          <div className="mr-2 w-1/4">
+            <label
+              className="block uppercase tracking-wide text-grey-darker text-xs text-left font-bold mb-2"
+              htmlFor="grid-first-name"
+            >
+              Наличные
+            </label>
+            <input
+              className="appearance-none w-full block bg-grey-lighter text-grey-darker border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-1 px-4"
+              type="number"
+              name="cash"
+              value={termCash.cash}
+              autoComplete="off"
+            />
           </div>
         </div>
       ) : null}

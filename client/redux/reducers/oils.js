@@ -89,3 +89,13 @@ export function deleteOil(id) {
       })
   }
 }
+
+export function getByMonthOil(yearmonth) {
+  return (dispatch) => {
+    fetch(`/api/v1/oilmonth?yearmonth=${yearmonth}`)
+      .then((r) => r.json())
+      .then(({ data: oils }) => {
+        dispatch({ type: GET_OILS, oils })
+      })
+  }
+}
