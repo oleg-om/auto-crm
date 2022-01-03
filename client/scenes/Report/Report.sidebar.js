@@ -236,11 +236,11 @@ const ReportSidebar = (props) => {
                 <option value="">Все</option>
                 {props.placeList
                   .filter(
-                    (it) =>
-                      it.id === props.place ||
-                      it.name.includes('Чкалова') ||
-                      it.name.includes('Новониколаевка') ||
-                      it.name.includes('Вокзальное шоссе 44')
+                    (it) => it.id === props.place
+                    //  ||
+                    // it.name.includes('Чкалова') ||
+                    // it.name.includes('Новониколаевка') ||
+                    // it.name.includes('Вокзальное шоссе 44')
                   )
                   .map((it) => (
                     <option key={it} value={it.id}>
