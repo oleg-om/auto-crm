@@ -5,6 +5,7 @@ import { socket } from '../../redux/sockets/socketReceivers'
 import AutopartUpdate from '../../components/autoparts/autopaparts.preorder.edit'
 import Navbar from '../../components/Navbar'
 import { updateAutopart } from '../../redux/reducers/autoparts'
+import { getVendors } from '../../redux/reducers/vendors'
 
 const AutopartEditSimple = () => {
   socket.connect()
@@ -13,6 +14,7 @@ const AutopartEditSimple = () => {
   const dispatch = useDispatch()
   const [loading, setLoading] = useState(false)
   const [list, setList] = useState([])
+
   useEffect(() => {
     fetch(`/api/v1/autopart/${id}`)
       .then((r) => r.json())
@@ -20,6 +22,7 @@ const AutopartEditSimple = () => {
         setList([autopart])
         setLoading(true)
       })
+    dispatch(getVendors())
   }, [id])
   const employeeList = useSelector((s) => s.employees.list)
   const placesList = useSelector((s) => s.places.list)

@@ -4,6 +4,7 @@ import { useParams } from 'react-router-dom'
 import AutopartViewOrder from '../../components/autoparts/autoparts.view'
 import Navbar from '../../components/Navbar'
 import { updateAutopart } from '../../redux/reducers/autoparts'
+import { getVendors } from '../../redux/reducers/vendors'
 
 const AutopartView = () => {
   const { id } = useParams()
@@ -18,6 +19,7 @@ const AutopartView = () => {
         setList([autopart])
         setLoading(true)
       })
+    dispatch(getVendors())
   }, [id])
   const employeeList = useSelector((s) => s.employees.list)
   const placesList = useSelector((s) => s.places.list)

@@ -5,6 +5,7 @@ import { socket } from '../../redux/sockets/socketReceivers'
 import TyreUpdate from '../../components/tyres/tyres.preorder.edit'
 import Navbar from '../../components/Navbar'
 import { updateTyre } from '../../redux/reducers/tyres'
+import { getVendors } from '../../redux/reducers/vendors'
 
 const TyreEditSimple = () => {
   socket.connect()
@@ -19,6 +20,7 @@ const TyreEditSimple = () => {
         setList([tyre])
         setLoading(true)
       })
+    dispatch(getVendors())
   }, [id])
   const { num } = useParams(1)
   const employeeList = useSelector((s) => s.employees.list)
