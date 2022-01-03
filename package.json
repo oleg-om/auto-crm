@@ -1,7 +1,7 @@
 {
-    "name": "boilerplate-skillcrucial",
-    "version": "0.0.2",
-    "description": "Boilerplate SkillCrucial",
+    "name": "autodom-crm",
+    "version": "0.0.3",
+    "description": "Autodom Crm",
     "main": "index.js",
     "scripts": {
         "docker-start-dev": "docker-compose -f \"docker\\DEV.docker-compose.yml\" up",

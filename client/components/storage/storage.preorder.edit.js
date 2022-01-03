@@ -4,6 +4,7 @@ import { useSelector } from 'react-redux'
 import { toast } from 'react-toastify'
 import { useReactToPrint } from 'react-to-print'
 import NumberFormat from 'react-number-format'
+import cx from 'classnames'
 import ComponentToPrint from './dogovor.print'
 import PeredachaToPrint from './peredacha.print'
 import VozvratToPrint from './vozvrat.print'
@@ -751,7 +752,14 @@ const StoragesUpdate = (props) => {
             </label>
             <div className="flex-shrink w-full inline-block relative">
               <select
-                className="block appearance-none w-full bg-grey-lighter border border-gray-300 focus:border-gray-500 focus:outline-none py-1 px-4 mb-3 rounded"
+                className={cx(
+                  'block appearance-none w-full bg-grey-lighter border border-gray-300 focus:border-gray-500 focus:outline-none py-1 px-4 mb-3 rounded',
+                  {
+                    'bg-green-200': state.payment === 'yes',
+                    'bg-red-200': state.payment === 'no',
+                    'bg-yellow-200': state.payment === 'free'
+                  }
+                )}
                 name="payment"
                 id="payment"
                 value={state.payment}
@@ -761,6 +769,7 @@ const StoragesUpdate = (props) => {
               >
                 <option value="yes">Оплачено</option>
                 <option value="no">Не оплачено</option>
+                <option value="free">Акция (бесплатно)</option>
               </select>
               <div className="pointer-events-none hidden absolute top-0 mt-2 right-0 lg:flex items-center px-2 text-gray-600">
                 <svg

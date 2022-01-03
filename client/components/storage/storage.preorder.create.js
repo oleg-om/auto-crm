@@ -1255,7 +1255,8 @@ const StoragesCreate = (props) => {
                   'block appearance-none w-full bg-grey-lighter border border-gray-300 focus:border-gray-500 focus:outline-none py-1 px-4 mb-3 rounded',
                   {
                     'bg-green-200': state.payment === 'yes',
-                    'bg-red-200': state.payment !== 'yes'
+                    'bg-red-200': state.payment === 'no',
+                    'bg-yellow-200': state.payment === 'free'
                   }
                 )}
                 name="payment"
@@ -1267,6 +1268,7 @@ const StoragesCreate = (props) => {
               >
                 <option value="yes">Оплачено</option>
                 <option value="no">Не оплачено</option>
+                <option value="free">Акция (бесплатно)</option>
               </select>
               <div className="pointer-events-none hidden absolute top-0 mt-2 right-0 lg:flex items-center px-2 text-gray-600">
                 <svg

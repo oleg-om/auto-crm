@@ -89,7 +89,7 @@ const config = {
             loader: MiniCssExtractPlugin.loader,
             options: {
               publicPath: '../',
-              hmr: process.env.NODE_ENV === 'production'
+              hmr: process.env.NODE_ENV === 'development'
             }
           },
           { loader: 'css-loader', options: { sourceMap: false } },
@@ -110,7 +110,7 @@ const config = {
             loader: MiniCssExtractPlugin.loader,
             options: {
               publicPath: '../',
-              hmr: process.env.NODE_ENV === 'production'
+              hmr: process.env.NODE_ENV === 'development'
             }
           },
 
