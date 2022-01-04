@@ -136,7 +136,9 @@
         "@storybook/react": "^6.0.21",
         "@testing-library/react": "^11.2.2",
         "autoprefixer": "^9.8.6",
+        "child_process": "^1.0.2",
         "copy-webpack-plugin": "^6.1.0",
+        "cron": "^1.8.2",
         "css-loader": "4.2.2",
         "cssnano": "^4.1.10",
         "emotion-theming": "^10.0.27",
@@ -158,9 +160,11 @@
         "image-webpack-loader": "^6.0.0",
         "jest": "^26.4.2",
         "jest-cli": "^26.4.2",
+        "lodash": "^4.17.21",
         "mini-css-extract-plugin": "^0.11.0",
         "node-hot-loader": "^1.20.0",
         "node-sass": "^4.14.1",
+        "nodemailer": "^6.7.2",
         "nodemon": "^2.0.4",
         "optimize-css-assets-webpack-plugin": "^5.0.4",
         "postcss-import": "^12.0.1",
@@ -179,7 +183,8 @@
         "webpack": "^4.44.1",
         "webpack-cli": "^3.3.12",
         "webpack-dev-server": "^3.11.0",
-        "webpack-shell-plugin": "^0.5.0"
+        "webpack-shell-plugin": "^0.5.0",
+        "zip-lib": "^0.7.2"
     },
     "nodemonConfig": {
         "ignore": [
