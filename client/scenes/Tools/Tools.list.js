@@ -6,30 +6,30 @@ import cx from 'classnames'
 import { toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
 import { socket } from '../../redux/sockets/socketReceivers'
-import AutopartsRow from '../../components/autoparts/autoparts.row'
-import { updateStatus, getAutopartsFiltered } from '../../redux/reducers/autoparts'
+import ToolsRow from '../../components/tools/tools.row'
+import { updateStatus, getToolsFiltered } from '../../redux/reducers/tools'
 import Navbar from '../../components/Navbar'
 import Pagination from '../Pagination'
 import taskStatuses from '../../lists/task-statuses'
 import onLoad from './Onload'
 
-const AutopartsList = () => {
+const ToolsList = () => {
   const { num } = useParams(1)
   const [showSearch, setShowSearch] = useState(false)
   onLoad(num ? Number(num) : 1, showSearch)
   const dispatch = useDispatch()
-  const list = useSelector((s) => s.autoparts.list)
-  const curPage = useSelector((s) => s.autoparts.currentPage)
-  const totalPages = useSelector((s) => s.autoparts.numberOfPages)
-  const isLoaded = useSelector((s) => s.autoparts.isLoaded)
+  const list = useSelector((s) => s.tools.list)
+  const curPage = useSelector((s) => s.tools.currentPage)
+  const totalPages = useSelector((s) => s.tools.numberOfPages)
+  const isLoaded = useSelector((s) => s.tools.isLoaded)
   const revList = [].concat(list).reverse()
   const placesList = useSelector((s) => s.places.list)
   const employeeList = useSelector((s) => s.employees.list)
   const role = useSelector((s) => s.auth.roles)
   socket.connect()
   // useEffect(() => {
-  //   socket.on('update autopart', function () {
-  //     dispatch(getAutoparts())
+  //   socket.on('update tool', function () {
+  //     dispatch(getTools())
   //   })
   // }, [])
   const settings = useSelector((s) => s.settings.list)
@@ -50,7 +50,7 @@ const AutopartsList = () => {
 
   const paginate = (pageNumber) => {
     setCurrentPage(pageNumber)
-    history.push(`/autoparts/order/list/${pageNumber}`)
+    history.push(`/tools/order/list/${pageNumber}`)
   }
 
   toast.configure()
@@ -81,16 +81,7 @@ const AutopartsList = () => {
       [name]: value
     }))
   }
-  const onChangeCustomerUppercaseRussian = (e) => {
-    const { name, value } = e.target
-    setSearch((prevState) => ({
-      ...prevState,
-      [name]: value
-        .toUpperCase()
-        .replace(/\s/g, '')
-        .replace(/[^а-яё0-9]/i, '')
-    }))
-  }
+
   const onChangeStatus = (e) => {
     const { name, value } = e.target
     setSearch((prevState) => ({
@@ -128,7 +119,7 @@ const AutopartsList = () => {
         search.regnumber
       ) {
         dispatch(
-          getAutopartsFiltered(
+          getToolsFiltered(
             num ? Number(num) : 1,
             search.status ? search.status : '',
             search.process ? search.process : '',
@@ -152,7 +143,7 @@ const AutopartsList = () => {
       place: '',
       regnumber: ''
     }))
-    history.push(`/autoparts/order/list/1`)
+    history.push(`/tools/order/list/1`)
   }
   const onFilter = () => {
     if (
@@ -166,7 +157,7 @@ const AutopartsList = () => {
       notify('Заполните хотябы одно поле фильтра')
     } else {
       setShowSearch(true)
-      history.push(`/autoparts/order/list/1`)
+      history.push(`/tools/order/list/1`)
     }
   }
 
@@ -297,7 +288,7 @@ const AutopartsList = () => {
                       Все
                     </option>
                     {employeeList
-                      .filter((it) => it.role.includes('Обработка заказов (запчасти)'))
+                      .filter((it) => it.role.includes('Обработка заказов (инструмент)'))
                       .map((it) => {
                         return (
                           <option key={it.id} value={it.id}>
@@ -360,7 +351,7 @@ const AutopartsList = () => {
                   className="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2"
                   htmlFor="grid-first-name"
                 >
-                  Сорт. по точке
+                  Сортировка по точке
                 </label>
                 <div className="flex-shrink w-full inline-block relative">
                   <select
@@ -392,62 +383,6 @@ const AutopartsList = () => {
                       viewBox="0 0 20 20"
                     >
                       <path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z" />
-                    </svg>
-                  </div>
-                </div>
-              </div>
-              {/* <div className="md:w-1/2 px-3 mb-6 md:mb-0">
-                <label
-                  className="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2"
-                  htmlFor="grid-first-name"
-                >
-                  Новых заказов
-                </label>
-                <div className="flex-shrink w-full">
-                  <button
-                    type="button"
-                    className="appearance-none w-full text-left bg-grey-lighter border border-yellow-500 focus:outline-none py-1 px-4 pr-8 rounded"
-                  >
-                    {list ? list.filter((it) => it.status === taskStatuses[0]).length : 0}
-                  </button>
-                </div>
-              </div> */}
-              <div className="md:w-1/2 px-3 mb-6 md:mb-0">
-                <label
-                  className="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2"
-                  htmlFor="grid-first-name"
-                >
-                  Гос номер
-                </label>
-                <div className="flex-shrink w-full inline-block relative">
-                  <input
-                    className={cx(
-                      'block appearance-none w-full bg-grey-lighter border border-gray-300 focus:border-gray-500 focus:outline-none py-1 px-4 pr-8 rounded',
-                      {
-                        'border-red-300 focus:border-red-500':
-                          search.regnumber && showSearch === true
-                      }
-                    )}
-                    value={search.regnumber}
-                    name="regnumber"
-                    type="regnumber"
-                    onChange={onChangeCustomerUppercaseRussian}
-                  />
-                  <div className="pointer-events-none absolute top-0 mt-2  right-0 flex items-center px-2 text-gray-600">
-                    <svg
-                      version="1.1"
-                      className="fill-current h-4 w-4"
-                      xmlns="http://www.w3.org/2000/svg "
-                      xlink="http://www.w3.org/1999/xlink "
-                      x="0px "
-                      y="0px "
-                      viewBox="0 0 52.966 52.966 "
-                      space="preserve "
-                    >
-                      <path
-                        d="M51.704,51.273L36.845,35.82c3.79-3.801,6.138-9.041,6.138-14.82c0-11.58-9.42-21-21-21s-21,9.42-21,21s9.42,21,21,21 c5.083,0,9.748-1.817,13.384-4.832l14.895,15.491c0.196,0.205,0.458,0.307,0.721,0.307c0.25,0,0.499-0.093,0.693-0.279 C52.074,52.304,52.086,51.671,51.704,51.273z
-                            M21.983,40c-10.477,0-19-8.523-19-19s8.523-19,19-19s19,8.523,19,19 S32.459,40,21.983,40z "
-                      />
                     </svg>
                   </div>
                 </div>
@@ -494,9 +429,6 @@ const AutopartsList = () => {
                   Заказ
                 </th>
                 <th className="p-3 font-bold uppercase bg-gray-100 text-gray-600 border border-gray-300 hidden lg:table-cell">
-                  Авто
-                </th>
-                <th className="p-3 font-bold uppercase bg-gray-100 text-gray-600 border border-gray-300 hidden lg:table-cell">
                   Телефон
                 </th>
                 <th className="p-3 font-bold uppercase bg-gray-100 text-gray-600 border border-gray-300 hidden lg:table-cell">
@@ -522,7 +454,7 @@ const AutopartsList = () => {
             <tbody>
               {list && list.length > 0
                 ? list.map((it) => (
-                    <AutopartsRow
+                    <ToolsRow
                       key={it.id}
                       {...it}
                       updateStatus={updateStatusLocal}
@@ -562,7 +494,7 @@ const AutopartsList = () => {
           />
         </div>
 
-        <Link to={`/autoparts/order/create/${num ? Number(num) : ''}`}>
+        <Link to={`/tools/order/create/${num ? Number(num) : ''}`}>
           <button
             type="button"
             className="fixed bottom-0 left-0 p-6 shadow bg-blue-600 text-white opacity-75 text-l hover:opacity-100 hover:bg-blue-700 hover:text-white rounded-full my-3 mx-3"
@@ -577,4 +509,4 @@ const AutopartsList = () => {
   )
 }
 
-export default AutopartsList
+export default ToolsList

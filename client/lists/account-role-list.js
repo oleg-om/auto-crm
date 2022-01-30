@@ -9,5 +9,7 @@ module.exports = [
   { name: 'Прием заказов (шины)', value: 'tyresimple' },
   { name: 'Обработка заказов (шины)', value: 'tyrefull' },
   { name: 'Хранение', value: 'hranenie' },
-  { name: 'Кассир', value: 'kassa' }
+  { name: 'Кассир', value: 'kassa' },
+  { name: 'Прием заказов (инструмент)', value: 'toolsimple' },
+  { name: 'Обработка заказов (инструмент)', value: 'toolfull' }
 ]

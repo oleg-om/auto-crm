@@ -35,6 +35,7 @@ const shinomotazhRoutes = require('./routes/api/shinomotazh.routes')
 const vendorRoutes = require('./routes/api/vendor.routes')
 const tyreRoutes = require('./routes/api/tyres.routes')
 const storageRoutes = require('./routes/api/storage.routes')
+const toolRoutes = require('./routes/api/tools.routes')
 
 const Root = () => ''
 
@@ -106,6 +107,7 @@ server.use('/api/v1', shinomotazhRoutes)
 server.use('/api/v1', vendorRoutes)
 server.use('/api/v1', tyreRoutes)
 server.use('/api/v1', storageRoutes)
+server.use('/api/v1', toolRoutes)
 
 server.get('/api/v1/auth', async (req, res) => {
   try {
@@ -270,6 +272,14 @@ io.on('connection', (socket) => {
 
   socket.on('edit autopart', () => {
     io.emit('update edited autopart', { status: 'test', place: 'test' })
+  })
+
+  socket.on('new tool', () => {
+    io.emit('update tool', { status: 'test', place: 'test' })
+  })
+
+  socket.on('edit tool', () => {
+    io.emit('update edited tool', { status: 'test', place: 'test' })
   })
 
   socket.on('new razval', ({ razval }) => {

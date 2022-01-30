@@ -66,6 +66,12 @@ import StorageView from '../scenes/Storage/Storage.preorder.view'
 import ScrollToTop from '../components/ScrollToTop'
 import Startup from './startup'
 
+import ToolsList from '../scenes/Tools/Tools.list'
+import ToolsNew from '../scenes/Tools/Tools.preorder.create'
+import ToolEditSimple from '../scenes/Tools/Tools.preorder.edit'
+import ToolEditFull from '../scenes/Tools/Tools.edit'
+import ToolView from '../scenes/Tools/Tools.preorder.view'
+
 const OnlyAnonymousRoute = ({ component: Component, ...rest }) => {
   const auth = useSelector((s) => s.auth)
   const func = (props) =>
@@ -262,6 +268,16 @@ const RootComponent = (props) => {
             <PrivateRoute exact path="/storages/editfull/:id" component={StorageEditFull} />
             <PrivateRoute exact path="/storages/view/:id/:num" component={StorageView} />
             <PrivateRoute exact path="/storages/view/:id" component={StorageView} />
+            <PrivateRoute exact path="/tools/order/list/:num" component={ToolsList} />
+            <PrivateRoute exact path="/tools/order/list/" component={ToolsList} />
+            <PrivateRoute exact path="/tools/order/create/:num" component={ToolsNew} />
+            <PrivateRoute exact path="/tools/order/create" component={ToolsNew} />
+            <PrivateRoute exact path="/tools/edit/:id/:num" component={ToolEditSimple} />
+            <PrivateRoute exact path="/tools/edit/:id" component={ToolEditSimple} />
+            <PrivateRoute exact path="/tools/editfull/:id/:num" component={ToolEditFull} />
+            <PrivateRoute exact path="/tools/editfull/:id" component={ToolEditFull} />
+            <PrivateRoute exact path="/tools/view/:id/:num" component={ToolView} />
+            <PrivateRoute exact path="/tools/view/:id" component={ToolView} />
             <Route component={() => <NotFound />} />
           </Switch>
         </Startup>
