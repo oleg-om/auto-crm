@@ -89,7 +89,7 @@ const Shinomontazh = ({
               it.status === statuses[4] ||
               it.status === statuses[6]
           )
-          // .filter((it) => it.payment === 'yes')
+          .filter((it) => it.payment && it.payment !== 'cancel')
           .filter(
             (item) =>
               new Date(item.dateFinish).getFullYear() === activeMonth.getFullYear() &&
@@ -110,7 +110,7 @@ const Shinomontazh = ({
               it.status === statuses[4] ||
               it.status === statuses[6]
           )
-          // .filter((it) => it.payment === 'yes')
+          .filter((it) => it.payment && it.payment !== 'cancel')
           .filter(
             (item) =>
               new Date(item.dateFinish).getFullYear() === activeDay.getFullYear() &&
@@ -135,7 +135,7 @@ const Shinomontazh = ({
               it.status === statuses[6]
           )
           .filter((it) => (place ? place === it.place : it))
-          // .filter((it) => it.payment === 'yes')
+          .filter((it) => it.payment && it.payment !== 'cancel')
           .filter(
             (item) =>
               new Date(item.dateFinish).getFullYear() === activeMonth.getFullYear() &&
@@ -155,7 +155,7 @@ const Shinomontazh = ({
               it.status === statuses[6]
           )
           .filter((it) => (place ? place === it.place : it))
-          // .filter((it) => it.payment === 'yes')
+          .filter((it) => it.payment && it.payment !== 'cancel')
           .filter(
             (item) =>
               new Date(item.dateFinish).getFullYear() === activeDay.getFullYear() &&
@@ -176,7 +176,7 @@ const Shinomontazh = ({
               it.status === statuses[6]
           )
           .filter((it) => (place ? place === it.place : it))
-          // .filter((it) => it.payment === 'yes')
+          .filter((it) => it.payment && it.payment !== 'cancel')
           .filter(
             (item) =>
               new Date(item.dateFinish).getFullYear() === activeDay.getFullYear() &&

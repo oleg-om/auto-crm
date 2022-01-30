@@ -549,19 +549,19 @@ const Salary = ({ report, isMaterial, setIsMaterial, calendarType }) => {
               <td className="w-full lg:w-auto p-2 text-gray-800 text-left lg:text-center border border-b block lg:table-cell relative lg:static">
                 <span className="lg:hidden px-2 py-1 text-xs font-bold uppercase">Терминал:</span>
                 {Math.round(
-                  getSalary(it.id, 'Терминал', 'Комбинированный'),
+                  getSalary(it.id, 'Терминал', 'Комбинированный', 'summa'),
                   userPercent[it.id]
                 )}{' '}
                 руб.
               </td>
               <td className="w-full lg:w-auto p-2 text-gray-800 text-left lg:text-center border border-b block lg:table-cell relative lg:static">
                 <span className="lg:hidden px-2 py-1 text-xs font-bold uppercase">Безнал:</span>
-                {Math.round(getSalary(it.id, 'Безнал'), userPercent[it.id])} руб.
+                {Math.round(getSalary(it.id, 'Безнал', '', 'summa'), userPercent[it.id])} руб.
               </td>
               <td className="w-full lg:w-auto p-2 text-gray-800 text-left lg:text-center border border-b block lg:table-cell relative lg:static">
                 <span className="lg:hidden px-2 py-1 text-xs font-bold uppercase">Наличка:</span>
                 {Math.round(
-                  getSalary(it.id, 'Оплачено', 'Комбинированный'),
+                  getSalary(it.id, 'Оплачено', 'Комбинированный', 'summa'),
                   userPercent[it.id]
                 )}{' '}
                 руб.
@@ -605,17 +605,17 @@ const Salary = ({ report, isMaterial, setIsMaterial, calendarType }) => {
               <span className="lg:hidden px-2 py-1 bg-purple-100 font-bold uppercase">
                 Терминал:
               </span>
-              {Math.round(getSalaryfull('', 'Терминал', 'Комбинированный'), '')} руб.
+              {Math.round(getSalaryfull('', 'Терминал', 'Комбинированный', 'summa'), '')} руб.
             </td>
             <td className="w-full lg:w-auto p-2 text-gray-800 text-left lg:text-center border border-b block lg:table-cell relative lg:static">
               <span className="lg:hidden px-2 py-1 bg-purple-100 font-bold uppercase">Безнал:</span>
-              {Math.round(getSalaryfull('', 'Безнал'), '')} руб.
+              {Math.round(getSalaryfull('', 'Безнал', '', 'summa'), '')} руб.
             </td>
             <td className="w-full lg:w-auto p-2 text-gray-800 text-left lg:text-center border border-b block lg:table-cell relative lg:static">
               <span className="lg:hidden px-2 py-1 bg-purple-100 font-bold uppercase">
                 Наличка:
               </span>
-              {Math.round(getSalaryfull('', 'Оплачено', 'Комбинированный'), '')} руб.
+              {Math.round(getSalaryfull('', 'Оплачено', 'Комбинированный', 'summa'), '')} руб.
             </td>
             {calendarType === 'day' ? (
               <td className="w-full lg:w-auto p-2 text-gray-800 text-left lg:text-center border border-b block lg:table-cell relative lg:static">
