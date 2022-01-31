@@ -6,7 +6,6 @@ import cx from 'classnames'
 import { useReactToPrint } from 'react-to-print'
 import 'react-toastify/dist/ReactToastify.css'
 import ComponentToPrint from './tools.print'
-import malePlaceholder from '../../assets/images/profile_placeholder_male.webp'
 import orderPlaceholder from '../../assets/images/order_placeholder.webp'
 import taskStatuses from '../../lists/task-statuses'
 import cancelStatuses from '../../lists/cancel-statuses'
@@ -61,7 +60,7 @@ const ToolUpdate = (props) => {
     process: props.process ? props.process : auth.name,
     prepay: props.prepay,
     commentOrder: props.commentOrder,
-    order: props.order.length !== 0 ? props.order : [{}],
+    order: props.order && props.order.length !== 0 ? props.order : [{}],
     dateInWork: props.dateInWork,
     dateFinish: props.dateFinish,
     dateMiscall: props.dateMiscall,
@@ -156,7 +155,7 @@ const ToolUpdate = (props) => {
   const createDate = new Date(props.date)
 
   const totalInWork =
-    props.order.length >= 1
+    props.order && props.order.length >= 1
       ? props.order.reduce(function fullPrice(acc, rec) {
           if (rec.price && rec.quantity && rec.stat !== 'Интересовался')
             if (rec.price.match(/[0-9]/) && rec.quantity.match(/[0-9]/)) {
@@ -213,61 +212,31 @@ const ToolUpdate = (props) => {
                   <li>
                     <b>Предоплата:</b> {props.prepay ? props.prepay : 'Нет'}
                   </li>
+
+                  <li>
+                    <b>Имя клиента:</b> {props.name}
+                  </li>
+                  <li>
+                    <b>Телефон клиента:</b> {props.phone}
+                  </li>
                 </ul>
                 <Link
                   to={`/tools/editfull/${props.id_tools}/${props.num ? props.num : ''}`}
-                  className="py-2 px-3 bg-blue-600 text-white text-sm hover:bg-blue-700 hover:text-white rounded-full h-22 w-22"
+                  className="py-2 px-3 bg-blue-600 text-white text-sm hover:bg-blue-700 hover:text-white rounded-full h-22 w-22 mr-2"
                 >
                   Редактировать заказ
                 </Link>
-              </div>
-            </div>
-          </div>
-          <div className="md:m-3 lg:flex rounded-lg px-6 py-2 w-auto shadow bg-gray-100 my-2">
-            <img
-              className="h-32 w-32 m-5 rounded-full mx-auto md:mx-0"
-              src={malePlaceholder}
-              alt="Олег"
-            />
-            <div className="text-center md:text-left m-3">
-              <h2>Клиент</h2>
-              <div>
-                <ul className="mb-4">
-                  <li className="whitespace-normal">
-                    <b>Авто:</b> {props.mark} {props.model} {props.gen} {props.mod}
-                  </li>
-                  {props.regnumber ? (
-                    <li>
-                      <b>Гос. номер:</b> {props.regnumber}
-                    </li>
-                  ) : null}
-                  <li>
-                    <b>VIN:</b> {props.vinnumber}
-                  </li>
-                  <li>
-                    <b>Имя:</b> {props.name}
-                  </li>
-                  <li>
-                    <b>Телефон:</b> {props.phone}
-                  </li>
-                </ul>
-                {/* <Link
-                  to={`/tools/editfull/${props.id_tools}`}
-                  className="py-2 px-3 bg-blue-600 text-white text-sm hover:bg-blue-700 hover:text-white rounded-full h-22 w-22"
-                >
-                  Заказы клиента
-                </Link> */}
                 <button
                   type="submit"
                   onClick={handlePrintPlusUpdateStatus}
                   className="py-2 px-3 bg-blue-600 text-white text-sm hover:bg-blue-700 hover:text-white rounded-full h-22 w-22"
                 >
-                  <div className="flex flex-row">
+                  {/* <div className="flex flex-row">
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
                       version="1.1"
-                      width="20"
-                      height="20"
+                      width="15"
+                      height="15"
                       x="0"
                       y="0"
                       viewBox="0 0 512 512"
@@ -295,9 +264,9 @@ const ToolUpdate = (props) => {
                         />
                       </g>
                     </svg>
-
-                    <p> Печать сметы</p>
-                  </div>
+                    Печать сметы
+                  </div> */}
+                  Печать сметы
                 </button>
                 <div className="hidden">
                   <ComponentToPrint
@@ -312,6 +281,7 @@ const ToolUpdate = (props) => {
               </div>
             </div>
           </div>
+
           <div className="md:m-3 lg:flex flex-col rounded-lg px-6 py-2 w-auto shadow bg-gray-100 my-2">
             <div className="text-center md:text-left m-3">
               <div>
@@ -348,7 +318,7 @@ const ToolUpdate = (props) => {
                     Выберите сотрудника
                   </option>
                   {employeeListLocal
-                    .filter((it) => it.role.includes('Обработка заказов (запчасти)'))
+                    .filter((it) => it.role.includes('Обработка заказов (инструмент)'))
                     .map((it) => {
                       return (
                         <option value={it.id} key={it.id}>
@@ -677,39 +647,21 @@ const ToolUpdate = (props) => {
                           <option value="instock">В наличии</option>
                         </select>
                       </td>
-                      {props.id_tools > 58 ? (
-                        <td className="w-full lg:w-auto p-2 text-gray-800 text-center border border-b table-cell relative">
-                          <input
-                            className="appearance-none block w-full bg-grey-lighter text-sm text-grey-darker border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-1 px-4"
-                            type="date"
-                            name="come"
-                            value={inputField.come}
-                            defaultValue={
-                              state.order.find((it, id) => id === index)
-                                ? state.order.find((it, id) => id === index).come
-                                : ''
-                            }
-                            autoComplete="off"
-                            onChange={(event) => handleChangeInput(index, event)}
-                          />
-                        </td>
-                      ) : (
-                        <td className="w-full lg:w-auto p-2 text-gray-800 text-center border border-b table-cell relative">
-                          <input
-                            className="appearance-none block w-full bg-grey-lighter text-sm text-grey-darker border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-1 px-4"
-                            type="text"
-                            name="come"
-                            value={inputField.come}
-                            defaultValue={
-                              state.order.find((it, id) => id === index)
-                                ? state.order.find((it, id) => id === index).come
-                                : ''
-                            }
-                            autoComplete="off"
-                            onChange={(event) => handleChangeInput(index, event)}
-                          />
-                        </td>
-                      )}
+                      <td className="w-full lg:w-auto p-2 text-gray-800 text-center border border-b table-cell relative">
+                        <input
+                          className="appearance-none block w-full bg-grey-lighter text-sm text-grey-darker border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-1 px-4"
+                          type="date"
+                          name="come"
+                          value={inputField.come}
+                          defaultValue={
+                            state.order.find((it, id) => id === index)
+                              ? state.order.find((it, id) => id === index).come
+                              : ''
+                          }
+                          autoComplete="off"
+                          onChange={(event) => handleChangeInput(index, event)}
+                        />
+                      </td>
                       <td className="w-full lg:w-auto p-2 text-gray-800 text-center border border-b table-cell">
                         <div className="flex flex-row">
                           <button
@@ -779,7 +731,7 @@ const ToolUpdate = (props) => {
                 </button>
               </div>
               <p className="ml-3">
-                {props.order.length >= 1
+                {props.order && props.order.length >= 1
                   ? props.order.reduce(function fullPrice(acc, rec) {
                       if (rec.price && rec.quantity && rec.stat !== 'Интересовался')
                         if (rec.price.match(/[0-9]/) && rec.quantity.match(/[0-9]/)) {

@@ -32,10 +32,6 @@ const ToolsRow = (props) => {
           : props.preorder.slice(0, 2).map((it, index) => <p key={index}>{it.toolItem}</p>)}
       </td>
 
-      <td className="w-full lg:w-auto p-2 text-gray-800 text-left text-sm lg:text-center border border-b block lg:table-cell relative lg:static">
-        <span className="lg:hidden px-2 py-1 text-xs font-bold uppercase">Авто:</span>
-        {props.mark} {props.model}
-      </td>
       <td className="whitespace-no-wrap w-full lg:w-auto p-2 text-gray-800 text-sm text-left lg:text-center border border-b block lg:table-cell relative lg:static">
         <span className="lg:hidden px-2 py-1 text-xs font-bold uppercase">Телефон:</span>
         {props.phone}

@@ -6,7 +6,7 @@ exports.getAll = async (req, res) => {
 }
 
 exports.getLastOneHundred = async (req, res) => {
-  const list = await Tool.find().sort({ id_autoparts: -1 }).limit(20)
+  const list = await Tool.find().sort({ id_tools: -1 }).limit(20)
   return res.json({ status: 'ok', data: list.reverse() })
 }
 
@@ -18,7 +18,7 @@ exports.getByPage = async (req, res) => {
     const startIndex = (Number(page) - 1) * LIMIT // get the starting index of every page
 
     const total = await Tool.countDocuments({})
-    const posts = await Tool.find().sort({ id_autoparts: -1 }).limit(LIMIT).skip(startIndex)
+    const posts = await Tool.find().sort({ id_tools: -1 }).limit(LIMIT).skip(startIndex)
 
     res.json({
       status: 'ok',
@@ -32,7 +32,7 @@ exports.getByPage = async (req, res) => {
 }
 
 exports.getFiltered = async (req, res) => {
-  const { page, number, place, status, process, phone, reg } = req.query
+  const { page, number, place, status, process, phone } = req.query
 
   try {
     const LIMIT = 14
@@ -43,7 +43,7 @@ exports.getFiltered = async (req, res) => {
     //     {
     //       status: `${decodeURIComponent(req.query.status ? status : '').toString()}`
     //     },
-    //     { id_autoparts: number },
+    //     { id_tools: number },
     //     {
     //       process: req.query.process ? `${process.toString()}` : 'smth'
     //     },
@@ -54,22 +54,20 @@ exports.getFiltered = async (req, res) => {
     //   ]
     // })
     const total = await Tool.countDocuments({
-      id_autoparts: req.query.number ? number : { $exists: true },
+      id_tools: req.query.number ? number : { $exists: true },
       place: req.query.place ? `${place.toString()}` : { $exists: true },
       status: req.query.status ? `${decodeURIComponent(status).toString()}` : { $exists: true },
       process: req.query.process ? `${process.toString()}` : { $exists: true },
-      phone: req.query.phone ? { $regex: `${phone.toString()}`, $options: 'i' } : { $exists: true },
-      regnumber: req.query.reg ? { $regex: `${reg.toString()}`, $options: 'i' } : { $exists: true }
+      phone: req.query.phone ? { $regex: `${phone.toString()}`, $options: 'i' } : { $exists: true }
     })
 
     const posts = await Tool.find({
       // status: `${decodeURIComponent(req.query.status ? status : '').toString()}`,
-      id_autoparts: req.query.number ? number : { $exists: true },
+      id_tools: req.query.number ? number : { $exists: true },
       place: req.query.place ? `${place.toString()}` : { $exists: true },
       status: req.query.status ? `${decodeURIComponent(status).toString()}` : { $exists: true },
       process: req.query.process ? `${process.toString()}` : { $exists: true },
-      phone: req.query.phone ? { $regex: `${phone.toString()}`, $options: 'i' } : { $exists: true },
-      regnumber: req.query.reg ? { $regex: `${reg.toString()}`, $options: 'i' } : { $exists: true }
+      phone: req.query.phone ? { $regex: `${phone.toString()}`, $options: 'i' } : { $exists: true }
       // {
       //   process: req.query.process ? `${process.toString()}` : 'smth'
       // },
@@ -78,7 +76,7 @@ exports.getFiltered = async (req, res) => {
       // upsert: false,
       // useFindAndModify: false
     })
-      .sort({ id_autoparts: -1 })
+      .sort({ id_tools: -1 })
       .limit(LIMIT)
       .skip(startIndex)
 
@@ -95,7 +93,7 @@ exports.getFiltered = async (req, res) => {
 
 exports.getOne = async (req, res) => {
   const autopart = await Tool.findOne(
-    { id_autoparts: req.params.id },
+    { id_tools: req.params.id },
     { upsert: false, useFindAndModify: false }
   )
   return res.json({ status: 'ok', data: autopart })

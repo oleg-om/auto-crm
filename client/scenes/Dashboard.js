@@ -12,6 +12,7 @@ import razval from '../assets/images/Dashboard/razval.png'
 import customer from '../assets/images/Dashboard/customer.png'
 import vendor from '../assets/images/Dashboard/vendor.png'
 import shinomotazh from '../assets/images/Dashboard/tyremount.png'
+import tools from '../assets/images/Dashboard/tools.png'
 
 const Dashboard = () => {
   toast.configure()
@@ -85,6 +86,36 @@ const Dashboard = () => {
                     </div>
                     <div className="w-1/2">
                       <img src={autoparts} alt="" className="object-contain h-48 w-full" />
+                    </div>
+                  </div>
+                </Link>
+              </div>
+            ) : null}
+
+            {auth.roles.includes('toolfull') ||
+            auth.roles.includes('toolsimple') ||
+            auth.roles.includes('boss') ||
+            auth.roles.includes('admin') ? (
+              <div className="md:w-1/2 px-3 mb-6 flex flex-col">
+                <Link
+                  to="/tools/order/list"
+                  className="rounded-lg shadow-lg bg-gradient-to-r from-red-400 to-yellow-500 h-full"
+                >
+                  <div className="m-2 p-2 flex flex-row">
+                    <div className="w-1/2 px-3">
+                      <h2 className="text-3xl text-white font-bold">Инструмент</h2>
+                      <p className="my-2 text-white">
+                        Возможность создавать, редактировать заказы по инструменту и оборудованию
+                      </p>
+                      <button
+                        type="button"
+                        className="bottom-0 py-2 px-4 bg-blue-600 text-white hover:bg-blue-700 hover:text-white rounded-lg lg:my-3 my-0"
+                      >
+                        Перейти
+                      </button>
+                    </div>
+                    <div className="w-1/2">
+                      <img src={tools} alt="" className="object-contain h-48 w-full" />
                     </div>
                   </div>
                 </Link>

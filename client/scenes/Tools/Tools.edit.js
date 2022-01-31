@@ -2,11 +2,11 @@ import React, { useEffect, useState } from 'react'
 import { useDispatch } from 'react-redux'
 import { useParams } from 'react-router-dom'
 import { socket } from '../../redux/sockets/socketReceivers'
-import AutopartsEdit from '../../components/autoparts/autoparts.order.edit'
+import ToolsEdit from '../../components/tools/tools.order.edit'
 import Navbar from '../../components/Navbar'
-import { updateAutopart } from '../../redux/reducers/autoparts'
+import { updateTool } from '../../redux/reducers/tools'
 
-const AutopartEditFull = () => {
+const ToolEditFull = () => {
   socket.connect()
   const { id } = useParams()
   const { num } = useParams(1)
@@ -14,17 +14,17 @@ const AutopartEditFull = () => {
   const [loading, setLoading] = useState(false)
   const [list, setList] = useState([])
   useEffect(() => {
-    fetch(`/api/v1/autopart/${id}`)
+    fetch(`/api/v1/tool/${id}`)
       .then((r) => r.json())
-      .then(({ data: autopart }) => {
-        setList([autopart])
+      .then(({ data: tool }) => {
+        setList([tool])
         setLoading(true)
       })
   }, [id])
 
-  const updateAutopartLocal = (idOfItem, name) => {
-    dispatch(updateAutopart(idOfItem, name))
-    socket.emit('edit autopart')
+  const updateToolLocal = (idOfItem, name) => {
+    dispatch(updateTool(idOfItem, name))
+    socket.emit('edit tool')
   }
 
   const loadingComponent = () => {
@@ -49,13 +49,11 @@ const AutopartEditFull = () => {
       <Navbar />
       <div className="container mx-auto px-4 mt-3">
         {loading
-          ? list.map((it) => (
-              <AutopartsEdit key={id} {...it} updateAutopart={updateAutopartLocal} num={num} />
-            ))
+          ? list.map((it) => <ToolsEdit key={id} {...it} updateTool={updateToolLocal} num={num} />)
           : loadingComponent()}
       </div>
     </div>
   )
 }
 
-export default AutopartEditFull
+export default ToolEditFull
