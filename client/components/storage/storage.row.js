@@ -98,11 +98,11 @@ const StoragesRow = (props) => {
       <td className="w-auto p-2 text-gray-800 text-sm text-center border border-b table-cell static whitespace-no-wrap">
         <div
           className={cx('rounded py-1 px-3 text-xs font-bold justify-center flex', {
-            'bg-yellow-400': props.status === taskStatuses[0],
-            'bg-green-400': props.status === taskStatuses[2],
-            'bg-red-400': props.status === taskStatuses[1],
-            'bg-purple-400': props.status === taskStatuses[3],
-            'bg-gray-400': props.status === taskStatuses[4]
+            'bg-yellow-400': props.status === taskStatuses[0] || props.status === taskStatuses[1],
+            'bg-green-400': props.status === taskStatuses[3],
+            'bg-red-400': props.status === taskStatuses[2],
+            'bg-purple-400': props.status === taskStatuses[4],
+            'bg-gray-400': props.status === taskStatuses[5]
           })}
         >
           {props.status}

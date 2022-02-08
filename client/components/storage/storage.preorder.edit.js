@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react'
+import React, { useState, useRef, useEffect } from 'react'
 import { Link, useHistory } from 'react-router-dom'
 import { useSelector } from 'react-redux'
 import { toast } from 'react-toastify'
@@ -90,6 +90,16 @@ const StoragesUpdate = (props) => {
     currentplace: props.currentplace,
     status: props.status
   })
+
+  useEffect(() => {
+    if (state.payment === 'free') {
+      setState((prevState) => ({
+        ...prevState,
+        comment: 0
+      }))
+    }
+    return () => {}
+  }, [state.payment])
 
   const onChange = (e) => {
     const { name, value } = e.target
@@ -1009,13 +1019,16 @@ const StoragesUpdate = (props) => {
               className="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2"
               htmlFor="grid-city"
             >
-              Цена
+              {state.payment === 'free'
+                ? 'Цена (по умолчанию равна 0 при покупке новых шин)'
+                : 'Цена'}
             </label>
             <input
               className="appearance-none block w-full bg-grey-lighter text-grey-darker border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-1 px-4 mb-3"
               type="number"
               placeholder="Сумма хранения"
               value={state.comment}
+              disabled={state.payment === 'free'}
               name="comment"
               id="comment"
               onChange={onChange}

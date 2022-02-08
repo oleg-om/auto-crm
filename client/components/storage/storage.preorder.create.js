@@ -75,6 +75,16 @@ const StoragesCreate = (props) => {
   })
 
   useEffect(() => {
+    if (state.payment === 'free') {
+      setState((prevState) => ({
+        ...prevState,
+        comment: 0
+      }))
+    }
+    return () => {}
+  }, [state.payment])
+
+  useEffect(() => {
     fetch('/api/v1/carmark')
       .then((res) => res.json())
       .then((it) => {
@@ -1508,13 +1518,16 @@ const StoragesCreate = (props) => {
               className="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2"
               htmlFor="grid-city"
             >
-              Цена
+              {state.payment === 'free'
+                ? 'Цена (по умолчанию равна 0 при покупке новых шин)'
+                : 'Цена'}
             </label>
             <input
               className="appearance-none block w-full bg-grey-lighter text-grey-darker border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-1 px-4 mb-3"
               type="number"
               placeholder="Сумма хранения"
               value={state.comment}
+              disabled={state.payment === 'free'}
               name="comment"
               id="comment"
               onChange={onChange}
