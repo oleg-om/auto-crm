@@ -98,6 +98,10 @@ const Storage = new mongoose.Schema({
     type: Array,
     required: false
   },
+  payment: {
+    type: String,
+    required: false
+  },
   cancelReason: {
     type: String,
     required: false

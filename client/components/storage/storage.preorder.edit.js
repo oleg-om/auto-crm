@@ -127,7 +127,7 @@ const StoragesUpdate = (props) => {
       dateFinish: today
     }))
   }
-
+  console.log(state)
   const sendData = () => {
     if (!state.employee) notify('Заполните поле Принял заказ')
     if (!state.place) notify('Заполните поле Заказ принят на точке')
@@ -137,6 +137,7 @@ const StoragesUpdate = (props) => {
     if (!state.name) notify('Заполните поле ФИО клиента')
     if (!state.phone) notify('Заполните поле Телефон')
     if (!state.dateStart) notify('Заполните обе даты')
+    if (!state.payment) notify('Заполните поле оплата')
     if (!state.dateFinish) notify('Заполните обе даты')
     if (state.preorder.length === 0) notify('Заполните хранение')
     else if (
