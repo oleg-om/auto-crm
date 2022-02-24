@@ -1,35 +1,39 @@
 import React, { useState, useEffect } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import { Link, useParams, useHistory } from 'react-router-dom'
-import NumberFormat from 'react-number-format'
+// import NumberFormat from 'react-number-format'
 import cx from 'classnames'
 import { toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
 import { socket } from '../../redux/sockets/socketReceivers'
-import AutopartsRow from '../../components/autoparts/autoparts.row'
-import { updateStatus, getAutopartsFiltered } from '../../redux/reducers/autoparts'
+import ShinomontazhsRowBoss from '../../components/shinomontazhs/shinomontazhs.row.boss'
+import { updateStatus, getItemsFiltered } from '../../redux/reducers/shinomontazhs'
 import Navbar from '../../components/Navbar'
 import Pagination from '../Pagination'
-import taskStatuses from '../../lists/task-statuses'
 import onLoad from './Onload'
+// import taskStatuses from '../../lists/task-statuses'
 
-const AutopartsList = () => {
+const ShinomontazhsListBoss = () => {
   const { num } = useParams(1)
   const [showSearch, setShowSearch] = useState(false)
   onLoad(num ? Number(num) : 1, showSearch)
+
   const dispatch = useDispatch()
-  const list = useSelector((s) => s.autoparts.list)
-  const curPage = useSelector((s) => s.autoparts.currentPage)
-  const totalPages = useSelector((s) => s.autoparts.numberOfPages)
-  const isLoaded = useSelector((s) => s.autoparts.isLoaded)
-  const revList = [].concat(list).reverse()
+  const list = useSelector((s) => s.shinomontazhs.list)
+  const curPage = useSelector((s) => s.shinomontazhs.currentPage)
+  const totalPages = useSelector((s) => s.shinomontazhs.numberOfPages)
+  const isLoaded = useSelector((s) => s.shinomontazhs.isLoaded)
+
   const placesList = useSelector((s) => s.places.list)
   const employeeList = useSelector((s) => s.employees.list)
   const role = useSelector((s) => s.auth.roles)
+
+  const history = useHistory()
+
   socket.connect()
   // useEffect(() => {
-  //   socket.on('update autopart', function () {
-  //     dispatch(getAutoparts())
+  //   socket.on('update shinomontazh', function () {
+  //     dispatch(getShinomontazhs())
   //   })
   // }, [])
   const settings = useSelector((s) => s.settings.list)
@@ -37,20 +41,10 @@ const AutopartsList = () => {
     dispatch(updateStatus(id, status))
   }
 
-  const [loading, setLoading] = useState(true)
-
-  const history = useHistory()
-
-  const [currentPage, setCurrentPage] = useState(num ? Number(num) : 1)
   const postsPerPage = 14
-  const indexOfLastPost = currentPage * postsPerPage
-  const indexOfFirstPost = indexOfLastPost - postsPerPage
-
-  const currentPosts = revList.slice(indexOfFirstPost, indexOfLastPost)
 
   const paginate = (pageNumber) => {
-    setCurrentPage(pageNumber)
-    history.push(`/autoparts/order/list/${pageNumber}`)
+    history.push(`/shinomontazhboss/list/${pageNumber}`)
   }
 
   toast.configure()
@@ -62,58 +56,44 @@ const AutopartsList = () => {
     phone: '',
     number: '',
     status: '',
-    process: '',
+    vinnumber: '',
     place: '',
     regnumber: ''
   })
 
-  const onChangePhone = (e) => {
-    const { name, value } = e.target
-    setSearch((prevState) => ({
-      ...prevState,
-      [name]: value
-    }))
-  }
+  // const onChangePhone = (e) => {
+  //   const { name, value } = e.target
+  //   setSearch(() => ({
+  //     [name]: value,
+  //     number: '',
+  //     status: '',
+  //     vinnumber: '',
+  //     place: ''
+  //   }))
+  // }
   const onChangeNumber = (e) => {
     const { name, value } = e.target
-    setSearch((prevState) => ({
-      ...prevState,
-      [name]: value
-    }))
-  }
-  const onChangeCustomerUppercaseRussian = (e) => {
-    const { name, value } = e.target
-    setSearch((prevState) => ({
-      ...prevState,
-      [name]: value
-        .toUpperCase()
-        .replace(/\s/g, '')
-        .replace(/[^а-яё0-9]/i, '')
-    }))
-  }
-  const onChangeStatus = (e) => {
-    const { name, value } = e.target
-    setSearch((prevState) => ({
-      ...prevState,
-      [name]: value
+    setSearch(() => ({
+      [name]: value,
+      phone: '',
+      status: '',
+      vinnumber: '',
+      place: '',
+      regnumber: ''
     }))
   }
 
   const onChangePlace = (e) => {
     const { name, value } = e.target
-    setSearch((prevState) => ({
-      ...prevState,
-      [name]: value
+    setSearch(() => ({
+      [name]: value,
+      phone: '',
+      number: '',
+      status: '',
+      vinnumber: '',
+      regnumber: ''
     }))
   }
-  useEffect(() => {
-    if (showSearch === false && currentPosts.length === 0 && loading === true) {
-      setTimeout(() => setLoading(false), 10000)
-    } else {
-      setLoading(true)
-    }
-    return () => {}
-  }, [currentPosts.length, showSearch, loading])
 
   useEffect(() => {
     if (showSearch) {
@@ -122,18 +102,15 @@ const AutopartsList = () => {
       if (
         (search.phone !== '' && phoneToRest.length > 6) ||
         search.status ||
-        search.process ||
+        search.vin ||
         search.place ||
         search.number ||
         search.regnumber
       ) {
         dispatch(
-          getAutopartsFiltered(
+          getItemsFiltered(
             num ? Number(num) : 1,
-            search.status ? search.status : '',
-            search.process ? search.process : '',
             search.place ? search.place : '',
-            phoneToRest && search.phone ? phoneToRest : '',
             search.number ? search.number : '',
             search.regnumber ? search.regnumber : ''
           )
@@ -148,26 +125,37 @@ const AutopartsList = () => {
       phone: '',
       number: '',
       status: '',
-      process: '',
+      vinnumber: '',
       place: '',
       regnumber: ''
     }))
-    history.push(`/autoparts/order/list/1`)
+    history.push(`/shinomontazhboss/list/1`)
   }
   const onFilter = () => {
     if (
       search.phone === '' &&
       search.number === '' &&
       search.status === '' &&
-      search.process === '' &&
+      search.vinnumber === '' &&
       search.place === '' &&
       search.regnumber === ''
     ) {
-      notify('Заполните хотябы одно поле фильтра')
+      notify('Заполните хотябы одно поле')
     } else {
       setShowSearch(true)
-      history.push(`/autoparts/order/list/1`)
+      history.push(`/shinomontazhboss/list/1`)
     }
+  }
+
+  const onChangeCustomerUppercaseRussian = (e) => {
+    const { name, value } = e.target
+    setSearch((prevState) => ({
+      ...prevState,
+      [name]: value
+        .toUpperCase()
+        .replace(/\s/g, '')
+        .replace(/[^а-яё0-9]/i, '')
+    }))
   }
 
   const loadingComponent = () => {
@@ -206,7 +194,8 @@ const AutopartsList = () => {
                     className={cx(
                       'block appearance-none w-full bg-grey-lighter border border-gray-300 focus:border-gray-500 focus:outline-none py-1 px-4 pr-8 rounded',
                       {
-                        'border-red-300 focus:border-red-500': search.number && showSearch === true
+                        'border-red-300 focus:border-red-500':
+                          search.number.length >= 1 && showSearch === true
                       }
                     )}
                     value={search.number}
@@ -233,7 +222,7 @@ const AutopartsList = () => {
                   </div>
                 </div>
               </div>
-              <div className="md:w-1/2 px-3 mb-6 md:mb-0">
+              {/* <div className="md:w-1/2 px-3 mb-6 md:mb-0">
                 <label
                   className="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2"
                   htmlFor="grid-first-name"
@@ -245,7 +234,8 @@ const AutopartsList = () => {
                     className={cx(
                       'block appearance-none w-full bg-grey-lighter border border-gray-300 focus:border-gray-500 focus:outline-none py-1 px-4 pr-8 rounded',
                       {
-                        'border-red-300 focus:border-red-500': search.phone && showSearch === true
+                        'border-red-300 focus:border-red-500':
+                          search.phone.length >= 1 && showSearch === true
                       }
                     )}
                     format="+7 (###) ###-##-##"
@@ -273,51 +263,47 @@ const AutopartsList = () => {
                     </svg>
                   </div>
                 </div>
-              </div>
-              <div className="md:w-1/2 px-3 mb-6 md:mb-0">
+              </div> */}
+              {/* <div className="md:w-1/2 px-3 mb-6 md:mb-0">
                 <label
                   className="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2"
                   htmlFor="grid-first-name"
                 >
-                  Обработал
+                  Поиск по VIN
                 </label>
                 <div className="flex-shrink w-full inline-block relative">
-                  <select
+                  <input
                     className={cx(
                       'block appearance-none w-full bg-grey-lighter border border-gray-300 focus:border-gray-500 focus:outline-none py-1 px-4 pr-8 rounded',
                       {
-                        'border-red-300 focus:border-red-500': search.status && showSearch === true
+                        'border-red-300 focus:border-red-500':
+                          search.vinnumber.length >= 1 && showSearch === true
                       }
                     )}
-                    value={search.process}
-                    name="process"
-                    onChange={onChangePlace}
-                  >
-                    <option value="" disabled hidden>
-                      Все
-                    </option>
-                    {employeeList
-                      .filter((it) => it.role.includes('Обработка заказов (запчасти)'))
-                      .map((it) => {
-                        return (
-                          <option key={it.id} value={it.id}>
-                            {it.name} {it.surname}
-                          </option>
-                        )
-                      })}
-                  </select>
+                    name="vinnumber"
+                    value={search.vinnumber}
+                    onChange={onChangeVin}
+                  />
                   <div className="pointer-events-none absolute top-0 mt-2  right-0 flex items-center px-2 text-gray-600">
                     <svg
+                      version="1.1"
                       className="fill-current h-4 w-4"
-                      xmlns="http://www.w3.org/2000/svg"
-                      viewBox="0 0 20 20"
+                      xmlns="http://www.w3.org/2000/svg "
+                      xlink="http://www.w3.org/1999/xlink "
+                      x="0px "
+                      y="0px "
+                      viewBox="0 0 52.966 52.966 "
+                      space="preserve "
                     >
-                      <path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z" />
+                      <path
+                        d="M51.704,51.273L36.845,35.82c3.79-3.801,6.138-9.041,6.138-14.82c0-11.58-9.42-21-21-21s-21,9.42-21,21s9.42,21,21,21 c5.083,0,9.748-1.817,13.384-4.832l14.895,15.491c0.196,0.205,0.458,0.307,0.721,0.307c0.25,0,0.499-0.093,0.693-0.279 C52.074,52.304,52.086,51.671,51.704,51.273z
+                            M21.983,40c-10.477,0-19-8.523-19-19s8.523-19,19-19s19,8.523,19,19 S32.459,40,21.983,40z "
+                      />
                     </svg>
                   </div>
                 </div>
-              </div>
-              <div className="md:w-1/2 px-3 mb-6 md:mb-0">
+              </div> */}
+              {/* <div className="md:w-1/2 px-3 mb-6 md:mb-0">
                 <label
                   className="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2"
                   htmlFor="grid-first-name"
@@ -330,10 +316,10 @@ const AutopartsList = () => {
                       'block appearance-none w-full bg-grey-lighter border border-gray-300 focus:border-gray-500 focus:outline-none py-1 px-4 pr-8 rounded',
                       {
                         'border-red-300 focus:border-red-500':
-                          search && search.status && showSearch === true
+                          search.status.length >= 1 && showSearch === true
                       }
                     )}
-                    value={search && search.status ? search.status : ''}
+                    value={search.status}
                     name="status"
                     onChange={onChangeStatus}
                   >
@@ -343,7 +329,6 @@ const AutopartsList = () => {
                     {taskStatuses.map((it) => (
                       <option key={it}>{it}</option>
                     ))}
-                    <option value="itemsInStock">Товар на складе</option>
                   </select>
                   <div className="pointer-events-none absolute top-0 mt-2  right-0 flex items-center px-2 text-gray-600">
                     <svg
@@ -355,20 +340,21 @@ const AutopartsList = () => {
                     </svg>
                   </div>
                 </div>
-              </div>
+              </div> */}
               <div className="md:w-1/2 px-3 mb-6 md:mb-0">
                 <label
                   className="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2"
                   htmlFor="grid-first-name"
                 >
-                  Сорт. по точке
+                  Сортировка по точке
                 </label>
                 <div className="flex-shrink w-full inline-block relative">
                   <select
                     className={cx(
                       'block appearance-none w-full bg-grey-lighter border border-gray-300 focus:border-gray-500 focus:outline-none py-1 px-4 pr-8 rounded',
                       {
-                        'border-red-300 focus:border-red-500': search.place && showSearch === true
+                        'border-red-300 focus:border-red-500':
+                          search.place.length >= 1 && showSearch === true
                       }
                     )}
                     value={search.place}
@@ -397,22 +383,6 @@ const AutopartsList = () => {
                   </div>
                 </div>
               </div>
-              {/* <div className="md:w-1/2 px-3 mb-6 md:mb-0">
-                <label
-                  className="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2"
-                  htmlFor="grid-first-name"
-                >
-                  Новых заказов
-                </label>
-                <div className="flex-shrink w-full">
-                  <button
-                    type="button"
-                    className="appearance-none w-full text-left bg-grey-lighter border border-yellow-500 focus:outline-none py-1 px-4 pr-8 rounded"
-                  >
-                    {list ? list.filter((it) => it.status === taskStatuses[0]).length : 0}
-                  </button>
-                </div>
-              </div> */}
               <div className="md:w-1/2 px-3 mb-6 md:mb-0">
                 <label
                   className="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2"
@@ -453,6 +423,22 @@ const AutopartsList = () => {
                   </div>
                 </div>
               </div>
+              {/* <div className="md:w-1/2 px-3 mb-6 md:mb-0">
+                <label
+                  className="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2"
+                  htmlFor="grid-first-name"
+                >
+                  Новых заказов
+                </label>
+                <div className="flex-shrink w-full">
+                  <button
+                    type="button"
+                    className="appearance-none w-full text-left bg-grey-lighter border border-yellow-500 focus:outline-none py-1 px-4 pr-8 rounded"
+                  >
+                    {revList.filter((it) => it.status === taskStatuses[0]).length}
+                  </button>
+                </div>
+              </div> */}
 
               <div className="flex content-end  px-3 mb-6 md:mb-0">
                 <button
@@ -481,41 +467,38 @@ const AutopartsList = () => {
             </button>
           </div>
         ) : null}
-        <div className="mx-auto px-4">
-          <table className="border-collapse w-full rounded-lg shadow">
+        <div className="overflow-x-auto rounded-lg overflow-y-auto relative lg:my-3 mt-1 lg:shadow lg:mx-4">
+          <table className="border-collapse w-full">
             <thead>
               <tr>
-                <th className="p-3 font-bold uppercase bg-gray-100 text-gray-600 border border-gray-300 hidden lg:table-cell">
+                <th className="p-3 font-bold uppercase bg-gray-100 text-gray-600 border border-gray-300 table-cell">
                   №
                 </th>
-                <th className="p-3 font-bold uppercase bg-gray-100 text-gray-600 border border-gray-300 hidden lg:table-cell">
-                  Клиент
-                </th>
-                <th className="p-3 font-bold uppercase bg-gray-100 text-gray-600 border border-gray-300 hidden lg:table-cell">
-                  Заказ
-                </th>
-                <th className="p-3 font-bold uppercase bg-gray-100 text-gray-600 border border-gray-300 hidden lg:table-cell">
+                <th className="p-3 font-bold uppercase bg-gray-100 text-gray-600 border border-gray-300 table-cell">
                   Авто
                 </th>
-                <th className="p-3 font-bold uppercase bg-gray-100 text-gray-600 border border-gray-300 hidden lg:table-cell">
-                  Телефон
+                <th className="p-3 font-bold uppercase bg-gray-100 text-gray-600 border border-gray-300 table-cell">
+                  Гос. номер
                 </th>
-                <th className="p-3 font-bold uppercase bg-gray-100 text-gray-600 border border-gray-300 hidden lg:table-cell">
-                  Принял
+                <th className="p-3 font-bold uppercase bg-gray-100 text-gray-600 border border-gray-300 table-cell">
+                  Исп
                 </th>
-                <th className="p-3 font-bold uppercase bg-gray-100 text-gray-600 border border-gray-300 hidden lg:table-cell">
+                <th className="p-3 font-bold uppercase bg-gray-100 text-gray-600 border border-gray-300 table-cell">
                   Точка
                 </th>
-                <th className="p-3 font-bold uppercase bg-gray-100 text-gray-600 border border-gray-300 hidden lg:table-cell">
-                  Обработал
-                </th>
-                <th className="p-3 font-bold uppercase bg-gray-100 text-gray-600 border border-gray-300 hidden lg:table-cell">
+                <th className="p-3 font-bold uppercase bg-gray-100 text-gray-600 border border-gray-300 table-cell">
                   Статус
                 </th>
-                <th className="p-3 font-bold uppercase bg-gray-100 text-gray-600 border border-gray-300 hidden lg:table-cell">
-                  Дата
+                <th className="p-3 font-bold uppercase bg-gray-100 text-gray-600 border border-gray-300 table-cell">
+                  Начало
                 </th>
-                <th className="p-3 font-bold uppercase bg-gray-100 text-gray-600 border border-gray-300 hidden lg:table-cell">
+                <th className="p-3 font-bold uppercase bg-gray-100 text-gray-600 border border-gray-300 table-cell">
+                  Завершение
+                </th>
+                <th className="p-1 lg:p-3 lg:font-bold lg:uppercase bg-gray-100 text-gray-600 border border-gray-300 table-cell">
+                  Cумма
+                </th>
+                <th className="p-3 font-bold uppercase bg-gray-100 text-gray-600 border border-gray-300 table-cell">
                   Действия
                 </th>
               </tr>
@@ -523,7 +506,7 @@ const AutopartsList = () => {
             <tbody>
               {list && list.length > 0
                 ? list.map((it) => (
-                    <AutopartsRow
+                    <ShinomontazhsRowBoss
                       key={it.id}
                       {...it}
                       updateStatus={updateStatusLocal}
@@ -563,7 +546,7 @@ const AutopartsList = () => {
           />
         </div>
 
-        <Link to={`/autoparts/order/create/${num ? Number(num) : ''}`}>
+        <Link to={`/shinomontazhboss/create/${num ? Number(num) : ''}`}>
           <button
             type="button"
             className="fixed bottom-0 left-0 p-6 shadow bg-blue-600 text-white opacity-75 text-l hover:opacity-100 hover:bg-blue-700 hover:text-white rounded-full my-3 mx-3"
@@ -578,4 +561,4 @@ const AutopartsList = () => {
   )
 }
 
-export default AutopartsList
+export default ShinomontazhsListBoss

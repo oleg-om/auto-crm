@@ -56,20 +56,35 @@ exports.getFiltered = async (req, res) => {
     const total = await Autopart.countDocuments({
       id_autoparts: req.query.number ? number : { $exists: true },
       place: req.query.place ? `${place.toString()}` : { $exists: true },
-      status: req.query.status ? `${decodeURIComponent(status).toString()}` : { $exists: true },
+      status:
+        req.query.status && req.query.status !== 'itemsInStock'
+          ? `${decodeURIComponent(status).toString()}`
+          : { $exists: true },
       process: req.query.process ? `${process.toString()}` : { $exists: true },
       phone: req.query.phone ? { $regex: `${phone.toString()}`, $options: 'i' } : { $exists: true },
-      regnumber: req.query.reg ? { $regex: `${reg.toString()}`, $options: 'i' } : { $exists: true }
+      regnumber: req.query.reg ? { $regex: `${reg.toString()}`, $options: 'i' } : { $exists: true },
+      'order.stat':
+        req.query.status && req.query.status === 'itemsInStock'
+          ? `Получен на складе`
+          : { $exists: true }
     })
 
     const posts = await Autopart.find({
       // status: `${decodeURIComponent(req.query.status ? status : '').toString()}`,
       id_autoparts: req.query.number ? number : { $exists: true },
       place: req.query.place ? `${place.toString()}` : { $exists: true },
-      status: req.query.status ? `${decodeURIComponent(status).toString()}` : { $exists: true },
+      status:
+        req.query.status && req.query.status !== 'itemsInStock'
+          ? `${decodeURIComponent(status).toString()}`
+          : { $exists: true },
       process: req.query.process ? `${process.toString()}` : { $exists: true },
       phone: req.query.phone ? { $regex: `${phone.toString()}`, $options: 'i' } : { $exists: true },
-      regnumber: req.query.reg ? { $regex: `${reg.toString()}`, $options: 'i' } : { $exists: true }
+      regnumber: req.query.reg ? { $regex: `${reg.toString()}`, $options: 'i' } : { $exists: true },
+      'order.stat':
+        req.query.status && req.query.status === 'itemsInStock'
+          ? `Получен на складе`
+          : { $exists: true }
+
       // {
       //   process: req.query.process ? `${process.toString()}` : 'smth'
       // },
