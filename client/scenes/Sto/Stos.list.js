@@ -6,14 +6,14 @@ import { Link, useParams, useHistory } from 'react-router-dom'
 import { toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
 import { socket } from '../../redux/sockets/socketReceivers'
-import ShinomontazhsRow from '../../components/shinomontazhs/shinomontazhs.row'
-import { updateStatus } from '../../redux/reducers/shinomontazhs'
+import StosRow from '../../components/stos/stos.row'
+import { updateStatus } from '../../redux/reducers/stos'
 import Navbar from '../../components/Navbar'
 import Pagination from '../Pagination'
 import OnLoadPlace from './OnloadPyPlace'
 // import taskStatuses from '../../lists/task-statuses'
 
-const ShinomontazhsList = () => {
+const StosList = () => {
   const { num } = useParams(1)
   const [showSearch] = useState(false)
   const auth = useSelector((s) => s.auth)
@@ -30,10 +30,10 @@ const ShinomontazhsList = () => {
   //   const secDiff = Math.floor((d2 - d1) / 1000)
   //   return secDiff
   // }
-  const list = useSelector((s) => s.shinomontazhs.list)
-  const curPage = useSelector((s) => s.shinomontazhs.currentPage)
-  const totalPages = useSelector((s) => s.shinomontazhs.numberOfPages)
-  const isLoaded = useSelector((s) => s.shinomontazhs.isLoaded)
+  const list = useSelector((s) => s.stos.list)
+  const curPage = useSelector((s) => s.stos.currentPage)
+  const totalPages = useSelector((s) => s.stos.numberOfPages)
+  const isLoaded = useSelector((s) => s.stos.isLoaded)
 
   socket.connect()
 
@@ -45,7 +45,7 @@ const ShinomontazhsList = () => {
   // const [loading] = useState(true)
 
   const paginate = (pageNumber) => {
-    history.push(`/shinomontazh/list/${pageNumber}`)
+    history.push(`/sto/list/${pageNumber}`)
   }
   toast.configure()
   // const notify = (arg) => {
@@ -75,7 +75,7 @@ const ShinomontazhsList = () => {
       <div>
         {auth.roles.includes('boss') ? (
           <Link
-            to="/shinomontazhboss/list"
+            to="/stoboss/list"
             className="block mt-4 pt-3 lg:inline-block lg:mt-0 text-gray-800 hover:text-blue-700 ml-4"
           >
             ➜ Перейти в режим начальника
@@ -115,7 +115,7 @@ const ShinomontazhsList = () => {
             <tbody>
               {list && list.length > 0
                 ? list.map((it) => (
-                    <ShinomontazhsRow
+                    <StosRow
                       key={it.id}
                       {...it}
                       updateStatus={updateStatusLocal}
@@ -155,7 +155,7 @@ const ShinomontazhsList = () => {
           />
         </div>
 
-        <Link to={`/shinomontazh/create/${num ? Number(num) : ''}`}>
+        <Link to={`/sto/create/${num ? Number(num) : ''}`}>
           <button
             type="button"
             className="fixed bottom-0 left-0 p-6 shadow bg-blue-600 text-white opacity-75 text-2xl hover:opacity-100 hover:bg-blue-700 hover:text-white rounded-full my-3 mx-3"
@@ -170,4 +170,4 @@ const ShinomontazhsList = () => {
   )
 }
 
-export default ShinomontazhsList
+export default StosList

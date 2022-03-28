@@ -36,6 +36,8 @@ const vendorRoutes = require('./routes/api/vendor.routes')
 const tyreRoutes = require('./routes/api/tyres.routes')
 const storageRoutes = require('./routes/api/storage.routes')
 const toolRoutes = require('./routes/api/tools.routes')
+const stopriceRoutes = require('./routes/api/sto.price.routes')
+const stoRoutes = require('./routes/api/sto.routes')
 
 const Root = () => ''
 
@@ -108,6 +110,8 @@ server.use('/api/v1', vendorRoutes)
 server.use('/api/v1', tyreRoutes)
 server.use('/api/v1', storageRoutes)
 server.use('/api/v1', toolRoutes)
+server.use('/api/v1', stopriceRoutes)
+server.use('/api/v1', stoRoutes)
 
 server.get('/api/v1/auth', async (req, res) => {
   try {
@@ -314,6 +318,13 @@ io.on('connection', (socket) => {
     io.emit('shintwoprint', shinomontazh)
   })
 
+  socket.on('sto one print', (sto) => {
+    io.emit('sto', sto)
+  })
+  socket.on('sto two print', (sto) => {
+    io.emit('sto', sto)
+  })
+
   // socket.on('new shinomontazh', () => {
   //   io.emit('update shinomontazh')
   // })
@@ -333,4 +344,4 @@ io.on('connection', (socket) => {
 
 console.log(`Serving at http://localhost:${port}`)
 
-setInterval(() => kerchshinaCheck(io), 1800000)
+setInterval(() => kerchshinaCheck(io), 440000)

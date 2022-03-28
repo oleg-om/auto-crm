@@ -339,7 +339,9 @@ const TyreViewOrder = (props) => {
               <b>Предварительный заказ</b>
               <div className="-mx-3 md:flex mb-2">
                 <div className="overflow-x-auto md:w-auto px-3 mb-6 md:mb-0">
-                  {props.preorder
+                  {props.preorder &&
+                  props.preorder.filter((it) => it && it.mode).length > 0 &&
+                  props.preorder.length > 0
                     ? props.preorder
                         .filter((it) => it.mode === 'simple' && it.type === '1')
                         .map((it) => (
@@ -349,7 +351,9 @@ const TyreViewOrder = (props) => {
                           </p>
                         ))
                     : null}
-                  {props.preorder
+                  {props.preorder &&
+                  props.preorder.filter((it) => it && it.mode).length > 0 &&
+                  props.preorder.length > 0
                     ? props.preorder
                         .filter((it) => it.mode === 'simple' && it.type === '2')
                         .map((it) => (
@@ -359,7 +363,9 @@ const TyreViewOrder = (props) => {
                           </p>
                         ))
                     : null}
-                  {props.preorder
+                  {props.preorder &&
+                  props.preorder.filter((it) => it && it.mode).length > 0 &&
+                  props.preorder.length > 0
                     ? props.preorder
                         .filter((it) => it.mode === 'simple' && it.type === '3')
                         .map((it) => (
@@ -369,7 +375,9 @@ const TyreViewOrder = (props) => {
                           </p>
                         ))
                     : null}
-                  {props.preorder
+                  {props.preorder &&
+                  props.preorder.filter((it) => it && it.mode).length > 0 &&
+                  props.preorder.length > 0
                     ? props.preorder
                         .filter((it) => it.mode === 'full' && it.type === '1')
                         .map((it) => (
@@ -389,7 +397,9 @@ const TyreViewOrder = (props) => {
                           </p>
                         ))
                     : null}
-                  {props.preorder
+                  {props.preorder &&
+                  props.preorder.filter((it) => it && it.mode).length > 0 &&
+                  props.preorder.length > 0
                     ? props.preorder
                         .filter((it) => it.mode === 'full' && it.type === '3')
                         .map((it) => (
@@ -409,7 +419,9 @@ const TyreViewOrder = (props) => {
                           </p>
                         ))
                     : null}
-                  {props.preorder
+                  {props.preorder &&
+                  props.preorder.filter((it) => it && it.mode).length > 0 &&
+                  props.preorder.length > 0
                     ? props.preorder
                         .filter((it) => it.mode === 'full' && it.type === '2')
                         .map((it) => (

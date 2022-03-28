@@ -21,11 +21,11 @@ const Sto = new mongoose.Schema({
     type: String,
     required: false
   },
-  kuzov: {
+  class: {
     type: String,
     required: false
   },
-  diametr: {
+  category: {
     type: String,
     required: false
   },
@@ -81,6 +81,10 @@ const Sto = new mongoose.Schema({
   },
   combCash: {
     type: String,
+    required: false
+  },
+  box: {
+    type: Number,
     required: false
   }
 })

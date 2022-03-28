@@ -264,6 +264,24 @@ const Navbar = () => {
               Шиномонтаж (Босс)
             </NavLink>
           ) : null}
+          {auth.roles.includes('sto') ? (
+            <NavLink
+              to="/sto/list"
+              className="block mt-4 lg:inline-block lg:mt-0 text-gray-800 hover:text-blue-700 mr-4"
+              activeClassName="text-blue-600 underline font-semibold"
+            >
+              СТО
+            </NavLink>
+          ) : null}
+          {auth.roles.includes('boss') || auth.roles.includes('bookkeeper') ? (
+            <NavLink
+              to="/stoboss/list"
+              className="block mt-4 lg:inline-block lg:mt-0 text-gray-800 hover:text-blue-700 mr-4"
+              activeClassName="text-blue-600 underline font-semibold"
+            >
+              СТО (Босс)
+            </NavLink>
+          ) : null}
           {auth.roles.includes('kassa') ||
           auth.roles.includes('boss') ||
           auth.roles.includes('hranenie') ||

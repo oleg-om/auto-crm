@@ -4,23 +4,23 @@ import { useHistory, useParams } from 'react-router-dom'
 import { toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
 import { socket } from '../../redux/sockets/socketReceivers'
-import ShinomontazhsCreate from '../../components/shinomontazhs/shinomontazhs.work.create'
-import { createShinomontazh } from '../../redux/reducers/shinomontazhs'
+import ShinomontazhsCreate from '../../components/stos/stos.work.create'
+import { createSto } from '../../redux/reducers/stos'
 import Navbar from '../../components/Navbar'
-import UpdateModal from '../../components/shinomontazhs/updatecutomer.modal'
+import UpdateModal from '../../components/stos/updatecutomer.modal'
 import { createCustomer, updateCustomer } from '../../redux/reducers/customers'
 
 const ShinomontazhsNew = () => {
   socket.connect()
   const dispatch = useDispatch()
   const create = (name) => {
-    dispatch(createShinomontazh(name))
-    socket.emit('new shinomontazh')
+    dispatch(createSto(name))
+    socket.emit('new sto')
   }
   const { num } = useParams(1)
 
   const history = useHistory()
-  const checkLink = () => history.location.pathname.split('/').includes('shinomontazhboss')
+  const checkLink = () => history.location.pathname.split('/').includes('stoboss')
   toast.configure()
   const notify = (arg) => {
     toast.info(arg, { position: toast.POSITION.BOTTOM_RIGHT })
@@ -41,9 +41,9 @@ const ShinomontazhsNew = () => {
     notify('Данные клиента изменены')
     create(order)
     if (checkLink()) {
-      history.push('/shinomontazhboss/list')
+      history.push('/stoboss/list')
     } else {
-      history.push('/shinomontazh/list')
+      history.push('/sto/list')
     }
     notify('Запись добавлена')
   }
@@ -52,9 +52,9 @@ const ShinomontazhsNew = () => {
     setModalIsOpen(false)
     create(order)
     if (checkLink()) {
-      history.push('/shinomontazhboss/list')
+      history.push('/stoboss/list')
     } else {
-      history.push('/shinomontazh/list')
+      history.push('/sto/list')
     }
     notify('Запись добавлена')
   }

@@ -47,6 +47,13 @@ const Sidebar = () => {
         Шиномонтаж - цены
       </NavLink>
       <NavLink
+        to="/stoprice/list/rus"
+        className="text-gray-100 w-full p-3 pl-5"
+        activeClassName="bg-gray-700 text-gray-100 border-r-4 border-gray-100 w-full p-3 pl-5"
+      >
+        СТО - цены
+      </NavLink>
+      <NavLink
         to="/vendor/list"
         className="text-gray-100 w-full p-3 pl-5"
         activeClassName="bg-gray-700 text-gray-100 border-r-4 border-gray-100 w-full p-3 pl-5"

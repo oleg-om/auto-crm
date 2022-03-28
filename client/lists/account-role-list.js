@@ -11,5 +11,6 @@ module.exports = [
   { name: 'Хранение', value: 'hranenie' },
   { name: 'Кассир', value: 'kassa' },
   { name: 'Прием заказов (инструмент)', value: 'toolsimple' },
-  { name: 'Обработка заказов (инструмент)', value: 'toolfull' }
+  { name: 'Обработка заказов (инструмент)', value: 'toolfull' },
+  { name: 'Работник СТО', value: 'sto' }
 ]

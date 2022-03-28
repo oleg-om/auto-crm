@@ -1,0 +1,6 @@
+export const GET_STOS = 'GET_STOS'
+export const GET_STO = 'GET_STO'
+export const CREATE_STO = 'CREATE_STO'
+export const UPDATE_STO = 'UPDATE_STO'
+export const UPDATE_STO_STATUS = 'UPDATE_STO_STATUS'
+export const GET_STOS_LAST_TWO_DAYS = 'GET_STOS_LAST_TWO_DAYS'

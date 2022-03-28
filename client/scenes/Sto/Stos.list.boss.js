@@ -6,23 +6,23 @@ import cx from 'classnames'
 import { toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
 import { socket } from '../../redux/sockets/socketReceivers'
-import ShinomontazhsRowBoss from '../../components/shinomontazhs/shinomontazhs.row.boss'
-import { updateStatus, getItemsFiltered } from '../../redux/reducers/shinomontazhs'
+import StosRowBoss from '../../components/stos/stos.row.boss'
+import { updateStatus, getItemsFiltered } from '../../redux/reducers/stos'
 import Navbar from '../../components/Navbar'
 import Pagination from '../Pagination'
 import onLoad from './Onload'
 // import taskStatuses from '../../lists/task-statuses'
 
-const ShinomontazhsListBoss = () => {
+const StosListBoss = () => {
   const { num } = useParams(1)
   const [showSearch, setShowSearch] = useState(false)
   onLoad(num ? Number(num) : 1, showSearch)
 
   const dispatch = useDispatch()
-  const list = useSelector((s) => s.shinomontazhs.list)
-  const curPage = useSelector((s) => s.shinomontazhs.currentPage)
-  const totalPages = useSelector((s) => s.shinomontazhs.numberOfPages)
-  const isLoaded = useSelector((s) => s.shinomontazhs.isLoaded)
+  const list = useSelector((s) => s.stos.list)
+  const curPage = useSelector((s) => s.stos.currentPage)
+  const totalPages = useSelector((s) => s.stos.numberOfPages)
+  const isLoaded = useSelector((s) => s.stos.isLoaded)
 
   const placesList = useSelector((s) => s.places.list)
   const employeeList = useSelector((s) => s.employees.list)
@@ -32,8 +32,8 @@ const ShinomontazhsListBoss = () => {
 
   socket.connect()
   // useEffect(() => {
-  //   socket.on('update shinomontazh', function () {
-  //     dispatch(getShinomontazhs())
+  //   socket.on('update sto', function () {
+  //     dispatch(getStos())
   //   })
   // }, [])
   const settings = useSelector((s) => s.settings.list)
@@ -44,7 +44,7 @@ const ShinomontazhsListBoss = () => {
   const postsPerPage = 14
 
   const paginate = (pageNumber) => {
-    history.push(`/shinomontazhboss/list/${pageNumber}`)
+    history.push(`/stoboss/list/${pageNumber}`)
   }
 
   toast.configure()
@@ -129,7 +129,7 @@ const ShinomontazhsListBoss = () => {
       place: '',
       regnumber: ''
     }))
-    history.push(`/shinomontazhboss/list/1`)
+    history.push(`/stoboss/list/1`)
   }
   const onFilter = () => {
     if (
@@ -143,7 +143,7 @@ const ShinomontazhsListBoss = () => {
       notify('Заполните хотябы одно поле')
     } else {
       setShowSearch(true)
-      history.push(`/shinomontazhboss/list/1`)
+      history.push(`/stoboss/list/1`)
     }
   }
 
@@ -506,7 +506,7 @@ const ShinomontazhsListBoss = () => {
             <tbody>
               {list && list.length > 0
                 ? list.map((it) => (
-                    <ShinomontazhsRowBoss
+                    <StosRowBoss
                       key={it.id}
                       {...it}
                       updateStatus={updateStatusLocal}
@@ -546,7 +546,7 @@ const ShinomontazhsListBoss = () => {
           />
         </div>
 
-        <Link to={`/shinomontazhboss/create/${num ? Number(num) : ''}`}>
+        <Link to={`/stoboss/create/${num ? Number(num) : ''}`}>
           <button
             type="button"
             className="fixed bottom-0 left-0 p-6 shadow bg-blue-600 text-white opacity-75 text-l hover:opacity-100 hover:bg-blue-700 hover:text-white rounded-full my-3 mx-3"
@@ -561,4 +561,4 @@ const ShinomontazhsListBoss = () => {
   )
 }
 
-export default ShinomontazhsListBoss
+export default StosListBoss

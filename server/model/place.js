@@ -66,6 +66,14 @@ const Place = new mongoose.Schema({
   shinomeaning: {
     type: String,
     required: false
+  },
+  stophone: {
+    type: String,
+    required: false
+  },
+  stoboxes: {
+    type: Number,
+    required: false
   }
 })
 

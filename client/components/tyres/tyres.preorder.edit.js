@@ -16,6 +16,7 @@ import AkbColumn from './moduls/akbcolumn'
 import WheelColumn from './moduls/wheelcolumn'
 
 const TyreUpdate = (props) => {
+  console.log('props: ', props)
   const history = useHistory()
 
   const componentRef = useRef()
@@ -50,7 +51,7 @@ const TyreUpdate = (props) => {
       statusDates: [...props.statusDates, { status: 'Печать сметы', date: dateNew }]
     })
   }
-
+  console.log(props.order)
   const auth = useSelector((s) => s.auth)
   const [state, setState] = useState({
     status: props.status,
@@ -58,7 +59,7 @@ const TyreUpdate = (props) => {
     prepay: props.prepay,
     commentOrder: props.commentOrder,
     order:
-      props.order.length !== 0
+      props.order && props.order !== null && props.order.length !== 0
         ? props.order
         : [{ tyreItem: '', type: '1', mode: 'full', brand: '' }],
     dateInWork: props.dateInWork,
@@ -105,7 +106,7 @@ const TyreUpdate = (props) => {
     if (
       props.status === taskStatuses[0] &&
       props.order.length === 0 &&
-      props.preorder.filter((it) => it.mode === 'full').length !== 0
+      props.preorder.filter((it) => it).filter((it) => it.mode === 'full').length !== 0
     ) {
       setInputFields(temp)
       setState((prevState) => ({
@@ -517,7 +518,7 @@ const TyreUpdate = (props) => {
               <b>Предварительный заказ</b>
               <div className="-mx-3 md:flex mb-2">
                 <div className="overflow-x-auto md:w-auto px-3 mb-6 md:mb-0">
-                  {props.preorder
+                  {props.preorder && props.preorder.filter((it) => it && it.mode).length > 0
                     ? props.preorder
                         .filter((it) => it.mode === 'simple' && it.type === '1')
                         .map((it) => (
@@ -527,7 +528,7 @@ const TyreUpdate = (props) => {
                           </p>
                         ))
                     : null}
-                  {props.preorder
+                  {props.preorder && props.preorder.filter((it) => it && it.mode).length > 0
                     ? props.preorder
                         .filter((it) => it.mode === 'simple' && it.type === '2')
                         .map((it) => (
@@ -537,7 +538,7 @@ const TyreUpdate = (props) => {
                           </p>
                         ))
                     : null}
-                  {props.preorder
+                  {props.preorder && props.preorder.filter((it) => it && it.mode).length > 0
                     ? props.preorder
                         .filter((it) => it.mode === 'simple' && it.type === '3')
                         .map((it) => (
@@ -547,7 +548,7 @@ const TyreUpdate = (props) => {
                           </p>
                         ))
                     : null}
-                  {props.preorder
+                  {props.preorder && props.preorder.filter((it) => it && it.mode).length > 0
                     ? props.preorder
                         .filter((it) => it.mode === 'full' && it.type === '1')
                         .map((it) => (
@@ -567,7 +568,7 @@ const TyreUpdate = (props) => {
                           </p>
                         ))
                     : null}
-                  {props.preorder
+                  {props.preorder && props.preorder.filter((it) => it && it.mode).length > 0
                     ? props.preorder
                         .filter((it) => it.mode === 'full' && it.type === '3')
                         .map((it) => (
@@ -587,7 +588,7 @@ const TyreUpdate = (props) => {
                           </p>
                         ))
                     : null}
-                  {props.preorder
+                  {props.preorder && props.preorder.filter((it) => it && it.mode).length > 0
                     ? props.preorder
                         .filter((it) => it.mode === 'full' && it.type === '2')
                         .map((it) => (

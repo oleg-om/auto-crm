@@ -12,6 +12,7 @@ import { getAccounts } from '../redux/reducers/accounts'
 import { getSettings } from '../redux/reducers/settings'
 import { getMaterials } from '../redux/reducers/materials'
 import { getShinomontazhprices } from '../redux/reducers/shinomotazh.prices'
+import { getStoprices } from '../redux/reducers/sto.prices'
 // import { getShinomontazhs } from '../redux/reducers/shinomontazhs'
 // import { getVendors } from '../redux/reducers/vendors'
 // import { getTyres } from '../redux/reducers/tyres'
@@ -54,6 +55,10 @@ const Startup = (props) => {
 
   useEffect(() => {
     dispatch(getShinomontazhprices())
+  }, [dispatch])
+
+  useEffect(() => {
+    dispatch(getStoprices())
   }, [dispatch])
 
   // useEffect(() => {

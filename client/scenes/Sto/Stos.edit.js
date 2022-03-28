@@ -4,11 +4,11 @@ import { useParams } from 'react-router-dom'
 import { toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
 import { socket } from '../../redux/sockets/socketReceivers'
-import ShinomontazhsEdit from '../../components/shinomontazhs/shinomontazhs.work.edit'
+import StosEdit from '../../components/stos/stos.work.edit'
 import Navbar from '../../components/Navbar'
-import { updateShinomontazh } from '../../redux/reducers/shinomontazhs'
+import { updateSto } from '../../redux/reducers/stos'
 
-const ShinomontazhEditFull = () => {
+const StoEditFull = () => {
   socket.connect()
   const { id } = useParams()
   const { num } = useParams(1)
@@ -16,10 +16,10 @@ const ShinomontazhEditFull = () => {
   const [loading, setLoading] = useState(false)
   const [list, setList] = useState([])
   useEffect(() => {
-    fetch(`/api/v1/shinomontazh/${id}`)
+    fetch(`/api/v1/sto/${id}`)
       .then((r) => r.json())
-      .then(({ data: shinomontazhs }) => {
-        setList([shinomontazhs])
+      .then(({ data: stos }) => {
+        setList([stos])
         setLoading(true)
       })
   }, [id])
@@ -29,18 +29,18 @@ const ShinomontazhEditFull = () => {
     toast.info(arg, { position: toast.POSITION.BOTTOM_RIGHT })
   }
 
-  const updateShinomontazhLocal = (idOfItem, name) => {
-    dispatch(updateShinomontazh(idOfItem, name))
-    socket.emit('edit shinomontazh')
+  const updateStoLocal = (idOfItem, name) => {
+    dispatch(updateSto(idOfItem, name))
+    socket.emit('edit sto')
   }
 
-  const shinomontazhPrintOne = (shinomontazh) => {
-    socket.emit('shinomontazh one print', shinomontazh)
+  const stoPrintOne = (sto) => {
+    socket.emit('sto one print', sto)
     notify('Печатаю один чек')
   }
 
-  const shinomontazhPrintTwo = (shinomontazh) => {
-    socket.emit('shinomontazh two print', shinomontazh)
+  const stoPrintTwo = (sto) => {
+    socket.emit('sto two print', sto)
     notify('Печатаю два чека')
   }
   const loadingComponent = () => {
@@ -65,12 +65,12 @@ const ShinomontazhEditFull = () => {
       <div className="container mx-auto px-4 mt-3" key={id}>
         {loading
           ? list.map((it) => (
-              <ShinomontazhsEdit
-                key={it.id_shinomontazhs}
+              <StosEdit
+                key={it.id_stos}
                 {...it}
-                updateShinomontazh={updateShinomontazhLocal}
-                shinomontazhPrintOne={shinomontazhPrintOne}
-                shinomontazhPrintTwo={shinomontazhPrintTwo}
+                updateSto={updateStoLocal}
+                stoPrintOne={stoPrintOne}
+                stoPrintTwo={stoPrintTwo}
                 num={num}
               />
             ))
@@ -80,4 +80,4 @@ const ShinomontazhEditFull = () => {
   )
 }
 
-export default ShinomontazhEditFull
+export default StoEditFull

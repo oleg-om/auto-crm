@@ -72,6 +72,14 @@ import ToolEditSimple from '../scenes/Tools/Tools.preorder.edit'
 import ToolEditFull from '../scenes/Tools/Tools.edit'
 import ToolView from '../scenes/Tools/Tools.preorder.view'
 
+import StopriceList from '../scenes/Sto.prices/Sto.prices.list'
+import StopriceNew from '../scenes/Sto.prices/Sto.prices.create'
+import StopriceEdit from '../scenes/Sto.prices/Sto.prices.edit'
+import StosList from '../scenes/Sto/Stos.list'
+import StosListBoss from '../scenes/Sto/Stos.list.boss'
+import StosNew from '../scenes/Sto/Stos.work.create'
+import StoEditFull from '../scenes/Sto/Stos.edit'
+
 const OnlyAnonymousRoute = ({ component: Component, ...rest }) => {
   const auth = useSelector((s) => s.auth)
   const func = (props) =>
@@ -278,6 +286,22 @@ const RootComponent = (props) => {
             <PrivateRoute exact path="/tools/editfull/:id" component={ToolEditFull} />
             <PrivateRoute exact path="/tools/view/:id/:num" component={ToolView} />
             <PrivateRoute exact path="/tools/view/:id" component={ToolView} />
+
+            <PrivateRoute exact path="/stoprice/list/:type" component={StopriceList} />
+            <PrivateRoute exact path="/stoprice/create" component={StopriceNew} />
+            <PrivateRoute exact path="/stoprice/:type/edit/:id" component={StopriceEdit} />
+            <PrivateRoute exact path="/sto/list/:num" component={StosList} />
+            <PrivateRoute exact path="/sto/list" component={StosList} />
+            <PrivateRoute exact path="/stoboss/list/:num" component={ShinomontazhsListBoss} />
+            <PrivateRoute exact path="/stoboss/list" component={StosListBoss} />
+            <PrivateRoute exact path="/sto/create/:num" component={StosNew} />
+            <PrivateRoute exact path="/sto/create" component={StosNew} />
+            <PrivateRoute exact path="/stoboss/create/:num" component={StosNew} />
+            <PrivateRoute exact path="/stoboss/create" component={StosNew} />
+            <PrivateRoute exact path="/sto/edit/:id/:num" component={StoEditFull} />
+            <PrivateRoute exact path="/sto/edit/:id" component={StoEditFull} />
+            <PrivateRoute exact path="/stoboss/edit/:id/:num" component={StoEditFull} />
+            <PrivateRoute exact path="/stoboss/edit/:id" component={StoEditFull} />
             <Route component={() => <NotFound />} />
           </Switch>
         </Startup>

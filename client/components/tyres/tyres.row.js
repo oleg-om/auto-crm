@@ -23,13 +23,19 @@ const TyresRow = (props) => {
       </td>
       <td className="w-full overflow-hidden lg:w-auto max-w-lg p-2 text-gray-800 text-sm text-left lg:text-center border border-b block lg:table-cell relative lg:static">
         <span className="lg:hidden px-2 py-1 text-xs font-bold uppercase">Заказ:</span>
-        {props.preorder && props.order.filter((it) => it.price && it.brand).length <= 0
+        {props.preorder &&
+        props.preorder.length > 0 &&
+        props.preorder.filter((it) => it && it.mode).length > 0 &&
+        props.order.filter((it) => it.price && it.brand).length <= 0
           ? props.preorder
               .filter((it) => it.mode === 'simple')
               .slice(0, 3)
               .map((it, index) => <p key={index}>{it.tyreItem}</p>)
           : null}
-        {props.preorder && props.order.filter((it) => it.price && it.brand).length <= 0
+        {props.preorder &&
+        props.preorder.length > 0 &&
+        props.preorder.filter((it) => it && it.mode).length > 0 &&
+        props.order.filter((it) => it.price && it.brand).length <= 0
           ? props.preorder
               .filter((it) => it.mode === 'full' && it.type === '1')
               .slice(0, 3)
@@ -48,7 +54,10 @@ const TyresRow = (props) => {
                 </p>
               ))
           : null}
-        {props.preorder && props.order.filter((it) => it.price && it.brand).length <= 0
+        {props.preorder &&
+        props.preorder.length > 0 &&
+        props.preorder.filter((it) => it && it.mode).length > 0 &&
+        props.order.filter((it) => it.price && it.brand).length <= 0
           ? props.preorder
               .filter((it) => it.mode === 'full' && it.type === '3')
               .slice(0, 3)
@@ -67,7 +76,10 @@ const TyresRow = (props) => {
                 </p>
               ))
           : null}
-        {props.preorder && props.order.filter((it) => it.price && it.brand).length <= 0
+        {props.preorder &&
+        props.preorder.length > 0 &&
+        props.preorder.filter((it) => it && it.mode).length > 0 &&
+        props.order.filter((it) => it.price && it.brand).length <= 0
           ? props.preorder
               .filter((it) => it.mode === 'full' && it.type === '2')
               .slice(0, 3)
@@ -88,7 +100,10 @@ const TyresRow = (props) => {
               ))
           : null}
 
-        {props.order.length >= 1 && props.order.filter((it) => it.price && it.brand).length >= 1
+        {props.order &&
+        props.order !== null &&
+        props.order.length >= 1 &&
+        props.order.filter((it) => it.price && it.brand).length >= 1
           ? props.order
               .filter((it) => it.mode === 'full' && it.type === '1')
               .slice(0, 3)
@@ -107,7 +122,10 @@ const TyresRow = (props) => {
                 </p>
               ))
           : null}
-        {props.order.length >= 1 && props.order.filter((it) => it.price && it.brand).length >= 1
+        {props.order &&
+        props.order !== null &&
+        props.order.length >= 1 &&
+        props.order.filter((it) => it.price && it.brand).length >= 1
           ? props.order
               .filter((it) => it.mode === 'full' && it.type === '3')
               .slice(0, 3)
@@ -126,7 +144,10 @@ const TyresRow = (props) => {
                 </p>
               ))
           : null}
-        {props.order.length >= 1 && props.order.filter((it) => it.price && it.brand).length >= 1
+        {props.order &&
+        props.order !== null &&
+        props.order.length >= 1 &&
+        props.order.filter((it) => it.price && it.brand).length >= 1
           ? props.order
               .filter((it) => it.mode === 'full' && it.type === '2')
               .slice(0, 3)

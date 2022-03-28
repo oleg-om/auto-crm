@@ -20,7 +20,9 @@ const PlaceUpdate = (props) => {
     shinomontazhquantity: props.shinomontazhquantity,
     shinostavka: props.shinostavka,
     shinomontazhphone: props.shinomontazhphone,
-    shinomeaning: props.shinomeaning
+    shinomeaning: props.shinomeaning,
+    stophone: props.stophone,
+    stoboxes: props.stoboxes
   })
   const history = useHistory()
   toast.configure()
@@ -340,6 +342,44 @@ const PlaceUpdate = (props) => {
                 onChange={onChange}
               />
             </div>
+          </div>
+          <div className="md:w-1/3 px-3 mb-6 md:mb-0 flex flex-col">
+            <label
+              className="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2"
+              htmlFor="grid-first-name"
+            >
+              СТО - номер телефона
+            </label>
+            <div className="flex-shrink w-full inline-block relative mb-3">
+              <NumberFormat
+                format="+7 (###) ###-##-##"
+                mask="_"
+                className="appearance-none block w-full bg-grey-lighter text-grey-darker border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-3 px-4 mb-3"
+                type="text"
+                placeholder="СТО - номер телефона"
+                value={state.stophone}
+                name="stophone"
+                id="stophone"
+                onChange={onChange}
+              />
+            </div>
+          </div>
+          <div className="md:w-1/3 px-3 mb-6 md:mb-0 flex flex-col">
+            <label
+              className="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2"
+              htmlFor="grid-first-name"
+            >
+              Количество постов СТО
+            </label>
+            <input
+              className="appearance-none block w-full bg-grey-lighter text-grey-darker border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-3 px-4 mb-3"
+              value={state.stoboxes}
+              name="stoboxes"
+              id="stoboxes"
+              type="number"
+              placeholder="Введите количество постов СТО"
+              onChange={onChange}
+            />
           </div>
         </div>
       </div>
