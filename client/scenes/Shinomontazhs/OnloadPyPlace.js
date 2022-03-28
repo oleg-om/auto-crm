@@ -1,7 +1,7 @@
 import { useEffect } from 'react'
 import { useDispatch } from 'react-redux'
 // import { socket } from '../../redux/sockets/socketReceivers'
-import { getItemsFiltered } from '../../redux/reducers/stos'
+import { getItemsFiltered } from '../../redux/reducers/shinomontazhs'
 
 const OnLoadPlace = (page, showSearch, place) => {
   const dispatch = useDispatch()

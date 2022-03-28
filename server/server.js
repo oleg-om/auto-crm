@@ -319,10 +319,10 @@ io.on('connection', (socket) => {
   })
 
   socket.on('sto one print', (sto) => {
-    io.emit('sto', sto)
+    io.emit('stooneprint', sto)
   })
   socket.on('sto two print', (sto) => {
-    io.emit('sto', sto)
+    io.emit('stotwoprint', sto)
   })
 
   // socket.on('new shinomontazh', () => {
