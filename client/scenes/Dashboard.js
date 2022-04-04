@@ -98,7 +98,11 @@ const Dashboard = () => {
             auth.roles.includes('admin') ? (
               <div className="md:w-1/2 px-3 mb-6 flex flex-col">
                 <Link
-                  to="/shinomontazh/list"
+                  to={
+                    auth.roles.includes('boss') || auth.roles.includes('admin')
+                      ? '/stoboss/list'
+                      : '/sto/list'
+                  }
                   className="rounded-lg shadow-lg bg-gradient-to-r from-gray-700 to-gray-400 h-full"
                 >
                   <div className="m-2 p-2 flex flex-row">
