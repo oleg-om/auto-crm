@@ -80,6 +80,10 @@ import StosListBoss from '../scenes/Sto/Stos.list.boss'
 import StosNew from '../scenes/Sto/Stos.work.create'
 import StoEditFull from '../scenes/Sto/Stos.edit'
 
+import CategoryList from '../scenes/Categorys/Categorys.list'
+import CategoryNew from '../scenes/Categorys/Categorys.create'
+import CategoryEdit from '../scenes/Categorys/Categorys.edit'
+
 const OnlyAnonymousRoute = ({ component: Component, ...rest }) => {
   const auth = useSelector((s) => s.auth)
   const func = (props) =>
@@ -302,6 +306,9 @@ const RootComponent = (props) => {
             <PrivateRoute exact path="/sto/edit/:id" component={StoEditFull} />
             <PrivateRoute exact path="/stoboss/edit/:id/:num" component={StoEditFull} />
             <PrivateRoute exact path="/stoboss/edit/:id" component={StoEditFull} />
+            <PrivateRoute exact path="/category/list" component={CategoryList} />
+            <PrivateRoute exact path="/category/create" component={CategoryNew} />
+            <PrivateRoute exact path="/category/edit/:id" component={CategoryEdit} />
             <Route component={() => <NotFound />} />
           </Switch>
         </Startup>

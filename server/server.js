@@ -38,6 +38,7 @@ const storageRoutes = require('./routes/api/storage.routes')
 const toolRoutes = require('./routes/api/tools.routes')
 const stopriceRoutes = require('./routes/api/sto.price.routes')
 const stoRoutes = require('./routes/api/sto.routes')
+const categoryRoutes = require('./routes/api/category.routes')
 
 const Root = () => ''
 
@@ -112,6 +113,7 @@ server.use('/api/v1', storageRoutes)
 server.use('/api/v1', toolRoutes)
 server.use('/api/v1', stopriceRoutes)
 server.use('/api/v1', stoRoutes)
+server.use('/api/v1', categoryRoutes)
 
 server.get('/api/v1/auth', async (req, res) => {
   try {

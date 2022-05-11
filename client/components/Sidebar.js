@@ -60,6 +60,13 @@ const Sidebar = () => {
       >
         Поставщики
       </NavLink>
+      <NavLink
+        to="/category/list"
+        className="text-gray-100 w-full p-3 pl-5"
+        activeClassName="bg-gray-700 text-gray-100 border-r-4 border-gray-100 w-full p-3 pl-5"
+      >
+        Категории
+      </NavLink>
     </nav>
   )
 }

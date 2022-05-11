@@ -2,13 +2,14 @@ import React, { useState } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import { Link, useParams } from 'react-router-dom'
 import { toast } from 'react-toastify'
-import StopriceRow from '../../components/stoprices/stoprice' 
+import StopriceRow from '../../components/stoprices/stoprice'
 import { deleteStoprice } from '../../redux/reducers/sto.prices'
 import Navbar from '../../components/Navbar'
 import Sidebar from '../../components/Sidebar'
 import Modal from '../../components/Modal.delete'
 import 'react-toastify/dist/ReactToastify.css'
 import StoCategoryList from '../../lists/shinomontazhprice-list'
+import OnLoad from '../Categorys/Onload'
 
 const StoTypeList = [
   { value: 'rus', name: 'Отечественные' },
@@ -16,10 +17,12 @@ const StoTypeList = [
 ]
 
 const StopriceList = () => {
+  OnLoad()
   toast.configure()
   const notify = (arg) => {
     toast.info(arg, { position: toast.POSITION.BOTTOM_RIGHT })
   }
+
   const { type } = useParams()
   const dispatch = useDispatch()
   const list = useSelector((s) => s.stoprices.list)
@@ -67,11 +70,13 @@ const StopriceList = () => {
                   <option value="" disabled className="text-gray-800">
                     Выберите направление
                   </option>
-                  {StoTypeList.map((it) => (
-                    <option key={it.value} value={it.value}>
-                      {it.name}
-                    </option>
-                  ))}
+                  {StoTypeList
+                    ? StoTypeList.map((it) => (
+                        <option key={it.value} value={it.value}>
+                          {it.name}
+                        </option>
+                      ))
+                    : null}
                 </select>
                 <div className="pointer-events-none absolute top-0 mt-4  right-0 flex items-center px-2 text-gray-600">
                   <svg
@@ -84,49 +89,46 @@ const StopriceList = () => {
                 </div>
               </div>
             </div>
-            
-              <table className="border-collapse w-full">
-                <thead>
-                  <tr className="text-xs">
-                    <th className="p-3 uppercase bg-gray-100 text-gray-600 border border-gray-300 hidden lg:table-cell">
-                      Название
-                    </th>
-                    <th className="p-3 uppercase bg-gray-100 text-gray-600 border border-gray-300 hidden lg:table-cell">
-                      Направление
-                    </th>
-                    <th className="p-3 uppercase bg-gray-100 text-gray-600 border border-gray-300 hidden lg:table-cell">
-                      Категория
-                    </th>
-                   
- 
 
-                    <th className="p-3 uppercase bg-gray-100 text-gray-600 border border-gray-300 hidden lg:table-cell">
-                      Номер
-                    </th>
-                    <th className="p-3 uppercase bg-gray-100 text-gray-600 border border-gray-300 hidden lg:table-cell">
-                      Акция
-                    </th>
-                    <th className="p-3 uppercase bg-gray-100 text-gray-600 border border-gray-300 hidden lg:table-cell">
-                      Действия
-                    </th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {list
-                    .filter((item) => item.type === active)
-                    .map((it) => (
-                      <StopriceRow
-                        key={it.id}
-                        deleteStoprice={openAndDelete}
-                        StoTypeList={StoTypeList}
-                        StoCategoryList={StoCategoryList}
-                        type={type}
-                        {...it}
-                      />
-                    ))}
-                </tbody>
-              </table> 
-            
+            <table className="border-collapse w-full">
+              <thead>
+                <tr className="text-xs">
+                  <th className="p-3 uppercase bg-gray-100 text-gray-600 border border-gray-300 hidden lg:table-cell">
+                    Название
+                  </th>
+                  <th className="p-3 uppercase bg-gray-100 text-gray-600 border border-gray-300 hidden lg:table-cell">
+                    Направление
+                  </th>
+                  <th className="p-3 uppercase bg-gray-100 text-gray-600 border border-gray-300 hidden lg:table-cell">
+                    Категория
+                  </th>
+
+                  <th className="p-3 uppercase bg-gray-100 text-gray-600 border border-gray-300 hidden lg:table-cell">
+                    Номер
+                  </th>
+                  <th className="p-3 uppercase bg-gray-100 text-gray-600 border border-gray-300 hidden lg:table-cell">
+                    Акция
+                  </th>
+                  <th className="p-3 uppercase bg-gray-100 text-gray-600 border border-gray-300 hidden lg:table-cell">
+                    Действия
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                {list
+                  .filter((item) => item.type === active)
+                  .map((it) => (
+                    <StopriceRow
+                      key={it.id}
+                      deleteStoprice={openAndDelete}
+                      StoTypeList={StoTypeList}
+                      StoCategoryList={StoCategoryList}
+                      type={type}
+                      {...it}
+                    />
+                  ))}
+              </tbody>
+            </table>
           </div>
           <Link to="/stoprice/create">
             <button

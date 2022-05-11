@@ -282,6 +282,24 @@ const Navbar = () => {
               СТО (Босс)
             </NavLink>
           ) : null}
+          {auth.roles.includes('wash') ? (
+            <NavLink
+              to="/wash/list"
+              className="block mt-4 lg:inline-block lg:mt-0 text-gray-800 hover:text-blue-700 mr-4"
+              activeClassName="text-blue-600 underline font-semibold"
+            >
+              Мойка
+            </NavLink>
+          ) : null}
+          {auth.roles.includes('boss') || auth.roles.includes('bookkeeper') ? (
+            <NavLink
+              to="/washboss/list"
+              className="block mt-4 lg:inline-block lg:mt-0 text-gray-800 hover:text-blue-700 mr-4"
+              activeClassName="text-blue-600 underline font-semibold"
+            >
+              Мойка (Босс)
+            </NavLink>
+          ) : null}
           {auth.roles.includes('kassa') ||
           auth.roles.includes('boss') ||
           auth.roles.includes('hranenie') ||
@@ -371,11 +389,29 @@ const Navbar = () => {
           ) : null}
           {auth.roles.includes('bookkeeper') ? (
             <NavLink
+              to="/washprice/list/rus"
+              className="block mt-4 lg:inline-block lg:mt-0 text-gray-800 hover:text-blue-700 mr-4"
+              activeClassName="text-blue-600 underline font-semibold"
+            >
+              Цены (Мойка)
+            </NavLink>
+          ) : null}
+          {auth.roles.includes('bookkeeper') ? (
+            <NavLink
               to="/material/list"
               className="block mt-4 lg:inline-block lg:mt-0 text-gray-800 hover:text-blue-700 mr-4"
               activeClassName="text-blue-600 underline font-semibold"
             >
               Цены (материалы)
+            </NavLink>
+          ) : null}
+          {auth.roles.includes('bookkeeper') ? (
+            <NavLink
+              to="/category/list"
+              className="block mt-4 lg:inline-block lg:mt-0 text-gray-800 hover:text-blue-700 mr-4"
+              activeClassName="text-blue-600 underline font-semibold"
+            >
+              Категории
             </NavLink>
           ) : null}
           {auth.roles.includes('kassa') ||

@@ -28,7 +28,7 @@ const StopriceUpdate = (props) => {
     foreignFirst: props.foreignFirst,
     foreignSecond: props.foreignSecond,
     foreignThird: props.foreignThird,
-  
+
     number: props.number,
     free: props.free
   })
@@ -251,7 +251,7 @@ const StopriceUpdate = (props) => {
                 className="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2"
                 htmlFor="grid-first-name"
               >
-                  ВАЗ 2108-09 (2 кат)
+                ВАЗ 2108-09 (2 кат)
               </label>
               <input
                 className="appearance-none block w-full bg-grey-lighter text-grey-darker border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-3 px-4 mb-3"
@@ -268,7 +268,7 @@ const StopriceUpdate = (props) => {
                 className="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2"
                 htmlFor="grid-first-name"
               >
-              ВАЗ 2108-09 (3 кат)
+                ВАЗ 2108-09 (3 кат)
               </label>
               <input
                 className="appearance-none block w-full bg-grey-lighter text-grey-darker border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-3 px-4 mb-3"
@@ -331,9 +331,6 @@ const StopriceUpdate = (props) => {
                 onChange={onChange}
               />
             </div>
-             
-             
-             
           </div>
         ) : null}
         {state.type === 'foreign' ? (
@@ -389,10 +386,9 @@ const StopriceUpdate = (props) => {
                 onChange={onChange}
               />
             </div>
-             
           </div>
         ) : null}
-         
+
         <div className="-mx-3 md:flex flex-wrap mt-3">
           <div className="md:w-1/3 px-3 mb-6 md:mb-0 flex flex-col">
             <label

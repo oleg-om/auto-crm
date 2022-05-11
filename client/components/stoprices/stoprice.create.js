@@ -1,33 +1,31 @@
 import React, { useState } from 'react'
 import { Link, useHistory } from 'react-router-dom'
 import { toast } from 'react-toastify'
-import 'react-toastify/dist/ReactToastify.css' 
+import 'react-toastify/dist/ReactToastify.css'
 
 const StoTypeList = [
   { value: 'rus', name: 'Отечественные' },
   { value: 'foreign', name: 'Иномарки' }
 ]
 
-const StoCategoryList = [
-  { name: 'Рулевое управление' },
-  { name: 'Тормозная система' },
-  { name: 'Передняя подвеска' },
-  { name: 'Задняя подвеска' },
+// const StoCategoryList = [
+//   { name: 'Рулевое управление' },
+//   { name: 'Тормозная система' },
+//   { name: 'Передняя подвеска' },
+//   { name: 'Задняя подвеска' },
 
-  { name: 'Двигатель' },
-  { name: 'Трансмиссия, КПП, мосты' },
-  { name: 'Выхлопная система' },
-  { name: 'Другое' },
+//   { name: 'Двигатель' },
+//   { name: 'Трансмиссия, КПП, мосты' },
+//   { name: 'Выхлопная система' },
+//   { name: 'Другое' },
 
-  { name: 'Охлаждающая система' },
-  { name: 'Передняя подвеска, рулевой механизм' },
-  { name: 'Трансмиссия, КПП, мосты' },
-  { name: 'Топливная система' },
-  { name: 'Электрика' },
-  { name: 'Система охлаждения' },
-]
-
-
+//   { name: 'Охлаждающая система' },
+//   { name: 'Передняя подвеска, рулевой механизм' },
+//   { name: 'Топливная система' },
+//   { name: 'Электрика' },
+//   { name: 'Система охлаждения' },
+//   { name: 'Развал-схождение' }
+// ]
 
 const StopriceCreate = (props) => {
   toast.configure()
@@ -37,24 +35,24 @@ const StopriceCreate = (props) => {
 
   const history = useHistory()
   const [state, setState] = useState({
-    name:  '',
-    category:  '',
-    type:  '',
-    R210107first:  '',
-    R210107second:  '',
-    R210107third:  '',
-    R210809first:  '',
+    name: '',
+    category: '',
+    type: '',
+    R210107first: '',
+    R210107second: '',
+    R210107third: '',
+    R210809first: '',
     R210809second: '',
     R210809third: '',
-    R2110PrioraFirst:  '',
-    R2110PrioraSecond:  '',
-    R2110PrioraThird:  '',
-    foreignFirst:  '',
-    foreignSecond:  '',
+    R2110PrioraFirst: '',
+    R2110PrioraSecond: '',
+    R2110PrioraThird: '',
+    foreignFirst: '',
+    foreignSecond: '',
     foreignThird: '',
-  
-    number:  '',
-    free:  '',
+
+    number: '',
+    free: ''
   })
 
   const onChange = (e) => {
@@ -153,7 +151,7 @@ const StopriceCreate = (props) => {
                   <option value="" className="text-gray-800">
                     Выберите категорию
                   </option>
-                  {StoCategoryList.map((it) => (
+                  {props.StoCategoryList.map((it) => (
                     <option key={it.name} value={it.name}>
                       {it.name}
                     </option>
@@ -195,13 +193,11 @@ const StopriceCreate = (props) => {
         >
           Цены:
         </label>
-        
-         
-         
+
         {!state.type ? <p>Сначала выбрите направление и категорию</p> : null}
         {state.type && !state.category ? <p>Выберите категорию</p> : null}
 
-        {state.type === 'rus'  ? (
+        {state.type === 'rus' ? (
           <div className="-mx-3 md:flex flex-wrap mt-3">
             <div className="md:w-1/5 px-3 mb-6 md:mb-0 flex flex-col">
               <label
@@ -276,7 +272,7 @@ const StopriceCreate = (props) => {
                 className="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2"
                 htmlFor="grid-first-name"
               >
-                  ВАЗ 2108-09 (2 кат)
+                ВАЗ 2108-09 (2 кат)
               </label>
               <input
                 className="appearance-none block w-full bg-grey-lighter text-grey-darker border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-3 px-4 mb-3"
@@ -293,7 +289,7 @@ const StopriceCreate = (props) => {
                 className="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2"
                 htmlFor="grid-first-name"
               >
-              ВАЗ 2108-09 (3 кат)
+                ВАЗ 2108-09 (3 кат)
               </label>
               <input
                 className="appearance-none block w-full bg-grey-lighter text-grey-darker border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-3 px-4 mb-3"
@@ -356,9 +352,6 @@ const StopriceCreate = (props) => {
                 onChange={onChange}
               />
             </div>
-             
-             
-             
           </div>
         ) : null}
         {state.type === 'foreign' ? (
@@ -414,7 +407,6 @@ const StopriceCreate = (props) => {
                 onChange={onChange}
               />
             </div>
-             
           </div>
         ) : null}
         <div className="-mx-3 md:flex flex-wrap mt-3">
@@ -473,7 +465,7 @@ const StopriceCreate = (props) => {
       </div>
       <div className=" flex my-2">
         <Link
-          to="/stoprice/list/legk"
+          to="/stoprice/list/rus"
           className="my-3 mr-2 py-2 md:w-1/3 px-3 bg-red-600 text-white text-center hover:bg-red-700 hover:text-white rounded-lg"
         >
           Отмена

@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { useDispatch } from 'react-redux'
+import { useSelector, useDispatch } from 'react-redux'
 import { useParams } from 'react-router-dom'
 import cx from 'classnames'
 import StopriceCreate from '../../components/stoprices/stoprice.create'
@@ -11,10 +11,14 @@ import {
   getStoprices
 } from '../../redux/reducers/sto.prices'
 import Navbar from '../../components/Navbar'
+import OnLoad from '../Categorys/Onload'
 
 const StopriceNew = () => {
+  OnLoad()
   const { type } = useParams()
   const dispatch = useDispatch()
+  const StoCategoryList = useSelector((s) => s.categorys.list)
+
   const create = (name) => {
     dispatch(createStoprice(name))
   }
@@ -58,7 +62,13 @@ const StopriceNew = () => {
         {typeOfLoad === 'single' ? (
           <div>
             <h1 className="text-3xl py-4 border-b mb-6">Добавить услугу</h1>
-            <StopriceCreate create={create} type={type} />
+            <StopriceCreate
+              create={create}
+              type={type}
+              StoCategoryList={
+                StoCategoryList ? StoCategoryList.filter((cat) => cat.type === 'sto') : []
+              }
+            />
           </div>
         ) : (
           <div>
