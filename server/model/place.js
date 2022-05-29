@@ -74,6 +74,14 @@ const Place = new mongoose.Schema({
   stoboxes: {
     type: Number,
     required: false
+  },
+  washphone: {
+    type: String,
+    required: false
+  },
+  washboxes: {
+    type: Number,
+    required: false
   }
 })
 

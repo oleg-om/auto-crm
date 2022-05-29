@@ -84,6 +84,14 @@ import CategoryList from '../scenes/Categorys/Categorys.list'
 import CategoryNew from '../scenes/Categorys/Categorys.create'
 import CategoryEdit from '../scenes/Categorys/Categorys.edit'
 
+import WashpriceList from '../scenes/Wash.prices/Wash.prices.list'
+import WashpriceNew from '../scenes/Wash.prices/Wash.prices.create'
+import WashpriceEdit from '../scenes/Wash.prices/Wash.prices.edit'
+import WashsList from '../scenes/Wash/Washs.list'
+import WashsListBoss from '../scenes/Wash/Washs.list.boss'
+import WashsNew from '../scenes/Wash/Washs.work.create'
+import WashEditFull from '../scenes/Wash/Washs.edit'
+
 const OnlyAnonymousRoute = ({ component: Component, ...rest }) => {
   const auth = useSelector((s) => s.auth)
   const func = (props) =>
@@ -296,7 +304,7 @@ const RootComponent = (props) => {
             <PrivateRoute exact path="/stoprice/:type/edit/:id" component={StopriceEdit} />
             <PrivateRoute exact path="/sto/list/:num" component={StosList} />
             <PrivateRoute exact path="/sto/list" component={StosList} />
-            <PrivateRoute exact path="/stoboss/list/:num" component={ShinomontazhsListBoss} />
+            <PrivateRoute exact path="/stoboss/list/:num" component={StosListBoss} />
             <PrivateRoute exact path="/stoboss/list" component={StosListBoss} />
             <PrivateRoute exact path="/sto/create/:num" component={StosNew} />
             <PrivateRoute exact path="/sto/create" component={StosNew} />
@@ -306,9 +314,28 @@ const RootComponent = (props) => {
             <PrivateRoute exact path="/sto/edit/:id" component={StoEditFull} />
             <PrivateRoute exact path="/stoboss/edit/:id/:num" component={StoEditFull} />
             <PrivateRoute exact path="/stoboss/edit/:id" component={StoEditFull} />
+
             <PrivateRoute exact path="/category/list" component={CategoryList} />
             <PrivateRoute exact path="/category/create" component={CategoryNew} />
             <PrivateRoute exact path="/category/edit/:id" component={CategoryEdit} />
+
+            <PrivateRoute exact path="/washprice/list/" component={WashpriceList} />
+            <PrivateRoute exact path="/washprice/list/:type" component={WashpriceList} />
+            <PrivateRoute exact path="/washprice/create" component={WashpriceNew} />
+            <PrivateRoute exact path="/washprice/:type/edit/:id" component={WashpriceEdit} />
+            <PrivateRoute exact path="/wash/list/:num" component={WashsList} />
+            <PrivateRoute exact path="/wash/list" component={WashsList} />
+            <PrivateRoute exact path="/washboss/list/:num" component={WashsListBoss} />
+            <PrivateRoute exact path="/washboss/list" component={WashsListBoss} />
+            <PrivateRoute exact path="/wash/create/:num" component={WashsNew} />
+            <PrivateRoute exact path="/wash/create" component={WashsNew} />
+            <PrivateRoute exact path="/washboss/create/:num" component={WashsNew} />
+            <PrivateRoute exact path="/washboss/create" component={WashsNew} />
+            <PrivateRoute exact path="/wash/edit/:id/:num" component={WashEditFull} />
+            <PrivateRoute exact path="/wash/edit/:id" component={WashEditFull} />
+            <PrivateRoute exact path="/washboss/edit/:id/:num" component={WashEditFull} />
+            <PrivateRoute exact path="/washboss/edit/:id" component={WashEditFull} />
+
             <Route component={() => <NotFound />} />
           </Switch>
         </Startup>

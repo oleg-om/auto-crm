@@ -23,6 +23,8 @@ import tools from './tools'
 import stoprices from './sto.prices'
 import stos from './stos'
 import categorys from './categorys'
+import washs from './washs'
+import washprices from './wash.prices'
 
 const createRootReducer = (history) =>
   combineReducers({
@@ -48,7 +50,9 @@ const createRootReducer = (history) =>
     tools,
     stoprices,
     stos,
-    categorys
+    categorys,
+    washs,
+    washprices
   })
 
 export default createRootReducer

@@ -39,6 +39,8 @@ const toolRoutes = require('./routes/api/tools.routes')
 const stopriceRoutes = require('./routes/api/sto.price.routes')
 const stoRoutes = require('./routes/api/sto.routes')
 const categoryRoutes = require('./routes/api/category.routes')
+const washpriceRoutes = require('./routes/api/wash.price.routes')
+const washRoutes = require('./routes/api/wash.routes')
 
 const Root = () => ''
 
@@ -114,6 +116,8 @@ server.use('/api/v1', toolRoutes)
 server.use('/api/v1', stopriceRoutes)
 server.use('/api/v1', stoRoutes)
 server.use('/api/v1', categoryRoutes)
+server.use('/api/v1', washpriceRoutes)
+server.use('/api/v1', washRoutes)
 
 server.get('/api/v1/auth', async (req, res) => {
   try {
@@ -325,6 +329,13 @@ io.on('connection', (socket) => {
   })
   socket.on('sto two print', (sto) => {
     io.emit('stotwoprint', sto)
+  })
+
+  socket.on('wash one print', (sto) => {
+    io.emit('washoneprint', sto)
+  })
+  socket.on('wash two print', (sto) => {
+    io.emit('washtwoprint', sto)
   })
 
   // socket.on('new shinomontazh', () => {

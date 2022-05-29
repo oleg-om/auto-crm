@@ -54,6 +54,14 @@ const Customer = new mongoose.Schema({
     type: String,
     required: false
   },
+  washClass: {
+    type: String,
+    required: false
+  },
+  washCategory: {
+    type: String,
+    required: false
+  },
   id: {
     type: String,
     unique: true,

@@ -1,0 +1,6 @@
+export const GET_WASHS = 'GET_WASHS'
+export const GET_WASH = 'GET_WASH'
+export const CREATE_WASH = 'CREATE_WASH'
+export const UPDATE_WASH = 'UPDATE_WASH'
+export const UPDATE_WASH_STATUS = 'UPDATE_WASH_STATUS'
+export const GET_WASHS_LAST_TWO_DAYS = 'GET_WASHS_LAST_TWO_DAYS'

@@ -22,7 +22,9 @@ const PlaceUpdate = (props) => {
     shinomontazhphone: props.shinomontazhphone,
     shinomeaning: props.shinomeaning,
     stophone: props.stophone,
-    stoboxes: props.stoboxes
+    stoboxes: props.stoboxes,
+    washphone: props.washphone,
+    washboxes: props.washboxes
   })
   const history = useHistory()
   toast.configure()
@@ -378,6 +380,44 @@ const PlaceUpdate = (props) => {
               id="stoboxes"
               type="number"
               placeholder="Введите количество постов СТО"
+              onChange={onChange}
+            />
+          </div>
+          <div className="md:w-1/3 px-3 mb-6 md:mb-0 flex flex-col">
+            <label
+              className="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2"
+              htmlFor="grid-first-name"
+            >
+              Автомойка - номер телефона
+            </label>
+            <div className="flex-shrink w-full inline-block relative mb-3">
+              <NumberFormat
+                format="+7 (###) ###-##-##"
+                mask="_"
+                className="appearance-none block w-full bg-grey-lighter text-grey-darker border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-3 px-4 mb-3"
+                type="text"
+                placeholder="Автомойка - номер телефона"
+                value={state.washphone}
+                name="washphone"
+                id="washphone"
+                onChange={onChange}
+              />
+            </div>
+          </div>
+          <div className="md:w-1/3 px-3 mb-6 md:mb-0 flex flex-col">
+            <label
+              className="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2"
+              htmlFor="grid-first-name"
+            >
+              Количество постов автомойки
+            </label>
+            <input
+              className="appearance-none block w-full bg-grey-lighter text-grey-darker border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-3 px-4 mb-3"
+              value={state.washboxes}
+              name="washboxes"
+              id="washboxes"
+              type="number"
+              placeholder="Введите количество постов автомойки"
               onChange={onChange}
             />
           </div>
