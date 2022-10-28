@@ -3,9 +3,7 @@ import cx from 'classnames'
 
 const Service = ({
   actualService,
-
   service,
-
   checkboxServiceChange,
   servicePlusChange,
   serviceMinusChange,

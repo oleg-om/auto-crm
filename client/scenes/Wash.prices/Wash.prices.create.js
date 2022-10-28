@@ -35,6 +35,11 @@ const WashpriceNew = () => {
   }
   const [typeOfLoad, setType] = useState('single')
 
+  const WashTypeList = [
+    { value: 'legk', name: 'Легковые' },
+    { value: 'gruz', name: 'Грузовые' }
+  ]
+
   return (
     <div>
       <Navbar />
@@ -67,6 +72,7 @@ const WashpriceNew = () => {
             <WashpriceCreate
               create={create}
               type={type}
+              WashTypeList={WashTypeList}
               WashCategoryList={
                 WashCategoryList ? WashCategoryList.filter((cat) => cat.type === 'wash') : []
               }

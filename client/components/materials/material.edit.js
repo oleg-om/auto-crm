@@ -33,6 +33,7 @@ const MaterialUpdate = (props) => {
     else if (!state.price) notify('Поле Цена пустое')
     else if (!state.quantity) notify('Поле Количество пустое')
     else if (!state.type) notify('Поле Тип пустое')
+    else if (!state.category) notify('Поле Категория пустое')
     else {
       props.updateMaterial(props.id, state)
       history.push('/material/list')

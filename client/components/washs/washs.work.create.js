@@ -43,7 +43,6 @@ const WashsCreate = (props) => {
     class: '',
     category: ''
   })
-
   const [service, setService] = useState([])
   const [materials, setMaterials] = useState([])
 
@@ -344,9 +343,9 @@ const WashsCreate = (props) => {
           box
         })
         if (props.checkLink) {
-          history.push('/stoboss/list')
+          history.push('/washboss/list')
         } else {
-          history.push('/sto/list')
+          history.push('/wash/list')
         }
         notify('Запись добавлена')
       } else if (checkCustomer !== undefined && activeCustomer !== '') {
@@ -356,7 +355,6 @@ const WashsCreate = (props) => {
           washCategory: state.category,
           washClass: state.class
         }
-        console.log('cust: ', cust)
         props.openAndUpdate(activeCustomer, cust, {
           ...state,
           services: service,
@@ -902,8 +900,8 @@ const WashsCreate = (props) => {
         <Link
           to={
             props.checkLink
-              ? `/stoboss/list/${props.num ? props.num : ''}`
-              : `/sto/list/${props.num ? props.num : ''}`
+              ? `/washboss/list/${props.num ? props.num : ''}`
+              : `/wash/list/${props.num ? props.num : ''}`
           }
           className="my-3 mr-2 py-3 w-1/3 px-3 bg-red-600 text-white text-center hover:bg-red-700 hover:text-white rounded-lg"
         >

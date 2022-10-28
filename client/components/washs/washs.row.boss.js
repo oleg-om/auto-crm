@@ -50,7 +50,7 @@ const WashsRowBoss = (props) => {
       })}
     >
       <td className="w-auto p-2 text-gray-800 text-sm text-center border border-b table-cell static">
-        {props.id_stos}
+        {props.id_washs}
       </td>
       <td className="w-auto p-2 text-gray-800 text-sm text-center border border-b table-cell static">
         {props.mark} {props.model}
@@ -168,7 +168,7 @@ const WashsRowBoss = (props) => {
             </div>
           </button> */}
           <Link
-            to={`/stoboss/edit/${props.id_stos}/${props.num ? props.num : ''}`}
+            to={`/washboss/edit/${props.id_washs}/${props.num ? props.num : ''}`}
             className="px-5 py-1 text-xs border-blue-500 border text-blue-500 rounded transition duration-300 hover:bg-blue-700 hover:text-white focus:outline-none"
           >
             Подробнее

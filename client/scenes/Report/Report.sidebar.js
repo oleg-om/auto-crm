@@ -233,7 +233,7 @@ const ReportSidebar = (props) => {
                 name="cancelReason"
                 onChange={props.onChangePlace}
               >
-                <option value="">Все</option>
+                {/* <option value="">Все</option> */}
                 {props.placeList
                   .filter(
                     (it) => it.id === props.place

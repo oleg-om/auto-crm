@@ -35,6 +35,7 @@ const MaterialCreate = (props) => {
     else if (!state.price) notify('Поле Цена пустое')
     else if (!state.quantity) notify('Поле Количество пустое')
     else if (!state.type) notify('Поле Тип пустое')
+    else if (!state.category) notify('Поле Категория пустое')
     else {
       props.create(state)
       history.push('/material/list')

@@ -2,11 +2,7 @@ import React, { useState } from 'react'
 import { Link, useHistory } from 'react-router-dom'
 import { toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
-
-const WashTypeList = [
-  { value: 'rus', name: 'Отечественные' },
-  { value: 'foreign', name: 'Иномарки' }
-]
+import categoryList from '../../lists/wash-categories'
 
 // const WashCategoryList = [
 //   { name: 'Рулевое управление' },
@@ -132,7 +128,7 @@ const WashpriceCreate = (props) => {
                 <option value="" disabled hidden className="text-gray-800">
                   Выберите направление
                 </option>
-                {WashTypeList.map((it) => (
+                {props.WashTypeList.map((it) => (
                   <option key={it.value} value={it.value}>
                     {it.name}
                   </option>
@@ -166,7 +162,7 @@ const WashpriceCreate = (props) => {
                   required
                   onChange={onChange}
                 >
-                  <option value="" className="text-gray-800">
+                  <option value="" disabled hidden className="text-gray-800">
                     Выберите категорию
                   </option>
                   {props.WashCategoryList.map((it) => (
@@ -190,7 +186,6 @@ const WashpriceCreate = (props) => {
 
                   <option value="common">Основное</option>
                   <option value="other">Другое</option>
-                  <option value="free">Акция</option>
                 </select>
               )}
               <div className="pointer-events-none absolute top-0 mt-4  right-0 flex items-center px-2 text-gray-600">
@@ -215,216 +210,58 @@ const WashpriceCreate = (props) => {
         {!state.type ? <p>Сначала выбрите направление и категорию</p> : null}
         {state.type && !state.category ? <p>Выберите категорию</p> : null}
 
-        {state.type === 'rus' ? (
+        {state.type === 'gruz' && state.category ? (
           <div className="-mx-3 md:flex flex-wrap mt-3">
-            <div className="md:w-1/5 px-3 mb-6 md:mb-0 flex flex-col">
-              <label
-                className="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2"
-                htmlFor="grid-first-name"
-              >
-                ВАЗ 2101-07 (1 кат)
-              </label>
-              <input
-                className="appearance-none block w-full bg-grey-lighter text-grey-darker border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-3 px-4 mb-3"
-                value={state.R210107first}
-                name="R210107first"
-                id="R210107first"
-                type="number"
-                placeholder="Введите цену"
-                onChange={onChange}
-              />
-            </div>
-            <div className="md:w-1/5 px-3 mb-6 md:mb-0 flex flex-col">
-              <label
-                className="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2"
-                htmlFor="grid-first-name"
-              >
-                ВАЗ 2101-07 (2 кат)
-              </label>
-              <input
-                className="appearance-none block w-full bg-grey-lighter text-grey-darker border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-3 px-4 mb-3"
-                value={state.R210107second}
-                name="R210107second"
-                id="R210107second"
-                type="number"
-                placeholder="Введите цену"
-                onChange={onChange}
-              />
-            </div>
-            <div className="md:w-1/5 px-3 mb-6 md:mb-0 flex flex-col">
-              <label
-                className="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2"
-                htmlFor="grid-first-name"
-              >
-                ВАЗ 2101-07 (3 кат)
-              </label>
-              <input
-                className="appearance-none block w-full bg-grey-lighter text-grey-darker border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-3 px-4 mb-3"
-                value={state.R210107third}
-                name="R210107third"
-                id="R210107third"
-                type="number"
-                placeholder="Введите цену"
-                onChange={onChange}
-              />
-            </div>
-            <div className="md:w-1/5 px-3 mb-6 md:mb-0 flex flex-col">
-              <label
-                className="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2"
-                htmlFor="grid-first-name"
-              >
-                ВАЗ 2108-09 (1 кат)
-              </label>
-              <input
-                className="appearance-none block w-full bg-grey-lighter text-grey-darker border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-3 px-4 mb-3"
-                value={state.R210809first}
-                name="R210809first"
-                id="R210809first"
-                type="number"
-                placeholder="Введите цену"
-                onChange={onChange}
-              />
-            </div>
-            <div className="md:w-1/5 px-3 mb-6 md:mb-0 flex flex-col">
-              <label
-                className="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2"
-                htmlFor="grid-first-name"
-              >
-                ВАЗ 2108-09 (2 кат)
-              </label>
-              <input
-                className="appearance-none block w-full bg-grey-lighter text-grey-darker border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-3 px-4 mb-3"
-                value={state.R210809second}
-                name="R210809second"
-                id="R210809second"
-                type="number"
-                placeholder="Введите цену"
-                onChange={onChange}
-              />
-            </div>
-            <div className="md:w-1/5 px-3 mb-6 md:mb-0 flex flex-col">
-              <label
-                className="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2"
-                htmlFor="grid-first-name"
-              >
-                ВАЗ 2108-09 (3 кат)
-              </label>
-              <input
-                className="appearance-none block w-full bg-grey-lighter text-grey-darker border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-3 px-4 mb-3"
-                value={state.R210809third}
-                name="R210809third"
-                id="R210809third"
-                type="number"
-                placeholder="Введите цену"
-                onChange={onChange}
-              />
-            </div>
-            <div className="md:w-1/5 px-3 mb-6 md:mb-0 flex flex-col">
-              <label
-                className="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2"
-                htmlFor="grid-first-name"
-              >
-                ВАЗ 2110 (ПРИОРА) (1 кат)
-              </label>
-              <input
-                className="appearance-none block w-full bg-grey-lighter text-grey-darker border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-3 px-4 mb-3"
-                value={state.R2110PrioraFirst}
-                name="R2110PrioraFirst"
-                id="R2110PrioraFirst"
-                type="number"
-                placeholder="Введите цену"
-                onChange={onChange}
-              />
-            </div>
-            <div className="md:w-1/5 px-3 mb-6 md:mb-0 flex flex-col">
-              <label
-                className="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2"
-                htmlFor="grid-first-name"
-              >
-                ВАЗ 2110 (ПРИОРА) (2 кат)
-              </label>
-              <input
-                className="appearance-none block w-full bg-grey-lighter text-grey-darker border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-3 px-4 mb-3"
-                value={state.R2110PrioraSecond}
-                name="R2110PrioraSecond"
-                id="R2110PrioraSecond"
-                type="number"
-                placeholder="Введите цену"
-                onChange={onChange}
-              />
-            </div>
-            <div className="md:w-1/5 px-3 mb-6 md:mb-0 flex flex-col">
-              <label
-                className="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2"
-                htmlFor="grid-first-name"
-              >
-                ВАЗ 2110 (ПРИОРА) (3 кат)
-              </label>
-              <input
-                className="appearance-none block w-full bg-grey-lighter text-grey-darker border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-3 px-4 mb-3"
-                value={state.R2110PrioraThird}
-                name="R2110PrioraThird"
-                id="R2110PrioraThird"
-                type="number"
-                placeholder="Введите цену"
-                onChange={onChange}
-              />
-            </div>
+            {categoryList
+              .filter((it) => it.class === 'gruz')
+              .map((it) => {
+                return (
+                  <div className="md:w-1/5 px-3 mb-6 md:mb-0 flex flex-col" key={it.name}>
+                    <label
+                      className="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2"
+                      htmlFor={it.id}
+                    >
+                      {it.name}
+                    </label>
+                    <input
+                      className="appearance-none block w-full bg-grey-lighter text-grey-darker border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-3 px-4 mb-3"
+                      value={state[it.id]}
+                      name={it.id}
+                      id={it.id}
+                      type="number"
+                      placeholder="Введите цену"
+                      onChange={onChange}
+                    />
+                  </div>
+                )
+              })}
           </div>
         ) : null}
-        {state.type === 'foreign' ? (
+        {state.type === 'legk' ? (
           <div className="-mx-3 md:flex flex-wrap mt-3">
-            <div className="md:w-1/5 px-3 mb-6 md:mb-0 flex flex-col">
-              <label
-                className="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2"
-                htmlFor="grid-first-name"
-              >
-                Иномарки (1 кат)
-              </label>
-              <input
-                className="appearance-none block w-full bg-grey-lighter text-grey-darker border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-3 px-4 mb-3"
-                value={state.foreignFirst}
-                name="foreignFirst"
-                id="foreignFirst"
-                type="number"
-                placeholder="Введите цену"
-                onChange={onChange}
-              />
-            </div>
-            <div className="md:w-1/5 px-3 mb-6 md:mb-0 flex flex-col">
-              <label
-                className="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2"
-                htmlFor="grid-first-name"
-              >
-                Иномарки (2 кат)
-              </label>
-              <input
-                className="appearance-none block w-full bg-grey-lighter text-grey-darker border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-3 px-4 mb-3"
-                value={state.foreignSecond}
-                name="foreignSecond"
-                id="foreignSecond"
-                type="number"
-                placeholder="Введите цену"
-                onChange={onChange}
-              />
-            </div>
-            <div className="md:w-1/5 px-3 mb-6 md:mb-0 flex flex-col">
-              <label
-                className="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2"
-                htmlFor="grid-first-name"
-              >
-                Иномарки (3 кат)
-              </label>
-              <input
-                className="appearance-none block w-full bg-grey-lighter text-grey-darker border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-3 px-4 mb-3"
-                value={state.foreignThird}
-                name="foreignThird"
-                id="foreignThird"
-                type="number"
-                placeholder="Введите цену"
-                onChange={onChange}
-              />
-            </div>
+            {categoryList
+              .filter((it) => it.class === 'legk')
+              .map((it) => {
+                return (
+                  <div className="md:w-1/5 px-3 mb-6 md:mb-0 flex flex-col" key={it.name}>
+                    <label
+                      className="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2"
+                      htmlFor={it.id}
+                    >
+                      {it.name}
+                    </label>
+                    <input
+                      className="appearance-none block w-full bg-grey-lighter text-grey-darker border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-3 px-4 mb-3"
+                      value={state[it.id]}
+                      name={it.id}
+                      id={it.id}
+                      type="number"
+                      placeholder="Введите цену"
+                      onChange={onChange}
+                    />
+                  </div>
+                )
+              })}
           </div>
         ) : null}
         <div className="-mx-3 md:flex flex-wrap mt-3">

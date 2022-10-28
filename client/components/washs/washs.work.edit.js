@@ -19,7 +19,7 @@ const WashsEdit = (props) => {
   }
 
   const history = useHistory()
-  const checkLink = () => history.location.pathname.split('/').includes('stoboss')
+  const checkLink = () => history.location.pathname.split('/').includes('washboss')
 
   const employeeList = useSelector((s) => s.employees.list)
   const customerList = useSelector((s) => s.customers.list)
@@ -46,7 +46,7 @@ const WashsEdit = (props) => {
     dateFinish: props.dateFinish ? props.dateFinish : new Date(),
     discount: props.discount,
     payment: props.payment,
-    talon: props.id_stos,
+    talon: props.id_washs,
     class: props.class,
     category: props.category
   })
@@ -529,7 +529,7 @@ const WashsEdit = (props) => {
         tyre: [...tyres]
       })
       if (checkLink()) {
-        history.push(`/stoboss/list/${props.num ? props.num : ''}`)
+        history.push(`/washboss/list/${props.num ? props.num : ''}`)
       } else {
         history.push(`/wash/list/${props.num ? props.num : ''}`)
       }
@@ -561,7 +561,7 @@ const WashsEdit = (props) => {
         status: statusList[1]
       })
       if (checkLink()) {
-        history.push(`/stoboss/list/${props.num ? props.num : ''}`)
+        history.push(`/washboss/list/${props.num ? props.num : ''}`)
       } else {
         history.push(`/wash/list/${props.num ? props.num : ''}`)
       }
@@ -574,7 +574,7 @@ const WashsEdit = (props) => {
         status: statusList[2]
       })
       if (checkLink()) {
-        history.push(`/stoboss/list/${props.num ? props.num : ''}`)
+        history.push(`/washboss/list/${props.num ? props.num : ''}`)
       } else {
         history.push(`/wash/list/${props.num ? props.num : ''}`)
       }
@@ -587,7 +587,7 @@ const WashsEdit = (props) => {
         status: statusList[3]
       })
       if (checkLink()) {
-        history.push(`/stoboss/list/${props.num ? props.num : ''}`)
+        history.push(`/washboss/list/${props.num ? props.num : ''}`)
       } else {
         history.push(`/wash/list/${props.num ? props.num : ''}`)
       }
@@ -600,7 +600,7 @@ const WashsEdit = (props) => {
         status: statusList[4]
       })
       if (checkLink()) {
-        history.push(`/stoboss/list/${props.num ? props.num : ''}`)
+        history.push(`/washboss/list/${props.num ? props.num : ''}`)
       } else {
         history.push(`/wash/list/${props.num ? props.num : ''}`)
       }
@@ -615,7 +615,7 @@ const WashsEdit = (props) => {
         combCash: termCash.cash
       })
       if (checkLink()) {
-        history.push(`/stoboss/list/${props.num ? props.num : ''}`)
+        history.push(`/washboss/list/${props.num ? props.num : ''}`)
       } else {
         history.push(`/wash/list/${props.num ? props.num : ''}`)
       }
@@ -628,7 +628,7 @@ const WashsEdit = (props) => {
         status: statusList[5]
       })
       if (checkLink()) {
-        history.push(`/stoboss/list/${props.num ? props.num : ''}`)
+        history.push(`/washboss/list/${props.num ? props.num : ''}`)
       } else {
         history.push(`/wash/list/${props.num ? props.num : ''}`)
       }
@@ -645,7 +645,7 @@ const WashsEdit = (props) => {
         comment: state.comment
       })
       if (checkLink()) {
-        history.push(`/stoboss/list/${props.num ? props.num : ''}`)
+        history.push(`/washboss/list/${props.num ? props.num : ''}`)
       } else {
         history.push(`/wash/list/${props.num ? props.num : ''}`)
       }
@@ -839,7 +839,7 @@ const WashsEdit = (props) => {
   // }
 
   const printOne = (totalSumWithoutMaterials, totalMaterial, totalSumm, totalWithDiscount) => {
-    props.stoPrintOne({
+    props.washPrintOne({
       ...state,
       services: service,
       material: materials,
@@ -850,12 +850,12 @@ const WashsEdit = (props) => {
       totalSumm,
       totalWithDiscount,
       box,
-      id_stos: props.id_stos
+      id_washs: props.id_washs
     })
   }
 
   const printTwo = (totalSumWithoutMaterials, totalMaterial, totalSumm, totalWithDiscount) => {
-    props.stoPrintTwo({
+    props.washPrintTwo({
       ...state,
       services: service,
       material: materials,
@@ -866,7 +866,7 @@ const WashsEdit = (props) => {
       totalSumm,
       totalWithDiscount,
       box,
-      id_stos: props.id_stos
+      id_washs: props.id_washs
     })
   }
 
@@ -1055,7 +1055,7 @@ const WashsEdit = (props) => {
         <Link
           to={
             checkLink()
-              ? `/stoboss/list/${props.num ? props.num : ''}`
+              ? `/washboss/list/${props.num ? props.num : ''}`
               : `/wash/list/${props.num ? props.num : ''}`
           }
           className="my-3 mr-2 py-3 w-1/3 px-3 bg-red-600 text-white text-center hover:bg-red-700 hover:text-white rounded-lg"
