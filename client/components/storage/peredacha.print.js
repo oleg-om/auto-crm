@@ -221,6 +221,9 @@ export default class PeredachaToPrint extends React.PureComponent {
         <p>
           <strong>Тел. 7-978-225-85-95 ул.Вокзальное шоссе 44 (шц Вианор)</strong>
         </p>
+        <p>
+          <strong>Тел. 7-978-068-05-98 ул.Чкалова 147А (шц Вианор)</strong>
+        </p>
         <p>* Условия хранения см. на обратной стороне</p>
       </div>
     )
