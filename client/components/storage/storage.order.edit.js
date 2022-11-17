@@ -45,7 +45,8 @@ const StoragesEdit = (props) => {
     name: props.name,
     phone: props.phone,
     prepay: props.prepay,
-    comment: props.comment
+    comment: props.comment,
+    doplata: props.doplata
   })
 
   const [inputFields, setInputFields] = useState(

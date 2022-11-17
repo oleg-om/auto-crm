@@ -88,7 +88,8 @@ const StoragesUpdate = (props) => {
     dateStart: props.dateStart,
     dateFinish: props.dateFinish,
     currentplace: props.currentplace,
-    status: props.status
+    status: props.status,
+    doplata: props.doplata
   })
 
   useEffect(() => {
@@ -1032,6 +1033,24 @@ const StoragesUpdate = (props) => {
               disabled={state.payment === 'free'}
               name="comment"
               id="comment"
+              onChange={onChange}
+            />
+          </div>
+          <div className="w-full px-3 mb-6 md:mb-0">
+            <label
+              className="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2"
+              htmlFor="grid-city"
+            >
+              Доплата за просрочку
+            </label>
+            <input
+              className="appearance-none block w-full bg-grey-lighter text-grey-darker border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-1 px-4 mb-3"
+              type="number"
+              placeholder="Доплата за просрочку"
+              value={state.doplata}
+              disabled={state.payment === 'free'}
+              name="doplata"
+              id="doplata"
               onChange={onChange}
             />
           </div>

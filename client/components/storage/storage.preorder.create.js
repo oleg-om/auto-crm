@@ -63,7 +63,8 @@ const StoragesCreate = (props) => {
     date: new Date(),
     payment: 'no',
     dateStart: '',
-    dateFinish: ''
+    dateFinish: '',
+    doplata: ''
   })
   const [customer, setCustomer] = useState({
     regnumber: '',

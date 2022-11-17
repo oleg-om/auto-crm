@@ -105,6 +105,10 @@ const Storage = new mongoose.Schema({
   cancelReason: {
     type: String,
     required: false
+  },
+  doplata: {
+    type: String,
+    required: false
   }
 })
 
