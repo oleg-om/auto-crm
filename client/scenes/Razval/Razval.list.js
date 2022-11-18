@@ -41,6 +41,7 @@ const RazvalList = () => {
 
   const [activeTime, setActiveTime] = useState('')
   const [activeAdress, setActiveAdress] = useState({})
+  const [activePost, setActivePost] = useState()
 
   socket.connect()
   // useEffect(() => {
@@ -61,11 +62,12 @@ const RazvalList = () => {
     setItemType(type)
     setActiveAdress(address)
   }
-  const openAndCreate = (time, address, type) => {
+  const openAndCreate = (time, address, type, actAdr, postNumber) => {
     setCreateIsOpen(true)
     setItemType(type)
     setActiveTime(time)
     setActiveAdress(address)
+    setActivePost(postNumber)
   }
   const openAndEditTime = () => {
     setIsOpen(false)
@@ -249,6 +251,7 @@ const RazvalList = () => {
           activeAdress={activeAdress}
           createIsOpen={createIsOpen}
           createCust={createCust}
+          activePost={activePost}
         />
         <ModalEdit
           open={editIsOpen}

@@ -17,7 +17,8 @@ const ModalNew = ({
   createRazval,
   createOil,
   createCust,
-  createIsOpen
+  createIsOpen,
+  activePost
 }) => {
   toast.configure()
   const notify = (arg) => {
@@ -50,7 +51,8 @@ const ModalNew = ({
     time: '',
     place: '',
     name: '',
-    dateofcreate: ''
+    dateofcreate: '',
+    post: ''
   })
   const [access, setAccess] = useState()
   useEffect(() => {
@@ -61,10 +63,11 @@ const ModalNew = ({
       employee: employee.name,
       employeeplace: employee.place,
       date: OrderDate,
-      dateofcreate: new Date()
+      dateofcreate: new Date(),
+      post: activePost
     }))
     return () => {}
-  }, [timeActive, activeAdress, employee, OrderDate, state.phone, access, createIsOpen])
+  }, [timeActive, activeAdress, employee, OrderDate, state.phone, access, createIsOpen, activePost])
   const [search, setSearch] = useState()
 
   const [stateId, setStateId] = useState({
@@ -232,7 +235,8 @@ const ModalNew = ({
           time: '',
           place: '',
           name: '',
-          dateofcreate: ''
+          dateofcreate: '',
+          post: ''
         })
         setCustomerOptions([])
         setStateId({
@@ -254,7 +258,8 @@ const ModalNew = ({
           time: '',
           place: '',
           name: '',
-          dateofcreate: ''
+          dateofcreate: '',
+          post: ''
         })
         setCustomerOptions([])
         setStateId({
@@ -284,7 +289,8 @@ const ModalNew = ({
           time: '',
           place: '',
           name: '',
-          dateofcreate: ''
+          dateofcreate: '',
+          post: ''
         })
         setCustomerOptions([])
         setStateId({
@@ -306,7 +312,8 @@ const ModalNew = ({
           time: '',
           place: '',
           name: '',
-          dateofcreate: ''
+          dateofcreate: '',
+          post: ''
         })
         setCustomerOptions([])
         setStateId({
@@ -327,7 +334,8 @@ const ModalNew = ({
           date: state.date,
           time: state.time,
           place: state.place,
-          dateofcreate: state.dateofcreate
+          dateofcreate: state.dateofcreate,
+          post: state?.post || null
         })
       )
       setState({
@@ -341,7 +349,8 @@ const ModalNew = ({
         time: '',
         place: '',
         name: '',
-        dateofcreate: ''
+        dateofcreate: '',
+        post: ''
       })
     } else if (itemType === 'Замена масла') {
       dispatch(() =>
@@ -350,7 +359,8 @@ const ModalNew = ({
           date: state.date,
           time: state.time,
           place: state.place,
-          dateofcreate: state.dateofcreate
+          dateofcreate: state.dateofcreate,
+          post: state?.post || null
         })
       )
       setState({
@@ -364,7 +374,8 @@ const ModalNew = ({
         time: '',
         place: '',
         name: '',
-        dateofcreate: ''
+        dateofcreate: '',
+        post: ''
       })
     }
   }
@@ -385,7 +396,8 @@ const ModalNew = ({
       time: '',
       place: '',
       name: '',
-      dateofcreate: ''
+      dateofcreate: '',
+      post: ''
     })
     setCustomerOptions([])
     setStateId({
@@ -459,7 +471,9 @@ const ModalNew = ({
                 </h3>
                 <div className="mt-2">
                   <p className="text-sm leading-5 text-gray-900">Адрес: {activeAdress.name}</p>
-
+                  {state.post ? (
+                    <p className="text-sm leading-5 text-gray-900">Пост: {state.post}</p>
+                  ) : null}
                   <div className="mt-3 flex flex-col">
                     <label
                       className="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2"

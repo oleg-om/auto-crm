@@ -10,6 +10,7 @@ const ModalView = ({
   open,
   onClose,
   itemId,
+
   itemType,
   updateRazval,
   updateOil,
@@ -21,7 +22,7 @@ const ModalView = ({
   const [changeStatus, setChangeStatus] = useState({
     status: ''
   })
-
+  console.log('itemId: ', itemId)
   const componentRef = useRef()
   const handlePrint = useReactToPrint({
     content: () => componentRef.current
@@ -143,6 +144,9 @@ const ModalView = ({
                 <p className="text-sm leading-5 text-gray-900 mt-2 mb-3">
                   Адрес: {dateCreate ? place.find((it) => it.id === itemId.place).name : null}
                 </p>
+                {itemId?.post ? (
+                  <p className="text-sm leading-5 text-gray-900">Пост: {itemId.post}</p>
+                ) : null}
                 <div className="mt-2">
                   <div className="flex flex-row appearance-none w-full bg-grey-lighter border border-gray-300 focus:border-gray-500 focus:outline-none py-1 px-4 pr-8 rounded mb-2">
                     <div className="mr-3">

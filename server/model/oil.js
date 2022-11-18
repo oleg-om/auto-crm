@@ -59,6 +59,10 @@ const Oil = new mongoose.Schema({
   access: {
     type: String,
     default: 'true'
+  },
+  post: {
+    type: String,
+    required: false
   }
 })
 

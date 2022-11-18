@@ -3,6 +3,7 @@ import { toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
 import statusList from '../../lists/razval.statuses'
 import timeList from '../../lists/time-list'
+import { arrayFromNumber } from './razval'
 
 const ModalEdit = ({
   open,
@@ -24,6 +25,7 @@ const ModalEdit = ({
     date: ''
   })
   const [choosedPlace, setChoosedPlace] = useState({})
+  console.log('choosedPlace: ', choosedPlace)
   useEffect(() => {
     setChangeStatus({
       status: itemId.status,
@@ -283,6 +285,50 @@ const ModalEdit = ({
                       </div>
                     </div>
                   </div>
+                  {choosedPlace?.razvalAndOilType === 'column' ? (
+                    <div className="mt-3 flex flex-col">
+                      <label
+                        className="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2"
+                        htmlFor="grid-first-name"
+                      >
+                        Пост
+                      </label>
+                      <div className="flex-shrink w-full inline-block relative mb-3">
+                        <select
+                          className="block appearance-none w-full bg-grey-lighter border border-gray-300 focus:border-gray-500 focus:outline-none py-1 px-4 pr-8 rounded"
+                          value={changeStatus.post}
+                          name="post"
+                          id="post"
+                          onChange={onChangeStatus}
+                        >
+                          <option value="" disabled hidden className="text-gray-800">
+                            Выберите пост
+                          </option>
+                          {arrayFromNumber(
+                            itemType === 'Развал-схождение'
+                              ? choosedPlace.razvalquantity
+                              : choosedPlace.oilquantity,
+                            'editpost'
+                          ).map((it, id) => {
+                            return (
+                              <option value={it.num} key={id}>
+                                {it.num}
+                              </option>
+                            )
+                          })}
+                        </select>
+                        <div className="pointer-events-none absolute top-0 mt-2  right-0 flex items-center px-2 text-gray-600">
+                          <svg
+                            className="fill-current h-4 w-4"
+                            xmlns="http://www.w3.org/2000/svg"
+                            viewBox="0 0 20 20"
+                          >
+                            <path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z" />
+                          </svg>
+                        </div>
+                      </div>
+                    </div>
+                  ) : null}
                   <div className="mt-3 flex flex-col">
                     <label
                       className="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2"

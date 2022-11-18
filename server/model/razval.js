@@ -59,6 +59,10 @@ const Razval = new mongoose.Schema({
   access: {
     type: String,
     default: 'true'
+  },
+  post: {
+    type: String,
+    required: false
   }
 })
 

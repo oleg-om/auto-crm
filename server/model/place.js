@@ -82,6 +82,11 @@ const Place = new mongoose.Schema({
   washboxes: {
     type: Number,
     required: false
+  },
+  razvalAndOilType: {
+    type: String,
+    required: false,
+    default: () => 'classic'
   }
 })
 
