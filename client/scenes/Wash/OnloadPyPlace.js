@@ -12,7 +12,7 @@ const OnLoadPlace = (page, showSearch, place) => {
   }, [dispatch])
 
   useEffect(() => {
-    if (!showSearch) {
+    if (!showSearch && place) {
       dispatch(getItemsFiltered(page, place))
     }
   }, [dispatch, page, showSearch, place])
