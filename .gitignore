@@ -69,3 +69,5 @@ client__reserve/
 /client__reserve/
 client__reserve
 .env.prod
+
+backup
