@@ -10,7 +10,6 @@ const ModalView = ({
   open,
   onClose,
   itemId,
-
   itemType,
   updateRazval,
   updateOil,
@@ -23,6 +22,8 @@ const ModalView = ({
     status: ''
   })
   console.log('itemId: ', itemId)
+  console.log('changeStatus: ', changeStatus)
+  console.log('itemType: ', itemType)
   const componentRef = useRef()
   const handlePrint = useReactToPrint({
     content: () => componentRef.current
@@ -71,7 +72,7 @@ const ModalView = ({
     .replace(/^(\d)$/, '0$1')}`.toString()
 
   const changeRazval = () => {
-    if (!changeStatus) notify('Поле пустое')
+    if (!changeStatus?.status) notify('Поле пустое')
     else if (itemType === 'Развал-схождение') {
       updateRazval(itemId.id, changeStatus)
     } else if (itemType === 'Замена масла') {

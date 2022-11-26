@@ -82,6 +82,7 @@ const ModalEdit = ({
   const changeRazval = () => {
     if (!changeStatus) notify('Поле пустое')
     else if (itemType === 'Развал-схождение') {
+      console.log('chenge razval', itemType)
       if (
         razvalList.filter(
           (item) =>
@@ -104,6 +105,7 @@ const ModalEdit = ({
         notify('Запись на данное время недоступна')
       }
     } else if (itemType === 'Замена масла') {
+      console.log('chenge oil', itemType)
       if (
         oilList.filter(
           (item) =>

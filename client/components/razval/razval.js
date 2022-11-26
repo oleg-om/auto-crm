@@ -635,8 +635,8 @@ const RazvalRow = (props) => {
                                 id={item.id}
                                 onClick={
                                   item.access === 'true'
-                                    ? () => openModal(item, 'Развал-схождение')
-                                    : () => openDeleteModal(item, 'Развал-схождение')
+                                    ? () => openModal(item, 'Замена масла')
+                                    : () => openDeleteModal(item, 'Замена масла')
                                 }
                               >
                                 {item.access === 'true' ? (
