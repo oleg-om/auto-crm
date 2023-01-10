@@ -33,6 +33,7 @@ exports.getByPage = async (req, res) => {
 
 exports.getFiltered = async (req, res) => {
   const { page, number, place, status, process, phone, reg } = req.query
+  console.log('status: ', status)
 
   try {
     const LIMIT = 14
@@ -53,6 +54,16 @@ exports.getFiltered = async (req, res) => {
     //     { upsert: false, useFindAndModify: false }
     //   ]
     // })
+
+    const orderStatField =
+      req.query.status && req.query.status === 'itemsInStock'
+        ? {
+            'order.stat': `Получен на складе`
+          }
+        : {}
+
+    const processField = req.query.process ? `${process.toString()}` : {}
+
     const total = await Autopart.countDocuments({
       id_autoparts: req.query.number ? number : { $exists: true },
       place: req.query.place ? `${place.toString()}` : { $exists: true },
@@ -60,13 +71,10 @@ exports.getFiltered = async (req, res) => {
         req.query.status && req.query.status !== 'itemsInStock'
           ? `${decodeURIComponent(status).toString()}`
           : { $exists: true },
-      process: req.query.process ? `${process.toString()}` : { $exists: true },
+      ...processField,
       phone: req.query.phone ? { $regex: `${phone.toString()}`, $options: 'i' } : { $exists: true },
       regnumber: req.query.reg ? { $regex: `${reg.toString()}`, $options: 'i' } : { $exists: true },
-      'order.stat':
-        req.query.status && req.query.status === 'itemsInStock'
-          ? `Получен на складе`
-          : { $exists: true }
+      ...orderStatField
     })
 
     const posts = await Autopart.find({
@@ -77,13 +85,10 @@ exports.getFiltered = async (req, res) => {
         req.query.status && req.query.status !== 'itemsInStock'
           ? `${decodeURIComponent(status).toString()}`
           : { $exists: true },
-      process: req.query.process ? `${process.toString()}` : { $exists: true },
+      ...processField,
       phone: req.query.phone ? { $regex: `${phone.toString()}`, $options: 'i' } : { $exists: true },
       regnumber: req.query.reg ? { $regex: `${reg.toString()}`, $options: 'i' } : { $exists: true },
-      'order.stat':
-        req.query.status && req.query.status === 'itemsInStock'
-          ? `Получен на складе`
-          : { $exists: true }
+      ...orderStatField
 
       // {
       //   process: req.query.process ? `${process.toString()}` : 'smth'
@@ -96,7 +101,27 @@ exports.getFiltered = async (req, res) => {
       .sort({ id_autoparts: -1 })
       .limit(LIMIT)
       .skip(startIndex)
+    console.log('posts: ', {
+      // status: `${decodeURIComponent(req.query.status ? status : '').toString()}`,
+      id_autoparts: req.query.number ? number : { $exists: true },
+      place: req.query.place ? `${place.toString()}` : { $exists: true },
+      status:
+        req.query.status && req.query.status !== 'itemsInStock'
+          ? `${decodeURIComponent(status).toString()}`
+          : { $exists: true },
+      process: req.query.process ? `${process.toString()}` : { $exists: true },
+      phone: req.query.phone ? { $regex: `${phone.toString()}`, $options: 'i' } : { $exists: true },
+      regnumber: req.query.reg ? { $regex: `${reg.toString()}`, $options: 'i' } : { $exists: true },
+      ...orderStatField
 
+      // {
+      //   process: req.query.process ? `${process.toString()}` : 'smth'
+      // },
+      // { phone: { $regex: req.query.phone ? `${phone.toString()}` : 'smth', $options: 'i' } },
+
+      // upsert: false,
+      // useFindAndModify: false
+    })
     res.json({
       status: 'ok',
       data: posts,
