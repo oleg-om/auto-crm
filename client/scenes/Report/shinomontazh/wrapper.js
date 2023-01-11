@@ -22,12 +22,17 @@ const Shinomontazh = ({
   const [isLoaded, setIsLoaded] = useState(false)
 
   useEffect(() => {
+    const getType = () => {
+      if (active === 'salary-sh') {
+        return 'shinomontazhmonth'
+      }
+      return 'stomonth'
+    }
+
     if (activeMonth && calendarType === 'month') {
       setIsLoaded(false)
       fetch(
-        `api/v1/shinomontazhmonth?month=${
-          activeMonth.getMonth() + 1
-        }&year=${activeMonth.getFullYear()}`
+        `api/v1/${getType()}?month=${activeMonth.getMonth() + 1}&year=${activeMonth.getFullYear()}`
       )
         .then((res) => res.json())
         .then((it) => {
@@ -37,9 +42,7 @@ const Shinomontazh = ({
     }
     if (activeDay && calendarType === 'day') {
       setIsLoaded(false)
-      fetch(
-        `api/v1/shinomontazhmonth?month=${activeDay.getMonth() + 1}&year=${activeDay.getFullYear()}`
-      )
+      fetch(`api/v1/${getType()}?month=${activeDay.getMonth() + 1}&year=${activeDay.getFullYear()}`)
         .then((res) => res.json())
         .then((it) => {
           setShinList(it.data)
@@ -56,7 +59,7 @@ const Shinomontazh = ({
         cont.filter((arr) => new Date(arr.dateFinish) > firstDt && new Date(arr.dateFinish) < secDt)
       setIsLoaded(false)
       fetch(
-        `api/v1/shinomontazhrange?month=${
+        `api/v1/${active === 'salary-sh' ? 'shinomontazhrange' : 'storange'}?month=${
           firstDt.getMonth() + 1
         }&year=${firstDt.getFullYear()}&secMonth=${
           secDt.getMonth() + 1
@@ -69,7 +72,7 @@ const Shinomontazh = ({
         })
     }
     return () => {}
-  }, [activeMonth.getMonth(), activeDay.getMonth(), range, calendarType])
+  }, [activeMonth.getMonth(), activeDay.getMonth(), range, calendarType, active])
 
   const [report, setReport] = useState([])
 
@@ -251,45 +254,44 @@ const Shinomontazh = ({
   //   : []
   return (
     <>
-      <div
-        className={cx('', {
-          block: active === 'salary',
-          hidden: active !== 'salary'
-        })}
-      >
-        {isLoaded ? null : loading()}
-        {report.length > 0 && report && isLoaded ? (
-          <Salary
-            employeeList={employeeList}
-            report={report}
-            // reportWithDiscount={repFinal}
-            taskStatuses={taskStatuses}
-            shinList={shinList}
-            place={place}
-            bossPercent={bossPercent}
-            setBossPercent={setBossPercent}
-            isMaterial={isMaterial}
-            setIsMaterial={setIsMaterial}
-            timeStart={timeStart}
-            timeFinish={timeFinish}
-            calendarType={calendarType}
-          />
-        ) : null}
-        {/* {isLoaded && report.length > 0 ? <p className="my-3">Записей нет</p> : null} */}
-      </div>
-      <div
-        className={cx('', {
-          block: active === 'material',
-          hidden: active !== 'material'
-        })}
-      >
-        {' '}
-        {isLoaded ? null : loading()}
-        {report.length > 0 && isLoaded ? (
-          <Material report={report} isLoaded={shinList.isLoaded} />
-        ) : null}
-        {isLoaded && report.length <= 0 ? <p className="my-3">Записей нет</p> : null}
-      </div>
+      {active === 'salary-sh' || active === 'salary-sto' ? (
+        <div className={cx('block', {})}>
+          {isLoaded ? null : loading()}
+          {report.length > 0 && report && isLoaded ? (
+            <Salary
+              employeeList={employeeList}
+              report={report}
+              // reportWithDiscount={repFinal}
+              taskStatuses={taskStatuses}
+              shinList={shinList}
+              place={place}
+              bossPercent={bossPercent}
+              setBossPercent={setBossPercent}
+              isMaterial={isMaterial}
+              setIsMaterial={setIsMaterial}
+              timeStart={timeStart}
+              timeFinish={timeFinish}
+              calendarType={calendarType}
+            />
+          ) : null}
+          {isLoaded && report.length <= 0 ? <p className="my-3">Записей нет</p> : null}
+        </div>
+      ) : null}
+      {active === 'material' ? (
+        <div
+          className={cx('', {
+            block: active === 'material',
+            hidden: active !== 'material'
+          })}
+        >
+          {' '}
+          {isLoaded ? null : loading()}
+          {report.length > 0 && isLoaded ? (
+            <Material report={report} isLoaded={shinList.isLoaded} />
+          ) : null}
+          {isLoaded && report.length <= 0 ? <p className="my-3">Записей нет</p> : null}
+        </div>
+      ) : null}
     </>
   )
 }

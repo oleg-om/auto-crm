@@ -19,7 +19,7 @@ const Report = () => {
   const [place, setPlace] = useState('')
   const [activeMonth, setActiveMonth] = useState(new Date())
   const [activeDay, setActiveDay] = useState(new Date())
-  const [active, setActive] = useState('salary')
+  const [active, setActive] = useState('salary-sh')
 
   const [range, setRange] = useState([new Date(), new Date()])
 
@@ -76,12 +76,24 @@ const Report = () => {
                 <button
                   type="button"
                   className={cx('p-4 bg-gray-200 rounded w-full h-full', {
-                    block: active !== 'salary',
-                    'border-b-8 border-blue-400': active === 'salary'
+                    block: active !== 'salary-sh',
+                    'border-b-8 border-blue-400': active === 'salary-sh'
                   })}
-                  onClick={() => setActive('salary')}
+                  onClick={() => setActive('salary-sh')}
                 >
-                  Зарплаты
+                  Шиномонтаж
+                </button>
+              </div>
+              <div className="w-1/5 p-2">
+                <button
+                  type="button"
+                  className={cx('p-4 bg-gray-200 rounded w-full h-full', {
+                    block: active !== 'salary-sto',
+                    'border-b-8 border-blue-400': active === 'salary-sto'
+                  })}
+                  onClick={() => setActive('salary-sto')}
+                >
+                  СТО
                 </button>
               </div>
               <div className="w-1/5 p-2">
@@ -108,7 +120,7 @@ const Report = () => {
                   Автозапчасти
                 </button>
               </div>
-              {checkIsAdmin ? (
+              {/* {checkIsAdmin ? (
                 <div className="w-1/5 p-2">
                   <a
                     href="https://docs.google.com/spreadsheets/d/1L6mR3e0bmu13y7OqIlMQbziWb4a7Ev0k9X_zu-kEBTg/edit?usp=sharing"
@@ -119,7 +131,7 @@ const Report = () => {
                     Программа
                   </a>
                 </div>
-              ) : null}
+              ) : null} */}
             </div>
             <Shinomontazh
               calendarType={calendarType}
