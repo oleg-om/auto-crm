@@ -69,6 +69,7 @@ const SalaryTableComponent = ({
 
     if (type === 'oformlen') {
       dispatch(updateEmployee(emplId, { oformlen: emplPerc }))
+      notify('Поле оформление сотрудника сохранено')
       setSavedOformlen(true)
     }
   }
