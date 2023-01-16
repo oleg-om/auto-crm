@@ -25,3 +25,14 @@ body {
   top:32px;
   box-shadow: 0 8px 6px -6px #ccc;
 }
+
+.img__save {
+  min-width: 13px;
+  min-height: 13px;
+}
+.img__save-wrap {
+  width: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}

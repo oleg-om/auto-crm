@@ -19,7 +19,7 @@ const Report = () => {
   const [place, setPlace] = useState('')
   const [activeMonth, setActiveMonth] = useState(new Date())
   const [activeDay, setActiveDay] = useState(new Date())
-  const [active, setActive] = useState('salary-sh')
+  const [active, setActive] = useState('sh-kassa')
 
   const [range, setRange] = useState([new Date(), new Date()])
 
@@ -67,35 +67,68 @@ const Report = () => {
           range={range}
           setRange={setRange}
           active={active}
+          auth={auth}
         />
         <div className="w-full mx-auto px-4">
           <h1 className="text-3xl py-4 border-b mb-6">Статистика</h1>
           <div className="py-3 px-4 my-3 rounded-lg shadow bg-white">
             <div className="flex flex-row">
-              <div className="w-1/5 p-2">
-                <button
-                  type="button"
-                  className={cx('p-4 bg-gray-200 rounded w-full h-full', {
-                    block: active !== 'salary-sh',
-                    'border-b-8 border-blue-400': active === 'salary-sh'
-                  })}
-                  onClick={() => setActive('salary-sh')}
-                >
-                  Шиномонтаж
-                </button>
-              </div>
-              <div className="w-1/5 p-2">
-                <button
-                  type="button"
-                  className={cx('p-4 bg-gray-200 rounded w-full h-full', {
-                    block: active !== 'salary-sto',
-                    'border-b-8 border-blue-400': active === 'salary-sto'
-                  })}
-                  onClick={() => setActive('salary-sto')}
-                >
-                  СТО
-                </button>
-              </div>
+              {auth.roles.includes('kassa') || auth.roles.includes('boss') ? (
+                <>
+                  <div className="w-1/5 p-2">
+                    <button
+                      type="button"
+                      className={cx('p-4 bg-gray-200 rounded w-full h-full', {
+                        block: active !== 'sh-kassa',
+                        'border-b-8 border-blue-400': active === 'sh-kassa'
+                      })}
+                      onClick={() => setActive('sh-kassa')}
+                    >
+                      Шиномонтаж (касса)
+                    </button>
+                  </div>
+                  <div className="w-1/5 p-2">
+                    <button
+                      type="button"
+                      className={cx('p-4 bg-gray-200 rounded w-full h-full', {
+                        block: active !== 'sto-kassa',
+                        'border-b-8 border-blue-400': active === 'sto-kassa'
+                      })}
+                      onClick={() => setActive('sto-kassa')}
+                    >
+                      СТО (касса)
+                    </button>
+                  </div>
+                </>
+              ) : null}
+              {auth.roles.includes('bookkeeper') || auth.roles.includes('boss') ? (
+                <>
+                  <div className="w-1/5 p-2">
+                    <button
+                      type="button"
+                      className={cx('p-4 bg-gray-200 rounded w-full h-full', {
+                        block: active !== 'sh-buh',
+                        'border-b-8 border-blue-400': active === 'sh-buh'
+                      })}
+                      onClick={() => setActive('sh-buh')}
+                    >
+                      Шиномонтаж (бухгалтерия)
+                    </button>
+                  </div>
+                  <div className="w-1/5 p-2">
+                    <button
+                      type="button"
+                      className={cx('p-4 bg-gray-200 rounded w-full h-full', {
+                        block: active !== 'sto-buh',
+                        'border-b-8 border-blue-400': active === 'sto-buh'
+                      })}
+                      onClick={() => setActive('sto-buh')}
+                    >
+                      СТО (бухгалтерия)
+                    </button>
+                  </div>
+                </>
+              ) : null}
               <div className="w-1/5 p-2">
                 <button
                   type="button"
@@ -143,6 +176,7 @@ const Report = () => {
               timeStart={timeStart}
               active={active}
               range={range}
+              // auth={auth}
             />
             {active === 'autopart' ? (
               <div

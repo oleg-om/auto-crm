@@ -16,6 +16,7 @@ const Shinomontazh = ({
   active,
   employeeList,
   range
+  // auth
 }) => {
   // onLoad()
   const [shinList, setShinList] = useState([])
@@ -23,7 +24,7 @@ const Shinomontazh = ({
 
   useEffect(() => {
     const getType = () => {
-      if (active === 'salary-sh') {
+      if (active.includes('sh-')) {
         return 'shinomontazhmonth'
       }
       return 'stomonth'
@@ -59,7 +60,7 @@ const Shinomontazh = ({
         cont.filter((arr) => new Date(arr.dateFinish) > firstDt && new Date(arr.dateFinish) < secDt)
       setIsLoaded(false)
       fetch(
-        `api/v1/${active === 'salary-sh' ? 'shinomontazhrange' : 'storange'}?month=${
+        `api/v1/${active.includes('sh-') ? 'shinomontazhrange' : 'storange'}?month=${
           firstDt.getMonth() + 1
         }&year=${firstDt.getFullYear()}&secMonth=${
           secDt.getMonth() + 1
@@ -254,7 +255,10 @@ const Shinomontazh = ({
   //   : []
   return (
     <>
-      {active === 'salary-sh' || active === 'salary-sto' ? (
+      {active === 'sh-kassa' ||
+      active === 'sto-kassa' ||
+      active === 'sh-buh' ||
+      active === 'sto-buh' ? (
         <div className={cx('block', {})}>
           {isLoaded ? null : loading()}
           {report.length > 0 && report && isLoaded ? (
@@ -272,6 +276,8 @@ const Shinomontazh = ({
               timeStart={timeStart}
               timeFinish={timeFinish}
               calendarType={calendarType}
+              // auth={auth}
+              active={active}
             />
           ) : null}
           {isLoaded && report.length <= 0 ? <p className="my-3">Записей нет</p> : null}

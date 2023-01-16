@@ -1,7 +1,8 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
+import SalaryTableComponent from './SalaryTableComponent'
 
-const Salary = ({ report, isMaterial, setIsMaterial, calendarType }) => {
+const Salary = ({ report, isMaterial, setIsMaterial, calendarType, active, employeeList }) => {
   const employeeArray = report
     ? report
         .reduce((acc, rec) => [...acc, ...rec.employee], [])
@@ -48,12 +49,6 @@ const Salary = ({ report, isMaterial, setIsMaterial, calendarType }) => {
   const onChangeMat = (e) => {
     const { value } = e.target
     setIsMaterial(value)
-  }
-
-  const applyDiscount = (number, percentOfUser) => {
-    const disc = percentOfUser
-    const number_percent = (number / 100) * disc
-    return Number(number) - (Number(number) - Number(number_percent))
   }
 
   const commonDiscount = (number, item) => {
@@ -437,6 +432,9 @@ const Salary = ({ report, isMaterial, setIsMaterial, calendarType }) => {
   }
 
   const [userPercent, setUserPercent] = useState({})
+  const [userOformlen, setUserOformlen] = useState({})
+  const [userNalog, setUserNalog] = useState({})
+  const [userCardSum, setUserCardSum] = useState({})
 
   const onChangePercent = (e) => {
     const { name, value } = e.target
@@ -445,6 +443,30 @@ const Salary = ({ report, isMaterial, setIsMaterial, calendarType }) => {
       [name]: value
     }))
   }
+  const onChangeOformlen = (e) => {
+    const { name, value } = e.target
+    setUserOformlen((prevState) => ({
+      ...prevState,
+      [name]: value
+    }))
+  }
+
+  const onChangeNalog = (e) => {
+    const { name, value } = e.target
+    setUserNalog((prevState) => ({
+      ...prevState,
+      [name]: value
+    }))
+  }
+
+  const onChangeCardSum = (e) => {
+    const { name, value } = e.target
+    setUserCardSum((prevState) => ({
+      ...prevState,
+      [name]: value
+    }))
+  }
+
   const totalFreeService = (item) =>
     item.services
       .filter((it) => it.free === 'yes')
@@ -466,6 +488,55 @@ const Salary = ({ report, isMaterial, setIsMaterial, calendarType }) => {
     applyDiscountWithFreeService(totalFreeService(item)) +
     roundTo5(commonDiscount(totalService(item), item)) +
     totalMaterial(item)
+
+  const checkIsBookkeper = active.includes('-buh')
+  const checkIsShinomontazh = active.includes('sh-')
+
+  useEffect(() => {
+    // процент
+    const emplPercnentList =
+      employeeList && employeeList.length
+        ? employeeList
+            .filter((emp) => (checkIsShinomontazh ? emp?.shinomontazhPercent : emp?.stoPercent))
+            ?.reduce((acc, rec) => {
+              return {
+                ...acc,
+                [rec.id]: checkIsShinomontazh
+                  ? rec?.shinomontazhPercent.toString()
+                  : rec?.stoPercent.toString()
+              }
+
+              // { [rec.id]: checkIsShinomontazh ? rec?.shinomontazhPercent : rec?.stoPercent }
+            }, {})
+        : {}
+
+    setUserPercent((prevState) => ({
+      ...prevState,
+      ...emplPercnentList
+    }))
+
+    // оформление
+
+    const emplOformlenList =
+      employeeList && employeeList.length
+        ? employeeList
+            .filter((emp) => emp?.oformlen)
+            ?.reduce((acc, rec) => {
+              return {
+                ...acc,
+                [rec.id]: rec?.oformlen
+              }
+
+              // { [rec.id]: checkIsShinomontazh ? rec?.shinomontazhPercent : rec?.stoPercent }
+            }, {})
+        : {}
+
+    setUserOformlen((prevState) => ({
+      ...prevState,
+      ...emplOformlenList
+    }))
+  }, [employeeList])
+
   return (
     <div className="mb-3">
       <h2 className="text-xl font-semibold mb-2">Зарплаты</h2>
@@ -495,153 +566,154 @@ const Salary = ({ report, isMaterial, setIsMaterial, calendarType }) => {
             <th className="p-3 font-bold bg-gray-100 text-gray-600 border border-gray-300 hidden lg:table-cell">
               Имя
             </th>
-            <th className="p-3 font-bold bg-gray-100 text-gray-600 border border-gray-300 hidden lg:table-cell">
-              Процент
-            </th>
-            <th className="p-3 font-bold bg-gray-100 text-gray-600 border border-gray-300 hidden lg:table-cell">
-              Терминал
-            </th>
-            <th className="p-3 font-bold bg-gray-100 text-gray-600 border border-gray-300 hidden lg:table-cell">
-              Безнал
-            </th>
-            <th className="p-3 font-bold bg-gray-100 text-gray-600 border border-gray-300 hidden lg:table-cell">
-              Наличка
-            </th>
-            {calendarType === 'day' ? (
-              <th className="p-3 font-bold bg-gray-100 text-gray-600 border border-gray-300 hidden lg:table-cell">
-                Сумма
-              </th>
+            {checkIsBookkeper ? (
+              <>
+                <th className="p-3 font-bold bg-gray-100 text-gray-600 border border-gray-300 hidden lg:table-cell">
+                  Процент
+                </th>
+                <th className="p-3 font-bold bg-gray-100 text-gray-600 border border-gray-300 hidden lg:table-cell">
+                  Оформлен
+                </th>
+                <th className="p-3 font-bold bg-gray-100 text-gray-600 border border-gray-300 hidden lg:table-cell">
+                  Налог, руб
+                </th>
+                <th className="p-3 font-bold bg-gray-100 text-gray-600 border border-gray-300 hidden lg:table-cell">
+                  Сумма на карту
+                </th>
+              </>
             ) : null}
-            {calendarType === 'day' ? (
-              <th className="p-3 font-bold bg-gray-100 text-gray-600 border border-gray-300 hidden lg:table-cell">
-                Акция
-              </th>
+            {!checkIsBookkeper ? (
+              <>
+                <th className="p-3 font-bold bg-gray-100 text-gray-600 border border-gray-300 hidden lg:table-cell">
+                  Терминал
+                </th>
+                <th className="p-3 font-bold bg-gray-100 text-gray-600 border border-gray-300 hidden lg:table-cell">
+                  Безнал
+                </th>
+                <th className="p-3 font-bold bg-gray-100 text-gray-600 border border-gray-300 hidden lg:table-cell">
+                  Наличка
+                </th>
+
+                {calendarType === 'day' ? (
+                  <th className="p-3 font-bold bg-gray-100 text-gray-600 border border-gray-300 hidden lg:table-cell">
+                    Сумма
+                  </th>
+                ) : null}
+                {calendarType === 'day' ? (
+                  <th className="p-3 font-bold bg-gray-100 text-gray-600 border border-gray-300 hidden lg:table-cell">
+                    Акция
+                  </th>
+                ) : null}
+              </>
             ) : null}
             <th className="p-3 font-bold bg-gray-100 text-gray-600 border border-gray-300 hidden lg:table-cell">
               Вал
             </th>
 
-            <th className="p-3 font-bold bg-gray-100 text-gray-600 border border-gray-300 hidden lg:table-cell">
-              Зарплата
-            </th>
+            {checkIsBookkeper ? (
+              <th className="p-3 font-bold bg-gray-100 text-gray-600 border border-gray-300 hidden lg:table-cell">
+                Зарплата
+              </th>
+            ) : null}
           </tr>
         </thead>
         <tbody>
           {employeeArray.map((it) => (
-            <tr
+            <SalaryTableComponent
               key={it.id}
-              className="bg-white lg:hover:bg-gray-100 flex lg:table-row flex-row lg:flex-row flex-wrap lg:flex-no-wrap mb-5 lg:mb-0"
-            >
-              <td className="w-full lg:w-auto p-2 text-gray-800 text-left border border-b block lg:table-cell relative lg:static">
-                <span className="lg:hidden px-2 py-1 text-xs font-bold uppercase">Имя:</span>
-                {it.name} {it.surname}
-              </td>
-              <td className="w-full lg:w-auto p-2 text-gray-800 text-left border border-b block lg:table-cell relative lg:static">
-                <span className="lg:hidden px-2 py-1 text-xs font-bold uppercase">Процент:</span>
-                <input
-                  className="border-solid border-4 border-light-blue-500"
-                  type="number"
-                  value={userPercent[it.id]}
-                  onChange={onChangePercent}
-                  name={it.id}
-                />
-              </td>
-              <td className="w-full lg:w-auto p-2 text-gray-800 text-left lg:text-center border border-b block lg:table-cell relative lg:static">
-                <span className="lg:hidden px-2 py-1 text-xs font-bold uppercase">Терминал:</span>
-                {Math.round(
-                  getSalary(it.id, 'Терминал', 'Комбинированный', 'summa'),
-                  userPercent[it.id]
-                )}{' '}
-                руб.
-              </td>
-              <td className="w-full lg:w-auto p-2 text-gray-800 text-left lg:text-center border border-b block lg:table-cell relative lg:static">
-                <span className="lg:hidden px-2 py-1 text-xs font-bold uppercase">Безнал:</span>
-                {Math.round(getSalary(it.id, 'Безнал', '', 'summa'), userPercent[it.id])} руб.
-              </td>
-              <td className="w-full lg:w-auto p-2 text-gray-800 text-left lg:text-center border border-b block lg:table-cell relative lg:static">
-                <span className="lg:hidden px-2 py-1 text-xs font-bold uppercase">Наличка:</span>
-                {Math.round(
-                  getSalary(it.id, 'Оплачено', 'Комбинированный', 'summa'),
-                  userPercent[it.id]
-                )}{' '}
-                руб.
-              </td>
-              {calendarType === 'day' ? (
-                <td className="w-full lg:w-auto p-2 text-gray-800 text-left lg:text-center border border-b block lg:table-cell relative lg:static">
-                  <span className="lg:hidden px-2 py-1 text-xs font-bold uppercase">Сумма:</span>
-                  {Math.round(getSalary(it.id, '', '', 'summa'), userPercent[it.id])} руб.
-                </td>
-              ) : null}
-              {calendarType === 'day' ? (
-                <td className="w-full lg:w-auto p-2 text-gray-800 text-left lg:text-center border border-b block lg:table-cell relative lg:static">
-                  <span className="lg:hidden px-2 py-1 text-xs font-bold uppercase">Акция:</span>
-                  {Math.round(getSalary(it.id, '', '', 'discountonly'), userPercent[it.id])} руб.
-                </td>
-              ) : null}
-              <td className="w-full lg:w-auto p-2 text-gray-800 text-left lg:text-center border border-b block lg:table-cell relative lg:static">
-                <span className="lg:hidden px-2 py-1 text-xs font-bold uppercase">Вал:</span>
-                {Math.round(getSalary(it.id), userPercent[it.id])} руб.
-              </td>
-              <td className="w-full lg:w-auto p-2 text-gray-800 text-left lg:text-center border border-b block lg:table-cell relative lg:static">
-                <span className="lg:hidden px-2 py-1 text-xs font-bold uppercase">Зарплата:</span>
-                {userPercent[it.id]
-                  ? Math.round(applyDiscount(getSalary(it.id), userPercent[it.id]))
-                  : 0}{' '}
-                руб.
-              </td>
-            </tr>
+              it={it}
+              userPercent={userPercent}
+              getSalary={getSalary}
+              checkIsBookkeper={checkIsBookkeper}
+              onChangePercent={onChangePercent}
+              calendarType={calendarType}
+              checkIsShinomontazh={checkIsShinomontazh}
+              userOformlen={userOformlen}
+              onChangeOformlen={onChangeOformlen}
+              onChangeNalog={onChangeNalog}
+              onChangeCardSum={onChangeCardSum}
+              userNalog={userNalog}
+              userCardSum={userCardSum}
+            />
           ))}
           <tr className="bg-purple-100 font-bold lg:hover:bg-gray-100 flex lg:table-row flex-row lg:flex-row flex-wrap lg:flex-no-wrap mb-5 lg:mb-0">
             <td className="w-full lg:w-auto p-2 text-gray-800 text-left border border-b block lg:table-cell relative lg:static">
               <span className="lg:hidden px-2 py-1 bg-purple-100 font-bold uppercase">Всего:</span>
               Всего
             </td>
-            <td className="w-full lg:w-auto p-2 text-gray-800 text-left border border-b block lg:table-cell relative lg:static">
-              <span className="lg:hidden px-2 py-1 bg-purple-100 font-bold uppercase">
-                Процент:
-              </span>
-            </td>
-            <td className="w-full lg:w-auto p-2 text-gray-800 text-left lg:text-center border border-b block lg:table-cell relative lg:static">
-              <span className="lg:hidden px-2 py-1 bg-purple-100 font-bold uppercase">
-                Терминал:
-              </span>
-              {Math.round(getSalaryfull('', 'Терминал', 'Комбинированный', 'summa'), '')} руб.
-            </td>
-            <td className="w-full lg:w-auto p-2 text-gray-800 text-left lg:text-center border border-b block lg:table-cell relative lg:static">
-              <span className="lg:hidden px-2 py-1 bg-purple-100 font-bold uppercase">Безнал:</span>
-              {Math.round(getSalaryfull('', 'Безнал', '', 'summa'), '')} руб.
-            </td>
-            <td className="w-full lg:w-auto p-2 text-gray-800 text-left lg:text-center border border-b block lg:table-cell relative lg:static">
-              <span className="lg:hidden px-2 py-1 bg-purple-100 font-bold uppercase">
-                Наличка:
-              </span>
-              {Math.round(getSalaryfull('', 'Оплачено', 'Комбинированный', 'summa'), '')} руб.
-            </td>
-            {calendarType === 'day' ? (
-              <td className="w-full lg:w-auto p-2 text-gray-800 text-left lg:text-center border border-b block lg:table-cell relative lg:static">
-                <span className="lg:hidden px-2 py-1 bg-purple-100 font-bold uppercase">
-                  Сумма:
-                </span>
-                {Math.round(getSalaryfull('', '', '', 'summa'), '')} руб.
-              </td>
+            {checkIsBookkeper ? (
+              <>
+                <td className="w-full lg:w-auto p-2 text-gray-800 text-left border border-b block lg:table-cell relative lg:static">
+                  <span className="lg:hidden px-2 py-1 bg-purple-100 font-bold uppercase">
+                    Процент:
+                  </span>
+                </td>
+                <td className="w-full lg:w-auto p-2 text-gray-800 text-left border border-b block lg:table-cell relative lg:static">
+                  <span className="lg:hidden px-2 py-1 bg-purple-100 font-bold uppercase">
+                    Оформлен:
+                  </span>
+                </td>
+                <td className="w-full lg:w-auto p-2 text-gray-800 text-left border border-b block lg:table-cell relative lg:static">
+                  <span className="lg:hidden px-2 py-1 bg-purple-100 font-bold uppercase">
+                    Налог:
+                  </span>
+                </td>
+                <td className="w-full lg:w-auto p-2 text-gray-800 text-left border border-b block lg:table-cell relative lg:static">
+                  <span className="lg:hidden px-2 py-1 bg-purple-100 font-bold uppercase">
+                    Сумма на карту:
+                  </span>
+                </td>
+              </>
             ) : null}
-            {calendarType === 'day' ? (
-              <td className="w-full lg:w-auto p-2 text-gray-800 text-left lg:text-center border border-b block lg:table-cell relative lg:static">
-                <span className="lg:hidden px-2 py-1 bg-purple-100 font-bold uppercase">
-                  Акция:
-                </span>
-                {Math.round(getSalaryfull('', '', '', 'discountonly'), '')} руб.
-              </td>
+            {!checkIsBookkeper ? (
+              <>
+                <td className="w-full lg:w-auto p-2 text-gray-800 text-left lg:text-center border border-b block lg:table-cell relative lg:static">
+                  <span className="lg:hidden px-2 py-1 bg-purple-100 font-bold uppercase">
+                    Терминал:
+                  </span>
+                  {Math.round(getSalaryfull('', 'Терминал', 'Комбинированный', 'summa'), '')} руб.
+                </td>
+                <td className="w-full lg:w-auto p-2 text-gray-800 text-left lg:text-center border border-b block lg:table-cell relative lg:static">
+                  <span className="lg:hidden px-2 py-1 bg-purple-100 font-bold uppercase">
+                    Безнал:
+                  </span>
+                  {Math.round(getSalaryfull('', 'Безнал', '', 'summa'), '')} руб.
+                </td>
+                <td className="w-full lg:w-auto p-2 text-gray-800 text-left lg:text-center border border-b block lg:table-cell relative lg:static">
+                  <span className="lg:hidden px-2 py-1 bg-purple-100 font-bold uppercase">
+                    Наличка:
+                  </span>
+                  {Math.round(getSalaryfull('', 'Оплачено', 'Комбинированный', 'summa'), '')} руб.
+                </td>
+                {calendarType === 'day' ? (
+                  <td className="w-full lg:w-auto p-2 text-gray-800 text-left lg:text-center border border-b block lg:table-cell relative lg:static">
+                    <span className="lg:hidden px-2 py-1 bg-purple-100 font-bold uppercase">
+                      Сумма:
+                    </span>
+                    {Math.round(getSalaryfull('', '', '', 'summa'), '')} руб.
+                  </td>
+                ) : null}
+                {calendarType === 'day' ? (
+                  <td className="w-full lg:w-auto p-2 text-gray-800 text-left lg:text-center border border-b block lg:table-cell relative lg:static">
+                    <span className="lg:hidden px-2 py-1 bg-purple-100 font-bold uppercase">
+                      Акция:
+                    </span>
+                    {Math.round(getSalaryfull('', '', '', 'discountonly'), '')} руб.
+                  </td>
+                ) : null}
+              </>
             ) : null}
             <td className="w-full lg:w-auto p-2 text-gray-800 text-left lg:text-center border border-b block lg:table-cell relative lg:static">
               <span className="lg:hidden px-2 py-1 bg-purple-100 font-bold uppercase">Вал:</span>
               {Math.round(getSalaryfull(''), '')} руб.
             </td>
-            <td className="w-full lg:w-auto p-2 text-gray-800 text-left lg:text-center border border-b block lg:table-cell relative lg:static">
-              <span className="lg:hidden px-2 py-1 bg-purple-100 font-bold uppercase">
-                Зарплата:
-              </span>
-            </td>
+            {checkIsBookkeper ? (
+              <td className="w-full lg:w-auto p-2 text-gray-800 text-left lg:text-center border border-b block lg:table-cell relative lg:static">
+                <span className="lg:hidden px-2 py-1 bg-purple-100 font-bold uppercase">
+                  Зарплата:
+                </span>
+              </td>
+            ) : null}
           </tr>
         </tbody>
       </table>
@@ -694,10 +766,14 @@ const Salary = ({ report, isMaterial, setIsMaterial, calendarType }) => {
                           </span>
 
                           <Link
-                            to={`/shinomontazh/edit/${it.id_shinomontazhs}`}
+                            to={
+                              checkIsShinomontazh
+                                ? `/shinomontazh/edit/${it.id_shinomontazhs}`
+                                : `/sto/edit/${it.id_stos}`
+                            }
                             className="hover:underline"
                           >
-                            {it.id_shinomontazhs}
+                            {checkIsShinomontazh ? it.id_shinomontazhs : it.id_stos}
                           </Link>
                         </td>
                         <td className="w-full lg:w-auto p-2 text-gray-800 text-left border border-b block lg:table-cell relative lg:static">

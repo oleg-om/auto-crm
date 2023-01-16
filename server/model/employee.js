@@ -33,6 +33,31 @@ const Employee = new mongoose.Schema({
     unique: true,
     default: () => uuid.v4()
   },
+  stoPercent: {
+    type: Number,
+    required: false
+  },
+  shinomontazhPercent: {
+    type: Number,
+    required: false
+  },
+  oformlen: {
+    type: Boolean,
+    required: false
+  },
+  // oformlenNalog: {
+  //   type: Number,
+  //   required: false
+  // },
+  // есть карта у сотрудника или нет
+  // card: {
+  //   type: Boolean,
+  //   required: false
+  // },
+  // cardSum: {
+  //   type: Number,
+  //   required: false
+  // },
   date: {
     type: String,
     default: () =>

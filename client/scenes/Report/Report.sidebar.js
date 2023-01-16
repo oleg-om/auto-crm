@@ -61,16 +61,18 @@ const ReportSidebar = (props) => {
   return (
     <nav className="left-0 top-0 bg-gray-800 w-72 flex flex-col pt-3 sidebar">
       <div className="flex flex-row justify-around">
-        <button
-          type="button"
-          onClick={() => props.setCalendarType('month')}
-          className={cx(' mx-2 font-semibold', {
-            'text-white': props.calendarType !== 'month',
-            'text-yellow-500 underline': props.calendarType === 'month'
-          })}
-        >
-          Месяц
-        </button>
+        {props.auth.roles.includes('bookkeeper') || props.auth.roles.includes('boss') ? (
+          <button
+            type="button"
+            onClick={() => props.setCalendarType('month')}
+            className={cx(' mx-2 font-semibold', {
+              'text-white': props.calendarType !== 'month',
+              'text-yellow-500 underline': props.calendarType === 'month'
+            })}
+          >
+            Месяц
+          </button>
+        ) : null}
         <button
           type="button"
           onClick={() => props.setCalendarType('day')}
