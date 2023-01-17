@@ -24,7 +24,7 @@ const Shinomontazh = ({
 
   useEffect(() => {
     const getType = () => {
-      if (active.includes('sh-')) {
+      if (active.includes('sh-') || active === 'material') {
         return 'shinomontazhmonth'
       }
       return 'stomonth'

@@ -3,6 +3,7 @@ import ExportCSV from '../../../components/excel'
 
 const Material = ({ report }) => {
   const materialNums = report
+
     .reduce((acc, rec) => [...acc, rec.material], [])
     .reduce((acc, rec) => acc.concat(rec), [])
     .reduce((acc, rec) => {
