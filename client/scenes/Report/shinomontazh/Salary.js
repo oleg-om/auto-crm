@@ -535,6 +535,44 @@ const Salary = ({ report, isMaterial, setIsMaterial, calendarType, active, emplo
       ...prevState,
       ...emplOformlenList
     }))
+
+    // сумма на карту
+
+    const emplCardSumList =
+      employeeList && employeeList.length
+        ? employeeList
+            .filter((emp) => emp?.cardSum)
+            ?.reduce((acc, rec) => {
+              return {
+                ...acc,
+                [rec.id]: rec?.cardSum
+              }
+            }, {})
+        : {}
+
+    setUserCardSum((prevState) => ({
+      ...prevState,
+      ...emplCardSumList
+    }))
+
+    // налог
+
+    const emplNalogList =
+      employeeList && employeeList.length
+        ? employeeList
+            .filter((emp) => emp?.oformlenNalog)
+            ?.reduce((acc, rec) => {
+              return {
+                ...acc,
+                [rec.id]: rec?.oformlenNalog
+              }
+            }, {})
+        : {}
+
+    setUserNalog((prevState) => ({
+      ...prevState,
+      ...emplNalogList
+    }))
   }, [employeeList])
 
   return (
@@ -566,6 +604,9 @@ const Salary = ({ report, isMaterial, setIsMaterial, calendarType, active, emplo
             <th className="p-3 font-bold bg-gray-100 text-gray-600 border border-gray-300 hidden lg:table-cell">
               Имя
             </th>
+            <th className="p-3 font-bold bg-gray-100 text-gray-600 border border-gray-300 hidden lg:table-cell">
+              Вал
+            </th>
             {checkIsBookkeper ? (
               <>
                 <th className="p-3 font-bold bg-gray-100 text-gray-600 border border-gray-300 hidden lg:table-cell">
@@ -574,12 +615,16 @@ const Salary = ({ report, isMaterial, setIsMaterial, calendarType, active, emplo
                 <th className="p-3 font-bold bg-gray-100 text-gray-600 border border-gray-300 hidden lg:table-cell">
                   Оформлен
                 </th>
-                <th className="p-3 font-bold bg-gray-100 text-gray-600 border border-gray-300 hidden lg:table-cell">
-                  Налог, руб
-                </th>
-                <th className="p-3 font-bold bg-gray-100 text-gray-600 border border-gray-300 hidden lg:table-cell">
-                  Сумма на карту
-                </th>
+                {calendarType === 'month' ? (
+                  <>
+                    <th className="p-3 font-bold bg-gray-100 text-gray-600 border border-gray-300 hidden lg:table-cell">
+                      Налог, руб
+                    </th>
+                    <th className="p-3 font-bold bg-gray-100 text-gray-600 border border-gray-300 hidden lg:table-cell">
+                      Сумма на карту
+                    </th>
+                  </>
+                ) : null}
               </>
             ) : null}
             {!checkIsBookkeper ? (
@@ -606,9 +651,6 @@ const Salary = ({ report, isMaterial, setIsMaterial, calendarType, active, emplo
                 ) : null}
               </>
             ) : null}
-            <th className="p-3 font-bold bg-gray-100 text-gray-600 border border-gray-300 hidden lg:table-cell">
-              Вал
-            </th>
 
             {checkIsBookkeper ? (
               <th className="p-3 font-bold bg-gray-100 text-gray-600 border border-gray-300 hidden lg:table-cell">
@@ -641,6 +683,10 @@ const Salary = ({ report, isMaterial, setIsMaterial, calendarType, active, emplo
               <span className="lg:hidden px-2 py-1 bg-purple-100 font-bold uppercase">Всего:</span>
               Всего
             </td>
+            <td className="w-full lg:w-auto p-2 text-gray-800 text-left lg:text-center border border-b block lg:table-cell relative lg:static">
+              <span className="lg:hidden px-2 py-1 bg-purple-100 font-bold uppercase">Вал:</span>
+              {Math.round(getSalaryfull(''), '')} руб.
+            </td>
             {checkIsBookkeper ? (
               <>
                 <td className="w-full lg:w-auto p-2 text-gray-800 text-left border border-b block lg:table-cell relative lg:static">
@@ -653,16 +699,20 @@ const Salary = ({ report, isMaterial, setIsMaterial, calendarType, active, emplo
                     Оформлен:
                   </span>
                 </td>
-                <td className="w-full lg:w-auto p-2 text-gray-800 text-left border border-b block lg:table-cell relative lg:static">
-                  <span className="lg:hidden px-2 py-1 bg-purple-100 font-bold uppercase">
-                    Налог:
-                  </span>
-                </td>
-                <td className="w-full lg:w-auto p-2 text-gray-800 text-left border border-b block lg:table-cell relative lg:static">
-                  <span className="lg:hidden px-2 py-1 bg-purple-100 font-bold uppercase">
-                    Сумма на карту:
-                  </span>
-                </td>
+                {calendarType === 'month' ? (
+                  <>
+                    <td className="w-full lg:w-auto p-2 text-gray-800 text-left border border-b block lg:table-cell relative lg:static">
+                      <span className="lg:hidden px-2 py-1 bg-purple-100 font-bold uppercase">
+                        Налог:
+                      </span>
+                    </td>
+                    <td className="w-full lg:w-auto p-2 text-gray-800 text-left border border-b block lg:table-cell relative lg:static">
+                      <span className="lg:hidden px-2 py-1 bg-purple-100 font-bold uppercase">
+                        Сумма на карту:
+                      </span>
+                    </td>
+                  </>
+                ) : null}
               </>
             ) : null}
             {!checkIsBookkeper ? (
@@ -703,10 +753,7 @@ const Salary = ({ report, isMaterial, setIsMaterial, calendarType, active, emplo
                 ) : null}
               </>
             ) : null}
-            <td className="w-full lg:w-auto p-2 text-gray-800 text-left lg:text-center border border-b block lg:table-cell relative lg:static">
-              <span className="lg:hidden px-2 py-1 bg-purple-100 font-bold uppercase">Вал:</span>
-              {Math.round(getSalaryfull(''), '')} руб.
-            </td>
+
             {checkIsBookkeper ? (
               <td className="w-full lg:w-auto p-2 text-gray-800 text-left lg:text-center border border-b block lg:table-cell relative lg:static">
                 <span className="lg:hidden px-2 py-1 bg-purple-100 font-bold uppercase">

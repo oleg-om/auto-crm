@@ -45,19 +45,19 @@ const Employee = new mongoose.Schema({
     type: Boolean,
     required: false
   },
-  // oformlenNalog: {
-  //   type: Number,
-  //   required: false
-  // },
+  oformlenNalog: {
+    type: Number,
+    required: false
+  },
   // есть карта у сотрудника или нет
   // card: {
   //   type: Boolean,
   //   required: false
   // },
-  // cardSum: {
-  //   type: Number,
-  //   required: false
-  // },
+  cardSum: {
+    type: Number,
+    required: false
+  },
   date: {
     type: String,
     default: () =>

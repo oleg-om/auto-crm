@@ -33,11 +33,15 @@ const SalaryTableComponent = ({
     const nalog = Number(userNalog[userId]) || 0
     const card = Number(userCardSum[userId]) || 0
 
-    return Number(number) - (Number(number) - Number(number_percent)) - nalog - card
+    const getMinus = (num) => (calendarType === 'month' ? num - nalog - card : num)
+
+    return getMinus(Number(number) - (Number(number) - Number(number_percent)))
   }
 
   const [saved, setSaved] = useState(false)
   const [savedOformlen, setSavedOformlen] = useState(false)
+  const [savedNalog, setSavedNalog] = useState(false)
+  const [savedCardSum, setSavedCardSum] = useState(false)
   //   const [error, setError] = useState(true)
 
   toast.configure()
@@ -67,10 +71,22 @@ const SalaryTableComponent = ({
       }
     }
 
+    if (type === 'oformlenNalog') {
+      dispatch(updateEmployee(emplId, { oformlenNalog: emplPerc }))
+      notify('Поле налог сотрудника сохранено')
+      setSavedNalog(true)
+    }
+
     if (type === 'oformlen') {
       dispatch(updateEmployee(emplId, { oformlen: emplPerc }))
       notify('Поле оформление сотрудника сохранено')
       setSavedOformlen(true)
+    }
+
+    if (type === 'cardSum') {
+      dispatch(updateEmployee(emplId, { cardSum: emplPerc }))
+      notify('Поле сумма на карту сохранено')
+      setSavedCardSum(true)
     }
   }
 
@@ -79,6 +95,10 @@ const SalaryTableComponent = ({
       <td className="w-full lg:w-auto p-2 text-gray-800 text-left border border-b block lg:table-cell relative lg:static">
         <span className="lg:hidden px-2 py-1 text-xs font-bold uppercase">Имя:</span>
         {it.name} {it.surname}
+      </td>
+      <td className="w-full lg:w-auto p-2 text-gray-800 text-left lg:text-center border border-b block lg:table-cell relative lg:static">
+        <span className="lg:hidden px-2 py-1 text-xs font-bold uppercase">Вал:</span>
+        {Math.round(getSalary(it.id), userPercent[it.id])} руб.
       </td>
       {checkIsBookkeper ? (
         <>
@@ -129,48 +149,52 @@ const SalaryTableComponent = ({
               </button>{' '}
             </span>
           </td>
-          <td
-            id="nalog"
-            className="w-auto table-cell lg:w-auto p-2 text-gray-800 text-left border border-b relative lg:static"
-          >
-            <span className="flex">
-              <input
-                className="w-full border-solid border-4 border-light-blue-500"
-                type="number"
-                value={userNalog[it.id]}
-                onChange={onChangeNalog}
-                name={it.id}
-              />
-              {/* <button
-                type="button"
-                onClick={() => savePercent(it.id, userPercent[it.id])}
-                className="ml-2 text-sm py-1 px-4 bg-gray-200 text-gray-700 hover:text-gray-600 hover:bg-gray-400 rounded-lg"
+          {calendarType === 'month' ? (
+            <>
+              <td
+                id="nalog"
+                className="w-auto table-cell lg:w-auto p-2 text-gray-800 text-left border border-b relative lg:static"
               >
-                {saved ? '✓' : 'Сохранить'}
-              </button> */}
-            </span>
-          </td>
-          <td
-            id="cardSum"
-            className="w-auto table-cell lg:w-auto p-2 text-gray-800 text-left border border-b relative lg:static"
-          >
-            <span className="flex">
-              <input
-                className="w-full border-solid border-4 border-light-blue-500"
-                type="number"
-                value={userCardSum[it.id]}
-                onChange={onChangeCardSum}
-                name={it.id}
-              />
-              {/* <button
-                type="button"
-                onClick={() => savePercent(it.id, userPercent[it.id])}
-                className="ml-2 text-sm py-1 px-4 bg-gray-200 text-gray-700 hover:text-gray-600 hover:bg-gray-400 rounded-lg"
+                <span className="flex">
+                  <input
+                    className="w-full border-solid border-4 border-light-blue-500"
+                    type="number"
+                    value={userNalog[it.id]}
+                    onChange={onChangeNalog}
+                    name={it.id}
+                  />
+                  <button
+                    type="button"
+                    onClick={() => savePercent('oformlenNalog', it.id, userNalog[it.id])}
+                    className="img__save-wrap ml-2 text-sm py-1 px-4 bg-gray-200 text-gray-700 hover:text-gray-600 hover:bg-gray-400 rounded-lg"
+                  >
+                    {savedNalog ? '✓' : <ImageSave />}
+                  </button>
+                </span>
+              </td>
+              <td
+                id="cardSum"
+                className="w-auto table-cell lg:w-auto p-2 text-gray-800 text-left border border-b relative lg:static"
               >
-                {saved ? '✓' : 'Сохранить'}
-              </button> */}
-            </span>
-          </td>
+                <span className="flex">
+                  <input
+                    className="w-full border-solid border-4 border-light-blue-500"
+                    type="number"
+                    value={userCardSum[it.id]}
+                    onChange={onChangeCardSum}
+                    name={it.id}
+                  />
+                  <button
+                    type="button"
+                    onClick={() => savePercent('cardSum', it.id, userCardSum[it.id])}
+                    className="img__save-wrap ml-2 text-sm py-1 px-4 bg-gray-200 text-gray-700 hover:text-gray-600 hover:bg-gray-400 rounded-lg"
+                  >
+                    {savedCardSum ? '✓' : <ImageSave />}
+                  </button>
+                </span>
+              </td>
+            </>
+          ) : null}
         </>
       ) : null}
       {!checkIsBookkeper ? (
@@ -209,10 +233,7 @@ const SalaryTableComponent = ({
           ) : null}
         </>
       ) : null}
-      <td className="w-full lg:w-auto p-2 text-gray-800 text-left lg:text-center border border-b block lg:table-cell relative lg:static">
-        <span className="lg:hidden px-2 py-1 text-xs font-bold uppercase">Вал:</span>
-        {Math.round(getSalary(it.id), userPercent[it.id])} руб.
-      </td>
+
       {checkIsBookkeper ? (
         <td className="w-full lg:w-auto p-2 text-gray-800 text-left lg:text-center border border-b block lg:table-cell relative lg:static">
           <span className="lg:hidden px-2 py-1 text-xs font-bold uppercase">Зарплата:</span>
