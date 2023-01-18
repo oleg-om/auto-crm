@@ -604,11 +604,12 @@ const Salary = ({ report, isMaterial, setIsMaterial, calendarType, active, emplo
             <th className="p-3 font-bold bg-gray-100 text-gray-600 border border-gray-300 hidden lg:table-cell">
               Имя
             </th>
-            <th className="p-3 font-bold bg-gray-100 text-gray-600 border border-gray-300 hidden lg:table-cell">
-              Вал
-            </th>
+
             {checkIsBookkeper ? (
               <>
+                <th className="p-3 font-bold bg-gray-100 text-gray-600 border border-gray-300 hidden lg:table-cell">
+                  Вал
+                </th>
                 <th className="p-3 font-bold bg-gray-100 text-gray-600 border border-gray-300 hidden lg:table-cell">
                   Процент
                 </th>
@@ -649,6 +650,9 @@ const Salary = ({ report, isMaterial, setIsMaterial, calendarType, active, emplo
                     Акция
                   </th>
                 ) : null}
+                <th className="p-3 font-bold bg-gray-100 text-gray-600 border border-gray-300 hidden lg:table-cell">
+                  Вал
+                </th>
               </>
             ) : null}
 
@@ -683,12 +687,14 @@ const Salary = ({ report, isMaterial, setIsMaterial, calendarType, active, emplo
               <span className="lg:hidden px-2 py-1 bg-purple-100 font-bold uppercase">Всего:</span>
               Всего
             </td>
-            <td className="w-full lg:w-auto p-2 text-gray-800 text-left lg:text-center border border-b block lg:table-cell relative lg:static">
-              <span className="lg:hidden px-2 py-1 bg-purple-100 font-bold uppercase">Вал:</span>
-              {Math.round(getSalaryfull(''), '')} руб.
-            </td>
             {checkIsBookkeper ? (
               <>
+                <td className="w-full lg:w-auto p-2 text-gray-800 text-left lg:text-center border border-b block lg:table-cell relative lg:static">
+                  <span className="lg:hidden px-2 py-1 bg-purple-100 font-bold uppercase">
+                    Вал:
+                  </span>
+                  {Math.round(getSalaryfull(''), '')} руб.
+                </td>
                 <td className="w-full lg:w-auto p-2 text-gray-800 text-left border border-b block lg:table-cell relative lg:static">
                   <span className="lg:hidden px-2 py-1 bg-purple-100 font-bold uppercase">
                     Процент:
@@ -751,6 +757,12 @@ const Salary = ({ report, isMaterial, setIsMaterial, calendarType, active, emplo
                     {Math.round(getSalaryfull('', '', '', 'discountonly'), '')} руб.
                   </td>
                 ) : null}
+                <td className="w-full lg:w-auto p-2 text-gray-800 text-left lg:text-center border border-b block lg:table-cell relative lg:static">
+                  <span className="lg:hidden px-2 py-1 bg-purple-100 font-bold uppercase">
+                    Вал:
+                  </span>
+                  {Math.round(getSalaryfull(''), '')} руб.
+                </td>
               </>
             ) : null}
 
