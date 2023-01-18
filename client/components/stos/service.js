@@ -1,11 +1,10 @@
+/* eslint-disable no-unneeded-ternary */
 import React, { useEffect, useState } from 'react'
 import cx from 'classnames'
 
 const Service = ({
   actualService,
-
   service,
-
   checkboxServiceChange,
   servicePlusChange,
   serviceMinusChange,
@@ -58,6 +57,9 @@ const Service = ({
                   >
                     <option value="" hidden>
                       Выберите категорию
+                    </option>
+                    <option value="choosen" label="Выбранное">
+                      Выбранное
                     </option>
                     {categoryList
                       ? categoryList.map((it) => <option value={it} label={it} key={it} />)
@@ -132,7 +134,6 @@ const Service = ({
                               key={item.id}
                               name={item.id}
                               id={item.id}
-                              placeholder={item.actualprice}
                               somename={item.name}
                               somefree={item.free}
                               type="checkbox"
@@ -143,22 +144,18 @@ const Service = ({
                       </td>
                       {item.actualprice && item.free === 'no' ? (
                         <td>
-                          <button
-                            className="w-full h-full mr-3"
+                          <input
+                            className="py-1 px-4 bg-white rounded-lg my-1 mr-3 border-green-500 border w-32"
+                            placeholder="Цена"
+                            type="number"
                             key={item.id}
-                            type="button"
                             name={item.id}
-                            onClick={checkboxServiceChange}
-                          >
-                            <label
-                              htmlFor={item.id}
-                              somename={item.name}
-                              somefree={item.free}
-                              className="w-full h-full p-2 text-left inline-block"
-                            >
-                              {item.actualprice}
-                            </label>
-                          </button>
+                            id={item.id}
+                            somename={item.name}
+                            somefree={item.free}
+                            onChange={servicePriceChange}
+                            defaultValue={item.actualprice}
+                          />
                         </td>
                       ) : (
                         <td>
@@ -172,6 +169,7 @@ const Service = ({
                               id={item.id}
                               somename={item.name}
                               somefree={item.free}
+                              defaultValue={item.actualprice}
                               onChange={servicePriceChange}
                             />
                           ) : (
@@ -244,6 +242,7 @@ const Service = ({
                   ))
               : null}
             {!actualService && !dateEnd ? <p>Услуги не найдены</p> : null}
+
             {dateEnd
               ? service.map((item) => (
                   <tr
@@ -328,14 +327,12 @@ const Service = ({
                           +
                         </button>
                       ) : (
-                        // <label htmlFor={item.id} >
                         <label
                           htmlFor={item.id}
                           className="flex items-center py-1 px-4 bg-blue-500 text-white font-bold hover:bg-blue-700 hover:text-white rounded-lg m-1"
                         >
                           +
                         </label>
-                        // {/* </label> */}
                       )}
                     </td>
                   </tr>

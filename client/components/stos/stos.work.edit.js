@@ -400,19 +400,48 @@ const StosEdit = (props) => {
     )
   }
 
+  // const servicePriceChange = (e) => {
+  //   const { value, id } = e.target
+  //   setService(
+  //     service.map((object) => {
+  //       if (object.serviceName === id) {
+  //         return {
+  //           ...object,
+  //           price: value
+  //         }
+  //       }
+  //       return object
+  //     })
+  //   )
+  // }
+
   const servicePriceChange = (e) => {
-    const { value, id } = e.target
-    setService(
-      service.map((object) => {
-        if (object.serviceName === id) {
-          return {
-            ...object,
-            price: value
+    const { value, id, attributes, name } = e.target
+
+    if (service.find((object) => object.serviceName === id)) {
+      setService(
+        service.map((object) => {
+          if (object.serviceName === id) {
+            return {
+              ...object,
+              price: value
+            }
           }
+          return object
+        })
+      )
+    } else {
+      setService((prevState) => [
+        ...prevState,
+        {
+          serviceName: name,
+          quantity: 1,
+          price: value,
+          name: attributes.somename.value,
+          free: attributes.somefree.value
         }
-        return object
-      })
-    )
+      ])
+    }
   }
 
   const checkboxMaterialChange = (e) => {
@@ -992,6 +1021,7 @@ const StosEdit = (props) => {
             block: active === 'service',
             hidden: active !== 'service'
           })}
+          key={state?.category}
         >
           <Service
             actualService={actualService}
