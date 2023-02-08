@@ -24,10 +24,37 @@ const Shinomontazh = ({
 
   useEffect(() => {
     const getType = () => {
-      if (active.includes('sh-') || active === 'material') {
+      if (active.startsWith('sh-') || active === 'material') {
         return 'shinomontazhmonth'
       }
-      return 'stomonth'
+      if (active.includes('sto-')) {
+        return 'stomonth'
+      }
+      if (active.includes('wash-')) {
+        return 'washmonth'
+      }
+      return 'washmonth'
+    }
+
+    const getRangeType = (firstDt, secDt) => {
+      const getTp = () => {
+        if (active.startsWith('sh-') || active === 'material') {
+          return 'shinomontazhrange'
+        }
+        if (active.includes('sto-')) {
+          return 'storange'
+        }
+        if (active.includes('wash-')) {
+          return 'washrange'
+        }
+        return 'washrange'
+      }
+
+      return `api/v1/${getTp()}?month=${
+        firstDt.getMonth() + 1
+      }&year=${firstDt.getFullYear()}&secMonth=${
+        secDt.getMonth() + 1
+      }&secYear=${secDt.getFullYear()}`
     }
 
     if (activeMonth && calendarType === 'month') {
@@ -59,13 +86,7 @@ const Shinomontazh = ({
       const getFilteredByRange = (cont) =>
         cont.filter((arr) => new Date(arr.dateFinish) > firstDt && new Date(arr.dateFinish) < secDt)
       setIsLoaded(false)
-      fetch(
-        `api/v1/${active.includes('sh-') ? 'shinomontazhrange' : 'storange'}?month=${
-          firstDt.getMonth() + 1
-        }&year=${firstDt.getFullYear()}&secMonth=${
-          secDt.getMonth() + 1
-        }&secYear=${secDt.getFullYear()}`
-      )
+      fetch(getRangeType(firstDt, secDt))
         .then((res) => res.json())
         .then((it) => {
           setShinList(getFilteredByRange(it.data))
@@ -258,7 +279,9 @@ const Shinomontazh = ({
       {active === 'sh-kassa' ||
       active === 'sto-kassa' ||
       active === 'sh-buh' ||
-      active === 'sto-buh' ? (
+      active === 'sto-buh' ||
+      active === 'wash-kassa' ||
+      active === 'wash-buh' ? (
         <div className={cx('block', {})}>
           {isLoaded ? null : loading()}
           {report.length > 0 && report && isLoaded ? (

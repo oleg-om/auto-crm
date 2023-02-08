@@ -99,6 +99,18 @@ const Report = () => {
                       СТО (касса)
                     </button>
                   </div>
+                  <div className="w-1/5 p-2">
+                    <button
+                      type="button"
+                      className={cx('p-4 bg-gray-200 rounded w-full h-full', {
+                        block: active !== 'wash-kassa',
+                        'border-b-8 border-blue-400': active === 'wash-kassa'
+                      })}
+                      onClick={() => setActive('wash-kassa')}
+                    >
+                      Мойка (касса)
+                    </button>
+                  </div>
                 </>
               ) : null}
               {auth.roles.includes('bookkeeper') || auth.roles.includes('boss') ? (
@@ -125,6 +137,18 @@ const Report = () => {
                       onClick={() => setActive('sto-buh')}
                     >
                       СТО (бухгалтерия)
+                    </button>
+                  </div>
+                  <div className="w-1/5 p-2">
+                    <button
+                      type="button"
+                      className={cx('p-4 bg-gray-200 rounded w-full h-full', {
+                        block: active !== 'wash-buh',
+                        'border-b-8 border-blue-400': active === 'wash-buh'
+                      })}
+                      onClick={() => setActive('wash-buh')}
+                    >
+                      Мойка (бухгалтерия)
                     </button>
                   </div>
                 </>
