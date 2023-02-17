@@ -1,10 +1,11 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { Link, useHistory } from 'react-router-dom'
 import { useSelector } from 'react-redux'
 import { toast } from 'react-toastify'
 import NumberFormat from 'react-number-format'
 import 'react-toastify/dist/ReactToastify.css'
 import autopartsList from '../../lists/autoparts-list'
+// import useDebounce from '../useDebounce'
 
 const AutopartsCreate = (props) => {
   toast.configure()
@@ -160,26 +161,40 @@ const AutopartsCreate = (props) => {
   //   }
   // }, [state.phone, state.regnumber, state.vinnumber])
 
+  // const debouncedSearchTerm = useDebounce(state, 500);
+
+  const throttling = useRef(false)
+
   useEffect(() => {
     const phoneArray = state.phone.split(' ')
     const phoneToRest = phoneArray[phoneArray.length - 1].replace(/_/g, '')
-    if (
-      (state.phone !== '' && phoneToRest.length > 6) ||
-      (state.regnumber !== '' && state.regnumber.length > 4) ||
-      (state.vinnumber !== '' && state.vinnumber.length > 6)
-    ) {
-      fetch(
-        `/api/v1/customerfind/${state.regnumber ? state.regnumber : 'reg'}/${
-          state.vinnumber ? state.vinnumber : 'vin'
-        }/${state.phone ? phoneToRest : 'phone'}`
-      )
-        .then((res) => res.json())
-        .then((it) => {
-          setCustomerOptions(it.data)
-        })
-    } else if (state.phone === '' && state.regnumber === '' && state.vinnumber === '') {
-      setCustomerOptions([])
+
+    if (throttling.current) {
+      return
     }
+
+    // If there is no search term, do not make API call
+    throttling.current = true
+    setTimeout(() => {
+      throttling.current = false
+      if (
+        (state.phone !== '' && phoneToRest.length > 6) ||
+        (state.regnumber !== '' && state.regnumber.length > 4) ||
+        (state.vinnumber !== '' && state.vinnumber.length > 6)
+      ) {
+        fetch(
+          `/api/v1/customerfind/${state.regnumber ? state.regnumber : 'reg'}/${
+            state.vinnumber ? state.vinnumber : 'vin'
+          }/${state.phone ? phoneToRest : 'phone'}`
+        )
+          .then((res) => res.json())
+          .then((it) => {
+            setCustomerOptions(it.data)
+          })
+      } else if (state.phone === '' && state.regnumber === '' && state.vinnumber === '') {
+        setCustomerOptions([])
+      }
+    }, 500)
   }, [state.phone, state.regnumber, state.vinnumber])
 
   // useEffect(() => {

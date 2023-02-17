@@ -10,5 +10,6 @@ router.patch('/material/:id', materialController.update)
 router.delete('/material/:id', materialController.delete)
 router.post('/materialimport/', materialController.import)
 router.delete('/materialdrop/', materialController.deleteAll)
+// router.get('/washrange/', washsController.getRange)
 
 module.exports = router

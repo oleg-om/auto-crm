@@ -93,26 +93,36 @@ const ModalNew = ({
   //     setCustomerOptions([])
   //   }
   // }, [state.phone, state.regnumber, state.vinnumber, customerList])
+  const throttling = useRef(false)
 
   useEffect(() => {
-    const phoneArray = state.phone ? state.phone.split(' ') : ['', '']
-    const phoneToRest = phoneArray[phoneArray.length - 1].replace(/_/g, '')
-    if (
-      (state.phone !== '' && phoneToRest.length > 6) ||
-      (state.regnumber !== '' && state.regnumber.length > 4)
-    ) {
-      fetch(
-        `/api/v1/customerfind/${state.regnumber ? state.regnumber : 'reg'}/${
-          state.vinnumber ? state.vinnumber : 'vin'
-        }/${state.phone ? phoneToRest : 'phone'}`
-      )
-        .then((res) => res.json())
-        .then((it) => {
-          setCustomerOptions(it.data)
-        })
-    } else if (state.phone === '' && state.regnumber === '') {
-      setCustomerOptions([])
+    if (throttling.current) {
+      return
     }
+
+    // If there is no search term, do not make API call
+    throttling.current = true
+    setTimeout(() => {
+      throttling.current = false
+      const phoneArray = state.phone ? state.phone.split(' ') : ['', '']
+      const phoneToRest = phoneArray[phoneArray.length - 1].replace(/_/g, '')
+      if (
+        (state.phone !== '' && phoneToRest.length > 6) ||
+        (state.regnumber !== '' && state.regnumber.length > 4)
+      ) {
+        fetch(
+          `/api/v1/customerfind/${state.regnumber ? state.regnumber : 'reg'}/${
+            state.vinnumber ? state.vinnumber : 'vin'
+          }/${state.phone ? phoneToRest : 'phone'}`
+        )
+          .then((res) => res.json())
+          .then((it) => {
+            setCustomerOptions(it.data)
+          })
+      } else if (state.phone === '' && state.regnumber === '') {
+        setCustomerOptions([])
+      }
+    }, 500)
   }, [state.phone, state.regnumber, state.vinnumber])
 
   useEffect(() => {

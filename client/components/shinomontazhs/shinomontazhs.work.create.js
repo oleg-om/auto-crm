@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import { Link, useHistory } from 'react-router-dom'
 import { useSelector } from 'react-redux'
 import { toast } from 'react-toastify'
@@ -186,20 +186,32 @@ const ShinomontazhsCreate = (props) => {
     }
   }
   const [customerList, setCustomerOptions] = useState([])
+
+  const throttling = useRef(false)
+
   useEffect(() => {
-    if (state.regnumber !== '' && state.regnumber.length > 4) {
-      fetch(
-        `/api/v1/customerfind/${state.regnumber ? state.regnumber : 'reg'}/${
-          state.vinnumber ? state.vinnumber : 'vin'
-        }/${state.phone ? state.phone : 'phone'}`
-      )
-        .then((res) => res.json())
-        .then((it) => {
-          setCustomerOptions(it.data)
-        })
-    } else if (state.regnumber === '') {
-      setCustomerOptions([])
+    if (throttling.current) {
+      return
     }
+
+    // If there is no search term, do not make API call
+    throttling.current = true
+    setTimeout(() => {
+      throttling.current = false
+      if (state.regnumber !== '' && state.regnumber.length > 4) {
+        fetch(
+          `/api/v1/customerfind/${state.regnumber ? state.regnumber : 'reg'}/${
+            state.vinnumber ? state.vinnumber : 'vin'
+          }/${state.phone ? state.phone : 'phone'}`
+        )
+          .then((res) => res.json())
+          .then((it) => {
+            setCustomerOptions(it.data)
+          })
+      } else if (state.regnumber === '') {
+        setCustomerOptions([])
+      }
+    }, 500)
   }, [state.regnumber])
 
   const applyCustomer = () => {
