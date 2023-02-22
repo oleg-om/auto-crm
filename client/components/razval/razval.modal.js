@@ -1,10 +1,21 @@
+/* eslint-disable no-unused-vars */
 import React, { useState, useEffect, useRef } from 'react'
 import { toast } from 'react-toastify'
 import cx from 'classnames'
 import { useReactToPrint } from 'react-to-print'
 import ComponentToPrint from './razval.pre.print'
 import 'react-toastify/dist/ReactToastify.css'
-import statusList from '../../lists/razval.statuses'
+
+const statusList = [
+  'Новая запись',
+  'Работа выполнена',
+  'Клиент отменил запись',
+  'Клиент не приехал',
+  'Авто требует ремонта',
+  'Оплачено',
+  'Терминал',
+  'Безнал'
+]
 
 const ModalView = ({
   open,
@@ -18,12 +29,11 @@ const ModalView = ({
   changeItem,
   activeAdress
 }) => {
+  console.log('itemId: ', itemId)
   const [changeStatus, setChangeStatus] = useState({
     status: ''
   })
-  console.log('itemId: ', itemId)
   console.log('changeStatus: ', changeStatus)
-  console.log('itemType: ', itemType)
   const componentRef = useRef()
   const handlePrint = useReactToPrint({
     content: () => componentRef.current
@@ -51,25 +61,32 @@ const ModalView = ({
 
   const propsDate = new Date(itemId.date)
   const propsCreateDate = new Date(itemId.dateofcreate)
-  const dateActive = `${propsDate
-    .getDate()
-    .toString()
-    .replace(/^(\d)$/, '0$1')}.${(propsDate.getMonth() + 1)
-    .toString()
-    .replace(/^(\d)$/, '0$1')}.${propsDate.getFullYear()}`.toString()
 
-  const dateCreate = `${propsCreateDate
-    .getDate()
-    .toString()
-    .replace(/^(\d)$/, '0$1')}.${(propsCreateDate.getMonth() + 1)
-    .toString()
-    .replace(/^(\d)$/, '0$1')}.${propsCreateDate.getFullYear()} ${propsCreateDate
-    .getHours()
-    .toString()
-    .replace(/^(\d)$/, '0$1')}:${propsCreateDate
-    .getMinutes()
-    .toString()
-    .replace(/^(\d)$/, '0$1')}`.toString()
+  const formatDate = (dt) =>
+    `${dt
+      .getDate()
+      .toString()
+      .replace(/^(\d)$/, '0$1')}.${(dt.getMonth() + 1)
+      .toString()
+      .replace(/^(\d)$/, '0$1')}.${dt.getFullYear()}`.toString()
+
+  const formatFullDate = (dt) =>
+    `${dt
+      .getDate()
+      .toString()
+      .replace(/^(\d)$/, '0$1')}.${(dt.getMonth() + 1)
+      .toString()
+      .replace(/^(\d)$/, '0$1')}.${dt.getFullYear()} ${dt
+      .getHours()
+      .toString()
+      .replace(/^(\d)$/, '0$1')}:${dt
+      .getMinutes()
+      .toString()
+      .replace(/^(\d)$/, '0$1')}`.toString()
+
+  const dateActive = formatDate(propsDate)
+
+  const dateCreate = formatFullDate(propsCreateDate)
 
   const changeRazval = () => {
     if (!changeStatus?.status) notify('Поле пустое')
@@ -139,11 +156,17 @@ const ModalView = ({
             </div>
             <div className="sm:flex justify-center">
               <div className="mt-3 text-center sm:mt-0 sm:ml-4">
-                <h3 className="text-lg leading-6 font-medium text-gray-900" id="modal-headline">
-                  Дата записи: {dateActive} {itemId.time}
-                </h3>
+                {itemId.date ? (
+                  <h3 className="text-lg leading-6 font-medium text-gray-900" id="modal-headline">
+                    Дата записи: {dateActive} {itemId.time}
+                  </h3>
+                ) : (
+                  <h3 className="text-lg leading-6 font-medium text-gray-900" id="modal-headline">
+                    Дата Выполнения: {formatFullDate(new Date(itemId?.dateStart))}
+                  </h3>
+                )}
                 <p className="text-sm leading-5 text-gray-900 mt-2 mb-3">
-                  Адрес: {dateCreate ? place.find((it) => it.id === itemId.place).name : null}
+                  {/* Адрес: {dateCreate ? place.find((it) => it.id === itemId.place).name : null} */}
                 </p>
                 {itemId?.post ? (
                   <p className="text-sm leading-5 text-gray-900">Пост: {itemId.post}</p>
@@ -180,11 +203,11 @@ const ModalView = ({
                           Телефон: {itemId.phone}
                         </p>
                       ) : null}
-                      {itemId.name ? (
+                      {/* {itemId.name ? (
                         <p className="text-sm leading-5 text-gray-900 text-left">
                           Имя клиента: {itemId.name}
                         </p>
-                      ) : null}
+                      ) : null} */}
                     </div>
                   </div>
                   <p className="text-sm leading-5 text-gray-900 mb-2">
@@ -193,20 +216,28 @@ const ModalView = ({
                   {itemId.employee ? (
                     <p className="text-sm leading-5 text-gray-900">
                       Принял заказ:{' '}
-                      {itemId.employee
+                      {/* {itemId.employee
                         ? employee.find((it) => it.id === itemId.employee).name
-                        : null}{' '}
-                      {itemId.employee
+                        : null}  */}
+                      {/* {itemId.employee
                         ? employee.find((it) => it.id === itemId.employee).surname
-                        : null}
+                        : null} */}
                     </p>
                   ) : null}
-                  <p className="text-sm leading-5 text-gray-900">
-                    Заказ принят на:{' '}
-                    {dateCreate ? place.find((it) => it.id === itemId.employeeplace).name : null}
-                  </p>
-                  <p className="text-sm leading-5 text-gray-900">Заказ принят: {dateCreate}</p>
-                  {activeAdress === itemId.place ? (
+                  {itemId?.employeeplace ? (
+                    <p className="text-sm leading-5 text-gray-900">
+                      Заказ принят на:{' '}
+                      {dateCreate ? place.find((it) => it.id === itemId.employeeplace).name : null}
+                    </p>
+                  ) : null}
+                  {itemId.dateofcreate ? (
+                    <p className="text-sm leading-5 text-gray-900">Заказ принят: {dateCreate}</p>
+                  ) : null}
+                  {activeAdress === itemId.place &&
+                  itemId.status !== 'Оплачено' &&
+                  itemId.status !== 'Работа выполнена' &&
+                  itemId.status !== 'Терминал' &&
+                  itemId.status !== 'Безнал' ? (
                     <div className="mt-3 flex flex-col">
                       <label
                         className="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2"

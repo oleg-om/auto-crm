@@ -4,7 +4,8 @@ import {
   GET_SHINOMONTAZHS_LAST_TWO_DAYS,
   CREATE_SHINOMONTAZH,
   UPDATE_SHINOMONTAZH_STATUS,
-  UPDATE_SHINOMONTAZH
+  UPDATE_SHINOMONTAZH,
+  GET_SHINOMONTAZHS_PREENTRY
 } from '../actions/shinomontazhs'
 
 const initialState = {
@@ -14,6 +15,9 @@ const initialState = {
 
 export default (state = initialState, action) => {
   switch (action.type) {
+    case GET_SHINOMONTAZHS_PREENTRY: {
+      return { ...state, list: action.shinomontazhpreentry }
+    }
     case GET_SHINOMONTAZHS: {
       return {
         ...state,
@@ -168,6 +172,16 @@ export function updateShinomontazh(id, name) {
       .then((r) => r.json())
       .then(({ data: shinomontazh }) => {
         dispatch({ type: UPDATE_SHINOMONTAZH, shinomontazh })
+      })
+  }
+}
+
+export function getByMonth(year, month, day, date) {
+  return (dispatch) => {
+    fetch(`/api/v1/shinomontazhpreentry?year=${year}&month=${month}&day=${day}&date=${date}`)
+      .then((r) => r.json())
+      .then(({ data: shinomontazhpreentry }) => {
+        dispatch({ type: GET_SHINOMONTAZHS_PREENTRY, shinomontazhpreentry })
       })
   }
 }

@@ -65,6 +65,10 @@ const Shinomontazh = new mongoose.Schema({
   date: {
     type: Date
   },
+  // datePreentry: {
+  //   type: Date,
+  //   required: false
+  // },
   dateStart: {
     type: Date
   },

@@ -2,13 +2,12 @@ import React, { useState } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 // import { Link } from 'react-router-dom'
 import { toast } from 'react-toastify'
-import RazvalRow from '../../components/razval/razval'
 import { deleteEmployee } from '../../redux/reducers/employees'
 import { updateRazval, createRazval, deleteRazval } from '../../redux/reducers/razvals'
 import { createOil, updateOil, deleteOil } from '../../redux/reducers/oils'
 import { createCustomer } from '../../redux/reducers/customers'
 import Navbar from '../../components/Navbar'
-import RazvalSidebar from './Razval.sidebar'
+import RazvalSidebar from './ShinomontazhPreentry.sidebar'
 import Modal from '../../components/Modal.delete'
 import ModalView from '../../components/razval/razval.modal'
 import ModalCreate from '../../components/razval/razval.modal.create'
@@ -17,8 +16,9 @@ import AccessModal from '../../components/razval/access.modal'
 import 'react-toastify/dist/ReactToastify.css'
 import { socket } from '../../redux/sockets/socketReceivers'
 import onLoad from './Onload'
+import ShinomontazhEntryRow from '../../components/shinomontazhentry/ShinomontazhEntryRow'
 
-const RazvalList = () => {
+const PreentryList = () => {
   const [activeDay, setActiveDay] = useState(new Date())
   onLoad(activeDay)
   toast.configure()
@@ -28,8 +28,8 @@ const RazvalList = () => {
   const dispatch = useDispatch()
   const place = useSelector((s) => s.places.list)
   const employee = useSelector((s) => s.employees.list)
-  const razvalList = useSelector((s) => s.razvals.list)
-  const oilList = useSelector((s) => s.oils.list)
+  const razvalList = useSelector((s) => s.shinomontazhs.list)
+  const oilList = []
   const auth = useSelector((s) => s.auth)
   const [isOpen, setIsOpen] = useState(false)
   const [createIsOpen, setCreateIsOpen] = useState(false)
@@ -156,10 +156,10 @@ const RazvalList = () => {
           <div className="rounded-lg relative lg:my-3 mt-1 flex flex-wrap mx-3">
             {place
               .filter((it) => it.id === auth.place)
-              .filter((it) => it.razval === 'true' || it.oil === 'true')
+              .filter((it) => it.shinomontazh === 'true')
               .map((it) => (
                 <div key={it.id}>
-                  <RazvalRow
+                  <ShinomontazhEntryRow
                     key={it.id}
                     place={place}
                     editItem={openAndEdit}
@@ -179,10 +179,10 @@ const RazvalList = () => {
               ))}
             {place
               .filter((it) => it.id !== auth.place)
-              .filter((it) => it.razval === 'true' || it.oil === 'true')
+              .filter((it) => it.shinomontazh === 'true')
               .map((it) => (
                 <div key={it.id}>
-                  <RazvalRow
+                  <ShinomontazhEntryRow
                     key={it.id}
                     place={place}
                     editItem={openAndEdit}
@@ -274,4 +274,4 @@ const RazvalList = () => {
   )
 }
 
-export default RazvalList
+export default PreentryList

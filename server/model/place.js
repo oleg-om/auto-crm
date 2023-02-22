@@ -87,6 +87,11 @@ const Place = new mongoose.Schema({
     type: String,
     required: false,
     default: () => 'classic'
+  },
+  shinomontazhType: {
+    type: String,
+    required: false,
+    default: () => 'classic'
   }
 })
 

@@ -264,6 +264,17 @@ const Navbar = () => {
               Шиномонтаж (Босс)
             </NavLink>
           ) : null}
+          {/* {auth.roles.includes('kassa') ||
+          auth.roles.includes('boss') ||
+          auth.roles.includes('admin') ? (
+            <NavLink
+              to="/preentry/shinomontazh"
+              className="block mt-4 lg:inline-block lg:mt-0 text-gray-800 hover:text-blue-700 mr-4"
+              activeClassName="text-blue-600 underline font-semibold"
+            >
+              Шиномонтаж (запись)
+            </NavLink>
+          ) : null} */}
           {auth.roles.includes('sto') &&
           !auth.roles.includes('boss') &&
           !auth.roles.includes('bookkeeper') ? (

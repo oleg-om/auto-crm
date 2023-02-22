@@ -113,6 +113,24 @@ exports.getMonth = async (req, res) => {
 
   return res.json({ status: 'ok', data: list })
 }
+
+exports.getMonthForPreentry = async (req, res) => {
+  // eslint-disable-next-line no-unused-vars
+  const { year, month, day, date } = req.query
+
+  const list = await Shinomontazh.find({
+    $expr: {
+      $and: [
+        { $eq: [{ $year: '$dateStart' }, Number(year)] },
+        { $eq: [{ $month: '$dateStart' }, Number(month)] },
+        { $eq: [{ $dayOfMonth: '$dateStart' }, Number(day)] }
+      ]
+    }
+  })
+
+  return res.json({ status: 'ok', data: list })
+}
+
 exports.getRange = async (req, res) => {
   const { month, year, secMonth, secYear } = req.query
   // const { month, year } = req.query

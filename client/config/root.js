@@ -91,6 +91,7 @@ import WashsList from '../scenes/Wash/Washs.list'
 import WashsListBoss from '../scenes/Wash/Washs.list.boss'
 import WashsNew from '../scenes/Wash/Washs.work.create'
 import WashEditFull from '../scenes/Wash/Washs.edit'
+import PreentryList from '../scenes/ShinomontazhPreentry/ShinomontazhPreentry.list'
 
 const OnlyAnonymousRoute = ({ component: Component, ...rest }) => {
   const auth = useSelector((s) => s.auth)
@@ -335,6 +336,8 @@ const RootComponent = (props) => {
             <PrivateRoute exact path="/wash/edit/:id" component={WashEditFull} />
             <PrivateRoute exact path="/washboss/edit/:id/:num" component={WashEditFull} />
             <PrivateRoute exact path="/washboss/edit/:id" component={WashEditFull} />
+
+            <PrivateRoute exact path="/preentry/shinomontazh" component={PreentryList} />
 
             <Route component={() => <NotFound />} />
           </Switch>

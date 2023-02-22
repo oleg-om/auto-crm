@@ -33,7 +33,6 @@ exports.getByPage = async (req, res) => {
 
 exports.getFiltered = async (req, res) => {
   const { page, number, place, status, process, phone, reg } = req.query
-  console.log('status: ', status)
 
   try {
     const LIMIT = 14
@@ -62,7 +61,9 @@ exports.getFiltered = async (req, res) => {
           }
         : {}
 
-    const processField = req.query.process ? `${process.toString()}` : {}
+    const processField = req.query.process
+      ? { process: { $regex: `${process.toString()}`, $options: 'i' } }
+      : {}
 
     const total = await Autopart.countDocuments({
       id_autoparts: req.query.number ? number : { $exists: true },
