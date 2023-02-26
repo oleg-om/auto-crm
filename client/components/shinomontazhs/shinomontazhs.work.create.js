@@ -31,6 +31,8 @@ const ShinomontazhsCreate = (props) => {
   const [keyboard, setKeyboard] = useState(false)
   const [regOpen, setRegOpen] = useState(false)
 
+  const [box, setBox] = useState('')
+
   const [state, setState] = useState({
     place: auth.place,
     regnumber: regNumber.toString(),
@@ -376,7 +378,8 @@ const ShinomontazhsCreate = (props) => {
           services: service,
           material: materials,
           tyre: tyres,
-          employee: employees
+          employee: employees,
+          box
         })
         if (props.checkLink) {
           history.push('/shinomontazhboss/list')
@@ -393,7 +396,8 @@ const ShinomontazhsCreate = (props) => {
             services: service,
             material: materials,
             tyre: [...tyres],
-            employee: employees
+            employee: employees,
+            box
           }
         )
       } else {
@@ -402,7 +406,8 @@ const ShinomontazhsCreate = (props) => {
           services: service,
           material: materials,
           tyre: [...tyres],
-          employee: employees
+          employee: employees,
+          box
         })
         props.createCust({
           ...customer,
@@ -834,6 +839,9 @@ const ShinomontazhsCreate = (props) => {
             checkboxEmployeeChange={checkboxEmployeeChange}
             checkBoxEmpRoleChange={checkBoxEmpRoleChange}
             dateEnd=""
+            box={box}
+            setBox={setBox}
+            currentPlace={currentPlace}
           />
         </div>
         <div

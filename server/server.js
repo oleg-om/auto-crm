@@ -123,6 +123,7 @@ server.get('/api/v1/auth', async (req, res) => {
   try {
     const jwtUser = jwt.verify(req.cookies.token, config.secret)
     const user = await User.findById(jwtUser.uid)
+
     const token = createToken(user)
     createCookie(token, res)
     res.json({ status: 'ok', token, user })

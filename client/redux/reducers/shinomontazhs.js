@@ -5,7 +5,8 @@ import {
   CREATE_SHINOMONTAZH,
   UPDATE_SHINOMONTAZH_STATUS,
   UPDATE_SHINOMONTAZH,
-  GET_SHINOMONTAZHS_PREENTRY
+  GET_SHINOMONTAZHS_PREENTRY,
+  DELETE_SHINOMONTAZH
 } from '../actions/shinomontazhs'
 
 const initialState = {
@@ -176,12 +177,24 @@ export function updateShinomontazh(id, name) {
   }
 }
 
-export function getByMonth(year, month, day, date) {
+export function getByMonth(year, month, day) {
   return (dispatch) => {
-    fetch(`/api/v1/shinomontazhpreentry?year=${year}&month=${month}&day=${day}&date=${date}`)
+    fetch(`/api/v1/shinomontazhpreentry?year=${year}&month=${month}&day=${day} `)
       .then((r) => r.json())
       .then(({ data: shinomontazhpreentry }) => {
         dispatch({ type: GET_SHINOMONTAZHS_PREENTRY, shinomontazhpreentry })
+      })
+  }
+}
+
+export function deleteShinomontazh(id) {
+  return (dispatch) => {
+    fetch(`/api/v1/shinomontazh/${id}`, {
+      method: 'DELETE'
+    })
+      .then((r) => r.json())
+      .then(() => {
+        dispatch({ type: DELETE_SHINOMONTAZH, id })
       })
   }
 }

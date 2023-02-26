@@ -1,41 +1,102 @@
 import React, { useState } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
+import { useLocation } from 'react-router-dom'
 // import { Link } from 'react-router-dom'
 import { toast } from 'react-toastify'
 import { deleteEmployee } from '../../redux/reducers/employees'
-import { updateRazval, createRazval, deleteRazval } from '../../redux/reducers/razvals'
-import { createOil, updateOil, deleteOil } from '../../redux/reducers/oils'
+
 import { createCustomer } from '../../redux/reducers/customers'
 import Navbar from '../../components/Navbar'
 import RazvalSidebar from './ShinomontazhPreentry.sidebar'
 import Modal from '../../components/Modal.delete'
-import ModalView from '../../components/razval/razval.modal'
-import ModalCreate from '../../components/razval/razval.modal.create'
-import ModalEdit from '../../components/razval/razval.modal.edit'
-import AccessModal from '../../components/razval/access.modal'
+import ModalView from '../../components/shinomontazhentry/Entry.modal'
+import ModalCreate from '../../components/shinomontazhentry/ShinomontazhEntryCreate'
+import ModalEdit from '../../components/shinomontazhentry/Entry.modal.edit'
+import AccessModal from '../../components/shinomontazhentry/access.modal'
 import 'react-toastify/dist/ReactToastify.css'
 import { socket } from '../../redux/sockets/socketReceivers'
 import onLoad from './Onload'
 import ShinomontazhEntryRow from '../../components/shinomontazhentry/ShinomontazhEntryRow'
+import {
+  createShinomontazh,
+  updateShinomontazh,
+  deleteShinomontazh
+} from '../../redux/reducers/shinomontazhs'
 
 const PreentryList = () => {
+  const location = useLocation()
+  const dispatch = useDispatch()
+
+  const getPreentryType = () => {
+    if (location?.pathname.includes('/shinomontazh')) {
+      return 'shinomontazh'
+    }
+    return 'shinomontazh'
+  }
+  const getPreentryTypeRus = () => {
+    if (location?.pathname.includes('/shinomontazh')) {
+      return 'Шиномонтаж'
+    }
+    return 'Шиномонтаж'
+  }
+
+  const preentryType = getPreentryType()
+  const preentryTypeRus = getPreentryTypeRus()
+
+  const isShinomontazh = preentryType === 'shinomontazh'
+
+  const getPreentryCreateFunc = (it) => {
+    if (isShinomontazh) {
+      dispatch(createShinomontazh(it))
+    }
+    return () => {}
+  }
+
+  const getPreentryUpdateFunc = (id, it) => {
+    if (isShinomontazh) {
+      dispatch(updateShinomontazh(id, it))
+    }
+    return () => {}
+  }
+
+  const getPreentryDeleteFunc = (id) => {
+    if (isShinomontazh) {
+      dispatch(deleteShinomontazh(id))
+    }
+    return () => {}
+  }
+
   const [activeDay, setActiveDay] = useState(new Date())
-  onLoad(activeDay)
+  onLoad(activeDay, preentryType)
   toast.configure()
   const notify = (arg) => {
     toast.info(arg, { position: toast.POSITION.BOTTOM_RIGHT })
   }
-  const dispatch = useDispatch()
+
   const place = useSelector((s) => s.places.list)
   const employee = useSelector((s) => s.employees.list)
-  const razvalList = useSelector((s) => s.shinomontazhs.list)
-  const oilList = []
+
+  const shinomontazhList = useSelector((s) => s.shinomontazhs.list)
+
+  const getData = () => {
+    if (isShinomontazh) {
+      return shinomontazhList
+    }
+    return []
+  }
+
+  const dataList = getData()
+
   const auth = useSelector((s) => s.auth)
   const [isOpen, setIsOpen] = useState(false)
+  console.log('isOpen: ', isOpen)
   const [createIsOpen, setCreateIsOpen] = useState(false)
   const [editIsOpen, setEditIsOpen] = useState(false)
+  console.log('editIsOpen: ', editIsOpen)
   const [deleteIsOpen, setDeleteIsOpen] = useState(false)
+  console.log('deleteIsOpen: ', deleteIsOpen)
   const [accessIsOpen, setAccessIsOpen] = useState(false)
+  console.log('accessIsOpen: ', accessIsOpen)
   const [itemId, setItemId] = useState('')
   const [itemType, setItemType] = useState('')
 
@@ -77,37 +138,20 @@ const PreentryList = () => {
     setItemType(type)
     setAccessIsOpen(true)
   }
-  const updateRazvalLocal = (idOfItem, name) => {
-    dispatch(updateRazval(idOfItem, name))
+  const updateEntryLocal = (idOfItem, name) => {
+    getPreentryUpdateFunc(idOfItem, name)
     setIsOpen(false)
     setEditIsOpen(false)
     notify('Данные обновлены')
-    socket.emit('edit razval')
+    socket.emit(`edit ${preentryType}`)
     setItemId('')
   }
 
-  const updateOilLocal = (idOfItem, name) => {
-    dispatch(updateOil(idOfItem, name))
-    setIsOpen(false)
-    setEditIsOpen(false)
-    notify('Данные обновлены')
-    socket.emit('edit oil')
-    setItemId('')
-  }
-
-  const createRazvalLocal = (name) => {
-    dispatch(createRazval(name))
+  const createEntryLocal = (name) => {
+    getPreentryCreateFunc(name)
     setCreateIsOpen(false)
-    notify('Запись на развал-схождение добавлена')
+    notify(`Запись на ${preentryTypeRus} добавлена`)
     // socket.emit('new razval', { name })
-    setItemId('')
-  }
-
-  const createOilLocal = (name) => {
-    dispatch(createOil(name))
-    setCreateIsOpen(false)
-    notify('Запись на замену масла добавлена')
-    // socket.emit('new oil')
     setItemId('')
   }
 
@@ -116,29 +160,13 @@ const PreentryList = () => {
     notify('Создан новый клиент')
   }
 
-  const deleteOilLocal = (id) => {
-    dispatch(deleteOil(id))
-    setDeleteIsOpen(false)
-    notify('Запись удалена')
-    socket.emit('edit oil')
-    setItemId('')
-  }
   const deleteRazvalLocal = (id) => {
-    if (itemType === 'Развал-схождение') {
-      dispatch(deleteRazval(id))
-      setDeleteIsOpen(false)
-      setEditIsOpen(false)
-      notify('Запись удалена')
-      socket.emit('edit razval')
-      setItemId('')
-    } else if (itemType === 'Замена масла') {
-      dispatch(deleteOil(id))
-      setDeleteIsOpen(false)
-      setEditIsOpen(false)
-      notify('Запись удалена')
-      socket.emit('edit oil')
-      setItemId('')
-    }
+    getPreentryDeleteFunc(id)
+    setDeleteIsOpen(false)
+    setEditIsOpen(false)
+    notify('Запись удалена')
+    socket.emit(`edit ${preentryType}`)
+    setItemId('')
   }
 
   const deleteEmployeeLocal = (id) => {
@@ -156,7 +184,7 @@ const PreentryList = () => {
           <div className="rounded-lg relative lg:my-3 mt-1 flex flex-wrap mx-3">
             {place
               .filter((it) => it.id === auth.place)
-              .filter((it) => it.shinomontazh === 'true')
+              .filter((it) => it[preentryType] === 'true')
               .map((it) => (
                 <div key={it.id}>
                   <ShinomontazhEntryRow
@@ -168,18 +196,20 @@ const PreentryList = () => {
                     openAccess={openAccess}
                     adress={it}
                     activeDay={activeDay}
-                    razvalList={razvalList}
-                    oilList={oilList}
+                    dataList={dataList || []}
                     activePlace="true"
                     activeAdress={auth.place}
                     activeRole={auth.roles}
+                    preentryType={preentryType}
+                    preentryTypeRus={preentryTypeRus}
+                    viewType={it[`${preentryType}Type`]}
                     {...it}
                   />
                 </div>
               ))}
             {place
               .filter((it) => it.id !== auth.place)
-              .filter((it) => it.shinomontazh === 'true')
+              .filter((it) => it[preentryType] === 'true')
               .map((it) => (
                 <div key={it.id}>
                   <ShinomontazhEntryRow
@@ -191,11 +221,13 @@ const PreentryList = () => {
                     openAccess={openAccess}
                     adress={it}
                     activeDay={activeDay}
-                    razvalList={razvalList}
-                    oilList={oilList}
+                    dataList={dataList || []}
                     activePlace="false"
                     activeAdress={auth.place}
                     activeRole={auth.roles}
+                    preentryType={preentryType}
+                    preentryTypeRus={preentryTypeRus}
+                    viewType={it[`${preentryType}Type`]}
                     {...it}
                   />
                 </div>
@@ -210,10 +242,10 @@ const PreentryList = () => {
           itemType={itemType}
           place={place}
           employee={employee}
-          updateRazval={updateRazvalLocal}
-          updateOil={updateOilLocal}
+          updateRazval={updateEntryLocal}
           activeAdress={auth.place}
           changeItem={openAndEditTime}
+          preentryType={preentryType}
         />
         <ModalCreate
           open={createIsOpen}
@@ -223,14 +255,14 @@ const PreentryList = () => {
           itemType={itemType}
           place={place}
           employee={auth}
-          createRazval={createRazvalLocal}
-          createOil={createOilLocal}
+          createFunc={createEntryLocal}
           activeDay={activeDay}
           timeActive={activeTime}
           activeAdress={activeAdress}
           createIsOpen={createIsOpen}
           createCust={createCust}
           activePost={activePost}
+          preentryType={preentryType}
         />
         <ModalEdit
           open={editIsOpen}
@@ -240,19 +272,18 @@ const PreentryList = () => {
           itemType={itemType}
           place={place}
           employee={employee}
-          updateRazval={updateRazvalLocal}
-          updateOil={updateOilLocal}
+          updateRazval={updateEntryLocal}
           deleteRazval={deleteRazvalLocal}
-          deleteOil={deleteOilLocal}
           activeAdress={activeAdress}
           deleteItem={openAndDelete}
-          razvalList={razvalList}
-          oilList={oilList}
+          dataList={dataList}
+          preentryType={preentryType}
         />
         <Modal
           open={deleteIsOpen}
           onClose={() => setDeleteIsOpen(false)}
           onSubmit={() => deleteRazvalLocal(itemId.id)}
+          preentryType={preentryType}
         />
         <AccessModal
           open={accessIsOpen}
@@ -262,12 +293,11 @@ const PreentryList = () => {
           itemType={itemType}
           place={place}
           employee={employee}
-          updateRazval={updateRazvalLocal}
-          updateOil={updateOilLocal}
+          updateRazval={updateEntryLocal}
           deleteRazval={deleteRazvalLocal}
-          deleteOil={deleteOilLocal}
           activeAdress={auth.place}
           deleteItem={openAndDeleteAccess}
+          preentryType={preentryType}
         />
       </div>
     </div>

@@ -3,8 +3,9 @@ import React, { useState, useEffect, useRef } from 'react'
 import { toast } from 'react-toastify'
 import cx from 'classnames'
 import { useReactToPrint } from 'react-to-print'
-import ComponentToPrint from './razval.pre.print'
+import ComponentToPrint from '../razval/razval.pre.print'
 import 'react-toastify/dist/ReactToastify.css'
+import { getTime } from './ShinomontazhEntryRow'
 
 const statusList = [
   'Новая запись',
@@ -17,6 +18,20 @@ const statusList = [
   // 'Безнал'
 ]
 
+export const getDate = (dt) => {
+  if (dt) {
+    const year = dt.slice(2, 4)
+    const month = dt.slice(5, 7)
+    const day = dt.slice(8, 10)
+    return `${day}.${month}.${year}`
+  }
+  return dt
+}
+
+export const formatUtcDate = (dt) => {
+  return `${getDate(dt)} ${getTime(dt)}`
+}
+
 const ModalView = ({
   open,
   onClose,
@@ -27,7 +42,8 @@ const ModalView = ({
   place,
   employee,
   changeItem,
-  activeAdress
+  activeAdress,
+  preentryType
 }) => {
   const [changeStatus, setChangeStatus] = useState({
     status: ''
@@ -89,11 +105,7 @@ const ModalView = ({
 
   const changeRazval = () => {
     if (!changeStatus?.status) notify('Поле пустое')
-    else if (itemType === 'Развал-схождение') {
-      updateRazval(itemId.id, changeStatus)
-    } else if (itemType === 'Замена масла') {
-      updateOil(itemId.id, changeStatus)
-    }
+    updateRazval(itemId.id, changeStatus)
   }
   return (
     <div className="fixed z-10 inset-0 overflow-y-auto">
@@ -155,20 +167,20 @@ const ModalView = ({
             </div>
             <div className="sm:flex justify-center">
               <div className="mt-3 text-center sm:mt-0 sm:ml-4">
-                {itemId.date ? (
+                {itemId?.dateStart ? (
                   <h3 className="text-lg leading-6 font-medium text-gray-900" id="modal-headline">
-                    Дата записи: {dateActive} {itemId.time}
+                    Дата Выполнения: {formatUtcDate(itemId?.dateStart)}
                   </h3>
                 ) : (
                   <h3 className="text-lg leading-6 font-medium text-gray-900" id="modal-headline">
-                    Дата Выполнения: {formatFullDate(new Date(itemId?.dateStart))}
+                    Дата записи: {formatUtcDate(itemId?.datePreentry)}
                   </h3>
                 )}
                 <p className="text-sm leading-5 text-gray-900 mt-2 mb-3">
                   {/* Адрес: {dateCreate ? place.find((it) => it.id === itemId.place).name : null} */}
                 </p>
-                {itemId?.post ? (
-                  <p className="text-sm leading-5 text-gray-900">Пост: {itemId.post}</p>
+                {itemId?.box ? (
+                  <p className="text-sm leading-5 text-gray-900">Пост: {itemId.box}</p>
                 ) : null}
                 <div className="mt-2">
                   <div className="flex flex-row appearance-none w-full bg-grey-lighter border border-gray-300 focus:border-gray-500 focus:outline-none py-1 px-4 pr-8 rounded mb-2">
@@ -212,6 +224,9 @@ const ModalView = ({
                   <p className="text-sm leading-5 text-gray-900 mb-2">
                     Услуга: <b>{itemType}</b>
                   </p>
+                  <p className="text-sm leading-5 text-gray-900 mb-2">
+                    Номер заказа: <b>{itemId[`id_${preentryType}s`]}</b>
+                  </p>
                   {/* {itemId.employee ? (
                     <p className="text-sm leading-5 text-gray-900">
                       Принял заказ:{' '}
@@ -236,7 +251,8 @@ const ModalView = ({
                   itemId.status !== 'Оплачено' &&
                   itemId.status !== 'Работа выполнена' &&
                   itemId.status !== 'Терминал' &&
-                  itemId.status !== 'Безнал' ? (
+                  itemId.status !== 'Безнал' &&
+                  itemId.status !== 'Комбинированный' ? (
                     <div className="mt-3 flex flex-col">
                       <label
                         className="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2"
@@ -285,7 +301,12 @@ const ModalView = ({
                       <div
                         className={cx('rounded p-2', {
                           'bg-yellow-400 hover:bg-yellow-500': itemId.status === statusList[0],
-                          'bg-green-400 hover:bg-green-500': itemId.status === statusList[1],
+                          'bg-green-400 hover:bg-green-500':
+                            itemId.status === 'Оплачено' ||
+                            itemId.status === 'Работа выполнена' ||
+                            itemId.status === 'Терминал' ||
+                            itemId.status === 'Безнал' ||
+                            itemId.status === 'Комбинированный',
                           'bg-red-400 hover:bg-red-500':
                             itemId.status === statusList[2] ||
                             itemId.status === statusList[3] ||
@@ -313,7 +334,21 @@ const ModalView = ({
                 </button>
               </span>
             ) : null}
-            {activeAdress === itemId.place ? (
+            {activeAdress === itemId.place && itemId.status === 'Новая запись' ? (
+              <span className="flex w-full rounded-md shadow-sm sm:ml-3 sm:w-auto">
+                <a
+                  href={`/${preentryType}/edit/${itemId[`id_${preentryType}s`]}?from=preentry`}
+                  className="inline-flex justify-center w-full rounded-md border border-transparent px-4 py-2 bg-orange-600 text-base leading-6 font-medium text-white shadow-sm hover:bg-orange-500 focus:outline-none focus:border-orange-700 focus:shadow-outline-orange transition ease-in-out duration-150 sm:text-sm sm:leading-5"
+                >
+                  В работу
+                </a>
+              </span>
+            ) : null}
+            {activeAdress === itemId.place &&
+            itemId.status !== 'Оплачено' &&
+            itemId.status !== 'Терминал' &&
+            itemId.status !== 'Безнал' &&
+            itemId.status !== 'Комбинированный' ? (
               <span className="flex w-full rounded-md shadow-sm sm:ml-3 sm:w-auto">
                 <button
                   type="button"
@@ -340,8 +375,8 @@ const ModalView = ({
               props={itemId}
               placesList={dateCreate ? place.find((it) => it.id === itemId.place) : null}
               itemType={itemType}
-              OrderDate={dateActive}
-              OrderTime={itemId.time}
+              OrderDate={formatUtcDate(itemId.datePreentry || itemId.dateStart)}
+              OrderTime=""
             />
           </div>
         </div>

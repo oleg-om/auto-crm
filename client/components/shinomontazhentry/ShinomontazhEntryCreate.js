@@ -4,9 +4,17 @@ import NumberFormat from 'react-number-format'
 import { useReactToPrint } from 'react-to-print'
 import { toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
-import ComponentToPrint from './razval.pre.print'
+import ComponentToPrint from '../razval/razval.pre.print'
 
-const ModalNew = ({
+export function isoDateWithoutTimeZone(date) {
+  if (date == null) return date
+  const timestamp = date.getTime() - date.getTimezoneOffset() * 60000
+  const correctDate = new Date(timestamp)
+  // correctDate.setUTCHours(0, 0, 0, 0); // uncomment this if you want to remove the time
+  return correctDate.toISOString()
+}
+
+const ShinomontazhEntryCreate = ({
   open,
   onClose,
   timeActive,
@@ -14,8 +22,7 @@ const ModalNew = ({
   itemType,
   activeAdress,
   employee,
-  createRazval,
-  createOil,
+  createFunc,
   createCust,
   createIsOpen,
   activePost
@@ -31,6 +38,7 @@ const ModalNew = ({
   })
 
   const propsDate = new Date(activeDay)
+
   const OrderDate = `${propsDate.getFullYear()}-${(propsDate.getMonth() + 1)
     .toString()
     .replace(/^(\d)$/, '0$1')}-${propsDate
@@ -46,25 +54,28 @@ const ModalNew = ({
     regnumber: '',
     phone: '',
     employeeplace: '',
-    employee: '',
-    date: '',
-    time: '',
+    employeePreentry: '',
+    // date: '',
+    // time: '',
     place: '',
     name: '',
-    dateofcreate: '',
-    post: ''
+    datePreentry: '',
+    box: ''
   })
   const [access, setAccess] = useState()
+
   useEffect(() => {
     setState((prevState) => ({
       ...prevState,
-      time: timeActive,
+      //   time: timeActive,
       place: activeAdress.id,
-      employee: employee?.id,
+      employeePreentry: employee.name,
       employeeplace: employee.place,
-      date: OrderDate,
-      dateofcreate: new Date(),
-      post: activePost
+      //   date: OrderDate,
+      datePreentry: isoDateWithoutTimeZone(new Date(`${OrderDate} ${timeActive}`)),
+
+      box: activePost,
+      status: 'Новая запись'
     }))
     return () => {}
   }, [timeActive, activeAdress, employee, OrderDate, state.phone, access, createIsOpen, activePost])
@@ -225,14 +236,14 @@ const ModalNew = ({
   }
 
   const sendData = () => {
-    if (itemType === 'Развал-схождение') {
+    if (itemType) {
       if (propsDate > new Date() && state.phone === '') notify('Поле телефон пустое')
       else if (propsDate < new Date() && state.phone === '' && state.regnumber === '')
         notify('Поле телефон и гос.номер пустое. Заполните одно из них')
       else if (state.mark === '') notify('Поле марка авто пустое')
       else if (state.model === '') notify('Поле модель авто пустое')
       else if (!activeCustomer) {
-        dispatch(() => createRazval(state))
+        dispatch(() => createFunc(state))
         dispatch(() => createCust(state))
         setState({
           mark: '',
@@ -240,13 +251,13 @@ const ModalNew = ({
           phone: '',
           regnumber: '',
           employeeplace: '',
-          employee: '',
-          date: '',
-          time: '',
+          employeePreentry: '',
+          //   date: '',
+          //   time: '',
           place: '',
           name: '',
-          dateofcreate: '',
-          post: ''
+          datePreentry: '',
+          box: ''
         })
         setCustomerOptions([])
         setStateId({
@@ -256,74 +267,20 @@ const ModalNew = ({
         setSearch()
         setActiveCustomer('')
       } else {
-        dispatch(() => createRazval(state))
+        dispatch(() => createFunc(state))
         setState({
           mark: '',
           model: '',
           phone: '',
           regnumber: '',
           employeeplace: '',
-          employee: '',
-          date: '',
-          time: '',
+          employeePreentry: '',
+          //   date: '',
+          //   time: '',
           place: '',
           name: '',
-          dateofcreate: '',
-          post: ''
-        })
-        setCustomerOptions([])
-        setStateId({
-          mark: '',
-          model: ''
-        })
-        setSearch()
-        setActiveCustomer('')
-      }
-    } else if (itemType === 'Замена масла') {
-      if (propsDate > new Date() && state.phone === '') notify('Поле телефон пустое')
-      else if (propsDate < new Date() && state.phone === '' && state.regnumber === '')
-        notify('Поле телефон и гос.номер пустое. Заполните одно из них')
-      else if (state.mark === '') notify('Поле марка авто пустое')
-      else if (state.model === '') notify('Поле модель авто пустое')
-      else if (!activeCustomer) {
-        dispatch(() => createOil(state))
-        dispatch(() => createCust(state))
-        setState({
-          mark: '',
-          model: '',
-          phone: '',
-          regnumber: '',
-          employeeplace: '',
-          employee: '',
-          date: '',
-          time: '',
-          place: '',
-          name: '',
-          dateofcreate: '',
-          post: ''
-        })
-        setCustomerOptions([])
-        setStateId({
-          mark: '',
-          model: ''
-        })
-        setSearch()
-        setActiveCustomer('')
-      } else {
-        dispatch(() => createOil(state))
-        setState({
-          mark: '',
-          model: '',
-          phone: '',
-          regnumber: '',
-          employeeplace: '',
-          employee: '',
-          date: '',
-          time: '',
-          place: '',
-          name: '',
-          dateofcreate: '',
-          post: ''
+          datePreentry: '',
+          box: ''
         })
         setCustomerOptions([])
         setStateId({
@@ -337,57 +294,30 @@ const ModalNew = ({
   }
 
   const sendAccess = () => {
-    if (itemType === 'Развал-схождение') {
-      dispatch(() =>
-        createRazval({
-          access: 'false',
-          date: state.date,
-          time: state.time,
-          place: state.place,
-          dateofcreate: state.dateofcreate,
-          post: state?.post || null
-        })
-      )
-      setState({
-        mark: '',
-        model: '',
-        phone: '',
-        regnumber: '',
-        employeeplace: '',
-        employee: '',
-        date: '',
-        time: '',
-        place: '',
-        name: '',
-        dateofcreate: '',
-        post: ''
+    dispatch(() =>
+      createFunc({
+        access: 'false',
+        date: state.date,
+        // time: state.time,
+        place: state.place,
+        datePreentry: state.datePreentry,
+        box: state?.box || null
       })
-    } else if (itemType === 'Замена масла') {
-      dispatch(() =>
-        createOil({
-          access: 'false',
-          date: state.date,
-          time: state.time,
-          place: state.place,
-          dateofcreate: state.dateofcreate,
-          post: state?.post || null
-        })
-      )
-      setState({
-        mark: '',
-        model: '',
-        phone: '',
-        employeeplace: '',
-        employee: '',
-        date: '',
-        regnumber: '',
-        time: '',
-        place: '',
-        name: '',
-        dateofcreate: '',
-        post: ''
-      })
-    }
+    )
+    setState({
+      mark: '',
+      model: '',
+      phone: '',
+      regnumber: '',
+      employeeplace: '',
+      employeePreentry: '',
+      //  date: '',
+      //   time: '',
+      place: '',
+      name: '',
+      datePreentry: '',
+      box: ''
+    })
   }
   const checkAccess = () => {
     setAccess(true)
@@ -401,13 +331,13 @@ const ModalNew = ({
       phone: '',
       regnumber: '',
       employeeplace: '',
-      employee: '',
-      date: '',
-      time: '',
+      employeePreentry: '',
+      //   date: '',
+      //   time: '',
       place: '',
       name: '',
-      dateofcreate: '',
-      post: ''
+      datePreentry: '',
+      box: ''
     })
     setCustomerOptions([])
     setStateId({
@@ -481,8 +411,8 @@ const ModalNew = ({
                 </h3>
                 <div className="mt-2">
                   <p className="text-sm leading-5 text-gray-900">Адрес: {activeAdress.name}</p>
-                  {state.post ? (
-                    <p className="text-sm leading-5 text-gray-900">Пост: {state.post}</p>
+                  {state.box ? (
+                    <p className="text-sm leading-5 text-gray-900">Пост: {state.box}</p>
                   ) : null}
                   <div className="mt-3 flex flex-col">
                     <label
@@ -741,4 +671,4 @@ const ModalNew = ({
   )
 }
 
-export default ModalNew
+export default ShinomontazhEntryCreate

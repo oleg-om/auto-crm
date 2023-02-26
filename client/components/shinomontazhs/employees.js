@@ -7,10 +7,46 @@ const Employee = ({
   employees,
   checkboxEmployeeChange,
   checkBoxEmpRoleChange,
-  dateEnd
+  dateEnd,
+  currentPlace,
+  box,
+  setBox
 }) => {
   return (
-    <div className="md:flex md:flex-row -mx-3">
+    <div className="flex flex-col -mx-3">
+      {currentPlace && currentPlace.shinomontazhquantity ? (
+        <div className="px-3 mb-3   w-full">
+          <label
+            className="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2"
+            htmlFor="grid-first-name"
+          >
+            Бокс
+          </label>
+          <div className="flex flex-wrap w-full relative">
+            {Array.from(
+              Array(
+                currentPlace && currentPlace.shinomontazhquantity
+                  ? Number(currentPlace.shinomontazhquantity)
+                  : 0
+              ).keys()
+            )
+              .map((a) => a + 1)
+              .map((it) => (
+                <button
+                  type="button"
+                  onClick={() => setBox(it)}
+                  key={it}
+                  className={cx('p-6 mx-3 rounded-md  border-gray-800 border mb-3', {
+                    'bg-green-200': box === it,
+                    'bg-gray-200': box !== it
+                  })}
+                >
+                  <p className="px-4 text-lg">{it}</p>
+                </button>
+              ))}
+          </div>
+        </div>
+      ) : null}
       <div className="px-3 mb-6 md:mb-0 w-full">
         <label
           className="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2"

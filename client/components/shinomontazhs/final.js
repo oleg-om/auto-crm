@@ -332,8 +332,8 @@ const Final = ({
       <div className="flex flex-row mt-3">
         <button
           className={cx('mb-3 flex flex-row rounded bg-gray-200 w-full text-lg', {
-            'bg-green-200 hover:bg-green-300': tyres.sale === 'yes',
-            'bg-gray-100 hover:bg-gray-300': tyres.sale !== 'yes'
+            'bg-green-200 hover:bg-green-300': tyres?.sale === 'yes',
+            'bg-gray-100 hover:bg-gray-300': tyres?.sale !== 'yes'
           })}
           type="button"
           name="sale"
@@ -342,13 +342,13 @@ const Final = ({
           <label htmlFor="sale" className="w-full h-full p-2 text-left inline-block">
             <input
               className="mr-4"
-              value={tyres.sale}
-              checked={tyres.sale === 'yes'}
+              value={tyres?.sale}
+              checked={tyres?.sale === 'yes'}
               name="sale"
               id="sale"
               type="checkbox"
             />
-            {tyres.sale !== 'yes' ? 'Шины куплены не у нас' : 'Шины куплены у нас'}
+            {tyres?.sale !== 'yes' ? 'Шины куплены не у нас' : 'Шины куплены у нас'}
           </label>
         </button>
         {/* <label htmlFor="sale" className="w-full h-full p-2 text-left inline-block">
@@ -363,7 +363,7 @@ const Final = ({
           Шины куплены у нас
         </label> */}
       </div>
-      {tyres.sale === 'yes' ? (
+      {tyres?.sale === 'yes' ? (
         <div className="flex flex-row">
           <div className="mr-2 w-1/4">
             <label

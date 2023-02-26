@@ -86,6 +86,32 @@ const Shinomontazh = new mongoose.Schema({
   combCash: {
     type: String,
     required: false
+  },
+  // for preentry
+  box: {
+    type: Number,
+    required: false
+  },
+  access: {
+    type: String,
+    required: false
+    // default: 'true'
+  },
+  datePreentry: {
+    type: Date,
+    required: false
+  },
+  employeeplace: {
+    type: String,
+    required: false
+  },
+  employeePreentry: {
+    type: String,
+    required: false
+  },
+  name: {
+    type: String,
+    required: false
   }
 })
 

@@ -5,14 +5,12 @@ import { getByMonth } from '../../redux/reducers/shinomontazhs'
 // import { getByMonthOil } from '../../redux/reducers/oils'
 
 const OnLoad = (dt) => {
-  console.log('dt: ', dt)
   // const toDate = new Date(dt)
   // const getMonth = toDate.getMonth()
   const year = dt.getFullYear()
   const month = `0${dt.getMonth() + 1}`.slice(-2)
   const yearmonth = `${year}-${month}`
   const day = dt.getDate()
-  console.log('day: ', day)
 
   const dispatch = useDispatch()
 

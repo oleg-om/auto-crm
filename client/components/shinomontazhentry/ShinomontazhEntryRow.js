@@ -4,19 +4,41 @@ import { toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
 import timeList from '../../lists/time-list'
 import statusList from '../../lists/razval.statuses'
+// import { isoDateWithoutTimeZone } from './ShinomontazhEntryCreate'
 
 export const arrayFromNumber = (num, type) =>
-  [...new Array(Number(num))].fill(1).map((it, index) => {
+  [...new Array(Number(num || 1))].fill(1).map((it, index) => {
     return { num: index + 1, name: `${type}${num}` }
   })
+
+export const getTime = (dt) => {
+  if (dt) {
+    const hours = dt.slice(11, 13) || null
+
+    return `${hours}:00`
+  }
+  // if (hours) {
+  //   if (hours < 10) {
+  //     return `0${hours}:00`
+  //   }
+  //   return `${hours}:00`
+  // }
+  return dt
+}
 
 const getEntryStyle = (item, activeAdress) => {
   return {
     'bg-yellow-400 hover:bg-yellow-500': item.status === statusList[0],
     'bg-purple-400 hover:bg-purple-500': item.access === 'false',
+    'bg-green-500 hover:bg-green-600': item.status === 'Работа выполнена',
     'bg-green-400 hover:bg-green-500':
       item.status === 'Оплачено' || item.status === 'Терминал' || item.status === 'Безнал',
-    'bg-red-400 hover:bg-red-500': item.status === 'Отмена',
+    // 'bg-red-400 hover:bg-red-500': item.status === 'Отмена',
+    'bg-red-400 hover:bg-red-500':
+      item.place === activeAdress &&
+      (item.status === statusList[2] ||
+        item.status === statusList[3] ||
+        item.status === statusList[4]),
     'bg-blue-400 hover:bg-blue-500':
       item.status === statusList[0] &&
       item.employeeplace !== activeAdress &&
@@ -39,33 +61,21 @@ const ShinomontazhEntryRow = (props) => {
     props.openAccess(item, type)
   }
 
-  const formatDate = (d) => {
-    if (d) {
-      const dt = new Date(d)
-      return `${dt.getFullYear()}-${(dt.getMonth() + 1).toString().replace(/^(\d)$/, '0$1')}-${dt
-        .getDate()
-        .toString()
-        .replace(/^(\d)$/, '0$1')}`
-    }
-    return d
-  }
+  // const formatDate = (d) => {
+  //   if (d) {
+  //     const dt = new Date(d)
+  //     // return `${dt.getFullYear()}-${(dt.getMonth() + 1).toString().replace(/^(\d)$/, '0$1')}-${dt
+  //     //   .getDate()
+  //     //   .toString()
+  //     //   .replace(/^(\d)$/, '0$1')}`
+  //     return isoDateWithoutTimeZone(dt)
+  //   }
+  //   return d
+  // }
 
-  const dateActive = formatDate(props.activeDay)
+  // const dateActive = formatDate(props.activeDay)
 
-  console.log('dateActive: ', dateActive)
-
-  const getTime = (dt) => {
-    const hours = new Date(dt).getHours()
-    if (hours) {
-      if (hours < 10) {
-        return `0${hours}:00`
-      }
-      return `${hours}:00`
-    }
-    return hours
-  }
-
-  if (props.razvalAndOilType === 'classic' || !props.razvalAndOilType) {
+  if (props.viewType === 'classic' || !props.viewType) {
     return (
       <div className="mx-2 mb-6 relative">
         <div
@@ -84,7 +94,7 @@ const ShinomontazhEntryRow = (props) => {
               </th>
               {props.adress.shinomontazh === 'true' ? (
                 <th className="p-3 font-bold uppercase bg-gray-100 text-gray-600 border border-gray-300 hidden lg:table-cell">
-                  Шиномонтаж
+                  {props.preentryTypeRus}
                 </th>
               ) : null}
             </tr>
@@ -98,17 +108,21 @@ const ShinomontazhEntryRow = (props) => {
                 <td className="w-full lg:w-auto p-2 text-gray-800 text-left lg:text-center border border-b block lg:table-cell relative lg:static">
                   {it}
                 </td>
-                {props.adress.shinomontazh === 'true' ? (
+                {props.adress[props.preentryType] === 'true' ? (
                   <td className="w-full lg:w-auto p-2 text-gray-800 text-left lg:text-center border border-b block lg:table-cell relative lg:static">
-                    {props.razvalList
+                    {props.dataList
                       .filter(
                         (item) =>
-                          formatDate(item?.dateStart) === dateActive &&
-                          getTime(item?.dateStart) === it &&
+                          //    formatDate(item?.dateStart || item?.datePreentry) === dateActive &&
+                          getTime(item?.dateStart || item?.datePreentry) === it &&
                           item.place === props.adress.id
                       )
                       .map((item) => (
                         <div key={item.id}>
+                          {/* item date: {formatDate(item?.dateStart || item?.datePreentry)} <br />
+                          dateActive: {dateActive} <br />
+                          time : {getTime(item?.dateStart || item?.datePreentry)} */}
+                          <br />
                           {props.activeRole.includes('boss') ? (
                             <button
                               title={item.status}
@@ -120,12 +134,12 @@ const ShinomontazhEntryRow = (props) => {
                               id={item.id}
                               onClick={
                                 item?.access === 'false'
-                                  ? () => openDeleteModal(item, 'Развал-схождение')
-                                  : () => openModal(item, 'Развал-схождение')
+                                  ? () => openDeleteModal(item, props.preentryTypeRus)
+                                  : () => openModal(item, props.preentryTypeRus)
                               }
                             >
                               {item?.access === 'false' ? (
-                                <p>Запись недоступна 1</p>
+                                <p>Запись недоступна</p>
                               ) : (
                                 <div>
                                   <p>{`${item.mark} ${item.model}`}</p>
@@ -143,37 +157,35 @@ const ShinomontazhEntryRow = (props) => {
                               type="button"
                               id={item.id}
                               onClick={
-                                !item?.access === 'false'
-                                  ? () => openModal(item, 'Развал-схождение')
-                                  : () => openDeleteModal(item, 'Развал-схождение')
+                                item?.access === 'false'
+                                  ? () => openDeleteModal(item, props.preentryTypeRus)
+                                  : () => openModal(item, props.preentryTypeRus)
                               }
                             >
-                              {!item?.access === 'false' ? (
+                              {item?.access === 'false' ? (
+                                <p>Запись недоступна</p>
+                              ) : (
                                 <div>
                                   <p>{`${item.mark} ${item.model}`}</p>
                                   <p>{item.phone}</p>
                                 </div>
-                              ) : (
-                                <p>Запись недоступна 2</p>
                               )}
                             </button>
                           )}
                         </div>
                       ))}
                     <div>
-                      {props.razvalList.filter(
+                      {props.dataList.filter(
                         (item) =>
-                          item.date === dateActive &&
-                          item.time === it &&
+                          getTime(item?.dateStart || item?.datePreentry) === it &&
                           item.place === props.adress.id &&
                           item.status !== statusList[2] &&
                           item.status !== statusList[3] &&
                           item.status !== statusList[4]
-                      ).length !== Number(props.adress.razvalquantity) &&
-                      props.razvalList.filter(
+                      ).length < Number(props.adress[`${props.preentryType}quantity`]) &&
+                      props.dataList.filter(
                         (item) =>
-                          item.date === dateActive &&
-                          item.time === it &&
+                          getTime(item?.dateStart || item?.datePreentry) === it &&
                           item.place === props.adress.id &&
                           item.access === 'false'
                       ).length !== 1 ? (
@@ -183,7 +195,7 @@ const ShinomontazhEntryRow = (props) => {
                             openCreateModal(
                               it,
                               props.adress,
-                              'Развал-схождение',
+                              props.preentryTypeRus,
                               props.activeAdress
                             )
                           }
@@ -212,8 +224,6 @@ const ShinomontazhEntryRow = (props) => {
   }
   // if new column type
 
-  console.log(' props.adress: ', props.adress)
-
   return (
     <div className="mx-2 mb-6 relative">
       <div
@@ -233,9 +243,9 @@ const ShinomontazhEntryRow = (props) => {
             <th className="p-3 font-bold uppercase bg-gray-100 text-gray-600 border border-gray-300 hidden lg:table-cell">
               Время
             </th>
-            {props.adress.razval === 'true' ? (
+            {props.adress[props.preentryType] === 'true' ? (
               <>
-                {arrayFromNumber(props.razvalquantity).map((it) => (
+                {arrayFromNumber(props[`${props.preentryType}quantity`]).map((it) => (
                   <th
                     key={it.name}
                     className={cx(
@@ -245,24 +255,7 @@ const ShinomontazhEntryRow = (props) => {
                       }
                     )}
                   >
-                    Развал №{it.num}
-                  </th>
-                ))}
-              </>
-            ) : null}
-            {props.adress.oil === 'true' ? (
-              <>
-                {arrayFromNumber(props.oilquantity).map((it) => (
-                  <th
-                    key={it.name}
-                    className={cx(
-                      'p-3 font-bold uppercase bg-gray-100 text-gray-600 border border-gray-300 hidden lg:table-cell',
-                      {
-                        'border-l-4': it.num === 1
-                      }
-                    )}
-                  >
-                    Замена масла №{it.num}
+                    {props.preentryTypeRus} №{it.num}
                   </th>
                 ))}
               </>
@@ -278,9 +271,9 @@ const ShinomontazhEntryRow = (props) => {
               <td className="w-full lg:w-auto p-2 text-gray-800 text-left lg:text-center border border-b block lg:table-cell relative lg:static">
                 {it}
               </td>
-              {props.adress.razval === 'true' ? (
+              {props.adress[props.preentryType] === 'true' ? (
                 <>
-                  {arrayFromNumber(props.razvalquantity).map((raz) => (
+                  {arrayFromNumber(props[`${props.preentryType}quantity`]).map((raz) => (
                     <td
                       key={`${it}-${raz.num}`}
                       className={cx(
@@ -290,13 +283,14 @@ const ShinomontazhEntryRow = (props) => {
                         }
                       )}
                     >
-                      {props.razvalList
+                      {props.dataList
                         .filter(
                           (item) =>
-                            item.date === dateActive &&
-                            item.time === it &&
+                            //  item.date === dateActive &&
+                            //  item.time === it &&
+                            getTime(item?.dateStart || item?.datePreentry) === it &&
                             item.place === props.adress.id &&
-                            (Number(item.post) === Number(raz.num) || (!item.post && raz.num === 1))
+                            (Number(item.box) === Number(raz.num) || (!item.box && raz.num === 1))
                         )
                         .map((item) => (
                           <div key={item.id}>
@@ -310,18 +304,18 @@ const ShinomontazhEntryRow = (props) => {
                                 type="button"
                                 id={item.id}
                                 onClick={
-                                  item.access === 'true'
-                                    ? () => openModal(item, 'Развал-схождение')
-                                    : () => openDeleteModal(item, 'Развал-схождение')
+                                  item.access === 'false'
+                                    ? () => openDeleteModal(item, props.preentryTypeRus)
+                                    : () => openModal(item, props.preentryTypeRus)
                                 }
                               >
-                                {item.access === 'true' ? (
+                                {item.access === 'false' ? (
+                                  <p>Запись недоступна</p>
+                                ) : (
                                   <div>
                                     <p>{`${item.mark} ${item.model}`}</p>
                                     <p>{item.phone}</p>
                                   </div>
-                                ) : (
-                                  <p>Запись недоступна</p>
                                 )}
                               </button>
                             ) : (
@@ -334,41 +328,39 @@ const ShinomontazhEntryRow = (props) => {
                                 type="button"
                                 id={item.id}
                                 onClick={
-                                  item.access === 'true'
-                                    ? () => openModal(item, 'Развал-схождение')
-                                    : () => openDeleteModal(item, 'Развал-схождение')
+                                  item.access === 'false'
+                                    ? () => openDeleteModal(item, props.preentryTypeRus)
+                                    : () => openModal(item, props.preentryTypeRus)
                                 }
                               >
-                                {item.access === 'true' ? (
+                                {item.access === 'false' ? (
+                                  <p>Запись недоступна</p>
+                                ) : (
                                   <div>
                                     <p>{`${item.mark} ${item.model}`}</p>
                                     <p>{item.phone}</p>
                                   </div>
-                                ) : (
-                                  <p>Запись недоступна</p>
                                 )}
                               </button>
                             )}
                           </div>
                         ))}
                       <div>
-                        {props.razvalList.filter(
+                        {props.dataList.filter(
                           (item) =>
-                            item.date === dateActive &&
-                            item.time === it &&
+                            getTime(item?.dateStart || item?.datePreentry) === it &&
                             item.place === props.adress.id &&
                             item.status !== statusList[2] &&
                             item.status !== statusList[3] &&
                             item.status !== statusList[4] &&
-                            (Number(item.post) === Number(raz.num) || (!item.post && raz.num === 1))
+                            (Number(item.box) === Number(raz.num) || (!item.box && raz.num === 1))
                         ).length < 1 &&
-                        props.razvalList.filter(
+                        props.dataList.filter(
                           (item) =>
-                            item.date === dateActive &&
-                            item.time === it &&
+                            getTime(item?.dateStart || item?.datePreentry) === it &&
                             item.place === props.adress.id &&
                             item.access === 'false' &&
-                            (Number(item.post) === Number(raz.num) || (!item.post && raz.num === 1))
+                            (Number(item.box) === Number(raz.num) || (!item.box && raz.num === 1))
                         ).length !== 1 ? (
                           <button
                             type="button"
@@ -376,7 +368,7 @@ const ShinomontazhEntryRow = (props) => {
                               openCreateModal(
                                 it,
                                 props.adress,
-                                'Развал-схождение',
+                                props.preentryTypeRus,
                                 props.activeAdress,
                                 raz.num
                               )

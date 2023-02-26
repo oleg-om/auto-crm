@@ -25,7 +25,8 @@ const PlaceUpdate = (props) => {
     stoboxes: props.stoboxes,
     washphone: props.washphone,
     washboxes: props.washboxes,
-    razvalAndOilType: props.razvalAndOilType
+    razvalAndOilType: props.razvalAndOilType,
+    shinomontazhType: props?.shinomontazhType || null
   })
   const history = useHistory()
   toast.configure()

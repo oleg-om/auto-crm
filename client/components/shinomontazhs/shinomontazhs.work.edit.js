@@ -21,6 +21,8 @@ const ShinomontazhsEdit = (props) => {
   const history = useHistory()
   const checkLink = () => history.location.pathname.split('/').includes('shinomontazhboss')
 
+  const isFromPreentry = history?.location?.search.includes('from=preentry')
+
   const employeeList = useSelector((s) => s.employees.list)
   const customerList = useSelector((s) => s.customers.list)
   const auth = useSelector((s) => s.auth)
@@ -42,12 +44,14 @@ const ShinomontazhsEdit = (props) => {
     comment: props.comment,
     kuzov: props.kuzov,
     diametr: props.diametr,
-    dateStart: props.dateStart,
+    dateStart: props.dateStart || new Date(),
     dateFinish: props.dateFinish ? props.dateFinish : new Date(),
     discount: props.discount,
     payment: props.payment,
     talon: props.id_shinomontazhs
   })
+
+  const [box, setBox] = useState(props.box ? props.box : '')
 
   const [service, setService] = useState(props.services ? props.services : [])
   const [materials, setMaterials] = useState(props.material ? props.material : [])
@@ -130,13 +134,15 @@ const ShinomontazhsEdit = (props) => {
 
   const onChangeRegnumberUppercaseRussian = (e) => {
     const { name, value } = e.target
-    setState((prevState) => ({
-      ...prevState,
-      [name]: value
-        .toUpperCase()
-        .replace(/\s/g, '')
-        .replace(/[^а-яё0-9]/i, '')
-    }))
+    if (value) {
+      setState((prevState) => ({
+        ...prevState,
+        [name]: value
+          .toUpperCase()
+          .replace(/\s/g, '')
+          .replace(/[^а-яё0-9]/i, '')
+      }))
+    }
   }
 
   const switchKeyboard = () => {
@@ -339,13 +345,16 @@ const ShinomontazhsEdit = (props) => {
   }
   useEffect(() => {
     const helpToGetDiametr = (item) => {
-      if (item === 'R16С (скорая)') {
-        return '16Camb'
+      if (item) {
+        if (item === 'R16С (скорая)') {
+          return '16Camb'
+        }
+        if (item === '22.5 (спец шина)') {
+          return '23'
+        }
+        return item.replace(/[^C\d]/g, '')
       }
-      if (item === '22.5 (спец шина)') {
-        return '23'
-      }
-      return item.replace(/[^C\d]/g, '')
+      return item
     }
     const actualDiametr = 'R'.concat(helpToGetDiametr(state.diametr))
     const percent = currentPlace ? currentPlace.shinostavka : ''
@@ -425,7 +434,7 @@ const ShinomontazhsEdit = (props) => {
     return () => {}
   }, [state.diametr, state.kuzov, shinomontazhprices])
 
-  const [active, setActive] = useState('finish')
+  const [active, setActive] = useState(isFromPreentry ? 'employee' : 'finish')
   const checkboxServiceChange = (e) => {
     const { name, placeholder, checked, attributes } = e.target
     if (checked) {
@@ -599,7 +608,11 @@ const ShinomontazhsEdit = (props) => {
         payment: state.payment,
         services: service,
         material: materials,
-        tyre: [...tyres]
+        tyre: [...tyres],
+        employee: employees,
+        dateStart: props?.dateStart ? props.dateStart : new Date(),
+        status: props.status === 'Новая запись' ? 'В работе' : props.status,
+        box
       })
       if (checkLink()) {
         history.push(`/shinomontazhboss/list/${props.num ? props.num : ''}`)
@@ -630,8 +643,10 @@ const ShinomontazhsEdit = (props) => {
         material: materials,
         tyre: [...tyres],
         employee: employees,
+        dateStart: props.dateStart ? props.dateStart : new Date(),
         dateFinish: props.dateFinish ? props.dateFinish : new Date(),
-        status: statusList[1]
+        status: statusList[1],
+        box
       })
       if (checkLink()) {
         history.push(`/shinomontazhboss/list/${props.num ? props.num : ''}`)
@@ -644,7 +659,8 @@ const ShinomontazhsEdit = (props) => {
         discount: state.discount,
         payment: state.payment,
         comment: state.comment,
-        status: statusList[2]
+        status: statusList[2],
+        box
       })
       if (checkLink()) {
         history.push(`/shinomontazhboss/list/${props.num ? props.num : ''}`)
@@ -657,7 +673,8 @@ const ShinomontazhsEdit = (props) => {
         discount: state.discount,
         payment: state.payment,
         comment: state.comment,
-        status: statusList[3]
+        status: statusList[3],
+        box
       })
       if (checkLink()) {
         history.push(`/shinomontazhboss/list/${props.num ? props.num : ''}`)
@@ -670,7 +687,8 @@ const ShinomontazhsEdit = (props) => {
         discount: state.discount,
         payment: state.payment,
         comment: state.comment,
-        status: statusList[4]
+        status: statusList[4],
+        box
       })
       if (checkLink()) {
         history.push(`/shinomontazhboss/list/${props.num ? props.num : ''}`)
@@ -685,7 +703,8 @@ const ShinomontazhsEdit = (props) => {
         comment: state.comment,
         status: statusList[6],
         combTerm: termCash.terminal,
-        combCash: termCash.cash
+        combCash: termCash.cash,
+        box
       })
       if (checkLink()) {
         history.push(`/shinomontazhboss/list/${props.num ? props.num : ''}`)
@@ -698,7 +717,8 @@ const ShinomontazhsEdit = (props) => {
         discount: state.discount,
         payment: state.payment,
         comment: state.comment,
-        status: statusList[5]
+        status: statusList[5],
+        box
       })
       if (checkLink()) {
         history.push(`/shinomontazhboss/list/${props.num ? props.num : ''}`)
@@ -715,7 +735,8 @@ const ShinomontazhsEdit = (props) => {
         // employee: employees,
         discount: state.discount,
         payment: state.payment,
-        comment: state.comment
+        comment: state.comment,
+        box
       })
       if (checkLink()) {
         history.push(`/shinomontazhboss/list/${props.num ? props.num : ''}`)
@@ -927,6 +948,9 @@ const ShinomontazhsEdit = (props) => {
             checkboxEmployeeChange={checkboxEmployeeChange}
             checkBoxEmpRoleChange={checkBoxEmpRoleChange}
             dateEnd={props.dateFinish}
+            box={box}
+            setBox={setBox}
+            currentPlace={currentPlace}
           />
         </div>
         <div

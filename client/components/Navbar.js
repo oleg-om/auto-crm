@@ -246,7 +246,7 @@ const Navbar = () => {
           >
             Адреса
           </NavLink> */}
-          {auth.roles.includes('shinomontazh') ? (
+          {auth.roles.includes('shinomontazh') && !auth.roles.includes('boss') ? (
             <NavLink
               to="/shinomontazh/list"
               className="block mt-4 lg:inline-block lg:mt-0 text-gray-800 hover:text-blue-700 mr-4"
@@ -264,7 +264,7 @@ const Navbar = () => {
               Шиномонтаж (Босс)
             </NavLink>
           ) : null}
-          {/* {auth.roles.includes('kassa') ||
+          {auth.roles.includes('kassa') ||
           auth.roles.includes('boss') ||
           auth.roles.includes('admin') ? (
             <NavLink
@@ -274,7 +274,7 @@ const Navbar = () => {
             >
               Шиномонтаж (запись)
             </NavLink>
-          ) : null} */}
+          ) : null}
           {auth.roles.includes('sto') &&
           !auth.roles.includes('boss') &&
           !auth.roles.includes('bookkeeper') ? (
@@ -351,7 +351,7 @@ const Navbar = () => {
               Поставщики
             </NavLink>
           ) : null}
-          {auth.roles.includes('boss') || auth.roles.includes('admin') ? (
+          {auth.roles.includes('admin') ? (
             <NavLink
               to="/place/list"
               className="block mt-4 lg:inline-block lg:mt-0 text-gray-800 hover:text-blue-700 mr-4"

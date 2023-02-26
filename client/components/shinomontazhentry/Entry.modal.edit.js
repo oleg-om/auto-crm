@@ -3,7 +3,23 @@ import { toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
 import statusList from '../../lists/razval.statuses'
 import timeList from '../../lists/time-list'
-import { arrayFromNumber } from './razval'
+import { arrayFromNumber } from '../razval/razval'
+import { isoDateWithoutTimeZone } from './ShinomontazhEntryCreate'
+
+// import { formatUtcDate, getDate } from './Entry.modal'
+import { getTime } from './ShinomontazhEntryRow'
+
+const editTime = (d, t) => {
+  if (d && t) {
+    const slicedDate = d.split('T')
+    if (slicedDate?.length >= 1) {
+      const timeOfArray = slicedDate[1] ? slicedDate[1].slice(5) : ''
+
+      return `${slicedDate[0]}T${t}${timeOfArray}`
+    }
+  }
+  return d
+}
 
 const ModalEdit = ({
   open,
@@ -11,27 +27,35 @@ const ModalEdit = ({
   itemId,
   itemType,
   updateRazval,
-  updateOil,
   place,
-  employee,
-  deleteItem,
-  razvalList,
-  oilList
+  // employee,
+  deleteItem
+  // dataList
 }) => {
   const [changeStatus, setChangeStatus] = useState({
     status: '',
     time: '',
     place: '',
-    date: ''
+    datePreentry: ''
   })
+
   const [choosedPlace, setChoosedPlace] = useState({})
-  console.log('changeStatus: ', changeStatus)
+
+  const propsDate = new Date(itemId.datePreentry)
+  const dateActive = `${propsDate
+    .getDate()
+    .toString()
+    .replace(/^(\d)$/, '0$1')}.${(propsDate.getMonth() + 1)
+    .toString()
+    .replace(/^(\d)$/, '0$1')}.${propsDate.getFullYear()}`.toString()
+
   useEffect(() => {
     setChangeStatus({
       status: itemId.status,
-      time: itemId.time,
+      time: getTime(itemId.datePreentry),
       place: itemId.place,
-      date: itemId.date
+      datePreentry: itemId?.datePreentry ? itemId?.datePreentry?.slice(0, 10) : ''
+      // datePreentry: itemId.datePreentry
     })
     return () => {}
   }, [itemId])
@@ -57,77 +81,41 @@ const ModalEdit = ({
       [name]: value
     }))
   }
-  const propsDate = new Date(itemId.date)
-  const propsCreateDate = new Date(itemId.dateofcreate)
-  const dateActive = `${propsDate
-    .getDate()
-    .toString()
-    .replace(/^(\d)$/, '0$1')}.${(propsDate.getMonth() + 1)
-    .toString()
-    .replace(/^(\d)$/, '0$1')}.${propsDate.getFullYear()}`.toString()
-
-  const dateCreate = `${propsCreateDate
-    .getDate()
-    .toString()
-    .replace(/^(\d)$/, '0$1')}.${(propsCreateDate.getMonth() + 1)
-    .toString()
-    .replace(/^(\d)$/, '0$1')}.${propsCreateDate.getFullYear()} ${propsCreateDate
-    .getHours()
-    .toString()
-    .replace(/^(\d)$/, '0$1')}:${propsCreateDate
-    .getMinutes()
-    .toString()
-    .replace(/^(\d)$/, '0$1')}`.toString()
+  // const propsDate = new Date(itemId.datePreentry)
+  // const propsCreateDate = new Date(itemId.dateofcreate)
+  // const dateActive = formatUtcDate(itemId?.datePreentry)
 
   const changeRazval = () => {
     if (!changeStatus) notify('Поле пустое')
-    else if (itemType === 'Развал-схождение') {
-      console.log('chenge razval', itemType)
-      if (
-        razvalList.filter(
-          (item) =>
-            item.date === changeStatus.date &&
-            item.time === changeStatus.time &&
-            item.place === changeStatus.place &&
-            item.status !== statusList[2] &&
-            item.status !== statusList[3]
-        ).length !== Number(choosedPlace.razvalquantity) &&
-        razvalList.filter(
-          (item) =>
-            item.date === changeStatus.date &&
-            item.time === changeStatus.time &&
-            item.place === changeStatus.place &&
-            item.access === 'false'
-        ).length !== 1
-      ) {
-        updateRazval(itemId.id, changeStatus)
-      } else {
-        notify('Запись на данное время недоступна')
-      }
-    } else if (itemType === 'Замена масла') {
-      console.log('chenge oil', itemType)
-      if (
-        oilList.filter(
-          (item) =>
-            item.date === changeStatus.date &&
-            item.time === changeStatus.time &&
-            item.place === changeStatus.place &&
-            item.status !== statusList[2] &&
-            item.status !== statusList[3]
-        ).length !== Number(choosedPlace.razvalquantity) &&
-        oilList.filter(
-          (item) =>
-            item.date === changeStatus.date &&
-            item.time === changeStatus.time &&
-            item.place === changeStatus.place &&
-            item.access === 'false'
-        ).length !== 1
-      ) {
-        updateOil(itemId.id, changeStatus)
-      } else {
-        notify('Запись на данное время недоступна')
-      }
-    }
+
+    // if (
+    //   dataList.filter(
+    //     (item) =>
+    //       item.datePreentry === changeStatus.datePreentry &&
+    //       item.time === changeStatus.time &&
+    //       item.place === changeStatus.place &&
+    //       item.status !== statusList[2] &&
+    //       item.status !== statusList[3]
+    //   ).length !== Number(choosedPlace[itemType]) &&
+    //   dataList.filter(
+    //     (item) =>
+    //       item.datePreentry === changeStatus.datePreentry &&
+    //       item.time === changeStatus.time &&
+    //       item.place === changeStatus.place &&
+    //       item.access === 'false'
+    //   ).length !== 1
+    // ) {
+    //   updateRazval(itemId.id, changeStatus)
+    // } else {
+    //   notify('Запись на данное время недоступна')
+    // }
+    // console.log('lol', changeStatus.time, editTime(changeStatus.datePreentry, changeStatus.time))
+    updateRazval(itemId.id, {
+      place: changeStatus.place,
+      datePreentry: isoDateWithoutTimeZone(
+        new Date(editTime(changeStatus.datePreentry, changeStatus.time))
+      )
+    })
   }
   return (
     <div className="fixed z-10 inset-0 overflow-y-auto">
@@ -147,7 +135,7 @@ const ModalEdit = ({
             <div className="sm:flex justify-center">
               <div className="mt-3 text-center sm:mt-0 sm:ml-4">
                 <h3 className="text-lg leading-6 font-medium text-gray-900" id="modal-headline">
-                  Дата записи: {dateActive} {itemId.time}
+                  Дата записи: {dateActive}
                 </h3>
                 <div className="mt-2">
                   <div className="flex flex-row appearance-none w-full bg-grey-lighter border border-gray-300 focus:border-gray-500 focus:outline-none py-1 px-4 pr-8 rounded mb-2">
@@ -176,11 +164,10 @@ const ModalEdit = ({
                       </p>
                     </div>
                   </div>
-
                   <p className="text-sm leading-5 text-gray-900 mb-2">
-                    Номер заказа: <b>{itemType}</b>
+                    Услуга: <b>{itemType}</b>
                   </p>
-                  {itemId.employee ? (
+                  {/* {itemId.employee ? (
                     <p className="text-sm leading-5 text-gray-900">
                       Принял заказ:{' '}
                       {itemId.employee
@@ -190,12 +177,12 @@ const ModalEdit = ({
                         ? employee.find((it) => it.id === itemId.employee).surname
                         : null}
                     </p>
-                  ) : null}
+                  ) : null} */}
                   <p className="text-sm leading-5 text-gray-900">
                     Заказ принят на:{' '}
-                    {dateCreate ? place.find((it) => it.id === itemId.employeeplace).name : null}
+                    {place.find((it) => it.id === itemId.employeeplace).name || null}
                   </p>
-                  <p className="text-sm leading-5 text-gray-900">Заказ принят: {dateCreate}</p>
+                  {/* <p className="text-sm leading-5 text-gray-900">Заказ принят: {dateCreate}</p> */}
                   <div className="mt-3 flex flex-col">
                     <label
                       className="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2"
@@ -243,9 +230,9 @@ const ModalEdit = ({
                     <div className="flex-shrink w-full inline-block relative mb-3">
                       <input
                         className="block appearance-none w-full bg-grey-lighter border border-gray-300 focus:border-gray-500 focus:outline-none py-1 px-4 rounded"
-                        value={changeStatus.date}
-                        name="date"
-                        id="date"
+                        value={changeStatus.datePreentry}
+                        name="datePreentry"
+                        id="datePreentry"
                         type="date"
                         onChange={onChangeStatus}
                       />
