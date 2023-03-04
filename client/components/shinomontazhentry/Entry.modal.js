@@ -252,6 +252,7 @@ const ModalView = ({
                   itemId.status !== 'Работа выполнена' &&
                   itemId.status !== 'В работе' &&
                   itemId.status !== 'Терминал' &&
+                  itemId.status !== 'Отмена' &&
                   itemId.status !== 'Безнал' &&
                   itemId.status !== 'Комбинированный' ? (
                     <div className="mt-3 flex flex-col">
@@ -312,7 +313,8 @@ const ModalView = ({
                           'bg-red-400 hover:bg-red-500':
                             itemId.status === statusList[2] ||
                             itemId.status === statusList[3] ||
-                            itemId.status === statusList[4]
+                            itemId.status === statusList[4] ||
+                            itemId.status === 'Отмена'
                         })}
                       >
                         {changeStatus.status}
