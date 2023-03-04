@@ -5,6 +5,7 @@ import { getByMonth } from '../../redux/reducers/shinomontazhs'
 // import { getByMonthOil } from '../../redux/reducers/oils'
 
 const OnLoad = (dt) => {
+  console.log('dt: ', dt)
   // const toDate = new Date(dt)
   // const getMonth = toDate.getMonth()
   const year = dt.getFullYear()
@@ -15,7 +16,7 @@ const OnLoad = (dt) => {
   const dispatch = useDispatch()
 
   useEffect(() => {
-    dispatch(getByMonth(year, month, day, dt.toISOString()))
+    dispatch(getByMonth(year, month, day, dt ? dt.toISOString() : null))
   }, [dispatch, dt])
 
   // useEffect(() => {

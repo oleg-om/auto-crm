@@ -16,7 +16,6 @@ import AkbColumn from './moduls/akbcolumn'
 import WheelColumn from './moduls/wheelcolumn'
 
 const TyreUpdate = (props) => {
-  console.log('props: ', props)
   const history = useHistory()
 
   const componentRef = useRef()
@@ -51,7 +50,7 @@ const TyreUpdate = (props) => {
       statusDates: [...props.statusDates, { status: 'Печать сметы', date: dateNew }]
     })
   }
-  console.log(props.order)
+
   const auth = useSelector((s) => s.auth)
   const [state, setState] = useState({
     status: props.status,

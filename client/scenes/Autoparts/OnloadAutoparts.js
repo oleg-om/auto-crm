@@ -21,10 +21,8 @@ const OnloadAutoparts = (num, showSearch, type) => {
     socket.on('update autopart', () => {
       if (!checkNum && !showSearch) {
         dispatch(() => getAutopartsLast())
-        console.log('last')
       } else {
         dispatch(() => getAutoparts())
-        console.log('all')
       }
     })
   }, [])
@@ -34,11 +32,9 @@ const OnloadAutoparts = (num, showSearch, type) => {
       if (!checkNum && !showSearch) {
         // setTimeout(dispatch(getAutoparts()), 5000)
         dispatch(getAutoparts())
-        console.log('last')
       } else {
         // setTimeout(dispatch(getAutoparts()), 5000)
         dispatch(getAutoparts())
-        console.log('all')
       }
     })
   }, [])

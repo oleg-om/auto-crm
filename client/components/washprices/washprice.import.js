@@ -63,7 +63,7 @@ const WashpriceImport = (props) => {
       setLoad('finish')
     })
   }
-  console.log('loadingData: ', loadingData)
+
   const [isOpen, SetIsOpen] = useState(false)
   const sendData = () => {
     if (loadingData === undefined) notify('Загрузите файл')

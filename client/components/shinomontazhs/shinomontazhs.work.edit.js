@@ -624,6 +624,10 @@ const ShinomontazhsEdit = (props) => {
   }
 
   const changeShinomontazh = () => {
+    const dateFinishObj =
+      props?.status === 'Новая запись'
+        ? {}
+        : { dateFinish: props.dateFinish ? props.dateFinish : new Date() }
     if (!state.regnumber) notify('Заполните поле гос.номер')
     if (!state.mark) notify('Укажите марку авто')
     if (!state.model) notify('Укажите модель авто')
@@ -644,8 +648,8 @@ const ShinomontazhsEdit = (props) => {
         tyre: [...tyres],
         employee: employees,
         dateStart: props.dateStart ? props.dateStart : new Date(),
-        dateFinish: props.dateFinish ? props.dateFinish : new Date(),
-        status: statusList[1],
+        ...dateFinishObj,
+        status: props?.status === 'Новая запись' ? statusList[0] : statusList[1],
         box
       })
       if (checkLink()) {
@@ -777,7 +781,7 @@ const ShinomontazhsEdit = (props) => {
     } else if (active === 'material') {
       setActive('finish')
     } else if (active === 'finish') {
-      setActive('finish')
+      changeShinomontazh()
     }
   }
 
@@ -1060,31 +1064,37 @@ const ShinomontazhsEdit = (props) => {
         >
           Отмена
         </Link>
-        {active !== 'finish' ? (
+
+        {props?.status === 'Новая запись' || active !== 'finish' ? (
           <button
             className="my-3 ml-2 py-3 w-2/3 px-3 bg-blue-600 text-white hover:bg-blue-700 hover:text-white rounded-lg"
             onClick={nextStep}
             type="submit"
           >
-            Далее
+            {active !== 'finish' ? 'Далее' : 'В работу'}
           </button>
         ) : null}
         {active === 'finish' && !props.dateFinish ? (
           <div className="w-2/3 flex flex-row">
-            <button
-              className="my-3 mx-2 py-3 w-1/2 px-3 bg-blue-600 text-white hover:bg-blue-700 hover:text-white rounded-lg"
-              onClick={preChangeShinomontazh}
-              type="submit"
-            >
-              Сохранить
-            </button>
-            <button
-              className="my-3 ml-2 py-3 w-1/2 px-3 bg-green-600 text-white hover:bg-green-700 hover:text-white rounded-lg"
-              onClick={changeShinomontazh}
-              type="submit"
-            >
-              Завершить
-            </button>
+            {props?.status !== 'Новая запись' ? (
+              <>
+                <button
+                  className="my-3 mx-2 py-3 w-1/2 px-3 bg-blue-600 text-white hover:bg-blue-700 hover:text-white rounded-lg"
+                  onClick={preChangeShinomontazh}
+                  type="submit"
+                >
+                  Сохранить
+                </button>
+
+                <button
+                  className="my-3 ml-2 py-3 w-1/2 px-3 bg-green-600 text-white hover:bg-green-700 hover:text-white rounded-lg"
+                  onClick={changeShinomontazh}
+                  type="submit"
+                >
+                  Завершить
+                </button>
+              </>
+            ) : null}
           </div>
         ) : null}
         {active === 'finish' && props.dateFinish ? (

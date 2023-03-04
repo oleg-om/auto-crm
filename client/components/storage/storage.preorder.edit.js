@@ -128,7 +128,7 @@ const StoragesUpdate = (props) => {
       dateFinish: today
     }))
   }
-  console.log(state)
+
   const sendData = () => {
     if (!state.employee) notify('Заполните поле Принял заказ')
     if (!state.place) notify('Заполните поле Заказ принят на точке')

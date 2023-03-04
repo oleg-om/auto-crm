@@ -104,7 +104,6 @@ export function createTyre(name) {
     })
       .then((r) => r.json())
       .then(({ data: tyre }) => {
-        console.log(tyre)
         // socket.emit('new tyre', { tyre })
         dispatch({ type: CREATE_TYRE, tyre })
       })

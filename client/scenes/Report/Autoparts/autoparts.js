@@ -170,7 +170,6 @@ const Salary = ({ report, employeeListFull }) => {
     }))
   }
 
-  console.log(report)
   return (
     <div className="mb-3">
       <h2 className="text-xl font-semibold mb-2">Зарплаты</h2>

@@ -31,7 +31,7 @@ const ShinomontazhsNew = () => {
   const [modalIsOpen, setModalIsOpen] = useState(false)
   const [activeCustomerId, setActiveCustomerId] = useState('')
   const [activeCustomerName, setActiveCustomerName] = useState({})
-  console.log('activeCustomerName: ', activeCustomerName)
+
   const [order, setOrder] = useState({})
 
   const createCust = (name) => {
@@ -63,9 +63,6 @@ const ShinomontazhsNew = () => {
   }
 
   const openAndUpdate = useCallback((idOfItem, name, state) => {
-    console.log('OU state: ', state)
-    console.log('OU idOfItem: ', idOfItem)
-    console.log('OU name: ', name)
     setModalIsOpen(true)
     setActiveCustomerId(idOfItem)
     setActiveCustomerName(name)

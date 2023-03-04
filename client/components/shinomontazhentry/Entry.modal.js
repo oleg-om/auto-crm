@@ -250,6 +250,7 @@ const ModalView = ({
                   {activeAdress === itemId.place &&
                   itemId.status !== 'Оплачено' &&
                   itemId.status !== 'Работа выполнена' &&
+                  itemId.status !== 'В работе' &&
                   itemId.status !== 'Терминал' &&
                   itemId.status !== 'Безнал' &&
                   itemId.status !== 'Комбинированный' ? (
@@ -301,6 +302,7 @@ const ModalView = ({
                       <div
                         className={cx('rounded p-2', {
                           'bg-yellow-400 hover:bg-yellow-500': itemId.status === statusList[0],
+                          'bg-orange-400 hover:bg-orange-500': itemId.status === 'В работе',
                           'bg-green-400 hover:bg-green-500':
                             itemId.status === 'Оплачено' ||
                             itemId.status === 'Работа выполнена' ||
@@ -338,7 +340,7 @@ const ModalView = ({
               <span className="flex w-full rounded-md shadow-sm sm:ml-3 sm:w-auto">
                 <a
                   href={`/${preentryType}/edit/${itemId[`id_${preentryType}s`]}?from=preentry`}
-                  className="inline-flex justify-center w-full rounded-md border border-transparent px-4 py-2 bg-orange-600 text-base leading-6 font-medium text-white shadow-sm hover:bg-orange-500 focus:outline-none focus:border-orange-700 focus:shadow-outline-orange transition ease-in-out duration-150 sm:text-sm sm:leading-5"
+                  className="inline-flex whitespace-nowrap justify-center w-full rounded-md border border-transparent px-4 py-2 bg-orange-600 text-base leading-6 font-medium text-white shadow-sm hover:bg-orange-500 focus:outline-none focus:border-orange-700 focus:shadow-outline-orange transition ease-in-out duration-150 sm:text-sm sm:leading-5"
                 >
                   В работу
                 </a>
@@ -346,6 +348,7 @@ const ModalView = ({
             ) : null}
             {activeAdress === itemId.place &&
             itemId.status !== 'Оплачено' &&
+            itemId.status !== 'В работе' &&
             itemId.status !== 'Терминал' &&
             itemId.status !== 'Безнал' &&
             itemId.status !== 'Комбинированный' ? (

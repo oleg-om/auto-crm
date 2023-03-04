@@ -1,4 +1,5 @@
 import React from 'react'
+import { formatUtcDate } from './Entry.modal'
 
 const AccessModal = ({ open, onClose, itemId, deleteItem, activeAdress }) => {
   if (!open) return null
@@ -6,13 +7,6 @@ const AccessModal = ({ open, onClose, itemId, deleteItem, activeAdress }) => {
   const openDeleteModal = () => {
     deleteItem()
   }
-  const propsDate = new Date(itemId.date)
-  const dateActive = `${propsDate
-    .getDate()
-    .toString()
-    .replace(/^(\d)$/, '0$1')}.${(propsDate.getMonth() + 1)
-    .toString()
-    .replace(/^(\d)$/, '0$1')}.${propsDate.getFullYear()}`.toString()
 
   return (
     <div className="fixed z-10 inset-0 overflow-y-auto">
@@ -32,7 +26,7 @@ const AccessModal = ({ open, onClose, itemId, deleteItem, activeAdress }) => {
             <div className="sm:flex justify-center">
               <div className="mt-3 text-center sm:mt-0 sm:ml-4">
                 <h3 className="text-lg leading-6 font-medium text-gray-900" id="modal-headline">
-                  Дата записи: {dateActive} {itemId.time}
+                  Дата записи: {formatUtcDate(itemId?.datePreentry)}
                 </h3>
                 <div className="mt-2">
                   <p className="text-sm leading-5 text-gray-900 mb-2">Запись невозможна</p>

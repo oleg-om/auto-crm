@@ -63,7 +63,6 @@ export function createRazval(name) {
 }
 
 export function updateRazval(id, name) {
-  console.log('id redux: ', id)
   return (dispatch) => {
     fetch(`/api/v1/razval/${id}`, {
       method: 'PATCH',

@@ -1,7 +1,6 @@
 import React from 'react'
 
 const UpdateModal = ({ open, onClose, onSubmit, activeCustomerName, onDisSubmit }) => {
-  console.log('activeCustomerName: ', activeCustomerName)
   if (!open) return null
 
   return (

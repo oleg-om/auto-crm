@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react'
 import { useDispatch } from 'react-redux'
+import 'fix-date'
 import NumberFormat from 'react-number-format'
 import { useReactToPrint } from 'react-to-print'
 import { toast } from 'react-toastify'
@@ -7,11 +8,16 @@ import 'react-toastify/dist/ReactToastify.css'
 import ComponentToPrint from '../razval/razval.pre.print'
 
 export function isoDateWithoutTimeZone(date) {
-  if (date == null) return date
-  const timestamp = date.getTime() - date.getTimezoneOffset() * 60000
+  if (!date) return date
+
+  const dt = new Date(date)
+  const timestamp = dt.getTime() - dt.getTimezoneOffset() * 60000
   const correctDate = new Date(timestamp)
   // correctDate.setUTCHours(0, 0, 0, 0); // uncomment this if you want to remove the time
-  return correctDate.toISOString()
+  if (correctDate) {
+    return correctDate?.toISOString()
+  }
+  return ''
 }
 
 const ShinomontazhEntryCreate = ({
@@ -67,13 +73,11 @@ const ShinomontazhEntryCreate = ({
   useEffect(() => {
     setState((prevState) => ({
       ...prevState,
-      //   time: timeActive,
       place: activeAdress.id,
       employeePreentry: employee.name,
       employeeplace: employee.place,
-      //   date: OrderDate,
-      datePreentry: isoDateWithoutTimeZone(new Date(`${OrderDate} ${timeActive}`)),
-
+      // datePreentry: isoDateWithoutTimeZone(new Date(`${OrderDate} ${timeActive}`)),
+      datePreentry: new Date(`${OrderDate} ${timeActive}`),
       box: activePost,
       status: 'Новая запись'
     }))

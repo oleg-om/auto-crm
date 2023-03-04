@@ -4,6 +4,7 @@ import { toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
 import timeList from '../../lists/time-list'
 import statusList from '../../lists/razval.statuses'
+import { isoDateWithoutTimeZone } from './ShinomontazhEntryCreate'
 // import { isoDateWithoutTimeZone } from './ShinomontazhEntryCreate'
 
 export const arrayFromNumber = (num, type) =>
@@ -30,6 +31,7 @@ const getEntryStyle = (item, activeAdress) => {
   return {
     'bg-yellow-400 hover:bg-yellow-500': item.status === statusList[0],
     'bg-purple-400 hover:bg-purple-500': item.access === 'false',
+    'bg-orange-400 hover:bg-orange-500': item.status === 'В работе',
     'bg-green-500 hover:bg-green-600': item.status === 'Работа выполнена',
     'bg-green-400 hover:bg-green-500':
       item.status === 'Оплачено' || item.status === 'Терминал' || item.status === 'Безнал',
@@ -74,7 +76,7 @@ const ShinomontazhEntryRow = (props) => {
   // }
 
   // const dateActive = formatDate(props.activeDay)
-
+  console.log('data:', props.dataList)
   if (props.viewType === 'classic' || !props.viewType) {
     return (
       <div className="mx-2 mb-6 relative">
@@ -114,8 +116,8 @@ const ShinomontazhEntryRow = (props) => {
                       .filter(
                         (item) =>
                           //    formatDate(item?.dateStart || item?.datePreentry) === dateActive &&
-                          getTime(item?.dateStart || item?.datePreentry) === it &&
-                          item.place === props.adress.id
+                          getTime(isoDateWithoutTimeZone(item?.dateStart || item?.datePreentry)) ===
+                            it && item.place === props.adress.id
                       )
                       .map((item) => (
                         <div key={item.id}>
@@ -288,7 +290,9 @@ const ShinomontazhEntryRow = (props) => {
                           (item) =>
                             //  item.date === dateActive &&
                             //  item.time === it &&
-                            getTime(item?.dateStart || item?.datePreentry) === it &&
+                            getTime(
+                              isoDateWithoutTimeZone(item?.dateStart || item?.datePreentry)
+                            ) === it &&
                             item.place === props.adress.id &&
                             (Number(item.box) === Number(raz.num) || (!item.box && raz.num === 1))
                         )
@@ -314,7 +318,7 @@ const ShinomontazhEntryRow = (props) => {
                                 ) : (
                                   <div>
                                     <p>{`${item.mark} ${item.model}`}</p>
-                                    <p>{item.phone}</p>
+                                    <p>{item.phone || item.regnumber}</p>
                                   </div>
                                 )}
                               </button>
@@ -348,7 +352,9 @@ const ShinomontazhEntryRow = (props) => {
                       <div>
                         {props.dataList.filter(
                           (item) =>
-                            getTime(item?.dateStart || item?.datePreentry) === it &&
+                            getTime(
+                              isoDateWithoutTimeZone(item?.dateStart || item?.datePreentry)
+                            ) === it &&
                             item.place === props.adress.id &&
                             item.status !== statusList[2] &&
                             item.status !== statusList[3] &&
@@ -357,7 +363,9 @@ const ShinomontazhEntryRow = (props) => {
                         ).length < 1 &&
                         props.dataList.filter(
                           (item) =>
-                            getTime(item?.dateStart || item?.datePreentry) === it &&
+                            getTime(
+                              isoDateWithoutTimeZone(item?.dateStart || item?.datePreentry)
+                            ) === it &&
                             item.place === props.adress.id &&
                             item.access === 'false' &&
                             (Number(item.box) === Number(raz.num) || (!item.box && raz.num === 1))

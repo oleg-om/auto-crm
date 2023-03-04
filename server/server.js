@@ -45,9 +45,8 @@ const washRoutes = require('./routes/api/wash.routes')
 const Root = () => ''
 
 try {
-  console.log(Root)
 } catch (ex) {
-  console.log(' run yarn build:prod to enable ssr')
+  console.error(' run yarn build:prod to enable ssr')
 }
 
 const connections = []

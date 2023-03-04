@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
-import { useLocation } from 'react-router-dom'
+import { Link, useLocation } from 'react-router-dom'
 // import { Link } from 'react-router-dom'
 import { toast } from 'react-toastify'
 import { deleteEmployee } from '../../redux/reducers/employees'
@@ -89,14 +89,14 @@ const PreentryList = () => {
 
   const auth = useSelector((s) => s.auth)
   const [isOpen, setIsOpen] = useState(false)
-  console.log('isOpen: ', isOpen)
+
   const [createIsOpen, setCreateIsOpen] = useState(false)
   const [editIsOpen, setEditIsOpen] = useState(false)
-  console.log('editIsOpen: ', editIsOpen)
+
   const [deleteIsOpen, setDeleteIsOpen] = useState(false)
-  console.log('deleteIsOpen: ', deleteIsOpen)
+
   const [accessIsOpen, setAccessIsOpen] = useState(false)
-  console.log('accessIsOpen: ', accessIsOpen)
+
   const [itemId, setItemId] = useState('')
   const [itemType, setItemType] = useState('')
 
@@ -300,6 +300,16 @@ const PreentryList = () => {
           preentryType={preentryType}
         />
       </div>
+      <Link to="/shinomontazh/create/">
+        <button
+          type="button"
+          className="fixed bottom-0 right-0 p-6 shadow bg-blue-600 text-white opacity-75 text-2xl hover:opacity-100 hover:bg-blue-700 hover:text-white rounded-full my-3 mx-3"
+        >
+          Новый
+          <br />
+          заказ
+        </button>
+      </Link>
     </div>
   )
 }

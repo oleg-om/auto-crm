@@ -49,7 +49,6 @@ const Autoparts = ({
   //     return []
   //   }
   const [report, setReport] = useState([])
-  console.log(report)
 
   //   const [bossPercent, setBossPercent] = useState(30)
   //   const [isMaterial, setIsMaterial] = useState('yes')
@@ -200,7 +199,7 @@ const Autoparts = ({
       </div>
     )
   }
-  console.log(report)
+
   return (
     <>
       <div

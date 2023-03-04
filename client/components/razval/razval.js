@@ -333,8 +333,6 @@ const RazvalRow = (props) => {
   }
   // if new column type
 
-  console.log(' props.adress: ', props.adress)
-
   return (
     <div className="mx-2 mb-6 relative">
       <div
