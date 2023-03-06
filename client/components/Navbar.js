@@ -266,7 +266,8 @@ const Navbar = () => {
           ) : null}
           {auth.roles.includes('kassa') ||
           auth.roles.includes('boss') ||
-          auth.roles.includes('admin') ? (
+          auth.roles.includes('admin') ||
+          auth.roles.includes('shinomontazh') ? (
             <NavLink
               to="/preentry/shinomontazh"
               className="block mt-4 lg:inline-block lg:mt-0 text-gray-800 hover:text-blue-700 mr-4"
