@@ -6,6 +6,7 @@ import { useReactToPrint } from 'react-to-print'
 import ComponentToPrint from '../razval/razval.pre.print'
 import 'react-toastify/dist/ReactToastify.css'
 import { getTime } from './ShinomontazhEntryRow'
+import { isoDateWithoutTimeZone } from './ShinomontazhEntryCreate'
 
 const statusList = [
   'Новая запись',
@@ -29,7 +30,7 @@ export const getDate = (dt) => {
 }
 
 export const formatUtcDate = (dt) => {
-  return `${getDate(dt)} ${getTime(dt)}`
+  return `${getDate(isoDateWithoutTimeZone(dt))} ${getTime(isoDateWithoutTimeZone(dt))}`
 }
 
 const ModalView = ({

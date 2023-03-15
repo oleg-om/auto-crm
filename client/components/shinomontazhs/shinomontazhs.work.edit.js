@@ -134,15 +134,16 @@ const ShinomontazhsEdit = (props) => {
 
   const onChangeRegnumberUppercaseRussian = (e) => {
     const { name, value } = e.target
-    if (value) {
-      setState((prevState) => ({
-        ...prevState,
-        [name]: value
-          .toUpperCase()
-          .replace(/\s/g, '')
-          .replace(/[^а-яё0-9]/i, '')
-      }))
-    }
+
+    setState((prevState) => ({
+      ...prevState,
+      [name]: value
+        ? value
+            .toUpperCase()
+            .replace(/\s/g, '')
+            .replace(/[^а-яё0-9]/i, '')
+        : ''
+    }))
   }
 
   const switchKeyboard = () => {
