@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 const Storage = require('../model/storage')
 
 exports.getAll = async (req, res) => {
@@ -87,4 +88,32 @@ exports.getFiltered = async (req, res) => {
   } catch (error) {
     res.status(404).json({ message: error.message })
   }
+}
+
+exports.updateStatus = async (req, res) => {
+  const storage1 = await Storage.findOne(
+    {
+      id_storages: req.params.id,
+      statusDates: { $elemMatch: { status: 'Произведен шиномонтаж' } }
+    },
+    { upsert: false, useFindAndModify: false }
+  )
+  // console.log('storage1: ', storage1)
+  // console.log('id: ', req.params.id)
+
+  if (!storage1) {
+    // const storage2 = await Storage.findOne({ id_storages: req.params.id })
+    await Storage.findOneAndUpdate(
+      { id_storages: req.params.id },
+      {
+        // id_storages: req.params.id,
+        $push: {
+          statusDates: req.body
+        }
+      },
+      { upsert: false, useFindAndModify: false }
+    )
+  }
+  const storage = await Storage.findOne({ id_storages: req.params.id })
+  return res.json({ status: 'ok', data: storage })
 }

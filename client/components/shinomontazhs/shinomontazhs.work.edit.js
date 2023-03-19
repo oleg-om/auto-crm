@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { Link, useHistory } from 'react-router-dom'
-import { useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { toast } from 'react-toastify'
 import cx from 'classnames'
 import 'react-toastify/dist/ReactToastify.css'
@@ -11,6 +11,8 @@ import Material from './material'
 import Final from './final'
 import sizeThreeList from '../../lists/shinomontazhdiametr'
 import statusList from '../../../common/enums/shinomontazh-statuses'
+import { updateStorageStatus } from '../../redux/reducers/storage'
+import { dateNew } from '../storage/storage.preorder.edit'
 
 const ShinomontazhsEdit = (props) => {
   toast.configure()
@@ -591,6 +593,21 @@ const ShinomontazhsEdit = (props) => {
       })
     )
   }
+
+  const dispatch = useDispatch()
+
+  const updateStorageStat = (idOFStorage, shinomontazhId) => {
+    if (idOFStorage) {
+      dispatch(
+        updateStorageStatus(idOFStorage, {
+          status: 'Произведен шиномонтаж',
+          date: dateNew,
+          shinomontazh_id: shinomontazhId
+        })
+      )
+    }
+  }
+
   const preChangeShinomontazh = () => {
     if (!state.regnumber) notify('Заполните поле гос.номер')
     if (!state.mark) notify('Укажите марку авто')
@@ -653,6 +670,7 @@ const ShinomontazhsEdit = (props) => {
         status: props?.status === 'Новая запись' ? statusList[0] : statusList[1],
         box
       })
+      updateStorageStat(props?.storage, props?.id_shinomontazhs)
       if (checkLink()) {
         history.push(`/shinomontazhboss/list/${props.num ? props.num : ''}`)
       } else {
@@ -667,6 +685,7 @@ const ShinomontazhsEdit = (props) => {
         status: statusList[2],
         box
       })
+      // updateStorageStat(state?.storage, state?.id_shinomontazhs)
       if (checkLink()) {
         history.push(`/shinomontazhboss/list/${props.num ? props.num : ''}`)
       } else {
@@ -681,6 +700,7 @@ const ShinomontazhsEdit = (props) => {
         status: statusList[3],
         box
       })
+      // updateStorageStat(state?.storage, state?.id_shinomontazhs)
       if (checkLink()) {
         history.push(`/shinomontazhboss/list/${props.num ? props.num : ''}`)
       } else {
@@ -695,6 +715,7 @@ const ShinomontazhsEdit = (props) => {
         status: statusList[4],
         box
       })
+      //  updateStorageStat(state?.storage, state?.id_shinomontazhs)
       if (checkLink()) {
         history.push(`/shinomontazhboss/list/${props.num ? props.num : ''}`)
       } else {
@@ -711,6 +732,7 @@ const ShinomontazhsEdit = (props) => {
         combCash: termCash.cash,
         box
       })
+      //  updateStorageStat(state?.storage, state?.id_shinomontazhs)
       if (checkLink()) {
         history.push(`/shinomontazhboss/list/${props.num ? props.num : ''}`)
       } else {

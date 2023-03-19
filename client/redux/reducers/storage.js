@@ -124,6 +124,22 @@ export function updateStorage(id, name) {
   }
 }
 
+export function updateStorageStatus(id, name) {
+  return (dispatch) => {
+    fetch(`/api/v1/storagestatus/${id}`, {
+      method: 'PATCH',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(name)
+    })
+      .then((r) => r.json())
+      .then(({ data: storage }) => {
+        dispatch({ type: UPDATE_STORAGE, storage })
+      })
+  }
+}
+
 export function getItemsByPage(page) {
   return (dispatch) => {
     fetch(`/api/v1/storagebypage/${page}`)

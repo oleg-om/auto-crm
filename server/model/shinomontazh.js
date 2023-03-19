@@ -112,6 +112,10 @@ const Shinomontazh = new mongoose.Schema({
   name: {
     type: String,
     required: false
+  },
+  storage: {
+    type: Number,
+    required: false
   }
 })
 

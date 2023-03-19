@@ -19,6 +19,20 @@ import FirstColumn from './moduls/firstcolumn'
 import TyreColumn from './moduls/tyrecolumn'
 import Statuses from '../../lists/storages-statuses'
 
+const dateNow = new Date()
+export const dateNew = `${dateNow
+  .getDate()
+  .toString()
+  .replace(/^(\d)$/, '0$1')}.${(dateNow.getMonth() + 1)
+  .toString()
+  .replace(/^(\d)$/, '0$1')}.${dateNow.getFullYear()} ${dateNow
+  .getHours()
+  .toString()
+  .replace(/^(\d)$/, '0$1')}:${dateNow
+  .getMinutes()
+  .toString()
+  .replace(/^(\d)$/, '0$1')}`
+
 const StoragesUpdate = (props) => {
   toast.configure()
   const notify = (arg) => {
@@ -57,20 +71,6 @@ const StoragesUpdate = (props) => {
   const history = useHistory()
   const list = useSelector((s) => s.places.list)
   const employeeList = useSelector((s) => s.employees.list)
-
-  const dateNow = new Date()
-  const dateNew = `${dateNow
-    .getDate()
-    .toString()
-    .replace(/^(\d)$/, '0$1')}.${(dateNow.getMonth() + 1)
-    .toString()
-    .replace(/^(\d)$/, '0$1')}.${dateNow.getFullYear()} ${dateNow
-    .getHours()
-    .toString()
-    .replace(/^(\d)$/, '0$1')}:${dateNow
-    .getMinutes()
-    .toString()
-    .replace(/^(\d)$/, '0$1')}`
 
   const [inputFields, setInputFields] = useState(props.preorder)
 
@@ -1077,7 +1077,12 @@ const StoragesUpdate = (props) => {
 
                 {props.statusDates.map((it) => (
                   <li key={it.date}>
-                    <b>{it.status}: </b> {it.date}
+                    <b>{it.status}: </b> {it.date}{' '}
+                    {it?.shinomontazh_id ? (
+                      <Link to={`/shinomontazh/edit/${it?.shinomontazh_id}`}>
+                        , Шиномонтаж: {it?.shinomontazh_id}
+                      </Link>
+                    ) : null}
                   </li>
                 ))}
               </ul>

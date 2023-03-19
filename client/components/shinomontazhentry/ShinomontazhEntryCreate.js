@@ -70,6 +70,28 @@ const ShinomontazhEntryCreate = ({
   })
   const [access, setAccess] = useState()
 
+  const [storageOptions, setStorageOptions] = useState()
+
+  const throttlingStorage = useRef(false)
+
+  useEffect(() => {
+    if (throttlingStorage.current) {
+      return
+    }
+    if (state?.storage) {
+      throttlingStorage.current = true
+      setTimeout(() => {
+        throttlingStorage.current = false
+        fetch(`/api/v1/storagefilter?page=1&number=${state?.storage}`)
+          .then((r) => r.json())
+          .then((st) => {
+            setStorageOptions(st)
+          })
+      }, 500)
+    }
+    // return () => {}
+  }, [state?.storage])
+
   useEffect(() => {
     setState((prevState) => ({
       ...prevState,
@@ -350,6 +372,7 @@ const ShinomontazhEntryCreate = ({
     })
     setSearch()
   }
+
   return (
     <div className="fixed z-10 inset-0 overflow-y-auto">
       <div className="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
@@ -526,6 +549,37 @@ const ShinomontazhEntryCreate = ({
                         value={state.name}
                         onChange={onChange}
                       />
+                    </div>
+                  </div>
+                  <div className="mt-3 flex flex-col">
+                    <label
+                      className="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2"
+                      htmlFor="phone"
+                    >
+                      Хранение, №
+                    </label>
+                    <div className="flex-shrink w-full inline-block relative">
+                      <input
+                        className="block appearance-none w-full bg-grey-lighter border border-gray-300 focus:border-gray-500 focus:outline-none py-1 px-4 pr-8 rounded"
+                        type="number"
+                        name="storage"
+                        id="storage"
+                        list="storage_list"
+                        placeholder="Номер хранения"
+                        value={state.storage}
+                        onChange={onChange}
+                      />
+                      {state?.storage && storageOptions && storageOptions?.data?.length ? (
+                        <datalist id="storage_list">
+                          {storageOptions?.data.map((it, index) => (
+                            <option
+                              key={index}
+                              value={it.id_storages}
+                              label={`№${it.id_storages}, ${it?.phone || ''}, ${it?.name || ''}`}
+                            />
+                          ))}
+                        </datalist>
+                      ) : null}
                     </div>
                   </div>
                   {customerOptions.length >= 1 ? (

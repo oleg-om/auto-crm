@@ -47,8 +47,31 @@ const ModalView = ({
   preentryType
 }) => {
   const [changeStatus, setChangeStatus] = useState({
-    status: ''
+    status: '',
+    staroge: null
   })
+
+  const [storageOptions, setStorageOptions] = useState()
+
+  const throttlingStorage = useRef(false)
+
+  useEffect(() => {
+    if (throttlingStorage.current) {
+      return
+    }
+    if (changeStatus?.storage) {
+      throttlingStorage.current = true
+      setTimeout(() => {
+        throttlingStorage.current = false
+        fetch(`/api/v1/storagefilter?page=1&number=${changeStatus?.storage}`)
+          .then((r) => r.json())
+          .then((st) => {
+            setStorageOptions(st)
+          })
+      }, 500)
+    }
+    // return () => {}
+  }, [changeStatus?.storage])
 
   const componentRef = useRef()
   const handlePrint = useReactToPrint({
@@ -56,7 +79,7 @@ const ModalView = ({
   })
 
   useEffect(() => {
-    setChangeStatus({ status: itemId.status })
+    setChangeStatus({ status: itemId.status, storage: itemId?.storage || null })
     return () => {}
   }, [itemId])
   if (!open) return null
@@ -66,11 +89,13 @@ const ModalView = ({
   }
   const onChangeStatus = (e) => {
     const { name, value } = e.target
+    console.log('name: ', name, value)
     setChangeStatus((prevState) => ({
       ...prevState,
       [name]: value
     }))
   }
+
   const openEditModal = () => {
     changeItem()
   }
@@ -228,6 +253,11 @@ const ModalView = ({
                   <p className="text-sm leading-5 text-gray-900 mb-2">
                     Номер заказа: <b>{itemId[`id_${preentryType}s`]}</b>
                   </p>
+                  {/* {itemId?.storage ? (
+                    <p className="text-sm leading-5 text-gray-900 mb-2">
+                      Номер хранения: <b>{itemId.storage}</b>
+                    </p>
+                  ) : null} */}
                   {/* {itemId.employee ? (
                     <p className="text-sm leading-5 text-gray-900">
                       Принял заказ:{' '}
@@ -248,6 +278,37 @@ const ModalView = ({
                   {itemId.dateofcreate ? (
                     <p className="text-sm leading-5 text-gray-900">Заказ принят: {dateCreate}</p>
                   ) : null}
+                  <div className="mt-3 flex flex-col">
+                    <label
+                      className="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2"
+                      htmlFor="phone"
+                    >
+                      Хранение, №
+                    </label>
+                    <div className="flex-shrink w-full inline-block relative">
+                      <input
+                        className="block appearance-none w-full bg-grey-lighter border border-gray-300 focus:border-gray-500 focus:outline-none py-1 px-4 pr-8 rounded"
+                        type="number"
+                        name="storage"
+                        id="storage"
+                        list="storage_list"
+                        placeholder="Номер хранения"
+                        value={changeStatus?.storage || ''}
+                        onChange={onChangeStatus}
+                      />
+                      {changeStatus?.storage && storageOptions && storageOptions?.data?.length ? (
+                        <datalist id="storage_list">
+                          {storageOptions?.data.map((it, index) => (
+                            <option
+                              key={index}
+                              value={it.id_storages}
+                              label={`№${it.id_storages}, ${it?.phone || ''}, ${it?.name || ''}`}
+                            />
+                          ))}
+                        </datalist>
+                      ) : null}
+                    </div>
+                  </div>
                   {activeAdress === itemId.place &&
                   itemId.status !== 'Оплачено' &&
                   itemId.status !== 'Работа выполнена' &&
