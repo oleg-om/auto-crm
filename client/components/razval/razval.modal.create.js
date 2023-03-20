@@ -122,7 +122,7 @@ const ModalNew = ({
       } else if (state.phone === '' && state.regnumber === '') {
         setCustomerOptions([])
       }
-    }, 500)
+    }, 200)
   }, [state.phone, state.regnumber, state.vinnumber])
 
   useEffect(() => {

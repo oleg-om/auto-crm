@@ -194,7 +194,7 @@ const AutopartsCreate = (props) => {
       } else if (state.phone === '' && state.regnumber === '' && state.vinnumber === '') {
         setCustomerOptions([])
       }
-    }, 500)
+    }, 200)
   }, [state.phone, state.regnumber, state.vinnumber])
 
   // useEffect(() => {

@@ -37,7 +37,7 @@ const ShinomontazhEntryCreate = ({
   const notify = (arg) => {
     toast.info(arg, { position: toast.POSITION.BOTTOM_RIGHT })
   }
-
+  const [showStorageOptions, setShowStorageOptions] = useState(false)
   const componentRef = useRef()
   const handlePrint = useReactToPrint({
     content: () => componentRef.current
@@ -87,7 +87,7 @@ const ShinomontazhEntryCreate = ({
           .then((st) => {
             setStorageOptions(st)
           })
-      }, 500)
+      }, 200)
     }
     // return () => {}
   }, [state?.storage])
@@ -159,7 +159,7 @@ const ShinomontazhEntryCreate = ({
       } else if (state.phone === '' && state.regnumber === '') {
         setCustomerOptions([])
       }
-    }, 500)
+    }, 200)
   }, [state.phone, state.regnumber, state.vinnumber])
 
   useEffect(() => {
@@ -195,6 +195,9 @@ const ShinomontazhEntryCreate = ({
       ...prevState,
       [name]: value
     }))
+    if (name === 'storage') {
+      setShowStorageOptions(true)
+    }
   }
   const onChangeMark = (e) => {
     const { value } = e.target
@@ -371,6 +374,24 @@ const ShinomontazhEntryCreate = ({
       model: ''
     })
     setSearch()
+  }
+
+  const setCustomerFromStorage = (st) => {
+    const storageName = st?.name ? { name: st?.name } : {}
+    const storagePhone = st?.phone ? { phone: st?.phone } : {}
+    const storageMark = st?.mark ? { mark: st?.mark } : {}
+    const storageModel = st?.model ? { model: st?.model } : {}
+    const storageReg = st?.regnumber ? { regnumber: st?.regnumber } : {}
+    setState((prevState) => ({
+      ...prevState,
+      ...storageName,
+      ...storagePhone,
+      ...storageMark,
+      ...storageModel,
+      ...storageReg
+    }))
+    setShowStorageOptions(false)
+    setActiveCustomer(1)
   }
 
   return (
@@ -564,21 +585,26 @@ const ShinomontazhEntryCreate = ({
                         type="number"
                         name="storage"
                         id="storage"
-                        list="storage_list"
+                        // list="storage_list"
                         placeholder="Номер хранения"
                         value={state.storage}
                         onChange={onChange}
                       />
-                      {state?.storage && storageOptions && storageOptions?.data?.length ? (
-                        <datalist id="storage_list">
+                      {showStorageOptions &&
+                      state?.storage &&
+                      storageOptions &&
+                      storageOptions?.data?.length ? (
+                        <div className="absolute flex bg-gray-300 right-0 left-0">
                           {storageOptions?.data.map((it, index) => (
-                            <option
+                            // eslint-disable-next-line jsx-a11y/aria-role, jsx-a11y/click-events-have-key-events, jsx-a11y/no-static-element-interactions
+                            <button
+                              type="button"
+                              className="p-3"
                               key={index}
-                              value={it.id_storages}
-                              label={`№${it.id_storages}, ${it?.phone || ''}, ${it?.name || ''}`}
-                            />
+                              onClick={() => setCustomerFromStorage(it)}
+                            >{`№${it.id_storages}, ${it?.phone || ''}, ${it?.name || ''}`}</button>
                           ))}
-                        </datalist>
+                        </div>
                       ) : null}
                     </div>
                   </div>

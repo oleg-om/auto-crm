@@ -192,7 +192,7 @@ const WashsCreate = (props) => {
       } else if (state.regnumber === '') {
         setCustomerOptions([])
       }
-    }, 500)
+    }, 200)
   }, [state.regnumber])
 
   const applyCustomer = () => {
