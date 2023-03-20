@@ -35,26 +35,71 @@ exports.delete = async (req, res) => {
 }
 
 exports.getFiltered = async (req, res) => {
-  const { page, number, place, status, vin, phone } = req.query
+  const { page, number, place, status, vin, phone, sizeone, sizetwo, sizethree } = req.query
 
   try {
     const LIMIT = 14
     const startIndex = (Number(page) - 1) * LIMIT // get the starting index of every page
 
+    const findTyresBySize = () => {
+      if (sizeone || sizetwo || sizethree) {
+        const sz1 = sizeone ? { sizeone } : {}
+        const sz2 = sizetwo ? { sizetwo } : {}
+        const sz3 = sizethree ? { sizethree } : {}
+        return {
+          $or: [
+            {
+              order: {
+                $elemMatch: {
+                  ...sz1,
+                  ...sz2,
+                  ...sz3
+                }
+              }
+            },
+            {
+              preorder: {
+                $elemMatch: {
+                  ...sz1,
+                  ...sz2,
+                  ...sz3
+                }
+              }
+            }
+          ]
+        }
+      }
+      return {}
+    }
+
+    const idFind = req.query.number ? { id_tyres: `${number.toString()}` } : {}
+    const placeFind = req.query.place ? { place: `${place.toString()}` } : {}
+    const statusFind = req.query.status
+      ? { status: `${decodeURIComponent(status).toString()}` }
+      : {}
+    const vinFind = req.query.vin ? { vinnumber: `${vin.toString()}` } : {}
+    const phoneFind = req.query.phone
+      ? { phone: { $regex: `${phone.toString()}`, $options: 'i' } }
+      : {}
+
     const total = await Tyre.countDocuments({
-      id_tyres: req.query.number ? `${number.toString()}` : { $exists: true },
-      place: req.query.place ? `${place.toString()}` : { $exists: true },
-      status: req.query.status ? `${decodeURIComponent(status).toString()}` : { $exists: true },
-      vinnumber: req.query.vin ? `${vin.toString()}` : { $exists: true },
-      phone: req.query.phone ? { $regex: `${phone.toString()}`, $options: 'i' } : { $exists: true }
+      ...idFind,
+      ...placeFind,
+      ...statusFind,
+      ...vinFind,
+      ...phoneFind,
+      // ...findTyresBySize('order'),
+      ...findTyresBySize('preorder')
     })
 
     const posts = await Tyre.find({
-      id_tyres: req.query.number ? `${number.toString()}` : { $exists: true },
-      place: req.query.place ? `${place.toString()}` : { $exists: true },
-      status: req.query.status ? `${decodeURIComponent(status).toString()}` : { $exists: true },
-      vinnumber: req.query.vin ? `${vin.toString()}` : { $exists: true },
-      phone: req.query.phone ? { $regex: `${phone.toString()}`, $options: 'i' } : { $exists: true }
+      ...idFind,
+      ...placeFind,
+      ...statusFind,
+      ...vinFind,
+      ...phoneFind,
+      // ...findTyresBySize('order'),
+      ...findTyresBySize('preorder')
     })
       .sort({ id_tyres: -1 })
       .limit(LIMIT)

@@ -77,13 +77,25 @@ export function getItemsByPage(page) {
   }
 }
 
-export function getItemsFiltered(page, status, vin, place, phone, number) {
+export function getItemsFiltered(
+  page,
+  status,
+  vin,
+  place,
+  phone,
+  number,
+  sizeone,
+  sizetwo,
+  sizethree
+) {
   return (dispatch) => {
     fetch(
       `/api/v1/tyrefilter${page ? `?page=${page}` : ''}${status ? `&status=${status}` : ''}${
         vin ? `&vin=${vin}` : ''
       }${place ? `&place=${place}` : ''}${phone ? `&phone=${phone}` : ''}${
         number ? `&number=${number}` : ''
+      }${sizeone ? `&sizeone=${sizeone}` : ''}${sizetwo ? `&sizetwo=${sizetwo}` : ''}${
+        sizethree ? `&sizethree=${sizethree}` : ''
       }`
     )
       .then((r) => r.json())
