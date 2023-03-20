@@ -3,6 +3,7 @@ import cx from 'classnames'
 import { toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
 import timeList from '../../lists/time-list'
+import timeList24 from '../../lists/time-list24'
 import statusList from '../../lists/razval.statuses'
 import { isoDateWithoutTimeZone } from './ShinomontazhEntryCreate'
 // import { isoDateWithoutTimeZone } from './ShinomontazhEntryCreate'
@@ -80,7 +81,13 @@ const ShinomontazhEntryRow = (props) => {
   // }
 
   // const dateActive = formatDate(props.activeDay)
-  console.log('data:', props.dataList)
+
+  const getTimeList = () => (props.adress?.workTime === 24 ? timeList24 : timeList)
+  const timeNumberIs10 = (tm) =>
+    Number(tm.replace(':', '')) >= 800 || Number(tm.replace(':', '')) <= 1700
+  const timeNumberIs24 = (tm) =>
+    Number(tm.replace(':', '')) < 800 || Number(tm.replace(':', '')) > 1700
+
   if (props.viewType === 'classic' || !props.viewType) {
     return (
       <div className="mx-2 mb-6 relative">
@@ -90,7 +97,12 @@ const ShinomontazhEntryRow = (props) => {
             'bg-orange-500 text-white': props.activePlace === 'true'
           })}
         >
-          <h4 className="font-semibold text-center">{props.adress.name}</h4>
+          <h4 className="font-semibold text-center">
+            {props.adress.name}{' '}
+            {props.adress?.workTime === 24 ? (
+              <span className="ml-2 font-bold bg-white rounded-md text-red-500">24</span>
+            ) : null}
+          </h4>
         </div>
         <table className="border-collapse w-full">
           <thead>
@@ -106,10 +118,16 @@ const ShinomontazhEntryRow = (props) => {
             </tr>
           </thead>
           <tbody>
-            {timeList.map((it) => (
+            {getTimeList().map((it) => (
               <tr
                 key={it}
-                className="bg-white lg:hover:bg-gray-100 flex lg:table-row flex-row lg:flex-row flex-wrap lg:flex-no-wrap mb-5 lg:mb-0"
+                className={cx(
+                  'flex lg:table-row flex-row lg:flex-row flex-wrap lg:flex-no-wrap mb-5 lg:mb-0',
+                  {
+                    'bg-white lg:hover:bg-gray-100': timeNumberIs10(it),
+                    'bg-blue-100 lg:hover:bg-blue-200': timeNumberIs24(it)
+                  }
+                )}
               >
                 <td className="w-full lg:w-auto p-2 text-gray-800 text-left lg:text-center border border-b block lg:table-cell relative lg:static">
                   {it}
@@ -241,7 +259,12 @@ const ShinomontazhEntryRow = (props) => {
           }
         )}
       >
-        <h4 className="font-semibold text-center">{props.adress.name}</h4>
+        <h4 className="font-semibold text-center">
+          {props.adress.name}{' '}
+          {props.adress?.workTime === 24 ? (
+            <span className="ml-2 font-bold bg-white rounded-md text-red-500">24</span>
+          ) : null}
+        </h4>
       </div>
       <table className="border-collapse w-full">
         <thead>
@@ -269,10 +292,16 @@ const ShinomontazhEntryRow = (props) => {
           </tr>
         </thead>
         <tbody>
-          {timeList.map((it) => (
+          {getTimeList().map((it) => (
             <tr
               key={it}
-              className="bg-white lg:hover:bg-gray-100 flex lg:table-row flex-row lg:flex-row flex-wrap lg:flex-no-wrap mb-5 lg:mb-0"
+              className={cx(
+                'flex lg:table-row flex-row lg:flex-row flex-wrap lg:flex-no-wrap mb-5 lg:mb-0',
+                {
+                  'bg-white lg:hover:bg-gray-100': timeNumberIs10(it),
+                  'bg-blue-100 lg:hover:bg-blue-200': timeNumberIs24(it)
+                }
+              )}
             >
               <td className="w-full lg:w-auto p-2 text-gray-800 text-left lg:text-center border border-b block lg:table-cell relative lg:static">
                 {it}
@@ -285,7 +314,8 @@ const ShinomontazhEntryRow = (props) => {
                       className={cx(
                         'w-full lg:w-auto p-2 text-gray-800 text-left lg:text-center border border-b block lg:table-cell relative lg:static',
                         {
-                          'border-l-4': raz.num === 1
+                          'border-l-4': raz.num === 1,
+                          'border-blue-200': timeNumberIs24(it)
                         }
                       )}
                     >

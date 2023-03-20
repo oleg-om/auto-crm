@@ -92,6 +92,11 @@ const Place = new mongoose.Schema({
     type: String,
     required: false,
     default: () => 'classic'
+  },
+  workTime: {
+    type: Number,
+    required: false,
+    default: () => 10
   }
 })
 
