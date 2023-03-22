@@ -37,6 +37,7 @@ const ModalView = ({
   open,
   onClose,
   itemId,
+
   itemType,
   updateRazval,
   updateOil,
@@ -46,6 +47,7 @@ const ModalView = ({
   activeAdress,
   preentryType
 }) => {
+  console.log('itemId: ', itemId)
   const [changeStatus, setChangeStatus] = useState({
     status: '',
     staroge: null

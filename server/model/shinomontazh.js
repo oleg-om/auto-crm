@@ -113,6 +113,10 @@ const Shinomontazh = new mongoose.Schema({
     type: String,
     required: false
   },
+  phone: {
+    type: String,
+    required: false
+  },
   storage: {
     type: Number,
     required: false
