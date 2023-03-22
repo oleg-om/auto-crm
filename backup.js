@@ -61,8 +61,8 @@ const getIt = () =>
     }
   })
 
-setInterval(getIt, 72000000)
-// getIt()
+// setInterval(getIt, 72000000)
+getIt()
 // transporter.sendMail(mailOptions, function (error, info) {
 //   if (error) {
 //     console.log(error)

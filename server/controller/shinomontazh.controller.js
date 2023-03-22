@@ -58,7 +58,8 @@ exports.getByPage = async (req, res) => {
     const posts = await Shinomontazh.find({
       dateStart: { $exists: true }
     })
-      .sort({ id_shinomontazhs: -1 })
+      // .sort({ id_shinomontazhs: -1 })
+      .sort({ dateStart: -1 })
       .limit(LIMIT)
       .skip(startIndex)
 

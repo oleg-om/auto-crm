@@ -39,13 +39,14 @@ const getEntryStyle = (item, activeAdress) => {
       item.status === 'Терминал' ||
       item.status === 'Комбинированный' ||
       item.status === 'Безнал',
-    // 'bg-red-400 hover:bg-red-500': item.status === 'Отмена',
+    //  'bg-red-400 hover:bg-red-500': item.status === 'Отмена',
     'bg-red-400 hover:bg-red-500':
-      item.place === activeAdress &&
-      (item.status === statusList[2] ||
-        item.status === statusList[3] ||
-        item.status === statusList[4] ||
-        item.status === 'Отмена'),
+      (item.place === activeAdress &&
+        (item.status === statusList[2] ||
+          item.status === statusList[3] ||
+          item.status === statusList[4] ||
+          item.status === 'Отмена')) ||
+      item.status === 'Отмена',
     'bg-blue-400 hover:bg-blue-500':
       item.status === statusList[0] &&
       item.employeeplace !== activeAdress &&

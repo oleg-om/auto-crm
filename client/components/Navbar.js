@@ -331,6 +331,7 @@ const Navbar = () => {
           {auth.roles.includes('autopartfull') ||
           auth.roles.includes('autopartsimple') ||
           auth.roles.includes('razval') ||
+          auth.roles.includes('kassa') ||
           auth.roles.includes('boss') ||
           auth.roles.includes('admin') ? (
             <NavLink
