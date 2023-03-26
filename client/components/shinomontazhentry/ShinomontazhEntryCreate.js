@@ -246,7 +246,9 @@ const ShinomontazhEntryCreate = ({
         model: newCustomer.model,
         regnumber: newCustomer.regnumber,
         name: newCustomer.name,
-        phone: newCustomer.phone
+        phone: newCustomer.phone,
+        kuzov: newCustomer?.kuzov || null,
+        diametr: newCustomer?.diametr || null
       }))
       setActiveCustomer(newCustomer.id)
     }
