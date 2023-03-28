@@ -92,7 +92,8 @@ exports.getFiltered = async (req, res) => {
       regnumber: req.query.reg ? { $regex: `${reg.toString()}`, $options: 'i' } : { $exists: true },
       dateStart: { $exists: true }
     })
-      .sort({ id_shinomontazhs: -1 })
+      // .sort({ id_shinomontazhs: -1 })
+      .sort({ dateStart: -1 })
       .limit(LIMIT)
       .skip(startIndex)
 

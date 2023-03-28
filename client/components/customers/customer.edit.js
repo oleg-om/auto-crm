@@ -3,6 +3,10 @@ import { Link, useHistory } from 'react-router-dom'
 import { toast } from 'react-toastify'
 import NumberFormat from 'react-number-format'
 import Modal from '../Modal.delete'
+import sizeThreeList from '../../lists/shinomontazhdiametr'
+import sizeGruz from '../../lists/tyres/sizegruz'
+import sizeSelhoz from '../../lists/tyres/sizeselhoz'
+
 import 'react-toastify/dist/ReactToastify.css'
 
 const CustomerUpdate = (props) => {
@@ -14,7 +18,13 @@ const CustomerUpdate = (props) => {
     gen: props.gen ? props.gen : '',
     mod: props.mod ? props.mod : '',
     regnumber: props.regnumber ? props.regnumber : '',
-    vinnumber: props.vinnumber ? props.vinnumber : ''
+    vinnumber: props.vinnumber ? props.vinnumber : '',
+    diametr: props.diametr ? props.diametr : '',
+    kuzov: props.kuzov ? props.kuzov : '',
+    class: props.class ? props.class : '',
+    category: props.category ? props.category : '',
+    washClass: props.washClass ? props.washClass : '',
+    washCategory: props.washCategory ? props.washCategory : ''
   })
   const [isOpen, SetIsOpen] = useState(false)
   const history = useHistory()
@@ -29,22 +39,22 @@ const CustomerUpdate = (props) => {
     notify('Клиент удален')
   }
   const changeCustomer = () => {
-    if (!state.mod) notify('Заполните поле Объем двигателя')
-    if (!state.regnumber) notify('Заполните поле гос.номер')
-    if (!state.vinnumber) notify('Заполните поле VIN номер')
-    if (!state.mark) notify('Укажите марку авто')
-    if (!state.model) notify('Укажите модель авто')
-    if (!state.gen) notify('Укажите год авто')
-    if (!state.name) notify('Заполните поле Имя клиента')
-    if (!state.phone) notify('Заполните поле Телефон')
+    // if (!state.mod) notify('Заполните поле Объем двигателя')
+    if (!state.regnumber && !state.phone) notify('Заполните поле гос.номер либо Телефон')
+    // if (!state.vinnumber) notify('Заполните поле VIN номер')
+    // if (!state.mark) notify('Укажите марку авто')
+    // if (!state.model) notify('Укажите модель авто')
+    // if (!state.gen) notify('Укажите год авто')
+    // if (!state.name) notify('Заполните поле Имя клиента')
+    // if (!state.phone) notify('Заполните поле Телефон')
     else if (
-      state.name &&
-      state.phone &&
-      state.mark &&
-      state.model &&
-      state.gen &&
-      state.mod &&
-      state.vinnumber &&
+      // state.name &&
+      state.phone ||
+      // state.mark &&
+      // state.model &&
+      // state.gen &&
+      // state.mod &&
+      // state.vinnumber &&
       state.regnumber
     ) {
       props.updateCustomer(props.id, state)
@@ -418,6 +428,85 @@ const CustomerUpdate = (props) => {
               required
               onChange={onChangeCustomerUppercase}
             />
+          </div>
+          <div className="w-1/2 px-3 mb-6 md:mb-0">
+            <label
+              className="block uppercase tracking-wide  text-xs font-bold mb-2"
+              htmlFor="kuzov"
+            >
+              Кузов (шиномонтаж)
+            </label>
+            <div className="flex-shrink w-full inline-block relative">
+              <select
+                className="block appearance-none w-full bg-grey-lighter border border-gray-300 focus:border-gray-500 focus:outline-none py-2 px-4 pr-8 rounded"
+                name="kuzov"
+                id="kuzov"
+                value={state.kuzov}
+                autoComplete="off"
+                required
+                onChange={onChange}
+              >
+                <option value="" hidden>
+                  Выберите кузов
+                </option>
+                <option value="sedan">Седан</option>
+                <option value="crossover">Кроссовер</option>
+                <option value="runflat">RUN FLAT</option>
+                <option value="gruz">Грузовой</option>
+                <option value="selhoz">Сельхоз</option>
+              </select>
+              <div className="pointer-events-none hidden absolute top-0 mt-3 right-0 lg:flex items-center px-2 text-gray-600">
+                <svg
+                  className="fill-current h-4 w-4"
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 20 20"
+                >
+                  <path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z" />
+                </svg>
+              </div>
+            </div>
+          </div>
+          <div className="w-1/2 px-3 mb-6 md:mb-0">
+            <label
+              className="block uppercase tracking-wide   text-xs font-bold mb-2"
+              htmlFor="diametr"
+            >
+              Диаметр (шиномонтаж)
+            </label>
+            <div className="flex-shrink w-full inline-block relative">
+              <select
+                className="block appearance-none w-full bg-grey-lighter border border-gray-300 focus:border-gray-500 focus:outline-none py-2 px-4 pr-8 rounded"
+                name="diametr"
+                id="diametr"
+                value={state.diametr}
+                autoComplete="off"
+                required
+                disabled={!state.kuzov}
+                onChange={onChange}
+              >
+                <option value="" hidden>
+                  {state.kuzov ? 'Выберите диаметр' : 'Сначала выберите кузов'}
+                </option>
+                {state.kuzov === 'sedan' || state.kuzov === 'crossover' || state.kuzov === 'runflat'
+                  ? sizeThreeList.map((it) => <option value={it} label={it} key={it} />)
+                  : null}
+                {state.kuzov === 'gruz'
+                  ? sizeGruz.map((it) => <option value={it} label={it} key={it} />)
+                  : null}
+                {state.kuzov === 'selhoz'
+                  ? sizeSelhoz.map((it) => <option value={it} label={it} key={it} />)
+                  : null}
+              </select>
+              <div className="pointer-events-none hidden absolute top-0 mt-3 right-0 lg:flex items-center px-2 text-gray-600">
+                <svg
+                  className="fill-current h-4 w-4"
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 20 20"
+                >
+                  <path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z" />
+                </svg>
+              </div>
+            </div>
           </div>
         </div>
       </div>
