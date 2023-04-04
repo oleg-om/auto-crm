@@ -20,12 +20,21 @@ exports.getByFind = async (req, res) => {
   // .replace(/brl/g, '(')
   // .replace(/brr/g, ')')
   // .replace(/pl/g, '+')
+  const regString =
+    req.params.regnumber && req.params.regnumber !== 'reg'
+      ? { regnumber: { $regex: req.params.regnumber, $options: 'i' } }
+      : null
+  const vinString =
+    req.params.vinnumber && req.params.vinnumber !== 'vin'
+      ? { vinnumber: { $regex: req.params.vinnumber, $options: 'i' } }
+      : null
+  const phoneString =
+    req.params.phone && req.params.phone !== 'phone'
+      ? { phone: { $regex: req.params.phone, $options: 'i' } }
+      : null
+
   const customer = await Customer.find({
-    $or: [
-      { regnumber: { $regex: req.params.regnumber, $options: 'i' } },
-      { vinnumber: { $regex: req.params.vinnumber, $options: 'i' } },
-      { phone: { $regex: req.params.phone, $options: 'i' } }
-    ]
+    $and: [regString, vinString, phoneString].filter((it) => it)
   })
   return res.json({ status: 'ok', data: customer })
 }
