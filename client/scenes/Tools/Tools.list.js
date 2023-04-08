@@ -12,6 +12,7 @@ import Navbar from '../../components/Navbar'
 import Pagination from '../Pagination'
 import taskStatuses from '../../lists/task-statuses'
 import onLoad from './Onload'
+import { handleEnterpress } from '../../utils/utils'
 
 const ToolsList = () => {
   const { num } = useParams(1)
@@ -178,6 +179,10 @@ const ToolsList = () => {
     )
   }
 
+  const onEterPress = (e) => {
+    handleEnterpress(e, onFilter)
+  }
+
   return (
     <div>
       <Navbar />
@@ -204,6 +209,7 @@ const ToolsList = () => {
                     name="number"
                     type="number"
                     onChange={onChangeNumber}
+                    onKeyDown={onEterPress}
                   />
                   <div className="pointer-events-none absolute top-0 mt-2  right-0 flex items-center px-2 text-gray-600">
                     <svg
@@ -245,6 +251,7 @@ const ToolsList = () => {
                     placeholder="Начинайте ввод с 978"
                     value={search.phone}
                     onChange={onChangePhone}
+                    onKeyDown={onEterPress}
                   />
                   <div className="pointer-events-none absolute top-0 mt-2  right-0 flex items-center px-2 text-gray-600">
                     <svg

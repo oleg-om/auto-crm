@@ -12,6 +12,7 @@ import Navbar from '../../components/Navbar'
 import Pagination from '../Pagination'
 import taskStatuses from '../../lists/task-statuses'
 import onLoad from './Onload'
+import { handleEnterpress } from '../../utils/utils'
 
 const TyresList = () => {
   const { num } = useParams(1)
@@ -194,6 +195,10 @@ const TyresList = () => {
     )
   }
 
+  const onEterPress = (e) => {
+    handleEnterpress(e, onFilter)
+  }
+
   return (
     <div>
       <Navbar />
@@ -220,6 +225,7 @@ const TyresList = () => {
                     name="number"
                     type="number"
                     onChange={onChangeNumber}
+                    onKeyDown={onEterPress}
                   />
                   <div className="pointer-events-none absolute top-0 mt-2  right-0 flex items-center px-2 text-gray-600">
                     <svg
@@ -261,6 +267,7 @@ const TyresList = () => {
                     placeholder="Начинайте ввод с 978"
                     value={search.phone}
                     onChange={onChangePhone}
+                    onKeyDown={onEterPress}
                   />
                   <div className="pointer-events-none absolute top-0 mt-2  right-0 flex items-center px-2 text-gray-600">
                     <svg
@@ -340,6 +347,7 @@ const TyresList = () => {
                     onChange={onChangeSize}
                     placeholder="175"
                     type="number"
+                    onKeyDown={onEterPress}
                   />
                   <span className="flex my-auto mr-1">/</span>
                   <input
@@ -354,6 +362,7 @@ const TyresList = () => {
                     onChange={onChangeSize}
                     placeholder="70"
                     type="number"
+                    onKeyDown={onEterPress}
                   />
                   <span className="flex my-auto mr-1">R</span>
                   <input
@@ -369,6 +378,7 @@ const TyresList = () => {
                     onChange={onChangeSize}
                     placeholder="13"
                     type="number"
+                    onKeyDown={onEterPress}
                   />
                   {/* <div className="pointer-events-none absolute top-0 mt-2  right-0 flex items-center px-2 text-gray-600">
                     <svg

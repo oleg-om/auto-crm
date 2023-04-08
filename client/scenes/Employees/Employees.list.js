@@ -29,6 +29,7 @@ const EmployeeList = () => {
     setIsOpen(false)
     notify('Сотрудник удален')
   }
+
   return (
     <div>
       <Navbar />

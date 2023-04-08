@@ -11,6 +11,7 @@ import Modal from '../../components/Modal.delete'
 import 'react-toastify/dist/ReactToastify.css'
 import Pagination from '../Pagination'
 import onLoad from './Onload'
+import { handleEnterpress } from '../../utils/utils'
 
 const CustomerList = () => {
   const { num } = useParams(1)
@@ -47,9 +48,13 @@ const CustomerList = () => {
 
   useEffect(() => {
     if (showSearch) {
-      const phoneArray = search.phone.split(' ')
-      const phoneToRest = phoneArray[phoneArray.length - 1].replace(/_/g, '')
-      if ((search.phone !== '' && phoneToRest.length > 6) || search.vinnumber || search.regnumber) {
+      const phoneArray = search.phone ? search.phone.split(' ') : []
+      const phoneToRest = phoneArray[phoneArray.length - 1]?.replace(/_/g, '')
+      if (
+        (search.phone !== '' && phoneToRest?.length > 6) ||
+        search.vinnumber ||
+        search.regnumber
+      ) {
         dispatch(
           getItemsFiltered(
             1,
@@ -125,6 +130,10 @@ const CustomerList = () => {
     )
   }
 
+  const onEterPress = (e) => {
+    handleEnterpress(e, onFilter)
+  }
+
   return (
     <div>
       <Navbar />
@@ -155,6 +164,7 @@ const CustomerList = () => {
                   placeholder="Начинайте ввод с 978"
                   value={search.phone}
                   onChange={onChangePhone}
+                  onKeyDown={onEterPress}
                 />
                 <div className="pointer-events-none absolute top-0 mt-2  right-0 flex items-center px-2 text-gray-600">
                   <svg
@@ -195,6 +205,7 @@ const CustomerList = () => {
                   name="vinnumber"
                   value={search.vinnumber}
                   onChange={onChangeVin}
+                  onKeyDown={onEterPress}
                 />
                 <div className="pointer-events-none absolute top-0 mt-2  right-0 flex items-center px-2 text-gray-600">
                   <svg
@@ -235,6 +246,7 @@ const CustomerList = () => {
                   name="regnumber"
                   value={search.regnumber}
                   onChange={onChangeReg}
+                  onKeyDown={onEterPress}
                 />
                 <div className="pointer-events-none absolute top-0 mt-2  right-0 flex items-center px-2 text-gray-600">
                   <svg
