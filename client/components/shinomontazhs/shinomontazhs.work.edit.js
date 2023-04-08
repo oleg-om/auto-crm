@@ -29,6 +29,7 @@ const ShinomontazhsEdit = (props) => {
   const customerList = useSelector((s) => s.customers.list)
   const auth = useSelector((s) => s.auth)
   const shinomontazhprices = useSelector((s) => s.shinomontazhprices.list)
+
   const materialprices = useSelector((s) => s.materials.list)
   const placeList = useSelector((s) => s.places.list)
 
@@ -56,6 +57,7 @@ const ShinomontazhsEdit = (props) => {
   const [box, setBox] = useState(props.box ? props.box : '')
 
   const [service, setService] = useState(props.services ? props.services : [])
+
   const [materials, setMaterials] = useState(props.material ? props.material : [])
   const [tyres, setTyres] = useState(props.tyre ? props.tyre[0] : { sale: 'no' })
   const [employees, setEmployees] = useState(props.employee ? props.employee : [])
@@ -333,6 +335,7 @@ const ShinomontazhsEdit = (props) => {
     return null
   }
   const [actualService, setActualService] = useState([])
+
   const applyDiscount = (number, percent) => {
     const number_percent = (number / 100) * Number(percent)
 
@@ -346,6 +349,10 @@ const ShinomontazhsEdit = (props) => {
   function roundTo5(num) {
     return Math.round(num / 5) * 5
   }
+
+  const serviceItemIsInActualService = (itId) =>
+    service && service?.length && service.find((serviceItem) => serviceItem?.serviceName === itId)
+
   useEffect(() => {
     const helpToGetDiametr = (item) => {
       if (item) {
@@ -382,8 +389,11 @@ const ShinomontazhsEdit = (props) => {
         shinomontazhprices
           .filter(
             (it) =>
-              it.type === 'legk' &&
-              (it.category === state.kuzov || it.category === 'other' || it.category === 'free')
+              (it.type === 'legk' &&
+                (it.category === state.kuzov ||
+                  it.category === 'other' ||
+                  it.category === 'free')) ||
+              serviceItemIsInActualService(it.id)
           )
           .map((item) => ({
             name: item.name,
@@ -401,8 +411,9 @@ const ShinomontazhsEdit = (props) => {
         shinomontazhprices
           .filter(
             (it) =>
-              it.type === 'gruz' &&
-              (it.category === 'common' || it.category === 'other' || it.category === 'free')
+              (it.type === 'gruz' &&
+                (it.category === 'common' || it.category === 'other' || it.category === 'free')) ||
+              serviceItemIsInActualService(it.id)
           )
           .map((item) => ({
             name: item.name,
@@ -420,8 +431,9 @@ const ShinomontazhsEdit = (props) => {
         shinomontazhprices
           .filter(
             (it) =>
-              it.type === 'selhoz' &&
-              (it.category === 'common' || it.category === 'other' || it.category === 'free')
+              (it.type === 'selhoz' &&
+                (it.category === 'common' || it.category === 'other' || it.category === 'free')) ||
+              serviceItemIsInActualService(it.id)
           )
           .map((item) => ({
             name: item.name,
