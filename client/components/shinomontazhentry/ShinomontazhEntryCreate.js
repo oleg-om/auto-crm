@@ -68,6 +68,7 @@ const ShinomontazhEntryCreate = ({
     datePreentry: '',
     box: ''
   })
+
   const [access, setAccess] = useState()
 
   const [storageOptions, setStorageOptions] = useState()
@@ -133,9 +134,9 @@ const ShinomontazhEntryCreate = ({
   const throttling = useRef(false)
 
   useEffect(() => {
-    if (throttling.current) {
-      return
-    }
+    // if (throttling.current) {
+    //   return
+    // }
 
     // If there is no search term, do not make API call
     throttling.current = true
@@ -143,6 +144,7 @@ const ShinomontazhEntryCreate = ({
       throttling.current = false
       const phoneArray = state.phone ? state.phone.split(' ') : ['', '']
       const phoneToRest = phoneArray[phoneArray.length - 1].replace(/_/g, '')
+
       if (
         (state.phone !== '' && phoneToRest.length > 6) ||
         (state.regnumber !== '' && state.regnumber.length > 4)
@@ -191,6 +193,7 @@ const ShinomontazhEntryCreate = ({
 
   const onChange = (e) => {
     const { name, value } = e.target
+
     setState((prevState) => ({
       ...prevState,
       [name]: value
