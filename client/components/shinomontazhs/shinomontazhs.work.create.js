@@ -155,6 +155,7 @@ const ShinomontazhsCreate = (props) => {
 
   const [search, setSearch] = useState()
   const [activeCustomer, setActiveCustomer] = useState('')
+  console.log('activeCustomer: ', activeCustomer)
 
   const onSearchChange = (event) => {
     setSearch(event.target.value)
@@ -379,7 +380,8 @@ const ShinomontazhsCreate = (props) => {
           material: materials,
           tyre: tyres,
           employee: employees,
-          box
+          box,
+          customerId: activeCustomer || null
         })
         if (props.checkLink) {
           history.push('/shinomontazhboss/list')
@@ -397,7 +399,8 @@ const ShinomontazhsCreate = (props) => {
             material: materials,
             tyre: [...tyres],
             employee: employees,
-            box
+            box,
+            customerId: activeCustomer || null
           }
         )
       } else {
@@ -407,7 +410,8 @@ const ShinomontazhsCreate = (props) => {
           material: materials,
           tyre: [...tyres],
           employee: employees,
-          box
+          box,
+          customerId: activeCustomer || null
         })
         props.createCust({
           ...customer,

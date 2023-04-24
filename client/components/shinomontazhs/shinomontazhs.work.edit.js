@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import { Link, useHistory } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
 import { toast } from 'react-toastify'
@@ -26,7 +26,8 @@ const ShinomontazhsEdit = (props) => {
   const isFromPreentry = history?.location?.search.includes('from=preentry')
 
   const employeeList = useSelector((s) => s.employees.list)
-  const customerList = useSelector((s) => s.customers.list)
+  // const customerList = useSelector((s) => s.customers.list)
+
   const auth = useSelector((s) => s.auth)
   const shinomontazhprices = useSelector((s) => s.shinomontazhprices.list)
 
@@ -229,7 +230,59 @@ const ShinomontazhsEdit = (props) => {
 
   const [search, setSearch] = useState()
   const [activeCustomer, setActiveCustomer] = useState('')
-  const [customerOptions, setCustomerOptions] = useState([])
+
+  // find client
+  useEffect(() => {
+    if (props.customerId && !activeCustomer) {
+      setActiveCustomer(props.customerId)
+      setSearch(props.customerId)
+    }
+    return () => {}
+  }, [props.customerId])
+
+  const [customerList, setCustomerOptions] = useState([])
+
+  // eslint-disable-next-line no-unused-vars
+  const throttling = useRef(false)
+
+  useEffect(() => {
+    // if (throttling.current) {
+    //   return
+    // }
+
+    // If there is no search term, do not make API call
+    throttling.current = true
+    setTimeout(() => {
+      throttling.current = false
+      if (state.regnumber !== '' && state.regnumber.length > 4) {
+        fetch(
+          `/api/v1/customerfind/${state.regnumber ? state.regnumber : 'reg'}/${
+            state.vinnumber ? state.vinnumber : 'vin'
+          }/${state.phone ? state.phone : 'phone'}`
+        )
+          .then((res) => res.json())
+          .then((it) => {
+            setCustomerOptions(it.data)
+          })
+      } else if (state.regnumber === '') {
+        setCustomerOptions([])
+      }
+    }, 200)
+  }, [state.regnumber])
+
+  useEffect(() => {
+    if (props.customerId) {
+      fetch(`/api/v1/customer/${props.customerId}`)
+        .then((res) => res.json())
+        .then((it) => {
+          if (it?.data) {
+            setCustomerOptions([it.data])
+            setCustomer({ ...it.data, idOfItem: it.data.id })
+          }
+        })
+    }
+  }, [props.customerId])
+
   useEffect(() => {
     if (state.regnumber !== '') {
       setCustomerOptions(
@@ -240,7 +293,7 @@ const ShinomontazhsEdit = (props) => {
     } else if (state.regnumber === '') {
       setCustomerOptions([])
     }
-  }, [state.regnumber, customerList])
+  }, [state.regnumber])
 
   useEffect(() => {
     const findCar = options.mark ? options.mark.find((it) => props.mark === it.name) : null
@@ -298,7 +351,8 @@ const ShinomontazhsEdit = (props) => {
   }
   const applyCustomer = () => {
     const newCustomer = customerList.find((it) => it.id === search)
-    const findCar = options.mark.find((it) => newCustomer.mark === it.name)
+
+    const findCar = options?.mark.find((it) => newCustomer?.mark === it.name)
     if (newCustomer) {
       setStateId((prevState) => ({
         ...prevState,
@@ -642,7 +696,8 @@ const ShinomontazhsEdit = (props) => {
         employee: employees,
         dateStart: props?.dateStart ? props.dateStart : new Date(),
         status: props.status === 'Новая запись' ? 'В работе' : props.status,
-        box
+        box,
+        customerId: activeCustomer || props.customerId || null
       })
       if (checkLink()) {
         history.push(`/shinomontazhboss/list/${props.num ? props.num : ''}`)
@@ -680,7 +735,8 @@ const ShinomontazhsEdit = (props) => {
         dateStart: props.dateStart ? props.dateStart : new Date(),
         ...dateFinishObj,
         status: props?.status === 'Новая запись' ? statusList[0] : statusList[1],
-        box
+        box,
+        customerId: activeCustomer || props.customerId || null
       })
       updateStorageStat(props?.storage, props?.id_shinomontazhs)
       if (checkLink()) {
@@ -695,7 +751,8 @@ const ShinomontazhsEdit = (props) => {
         payment: state.payment,
         comment: state.comment,
         status: statusList[2],
-        box
+        box,
+        customerId: activeCustomer || props.customerId || null
       })
       // updateStorageStat(state?.storage, state?.id_shinomontazhs)
       if (checkLink()) {
@@ -710,7 +767,8 @@ const ShinomontazhsEdit = (props) => {
         payment: state.payment,
         comment: state.comment,
         status: statusList[3],
-        box
+        box,
+        customerId: activeCustomer || props.customerId || null
       })
       // updateStorageStat(state?.storage, state?.id_shinomontazhs)
       if (checkLink()) {
@@ -725,7 +783,8 @@ const ShinomontazhsEdit = (props) => {
         payment: state.payment,
         comment: state.comment,
         status: statusList[4],
-        box
+        box,
+        customerId: activeCustomer || props.customerId || null
       })
       //  updateStorageStat(state?.storage, state?.id_shinomontazhs)
       if (checkLink()) {
@@ -742,7 +801,8 @@ const ShinomontazhsEdit = (props) => {
         status: statusList[6],
         combTerm: termCash.terminal,
         combCash: termCash.cash,
-        box
+        box,
+        customerId: activeCustomer || props.customerId || null
       })
       //  updateStorageStat(state?.storage, state?.id_shinomontazhs)
       if (checkLink()) {
@@ -757,7 +817,8 @@ const ShinomontazhsEdit = (props) => {
         payment: state.payment,
         comment: state.comment,
         status: statusList[5],
-        box
+        box,
+        customerId: activeCustomer || props.customerId || null
       })
       if (checkLink()) {
         history.push(`/shinomontazhboss/list/${props.num ? props.num : ''}`)
@@ -775,7 +836,8 @@ const ShinomontazhsEdit = (props) => {
         discount: state.discount,
         payment: state.payment,
         comment: state.comment,
-        box
+        box,
+        customerId: activeCustomer || props.customerId || null
       })
       if (checkLink()) {
         history.push(`/shinomontazhboss/list/${props.num ? props.num : ''}`)
@@ -1014,7 +1076,7 @@ const ShinomontazhsEdit = (props) => {
             onSearchChange={onSearchChange}
             search={search}
             customer={customer}
-            customerOptions={customerOptions}
+            customerOptions={customerList}
             activeCustomer={activeCustomer}
             setActiveCustomer={setActiveCustomer}
             applyCustomer={applyCustomer}

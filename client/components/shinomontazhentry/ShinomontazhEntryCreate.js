@@ -277,7 +277,7 @@ const ShinomontazhEntryCreate = ({
       else if (state.mark === '') notify('Поле марка авто пустое')
       else if (state.model === '') notify('Поле модель авто пустое')
       else if (!activeCustomer) {
-        dispatch(() => createFunc(state))
+        dispatch(() => createFunc({ ...state, customerId: activeCustomer || null }))
         dispatch(() => createCust(state))
         setState({
           mark: '',
@@ -301,7 +301,7 @@ const ShinomontazhEntryCreate = ({
         setSearch()
         setActiveCustomer('')
       } else {
-        dispatch(() => createFunc(state))
+        dispatch(() => createFunc({ ...state, customerId: activeCustomer || null }))
         setState({
           mark: '',
           model: '',

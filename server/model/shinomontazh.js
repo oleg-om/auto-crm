@@ -120,6 +120,10 @@ const Shinomontazh = new mongoose.Schema({
   storage: {
     type: Number,
     required: false
+  },
+  customerId: {
+    type: String,
+    required: false
   }
 })
 
