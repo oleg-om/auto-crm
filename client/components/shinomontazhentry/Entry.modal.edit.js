@@ -52,7 +52,7 @@ const ModalEdit = ({
   useEffect(() => {
     setChangeStatus({
       status: itemId.status,
-      time: getTime(itemId.datePreentry),
+      time: getTime(isoDateWithoutTimeZone(itemId.datePreentry)),
       place: itemId.place,
       datePreentry: itemId?.datePreentry ? itemId?.datePreentry?.slice(0, 10) : ''
       // datePreentry: itemId.datePreentry
@@ -112,9 +112,10 @@ const ModalEdit = ({
     // console.log('lol', changeStatus.time, editTime(changeStatus.datePreentry, changeStatus.time))
     updateRazval(itemId.id, {
       place: changeStatus.place,
-      datePreentry: isoDateWithoutTimeZone(
-        new Date(editTime(changeStatus.datePreentry, changeStatus.time))
-      )
+      // datePreentry: isoDateWithoutTimeZone(
+      //   new Date(editTime(changeStatus.datePreentry, changeStatus.time))
+      // )
+      datePreentry: new Date(editTime(changeStatus.datePreentry, changeStatus.time))
     })
   }
   return (

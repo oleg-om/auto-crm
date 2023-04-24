@@ -91,7 +91,6 @@ const ModalView = ({
   }
   const onChangeStatus = (e) => {
     const { name, value } = e.target
-    console.log('name: ', name, value)
     setChangeStatus((prevState) => ({
       ...prevState,
       [name]: value
