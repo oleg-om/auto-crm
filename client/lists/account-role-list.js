@@ -13,5 +13,7 @@ module.exports = [
   { name: 'Прием заказов (инструмент)', value: 'toolsimple' },
   { name: 'Обработка заказов (инструмент)', value: 'toolfull' },
   { name: 'Работник СТО', value: 'sto' },
-  { name: 'Работник автомойки', value: 'wash' }
+  { name: 'Работник автомойки', value: 'wash' },
+  { name: 'Замена лобовых стекол', value: 'window' },
+  { name: 'Кондиционеры', value: 'cond' }
 ]

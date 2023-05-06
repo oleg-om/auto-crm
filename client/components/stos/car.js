@@ -2,6 +2,7 @@ import React, { useEffect } from 'react'
 import cx from 'classnames'
 import stoCategories from '../../lists/sto-categories'
 import gruzCars from '../../lists/gruz-cars'
+import { SwitchToTapKeyboard } from '../../hooks/keyboard'
 
 const Car = ({
   regOpen,
@@ -25,7 +26,8 @@ const Car = ({
   applyCustomer,
   onChange,
   setOptions,
-  stateId
+  stateId,
+  type
 }) => {
   useEffect(() => {
     if (state.class !== 'gruz' && state.class !== 'selhoz') {
@@ -64,6 +66,7 @@ const Car = ({
     }
     return () => {}
   }, [stateId.mark, state.kuzov, setOptions])
+
   return (
     <div className="md:flex md:flex-col -mx-3">
       <div className="px-3 mb-6 md:mb-0 w-full">
@@ -596,6 +599,7 @@ const Car = ({
             </div>
           </div>
         </div>
+        <SwitchToTapKeyboard keyboard={keyboard} switchKeyboard={switchKeyboard} />
         {customerOptions.length >= 1 && customer.idOfItem && activeCustomer ? (
           <p className="text-left p-1">✔ Вы выбрали клиента</p>
         ) : null}
@@ -610,87 +614,89 @@ const Car = ({
         !activeCustomer ? (
           <p className="text-left p-1">Клиентов не найдено. Будет создан новый клиент</p>
         ) : null}
-        <div className="md:flex mb-2 mt-5">
-          <div className="bg-blue-400 rounded shadow p-3 w-full flex flex-row-reverse">
-            <div className="w-1/2 px-3 mb-6 md:mb-0">
-              <label
-                className="block uppercase tracking-wide text-white text-xs font-bold mb-2"
-                htmlFor="phone"
-              >
-                Категория сложности
-              </label>
-              <div className="flex-shrink w-full inline-block relative">
-                <select
-                  className="block appearance-none w-full bg-grey-lighter border border-gray-300 focus:border-gray-500 focus:outline-none py-2 px-4 pr-8 rounded"
-                  name="category"
-                  id="category"
-                  value={state.category}
-                  autoComplete="off"
-                  required
-                  disabled={!state.class}
-                  onChange={onChange}
+        {type === 'sto' ? (
+          <div className="md:flex mb-2 mt-5">
+            <div className="bg-blue-400 rounded shadow p-3 w-full flex flex-row-reverse">
+              <div className="w-1/2 px-3 mb-6 md:mb-0">
+                <label
+                  className="block uppercase tracking-wide text-white text-xs font-bold mb-2"
+                  htmlFor="phone"
                 >
-                  <option value="" hidden>
-                    {state.kuzov ? 'Выберите категорию сложности' : 'Сначала выберите класс авто'}
-                  </option>
-                  {state.class === 'rus'
-                    ? stoCategories
-                        .filter((it) => it.class === 'rus')
-                        .map((it) => <option value={it.id} label={it.name} key={it.id} />)
-                    : null}
-                  {state.class === 'foreign'
-                    ? stoCategories
-                        .filter((it) => it.class === 'foreign')
-                        .map((it) => <option value={it.id} label={it.name} key={it.id} />)
-                    : null}
-                </select>
-                <div className="pointer-events-none hidden absolute top-0 mt-3 right-0 lg:flex items-center px-2 text-gray-600">
-                  <svg
-                    className="fill-current h-4 w-4"
-                    xmlns="http://www.w3.org/2000/svg"
-                    viewBox="0 0 20 20"
+                  Категория сложности
+                </label>
+                <div className="flex-shrink w-full inline-block relative">
+                  <select
+                    className="block appearance-none w-full bg-grey-lighter border border-gray-300 focus:border-gray-500 focus:outline-none py-2 px-4 pr-8 rounded"
+                    name="category"
+                    id="category"
+                    value={state.category}
+                    autoComplete="off"
+                    required
+                    disabled={!state.class}
+                    onChange={onChange}
                   >
-                    <path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z" />
-                  </svg>
+                    <option value="" hidden>
+                      {state.kuzov ? 'Выберите категорию сложности' : 'Сначала выберите класс авто'}
+                    </option>
+                    {state.class === 'rus'
+                      ? stoCategories
+                          .filter((it) => it.class === 'rus')
+                          .map((it) => <option value={it.id} label={it.name} key={it.id} />)
+                      : null}
+                    {state.class === 'foreign'
+                      ? stoCategories
+                          .filter((it) => it.class === 'foreign')
+                          .map((it) => <option value={it.id} label={it.name} key={it.id} />)
+                      : null}
+                  </select>
+                  <div className="pointer-events-none hidden absolute top-0 mt-3 right-0 lg:flex items-center px-2 text-gray-600">
+                    <svg
+                      className="fill-current h-4 w-4"
+                      xmlns="http://www.w3.org/2000/svg"
+                      viewBox="0 0 20 20"
+                    >
+                      <path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z" />
+                    </svg>
+                  </div>
                 </div>
               </div>
-            </div>
-            <div className="w-1/2 px-3 mb-6 md:mb-0">
-              <label
-                className="block uppercase tracking-wide text-white text-xs font-bold mb-2"
-                htmlFor="phone"
-              >
-                Класс авто
-              </label>
-              <div className="flex-shrink w-full inline-block relative">
-                <select
-                  className="block appearance-none w-full bg-grey-lighter border border-gray-300 focus:border-gray-500 focus:outline-none py-2 px-4 pr-8 rounded"
-                  name="class"
-                  id="class"
-                  value={state.class}
-                  autoComplete="off"
-                  required
-                  onChange={onChange}
+              <div className="w-1/2 px-3 mb-6 md:mb-0">
+                <label
+                  className="block uppercase tracking-wide text-white text-xs font-bold mb-2"
+                  htmlFor="phone"
                 >
-                  <option value="" hidden>
-                    Выберите класс авто
-                  </option>
-                  <option value="rus">Отечественные</option>
-                  <option value="foreign">Иномарки</option>
-                </select>
-                <div className="pointer-events-none hidden absolute top-0 mt-3 right-0 lg:flex items-center px-2 text-gray-600">
-                  <svg
-                    className="fill-current h-4 w-4"
-                    xmlns="http://www.w3.org/2000/svg"
-                    viewBox="0 0 20 20"
+                  Класс авто
+                </label>
+                <div className="flex-shrink w-full inline-block relative">
+                  <select
+                    className="block appearance-none w-full bg-grey-lighter border border-gray-300 focus:border-gray-500 focus:outline-none py-2 px-4 pr-8 rounded"
+                    name="class"
+                    id="class"
+                    value={state.class}
+                    autoComplete="off"
+                    required
+                    onChange={onChange}
                   >
-                    <path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z" />
-                  </svg>
+                    <option value="" hidden>
+                      Выберите класс авто
+                    </option>
+                    <option value="rus">Отечественные</option>
+                    <option value="foreign">Иномарки</option>
+                  </select>
+                  <div className="pointer-events-none hidden absolute top-0 mt-3 right-0 lg:flex items-center px-2 text-gray-600">
+                    <svg
+                      className="fill-current h-4 w-4"
+                      xmlns="http://www.w3.org/2000/svg"
+                      viewBox="0 0 20 20"
+                    >
+                      <path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z" />
+                    </svg>
+                  </div>
                 </div>
               </div>
             </div>
           </div>
-        </div>
+        ) : null}
         <div className="flex-row flex w-full lg:w-1/2 mt-4 mb-5 lg:mb-0 bg-gray-200 rounded-lg shadow p-3">
           <div className="flex items-center mr-3">
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="85" height="85">

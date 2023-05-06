@@ -155,7 +155,6 @@ const ShinomontazhsCreate = (props) => {
 
   const [search, setSearch] = useState()
   const [activeCustomer, setActiveCustomer] = useState('')
-  console.log('activeCustomer: ', activeCustomer)
 
   const onSearchChange = (event) => {
     setSearch(event.target.value)
@@ -585,30 +584,6 @@ const ShinomontazhsCreate = (props) => {
       })
     )
   }
-
-  // const checkboxEmployeeChange = (e) => {
-  //   const { name, checked, placeholder, attributes } = e.target
-  //   if (checked) {
-  //     setState((prevState) => ({
-  //       ...prevState,
-  //       employee: [
-  //         ...prevState.employee,
-  //         {
-  //           id: name,
-  //           numberId: placeholder,
-  //           name: attributes.itemName.value,
-  //           surname: attributes.itemSurname.value,
-  //           role: 'second'
-  //         }
-  //       ]
-  //     }))
-  //   } else {
-  //     setState((prevState) => ({
-  //       ...prevState,
-  //       employee: prevState.employee.filter((it) => it.id !== name)
-  //     }))
-  //   }
-  // }
 
   const checkboxEmployeeChange = (e) => {
     const { name, placeholder, checked, attributes } = e.target

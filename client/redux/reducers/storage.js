@@ -55,6 +55,7 @@ export default (state = initialState, action) => {
 
 export function getStorages() {
   return (dispatch) => {
+    dispatch({ type: GET_STORAGES, isLoaded: false })
     fetch('/api/v1/storage')
       .then((r) => r.json())
       .then(({ data: storages }) => {
@@ -142,6 +143,7 @@ export function updateStorageStatus(id, name) {
 
 export function getItemsByPage(page) {
   return (dispatch) => {
+    dispatch({ type: GET_STORAGES, isLoaded: false })
     fetch(`/api/v1/storagebypage/${page}`)
       .then((r) => r.json())
       .then(({ data: storages, currentPage, numberOfPages }) => {
@@ -152,6 +154,7 @@ export function getItemsByPage(page) {
 
 export function getItemsFiltered(page, status, place, phone, number) {
   return (dispatch) => {
+    dispatch({ type: GET_STORAGES, isLoaded: false })
     fetch(
       `/api/v1/storagefilter${page ? `?page=${page}` : ''}${status ? `&status=${status}` : ''}${
         place ? `&place=${place}` : ''

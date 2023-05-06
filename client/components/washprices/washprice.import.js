@@ -1,10 +1,11 @@
 import React, { useState } from 'react'
-import { Link, useHistory } from 'react-router-dom'
+import { Link, useHistory, useLocation } from 'react-router-dom'
 import { toast } from 'react-toastify'
 import XLSX from 'xlsx'
 import 'react-toastify/dist/ReactToastify.css'
 import LoadExample from './load.example'
 import Modal from '../Modal.delete'
+import { getPriceLocation } from '../../scenes/Window.prices/Window.prices.list'
 
 const WashpriceImport = (props) => {
   toast.configure()
@@ -32,6 +33,10 @@ const WashpriceImport = (props) => {
   const [load, setLoad] = useState('')
   const [loadingData, setLoadingData] = useState([])
   // const [finishData, setFinishData] = useState([])
+
+  const location = useLocation()
+  const currentLocation = `${getPriceLocation(location)}price`
+
   const readExcel = (file) => {
     const promise = new Promise((resolve, reject) => {
       const fileReader = new FileReader()
@@ -69,7 +74,7 @@ const WashpriceImport = (props) => {
     if (loadingData === undefined) notify('Загрузите файл')
     else {
       props.create(loadingData)
-      history.push(`/washprice/list/legk`)
+      history.push(`/${currentLocation}/list/legk`)
       notify('Услуги добавлены')
       props.getWashprice()
     }

@@ -49,6 +49,7 @@ export default (state = initialState, action) => {
 
 export function getTyres() {
   return (dispatch) => {
+    dispatch({ type: GET_TYRES, isLoaded: false })
     fetch('/api/v1/tyre')
       .then((r) => r.json())
       .then(({ data: tyres }) => {
@@ -69,6 +70,7 @@ export function getTyre(id) {
 
 export function getItemsByPage(page) {
   return (dispatch) => {
+    dispatch({ type: GET_TYRES, isLoaded: false })
     fetch(`/api/v1/tyrebypage/${page}`)
       .then((r) => r.json())
       .then(({ data: tyres, currentPage, numberOfPages }) => {
@@ -89,6 +91,7 @@ export function getItemsFiltered(
   sizethree
 ) {
   return (dispatch) => {
+    dispatch({ type: GET_TYRES, isLoaded: false })
     fetch(
       `/api/v1/tyrefilter${page ? `?page=${page}` : ''}${status ? `&status=${status}` : ''}${
         vin ? `&vin=${vin}` : ''

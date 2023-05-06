@@ -37,7 +37,7 @@ export function getVendors() {
     fetch('/api/v1/vendor')
       .then((r) => r.json())
       .then(({ data: vendors }) => {
-        dispatch({ type: GET_VENDORS, vendors })
+        dispatch({ type: GET_VENDORS, vendors, isLoaded: true })
       })
   }
 }

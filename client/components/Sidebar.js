@@ -61,6 +61,20 @@ const Sidebar = () => {
         Мойка - цены
       </NavLink>
       <NavLink
+        to="/windowprice/list/"
+        className="text-gray-100 w-full p-3 pl-5"
+        activeClassName="bg-gray-700 text-gray-100 border-r-4 border-gray-100 w-full p-3 pl-5"
+      >
+        Лобовые стекла - цены
+      </NavLink>
+      <NavLink
+        to="/condprice/list/"
+        className="text-gray-100 w-full p-3 pl-5"
+        activeClassName="bg-gray-700 text-gray-100 border-r-4 border-gray-100 w-full p-3 pl-5"
+      >
+        Кондиционеры - цены
+      </NavLink>
+      <NavLink
         to="/vendor/list"
         className="text-gray-100 w-full p-3 pl-5"
         activeClassName="bg-gray-700 text-gray-100 border-r-4 border-gray-100 w-full p-3 pl-5"

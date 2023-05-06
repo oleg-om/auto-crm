@@ -25,6 +25,10 @@ import stos from './stos'
 import categorys from './categorys'
 import washs from './washs'
 import washprices from './wash.prices'
+import windows from './windows'
+import windowprices from './window.prices'
+import conds from './conds'
+import condprices from './cond.prices'
 
 const createRootReducer = (history) =>
   combineReducers({
@@ -52,7 +56,11 @@ const createRootReducer = (history) =>
     stos,
     categorys,
     washs,
-    washprices
+    washprices,
+    windows,
+    windowprices,
+    conds,
+    condprices
   })
 
 export default createRootReducer

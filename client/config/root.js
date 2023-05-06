@@ -93,6 +93,13 @@ import WashsNew from '../scenes/Wash/Washs.work.create'
 import WashEditFull from '../scenes/Wash/Washs.edit'
 import PreentryList from '../scenes/ShinomontazhPreentry/ShinomontazhPreentry.list'
 
+import WindowpriceList from '../scenes/Window.prices/Window.prices.list'
+import WindowpriceNew from '../scenes/Window.prices/Window.prices.create'
+import WindowpriceEdit from '../scenes/Window.prices/Window.prices.edit'
+import WindowsList from '../scenes/Window/Windows.list'
+import WindowsNew from '../scenes/Window/Windows.work.create'
+import WindowEditFull from '../scenes/Window/Windows.edit'
+
 const OnlyAnonymousRoute = ({ component: Component, ...rest }) => {
   const auth = useSelector((s) => s.auth)
   const func = (props) =>
@@ -196,7 +203,7 @@ const RootComponent = (props) => {
             <Route exact path="/access" component={() => <Access />} />
             <BossRoute exact path="/boss" component={() => <Boss />} />
             <PrivateRoute exact path="/autoparts/order/list/:num" component={AutopartsList} />
-            <PrivateRoute exact path="/autoparts/order/list/" component={AutopartsList} />
+            <PrivateRoute exact path="/autoparts/order/list/" component={() => <AutopartsList />} />
             <PrivateRoute exact path="/autoparts/order/create/:num" component={AutopartsNew} />
             <PrivateRoute exact path="/autoparts/order/create" component={AutopartsNew} />
             <PrivateRoute exact path="/autoparts/edit/:id/:num" component={AutopartEditSimple} />
@@ -319,7 +326,7 @@ const RootComponent = (props) => {
             <PrivateRoute exact path="/category/list" component={CategoryList} />
             <PrivateRoute exact path="/category/create" component={CategoryNew} />
             <PrivateRoute exact path="/category/edit/:id" component={CategoryEdit} />
-
+            {/* wash */}
             <PrivateRoute exact path="/washprice/list/" component={WashpriceList} />
             <PrivateRoute exact path="/washprice/list/:type" component={WashpriceList} />
             <PrivateRoute exact path="/washprice/create" component={WashpriceNew} />
@@ -338,6 +345,42 @@ const RootComponent = (props) => {
             <PrivateRoute exact path="/washboss/edit/:id" component={WashEditFull} />
 
             <PrivateRoute exact path="/preentry/shinomontazh" component={PreentryList} />
+            {/* window */}
+            <PrivateRoute exact path="/windowprice/list/" component={WindowpriceList} />
+            <PrivateRoute exact path="/windowprice/list/:type" component={WindowpriceList} />
+            <PrivateRoute exact path="/windowprice/create" component={WindowpriceNew} />
+            <PrivateRoute exact path="/windowprice/:type/edit/:id" component={WindowpriceEdit} />
+
+            <PrivateRoute exact path="/window/list/:num" component={WindowsList} />
+            <PrivateRoute exact path="/window/list" component={WindowsList} />
+            <PrivateRoute exact path="/windowboss/list/:num" component={WindowsList} />
+            <PrivateRoute exact path="/windowboss/list" component={WindowsList} />
+            <PrivateRoute exact path="/window/create/:num" component={WindowsNew} />
+            <PrivateRoute exact path="/window/create" component={WindowsNew} />
+            <PrivateRoute exact path="/windowboss/create/:num" component={WindowsNew} />
+            <PrivateRoute exact path="/windowboss/create" component={WindowsNew} />
+            <PrivateRoute exact path="/window/edit/:id/:num" component={WindowEditFull} />
+            <PrivateRoute exact path="/window/edit/:id" component={WindowEditFull} />
+            <PrivateRoute exact path="/windowboss/edit/:id/:num" component={WindowEditFull} />
+            <PrivateRoute exact path="/windowboss/edit/:id" component={WindowEditFull} />
+            {/* cond */}
+            <PrivateRoute exact path="/condprice/list/" component={WindowpriceList} />
+            <PrivateRoute exact path="/condprice/list/:type" component={WindowpriceList} />
+            <PrivateRoute exact path="/condprice/create" component={WindowpriceNew} />
+            <PrivateRoute exact path="/condprice/:type/edit/:id" component={WindowpriceEdit} />
+
+            <PrivateRoute exact path="/cond/list/:num" component={WindowsList} />
+            <PrivateRoute exact path="/cond/list" component={WindowsList} />
+            <PrivateRoute exact path="/condboss/list/:num" component={WindowsList} />
+            <PrivateRoute exact path="/condboss/list" component={WindowsList} />
+            <PrivateRoute exact path="/cond/create/:num" component={WindowsNew} />
+            <PrivateRoute exact path="/cond/create" component={WindowsNew} />
+            <PrivateRoute exact path="/condboss/create/:num" component={WindowsNew} />
+            <PrivateRoute exact path="/condboss/create" component={WindowsNew} />
+            <PrivateRoute exact path="/cond/edit/:id/:num" component={WindowEditFull} />
+            <PrivateRoute exact path="/cond/edit/:id" component={WindowEditFull} />
+            <PrivateRoute exact path="/condboss/edit/:id/:num" component={WindowEditFull} />
+            <PrivateRoute exact path="/condboss/edit/:id" component={WindowEditFull} />
 
             <Route component={() => <NotFound />} />
           </Switch>

@@ -17,7 +17,7 @@ const initialState = {
 export default (state = initialState, action) => {
   switch (action.type) {
     case GET_SHINOMONTAZHS_PREENTRY: {
-      return { ...state, list: action.shinomontazhpreentry }
+      return { ...state, list: action.shinomontazhpreentry, isLoaded: action.isLoaded }
     }
     case GET_SHINOMONTAZHS: {
       return {
@@ -63,6 +63,10 @@ export default (state = initialState, action) => {
 
 export function getShinomontazhs() {
   return (dispatch) => {
+    dispatch({
+      type: GET_SHINOMONTAZHS,
+      isLoaded: false
+    })
     fetch('/api/v1/shinomontazh')
       .then((r) => r.json())
       .then(({ data: shinomontazhs }) => {
@@ -93,6 +97,10 @@ export function getShinomontazh(id) {
 
 export function getItemsByPage(page) {
   return (dispatch) => {
+    dispatch({
+      type: GET_SHINOMONTAZHS,
+      isLoaded: false
+    })
     fetch(`/api/v1/shinomontazhbypage/${page}`)
       .then((r) => r.json())
       .then(({ data: shinomontazhs, currentPage, numberOfPages }) => {
@@ -109,6 +117,10 @@ export function getItemsByPage(page) {
 
 export function getItemsFiltered(page, place, number, reg) {
   return (dispatch) => {
+    dispatch({
+      type: GET_SHINOMONTAZHS,
+      isLoaded: false
+    })
     fetch(
       `/api/v1/shinomontazhfilter${page ? `?page=${page}` : ''}${place ? `&place=${place}` : ''}${
         number ? `&number=${number}` : ''
@@ -179,10 +191,14 @@ export function updateShinomontazh(id, name) {
 
 export function getByMonth(year, month, day) {
   return (dispatch) => {
+    dispatch({
+      type: GET_SHINOMONTAZHS_PREENTRY,
+      isLoaded: false
+    })
     fetch(`/api/v1/shinomontazhpreentry?year=${year}&month=${month}&day=${day} `)
       .then((r) => r.json())
       .then(({ data: shinomontazhpreentry }) => {
-        dispatch({ type: GET_SHINOMONTAZHS_PREENTRY, shinomontazhpreentry })
+        dispatch({ type: GET_SHINOMONTAZHS_PREENTRY, shinomontazhpreentry, isLoaded: true })
       })
   }
 }

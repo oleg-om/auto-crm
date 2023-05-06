@@ -81,7 +81,12 @@ const Service = ({
           <table>
             {actualService && !dateEnd
               ? actualService
-                  .filter((it) => it.category === category)
+                  .filter(
+                    (it) =>
+                      it.category === category ||
+                      (category === 'choosen' &&
+                        service.find((ser) => ser.serviceName.includes(it.id)))
+                  )
                   .sort(function (a, b) {
                     if (a.number > b.number) {
                       return 1
@@ -121,12 +126,14 @@ const Service = ({
                           name={item.id}
                           id={item.actualprice}
                           onClick={checkboxServiceChange}
+                          placeholder={item.actualprice}
                         >
                           <label
                             htmlFor={item.id}
                             somename={item.name}
                             somefree={item.free}
                             className="w-full h-full p-2 text-left inline-block"
+                            placeholder={item.actualprice}
                           >
                             <input
                               className="mr-4"
@@ -137,12 +144,13 @@ const Service = ({
                               somename={item.name}
                               somefree={item.free}
                               type="checkbox"
+                              placeholder={item.actualprice}
                             />
                             {item.name}
                           </label>
                         </button>
                       </td>
-                      {item.actualprice && item.free === 'no' ? (
+                      {item.actualprice && (item.free === 'no' || !item.free) ? (
                         <td>
                           <input
                             className="py-1 px-4 bg-white rounded-lg my-1 mr-3 border-green-500 border w-32"
@@ -159,7 +167,7 @@ const Service = ({
                         </td>
                       ) : (
                         <td>
-                          {item.free === 'no' ? (
+                          {item.free === 'no' || !item.free ? (
                             <input
                               className="py-1 px-4 bg-white rounded-lg my-1 mr-3 border-green-500 border w-32"
                               placeholder="Цена"
@@ -191,6 +199,7 @@ const Service = ({
                           <button
                             type="button"
                             name={item.id}
+                            placeholder={item.actualprice}
                             onClick={
                               service.find((it) => it.serviceName.includes(item.id)).quantity === 1
                                 ? checkboxServiceChange
@@ -202,6 +211,7 @@ const Service = ({
                           </button>
                         ) : (
                           <button
+                            placeholder={item.actualprice}
                             type="button"
                             className="py-1 px-4 bg-red-500 text-white font-bold hover:bg-red-700 hover:text-white rounded-lg m-1"
                           >
@@ -260,7 +270,7 @@ const Service = ({
                         </label>
                       </button>
                     </td>
-                    {item.price && item.free === 'no' ? (
+                    {item.price && (item.free === 'no' || !item.free) ? (
                       <td>
                         <button className="w-full h-full mr-3" key={item.id} type="button">
                           <label
@@ -273,7 +283,7 @@ const Service = ({
                       </td>
                     ) : (
                       <td>
-                        {item.free === 'no' ? (
+                        {item.free === 'no' || !item.free ? (
                           <input
                             className="py-1 px-4 bg-white rounded-lg my-1 mr-3 border-green-500 border w-32"
                             placeholder="Цена"

@@ -10,7 +10,7 @@ const initialState = {
 export default (state = initialState, action) => {
   switch (action.type) {
     case GET_OILS: {
-      return { ...state, list: action.oils }
+      return { ...state, list: action.oils, isLoaded: action.isLoaded }
     }
     case CREATE_OIL: {
       return { ...state, list: [...state.list, action.oil] }
@@ -37,10 +37,11 @@ export default (state = initialState, action) => {
 
 export function getOils() {
   return (dispatch) => {
+    dispatch({ type: GET_OILS, oils: [], isLoaded: false })
     fetch('/api/v1/oil')
       .then((r) => r.json())
       .then(({ data: oils }) => {
-        dispatch({ type: GET_OILS, oils })
+        dispatch({ type: GET_OILS, oils, isLoaded: true })
       })
   }
 }
@@ -92,10 +93,11 @@ export function deleteOil(id) {
 
 export function getByMonthOil(yearmonth) {
   return (dispatch) => {
+    dispatch({ type: GET_OILS, oils: [], isLoaded: false })
     fetch(`/api/v1/oilmonth?yearmonth=${yearmonth}`)
       .then((r) => r.json())
       .then(({ data: oils }) => {
-        dispatch({ type: GET_OILS, oils })
+        dispatch({ type: GET_OILS, oils, isLoaded: true })
       })
   }
 }

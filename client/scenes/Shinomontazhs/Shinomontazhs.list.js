@@ -13,6 +13,23 @@ import Pagination from '../Pagination'
 import OnLoadPlace from './OnloadPyPlace'
 // import taskStatuses from '../../lists/task-statuses'
 
+export const Loading = () => {
+  return (
+    <div className="flex w-100 justify-center my-3">
+      <button
+        type="button"
+        className="bg-blue-500 p-3 text-white rounded flex items-center"
+        disabled
+      >
+        <div className=" flex justify-center items-center pr-3">
+          <div className="animate-spin rounded-full h-4 w-4 border-b-4 border-white" />
+        </div>
+        Загрузка...
+      </button>
+    </div>
+  )
+}
+
 const ShinomontazhsList = () => {
   const { num } = useParams(1)
   const [showSearch] = useState(false)
@@ -51,23 +68,6 @@ const ShinomontazhsList = () => {
   // const notify = (arg) => {
   //   toast.info(arg, { position: toast.POSITION.BOTTOM_RIGHT })
   // }
-
-  const loadingComponent = () => {
-    return (
-      <div className="flex w-100 justify-center my-3">
-        <button
-          type="button"
-          className="bg-blue-500 p-3 text-white rounded flex items-center"
-          disabled
-        >
-          <div className=" flex justify-center items-center pr-3">
-            <div className="animate-spin rounded-full h-4 w-4 border-b-4 border-white" />
-          </div>
-          Загрузка...
-        </button>
-      </div>
-    )
-  }
 
   return (
     <div>
@@ -135,7 +135,7 @@ const ShinomontazhsList = () => {
               <b className="text-center text-gray-700">Записей не найдено</b>
             </div>
           ) : null}
-          {!isLoaded ? loadingComponent() : null}
+          {!isLoaded ? <Loading /> : null}
           {showSearch === false && list && list.length === 0 && isLoaded ? (
             <div className="w-full bg-white py-2 flex justify-center">
               <b className="text-center text-gray-700">

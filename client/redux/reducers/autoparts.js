@@ -55,6 +55,7 @@ export default (state = initialState, action) => {
 
 export function getAutoparts() {
   return (dispatch) => {
+    dispatch({ type: GET_AUTOPARTS, isLoaded: false })
     fetch('/api/v1/autopart')
       .then((r) => r.json())
       .then(({ data: autoparts }) => {
@@ -65,6 +66,7 @@ export function getAutoparts() {
 
 export function getAutopartsByPage(page) {
   return (dispatch) => {
+    dispatch({ type: GET_AUTOPARTS, isLoaded: false })
     fetch(`/api/v1/autopartsbypage/${page}`)
       .then((r) => r.json())
       .then(({ data: autoparts, currentPage, numberOfPages }) => {
@@ -75,6 +77,7 @@ export function getAutopartsByPage(page) {
 
 export function getAutopartsFiltered(page, status, process, place, phone, number, reg) {
   return (dispatch) => {
+    dispatch({ type: GET_AUTOPARTS, isLoaded: false })
     fetch(
       `/api/v1/autopartsfilter${page ? `?page=${page}` : ''}${status ? `&status=${status}` : ''}${
         process ? `&process=${process}` : ''

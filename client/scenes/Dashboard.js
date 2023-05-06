@@ -15,6 +15,9 @@ import shinomotazh from '../assets/images/Dashboard/tyremount.png'
 import tools from '../assets/images/Dashboard/tools.png'
 import sto from '../assets/images/Dashboard/sto.png'
 import wash from '../assets/images/Dashboard/wash.png'
+import window from '../assets/images/Dashboard/window.png'
+import cond from '../assets/images/Dashboard/cond.png'
+import tyresmountpreentry from '../assets/images/Dashboard/tyrepremount.png'
 
 const Dashboard = () => {
   toast.configure()
@@ -272,6 +275,106 @@ const Dashboard = () => {
                     </div>
                     <div className="w-1/2">
                       <img src={shinomotazh} alt="" className="object-contain h-48 w-full" />
+                    </div>
+                  </div>
+                </Link>
+              </div>
+            ) : null}
+
+            {auth.roles.includes('shinomontazh') ||
+            auth.roles.includes('shinomotazh') ||
+            auth.roles.includes('boss') ||
+            auth.roles.includes('admin') ? (
+              <div className="md:w-1/2 px-3 mb-6 flex flex-col">
+                <Link
+                  to="/preentry/shinomontazh"
+                  className="rounded-lg shadow-lg bg-gradient-to-r from-gray-700 to-gray-400 h-full"
+                >
+                  <div className="m-2 p-2 flex flex-row">
+                    <div className="w-1/2 px-3">
+                      <h2 className="text-3xl text-white font-bold">Шиномонтаж (запись)</h2>
+                      <p className="my-2 text-white">
+                        Возможность производить запись на шиномонтаж
+                      </p>
+                      <button
+                        type="button"
+                        className="bottom-0 py-2 px-4 bg-blue-600 text-white hover:bg-blue-700 hover:text-white rounded-lg lg:my-3 my-0"
+                      >
+                        Перейти
+                      </button>
+                    </div>
+                    <div className="w-1/2">
+                      <img src={tyresmountpreentry} alt="" className="object-contain h-48 w-full" />
+                    </div>
+                  </div>
+                </Link>
+              </div>
+            ) : null}
+
+            {auth.roles.includes('window') ||
+            auth.roles.includes('boss') ||
+            auth.roles.includes('bookkeeper') ? (
+              <div className="md:w-1/2 px-3 mb-6 flex flex-col">
+                <Link
+                  to={
+                    auth.roles.includes('window') &&
+                    !auth.roles.includes('boss') &&
+                    !auth.roles.includes('bookkeeper')
+                      ? '/window/list'
+                      : '/windowboss/list'
+                  }
+                  className="rounded-lg shadow-lg bg-gradient-to-r from-gray-700 to-gray-400 h-full"
+                >
+                  <div className="m-2 p-2 flex flex-row">
+                    <div className="w-1/2 px-3">
+                      <h2 className="text-3xl text-white font-bold">Автостекла</h2>
+                      <p className="my-2 text-white">
+                        Возможность проводить работы по замене и ремонту автостекол
+                      </p>
+                      <button
+                        type="button"
+                        className="bottom-0 py-2 px-4 bg-blue-600 text-white hover:bg-blue-700 hover:text-white rounded-lg lg:my-3 my-0"
+                      >
+                        Перейти
+                      </button>
+                    </div>
+                    <div className="w-1/2">
+                      <img src={window} alt="" className="object-contain h-48 w-full" />
+                    </div>
+                  </div>
+                </Link>
+              </div>
+            ) : null}
+
+            {auth.roles.includes('window') ||
+            auth.roles.includes('boss') ||
+            auth.roles.includes('bookkeeper') ? (
+              <div className="md:w-1/2 px-3 mb-6 flex flex-col">
+                <Link
+                  to={
+                    auth.roles.includes('window') &&
+                    !auth.roles.includes('boss') &&
+                    !auth.roles.includes('bookkeeper')
+                      ? '/window/list'
+                      : '/windowboss/list'
+                  }
+                  className="rounded-lg shadow-lg bg-gradient-to-r from-gray-700 to-gray-400 h-full"
+                >
+                  <div className="m-2 p-2 flex flex-row">
+                    <div className="w-1/2 px-3">
+                      <h2 className="text-3xl text-white font-bold">Кондиционеры</h2>
+                      <p className="my-2 text-white">
+                        Возможность проводить работы по замене и ремонту кондиционеров
+                      </p>
+                      <button
+                        type="button"
+                        className="bottom-0 py-2 px-4 bg-blue-600 text-white hover:bg-blue-700 hover:text-white rounded-lg lg:my-3 my-0"
+                      >
+                        Перейти
+                      </button>
+                    </div>
+                    <div className="w-1/2">
+                      <img src={cond} alt="" className="object-contain h-48 w-full" />
                     </div>
                   </div>
                 </Link>

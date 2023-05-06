@@ -316,6 +316,49 @@ const Navbar = () => {
               Мойка (Босс)
             </NavLink>
           ) : null}
+
+          {auth.roles.includes('window') &&
+          !auth.roles.includes('boss') &&
+          !auth.roles.includes('bookkeeper') ? (
+            <NavLink
+              to="/window/list"
+              className="block mt-4 lg:inline-block lg:mt-0 text-gray-800 hover:text-blue-700 mr-4"
+              activeClassName="text-blue-600 underline font-semibold"
+            >
+              Стекла
+            </NavLink>
+          ) : null}
+          {auth.roles.includes('boss') || auth.roles.includes('bookkeeper') ? (
+            <NavLink
+              to="/windowboss/list"
+              className="block mt-4 lg:inline-block lg:mt-0 text-gray-800 hover:text-blue-700 mr-4"
+              activeClassName="text-blue-600 underline font-semibold"
+            >
+              Стекла (Босс)
+            </NavLink>
+          ) : null}
+
+          {auth.roles.includes('cond') &&
+          !auth.roles.includes('boss') &&
+          !auth.roles.includes('bookkeeper') ? (
+            <NavLink
+              to="/cond/list"
+              className="block mt-4 lg:inline-block lg:mt-0 text-gray-800 hover:text-blue-700 mr-4"
+              activeClassName="text-blue-600 underline font-semibold"
+            >
+              Кондиционеры
+            </NavLink>
+          ) : null}
+          {auth.roles.includes('boss') || auth.roles.includes('bookkeeper') ? (
+            <NavLink
+              to="/condboss/list"
+              className="block mt-4 lg:inline-block lg:mt-0 text-gray-800 hover:text-blue-700 mr-4"
+              activeClassName="text-blue-600 underline font-semibold"
+            >
+              Кондиционеры (Босс)
+            </NavLink>
+          ) : null}
+
           {auth.roles.includes('kassa') ||
           auth.roles.includes('boss') ||
           auth.roles.includes('hranenie') ||
@@ -411,6 +454,24 @@ const Navbar = () => {
               activeClassName="text-blue-600 underline font-semibold"
             >
               Цены (Мойка)
+            </NavLink>
+          ) : null}
+          {auth.roles.includes('bookkeeper') ? (
+            <NavLink
+              to="/windowprice/list/legk"
+              className="block mt-4 lg:inline-block lg:mt-0 text-gray-800 hover:text-blue-700 mr-4"
+              activeClassName="text-blue-600 underline font-semibold"
+            >
+              Цены (Стекла)
+            </NavLink>
+          ) : null}
+          {auth.roles.includes('bookkeeper') ? (
+            <NavLink
+              to="/condprice/list/legk"
+              className="block mt-4 lg:inline-block lg:mt-0 text-gray-800 hover:text-blue-700 mr-4"
+              activeClassName="text-blue-600 underline font-semibold"
+            >
+              Цены (Кондиционеры)
             </NavLink>
           ) : null}
           {auth.roles.includes('bookkeeper') ? (

@@ -411,7 +411,7 @@ const TyresList = () => {
                     className={cx(
                       'block appearance-none w-full bg-grey-lighter border border-gray-300 focus:border-gray-500 focus:outline-none py-1 px-4 pr-8 rounded',
                       {
-                        'border-red-300 focus:border-red-500': search.status && showSearch === true
+                        'border-red-300 focus:border-red-500': search?.status && showSearch === true
                       }
                     )}
                     value={search.status}
@@ -490,7 +490,7 @@ const TyresList = () => {
                     type="button"
                     className="appearance-none w-full text-left bg-grey-lighter border border-yellow-500 focus:outline-none py-1 px-4 pr-8 rounded"
                   >
-                    {revList.filter((it) => it.status === taskStatuses[0]).length}
+                    {revList.filter((it) => it?.status === taskStatuses[0]).length}
                   </button>
                 </div>
               </div>

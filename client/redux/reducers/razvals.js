@@ -10,7 +10,7 @@ const initialState = {
 export default (state = initialState, action) => {
   switch (action.type) {
     case GET_RAZVALS: {
-      return { ...state, list: action.razvals }
+      return { ...state, list: action.razvals, isLoaded: action.isLoaded }
     }
     case CREATE_RAZVAL: {
       return { ...state, list: [...state.list, action.razval] }
@@ -37,10 +37,11 @@ export default (state = initialState, action) => {
 
 export function getRazvals() {
   return (dispatch) => {
+    dispatch({ type: GET_RAZVALS, razvals: [], isLoaded: false })
     fetch('/api/v1/razval')
       .then((r) => r.json())
       .then(({ data: razvals }) => {
-        dispatch({ type: GET_RAZVALS, razvals })
+        dispatch({ type: GET_RAZVALS, razvals, isLoaded: true })
       })
   }
 }
@@ -92,10 +93,11 @@ export function deleteRazval(id) {
 
 export function getByMonth(yearmonth) {
   return (dispatch) => {
+    dispatch({ type: GET_RAZVALS, razvals: [], isLoaded: false })
     fetch(`/api/v1/razvalmonth?yearmonth=${yearmonth}`)
       .then((r) => r.json())
       .then(({ data: razvals }) => {
-        dispatch({ type: GET_RAZVALS, razvals })
+        dispatch({ type: GET_RAZVALS, razvals, isLoaded: true })
       })
   }
 }

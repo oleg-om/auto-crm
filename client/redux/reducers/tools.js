@@ -49,6 +49,7 @@ export default (state = initialState, action) => {
 
 export function getTools() {
   return (dispatch) => {
+    dispatch({ type: GET_TOOLS, isLoaded: false })
     fetch('/api/v1/tool')
       .then((r) => r.json())
       .then(({ data: tools }) => {
@@ -59,6 +60,7 @@ export function getTools() {
 
 export function getToolsByPage(page) {
   return (dispatch) => {
+    dispatch({ type: GET_TOOLS, isLoaded: false })
     fetch(`/api/v1/toolsbypage/${page}`)
       .then((r) => r.json())
       .then(({ data: tools, currentPage, numberOfPages }) => {
@@ -69,6 +71,7 @@ export function getToolsByPage(page) {
 
 export function getToolsFiltered(page, status, process, place, phone, number, reg) {
   return (dispatch) => {
+    dispatch({ type: GET_TOOLS, isLoaded: false })
     fetch(
       `/api/v1/toolsfilter${page ? `?page=${page}` : ''}${status ? `&status=${status}` : ''}${
         process ? `&process=${process}` : ''

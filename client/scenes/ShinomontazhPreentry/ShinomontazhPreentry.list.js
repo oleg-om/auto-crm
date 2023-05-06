@@ -22,6 +22,7 @@ import {
   updateShinomontazh,
   deleteShinomontazh
 } from '../../redux/reducers/shinomontazhs'
+import { Loading } from '../Shinomontazhs/Shinomontazhs.list'
 
 const PreentryList = () => {
   const location = useLocation()
@@ -77,6 +78,7 @@ const PreentryList = () => {
   const employee = useSelector((s) => s.employees.list)
 
   const shinomontazhList = useSelector((s) => s.shinomontazhs.list)
+  const isLoaded = useSelector((s) => s.shinomontazhs.isLoaded)
 
   const getData = () => {
     if (isShinomontazh) {
@@ -181,58 +183,62 @@ const PreentryList = () => {
       <div className="flex flex-row">
         <RazvalSidebar setActiveDay={setActiveDay} activeDay={activeDay} />
         <div className="w-full mx-auto my-2">
-          <div className="rounded-lg relative lg:my-3 mt-1 flex flex-wrap mx-3">
-            {place
-              .filter((it) => it.id === auth.place)
-              .filter((it) => it[preentryType] === 'true')
-              .map((it) => (
-                <div key={it.id}>
-                  <ShinomontazhEntryRow
-                    key={it.id}
-                    place={place}
-                    editItem={openAndEdit}
-                    createItem={openAndCreate}
-                    changeItem={openAndEditTime}
-                    openAccess={openAccess}
-                    adress={it}
-                    activeDay={activeDay}
-                    dataList={dataList || []}
-                    activePlace="true"
-                    activeAdress={auth.place}
-                    activeRole={auth.roles}
-                    preentryType={preentryType}
-                    preentryTypeRus={preentryTypeRus}
-                    viewType={it[`${preentryType}Type`]}
-                    {...it}
-                  />
-                </div>
-              ))}
-            {place
-              .filter((it) => it.id !== auth.place)
-              .filter((it) => it[preentryType] === 'true')
-              .map((it) => (
-                <div key={it.id}>
-                  <ShinomontazhEntryRow
-                    key={it.id}
-                    place={place}
-                    editItem={openAndEdit}
-                    createItem={openAndCreate}
-                    changeItem={openAndEditTime}
-                    openAccess={openAccess}
-                    adress={it}
-                    activeDay={activeDay}
-                    dataList={dataList || []}
-                    activePlace="false"
-                    activeAdress={auth.place}
-                    activeRole={auth.roles}
-                    preentryType={preentryType}
-                    preentryTypeRus={preentryTypeRus}
-                    viewType={it[`${preentryType}Type`]}
-                    {...it}
-                  />
-                </div>
-              ))}
-          </div>
+          {isLoaded ? (
+            <div className="rounded-lg relative lg:my-3 mt-1 flex flex-wrap mx-3">
+              {place
+                .filter((it) => it.id === auth.place)
+                .filter((it) => it[preentryType] === 'true')
+                .map((it) => (
+                  <div key={it.id}>
+                    <ShinomontazhEntryRow
+                      key={it.id}
+                      place={place}
+                      editItem={openAndEdit}
+                      createItem={openAndCreate}
+                      changeItem={openAndEditTime}
+                      openAccess={openAccess}
+                      adress={it}
+                      activeDay={activeDay}
+                      dataList={dataList || []}
+                      activePlace="true"
+                      activeAdress={auth.place}
+                      activeRole={auth.roles}
+                      preentryType={preentryType}
+                      preentryTypeRus={preentryTypeRus}
+                      viewType={it[`${preentryType}Type`]}
+                      {...it}
+                    />
+                  </div>
+                ))}
+              {place
+                .filter((it) => it.id !== auth.place)
+                .filter((it) => it[preentryType] === 'true')
+                .map((it) => (
+                  <div key={it.id}>
+                    <ShinomontazhEntryRow
+                      key={it.id}
+                      place={place}
+                      editItem={openAndEdit}
+                      createItem={openAndCreate}
+                      changeItem={openAndEditTime}
+                      openAccess={openAccess}
+                      adress={it}
+                      activeDay={activeDay}
+                      dataList={dataList || []}
+                      activePlace="false"
+                      activeAdress={auth.place}
+                      activeRole={auth.roles}
+                      preentryType={preentryType}
+                      preentryTypeRus={preentryTypeRus}
+                      viewType={it[`${preentryType}Type`]}
+                      {...it}
+                    />
+                  </div>
+                ))}
+            </div>
+          ) : (
+            <Loading />
+          )}
         </div>
         <ModalView
           open={isOpen}

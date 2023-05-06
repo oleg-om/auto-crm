@@ -35,7 +35,7 @@ export default (state = initialState, action) => {
     case UPDATE_STO: {
       return {
         ...state,
-        list: state.list.map((it) => {
+        list: state?.list?.map((it) => {
           return action.sto.id_stos === it.id_stos ? action.sto : it
         })
       }
@@ -56,6 +56,7 @@ export default (state = initialState, action) => {
 
 export function getStos() {
   return (dispatch) => {
+    dispatch({ type: GET_STOS, isLoaded: false })
     fetch('/api/v1/sto')
       .then((r) => r.json())
       .then(({ data: stos }) => {
@@ -66,6 +67,7 @@ export function getStos() {
 
 export function getStosLastTwoDays() {
   return (dispatch) => {
+    dispatch({ type: GET_STOS, isLoaded: false })
     fetch('/api/v1/stolast')
       .then((r) => r.json())
       .then(({ data: stos }) => {
@@ -86,6 +88,7 @@ export function getSto(id) {
 
 export function getItemsByPage(page) {
   return (dispatch) => {
+    dispatch({ type: GET_STOS, isLoaded: false })
     fetch(`/api/v1/stobypage/${page}`)
       .then((r) => r.json())
       .then(({ data: stos, currentPage, numberOfPages }) => {
@@ -102,6 +105,7 @@ export function getItemsByPage(page) {
 
 export function getItemsFiltered(page, place, number, reg) {
   return (dispatch) => {
+    dispatch({ type: GET_STOS, isLoaded: false })
     fetch(
       `/api/v1/stofilter${page ? `?page=${page}` : ''}${place ? `&place=${place}` : ''}${
         number ? `&number=${number}` : ''

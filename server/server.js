@@ -41,10 +41,15 @@ const stoRoutes = require('./routes/api/sto.routes')
 const categoryRoutes = require('./routes/api/category.routes')
 const washpriceRoutes = require('./routes/api/wash.price.routes')
 const washRoutes = require('./routes/api/wash.routes')
+const windowRoutes = require('./routes/api/window.routes')
+const windowPriceRoutes = require('./routes/api/window.price.routes')
+const condRoutes = require('./routes/api/cond.routes')
+const condPriceRoutes = require('./routes/api/cond.price.routes')
 
 const Root = () => ''
 
 try {
+  console.log('start')
 } catch (ex) {
   console.error(' run yarn build:prod to enable ssr')
 }
@@ -117,6 +122,10 @@ server.use('/api/v1', stoRoutes)
 server.use('/api/v1', categoryRoutes)
 server.use('/api/v1', washpriceRoutes)
 server.use('/api/v1', washRoutes)
+server.use('/api/v1', windowRoutes)
+server.use('/api/v1', windowPriceRoutes)
+server.use('/api/v1', condRoutes)
+server.use('/api/v1', condPriceRoutes)
 
 server.get('/api/v1/auth', async (req, res) => {
   try {
@@ -336,6 +345,20 @@ io.on('connection', (socket) => {
   })
   socket.on('wash two print', (sto) => {
     io.emit('washtwoprint', sto)
+  })
+
+  socket.on('cond one print', (shinomontazh) => {
+    io.emit('condoneprint', shinomontazh)
+  })
+  socket.on('cond two print', (shinomontazh) => {
+    io.emit('condtwoprint', shinomontazh)
+  })
+
+  socket.on('window one print', (shinomontazh) => {
+    io.emit('windowoneprint', shinomontazh)
+  })
+  socket.on('window two print', (shinomontazh) => {
+    io.emit('windowtwoprint', shinomontazh)
   })
 
   // socket.on('new shinomontazh', () => {

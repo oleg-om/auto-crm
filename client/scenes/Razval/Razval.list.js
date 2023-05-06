@@ -17,6 +17,7 @@ import AccessModal from '../../components/razval/access.modal'
 import 'react-toastify/dist/ReactToastify.css'
 import { socket } from '../../redux/sockets/socketReceivers'
 import onLoad from './Onload'
+import { Loading } from '../Shinomontazhs/Shinomontazhs.list'
 
 const RazvalList = () => {
   const [activeDay, setActiveDay] = useState(new Date())
@@ -30,6 +31,11 @@ const RazvalList = () => {
   const employee = useSelector((s) => s.employees.list)
   const razvalList = useSelector((s) => s.razvals.list)
   const oilList = useSelector((s) => s.oils.list)
+
+  const razvalIsLoaded = useSelector((s) => s.razvals.isLoaded)
+  const oilIsLoaded = useSelector((s) => s.oils.isLoaded)
+  const isLoaded = razvalIsLoaded || oilIsLoaded
+
   const auth = useSelector((s) => s.auth)
   const [isOpen, setIsOpen] = useState(false)
   const [createIsOpen, setCreateIsOpen] = useState(false)
@@ -153,54 +159,58 @@ const RazvalList = () => {
       <div className="flex flex-row">
         <RazvalSidebar setActiveDay={setActiveDay} activeDay={activeDay} />
         <div className="w-full mx-auto my-2">
-          <div className="rounded-lg relative lg:my-3 mt-1 flex flex-wrap mx-3">
-            {place
-              .filter((it) => it.id === auth.place)
-              .filter((it) => it.razval === 'true' || it.oil === 'true')
-              .map((it) => (
-                <div key={it.id}>
-                  <RazvalRow
-                    key={it.id}
-                    place={place}
-                    editItem={openAndEdit}
-                    createItem={openAndCreate}
-                    changeItem={openAndEditTime}
-                    openAccess={openAccess}
-                    adress={it}
-                    activeDay={activeDay}
-                    razvalList={razvalList}
-                    oilList={oilList}
-                    activePlace="true"
-                    activeAdress={auth.place}
-                    activeRole={auth.roles}
-                    {...it}
-                  />
-                </div>
-              ))}
-            {place
-              .filter((it) => it.id !== auth.place)
-              .filter((it) => it.razval === 'true' || it.oil === 'true')
-              .map((it) => (
-                <div key={it.id}>
-                  <RazvalRow
-                    key={it.id}
-                    place={place}
-                    editItem={openAndEdit}
-                    createItem={openAndCreate}
-                    changeItem={openAndEditTime}
-                    openAccess={openAccess}
-                    adress={it}
-                    activeDay={activeDay}
-                    razvalList={razvalList}
-                    oilList={oilList}
-                    activePlace="false"
-                    activeAdress={auth.place}
-                    activeRole={auth.roles}
-                    {...it}
-                  />
-                </div>
-              ))}
-          </div>
+          {isLoaded ? (
+            <div className="rounded-lg relative lg:my-3 mt-1 flex flex-wrap mx-3">
+              {place
+                .filter((it) => it.id === auth.place)
+                .filter((it) => it.razval === 'true' || it.oil === 'true')
+                .map((it) => (
+                  <div key={it.id}>
+                    <RazvalRow
+                      key={it.id}
+                      place={place}
+                      editItem={openAndEdit}
+                      createItem={openAndCreate}
+                      changeItem={openAndEditTime}
+                      openAccess={openAccess}
+                      adress={it}
+                      activeDay={activeDay}
+                      razvalList={razvalList}
+                      oilList={oilList}
+                      activePlace="true"
+                      activeAdress={auth.place}
+                      activeRole={auth.roles}
+                      {...it}
+                    />
+                  </div>
+                ))}
+              {place
+                .filter((it) => it.id !== auth.place)
+                .filter((it) => it.razval === 'true' || it.oil === 'true')
+                .map((it) => (
+                  <div key={it.id}>
+                    <RazvalRow
+                      key={it.id}
+                      place={place}
+                      editItem={openAndEdit}
+                      createItem={openAndCreate}
+                      changeItem={openAndEditTime}
+                      openAccess={openAccess}
+                      adress={it}
+                      activeDay={activeDay}
+                      razvalList={razvalList}
+                      oilList={oilList}
+                      activePlace="false"
+                      activeAdress={auth.place}
+                      activeRole={auth.roles}
+                      {...it}
+                    />
+                  </div>
+                ))}
+            </div>
+          ) : (
+            <Loading />
+          )}
         </div>
         <ModalView
           open={isOpen}

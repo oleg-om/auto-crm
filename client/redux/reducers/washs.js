@@ -56,6 +56,7 @@ export default (state = initialState, action) => {
 
 export function getWashs() {
   return (dispatch) => {
+    dispatch({ type: GET_WASHS, isLoaded: false })
     fetch('/api/v1/wash')
       .then((r) => r.json())
       .then(({ data: washs }) => {
@@ -66,6 +67,7 @@ export function getWashs() {
 
 export function getWashsLastTwoDays() {
   return (dispatch) => {
+    dispatch({ type: GET_WASHS, isLoaded: false })
     fetch('/api/v1/washlast')
       .then((r) => r.json())
       .then(({ data: washs }) => {
@@ -86,6 +88,7 @@ export function getWash(id) {
 
 export function getItemsByPage(page) {
   return (dispatch) => {
+    dispatch({ type: GET_WASHS, isLoaded: false })
     fetch(`/api/v1/washbypage/${page}`)
       .then((r) => r.json())
       .then(({ data: washs, currentPage, numberOfPages }) => {
@@ -102,6 +105,7 @@ export function getItemsByPage(page) {
 
 export function getItemsFiltered(page, place, number, reg) {
   return (dispatch) => {
+    dispatch({ type: GET_WASHS, isLoaded: false })
     fetch(
       `/api/v1/washfilter${page ? `?page=${page}` : ''}${place ? `&place=${place}` : ''}${
         number ? `&number=${number}` : ''

@@ -10,8 +10,22 @@ const Employee = ({
   dateEnd,
   currentPlace,
   setBox,
-  box
+  box,
+  type
 }) => {
+  const getRole = () => {
+    if (type === 'sto') {
+      return 'Работник СТО'
+    }
+    if (type === 'window') {
+      return 'Замена лобовых стекол'
+    }
+    if (type === 'cond') {
+      return 'Кондиционеры'
+    }
+    return 'sto'
+  }
+
   return (
     <div className="flex flex-col -mx-3">
       {currentPlace && currentPlace.stoboxes ? (
@@ -54,9 +68,7 @@ const Employee = ({
           <table>
             {employeeList && !dateEnd
               ? employeeList
-                  .filter(
-                    (it) => it.role.includes('Работник СТО') && it.address.includes(auth.place)
-                  )
+                  .filter((it) => it.role.includes(getRole()) && it.address.includes(auth.place))
                   .map((item) => (
                     <tr
                       className={cx('mb-3 flex flex-row rounded bg-gray-200 w-full text-lg', {

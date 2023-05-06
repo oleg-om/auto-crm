@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react'
+import React, { useState, useEffect } from 'react'
 import { Link, useHistory } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
 import { toast } from 'react-toastify'
@@ -13,6 +13,7 @@ import sizeThreeList from '../../lists/shinomontazhdiametr'
 import statusList from '../../../common/enums/shinomontazh-statuses'
 import { updateStorageStatus } from '../../redux/reducers/storage'
 import { dateNew } from '../storage/storage.preorder.edit'
+import { useFindCustomer } from '../../hooks/findCustomer'
 
 const ShinomontazhsEdit = (props) => {
   toast.configure()
@@ -176,17 +177,26 @@ const ShinomontazhsEdit = (props) => {
     model: ''
   })
 
-  const [customer, setCustomer] = useState({
-    regnumber: '',
-    vinnumber: '',
-    mark: '',
-    model: '',
-    gen: '',
-    mod: '',
-    name: '',
-    phone: '',
-    idOfItem: ''
-  })
+  const {
+    customer,
+    setCustomer,
+    search,
+    setSearch,
+    customerList,
+    activeCustomer,
+    setActiveCustomer
+  } = useFindCustomer(props, state)
+  // const [customer, setCustomer] = useState({
+  //   regnumber: '',
+  //   vinnumber: '',
+  //   mark: '',
+  //   model: '',
+  //   gen: '',
+  //   mod: '',
+  //   name: '',
+  //   phone: '',
+  //   idOfItem: ''
+  // })
 
   const onChangeMark = (e) => {
     const { value } = e.target
@@ -228,72 +238,72 @@ const ShinomontazhsEdit = (props) => {
     }))
   }
 
-  const [search, setSearch] = useState()
-  const [activeCustomer, setActiveCustomer] = useState('')
+  // const [search, setSearch] = useState()
+  // const [activeCustomer, setActiveCustomer] = useState('')
 
-  // find client
-  useEffect(() => {
-    if (props.customerId && !activeCustomer) {
-      setActiveCustomer(props.customerId)
-      setSearch(props.customerId)
-    }
-    return () => {}
-  }, [props.customerId])
+  // // find client
+  // useEffect(() => {
+  //   if (props.customerId && !activeCustomer) {
+  //     setActiveCustomer(props.customerId)
+  //     setSearch(props.customerId)
+  //   }
+  //   return () => {}
+  // }, [props.customerId])
 
-  const [customerList, setCustomerOptions] = useState([])
+  // const [customerList, setCustomerOptions] = useState([])
 
-  // eslint-disable-next-line no-unused-vars
-  const throttling = useRef(false)
+  // // eslint-disable-next-line no-unused-vars
+  // const throttling = useRef(false)
 
-  useEffect(() => {
-    // if (throttling.current) {
-    //   return
-    // }
+  // useEffect(() => {
+  //   // if (throttling.current) {
+  //   //   return
+  //   // }
 
-    // If there is no search term, do not make API call
-    throttling.current = true
-    setTimeout(() => {
-      throttling.current = false
-      if (state.regnumber !== '' && state.regnumber.length > 4) {
-        fetch(
-          `/api/v1/customerfind/${state.regnumber ? state.regnumber : 'reg'}/${
-            state.vinnumber ? state.vinnumber : 'vin'
-          }/${state.phone ? state.phone : 'phone'}`
-        )
-          .then((res) => res.json())
-          .then((it) => {
-            setCustomerOptions(it.data)
-          })
-      } else if (state.regnumber === '') {
-        setCustomerOptions([])
-      }
-    }, 200)
-  }, [state.regnumber])
+  //   // If there is no search term, do not make API call
+  //   throttling.current = true
+  //   setTimeout(() => {
+  //     throttling.current = false
+  //     if (state.regnumber !== '' && state.regnumber.length > 4) {
+  //       fetch(
+  //         `/api/v1/customerfind/${state.regnumber ? state.regnumber : 'reg'}/${
+  //           state.vinnumber ? state.vinnumber : 'vin'
+  //         }/${state.phone ? state.phone : 'phone'}`
+  //       )
+  //         .then((res) => res.json())
+  //         .then((it) => {
+  //           setCustomerOptions(it.data)
+  //         })
+  //     } else if (state.regnumber === '') {
+  //       setCustomerOptions([])
+  //     }
+  //   }, 200)
+  // }, [state.regnumber])
 
-  useEffect(() => {
-    if (props.customerId) {
-      fetch(`/api/v1/customer/${props.customerId}`)
-        .then((res) => res.json())
-        .then((it) => {
-          if (it?.data) {
-            setCustomerOptions([it.data])
-            setCustomer({ ...it.data, idOfItem: it.data.id })
-          }
-        })
-    }
-  }, [props.customerId])
+  // useEffect(() => {
+  //   if (props.customerId) {
+  //     fetch(`/api/v1/customer/${props.customerId}`)
+  //       .then((res) => res.json())
+  //       .then((it) => {
+  //         if (it?.data) {
+  //           setCustomerOptions([it.data])
+  //           setCustomer({ ...it.data, idOfItem: it.data.id })
+  //         }
+  //       })
+  //   }
+  // }, [props.customerId])
 
-  useEffect(() => {
-    if (state.regnumber !== '') {
-      setCustomerOptions(
-        customerList.filter(
-          (it) => it.regnumber === state.regnumber && it.regnumber !== '' && state.regnumber !== ''
-        )
-      )
-    } else if (state.regnumber === '') {
-      setCustomerOptions([])
-    }
-  }, [state.regnumber])
+  // useEffect(() => {
+  //   if (state.regnumber !== '') {
+  //     setCustomerOptions(
+  //       customerList.filter(
+  //         (it) => it.regnumber === state.regnumber && it.regnumber !== '' && state.regnumber !== ''
+  //       )
+  //     )
+  //   } else if (state.regnumber === '') {
+  //     setCustomerOptions([])
+  //   }
+  // }, [state.regnumber])
 
   useEffect(() => {
     const findCar = options.mark ? options.mark.find((it) => props.mark === it.name) : null
@@ -349,6 +359,7 @@ const ShinomontazhsEdit = (props) => {
       }))
     }
   }
+
   const applyCustomer = () => {
     const newCustomer = customerList.find((it) => it.id === search)
 
@@ -371,6 +382,8 @@ const ShinomontazhsEdit = (props) => {
         mod: newCustomer.mod ? newCustomer.mod : '',
         name: newCustomer.name ? newCustomer.name : '',
         phone: newCustomer.phone ? newCustomer.phone : '',
+        kuzov: newCustomer.kuzov ? newCustomer.kuzov : '',
+        diametr: newCustomer.diametr ? newCustomer.diametr : '',
         idOfItem: newCustomer.id
       }))
       setState((prevState) => ({
@@ -382,6 +395,8 @@ const ShinomontazhsEdit = (props) => {
         gen: newCustomer.gen ? newCustomer.gen : '',
         mod: newCustomer.mod ? newCustomer.mod : '',
         name: newCustomer.name ? newCustomer.name : '',
+        kuzov: newCustomer.kuzov ? newCustomer.kuzov : '',
+        diametr: newCustomer.diametr ? newCustomer.diametr : '',
         phone: newCustomer.phone ? newCustomer.phone : ''
       }))
       setActiveCustomer(newCustomer.id)

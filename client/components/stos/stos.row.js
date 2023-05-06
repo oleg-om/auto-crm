@@ -11,7 +11,7 @@ const StosRow = (props) => {
   // })
   const createDate = new Date(props.dateStart)
   const finishDate = new Date(props.dateFinish)
-
+  console.log('props.type', props.type)
   const totalFreeService = props.services
     .filter((it) => it.free === 'yes')
     .reduce((acc, rec) => acc + rec.price * rec.quantity, 0)
@@ -29,6 +29,7 @@ const StosRow = (props) => {
   const applyDiscountWithFreeService = (number) => {
     return Number(number) - Number(number)
   }
+
   function roundTo5(num) {
     return Math.round(num / 5) * 5
   }
@@ -149,7 +150,9 @@ const StosRow = (props) => {
             </div>
           </button> */}
           <Link
-            to={`/sto/edit/${props.id_stos}/${props.num ? props.num : ''}`}
+            to={`/${props?.link || 'sto'}/edit/${
+              props?.type ? props[`id_${props.type}s`] : props.id_stos
+            }/${props.num ? props.num : ''}`}
             className="px-5 py-1 text-xs border-blue-500 border text-blue-500 rounded transition duration-300 hover:bg-blue-700 hover:text-white focus:outline-none"
           >
             Подробнее

@@ -55,7 +55,7 @@ const Pagination = ({ postsPerPage, totalPosts, paginate, currentPage, currentPo
               {number}
             </button>
           ))}
-        {currentPage !== pageNumbers.slice(-1)[0] ? (
+        {currentPage !== pageNumbers.slice(-1)[0] && pageNumbers?.length > 0 ? (
           <button
             type="button"
             className="mx-1 px-3 py-2 text-xs rounded-lg font-bold bg-gray-200 text-gray-700 hover:text-gray-600 hover:bg-gray-400"

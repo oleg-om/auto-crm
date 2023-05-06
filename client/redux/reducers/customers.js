@@ -50,6 +50,7 @@ export default (state = initialState, action) => {
 
 export function getCustomers() {
   return (dispatch) => {
+    dispatch({ type: GET_CUSTOMERS, isLoaded: false })
     fetch('/api/v1/customer')
       .then((r) => r.json())
       .then(({ data: customers }) => {
@@ -113,6 +114,7 @@ export function getCustomer(id) {
 
 export function getItemsByPage(page) {
   return (dispatch) => {
+    dispatch({ type: GET_CUSTOMERS, isLoaded: false })
     fetch(`/api/v1/customerbypage/${page}`)
       .then((r) => r.json())
       .then(({ data: customers, currentPage, numberOfPages }) => {
@@ -123,6 +125,7 @@ export function getItemsByPage(page) {
 
 export function getItemsFiltered(page, vin, reg, phone) {
   return (dispatch) => {
+    dispatch({ type: GET_CUSTOMERS, isLoaded: false })
     fetch(
       `/api/v1/customerfilter${page ? `?page=${page}` : ''}${reg ? `&reg=${reg}` : ''}${
         vin ? `&vin=${vin}` : ''

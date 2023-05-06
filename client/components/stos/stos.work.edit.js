@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { Link, useHistory } from 'react-router-dom'
+import { Link, useHistory, useLocation } from 'react-router-dom'
 import { useSelector } from 'react-redux'
 import { toast } from 'react-toastify'
 import cx from 'classnames'
@@ -11,6 +11,7 @@ import Material from './material'
 import Final from './final'
 import sizeThreeList from '../../lists/shinomontazhdiametr'
 import statusList from '../../../common/enums/shinomontazh-statuses'
+import { useFindCustomer } from '../../hooks/findCustomer'
 
 const StosEdit = (props) => {
   toast.configure()
@@ -18,14 +19,21 @@ const StosEdit = (props) => {
     toast.info(arg, { position: toast.POSITION.BOTTOM_RIGHT })
   }
 
+  const type = props?.type || 'sto'
+
   const history = useHistory()
+  const location = useLocation()
+
+  const SERVICES_WITHOUT_TYPE =
+    location.pathname.includes('/window') || location.pathname.includes('/cond')
+
   const checkLink = () => history.location.pathname.split('/').includes('stoboss')
 
   const employeeList = useSelector((s) => s.employees.list)
-  const customerList = useSelector((s) => s.customers.list)
+  // const customerList = useSelector((s) => s.customers.list)
   const auth = useSelector((s) => s.auth)
-  const stoprices = useSelector((s) => s.stoprices.list)
-  const materialprices = useSelector((s) => s.materials.list).filter((it) => it.type === 'sto')
+  const stoprices = useSelector((s) => s[`${type}prices`].list)
+  const materialprices = useSelector((s) => s.materials.list).filter((it) => it.type === type)
 
   const placeList = useSelector((s) => s.places.list)
   const currentPlace = placeList.find((it) => it.id === auth.place)
@@ -46,9 +54,9 @@ const StosEdit = (props) => {
     dateFinish: props.dateFinish ? props.dateFinish : new Date(),
     discount: props.discount,
     payment: props.payment,
-    talon: props.id_stos,
+    talon: props[`id_${type || 'sto'}s`],
     class: props.class,
-    category: props.category
+    category: props.category || SERVICES_WITHOUT_TYPE ? 'price' : ''
   })
 
   const [box, setBox] = useState(props.box ? props.box : '')
@@ -168,17 +176,27 @@ const StosEdit = (props) => {
     model: ''
   })
 
-  const [customer, setCustomer] = useState({
-    regnumber: '',
-    vinnumber: '',
-    mark: '',
-    model: '',
-    gen: '',
-    mod: '',
-    name: '',
-    phone: '',
-    idOfItem: ''
-  })
+  // const [customer, setCustomer] = useState({
+  //   regnumber: '',
+  //   vinnumber: '',
+  //   mark: '',
+  //   model: '',
+  //   gen: '',
+  //   mod: '',
+  //   name: '',
+  //   phone: '',
+  //   idOfItem: ''
+  // })
+
+  const {
+    customer,
+    setCustomer,
+    search,
+    setSearch,
+    customerList,
+    activeCustomer,
+    setActiveCustomer
+  } = useFindCustomer(props, state)
 
   const onChangeMark = (e) => {
     const { value } = e.target
@@ -220,20 +238,19 @@ const StosEdit = (props) => {
     }))
   }
 
-  const [search, setSearch] = useState()
-  const [activeCustomer, setActiveCustomer] = useState('')
-  const [customerOptions, setCustomerOptions] = useState([])
-  useEffect(() => {
-    if (state.regnumber !== '') {
-      setCustomerOptions(
-        customerList.filter(
-          (it) => it.regnumber === state.regnumber && it.regnumber !== '' && state.regnumber !== ''
-        )
-      )
-    } else if (state.regnumber === '') {
-      setCustomerOptions([])
-    }
-  }, [state.regnumber, customerList])
+  // const [search, setSearch] = useState()
+  // const [activeCustomer, setActiveCustomer] = useState('')
+  // useEffect(() => {
+  //   if (state.regnumber !== '') {
+  //     setCustomerOptions(
+  //       customerList.filter(
+  //         (it) => it.regnumber === state.regnumber && it.regnumber !== '' && state.regnumber !== ''
+  //       )
+  //     )
+  //   } else if (state.regnumber === '') {
+  //     setCustomerOptions([])
+  //   }
+  // }, [state.regnumber, customerList])
 
   useEffect(() => {
     const findCar = options.mark ? options.mark.find((it) => props.mark === it.name) : null
@@ -334,10 +351,10 @@ const StosEdit = (props) => {
     const getPrice = (item) => {
       return item[actualDiametr]
     }
-    if (state.class && state.category) {
+    if ((state.class && state.category) || SERVICES_WITHOUT_TYPE) {
       setActualService(
         stoprices
-          .filter((it) => it.type && it.type === state.class)
+          .filter((it) => (it.type && SERVICES_WITHOUT_TYPE ? it.type : it.type === state.class))
           .map((item) => ({
             name: item.name,
             id: item.id,
@@ -363,7 +380,7 @@ const StosEdit = (props) => {
           quantity: 1,
           price: placeholder,
           name: attributes.somename.value,
-          free: attributes.somefree.value
+          free: attributes.somefree?.value
         }
       ])
     } else {
@@ -555,12 +572,13 @@ const StosEdit = (props) => {
         payment: state.payment,
         services: service,
         material: materials,
-        tyre: [...tyres]
+        tyre: [...tyres],
+        customerId: activeCustomer || props.customerId || null
       })
       if (checkLink()) {
-        history.push(`/stoboss/list/${props.num ? props.num : ''}`)
+        history.push(`/${type}boss/list/${props.num ? props.num : ''}`)
       } else {
-        history.push(`/sto/list/${props.num ? props.num : ''}`)
+        history.push(`/${type}/list/${props.num ? props.num : ''}`)
       }
       notify('Запись изменена')
     }
@@ -587,12 +605,13 @@ const StosEdit = (props) => {
         tyre: [...tyres],
         employee: employees,
         dateFinish: props.dateFinish ? props.dateFinish : new Date(),
-        status: statusList[1]
+        status: statusList[1],
+        customerId: activeCustomer || props.customerId || null
       })
       if (checkLink()) {
-        history.push(`/stoboss/list/${props.num ? props.num : ''}`)
+        history.push(`/${type}boss/list/${props.num ? props.num : ''}`)
       } else {
-        history.push(`/sto/list/${props.num ? props.num : ''}`)
+        history.push(`/${type}/list/${props.num ? props.num : ''}`)
       }
       notify('Запись изменена')
     } else if (state.payment === 'yes') {
@@ -600,12 +619,13 @@ const StosEdit = (props) => {
         discount: state.discount,
         payment: state.payment,
         comment: state.comment,
-        status: statusList[2]
+        status: statusList[2],
+        customerId: activeCustomer || props.customerId || null
       })
       if (checkLink()) {
-        history.push(`/stoboss/list/${props.num ? props.num : ''}`)
+        history.push(`/${type}boss/list/${props.num ? props.num : ''}`)
       } else {
-        history.push(`/sto/list/${props.num ? props.num : ''}`)
+        history.push(`/${type}/list/${props.num ? props.num : ''}`)
       }
       notify('Работа оплачена')
     } else if (state.payment === 'card') {
@@ -613,12 +633,13 @@ const StosEdit = (props) => {
         discount: state.discount,
         payment: state.payment,
         comment: state.comment,
-        status: statusList[3]
+        status: statusList[3],
+        customerId: activeCustomer || props.customerId || null
       })
       if (checkLink()) {
-        history.push(`/stoboss/list/${props.num ? props.num : ''}`)
+        history.push(`/${type}boss/list/${props.num ? props.num : ''}`)
       } else {
-        history.push(`/sto/list/${props.num ? props.num : ''}`)
+        history.push(`/${type}/list/${props.num ? props.num : ''}`)
       }
       notify('Работа оплачена (безнал)')
     } else if (state.payment === 'terminal') {
@@ -626,12 +647,13 @@ const StosEdit = (props) => {
         discount: state.discount,
         payment: state.payment,
         comment: state.comment,
-        status: statusList[4]
+        status: statusList[4],
+        customerId: activeCustomer || props.customerId || null
       })
       if (checkLink()) {
-        history.push(`/stoboss/list/${props.num ? props.num : ''}`)
+        history.push(`/${type}boss/list/${props.num ? props.num : ''}`)
       } else {
-        history.push(`/sto/list/${props.num ? props.num : ''}`)
+        history.push(`/${type}/list/${props.num ? props.num : ''}`)
       }
       notify('Работа оплачена (терминал)')
     } else if (state.payment === 'termandcash') {
@@ -641,12 +663,13 @@ const StosEdit = (props) => {
         comment: state.comment,
         status: statusList[6],
         combTerm: termCash.terminal,
-        combCash: termCash.cash
+        combCash: termCash.cash,
+        customerId: activeCustomer || props.customerId || null
       })
       if (checkLink()) {
-        history.push(`/stoboss/list/${props.num ? props.num : ''}`)
+        history.push(`/${type}boss/list/${props.num ? props.num : ''}`)
       } else {
-        history.push(`/sto/list/${props.num ? props.num : ''}`)
+        history.push(`/${type}/list/${props.num ? props.num : ''}`)
       }
       notify('Работа оплачена (терминал + наличные)')
     } else if (state.payment === 'cancel') {
@@ -654,12 +677,13 @@ const StosEdit = (props) => {
         discount: state.discount,
         payment: state.payment,
         comment: state.comment,
-        status: statusList[5]
+        status: statusList[5],
+        customerId: activeCustomer || props.customerId || null
       })
       if (checkLink()) {
-        history.push(`/stoboss/list/${props.num ? props.num : ''}`)
+        history.push(`/${type}boss/list/${props.num ? props.num : ''}`)
       } else {
-        history.push(`/sto/list/${props.num ? props.num : ''}`)
+        history.push(`/${type}/list/${props.num ? props.num : ''}`)
       }
       notify('Работа отменена')
     } else {
@@ -671,12 +695,13 @@ const StosEdit = (props) => {
         // employee: employees,
         discount: state.discount,
         payment: state.payment,
-        comment: state.comment
+        comment: state.comment,
+        customerId: activeCustomer || props.customerId || null
       })
       if (checkLink()) {
-        history.push(`/stoboss/list/${props.num ? props.num : ''}`)
+        history.push(`/${type}boss/list/${props.num ? props.num : ''}`)
       } else {
-        history.push(`/sto/list/${props.num ? props.num : ''}`)
+        history.push(`/${type}/list/${props.num ? props.num : ''}`)
       }
       notify('Запись изменена')
     }
@@ -733,9 +758,9 @@ const StosEdit = (props) => {
         notify('Заполните поле Марка авто')
       } else if (!state.model) {
         notify('Заполните поле Модель авто')
-      } else if (!state.category) {
+      } else if (!state.category && type === 'sto') {
         notify('Выберите категорию')
-      } else if (!state.class) {
+      } else if (!state.class && type === 'sto') {
         notify('Выберите класс авто')
       } else {
         setActive('service')
@@ -772,9 +797,9 @@ const StosEdit = (props) => {
         notify('Заполните поле Марка авто')
       } else if (!state.model) {
         notify('Заполните поле Модель авто')
-      } else if (!state.category) {
+      } else if (!state.category && type === 'sto') {
         notify('Выберите категорию')
-      } else if (!state.class) {
+      } else if (!state.class && type === 'sto') {
         notify('Выберите класс авто')
       } else {
         setActive('service')
@@ -879,7 +904,7 @@ const StosEdit = (props) => {
       totalSumm,
       totalWithDiscount,
       box,
-      id_stos: props.id_stos
+      [`id_${type}s`]: props[`id_${type}s`]
     })
   }
 
@@ -895,7 +920,7 @@ const StosEdit = (props) => {
       totalSumm,
       totalWithDiscount,
       box,
-      id_stos: props.id_stos
+      [`id_${type}s`]: props[`id_${type}s`]
     })
   }
 
@@ -982,6 +1007,7 @@ const StosEdit = (props) => {
             box={box}
             setBox={setBox}
             currentPlace={currentPlace}
+            type={type}
           />
         </div>
         <div
@@ -1006,7 +1032,7 @@ const StosEdit = (props) => {
             onSearchChange={onSearchChange}
             search={search}
             customer={customer}
-            customerOptions={customerOptions}
+            customerOptions={customerList}
             activeCustomer={activeCustomer}
             setActiveCustomer={setActiveCustomer}
             applyCustomer={applyCustomer}
@@ -1014,6 +1040,7 @@ const StosEdit = (props) => {
             onChange={onChange}
             setOptions={setOptions}
             stateId={stateId}
+            type={type}
           />
         </div>
         <div
@@ -1033,6 +1060,7 @@ const StosEdit = (props) => {
             serviceMinusChange={serviceMinusChange}
             servicePriceChange={servicePriceChange}
             dateEnd={props.dateFinish}
+            type={type}
           />
         </div>
         <div
@@ -1078,6 +1106,7 @@ const StosEdit = (props) => {
             printTwo={printTwo}
             id_stos={props.id_stos}
             setTermCash={setTermCash}
+            type={type}
           />
         </div>
       </div>
@@ -1085,8 +1114,8 @@ const StosEdit = (props) => {
         <Link
           to={
             checkLink()
-              ? `/stoboss/list/${props.num ? props.num : ''}`
-              : `/sto/list/${props.num ? props.num : ''}`
+              ? `/${type || 'sto'}boss/list/${props.num ? props.num : ''}`
+              : `/${type || 'sto'}/list/${props.num ? props.num : ''}`
           }
           className="my-3 mr-2 py-3 w-1/3 px-3 bg-red-600 text-white text-center hover:bg-red-700 hover:text-white rounded-lg"
         >

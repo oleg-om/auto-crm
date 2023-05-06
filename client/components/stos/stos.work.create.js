@@ -1,5 +1,6 @@
+/* eslint-disable no-unused-vars */
 import React, { useState, useEffect, useRef } from 'react'
-import { Link, useHistory } from 'react-router-dom'
+import { Link, useHistory, useLocation } from 'react-router-dom'
 import { useSelector } from 'react-redux'
 import { toast } from 'react-toastify'
 import cx from 'classnames'
@@ -10,6 +11,7 @@ import Service from './service'
 import Material from './material'
 import Final from './final'
 import sizeThreeList from '../../lists/shinomontazhdiametr'
+import { useKeyboard } from '../../hooks/keyboard'
 
 const StosCreate = (props) => {
   toast.configure()
@@ -17,19 +19,26 @@ const StosCreate = (props) => {
     toast.info(arg, { position: toast.POSITION.BOTTOM_RIGHT })
   }
 
+  const type = props?.type || 'sto'
+
   const history = useHistory()
+  const location = useLocation()
+
+  const SERVICES_WITHOUT_TYPE =
+    location.pathname.includes('/window') || location.pathname.includes('/cond')
 
   const employeeList = useSelector((s) => s.employees.list)
   const auth = useSelector((s) => s.auth)
-  const stoprices = useSelector((s) => s.stoprices.list)
-  const materialprices = useSelector((s) => s.materials.list).filter((it) => it.type === 'sto')
+  const stoprices = useSelector((s) => s[`${type}prices`].list)
+
+  const materialprices = useSelector((s) => s.materials.list).filter((it) => it.type === type)
   const placeList = useSelector((s) => s.places.list)
 
   const currentPlace = placeList.find((it) => it.id === auth.place)
 
   const [regNumber, setRegNumber] = useState([])
-  const [keyboard, setKeyboard] = useState(false)
-  const [regOpen, setRegOpen] = useState(false)
+  // const [keyboard, setKeyboard] = useState(false)
+  const { keyboard, setKeyboard, regOpen, setRegOpen, switchKeyboard } = useKeyboard()
 
   const [state, setState] = useState({
     place: auth.place,
@@ -41,7 +50,7 @@ const StosCreate = (props) => {
     diametr: '',
     dateStart: new Date(),
     class: '',
-    category: ''
+    category: SERVICES_WITHOUT_TYPE ? 'price' : ''
   })
 
   const [service, setService] = useState([])
@@ -81,11 +90,6 @@ const StosCreate = (props) => {
         .replace(/\s/g, '')
         .replace(/[^а-яё0-9]/i, '')
     }))
-  }
-
-  const switchKeyboard = () => {
-    setKeyboard(true)
-    setRegOpen(false)
   }
 
   const acceptRegnumber = () => {
@@ -288,10 +292,10 @@ const StosCreate = (props) => {
       // }
       return item[actualDiametr]
     }
-    if (state.class && state.category) {
+    if ((state.class && state.category) || SERVICES_WITHOUT_TYPE) {
       setActualService(
         stoprices
-          .filter((it) => it.type && it.type === state.class)
+          .filter((it) => (it.type && SERVICES_WITHOUT_TYPE ? it.type : it.type === state.class))
           .map((item) => ({
             name: item.name,
             id: item.id,
@@ -374,12 +378,13 @@ const StosCreate = (props) => {
           material: materials,
           tyre: tyres,
           employee: employees,
-          box
+          box,
+          customerId: activeCustomer || props.customerId || null
         })
         if (props.checkLink) {
-          history.push('/stoboss/list')
+          history.push(`/${type}boss/list`)
         } else {
-          history.push('/sto/list')
+          history.push(`/${type}/list`)
         }
         notify('Запись добавлена')
       } else if (checkCustomer !== undefined && activeCustomer !== '') {
@@ -392,7 +397,8 @@ const StosCreate = (props) => {
             material: materials,
             tyre: [...tyres],
             employee: employees,
-            box
+            box,
+            customerId: activeCustomer || props.customerId || null
           }
         )
       } else {
@@ -402,18 +408,20 @@ const StosCreate = (props) => {
           material: materials,
           tyre: [...tyres],
           employee: employees,
-          box
+          box,
+          customerId: activeCustomer || props.customerId || null
         })
         props.createCust({
           ...customer,
           regnumber: state.regnumber,
           kuzov: state.kuzov,
-          diametr: state.diametr
+          diametr: state.diametr,
+          customerId: activeCustomer || props.customerId || null
         })
         if (props.checkLink) {
-          history.push('/stoboss/list')
+          history.push(`/${type}boss/list`)
         } else {
-          history.push('/sto/list')
+          history.push(`/${type}/list`)
         }
         notify('Запись добавлена')
         notify('Создан новый клиент')
@@ -424,6 +432,7 @@ const StosCreate = (props) => {
   const [active, setActive] = useState('employee')
   const checkboxServiceChange = (e) => {
     const { name, placeholder, checked, attributes } = e.target
+
     if (checked) {
       setService((prevState) => [
         ...prevState,
@@ -432,7 +441,7 @@ const StosCreate = (props) => {
           quantity: 1,
           price: placeholder,
           name: attributes.somename.value,
-          free: attributes.somefree.value
+          free: attributes.somefree?.value
         }
       ])
     } else {
@@ -691,9 +700,9 @@ const StosCreate = (props) => {
         notify('Заполните поле Марка авто')
       } else if (!state.model) {
         notify('Заполните поле Модель авто')
-      } else if (!state.category) {
+      } else if (!state.category && type === 'sto') {
         notify('Выберите категорию')
-      } else if (!state.class) {
+      } else if (!state.class && type === 'sto') {
         notify('Выберите класс авто')
       } else {
         setActive('service')
@@ -730,9 +739,9 @@ const StosCreate = (props) => {
         notify('Заполните поле Марка авто')
       } else if (!state.model) {
         notify('Заполните поле Модель авто')
-      } else if (!state.category) {
+      } else if (!state.category && type === 'sto') {
         notify('Выберите категорию')
-      } else if (!state.class) {
+      } else if (!state.class && type === 'sto') {
         notify('Выберите класс авто')
       } else {
         setActive('service')
@@ -854,6 +863,7 @@ const StosCreate = (props) => {
             box={box}
             setBox={setBox}
             currentPlace={currentPlace}
+            type={type}
           />
         </div>
         <div
@@ -886,6 +896,7 @@ const StosCreate = (props) => {
             onChange={onChange}
             setOptions={setOptions}
             stateId={stateId}
+            type={type}
           />
         </div>
         <div
@@ -905,6 +916,7 @@ const StosCreate = (props) => {
             serviceMinusChange={serviceMinusChange}
             servicePriceChange={servicePriceChange}
             dateEnd=""
+            type={type}
           />
         </div>
         <div
@@ -945,6 +957,7 @@ const StosCreate = (props) => {
             checkboxTyresChange={checkboxTyresChange}
             dateEnd=""
             termCash={termCash}
+            type={type}
           />
         </div>
       </div>
@@ -952,8 +965,8 @@ const StosCreate = (props) => {
         <Link
           to={
             props.checkLink
-              ? `/stoboss/list/${props.num ? props.num : ''}`
-              : `/sto/list/${props.num ? props.num : ''}`
+              ? `/${type || 'sto'}boss/list/${props.num ? props.num : ''}`
+              : `/${type || 'sto'}/list/${props.num ? props.num : ''}`
           }
           className="my-3 mr-2 py-3 w-1/3 px-3 bg-red-600 text-white text-center hover:bg-red-700 hover:text-white rounded-lg"
         >
