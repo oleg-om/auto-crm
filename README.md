@@ -1,4 +1,4 @@
-# Auto-CRM
+# Auto-crm
 ## Quick start
 
 
