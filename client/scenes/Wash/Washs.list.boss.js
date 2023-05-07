@@ -537,8 +537,8 @@ const WashsListBoss = () => {
           {showSearch === false && list && list.length === 0 && isLoaded ? (
             <div className="w-full bg-white py-2 flex justify-center">
               <b className="text-center text-gray-700">
-                Что-то пошло не так. Возможно нет ни одного заказа, попробуйте создать первый. Если
-                заказы есть, перезагрузите страницу
+                Нет ни одного заказа, попробуйте создать первый. Если заказы есть, перезагрузите
+                страницу
               </b>
             </div>
           ) : null}
