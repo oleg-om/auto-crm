@@ -1,4 +1,4 @@
-# Autodom CRM
+# Auto-CRM
 ## Quick start
 
 
