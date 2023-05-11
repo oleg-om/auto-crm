@@ -66,7 +66,8 @@ const ShinomontazhEntryCreate = ({
     place: '',
     name: '',
     datePreentry: '',
-    box: ''
+    box: '',
+    comment: ''
   })
 
   const [access, setAccess] = useState()
@@ -291,7 +292,8 @@ const ShinomontazhEntryCreate = ({
           place: '',
           name: '',
           datePreentry: '',
-          box: ''
+          box: '',
+          comment: ''
         })
         setCustomerOptions([])
         setStateId({
@@ -314,7 +316,8 @@ const ShinomontazhEntryCreate = ({
           place: '',
           name: '',
           datePreentry: '',
-          box: ''
+          box: '',
+          comment: ''
         })
         setCustomerOptions([])
         setStateId({
@@ -350,7 +353,8 @@ const ShinomontazhEntryCreate = ({
       place: '',
       name: '',
       datePreentry: '',
-      box: ''
+      box: '',
+      comment: ''
     })
   }
   const checkAccess = () => {
@@ -371,7 +375,8 @@ const ShinomontazhEntryCreate = ({
       place: '',
       name: '',
       datePreentry: '',
-      box: ''
+      box: '',
+      comment: ''
     })
     setCustomerOptions([])
     setStateId({
@@ -611,6 +616,25 @@ const ShinomontazhEntryCreate = ({
                           ))}
                         </div>
                       ) : null}
+                    </div>
+                  </div>
+                  <div className="mt-3 flex flex-col">
+                    <label
+                      className="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2"
+                      htmlFor="comment"
+                    >
+                      Комментарий
+                    </label>
+                    <div className="flex-shrink w-full inline-block relative">
+                      <input
+                        className="block appearance-none w-full bg-grey-lighter border border-gray-300 focus:border-gray-500 focus:outline-none py-1 px-4 pr-8 rounded"
+                        type="text"
+                        name="comment"
+                        id="comment"
+                        placeholder="Примечание"
+                        value={state.comment}
+                        onChange={onChange}
+                      />
                     </div>
                   </div>
                   {customerOptions.length >= 1 ? (

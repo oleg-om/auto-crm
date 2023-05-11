@@ -47,10 +47,10 @@ const ModalView = ({
   activeAdress,
   preentryType
 }) => {
-  console.log('itemId: ', itemId)
   const [changeStatus, setChangeStatus] = useState({
     status: '',
-    staroge: null
+    staroge: null,
+    comment: ''
   })
 
   const [storageOptions, setStorageOptions] = useState()
@@ -81,7 +81,11 @@ const ModalView = ({
   })
 
   useEffect(() => {
-    setChangeStatus({ status: itemId.status, storage: itemId?.storage || null })
+    setChangeStatus({
+      status: itemId.status,
+      storage: itemId?.storage || null,
+      comment: itemId?.comment || ''
+    })
     return () => {}
   }, [itemId])
   if (!open) return null
@@ -384,6 +388,25 @@ const ModalView = ({
                       </div>
                     </div>
                   )}
+                  <div className="mt-3 flex flex-col">
+                    <label
+                      className="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2"
+                      htmlFor="comment"
+                    >
+                      Комментарий
+                    </label>
+                    <div className="flex-shrink w-full inline-block relative">
+                      <input
+                        className="block appearance-none w-full bg-grey-lighter border border-gray-300 focus:border-gray-500 focus:outline-none py-1 px-4 pr-8 rounded"
+                        type="text"
+                        name="comment"
+                        id="comment"
+                        placeholder="Примечание"
+                        value={changeStatus.comment}
+                        onChange={onChangeStatus}
+                      />
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>

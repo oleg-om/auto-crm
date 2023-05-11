@@ -1186,27 +1186,25 @@ const ShinomontazhsEdit = (props) => {
             {active !== 'finish' ? 'Далее' : 'В работу'}
           </button>
         ) : null}
-        {active === 'finish' && !props.dateFinish ? (
+        {active === 'finish' && !props.dateFinish && props?.status !== 'Новая запись' ? (
           <div className="w-2/3 flex flex-row">
-            {props?.status !== 'Новая запись' ? (
-              <>
-                <button
-                  className="my-3 mx-2 py-3 w-1/2 px-3 bg-blue-600 text-white hover:bg-blue-700 hover:text-white rounded-lg"
-                  onClick={preChangeShinomontazh}
-                  type="submit"
-                >
-                  Сохранить
-                </button>
+            <>
+              <button
+                className="my-3 mx-2 py-3 w-1/2 px-3 bg-blue-600 text-white hover:bg-blue-700 hover:text-white rounded-lg"
+                onClick={preChangeShinomontazh}
+                type="submit"
+              >
+                Сохранить
+              </button>
 
-                <button
-                  className="my-3 ml-2 py-3 w-1/2 px-3 bg-green-600 text-white hover:bg-green-700 hover:text-white rounded-lg"
-                  onClick={changeShinomontazh}
-                  type="submit"
-                >
-                  Завершить
-                </button>
-              </>
-            ) : null}
+              <button
+                className="my-3 ml-2 py-3 w-1/2 px-3 bg-green-600 text-white hover:bg-green-700 hover:text-white rounded-lg"
+                onClick={changeShinomontazh}
+                type="submit"
+              >
+                Завершить
+              </button>
+            </>
           </div>
         ) : null}
         {active === 'finish' && props.dateFinish ? (
