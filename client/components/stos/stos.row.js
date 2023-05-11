@@ -5,13 +5,14 @@ import { Link } from 'react-router-dom'
 import taskStatuses from '../../../common/enums/shinomontazh-statuses'
 
 const StosRow = (props) => {
+  console.log('props: ', props)
   // const componentRef = useRef()
   // const handlePrint = useReactToPrint({
   //   content: () => componentRef.current
   // })
   const createDate = new Date(props.dateStart)
   const finishDate = new Date(props.dateFinish)
-  console.log('props.type', props.type)
+
   const totalFreeService = props.services
     .filter((it) => it.free === 'yes')
     .reduce((acc, rec) => acc + rec.price * rec.quantity, 0)
@@ -51,7 +52,7 @@ const StosRow = (props) => {
       })}
     >
       <td className="w-auto p-2 text-gray-800 text-sm text-center border border-b table-cell static">
-        {props.id_stos}
+        {props[`id_${props?.type || 'sto'}s`]}
       </td>
       <td className="w-auto p-2 text-gray-800 text-sm text-center border border-b table-cell static">
         {props.mark} {props.model}

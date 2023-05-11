@@ -27,7 +27,7 @@ const StosEdit = (props) => {
   const SERVICES_WITHOUT_TYPE =
     location.pathname.includes('/window') || location.pathname.includes('/cond')
 
-  const checkLink = () => history.location.pathname.split('/').includes('stoboss')
+  const checkLink = () => history.location.pathname.includes('boss')
 
   const employeeList = useSelector((s) => s.employees.list)
   // const customerList = useSelector((s) => s.customers.list)
