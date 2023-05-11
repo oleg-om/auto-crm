@@ -352,11 +352,11 @@ const Dashboard = () => {
               <div className="md:w-1/2 px-3 mb-6 flex flex-col">
                 <Link
                   to={
-                    auth.roles.includes('window') &&
+                    auth.roles.includes('cond') &&
                     !auth.roles.includes('boss') &&
                     !auth.roles.includes('bookkeeper')
-                      ? '/window/list'
-                      : '/windowboss/list'
+                      ? '/cond/list'
+                      : '/condboss/list'
                   }
                   className="rounded-lg shadow-lg bg-gradient-to-r from-gray-700 to-gray-400 h-full"
                 >
