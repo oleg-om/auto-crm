@@ -43,7 +43,7 @@ export default (state = initialState, action) => {
     case UPDATE_WINDOW_STATUS: {
       return {
         ...state,
-        list: state.list.map((it) => {
+        list: state?.list?.map((it) => {
           return action.window.id === it.id ? action.window : it
         })
       }

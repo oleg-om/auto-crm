@@ -18,7 +18,16 @@ const config = {
   optimization: {
     minimize: true,
     minimizer: [
-      new TerserJSPlugin({ parallel: true }),
+      new TerserJSPlugin(
+        { parallel: true },
+        {
+          terserOptions: {
+            compress: {
+              drop_console: true
+            }
+          }
+        }
+      ),
       new OptimizeCSSAssetsPlugin({
         cssProcessor: require('cssnano'),
         cssProcessorPluginOptions: {
