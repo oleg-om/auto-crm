@@ -43,7 +43,7 @@ export default (state = initialState, action) => {
     case UPDATE_COND_STATUS: {
       return {
         ...state,
-        list: state.list.map((it) => {
+        list: state?.list?.map((it) => {
           return action.cond.id === it.id ? action.cond : it
         })
       }
