@@ -40,7 +40,7 @@ export default (state = initialState, action) => {
     case UPDATE_SHINOMONTAZH: {
       return {
         ...state,
-        list: state.list.map((it) => {
+        list: state?.list?.map((it) => {
           return action.shinomontazh.id_shinomontazhs === it.id_shinomontazhs
             ? action.shinomontazh
             : it
@@ -50,7 +50,7 @@ export default (state = initialState, action) => {
     case UPDATE_SHINOMONTAZH_STATUS: {
       return {
         ...state,
-        list: state.list.map((it) => {
+        list: state?.list?.map((it) => {
           return action.shinomontazh.id === it.id ? action.shinomontazh : it
         })
       }
