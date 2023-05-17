@@ -30,7 +30,7 @@ export default (state = initialState, action) => {
       return { ...state, list: action.stos, isLoaded: action.isLoaded }
     }
     case CREATE_STO: {
-      return { ...state, list: [action.sto, ...state.list] }
+      return { ...state, list: [action.sto, ...state.list].filter((it) => it) }
     }
     case UPDATE_STO: {
       return {

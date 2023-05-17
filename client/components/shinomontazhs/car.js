@@ -3,6 +3,7 @@ import cx from 'classnames'
 import sizeGruz from '../../lists/tyres/sizegruz'
 import sizeSelhoz from '../../lists/tyres/sizeselhoz'
 import gruzCars from '../../lists/gruz-cars'
+import { SwitchToTapKeyboard } from '../../hooks/keyboard'
 
 const Car = ({
   regOpen,
@@ -598,6 +599,7 @@ const Car = ({
             </div>
           </div>
         </div>
+        <SwitchToTapKeyboard keyboard={keyboard} switchKeyboard={switchKeyboard} />
         {customerOptions.length >= 1 && customer.idOfItem && activeCustomer ? (
           <p className="text-left p-1">✔ Вы выбрали клиента</p>
         ) : null}

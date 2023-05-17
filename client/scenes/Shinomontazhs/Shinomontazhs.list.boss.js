@@ -179,7 +179,7 @@ const ShinomontazhsListBoss = () => {
   const onEterPress = (e) => {
     handleEnterpress(e, onFilter)
   }
-
+  console.log('list', list)
   return (
     <div>
       <Navbar />
@@ -514,7 +514,7 @@ const ShinomontazhsListBoss = () => {
               {list && list.length > 0
                 ? list.map((it) => (
                     <ShinomontazhsRowBoss
-                      key={it.id}
+                      key={it?.id}
                       {...it}
                       updateStatus={updateStatusLocal}
                       role={role}

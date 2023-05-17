@@ -12,6 +12,7 @@ import Final from './final'
 import sizeThreeList from '../../lists/shinomontazhdiametr'
 import statusList from '../../../common/enums/shinomontazh-statuses'
 import { useFindCustomer } from '../../hooks/findCustomer'
+import { useKeyboard } from '../../hooks/keyboard'
 
 const StosEdit = (props) => {
   toast.configure()
@@ -39,8 +40,9 @@ const StosEdit = (props) => {
   const currentPlace = placeList.find((it) => it.id === auth.place)
 
   const [regNumber, setRegNumber] = useState([])
-  const [keyboard, setKeyboard] = useState(true)
-  const [regOpen, setRegOpen] = useState(false)
+  // const [keyboard, setKeyboard] = useState(true)
+  const { keyboard, regOpen, setRegOpen, switchKeyboard } = useKeyboard()
+  // const [regOpen, setRegOpen] = useState(false)
 
   const [state, setState] = useState({
     place: props.place,
@@ -151,10 +153,10 @@ const StosEdit = (props) => {
     }))
   }
 
-  const switchKeyboard = () => {
-    setKeyboard(true)
-    setRegOpen(false)
-  }
+  // const switchKeyboard = () => {
+  //   setKeyboard(true)
+  //   setRegOpen(false)
+  // }
 
   const acceptRegnumber = () => {
     setRegOpen(false)

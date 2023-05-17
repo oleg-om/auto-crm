@@ -10,6 +10,7 @@ import Service from './service'
 import Material from './material'
 import Final from './final'
 import sizeThreeList from '../../lists/shinomontazhdiametr'
+import { useKeyboard } from '../../hooks/keyboard'
 
 const ShinomontazhsCreate = (props) => {
   toast.configure()
@@ -28,8 +29,7 @@ const ShinomontazhsCreate = (props) => {
   const currentPlace = placeList.find((it) => it.id === auth.place)
 
   const [regNumber, setRegNumber] = useState([])
-  const [keyboard, setKeyboard] = useState(false)
-  const [regOpen, setRegOpen] = useState(false)
+  const { keyboard, regOpen, setRegOpen, switchKeyboard } = useKeyboard()
 
   const [box, setBox] = useState('')
 
@@ -82,10 +82,10 @@ const ShinomontazhsCreate = (props) => {
     }))
   }
 
-  const switchKeyboard = () => {
-    setKeyboard(true)
-    setRegOpen(false)
-  }
+  // const switchKeyboard = () => {
+  //   setKeyboard(true)
+  //   setRegOpen(false)
+  // }
 
   const acceptRegnumber = () => {
     setRegOpen(false)

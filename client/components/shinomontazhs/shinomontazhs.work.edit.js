@@ -14,6 +14,7 @@ import statusList from '../../../common/enums/shinomontazh-statuses'
 import { updateStorageStatus } from '../../redux/reducers/storage'
 import { dateNew } from '../storage/storage.preorder.edit'
 import { useFindCustomer } from '../../hooks/findCustomer'
+import { useKeyboard } from '../../hooks/keyboard'
 
 const ShinomontazhsEdit = (props) => {
   toast.configure()
@@ -38,8 +39,7 @@ const ShinomontazhsEdit = (props) => {
   const currentPlace = placeList.find((it) => it.id === auth.place)
 
   const [regNumber, setRegNumber] = useState([])
-  const [keyboard, setKeyboard] = useState(true)
-  const [regOpen, setRegOpen] = useState(false)
+  const { keyboard, regOpen, setRegOpen, switchKeyboard } = useKeyboard()
 
   const [state, setState] = useState({
     place: props.place,
@@ -152,10 +152,10 @@ const ShinomontazhsEdit = (props) => {
     }))
   }
 
-  const switchKeyboard = () => {
-    setKeyboard(true)
-    setRegOpen(false)
-  }
+  // const switchKeyboard = () => {
+  //   setKeyboard(true)
+  //   setRegOpen(false)
+  // }
 
   const acceptRegnumber = () => {
     setRegOpen(false)

@@ -68,7 +68,7 @@ const ShinomontazhsList = () => {
   // const notify = (arg) => {
   //   toast.info(arg, { position: toast.POSITION.BOTTOM_RIGHT })
   // }
-
+  console.log('list', list)
   return (
     <div>
       <Navbar />
@@ -116,7 +116,7 @@ const ShinomontazhsList = () => {
               {list && list.length > 0
                 ? list.map((it) => (
                     <ShinomontazhsRow
-                      key={it.id}
+                      key={it?.id}
                       {...it}
                       updateStatus={updateStatusLocal}
                       role={role}

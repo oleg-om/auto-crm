@@ -35,7 +35,7 @@ export default (state = initialState, action) => {
       return { ...state, list: action.shinomontazhs, isLoaded: action.isLoaded }
     }
     case CREATE_SHINOMONTAZH: {
-      return { ...state, list: [action.shinomontazh, ...state.list] }
+      return { ...state, list: [action.shinomontazh, ...state.list].filter((it) => it) }
     }
     case UPDATE_SHINOMONTAZH: {
       return {

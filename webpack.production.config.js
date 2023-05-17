@@ -19,7 +19,17 @@ const config = {
     minimize: true,
     minimizer: [
       new TerserJSPlugin(
-        { parallel: true },
+        {
+          parallel: true,
+          // compress: {
+          //   drop_console: true
+          // }
+          terserOptions: {
+            compress: {
+              drop_console: true
+            }
+          }
+        },
         {
           terserOptions: {
             compress: {
