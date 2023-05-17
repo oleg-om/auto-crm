@@ -35,11 +35,12 @@ export default (state = initialState, action) => {
       return { ...state, list: action.shinomontazhs, isLoaded: action.isLoaded }
     }
     case CREATE_SHINOMONTAZH: {
-      return { ...state, list: [action.shinomontazh, ...state.list].filter((it) => it) }
+      return { ...state, list: [action.shinomontazh, ...state.list].filter((it) => it), isLoaded: action.isLoaded }
     }
     case UPDATE_SHINOMONTAZH: {
       return {
         ...state,
+        isLoaded: action.isLoaded,
         list: state?.list?.map((it) => {
           return action.shinomontazh.id_shinomontazhs === it.id_shinomontazhs
             ? action.shinomontazh
@@ -87,10 +88,14 @@ export function getShinomontazhsLastTwoDays() {
 
 export function getShinomontazh(id) {
   return (dispatch) => {
+    dispatch({
+      type: GET_SHINOMONTAZHS,
+      isLoaded: false
+    })
     fetch(`/api/v1/shinomontazh/${id}`)
       .then((r) => r.json())
       .then(({ data: shinomontazhs }) => {
-        dispatch({ type: GET_SHINOMONTAZH, shinomontazhs })
+        dispatch({ type: GET_SHINOMONTAZH, shinomontazhs, isLoaded: true  })
       })
   }
 }
@@ -141,6 +146,10 @@ export function getItemsFiltered(page, place, number, reg) {
 
 export function createShinomontazh(name) {
   return (dispatch) => {
+    dispatch({
+      type: GET_SHINOMONTAZHS,
+      isLoaded: false
+    })
     fetch('/api/v1/shinomontazh', {
       method: 'POST',
       headers: {
@@ -150,13 +159,17 @@ export function createShinomontazh(name) {
     })
       .then((r) => r.json())
       .then(({ data: shinomontazh }) => {
-        dispatch({ type: CREATE_SHINOMONTAZH, shinomontazh })
+        dispatch({ type: CREATE_SHINOMONTAZH, shinomontazh, isLoaded: true })
       })
   }
 }
 
 export function updateStatus(id, status) {
   return (dispatch) => {
+    dispatch({
+      type: GET_SHINOMONTAZHS,
+      isLoaded: false
+    })
     fetch(`/api/v1/shinomontazh/${id}`, {
       method: 'PATCH',
       headers: {
@@ -168,13 +181,17 @@ export function updateStatus(id, status) {
     })
       .then((r) => r.json())
       .then(({ data: shinomontazh }) => {
-        dispatch({ type: UPDATE_SHINOMONTAZH_STATUS, shinomontazh })
+        dispatch({ type: UPDATE_SHINOMONTAZH_STATUS, shinomontazh, isLoaded: true })
       })
   }
 }
 
 export function updateShinomontazh(id, name) {
   return (dispatch) => {
+    dispatch({
+      type: GET_SHINOMONTAZHS,
+      isLoaded: false
+    })
     fetch(`/api/v1/shinomontazh/${id}`, {
       method: 'PATCH',
       headers: {
@@ -184,7 +201,7 @@ export function updateShinomontazh(id, name) {
     })
       .then((r) => r.json())
       .then(({ data: shinomontazh }) => {
-        dispatch({ type: UPDATE_SHINOMONTAZH, shinomontazh })
+        dispatch({ type: UPDATE_SHINOMONTAZH, shinomontazh, isLoaded: true })
       })
   }
 }
