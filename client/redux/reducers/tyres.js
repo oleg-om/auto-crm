@@ -28,7 +28,7 @@ export default (state = initialState, action) => {
     case UPDATE_TYRE: {
       return {
         ...state,
-        list: state.list.map((it) => {
+        list: state?.list?.map((it) => {
           return action.tyre.id_tyres === it.id_tyres ? action.tyre : it
         })
       }

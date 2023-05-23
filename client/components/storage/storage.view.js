@@ -2,13 +2,13 @@ import React, { useState, useRef } from 'react'
 import { Link, useHistory } from 'react-router-dom'
 import { useSelector } from 'react-redux'
 import { toast } from 'react-toastify'
-import cx from 'classnames'
 import { useReactToPrint } from 'react-to-print'
 import 'react-toastify/dist/ReactToastify.css'
 import ComponentToPrint from './storage.print'
 import malePlaceholder from '../../assets/images/profile_placeholder_male.webp'
 import orderPlaceholder from '../../assets/images/order_placeholder.webp'
 import taskStatuses from '../../lists/task-statuses'
+import { CardStatus } from '../shared/goods/tables/TableStatuses'
 
 const StorageViewOrder = (props) => {
   const history = useHistory()
@@ -221,28 +221,7 @@ const StorageViewOrder = (props) => {
             </div>
           </div>
           <div className="md:m-3 lg:flex flex-col rounded-lg px-6 py-2 w-auto shadow bg-gray-100 my-2">
-            <div className="text-center md:text-left m-3">
-              <div>
-                <ul>
-                  <li>
-                    <b>Текущий статус заказа:</b>
-                    <div
-                      className={cx('rounded py-1 px-3 text-xs font-bold', {
-                        'bg-yellow-400': props.status === taskStatuses[0],
-                        'bg-orange-400': props.status === taskStatuses[1],
-                        'bg-green-400': props.status === taskStatuses[2],
-                        'bg-blue-400': props.status === taskStatuses[3],
-                        'bg-gray-400': props.status === taskStatuses[4],
-                        'bg-purple-400': props.status === taskStatuses[5],
-                        'bg-red-400': props.status === taskStatuses[6]
-                      })}
-                    >
-                      {props.status}
-                    </div>
-                  </li>
-                </ul>
-              </div>
-            </div>
+            <CardStatus props={props} />
             <div className="px-3">
               <b>Обработал заказ </b>
               <div className="flex-shrink w-full inline-block relative mb-3">

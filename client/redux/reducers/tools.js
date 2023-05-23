@@ -28,7 +28,7 @@ export default (state = initialState, action) => {
     case UPDATE_TOOL: {
       return {
         ...state,
-        list: state.list.map((it) => {
+        list: state?.list?.map((it) => {
           return action.tool.id_tools === it.id_tools ? action.tool : it
         })
       }
