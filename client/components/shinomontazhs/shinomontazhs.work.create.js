@@ -12,6 +12,7 @@ import Final from './final'
 import sizeThreeList from '../../lists/shinomontazhdiametr'
 import { useKeyboard } from '../../hooks/keyboard'
 import { useMaterials } from '../../hooks/handleMaterials'
+import { useServices } from '../../hooks/handleServices'
 
 const ShinomontazhsCreate = (props) => {
   toast.configure()
@@ -45,7 +46,7 @@ const ShinomontazhsCreate = (props) => {
     dateStart: new Date()
   })
 
-  const [service, setService] = useState([])
+  // const [service, setService] = useState([])
 
   const {
     materials,
@@ -57,6 +58,15 @@ const ShinomontazhsCreate = (props) => {
     materialPriceChange,
     materialOnChange
   } = useMaterials()
+
+  const {
+    service,
+    checkboxServiceChange,
+    servicePlusChange,
+    serviceMinusChange,
+    onServiceQuantityChange,
+    servicePriceChange
+  } = useServices()
 
   const [tyres, setTyres] = useState({ sale: 'no' })
   const [employees, setEmployees] = useState([])
@@ -441,67 +451,67 @@ const ShinomontazhsCreate = (props) => {
   }
 
   const [active, setActive] = useState('employee')
-  const checkboxServiceChange = (e) => {
-    const { name, placeholder, checked, attributes } = e.target
-    if (checked) {
-      setService((prevState) => [
-        ...prevState,
-        {
-          serviceName: name,
-          quantity: 1,
-          price: placeholder,
-          name: attributes.somename.value,
-          free: attributes.somefree.value
-        }
-      ])
-    } else {
-      setService((prevState) => prevState.filter((it) => it.serviceName !== name))
-    }
-  }
-  const servicePlusChange = (e) => {
-    const { name } = e.target
-    setService(
-      service.map((object) => {
-        if (object.serviceName === name) {
-          return {
-            ...object,
-            quantity: object.quantity + 1
-          }
-        }
-        return object
-      })
-    )
-  }
+  // const checkboxServiceChange = (e) => {
+  //   const { name, placeholder, checked, attributes } = e.target
+  //   if (checked) {
+  //     setService((prevState) => [
+  //       ...prevState,
+  //       {
+  //         serviceName: name,
+  //         quantity: 1,
+  //         price: placeholder,
+  //         name: attributes.somename.value,
+  //         free: attributes.somefree.value
+  //       }
+  //     ])
+  //   } else {
+  //     setService((prevState) => prevState.filter((it) => it.serviceName !== name))
+  //   }
+  // }
+  // const servicePlusChange = (e) => {
+  //   const { name } = e.target
+  //   setService(
+  //     service.map((object) => {
+  //       if (object.serviceName === name) {
+  //         return {
+  //           ...object,
+  //           quantity: object.quantity + 1
+  //         }
+  //       }
+  //       return object
+  //     })
+  //   )
+  // }
 
-  const serviceMinusChange = (e) => {
-    const { name } = e.target
-    setService(
-      service.map((object) => {
-        if (object.serviceName === name && object.quantity >= 2) {
-          return {
-            ...object,
-            quantity: object.quantity - 1
-          }
-        }
-        return object
-      })
-    )
-  }
+  // const serviceMinusChange = (e) => {
+  //   const { name } = e.target
+  //   setService(
+  //     service.map((object) => {
+  //       if (object.serviceName === name && object.quantity >= 2) {
+  //         return {
+  //           ...object,
+  //           quantity: object.quantity - 1
+  //         }
+  //       }
+  //       return object
+  //     })
+  //   )
+  // }
 
-  const servicePriceChange = (e) => {
-    const { value, id } = e.target
-    setService(
-      service.map((object) => {
-        if (object.serviceName === id) {
-          return {
-            ...object,
-            price: value
-          }
-        }
-        return object
-      })
-    )
-  }
+  // const servicePriceChange = (e) => {
+  //   const { value, id } = e.target
+  //   setService(
+  //     service.map((object) => {
+  //       if (object.serviceName === id) {
+  //         return {
+  //           ...object,
+  //           price: value
+  //         }
+  //       }
+  //       return object
+  //     })
+  //   )
+  // }
 
   const checkboxEmployeeChange = (e) => {
     const { name, placeholder, checked, attributes } = e.target
@@ -789,6 +799,7 @@ const ShinomontazhsCreate = (props) => {
             serviceMinusChange={serviceMinusChange}
             servicePriceChange={servicePriceChange}
             dateEnd=""
+            onServiceQuantityChange={onServiceQuantityChange}
           />
         </div>
         <div

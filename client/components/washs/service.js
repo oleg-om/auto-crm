@@ -1,5 +1,6 @@
-import React, { useEffect, useState } from 'react'
+import React from 'react'
 import cx from 'classnames'
+import { useServiceCategories } from '../../hooks/handleServiceCategories'
 
 const Service = ({
   actualService,
@@ -8,23 +9,26 @@ const Service = ({
   servicePlusChange,
   serviceMinusChange,
   servicePriceChange,
-  dateEnd
+  dateEnd,
+  onServiceQuantityChange
 }) => {
-  const [category, setCategory] = useState('')
+  // const [category, setCategory] = useState('')
 
-  const categoryList = actualService.reduce((acc, rec) => {
-    if (!acc.find((it) => it === rec.category)) {
-      return [...acc, rec.category].sort((a, b) => a.localeCompare(b))
-    }
-    return acc
-  }, [])
+  // const categoryList = actualService.reduce((acc, rec) => {
+  //   if (!acc.find((it) => it === rec.category)) {
+  //     return [...acc, rec.category].sort((a, b) => a.localeCompare(b))
+  //   }
+  //   return acc
+  // }, [])
 
-  useEffect(() => {
-    if (categoryList && categoryList.length > 0 && !category) {
-      setCategory(categoryList[0])
-    }
-    return () => {}
-  }, [categoryList])
+  // useEffect(() => {
+  //   if (categoryList && categoryList.length > 0 && !category) {
+  //     setCategory(categoryList[0])
+  //   }
+  //   return () => {}
+  // }, [categoryList])
+
+  const { category, setCategory, categoryList } = useServiceCategories(actualService, service)
 
   return (
     <div className="flex flex-col -mx-3">
@@ -57,6 +61,9 @@ const Service = ({
                     <option value="" hidden>
                       Выберите категорию
                     </option>
+                    <option value="choosen" label="Выбранное">
+                      Выбранное
+                    </option>
                     {categoryList
                       ? categoryList.map((it) => <option value={it} label={it} key={it} />)
                       : null}
@@ -77,7 +84,12 @@ const Service = ({
           <table>
             {actualService && !dateEnd
               ? actualService
-                  .filter((it) => it.category === category)
+                  .filter(
+                    (it) =>
+                      it.category === category ||
+                      (category === 'choosen' &&
+                        service.find((ser) => ser.serviceName.includes(it.id)))
+                  )
                   .sort(function (a, b) {
                     if (a.number > b.number) {
                       return 1
@@ -215,7 +227,12 @@ const Service = ({
                               ? service.find((it) => it.serviceName.includes(item.id)).quantity
                               : ''
                           }
-                          type="text"
+                          type="number"
+                          somename={item.name}
+                          somefree={item.free}
+                          name={item.id}
+                          someprice={item.actualprice}
+                          onChange={onServiceQuantityChange}
                         />
                         {service.find((it) => it.serviceName.includes(item.id)) ? (
                           <button

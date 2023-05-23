@@ -202,7 +202,7 @@ const Material = ({
                           </button>
                         )}
                         <input
-                          className="py-1 px-4 bg-white font-bold rounded-lg m-1 border-gray-300 border w-20 lg:max-w-sm"
+                          className="11 py-1 px-4 bg-white font-bold rounded-lg m-1 border-gray-300 border w-20 lg:max-w-sm"
                           value={
                             materials.find((it) => it.serviceName.includes(item.id))
                               ? materials.find((it) => it.serviceName.includes(item.id)).quantity

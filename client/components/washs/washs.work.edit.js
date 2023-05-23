@@ -13,6 +13,7 @@ import sizeThreeList from '../../lists/shinomontazhdiametr'
 import statusList from '../../../common/enums/shinomontazh-statuses'
 import { useMaterials } from '../../hooks/handleMaterials'
 import { useKeyboard } from '../../hooks/keyboard'
+import { useServices } from '../../hooks/handleServices'
 
 const WashsEdit = (props) => {
   toast.configure()
@@ -55,7 +56,7 @@ const WashsEdit = (props) => {
 
   const [box, setBox] = useState(props.box ? props.box : '')
 
-  const [service, setService] = useState(props.services ? props.services : [])
+  // const [service, setService] = useState(props.services ? props.services : [])
   // const [materials, setMaterials] = useState(props.material ? props.material : [])
   const [tyres, setTyres] = useState(props.tyre ? props.tyre[0] : { sale: 'no' })
   const [employees, setEmployees] = useState(props.employee ? props.employee : [])
@@ -70,6 +71,15 @@ const WashsEdit = (props) => {
     materialPriceChange,
     materialOnChange
   } = useMaterials(props.material)
+
+  const {
+    service,
+    checkboxServiceChange,
+    servicePlusChange,
+    serviceMinusChange,
+    onServiceQuantityChange,
+    servicePriceChange
+  } = useServices(props.services)
 
   const { keyboard, regOpen, setRegOpen, switchKeyboard } = useKeyboard()
 
@@ -368,67 +378,67 @@ const WashsEdit = (props) => {
   }, [state.diametr, state.kuzov, stoprices])
 
   const [active, setActive] = useState('finish')
-  const checkboxServiceChange = (e) => {
-    const { name, placeholder, checked, attributes } = e.target
-    if (checked) {
-      setService((prevState) => [
-        ...prevState,
-        {
-          serviceName: name,
-          quantity: 1,
-          price: placeholder,
-          name: attributes.somename.value,
-          free: attributes.somefree.value
-        }
-      ])
-    } else {
-      setService((prevState) => prevState.filter((it) => it.serviceName !== name))
-    }
-  }
-  const servicePlusChange = (e) => {
-    const { name } = e.target
-    setService(
-      service.map((object) => {
-        if (object.serviceName === name) {
-          return {
-            ...object,
-            quantity: object.quantity + 1
-          }
-        }
-        return object
-      })
-    )
-  }
+  // const checkboxServiceChange = (e) => {
+  //   const { name, placeholder, checked, attributes } = e.target
+  //   if (checked) {
+  //     setService((prevState) => [
+  //       ...prevState,
+  //       {
+  //         serviceName: name,
+  //         quantity: 1,
+  //         price: placeholder,
+  //         name: attributes.somename.value,
+  //         free: attributes.somefree.value
+  //       }
+  //     ])
+  //   } else {
+  //     setService((prevState) => prevState.filter((it) => it.serviceName !== name))
+  //   }
+  // }
+  // const servicePlusChange = (e) => {
+  //   const { name } = e.target
+  //   setService(
+  //     service.map((object) => {
+  //       if (object.serviceName === name) {
+  //         return {
+  //           ...object,
+  //           quantity: object.quantity + 1
+  //         }
+  //       }
+  //       return object
+  //     })
+  //   )
+  // }
 
-  const serviceMinusChange = (e) => {
-    const { name } = e.target
-    setService(
-      service.map((object) => {
-        if (object.serviceName === name && object.quantity >= 2) {
-          return {
-            ...object,
-            quantity: object.quantity - 1
-          }
-        }
-        return object
-      })
-    )
-  }
+  // const serviceMinusChange = (e) => {
+  //   const { name } = e.target
+  //   setService(
+  //     service.map((object) => {
+  //       if (object.serviceName === name && object.quantity >= 2) {
+  //         return {
+  //           ...object,
+  //           quantity: object.quantity - 1
+  //         }
+  //       }
+  //       return object
+  //     })
+  //   )
+  // }
 
-  const servicePriceChange = (e) => {
-    const { value, id } = e.target
-    setService(
-      service.map((object) => {
-        if (object.serviceName === id) {
-          return {
-            ...object,
-            price: value
-          }
-        }
-        return object
-      })
-    )
-  }
+  // const servicePriceChange = (e) => {
+  //   const { value, id } = e.target
+  //   setService(
+  //     service.map((object) => {
+  //       if (object.serviceName === id) {
+  //         return {
+  //           ...object,
+  //           price: value
+  //         }
+  //       }
+  //       return object
+  //     })
+  //   )
+  // }
 
   // const checkboxMaterialChange = (e) => {
   //   const { name, placeholder, checked, attributes } = e.target
@@ -1018,6 +1028,7 @@ const WashsEdit = (props) => {
             serviceMinusChange={serviceMinusChange}
             servicePriceChange={servicePriceChange}
             dateEnd={props.dateFinish}
+            onServiceQuantityChange={onServiceQuantityChange}
           />
         </div>
         <div

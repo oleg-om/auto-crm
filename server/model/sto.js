@@ -86,6 +86,10 @@ const Sto = new mongoose.Schema({
   box: {
     type: Number,
     required: false
+  },
+  customerId: {
+    type: String,
+    required: false
   }
 })
 

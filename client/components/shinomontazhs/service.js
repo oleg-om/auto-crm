@@ -8,7 +8,8 @@ const Service = ({
   servicePlusChange,
   serviceMinusChange,
   servicePriceChange,
-  dateEnd
+  dateEnd,
+  onServiceQuantityChange
 }) => {
   return (
     <div className="flex flex-col -mx-3">
@@ -160,7 +161,12 @@ const Service = ({
                               ? service.find((it) => it.serviceName.includes(item.id)).quantity
                               : ''
                           }
-                          type="text"
+                          type="number"
+                          somename={item.name}
+                          somefree={item.free}
+                          name={item.id}
+                          someprice={item.actualprice}
+                          onChange={onServiceQuantityChange}
                         />
                         {service.find((it) => it.serviceName.includes(item.id)) ? (
                           <button

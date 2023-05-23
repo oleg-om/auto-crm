@@ -35,7 +35,7 @@ export default (state = initialState, action) => {
     case UPDATE_WASH: {
       return {
         ...state,
-        list: state.list.map((it) => {
+        list: state?.list?.map((it) => {
           return action.wash.id_washs === it.id_washs ? action.wash : it
         })
       }
@@ -43,7 +43,7 @@ export default (state = initialState, action) => {
     case UPDATE_WASH_STATUS: {
       return {
         ...state,
-        list: state.list.map((it) => {
+        list: state?.list?.map((it) => {
           return action.wash.id === it.id ? action.wash : it
         })
       }

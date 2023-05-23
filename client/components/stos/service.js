@@ -1,6 +1,7 @@
 /* eslint-disable no-unneeded-ternary */
-import React, { useEffect, useState } from 'react'
+import React from 'react'
 import cx from 'classnames'
+import { useServiceCategories } from '../../hooks/handleServiceCategories'
 
 const Service = ({
   actualService,
@@ -9,23 +10,10 @@ const Service = ({
   servicePlusChange,
   serviceMinusChange,
   servicePriceChange,
-  dateEnd
+  dateEnd,
+  onServiceQuantityChange
 }) => {
-  const [category, setCategory] = useState('')
-
-  const categoryList = actualService.reduce((acc, rec) => {
-    if (!acc.find((it) => it === rec.category)) {
-      return [...acc, rec.category].sort((a, b) => a.localeCompare(b))
-    }
-    return acc
-  }, [])
-
-  useEffect(() => {
-    if (categoryList && categoryList.length > 0 && !category) {
-      setCategory(categoryList[0])
-    }
-    return () => {}
-  }, [categoryList])
+  const { category, setCategory, categoryList } = useServiceCategories(actualService, service)
 
   return (
     <div className="flex flex-col -mx-3">
@@ -225,7 +213,12 @@ const Service = ({
                               ? service.find((it) => it.serviceName.includes(item.id)).quantity
                               : ''
                           }
-                          type="text"
+                          type="number"
+                          somename={item.name}
+                          somefree={item.free}
+                          name={item.id}
+                          someprice={item.actualprice}
+                          onChange={onServiceQuantityChange}
                         />
                         {service.find((it) => it.serviceName.includes(item.id)) ? (
                           <button

@@ -14,11 +14,9 @@ export function useFindCustomer(props, state) {
   })
 
   const [search, setSearch] = useState()
-  console.log('search: ', search)
   const [activeCustomer, setActiveCustomer] = useState('')
   // find client
   useEffect(() => {
-    console.log('props.customerId: ', props.customerId)
     if (props.customerId && !activeCustomer) {
       setActiveCustomer(props.customerId)
       setSearch(props.customerId)
@@ -27,7 +25,6 @@ export function useFindCustomer(props, state) {
   }, [props.customerId])
 
   const [customerList, setCustomerOptions] = useState([])
-  console.log('customerList: ', customerList)
 
   // eslint-disable-next-line no-unused-vars
   const throttling = useRef(false)
