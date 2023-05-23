@@ -18,7 +18,7 @@ export default (state = initialState, action) => {
     case UPDATE_RAZVAL: {
       return {
         ...state,
-        list: state.list.map((it) => {
+        list: state?.list?.map((it) => {
           return action.razval.id === it.id ? action.razval : it
         })
       }

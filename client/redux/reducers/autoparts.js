@@ -34,7 +34,7 @@ export default (state = initialState, action) => {
     case UPDATE_AUTOPART: {
       return {
         ...state,
-        list: state.list.map((it) => {
+        list: state?.list?.map((it) => {
           return action.autopart.id_autoparts === it.id_autoparts ? action.autopart : it
         })
       }

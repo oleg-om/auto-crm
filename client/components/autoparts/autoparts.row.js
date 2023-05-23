@@ -63,10 +63,11 @@ const AutopartsRow = (props) => {
             'bg-yellow-400': props.status === taskStatuses[0],
             'bg-orange-400': props.status === taskStatuses[1],
             'bg-green-400': props.status === taskStatuses[2],
-            'bg-blue-400': props.status === taskStatuses[3],
-            'bg-gray-400': props.status === taskStatuses[4],
-            'bg-purple-400': props.status === taskStatuses[5],
-            'bg-red-400': props.status === taskStatuses[6]
+            'bg-pink-400': props.status === taskStatuses[3],
+            'bg-blue-400': props.status === taskStatuses[4],
+            'bg-gray-400': props.status === taskStatuses[5],
+            'bg-purple-400': props.status === taskStatuses[6],
+            'bg-red-400': props.status === taskStatuses[7]
           })}
         >
           {props.status}
