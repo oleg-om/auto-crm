@@ -11,6 +11,7 @@ import Material from './material'
 import Final from './final'
 import sizeThreeList from '../../lists/shinomontazhdiametr'
 import { useKeyboard } from '../../hooks/keyboard'
+import { useMaterials } from '../../hooks/handleMaterials'
 
 const ShinomontazhsCreate = (props) => {
   toast.configure()
@@ -45,7 +46,17 @@ const ShinomontazhsCreate = (props) => {
   })
 
   const [service, setService] = useState([])
-  const [materials, setMaterials] = useState([])
+
+  const {
+    materials,
+    checkboxMaterialChange,
+    materialPlusChange,
+    materialEightChange,
+    checkboxMaterialPlusChange,
+    materialMinusChange,
+    materialPriceChange,
+    materialOnChange
+  } = useMaterials()
 
   const [tyres, setTyres] = useState({ sale: 'no' })
   const [employees, setEmployees] = useState([])
@@ -492,99 +503,6 @@ const ShinomontazhsCreate = (props) => {
     )
   }
 
-  const checkboxMaterialChange = (e) => {
-    const { name, placeholder, checked, attributes } = e.target
-    if (checked) {
-      setMaterials((prevState) => [
-        ...prevState,
-        {
-          serviceName: name,
-          quantity: 1,
-          price: placeholder,
-          name: attributes.somename.value,
-          free: attributes.somefree.value
-        }
-      ])
-    } else {
-      setMaterials((prevState) => prevState.filter((it) => it.serviceName !== name))
-    }
-  }
-  const materialPlusChange = (e) => {
-    const { name } = e.target
-    setMaterials(
-      materials.map((object) => {
-        if (object.serviceName === name) {
-          return {
-            ...object,
-            quantity: object.quantity + 1
-          }
-        }
-        return object
-      })
-    )
-  }
-
-  const materialEightChange = (e) => {
-    const { name } = e.target
-    setMaterials(
-      materials.map((object) => {
-        if (object.serviceName === name) {
-          return {
-            ...object,
-            quantity: 8
-          }
-        }
-        return object
-      })
-    )
-  }
-
-  const checkboxMaterialPlusChange = (e) => {
-    const { name, attributes } = e.target
-    if (!materials.find((it) => it.serviceName.includes(name))) {
-      setMaterials((prevState) => [
-        ...prevState,
-        {
-          serviceName: name,
-          quantity: 8,
-          price: attributes.someprice.value,
-          name: attributes.somename.value,
-          free: attributes.somefree.value
-        }
-      ])
-    }
-  }
-
-  const materialMinusChange = (e) => {
-    const { name } = e.target
-    setMaterials(
-      materials.map((object) => {
-        if (object.serviceName === name && object.quantity >= 2) {
-          return {
-            ...object,
-            quantity: object.quantity - 1
-          }
-        }
-        return object
-      })
-    )
-  }
-
-  const materialPriceChange = (e) => {
-    const { value, id } = e.target
-    setMaterials(
-      materials.map((object) => {
-        if (object.serviceName === id) {
-          return {
-            ...object,
-            price: value
-          }
-        }
-        return object
-      })
-    )
-  }
-
   const checkboxEmployeeChange = (e) => {
     const { name, placeholder, checked, attributes } = e.target
     if (checked) {
@@ -890,6 +808,7 @@ const ShinomontazhsCreate = (props) => {
             dateEnd=""
             materialEightChange={materialEightChange}
             checkboxMaterialPlusChange={checkboxMaterialPlusChange}
+            materialOnChange={materialOnChange}
           />
         </div>
         <div

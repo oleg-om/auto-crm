@@ -10,6 +10,8 @@ import Service from './service'
 import Material from './material'
 import Final from './final'
 import sizeThreeList from '../../lists/shinomontazhdiametr'
+import { useMaterials } from '../../hooks/handleMaterials'
+import { useKeyboard } from '../../hooks/keyboard'
 
 const WashsCreate = (props) => {
   toast.configure()
@@ -28,8 +30,8 @@ const WashsCreate = (props) => {
   const currentPlace = placeList.find((it) => it.id === auth.place)
 
   const [regNumber, setRegNumber] = useState([])
-  const [keyboard, setKeyboard] = useState(false)
-  const [regOpen, setRegOpen] = useState(false)
+  // const [keyboard, setKeyboard] = useState(false)
+  // const [regOpen, setRegOpen] = useState(false)
 
   const [state, setState] = useState({
     place: auth.place,
@@ -44,7 +46,20 @@ const WashsCreate = (props) => {
     category: ''
   })
   const [service, setService] = useState([])
-  const [materials, setMaterials] = useState([])
+  // const [materials, setMaterials] = useState([])
+
+  const {
+    materials,
+    checkboxMaterialChange,
+    materialPlusChange,
+    materialEightChange,
+    checkboxMaterialPlusChange,
+    materialMinusChange,
+    materialPriceChange,
+    materialOnChange
+  } = useMaterials()
+
+  const { keyboard, regOpen, setRegOpen, switchKeyboard } = useKeyboard()
 
   const [employees, setEmployees] = useState([])
   const [box, setBox] = useState()
@@ -81,10 +96,10 @@ const WashsCreate = (props) => {
     }))
   }
 
-  const switchKeyboard = () => {
-    setKeyboard(true)
-    setRegOpen(false)
-  }
+  // const switchKeyboard = () => {
+  //   setKeyboard(true)
+  //   setRegOpen(false)
+  // }
 
   const acceptRegnumber = () => {
     setRegOpen(false)
@@ -344,9 +359,10 @@ const WashsCreate = (props) => {
         state.mark === checkCustomer.mark &&
         state.model === checkCustomer.model &&
         state.regnumber === checkCustomer.regnumber &&
-        state.kuzov === checkCustomer.kuzov &&
-        state.diametr === checkCustomer.diametr
+        state.category === checkCustomer.washCategory &&
+        state.class === checkCustomer.washClass
       ) {
+        console.log('1 cheeeck', state, checkCustomer)
         props.create({
           ...state,
           services: service,
@@ -361,6 +377,7 @@ const WashsCreate = (props) => {
         }
         notify('Запись добавлена')
       } else if (checkCustomer !== undefined && activeCustomer !== '') {
+        console.log('2 cheeeck', state, checkCustomer, activeCustomer)
         const cust = {
           ...customer,
           regnumber: state.regnumber,
@@ -375,6 +392,7 @@ const WashsCreate = (props) => {
           box
         })
       } else {
+        console.log('3 cheeeck', state, checkCustomer, activeCustomer)
         props.create({
           ...state,
           services: service,
@@ -462,98 +480,98 @@ const WashsCreate = (props) => {
     )
   }
 
-  const checkboxMaterialChange = (e) => {
-    const { name, placeholder, checked, attributes } = e.target
-    if (checked) {
-      setMaterials((prevState) => [
-        ...prevState,
-        {
-          serviceName: name,
-          quantity: 1,
-          price: placeholder,
-          name: attributes.somename.value,
-          free: attributes.somefree.value
-        }
-      ])
-    } else {
-      setMaterials((prevState) => prevState.filter((it) => it.serviceName !== name))
-    }
-  }
-  const materialPlusChange = (e) => {
-    const { name } = e.target
-    setMaterials(
-      materials.map((object) => {
-        if (object.serviceName === name) {
-          return {
-            ...object,
-            quantity: object.quantity + 1
-          }
-        }
-        return object
-      })
-    )
-  }
+  // const checkboxMaterialChange = (e) => {
+  //   const { name, placeholder, checked, attributes } = e.target
+  //   if (checked) {
+  //     setMaterials((prevState) => [
+  //       ...prevState,
+  //       {
+  //         serviceName: name,
+  //         quantity: 1,
+  //         price: placeholder,
+  //         name: attributes.somename.value,
+  //         free: attributes.somefree.value
+  //       }
+  //     ])
+  //   } else {
+  //     setMaterials((prevState) => prevState.filter((it) => it.serviceName !== name))
+  //   }
+  // }
+  // const materialPlusChange = (e) => {
+  //   const { name } = e.target
+  //   setMaterials(
+  //     materials.map((object) => {
+  //       if (object.serviceName === name) {
+  //         return {
+  //           ...object,
+  //           quantity: object.quantity + 1
+  //         }
+  //       }
+  //       return object
+  //     })
+  //   )
+  // }
 
-  const materialEightChange = (e) => {
-    const { name } = e.target
-    setMaterials(
-      materials.map((object) => {
-        if (object.serviceName === name) {
-          return {
-            ...object,
-            quantity: 8
-          }
-        }
-        return object
-      })
-    )
-  }
+  // const materialEightChange = (e) => {
+  //   const { name } = e.target
+  //   setMaterials(
+  //     materials.map((object) => {
+  //       if (object.serviceName === name) {
+  //         return {
+  //           ...object,
+  //           quantity: 8
+  //         }
+  //       }
+  //       return object
+  //     })
+  //   )
+  // }
 
-  const checkboxMaterialPlusChange = (e) => {
-    const { name, attributes } = e.target
-    if (!materials.find((it) => it.serviceName.includes(name))) {
-      setMaterials((prevState) => [
-        ...prevState,
-        {
-          serviceName: name,
-          quantity: 8,
-          price: attributes.someprice.value,
-          name: attributes.somename.value,
-          free: attributes.somefree.value
-        }
-      ])
-    }
-  }
+  // const checkboxMaterialPlusChange = (e) => {
+  //   const { name, attributes } = e.target
+  //   if (!materials.find((it) => it.serviceName.includes(name))) {
+  //     setMaterials((prevState) => [
+  //       ...prevState,
+  //       {
+  //         serviceName: name,
+  //         quantity: 8,
+  //         price: attributes.someprice.value,
+  //         name: attributes.somename.value,
+  //         free: attributes.somefree.value
+  //       }
+  //     ])
+  //   }
+  // }
 
-  const materialMinusChange = (e) => {
-    const { name } = e.target
-    setMaterials(
-      materials.map((object) => {
-        if (object.serviceName === name && object.quantity >= 2) {
-          return {
-            ...object,
-            quantity: object.quantity - 1
-          }
-        }
-        return object
-      })
-    )
-  }
+  // const materialMinusChange = (e) => {
+  //   const { name } = e.target
+  //   setMaterials(
+  //     materials.map((object) => {
+  //       if (object.serviceName === name && object.quantity >= 2) {
+  //         return {
+  //           ...object,
+  //           quantity: object.quantity - 1
+  //         }
+  //       }
+  //       return object
+  //     })
+  //   )
+  // }
 
-  const materialPriceChange = (e) => {
-    const { value, id } = e.target
-    setMaterials(
-      materials.map((object) => {
-        if (object.serviceName === id) {
-          return {
-            ...object,
-            price: value
-          }
-        }
-        return object
-      })
-    )
-  }
+  // const materialPriceChange = (e) => {
+  //   const { value, id } = e.target
+  //   setMaterials(
+  //     materials.map((object) => {
+  //       if (object.serviceName === id) {
+  //         return {
+  //           ...object,
+  //           price: value
+  //         }
+  //       }
+  //       return object
+  //     })
+  //   )
+  // }
 
   // const checkboxEmployeeChange = (e) => {
   //   const { name, checked, placeholder, attributes } = e.target
@@ -887,6 +905,7 @@ const WashsCreate = (props) => {
             dateEnd=""
             materialEightChange={materialEightChange}
             checkboxMaterialPlusChange={checkboxMaterialPlusChange}
+            materialOnChange={materialOnChange}
           />
         </div>
         <div

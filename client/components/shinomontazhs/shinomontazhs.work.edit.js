@@ -15,6 +15,7 @@ import { updateStorageStatus } from '../../redux/reducers/storage'
 import { dateNew } from '../storage/storage.preorder.edit'
 import { useFindCustomer } from '../../hooks/findCustomer'
 import { useKeyboard } from '../../hooks/keyboard'
+import { useMaterials } from '../../hooks/handleMaterials'
 
 const ShinomontazhsEdit = (props) => {
   toast.configure()
@@ -60,7 +61,17 @@ const ShinomontazhsEdit = (props) => {
 
   const [service, setService] = useState(props.services ? props.services : [])
 
-  const [materials, setMaterials] = useState(props.material ? props.material : [])
+  const {
+    materials,
+    checkboxMaterialChange,
+    materialPlusChange,
+    materialEightChange,
+    checkboxMaterialPlusChange,
+    materialMinusChange,
+    materialPriceChange,
+    materialOnChange
+  } = useMaterials(props.material)
+
   const [tyres, setTyres] = useState(props.tyre ? props.tyre[0] : { sale: 'no' })
   const [employees, setEmployees] = useState(props.employee ? props.employee : [])
 
@@ -581,100 +592,6 @@ const ShinomontazhsEdit = (props) => {
     )
   }
 
-  const checkboxMaterialChange = (e) => {
-    const { name, placeholder, checked, attributes } = e.target
-    if (checked) {
-      setMaterials((prevState) => [
-        ...prevState,
-        {
-          serviceName: name,
-          quantity: 1,
-          price: placeholder,
-          name: attributes.somename.value,
-          free: attributes.somefree.value
-        }
-      ])
-    } else {
-      setMaterials((prevState) => prevState.filter((it) => it.serviceName !== name))
-    }
-  }
-
-  const checkboxMaterialPlusChange = (e) => {
-    const { name, attributes } = e.target
-    if (!materials.find((it) => it.serviceName.includes(name))) {
-      setMaterials((prevState) => [
-        ...prevState,
-        {
-          serviceName: name,
-          quantity: 8,
-          price: attributes.someprice.value,
-          name: attributes.somename.value,
-          free: attributes.somefree.value
-        }
-      ])
-    }
-  }
-
-  const materialPlusChange = (e) => {
-    const { name } = e.target
-    setMaterials(
-      materials.map((object) => {
-        if (object.serviceName === name) {
-          return {
-            ...object,
-            quantity: object.quantity + 1
-          }
-        }
-        return object
-      })
-    )
-  }
-
-  const materialMinusChange = (e) => {
-    const { name } = e.target
-    setMaterials(
-      materials.map((object) => {
-        if (object.serviceName === name && object.quantity >= 2) {
-          return {
-            ...object,
-            quantity: object.quantity - 1
-          }
-        }
-        return object
-      })
-    )
-  }
-
-  const materialEightChange = (e) => {
-    const { name } = e.target
-    setMaterials(
-      materials.map((object) => {
-        if (object.serviceName === name) {
-          return {
-            ...object,
-            quantity: 8
-          }
-        }
-        return object
-      })
-    )
-  }
-
-  const materialPriceChange = (e) => {
-    const { value, id } = e.target
-    setMaterials(
-      materials.map((object) => {
-        if (object.serviceName === id) {
-          return {
-            ...object,
-            price: value
-          }
-        }
-        return object
-      })
-    )
-  }
-
   const dispatch = useDispatch()
 
   const updateStorageStat = (idOFStorage, shinomontazhId) => {
@@ -1136,6 +1053,7 @@ const ShinomontazhsEdit = (props) => {
             dateEnd={props.dateFinish}
             materialEightChange={materialEightChange}
             checkboxMaterialPlusChange={checkboxMaterialPlusChange}
+            materialOnChange={materialOnChange}
           />
         </div>
         <div

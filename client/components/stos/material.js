@@ -10,7 +10,8 @@ const Material = ({
   materialPriceChange,
   materialEightChange,
   checkboxMaterialPlusChange,
-  dateEnd
+  dateEnd,
+  materialOnChange
 }) => {
   const options = Array.from(
     new Set(materialprices.reduce((acc, rec) => [...acc, rec.category], []))
@@ -207,7 +208,13 @@ const Material = ({
                               ? materials.find((it) => it.serviceName.includes(item.id)).quantity
                               : ''
                           }
-                          type="text"
+                          id={item.id}
+                          name={item.id}
+                          somename={item.name}
+                          somefree={item.free}
+                          someprice={item.price}
+                          onChange={materialOnChange}
+                          type="number"
                         />
                         {materials.find((it) => it.serviceName.includes(item.id)) ? (
                           <button

@@ -10,7 +10,8 @@ const Material = ({
   materialPriceChange,
   materialEightChange,
   checkboxMaterialPlusChange,
-  dateEnd
+  dateEnd,
+  materialOnChange
 }) => {
   const options = Array.from(
     new Set(materialprices.reduce((acc, rec) => [...acc, rec.category], []))
@@ -206,7 +207,13 @@ const Material = ({
                               ? materials.find((it) => it.serviceName.includes(item.id)).quantity
                               : ''
                           }
-                          type="text"
+                          id={item.id}
+                          name={item.id}
+                          somename={item.name}
+                          somefree={item.free}
+                          someprice={item.price}
+                          type="number"
+                          onChange={materialOnChange}
                         />
                         {materials.find((it) => it.serviceName.includes(item.id)) ? (
                           <button
@@ -245,9 +252,9 @@ const Material = ({
                         !materials.find((it) => it.serviceName.includes(item.id)) ? (
                           <button
                             type="button"
+                            onClick={checkboxMaterialPlusChange}
                             name={item.id}
                             placeholder={item.price}
-                            onClick={checkboxMaterialPlusChange}
                             somename={item.name}
                             somefree={item.free}
                             someprice={item.price}
@@ -324,7 +331,9 @@ const Material = ({
                       <input
                         className="py-1 px-4 bg-white font-bold rounded-lg m-1 border-gray-300 border w-20 lg:max-w-sm"
                         value={item.quantity}
-                        type="text"
+                        id={item.id}
+                        // onChange={materialOnChange}
+                        // type="number"
                       />
                       {materials.find((it) => it.serviceName.includes(item.id)) ? (
                         <button

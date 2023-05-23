@@ -2,6 +2,7 @@ import React, { useEffect } from 'react'
 import cx from 'classnames'
 import stoCategories from '../../lists/wash-categories'
 import gruzCars from '../../lists/gruz-cars'
+import { SwitchToTapKeyboard } from '../../hooks/keyboard'
 
 const Car = ({
   regOpen,
@@ -596,6 +597,7 @@ const Car = ({
             </div>
           </div>
         </div>
+        <SwitchToTapKeyboard keyboard={keyboard} switchKeyboard={switchKeyboard} />
         {customerOptions.length >= 1 && customer.idOfItem && activeCustomer ? (
           <p className="text-left p-1">✔ Вы выбрали клиента</p>
         ) : null}
