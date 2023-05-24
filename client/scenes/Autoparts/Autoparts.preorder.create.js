@@ -38,14 +38,14 @@ const AutopartsNew = () => {
     setModalIsOpen(false)
     notify('Данные клиента изменены')
     create(order)
-    history.push(`/autoparts/order/list`)
+    history.push(`/autoparts/order/list/1`)
     notify('Заказ добавлен')
   }
 
   const disUpdateCust = () => {
     setModalIsOpen(false)
     create(order)
-    history.push(`/autoparts/order/list`)
+    history.push(`/autoparts/order/list/1`)
     notify('Заказ добавлен')
   }
 

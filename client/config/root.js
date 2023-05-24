@@ -203,7 +203,7 @@ const RootComponent = (props) => {
             <Route exact path="/access" component={() => <Access />} />
             <BossRoute exact path="/boss" component={() => <Boss />} />
             <PrivateRoute exact path="/autoparts/order/list/:num" component={AutopartsList} />
-            <PrivateRoute exact path="/autoparts/order/list/" component={() => <AutopartsList />} />
+            <PrivateRoute exact path="/autoparts/order/list/" component={AutopartsList} />
             <PrivateRoute exact path="/autoparts/order/create/:num" component={AutopartsNew} />
             <PrivateRoute exact path="/autoparts/order/create" component={AutopartsNew} />
             <PrivateRoute exact path="/autoparts/edit/:id/:num" component={AutopartEditSimple} />

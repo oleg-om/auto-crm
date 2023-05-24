@@ -17,6 +17,7 @@ import { handleEnterpress } from '../../utils/utils'
 const AutopartsList = () => {
   const { num } = useParams(1)
   const [showSearch, setShowSearch] = useState(false)
+
   onLoad(num ? Number(num) : 1, showSearch)
   const dispatch = useDispatch()
   const list = useSelector((s) => s.autoparts.list)
@@ -67,7 +68,7 @@ const AutopartsList = () => {
     place: '',
     regnumber: ''
   })
-  console.log('search: ', search)
+
   const onChangePhone = (e) => {
     const { name, value } = e.target
     setSearch((prevState) => ({
@@ -144,7 +145,6 @@ const AutopartsList = () => {
   }, [dispatch, num, showSearch, search])
 
   const onReset = () => {
-    console.log('onReset')
     setShowSearch(false)
     setSearch(() => ({
       phone: '',
@@ -157,7 +157,6 @@ const AutopartsList = () => {
     history.push(`/autoparts/order/list/1`)
   }
   const onFilter = () => {
-    console.log('onFilter', search.phone)
     if (
       search.phone === '' &&
       search.number === '' &&
@@ -171,6 +170,10 @@ const AutopartsList = () => {
       setShowSearch(true)
       history.push(`/autoparts/order/list/1`)
     }
+  }
+
+  const onEterPress = (e) => {
+    handleEnterpress(e, onFilter)
   }
 
   const loadingComponent = () => {
@@ -188,10 +191,6 @@ const AutopartsList = () => {
         </button>
       </div>
     )
-  }
-
-  const onEterPress = (e) => {
-    handleEnterpress(e, onFilter)
   }
 
   return (
@@ -406,22 +405,6 @@ const AutopartsList = () => {
                   </div>
                 </div>
               </div>
-              {/* <div className="md:w-1/2 px-3 mb-6 md:mb-0">
-                <label
-                  className="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2"
-                  htmlFor="grid-first-name"
-                >
-                  Новых заказов
-                </label>
-                <div className="flex-shrink w-full">
-                  <button
-                    type="button"
-                    className="appearance-none w-full text-left bg-grey-lighter border border-yellow-500 focus:outline-none py-1 px-4 pr-8 rounded"
-                  >
-                    {list ? list.filter((it) => it.status === taskStatuses[0]).length : 0}
-                  </button>
-                </div>
-              </div> */}
               <div className="md:w-1/2 px-3 mb-6 md:mb-0">
                 <label
                   className="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2"
