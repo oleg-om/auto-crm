@@ -6,18 +6,29 @@ import {
   UPDATE_SHINOMONTAZH_STATUS,
   UPDATE_SHINOMONTAZH,
   GET_SHINOMONTAZHS_PREENTRY,
-  DELETE_SHINOMONTAZH
+  DELETE_SHINOMONTAZH,
+  UPDATE_SHINOMONTAZH_PREENTRY,
+  CREATE_SHINOMONTAZH_PREENTRY,
+  DELETE_SHINOMONTAZH_PREENTRY
 } from '../actions/shinomontazhs'
 
 const initialState = {
   list: [],
-  item: []
+  item: [],
+  isLoaded: false,
+  preentryList: [],
+  prentryItem: [],
+  preentryIsLoaded: false
 }
 
 export default (state = initialState, action) => {
   switch (action.type) {
     case GET_SHINOMONTAZHS_PREENTRY: {
-      return { ...state, list: action.shinomontazhpreentry, isLoaded: action.isLoaded }
+      return {
+        ...state,
+        preentryList: action.shinomontazhpreentry,
+        preentryIsLoaded: action.isLoaded
+      }
     }
     case GET_SHINOMONTAZHS: {
       return {
@@ -35,13 +46,28 @@ export default (state = initialState, action) => {
       return { ...state, list: action.shinomontazhs, isLoaded: action.isLoaded }
     }
     case CREATE_SHINOMONTAZH: {
-      return { ...state, list: [action.shinomontazh, ...state.list].filter((it) => it), isLoaded: action.isLoaded }
+      return { ...state, list: [action.shinomontazh, ...state.list].filter((it) => it) }
+    }
+    case CREATE_SHINOMONTAZH_PREENTRY: {
+      return {
+        ...state,
+        preentryList: [action.shinomontazh, ...state.preentryList].filter((it) => it)
+      }
     }
     case UPDATE_SHINOMONTAZH: {
       return {
         ...state,
-        isLoaded: action.isLoaded,
         list: state?.list?.map((it) => {
+          return action.shinomontazh.id_shinomontazhs === it.id_shinomontazhs
+            ? action.shinomontazh
+            : it
+        })
+      }
+    }
+    case UPDATE_SHINOMONTAZH_PREENTRY: {
+      return {
+        ...state,
+        preentryList: state?.preentryList?.map((it) => {
           return action.shinomontazh.id_shinomontazhs === it.id_shinomontazhs
             ? action.shinomontazh
             : it
@@ -64,10 +90,10 @@ export default (state = initialState, action) => {
 
 export function getShinomontazhs() {
   return (dispatch) => {
-    dispatch({
-      type: GET_SHINOMONTAZHS,
-      isLoaded: false
-    })
+    // dispatch({
+    //   type: GET_SHINOMONTAZHS,
+    //   isLoaded: false
+    // })
     fetch('/api/v1/shinomontazh')
       .then((r) => r.json())
       .then(({ data: shinomontazhs }) => {
@@ -88,24 +114,24 @@ export function getShinomontazhsLastTwoDays() {
 
 export function getShinomontazh(id) {
   return (dispatch) => {
-    dispatch({
-      type: GET_SHINOMONTAZHS,
-      isLoaded: false
-    })
+    // dispatch({
+    //   type: GET_SHINOMONTAZHS,
+    //   isLoaded: false
+    // })
     fetch(`/api/v1/shinomontazh/${id}`)
       .then((r) => r.json())
       .then(({ data: shinomontazhs }) => {
-        dispatch({ type: GET_SHINOMONTAZH, shinomontazhs, isLoaded: true  })
+        dispatch({ type: GET_SHINOMONTAZH, shinomontazhs, isLoaded: true })
       })
   }
 }
 
 export function getItemsByPage(page) {
   return (dispatch) => {
-    dispatch({
-      type: GET_SHINOMONTAZHS,
-      isLoaded: false
-    })
+    // dispatch({
+    //   type: GET_SHINOMONTAZHS,
+    //   isLoaded: false
+    // })
     fetch(`/api/v1/shinomontazhbypage/${page}`)
       .then((r) => r.json())
       .then(({ data: shinomontazhs, currentPage, numberOfPages }) => {
@@ -120,12 +146,21 @@ export function getItemsByPage(page) {
   }
 }
 
-export function getItemsFiltered(page, place, number, reg) {
+export function enableShinomontazhLoading() {
   return (dispatch) => {
     dispatch({
       type: GET_SHINOMONTAZHS,
       isLoaded: false
     })
+  }
+}
+
+export function getItemsFiltered(page, place, number, reg) {
+  return (dispatch) => {
+    // dispatch({
+    //   type: GET_SHINOMONTAZHS,
+    //   isLoaded: false
+    // })
     fetch(
       `/api/v1/shinomontazhfilter${page ? `?page=${page}` : ''}${place ? `&place=${place}` : ''}${
         number ? `&number=${number}` : ''
@@ -146,10 +181,6 @@ export function getItemsFiltered(page, place, number, reg) {
 
 export function createShinomontazh(name) {
   return (dispatch) => {
-    dispatch({
-      type: GET_SHINOMONTAZHS,
-      isLoaded: false
-    })
     fetch('/api/v1/shinomontazh', {
       method: 'POST',
       headers: {
@@ -159,17 +190,29 @@ export function createShinomontazh(name) {
     })
       .then((r) => r.json())
       .then(({ data: shinomontazh }) => {
-        dispatch({ type: CREATE_SHINOMONTAZH, shinomontazh, isLoaded: true })
+        dispatch({ type: CREATE_SHINOMONTAZH, shinomontazh })
+      })
+  }
+}
+
+export function createShinomontazhPreentry(name) {
+  return (dispatch) => {
+    fetch('/api/v1/shinomontazh', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(name)
+    })
+      .then((r) => r.json())
+      .then(({ data: shinomontazh }) => {
+        dispatch({ type: CREATE_SHINOMONTAZH_PREENTRY, shinomontazh })
       })
   }
 }
 
 export function updateStatus(id, status) {
   return (dispatch) => {
-    dispatch({
-      type: GET_SHINOMONTAZHS,
-      isLoaded: false
-    })
     fetch(`/api/v1/shinomontazh/${id}`, {
       method: 'PATCH',
       headers: {
@@ -181,17 +224,13 @@ export function updateStatus(id, status) {
     })
       .then((r) => r.json())
       .then(({ data: shinomontazh }) => {
-        dispatch({ type: UPDATE_SHINOMONTAZH_STATUS, shinomontazh, isLoaded: true })
+        dispatch({ type: UPDATE_SHINOMONTAZH_STATUS, shinomontazh })
       })
   }
 }
 
 export function updateShinomontazh(id, name) {
   return (dispatch) => {
-    dispatch({
-      type: GET_SHINOMONTAZHS,
-      isLoaded: false
-    })
     fetch(`/api/v1/shinomontazh/${id}`, {
       method: 'PATCH',
       headers: {
@@ -201,17 +240,33 @@ export function updateShinomontazh(id, name) {
     })
       .then((r) => r.json())
       .then(({ data: shinomontazh }) => {
-        dispatch({ type: UPDATE_SHINOMONTAZH, shinomontazh, isLoaded: true })
+        dispatch({ type: UPDATE_SHINOMONTAZH, shinomontazh })
+      })
+  }
+}
+
+export function updateShinomontazhPreentry(id, name) {
+  return (dispatch) => {
+    fetch(`/api/v1/shinomontazh/${id}`, {
+      method: 'PATCH',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(name)
+    })
+      .then((r) => r.json())
+      .then(({ data: shinomontazh }) => {
+        dispatch({ type: UPDATE_SHINOMONTAZH_PREENTRY, shinomontazh })
       })
   }
 }
 
 export function getByMonth(year, month, day) {
   return (dispatch) => {
-    dispatch({
-      type: GET_SHINOMONTAZHS_PREENTRY,
-      isLoaded: false
-    })
+    // dispatch({
+    //   type: GET_SHINOMONTAZHS_PREENTRY,
+    //   isLoaded: false
+    // })
     fetch(`/api/v1/shinomontazhpreentry?year=${year}&month=${month}&day=${day} `)
       .then((r) => r.json())
       .then(({ data: shinomontazhpreentry }) => {
@@ -228,6 +283,18 @@ export function deleteShinomontazh(id) {
       .then((r) => r.json())
       .then(() => {
         dispatch({ type: DELETE_SHINOMONTAZH, id })
+      })
+  }
+}
+
+export function deleteShinomontazhPreentry(id) {
+  return (dispatch) => {
+    fetch(`/api/v1/shinomontazh/${id}`, {
+      method: 'DELETE'
+    })
+      .then((r) => r.json())
+      .then(() => {
+        dispatch({ type: DELETE_SHINOMONTAZH_PREENTRY, id })
       })
   }
 }

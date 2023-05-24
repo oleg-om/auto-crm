@@ -98,8 +98,6 @@ exports.updateStatus = async (req, res) => {
     },
     { upsert: false, useFindAndModify: false }
   )
-  // console.log('storage1: ', storage1)
-  // console.log('id: ', req.params.id)
 
   if (!storage1) {
     // const storage2 = await Storage.findOne({ id_storages: req.params.id })

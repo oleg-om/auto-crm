@@ -68,7 +68,7 @@ const ShinomontazhsList = () => {
   // const notify = (arg) => {
   //   toast.info(arg, { position: toast.POSITION.BOTTOM_RIGHT })
   // }
-  console.log('list', list)
+
   return (
     <div>
       <Navbar />

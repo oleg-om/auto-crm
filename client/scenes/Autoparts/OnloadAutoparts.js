@@ -11,7 +11,6 @@ const OnloadAutoparts = (num, showSearch, type) => {
   useEffect(() => {
     if (type === 'autoparts' && !checkNum && showSearch === false) {
       dispatch(getAutopartsLast())
-      console.log('wow')
     } else if (type === 'autoparts' && (checkNum || showSearch === true)) {
       dispatch(getAutoparts())
     }

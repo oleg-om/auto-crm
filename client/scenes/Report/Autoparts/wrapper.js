@@ -89,7 +89,6 @@ const Autoparts = ({
       )
     }
     if (calendarType === 'day' && autoList && autoList.length > 0) {
-      // console.log('day')
       setReport(
         autoList
           .filter((it) => (place ? place === it.place : it))

@@ -2,15 +2,11 @@ import { useEffect } from 'react'
 import { useDispatch } from 'react-redux'
 import { socket } from '../../redux/sockets/socketReceivers'
 import { getByMonth } from '../../redux/reducers/shinomontazhs'
-// import { getByMonthOil } from '../../redux/reducers/oils'
 
 const OnLoad = (dt) => {
-  console.log('dt: ', dt)
-  // const toDate = new Date(dt)
-  // const getMonth = toDate.getMonth()
   const year = dt.getFullYear()
   const month = `0${dt.getMonth() + 1}`.slice(-2)
-  const yearmonth = `${year}-${month}`
+  // const yearmonth = `${year}-${month}`
   const day = dt.getDate()
 
   const dispatch = useDispatch()
@@ -24,14 +20,15 @@ const OnLoad = (dt) => {
   // }, [dispatch, getMonth])
 
   useEffect(() => {
-    socket.on('update razval', function () {
-      dispatch(getByMonth(yearmonth))
+    socket.on('update shinomontazh', function () {
+      dispatch(getByMonth(year, month, day, dt ? dt.toISOString() : null))
+      console.log(1111)
     })
   }, [])
 
   useEffect(() => {
-    socket.on('update edited razval', function () {
-      dispatch(getByMonth(yearmonth))
+    socket.on('update edited shinomontazh', function () {
+      dispatch(getByMonth(year, month, day, dt ? dt.toISOString() : null))
     })
   }, [])
 

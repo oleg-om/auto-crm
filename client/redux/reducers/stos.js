@@ -88,7 +88,7 @@ export function getSto(id) {
 
 export function getItemsByPage(page) {
   return (dispatch) => {
-    dispatch({ type: GET_STOS, isLoaded: false })
+    // dispatch({ type: GET_STOS, isLoaded: false })
     fetch(`/api/v1/stobypage/${page}`)
       .then((r) => r.json())
       .then(({ data: stos, currentPage, numberOfPages }) => {
@@ -105,7 +105,7 @@ export function getItemsByPage(page) {
 
 export function getItemsFiltered(page, place, number, reg) {
   return (dispatch) => {
-    dispatch({ type: GET_STOS, isLoaded: false })
+    // dispatch({ type: GET_STOS, isLoaded: false })
     fetch(
       `/api/v1/stofilter${page ? `?page=${page}` : ''}${place ? `&place=${place}` : ''}${
         number ? `&number=${number}` : ''

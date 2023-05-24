@@ -109,7 +109,6 @@ const ModalEdit = ({
     // } else {
     //   notify('Запись на данное время недоступна')
     // }
-    // console.log('lol', changeStatus.time, editTime(changeStatus.datePreentry, changeStatus.time))
     updateRazval(itemId.id, {
       place: changeStatus.place,
       // datePreentry: isoDateWithoutTimeZone(

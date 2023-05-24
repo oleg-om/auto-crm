@@ -88,7 +88,7 @@ export function getWash(id) {
 
 export function getItemsByPage(page) {
   return (dispatch) => {
-    dispatch({ type: GET_WASHS, isLoaded: false })
+    // dispatch({ type: GET_WASHS, isLoaded: false })
     fetch(`/api/v1/washbypage/${page}`)
       .then((r) => r.json())
       .then(({ data: washs, currentPage, numberOfPages }) => {
@@ -105,7 +105,7 @@ export function getItemsByPage(page) {
 
 export function getItemsFiltered(page, place, number, reg) {
   return (dispatch) => {
-    dispatch({ type: GET_WASHS, isLoaded: false })
+    // dispatch({ type: GET_WASHS, isLoaded: false })
     fetch(
       `/api/v1/washfilter${page ? `?page=${page}` : ''}${place ? `&place=${place}` : ''}${
         number ? `&number=${number}` : ''

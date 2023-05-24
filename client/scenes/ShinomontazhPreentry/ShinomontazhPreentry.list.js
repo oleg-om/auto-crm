@@ -18,15 +18,16 @@ import { socket } from '../../redux/sockets/socketReceivers'
 import onLoad from './Onload'
 import ShinomontazhEntryRow from '../../components/shinomontazhentry/ShinomontazhEntryRow'
 import {
-  createShinomontazh,
-  updateShinomontazh,
-  deleteShinomontazh
+  updateShinomontazhPreentry,
+  createShinomontazhPreentry,
+  deleteShinomontazhPreentry
 } from '../../redux/reducers/shinomontazhs'
 import { Loading } from '../Shinomontazhs/Shinomontazhs.list'
 
 const PreentryList = () => {
   const location = useLocation()
   const dispatch = useDispatch()
+  socket.connect()
 
   const getPreentryType = () => {
     if (location?.pathname.includes('/shinomontazh')) {
@@ -48,21 +49,23 @@ const PreentryList = () => {
 
   const getPreentryCreateFunc = (it) => {
     if (isShinomontazh) {
-      dispatch(createShinomontazh(it))
+      dispatch(createShinomontazhPreentry(it))
+      socket.emit('new shinomontazh', { name: it })
     }
     return () => {}
   }
 
   const getPreentryUpdateFunc = (id, it) => {
     if (isShinomontazh) {
-      dispatch(updateShinomontazh(id, it))
+      dispatch(updateShinomontazhPreentry(id, it))
+      socket.emit('edit shinomontazh', { name: it })
     }
     return () => {}
   }
 
   const getPreentryDeleteFunc = (id) => {
     if (isShinomontazh) {
-      dispatch(deleteShinomontazh(id))
+      dispatch(deleteShinomontazhPreentry(id))
     }
     return () => {}
   }
@@ -77,8 +80,8 @@ const PreentryList = () => {
   const place = useSelector((s) => s.places.list)
   const employee = useSelector((s) => s.employees.list)
 
-  const shinomontazhList = useSelector((s) => s.shinomontazhs.list)
-  const isLoaded = useSelector((s) => s.shinomontazhs.isLoaded)
+  const shinomontazhList = useSelector((s) => s.shinomontazhs.preentryList)
+  const isLoaded = useSelector((s) => s.shinomontazhs.preentryIsLoaded)
 
   const getData = () => {
     if (isShinomontazh) {
@@ -105,8 +108,6 @@ const PreentryList = () => {
   const [activeTime, setActiveTime] = useState('')
   const [activeAdress, setActiveAdress] = useState({})
   const [activePost, setActivePost] = useState()
-
-  socket.connect()
 
   const openAndEdit = (id, type, address) => {
     setIsOpen(true)

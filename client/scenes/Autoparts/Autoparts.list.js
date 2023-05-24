@@ -67,7 +67,7 @@ const AutopartsList = () => {
     place: '',
     regnumber: ''
   })
-
+  console.log('search: ', search)
   const onChangePhone = (e) => {
     const { name, value } = e.target
     setSearch((prevState) => ({
@@ -144,6 +144,7 @@ const AutopartsList = () => {
   }, [dispatch, num, showSearch, search])
 
   const onReset = () => {
+    console.log('onReset')
     setShowSearch(false)
     setSearch(() => ({
       phone: '',
@@ -156,6 +157,7 @@ const AutopartsList = () => {
     history.push(`/autoparts/order/list/1`)
   }
   const onFilter = () => {
+    console.log('onFilter', search.phone)
     if (
       search.phone === '' &&
       search.number === '' &&

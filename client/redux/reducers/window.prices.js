@@ -38,7 +38,6 @@ export default (state = initialState, action) => {
 }
 
 export function getWindowprices() {
-  console.log('window')
   return (dispatch) => {
     fetch('/api/v1/windowprice')
       .then((r) => r.json())

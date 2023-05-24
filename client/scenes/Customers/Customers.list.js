@@ -111,7 +111,6 @@ const CustomerList = () => {
   const paginate = (pageNumber) => {
     history.push(`/customer/list/${pageNumber}`)
   }
-  // console.log(search.phone.length)
 
   const loadingComponent = () => {
     return (

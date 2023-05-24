@@ -98,8 +98,6 @@ export function useMaterials(propsMaterials) {
 
   const materialOnChange = (e) => {
     const { value, id, attributes, name } = e.target
-    // console.log('id: ', id)
-    // console.log('value: ', value)
     if (!materials.find((it) => it.serviceName.includes(name))) {
       setMaterials((prevState) => [
         ...prevState,

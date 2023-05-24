@@ -5,7 +5,6 @@ import { Link } from 'react-router-dom'
 import taskStatuses from '../../../common/enums/shinomontazh-statuses'
 
 const StosRow = (props) => {
-  console.log('props: ', props)
   // const componentRef = useRef()
   // const handlePrint = useReactToPrint({
   //   content: () => componentRef.current

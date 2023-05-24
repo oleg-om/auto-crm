@@ -361,13 +361,14 @@ io.on('connection', (socket) => {
     io.emit('windowtwoprint', shinomontazh)
   })
 
-  // socket.on('new shinomontazh', () => {
-  //   io.emit('update shinomontazh')
-  // })
+  socket.on('new shinomontazh', () => {
+    console.log('new shinomontazh')
+    io.emit('update shinomontazh')
+  })
 
-  // socket.on('edit shinomontazh', () => {
-  //   io.emit('update edited shinomontazh')
-  // })
+  socket.on('edit shinomontazh', () => {
+    io.emit('update edited shinomontazh')
+  })
 
   // socket.on('new storage', ({ storage }) => {
   //   io.emit('update storage', storage)

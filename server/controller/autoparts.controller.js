@@ -102,27 +102,7 @@ exports.getFiltered = async (req, res) => {
       .sort({ id_autoparts: -1 })
       .limit(LIMIT)
       .skip(startIndex)
-    console.log('posts: ', {
-      // status: `${decodeURIComponent(req.query.status ? status : '').toString()}`,
-      id_autoparts: req.query.number ? number : { $exists: true },
-      place: req.query.place ? `${place.toString()}` : { $exists: true },
-      status:
-        req.query.status && req.query.status !== 'itemsInStock'
-          ? `${decodeURIComponent(status).toString()}`
-          : { $exists: true },
-      process: req.query.process ? `${process.toString()}` : { $exists: true },
-      phone: req.query.phone ? { $regex: `${phone.toString()}`, $options: 'i' } : { $exists: true },
-      regnumber: req.query.reg ? { $regex: `${reg.toString()}`, $options: 'i' } : { $exists: true },
-      ...orderStatField
 
-      // {
-      //   process: req.query.process ? `${process.toString()}` : 'smth'
-      // },
-      // { phone: { $regex: req.query.phone ? `${phone.toString()}` : 'smth', $options: 'i' } },
-
-      // upsert: false,
-      // useFindAndModify: false
-    })
     res.json({
       status: 'ok',
       data: posts,

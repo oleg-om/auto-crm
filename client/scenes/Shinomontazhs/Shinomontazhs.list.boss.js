@@ -179,7 +179,7 @@ const ShinomontazhsListBoss = () => {
   const onEterPress = (e) => {
     handleEnterpress(e, onFilter)
   }
-  console.log('list', list)
+
   return (
     <div>
       <Navbar />
