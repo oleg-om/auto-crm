@@ -1,6 +1,7 @@
 import React from 'react'
 import cx from 'classnames'
 import { useServiceCategories } from '../../hooks/handleServiceCategories'
+import { getActualPrice } from '../../utils/services'
 
 const Service = ({
   actualService,
@@ -183,6 +184,7 @@ const Service = ({
                               somename={item.name}
                               somefree={item.free}
                               onChange={servicePriceChange}
+                              defaultValue={getActualPrice(item, service)}
                             />
                           ) : (
                             <label

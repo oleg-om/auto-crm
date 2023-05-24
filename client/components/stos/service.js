@@ -2,10 +2,12 @@
 import React from 'react'
 import cx from 'classnames'
 import { useServiceCategories } from '../../hooks/handleServiceCategories'
+import { getActualPrice } from '../../utils/services'
 
 const Service = ({
   actualService,
   service,
+
   checkboxServiceChange,
   servicePlusChange,
   serviceMinusChange,
@@ -141,7 +143,7 @@ const Service = ({
                       {item.actualprice && (item.free === 'no' || !item.free) ? (
                         <td>
                           <input
-                            className="py-1 px-4 bg-white rounded-lg my-1 mr-3 border-green-500 border w-32"
+                            className="test1 py-1 px-4 bg-white rounded-lg my-1 mr-3 border-green-500 border w-32"
                             placeholder="Цена"
                             type="number"
                             key={item.id}
@@ -150,14 +152,14 @@ const Service = ({
                             somename={item.name}
                             somefree={item.free}
                             onChange={servicePriceChange}
-                            defaultValue={item.actualprice}
+                            defaultValue={getActualPrice(item, service)}
                           />
                         </td>
                       ) : (
                         <td>
                           {item.free === 'no' || !item.free ? (
                             <input
-                              className="py-1 px-4 bg-white rounded-lg my-1 mr-3 border-green-500 border w-32"
+                              className="test2 py-1 px-4 bg-white rounded-lg my-1 mr-3 border-green-500 border w-32"
                               placeholder="Цена"
                               type="number"
                               key={item.id}
@@ -165,7 +167,7 @@ const Service = ({
                               id={item.id}
                               somename={item.name}
                               somefree={item.free}
-                              defaultValue={item.actualprice}
+                              defaultValue={getActualPrice(item, service)}
                               onChange={servicePriceChange}
                             />
                           ) : (
