@@ -2,6 +2,7 @@ import { useEffect } from 'react'
 import { useDispatch } from 'react-redux'
 import { socket } from '../../redux/sockets/socketReceivers'
 import { getItemsByPage } from '../../redux/reducers/shinomontazhs'
+import { socketCondition } from '../../utils/utils'
 
 const OnLoad = (page, showSearch) => {
   const dispatch = useDispatch()
@@ -14,13 +15,17 @@ const OnLoad = (page, showSearch) => {
 
   useEffect(() => {
     socket.on('update shinomontazh', function () {
-      dispatch(getItemsByPage(page))
+      if (socketCondition(showSearch, page)) {
+        dispatch(getItemsByPage(page))
+      }
     })
   }, [])
 
   useEffect(() => {
     socket.on('update edited shinomontazh', function () {
-      dispatch(getItemsByPage(page))
+      if (socketCondition(showSearch, page)) {
+        dispatch(getItemsByPage(page))
+      }
     })
   }, [])
 }

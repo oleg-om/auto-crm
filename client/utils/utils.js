@@ -4,3 +4,5 @@ export const handleEnterpress = (e, func) => {
     func()
   }
 }
+
+export const socketCondition = (showSearch, page) => !showSearch && page && (!page || page === 1)

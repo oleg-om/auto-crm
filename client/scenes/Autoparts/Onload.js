@@ -3,6 +3,7 @@ import { useDispatch } from 'react-redux'
 import { socket } from '../../redux/sockets/socketReceivers'
 import { getAutopartsByPage } from '../../redux/reducers/autoparts'
 import { getVendors } from '../../redux/reducers/vendors'
+import { socketCondition } from '../../utils/utils'
 
 const OnLoad = (page, showSearch) => {
   const dispatch = useDispatch()
@@ -19,13 +20,17 @@ const OnLoad = (page, showSearch) => {
 
   useEffect(() => {
     socket.on('update autopart', function () {
-      dispatch(getAutopartsByPage(page))
+      if (socketCondition(showSearch, page)) {
+        dispatch(getAutopartsByPage(page))
+      }
     })
   }, [])
 
   useEffect(() => {
     socket.on('update edited autopart', function () {
-      dispatch(getAutopartsByPage(page))
+      if (socketCondition(showSearch, page)) {
+        dispatch(getAutopartsByPage(page))
+      }
     })
   }, [])
 }

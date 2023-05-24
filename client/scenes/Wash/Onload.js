@@ -3,6 +3,7 @@ import { useDispatch } from 'react-redux'
 import { socket } from '../../redux/sockets/socketReceivers'
 import { getItemsByPage } from '../../redux/reducers/washs'
 import { getWashprices } from '../../redux/reducers/wash.prices'
+import { socketCondition } from '../../utils/utils'
 
 const OnLoad = (page, showSearch) => {
   const dispatch = useDispatch()
@@ -18,17 +19,19 @@ const OnLoad = (page, showSearch) => {
   }, [dispatch, page, showSearch])
 
   useEffect(() => {
-    if (page)
-      socket.on('update wash', function () {
+    socket.on('update wash', function () {
+      if (socketCondition(showSearch, page)) {
         dispatch(getItemsByPage(page))
-      })
+      }
+    })
   }, [])
 
   useEffect(() => {
-    if (page)
-      socket.on('update edited wash', function () {
+    socket.on('update edited wash', function () {
+      if (socketCondition(showSearch, page)) {
         dispatch(getItemsByPage(page))
-      })
+      }
+    })
   }, [])
 }
 

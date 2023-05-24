@@ -22,7 +22,6 @@ const OnLoad = (dt) => {
   useEffect(() => {
     socket.on('update shinomontazh', function () {
       dispatch(getByMonth(year, month, day, dt ? dt.toISOString() : null))
-      console.log(1111)
     })
   }, [])
 

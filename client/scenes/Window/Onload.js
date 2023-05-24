@@ -6,6 +6,7 @@ import { getCondprices } from '../../redux/reducers/cond.prices'
 import { getItemsByPage } from '../../redux/reducers/windows'
 import { getCondItemsByPage } from '../../redux/reducers/conds'
 import { getWindowprices } from '../../redux/reducers/window.prices'
+import { socketCondition } from '../../utils/utils'
 
 export const getFunc = (location) => {
   if (location.pathname.includes('window')) {
@@ -14,7 +15,7 @@ export const getFunc = (location) => {
   return getCondprices()
 }
 
-const getSocketName = (location) => {
+export const getSocketName = (location) => {
   if (location.pathname.includes('window')) {
     return 'window'
   }
@@ -51,17 +52,19 @@ const OnLoad = (page, showSearch) => {
   }, [dispatch, page, showSearch, location])
 
   useEffect(() => {
-    if (page)
-      socket.on(`update ${getSocketName(location)}`, function () {
+    socket.on(`update ${getSocketName(location)}`, function () {
+      if (socketCondition(showSearch, page)) {
         dispatch(getItemsByPageFunc(page, location))
-      })
+      }
+    })
   }, [])
 
   useEffect(() => {
-    if (page)
-      socket.on(`update edited ${getSocketName(location)}`, function () {
+    socket.on(`update edited ${getSocketName(location)}`, function () {
+      if (socketCondition(showSearch, page)) {
         dispatch(getItemsByPageFunc(page, location))
-      })
+      }
+    })
   }, [])
 }
 
