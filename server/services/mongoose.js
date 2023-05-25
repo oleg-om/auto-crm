@@ -11,7 +11,7 @@ mongoose.connection.on('error', (err) => {
 })
 
 const connect = async (mongoURL = config.mongoURL) => {
-  mongoose.connect(mongoURL, {
+  await mongoose.connect(mongoURL, {
     useUnifiedTopology: true,
     useNewUrlParser: true
   })
