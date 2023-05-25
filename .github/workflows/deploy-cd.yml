@@ -1,13 +1,10 @@
 # This is a basic workflow to help you get started with Actions
 
-name: Deploy-CD
+name: Deploy
 
 # Controls when the action will run. 
 
-on:
-  push:
-    branches:
-      - 'master'
+on: workflow_dispatch
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
@@ -25,4 +22,4 @@ jobs:
         username: ${{ secrets.USERNAME }}
         password: ${{ secrets.SSH_PASSWORD }}
         port: 22
-        # script: 'cd /var/www/autodom-crm && yarn reinstall'
+        script: 'cd /var/www/autodom-crm && yarn reinstall'
