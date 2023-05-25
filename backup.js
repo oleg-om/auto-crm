@@ -46,14 +46,8 @@ const getIt = () =>
     else if (signal) console.error('Backup process was killed with singal ', signal)
     else {
       console.log('Successfully backedup the database')
-      // transporter.sendMail(mailOptions, function (error, info) {
-      //   if (error) {
-      //     console.log(error)
-      //   } else {
-      //     console.log(`Email sent: ${info.response}`)
-      //   }
-      // })
       restoreToAtlasProcess.on('exit', (cd, sg) => {
+        console.log('restore process...')
         if (cd) console.log('Restore process exited with code ', code)
         else if (sg) console.error('Restore process was killed with singal ', signal)
         else console.log('successfully restored to Atlas')
