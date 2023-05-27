@@ -13,7 +13,8 @@ mongoose.connection.on('error', (err) => {
 const connect = async (mongoURL = config.mongoURL) => {
   await mongoose.connect(mongoURL, {
     useUnifiedTopology: true,
-    useNewUrlParser: true
+    useNewUrlParser: true,
+    poolSize: 40
   })
   return mongoose.connection
 }
