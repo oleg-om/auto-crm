@@ -24,6 +24,20 @@ exports.update = async (req, res) => {
 }
 
 exports.create = async (req, res) => {
+  if (!req.body?.siteNumber) {
+    const tyre = new Tyre(req.body)
+    await tyre.save()
+    return res.json({ status: 'ok', data: tyre })
+  }
+
+  const tyreFind = await Tyre.findOne(
+    { siteNumber: req.body.siteNumber },
+    { upsert: false, useFindAndModify: false }
+  )
+
+  if (tyreFind) {
+    return res.json({ status: 'is exist' })
+  }
   const tyre = new Tyre(req.body)
   await tyre.save()
   return res.json({ status: 'ok', data: tyre })
