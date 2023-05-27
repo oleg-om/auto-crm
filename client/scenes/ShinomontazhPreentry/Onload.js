@@ -1,7 +1,7 @@
 import { useEffect } from 'react'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { socket } from '../../redux/sockets/socketReceivers'
-import { getByMonth } from '../../redux/reducers/shinomontazhs'
+import { getByMonth, setPreentryLoading } from '../../redux/reducers/shinomontazhs'
 
 const OnLoad = (dt) => {
   const year = dt.getFullYear()
@@ -10,9 +10,13 @@ const OnLoad = (dt) => {
   const day = dt.getDate()
 
   const dispatch = useDispatch()
+  const preentryDate = useSelector((s) => s.shinomontazhs.preentryDate)
 
   useEffect(() => {
-    dispatch(getByMonth(year, month, day, dt ? dt.toISOString() : null))
+    if (preentryDate !== `${year}-${month}-${day}`) {
+      dispatch(setPreentryLoading())
+      dispatch(getByMonth(year, month, day, dt ? dt.toISOString() : null))
+    }
   }, [dispatch, dt])
 
   // useEffect(() => {

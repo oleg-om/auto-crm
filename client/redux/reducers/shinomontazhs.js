@@ -18,7 +18,8 @@ const initialState = {
   isLoaded: false,
   preentryList: [],
   prentryItem: [],
-  preentryIsLoaded: false
+  preentryIsLoaded: false,
+  preentryDate: null
 }
 
 export default (state = initialState, action) => {
@@ -27,7 +28,8 @@ export default (state = initialState, action) => {
       return {
         ...state,
         preentryList: action.shinomontazhpreentry,
-        preentryIsLoaded: action.isLoaded
+        preentryIsLoaded: action.isLoaded,
+        preentryDate: action.preentryDate
       }
     }
     case GET_SHINOMONTAZHS: {
@@ -270,8 +272,23 @@ export function getByMonth(year, month, day) {
     fetch(`/api/v1/shinomontazhpreentry?year=${year}&month=${month}&day=${day} `)
       .then((r) => r.json())
       .then(({ data: shinomontazhpreentry }) => {
-        dispatch({ type: GET_SHINOMONTAZHS_PREENTRY, shinomontazhpreentry, isLoaded: true })
+        dispatch({
+          type: GET_SHINOMONTAZHS_PREENTRY,
+          shinomontazhpreentry,
+          isLoaded: true,
+          preentryDate: `${year}-${month}-${day}`
+        })
       })
+  }
+}
+
+export function setPreentryLoading() {
+  return (dispatch) => {
+    dispatch({
+      type: GET_SHINOMONTAZHS_PREENTRY,
+      preentryIsLoaded: false,
+      preentryList: []
+    })
   }
 }
 
