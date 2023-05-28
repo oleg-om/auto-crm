@@ -195,8 +195,11 @@ async function kerchshinaCheck(io) {
     // const arrtoDb = new Tyre(finalArr)
     if (finalArr.siteNumber) {
       // arrtoDb.save()
-
-      tyresController.create({ body: finalArr }, { json: () => {} })
+      console.log('kerchina check')
+      tyresController.create(
+        { body: finalArr },
+        { json: (e) => console.log('kerchshina create', e) }
+      )
       io.emit('update tyre from oline shop')
     }
   })
