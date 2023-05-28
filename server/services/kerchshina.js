@@ -1,6 +1,7 @@
 import fetch from 'node-fetch'
 import Tyre from '../model/tyres'
 import Setting from '../model/settings'
+import tyresController from '../controller/tyres.controller'
 
 function takeOrderNumber() {
   return new Promise((resolve) => {
@@ -191,9 +192,11 @@ async function kerchshinaCheck(io) {
         []
       )
     }
-    const arrtoDb = new Tyre(finalArr)
+    // const arrtoDb = new Tyre(finalArr)
     if (finalArr.siteNumber) {
-      arrtoDb.save()
+      // arrtoDb.save()
+
+      tyresController.create({ body: finalArr }, { json: () => {} })
       io.emit('update tyre from oline shop')
     }
   })
