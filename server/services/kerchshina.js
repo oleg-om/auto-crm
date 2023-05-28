@@ -100,9 +100,13 @@ async function kerchshinaCheck(io) {
       employee: 'kerchshina.com',
       place: 'kerchshina.com',
       date: new Date(order.Order.created),
-      comment: `${order.Order.email ? `Эмйел: ${order.Order.email}` : ''}${
-        order.Order.city ? ` город: ${order.Order.city}` : ''
-      }${order.Order.address ? `, адрес: ${order.Order.address}` : ''}`
+      comment: `${order.Order.email ? `Эмйел: ${order.Order.email} , ` : ''}${
+        order.Order.city ? `город: ${order.Order.city} , ` : ''
+      }${order.Order.address ? `адрес: ${order.Order.address} , ` : ''}${
+        order.OrderEvent && order.OrderEvent?.length && order.OrderEvent.find((oev) => oev?.comment)
+          ? `Комментарий: ${order.OrderEvent.find((oev) => oev?.comment)?.comment || ''}`
+          : ''
+      }`
     }
     const finalArr = {
       ...resultOrder,
