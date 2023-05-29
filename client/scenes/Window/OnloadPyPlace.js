@@ -1,13 +1,13 @@
 import { useEffect } from 'react'
 import { useDispatch } from 'react-redux'
 import { useLocation } from 'react-router-dom'
-import { socket } from '../../redux/sockets/socketReceivers'
+// import { socket } from '../../redux/sockets/socketReceivers'
 import { getCondprices } from '../../redux/reducers/cond.prices'
 import { getItemsFiltered } from '../../redux/reducers/windows'
 import { getCondItemsFiltered } from '../../redux/reducers/conds'
 import { getWindowprices } from '../../redux/reducers/window.prices'
-import { socketCondition } from '../../utils/utils'
-import { getSocketName } from './Onload'
+// import { socketCondition } from '../../utils/utils'
+// import { getSocketName } from './Onload'
 
 const getFunc = (location) => {
   if (location.pathname.includes('window')) {
@@ -37,21 +37,21 @@ const OnLoadPlace = (page, showSearch, place) => {
     }
   }, [dispatch, page, showSearch, place, location])
 
-  useEffect(() => {
-    socket.on(`update ${getSocketName(location)}`, function () {
-      if (socketCondition(showSearch, page)) {
-        dispatch(getItemsFilteredFunc(page, place, location))
-      }
-    })
-  }, [])
-
-  useEffect(() => {
-    socket.on(`update edited ${getSocketName(location)}`, function () {
-      if (socketCondition(showSearch, page)) {
-        dispatch(getItemsFilteredFunc(page, place, location))
-      }
-    })
-  }, [])
+  // useEffect(() => {
+  //   socket.on(`update ${getSocketName(location)}`, function () {
+  //     if (socketCondition(showSearch, page)) {
+  //       dispatch(getItemsFilteredFunc(page, place, location))
+  //     }
+  //   })
+  // }, [])
+  //
+  // useEffect(() => {
+  //   socket.on(`update edited ${getSocketName(location)}`, function () {
+  //     if (socketCondition(showSearch, page)) {
+  //       dispatch(getItemsFilteredFunc(page, place, location))
+  //     }
+  //   })
+  // }, [])
 }
 
 export default OnLoadPlace
