@@ -72,13 +72,13 @@ const Report = () => {
         <div className="w-full mx-auto px-4">
           <h1 className="text-3xl py-4 border-b mb-6">Статистика</h1>
           <div className="py-3 px-4 my-3 rounded-lg shadow bg-white">
-            <div className="flex flex-row">
+            <div className="flex flex-wrap">
               {auth.roles.includes('kassa') || auth.roles.includes('boss') ? (
                 <>
                   <div className="w-1/5 p-2">
                     <button
                       type="button"
-                      className={cx('p-4 bg-gray-200 rounded w-full h-full', {
+                      className={cx('p-4 bg-gray-200 rounded w-full h-full overflow-hidden', {
                         block: active !== 'sh-kassa',
                         'border-b-8 border-blue-400': active === 'sh-kassa'
                       })}
@@ -90,7 +90,7 @@ const Report = () => {
                   <div className="w-1/5 p-2">
                     <button
                       type="button"
-                      className={cx('p-4 bg-gray-200 rounded w-full h-full', {
+                      className={cx('p-4 bg-gray-200 rounded w-full h-full overflow-hidden', {
                         block: active !== 'sto-kassa',
                         'border-b-8 border-blue-400': active === 'sto-kassa'
                       })}
@@ -102,13 +102,37 @@ const Report = () => {
                   <div className="w-1/5 p-2">
                     <button
                       type="button"
-                      className={cx('p-4 bg-gray-200 rounded w-full h-full', {
+                      className={cx('p-4 bg-gray-200 rounded w-full h-full overflow-hidden', {
                         block: active !== 'wash-kassa',
                         'border-b-8 border-blue-400': active === 'wash-kassa'
                       })}
                       onClick={() => setActive('wash-kassa')}
                     >
                       Мойка (касса)
+                    </button>
+                  </div>
+                  <div className="w-1/5 p-2">
+                    <button
+                      type="button"
+                      className={cx('p-4 bg-gray-200 rounded w-full h-full overflow-hidden', {
+                        block: active !== 'window-kassa',
+                        'border-b-8 border-blue-400': active === 'window-kassa'
+                      })}
+                      onClick={() => setActive('window-kassa')}
+                    >
+                      Стекла (касса)
+                    </button>
+                  </div>
+                  <div className="w-1/5 p-2">
+                    <button
+                      type="button"
+                      className={cx('p-4 bg-gray-200 rounded w-full h-full overflow-hidden', {
+                        block: active !== 'cond-kassa',
+                        'border-b-8 border-blue-400': active === 'cond-kassa'
+                      })}
+                      onClick={() => setActive('cond-kassa')}
+                    >
+                      Кондиционеры (касса)
                     </button>
                   </div>
                 </>
@@ -118,7 +142,7 @@ const Report = () => {
                   <div className="w-1/5 p-2">
                     <button
                       type="button"
-                      className={cx('p-4 bg-gray-200 rounded w-full h-full', {
+                      className={cx('p-4 bg-gray-200 rounded w-full h-full overflow-hidden', {
                         block: active !== 'sh-buh',
                         'border-b-8 border-blue-400': active === 'sh-buh'
                       })}
@@ -130,7 +154,7 @@ const Report = () => {
                   <div className="w-1/5 p-2">
                     <button
                       type="button"
-                      className={cx('p-4 bg-gray-200 rounded w-full h-full', {
+                      className={cx('p-4 bg-gray-200 rounded w-full h-full overflow-hidden', {
                         block: active !== 'sto-buh',
                         'border-b-8 border-blue-400': active === 'sto-buh'
                       })}
@@ -142,7 +166,7 @@ const Report = () => {
                   <div className="w-1/5 p-2">
                     <button
                       type="button"
-                      className={cx('p-4 bg-gray-200 rounded w-full h-full', {
+                      className={cx('p-4 bg-gray-200 rounded w-full h-full overflow-hidden', {
                         block: active !== 'wash-buh',
                         'border-b-8 border-blue-400': active === 'wash-buh'
                       })}
@@ -151,24 +175,48 @@ const Report = () => {
                       Мойка (бухгалтерия)
                     </button>
                   </div>
+                  <div className="w-1/5 p-2">
+                    <button
+                      type="button"
+                      className={cx('p-4 bg-gray-200 rounded w-full h-full overflow-hidden', {
+                        block: active !== 'window-buh',
+                        'border-b-8 border-blue-400': active === 'window-buh'
+                      })}
+                      onClick={() => setActive('window-buh')}
+                    >
+                      Стекла (бухгалтерия)
+                    </button>
+                  </div>
+                  <div className="w-1/5 p-2">
+                    <button
+                      type="button"
+                      className={cx('p-4 bg-gray-200 rounded w-full h-full overflow-hidden', {
+                        block: active !== 'cond-buh',
+                        'border-b-8 border-blue-400': active === 'cond-buh'
+                      })}
+                      onClick={() => setActive('cond-buh')}
+                    >
+                      Кондиционеры (бухгалтерия)
+                    </button>
+                  </div>
                 </>
               ) : null}
               <div className="w-1/5 p-2">
                 <button
                   type="button"
-                  className={cx('p-4 bg-gray-200 rounded w-full h-full', {
+                  className={cx('p-4 bg-gray-200 rounded w-full h-full overflow-hidden', {
                     block: active !== 'material',
                     'border-b-8 border-blue-400': active === 'material'
                   })}
                   onClick={() => setActive('material')}
                 >
-                  Материалы
+                  Материалы (шиномонтаж)
                 </button>
               </div>
               <div className="w-1/5 p-2">
                 <button
                   type="button"
-                  className={cx('p-4 bg-gray-200 rounded w-full h-full', {
+                  className={cx('p-4 bg-gray-200 rounded w-full h-full overflow-hidden', {
                     block: active !== 'autopart',
                     'border-b-8 border-blue-400': active === 'autopart'
                   })}

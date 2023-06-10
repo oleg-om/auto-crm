@@ -33,6 +33,12 @@ const Shinomontazh = ({
       if (active.includes('wash-')) {
         return 'washmonth'
       }
+      if (active.includes('cond-')) {
+        return 'condmonth'
+      }
+      if (active.includes('window-')) {
+        return 'windowmonth'
+      }
       return 'washmonth'
     }
 
@@ -46,6 +52,12 @@ const Shinomontazh = ({
         }
         if (active.includes('wash-')) {
           return 'washrange'
+        }
+        if (active.includes('cond-')) {
+          return 'condrange'
+        }
+        if (active.includes('window-')) {
+          return 'windowrange'
         }
         return 'washrange'
       }
@@ -281,7 +293,11 @@ const Shinomontazh = ({
       active === 'sh-buh' ||
       active === 'sto-buh' ||
       active === 'wash-kassa' ||
-      active === 'wash-buh' ? (
+      active === 'wash-buh' ||
+      active === 'window-buh' ||
+      active === 'window-kassa' ||
+      active === 'cond-buh' ||
+      active === 'cond-kassa' ? (
         <div className={cx('block', {})}>
           {isLoaded ? null : loading()}
           {report.length > 0 && report && isLoaded ? (
