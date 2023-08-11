@@ -89,7 +89,8 @@ const StoragesUpdate = (props) => {
     dateFinish: props.dateFinish,
     currentplace: props.currentplace,
     status: props.status,
-    doplata: props.doplata
+    doplata: props.doplata,
+    comment2: props?.comment2 || ''
   })
 
   useEffect(() => {
@@ -1055,6 +1056,26 @@ const StoragesUpdate = (props) => {
             />
           </div>
         </div>
+
+        <div className="-mx-3 md:flex my-2">
+          <div className="w-full px-3 mb-6 md:mb-0">
+            <label
+              className="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2"
+              htmlFor="grid-city"
+            >
+              Комметнарий
+            </label>
+            <input
+              className="appearance-none block w-full bg-grey-lighter text-grey-darker border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-1 px-4 mb-3"
+              placeholder="Комметнарий"
+              value={state.comment2}
+              name="comment2"
+              id="comment2"
+              onChange={onChange}
+            />
+          </div>
+        </div>
+
         <div className="md:m-3 lg:flex rounded-lg px-6 py-2 w-auto shadow bg-gray-100 my-2">
           <div className="text-center md:text-left m-3">
             <h2>История хранения</h2>

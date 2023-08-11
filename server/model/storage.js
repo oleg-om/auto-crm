@@ -47,6 +47,10 @@ const Storage = new mongoose.Schema({
     type: String,
     required: false
   },
+  comment2: {
+    type: String,
+    required: false
+  },
   commentOrder: {
     type: String,
     required: false

@@ -64,7 +64,8 @@ const StoragesCreate = (props) => {
     payment: 'no',
     dateStart: '',
     dateFinish: '',
-    doplata: ''
+    doplata: '',
+    comment2: ''
   })
   const [customer, setCustomer] = useState({
     regnumber: '',
@@ -329,7 +330,7 @@ const StoragesCreate = (props) => {
     if (!state.dateStart) notify('Заполните обе даты')
     if (!state.dateFinish) notify('Заполните обе даты')
     if (state.preorder.length === 0) notify('Заполните хранение')
-    if (state.preorder.length > 0 && !state.preorder[0].quantity) notify('Укажите количество')
+    if (state.preorder.length > 0 && !state.preorder[0]?.quantity) notify('Укажите количество')
     else if (
       state.employee &&
       state.place &&
@@ -340,7 +341,7 @@ const StoragesCreate = (props) => {
       state.phone &&
       state.dateStart &&
       state.dateFinish &&
-      state.preorder[0].quantity
+      state.preorder[0]?.quantity
     ) {
       if (
         checkCustomer !== undefined &&
@@ -1531,6 +1532,22 @@ const StoragesCreate = (props) => {
               disabled={state.payment === 'free'}
               name="comment"
               id="comment"
+              onChange={onChange}
+            />
+          </div>
+          <div className="w-full px-3 mb-6 md:mb-0">
+            <label
+              className="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2"
+              htmlFor="grid-city"
+            >
+              Комметнарий
+            </label>
+            <input
+              className="appearance-none block w-full bg-grey-lighter text-grey-darker border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-1 px-4 mb-3"
+              placeholder="Комметнарий"
+              value={state.comment2}
+              name="comment2"
+              id="comment2"
               onChange={onChange}
             />
           </div>
