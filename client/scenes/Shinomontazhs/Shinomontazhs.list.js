@@ -1,17 +1,15 @@
-import React, { useState } from 'react'
+import React from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import { Link, useParams, useHistory } from 'react-router-dom'
-// import NumberFormat from 'react-number-format'
-// import cx from 'classnames'
 import { toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
 import { socket } from '../../redux/sockets/socketReceivers'
 import ShinomontazhsRow from '../../components/shinomontazhs/shinomontazhs.row'
-import { updateStatus } from '../../redux/reducers/shinomontazhs'
+import { getItemsFiltered, updateStatus } from '../../redux/reducers/shinomontazhs'
 import Navbar from '../../components/Navbar'
 import Pagination from '../Pagination'
 import OnLoadPlace from './OnloadPyPlace'
-// import taskStatuses from '../../lists/task-statuses'
+import useFilter, { ServiceFilter } from '../../components/shinomontazhs/hooks/filter'
 
 export const Loading = () => {
   return (
@@ -32,7 +30,7 @@ export const Loading = () => {
 
 const ShinomontazhsList = () => {
   const { num } = useParams(1)
-  const [showSearch] = useState(false)
+  const { search, setSearch, showSearch, setShowSearch } = useFilter(num, getItemsFiltered)
   const auth = useSelector((s) => s.auth)
   OnLoadPlace(num ? Number(num) : 1, showSearch, auth.place)
   const dispatch = useDispatch()
@@ -65,9 +63,6 @@ const ShinomontazhsList = () => {
     history.push(`/shinomontazh/list/${pageNumber}`)
   }
   toast.configure()
-  // const notify = (arg) => {
-  //   toast.info(arg, { position: toast.POSITION.BOTTOM_RIGHT })
-  // }
 
   return (
     <div>
@@ -81,7 +76,13 @@ const ShinomontazhsList = () => {
             ➜ Перейти в режим начальника
           </Link>
         ) : null}
-
+        <ServiceFilter
+          path="shinomontazh"
+          search={search}
+          setSearch={setSearch}
+          showSearch={showSearch}
+          setShowSearch={setShowSearch}
+        />
         <div className="overflow-x-auto rounded-lg overflow-y-auto relative lg:my-3 mt-1 lg:shadow lg:mx-4">
           <table className="border-collapse w-full">
             <thead>
