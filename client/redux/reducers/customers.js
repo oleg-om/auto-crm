@@ -123,14 +123,10 @@ export function getItemsByPage(page) {
   }
 }
 
-export function getItemsFiltered(page, vin, reg, phone) {
+export function getItemsFiltered(queryParams) {
   return (dispatch) => {
     dispatch({ type: GET_CUSTOMERS, isLoaded: false })
-    fetch(
-      `/api/v1/customerfilter${page ? `?page=${page}` : ''}${reg ? `&reg=${reg}` : ''}${
-        vin ? `&vin=${vin}` : ''
-      }${phone ? `&phone=${phone}` : ''}`
-    )
+    fetch(`/api/v1/customerfilter${queryParams}`)
       .then((r) => r.json())
       .then(({ data: customers, currentPage, numberOfPages }) => {
         dispatch({ type: GET_CUSTOMERS, customers, currentPage, numberOfPages, isLoaded: true })

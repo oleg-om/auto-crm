@@ -75,16 +75,10 @@ export function getAutopartsByPage(page) {
   }
 }
 
-export function getAutopartsFiltered(page, status, process, place, phone, number, reg) {
+export function getAutopartsFiltered(queryParams) {
   return (dispatch) => {
     // dispatch({ type: GET_AUTOPARTS, isLoaded: false })
-    fetch(
-      `/api/v1/autopartsfilter${page ? `?page=${page}` : ''}${status ? `&status=${status}` : ''}${
-        process ? `&process=${process}` : ''
-      }${place ? `&place=${place}` : ''}${phone ? `&phone=${phone}` : ''}${
-        number ? `&number=${number}` : ''
-      }${reg ? `&reg=${reg}` : ''}`
-    )
+    fetch(`/api/v1/autopartsfilter${queryParams}`)
       .then((r) => r.json())
       .then(({ data: autoparts, currentPage, numberOfPages }) => {
         dispatch({ type: GET_AUTOPARTS, autoparts, currentPage, numberOfPages, isLoaded: true })

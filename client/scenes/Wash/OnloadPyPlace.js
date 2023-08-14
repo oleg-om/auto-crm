@@ -3,9 +3,13 @@ import { useDispatch } from 'react-redux'
 // import { socket } from '../../redux/sockets/socketReceivers'
 import { getItemsFiltered } from '../../redux/reducers/washs'
 import { getWashprices } from '../../redux/reducers/wash.prices'
+import useSaveFilter from '../../hooks/saveFilterParams'
 
 const OnLoadPlace = (page, showSearch, place) => {
   const dispatch = useDispatch()
+
+  const filterObj = { page, place }
+  const { queryParamsToApi } = useSaveFilter(filterObj)
 
   useEffect(() => {
     dispatch(getWashprices())
@@ -13,7 +17,7 @@ const OnLoadPlace = (page, showSearch, place) => {
 
   useEffect(() => {
     if (!showSearch && place) {
-      dispatch(getItemsFiltered(page, place))
+      dispatch(getItemsFiltered(queryParamsToApi))
     }
   }, [dispatch, page, showSearch, place])
 

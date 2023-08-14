@@ -1,6 +1,6 @@
 import React from 'react'
 import { useSelector, useDispatch } from 'react-redux'
-import { Link, useParams, useHistory } from 'react-router-dom'
+import { Link, useParams } from 'react-router-dom'
 import { toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
 import { socket } from '../../redux/sockets/socketReceivers'
@@ -9,11 +9,15 @@ import { getItemsFiltered, updateStatus } from '../../redux/reducers/stos'
 import Navbar from '../../components/Navbar'
 import Pagination from '../Pagination'
 import onLoad from './Onload'
-import useFilter, { ServiceFilter } from '../../components/shinomontazhs/hooks/filter'
+import useFilter, { ServiceFilter } from '../../components/shared/filter'
+import useSaveFilter from '../../hooks/saveFilterParams'
 
 const StosListBoss = () => {
   const { num } = useParams(1)
-  const { search, setSearch, showSearch, setShowSearch } = useFilter(num, getItemsFiltered)
+  const { search, setSearch, showSearch, setShowSearch, applyFilter } = useFilter(
+    num,
+    getItemsFiltered
+  )
   onLoad(num ? Number(num) : 1, showSearch)
 
   const dispatch = useDispatch()
@@ -25,8 +29,6 @@ const StosListBoss = () => {
   const placesList = useSelector((s) => s.places.list)
   const employeeList = useSelector((s) => s.employees.list)
   const role = useSelector((s) => s.auth.roles)
-
-  const history = useHistory()
 
   socket.connect()
   // useEffect(() => {
@@ -41,8 +43,10 @@ const StosListBoss = () => {
 
   const postsPerPage = 14
 
+  const { navigateWithQueryParams } = useSaveFilter(search)
+
   const paginate = (pageNumber) => {
-    history.push(`/stoboss/list/${pageNumber}`)
+    navigateWithQueryParams(`/stoboss/order/list/${pageNumber}`)
   }
 
   toast.configure()
@@ -64,6 +68,8 @@ const StosListBoss = () => {
     )
   }
 
+  const filters = ['number', 'place', 'regnumber']
+
   return (
     <div>
       <Navbar />
@@ -74,6 +80,8 @@ const StosListBoss = () => {
           setSearch={setSearch}
           showSearch={showSearch}
           setShowSearch={setShowSearch}
+          filters={filters}
+          applyFilter={applyFilter}
         />
         <div className="overflow-x-auto rounded-lg overflow-y-auto relative lg:my-3 mt-1 lg:shadow lg:mx-4">
           <table className="border-collapse w-full">

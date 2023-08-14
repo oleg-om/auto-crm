@@ -1,6 +1,6 @@
 import React from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { Link, useParams, useHistory } from 'react-router-dom'
+import { Link, useParams } from 'react-router-dom'
 import 'react-toastify/dist/ReactToastify.css'
 import { socket } from '../../redux/sockets/socketReceivers'
 import ShinomontazhsRowBoss from '../../components/shinomontazhs/shinomontazhs.row.boss'
@@ -8,12 +8,16 @@ import { getItemsFiltered, updateStatus } from '../../redux/reducers/shinomontaz
 import Navbar from '../../components/Navbar'
 import Pagination from '../Pagination'
 import onLoad from './Onload'
-import useFilter, { ServiceFilter } from '../../components/shinomontazhs/hooks/filter'
+import useFilter, { ServiceFilter } from '../../components/shared/filter'
+import useSaveFilter from '../../hooks/saveFilterParams'
 
 const ShinomontazhsListBoss = () => {
   const { num } = useParams(1)
   const dispatch = useDispatch()
-  const { search, setSearch, showSearch, setShowSearch } = useFilter(num, getItemsFiltered)
+  const { search, setSearch, showSearch, setShowSearch, applyFilter } = useFilter(
+    num,
+    getItemsFiltered
+  )
 
   onLoad(num ? Number(num) : 1, showSearch)
 
@@ -26,8 +30,6 @@ const ShinomontazhsListBoss = () => {
   const employeeList = useSelector((s) => s.employees.list)
   const role = useSelector((s) => s.auth.roles)
 
-  const history = useHistory()
-
   socket.connect()
 
   const settings = useSelector((s) => s.settings.list)
@@ -37,8 +39,10 @@ const ShinomontazhsListBoss = () => {
 
   const postsPerPage = 14
 
+  const { navigateWithQueryParams } = useSaveFilter(search)
+
   const paginate = (pageNumber) => {
-    history.push(`/shinomontazhboss/list/${pageNumber}`)
+    navigateWithQueryParams(`/shinomontazhboss/list/${pageNumber}`)
   }
 
   const loadingComponent = () => {
@@ -58,6 +62,8 @@ const ShinomontazhsListBoss = () => {
     )
   }
 
+  const filters = ['number', 'place', 'regnumber']
+
   return (
     <div>
       <Navbar />
@@ -68,6 +74,8 @@ const ShinomontazhsListBoss = () => {
           setSearch={setSearch}
           showSearch={showSearch}
           setShowSearch={setShowSearch}
+          filters={filters}
+          applyFilter={applyFilter}
         />
         <div className="overflow-x-auto rounded-lg overflow-y-auto relative lg:my-3 mt-1 lg:shadow lg:mx-4">
           <table className="border-collapse w-full">

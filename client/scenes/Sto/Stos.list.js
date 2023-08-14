@@ -1,6 +1,6 @@
 import React from 'react'
 import { useSelector, useDispatch } from 'react-redux'
-import { Link, useParams, useHistory } from 'react-router-dom'
+import { Link, useParams } from 'react-router-dom'
 // import NumberFormat from 'react-number-format'
 // import cx from 'classnames'
 import { toast } from 'react-toastify'
@@ -11,7 +11,8 @@ import { updateStatus, getItemsFiltered } from '../../redux/reducers/stos'
 import Navbar from '../../components/Navbar'
 import Pagination from '../Pagination'
 import OnLoadPlace from './OnloadPyPlace'
-import useFilter, { ServiceFilter } from '../../components/shinomontazhs/hooks/filter'
+import useFilter, { ServiceFilter } from '../../components/shared/filter'
+import useSaveFilter from '../../hooks/saveFilterParams'
 // import taskStatuses from '../../lists/task-statuses'
 
 const StosList = () => {
@@ -25,7 +26,6 @@ const StosList = () => {
 
   const role = useSelector((s) => s.auth.roles)
 
-  const history = useHistory()
   const postsPerPage = 14
   // function secondsDiff(d1, d2) {
   //   const secDiff = Math.floor((d2 - d1) / 1000)
@@ -45,9 +45,12 @@ const StosList = () => {
 
   // const [loading] = useState(true)
 
+  const { navigateWithQueryParams } = useSaveFilter(search)
+
   const paginate = (pageNumber) => {
-    history.push(`/sto/list/${pageNumber}`)
+    navigateWithQueryParams(`/sto/order/list/${pageNumber}`)
   }
+
   toast.configure()
   // const notify = (arg) => {
   //   toast.info(arg, { position: toast.POSITION.BOTTOM_RIGHT })
@@ -88,6 +91,7 @@ const StosList = () => {
           setSearch={setSearch}
           showSearch={showSearch}
           setShowSearch={setShowSearch}
+          filters={['number']}
         />
         <div className="overflow-x-auto rounded-lg overflow-y-auto relative lg:my-3 mt-1 lg:shadow lg:mx-4">
           <table className="border-collapse w-full">

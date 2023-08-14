@@ -1,21 +1,27 @@
-import React, { useState } from 'react'
+import React from 'react'
 import { useSelector, useDispatch } from 'react-redux'
-import { Link, useParams, useHistory } from 'react-router-dom'
+import { Link, useParams } from 'react-router-dom'
 // import NumberFormat from 'react-number-format'
 // import cx from 'classnames'
 import { toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
 import { socket } from '../../redux/sockets/socketReceivers'
 import WashsRow from '../../components/washs/washs.row'
-import { updateStatus } from '../../redux/reducers/washs'
+import { updateStatus, getItemsFiltered } from '../../redux/reducers/washs'
 import Navbar from '../../components/Navbar'
 import Pagination from '../Pagination'
 import OnLoadPlace from './OnloadPyPlace'
+import useFilter, { ServiceFilter } from '../../components/shared/filter'
+import useSaveFilter from '../../hooks/saveFilterParams'
 // import taskStatuses from '../../lists/task-statuses'
 
 const WashsList = () => {
   const { num } = useParams(1)
-  const [showSearch] = useState(false)
+  const { search, setSearch, showSearch, setShowSearch, applyFilter } = useFilter(
+    num,
+    getItemsFiltered
+  )
+
   const auth = useSelector((s) => s.auth)
   OnLoadPlace(num ? Number(num) : 1, showSearch, auth.place)
   const dispatch = useDispatch()
@@ -24,7 +30,6 @@ const WashsList = () => {
 
   const role = useSelector((s) => s.auth.roles)
 
-  const history = useHistory()
   const postsPerPage = 14
   // function secondsDiff(d1, d2) {
   //   const secDiff = Math.floor((d2 - d1) / 1000)
@@ -44,8 +49,10 @@ const WashsList = () => {
 
   // const [loading] = useState(true)
 
+  const { navigateWithQueryParams } = useSaveFilter(search)
+
   const paginate = (pageNumber) => {
-    history.push(`/wash/list/${pageNumber}`)
+    navigateWithQueryParams(`/wash/list/${pageNumber}`)
   }
   toast.configure()
   // const notify = (arg) => {
@@ -81,7 +88,15 @@ const WashsList = () => {
             ➜ Перейти в режим начальника
           </Link>
         ) : null}
-
+        <ServiceFilter
+          path="wash"
+          search={search}
+          setSearch={setSearch}
+          showSearch={showSearch}
+          setShowSearch={setShowSearch}
+          filters={['number']}
+          applyFilter={applyFilter}
+        />
         <div className="overflow-x-auto rounded-lg overflow-y-auto relative lg:my-3 mt-1 lg:shadow lg:mx-4">
           <table className="border-collapse w-full">
             <thead>

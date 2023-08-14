@@ -69,16 +69,10 @@ export function getToolsByPage(page) {
   }
 }
 
-export function getToolsFiltered(page, status, process, place, phone, number, reg) {
+export function getToolsFiltered(queryParams) {
   return (dispatch) => {
     // dispatch({ type: GET_TOOLS, isLoaded: false })
-    fetch(
-      `/api/v1/toolsfilter${page ? `?page=${page}` : ''}${status ? `&status=${status}` : ''}${
-        process ? `&process=${process}` : ''
-      }${place ? `&place=${place}` : ''}${phone ? `&phone=${phone}` : ''}${
-        number ? `&number=${number}` : ''
-      }${reg ? `&reg=${reg}` : ''}`
-    )
+    fetch(`/api/v1/toolsfilter${queryParams}`)
       .then((r) => r.json())
       .then(({ data: tools, currentPage, numberOfPages }) => {
         dispatch({ type: GET_TOOLS, tools, currentPage, numberOfPages, isLoaded: true })

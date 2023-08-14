@@ -1,6 +1,6 @@
 import React from 'react'
 import { useSelector, useDispatch } from 'react-redux'
-import { Link, useParams, useHistory } from 'react-router-dom'
+import { Link, useParams } from 'react-router-dom'
 import { toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
 import { socket } from '../../redux/sockets/socketReceivers'
@@ -9,7 +9,8 @@ import { getItemsFiltered, updateStatus } from '../../redux/reducers/shinomontaz
 import Navbar from '../../components/Navbar'
 import Pagination from '../Pagination'
 import OnLoadPlace from './OnloadPyPlace'
-import useFilter, { ServiceFilter } from '../../components/shinomontazhs/hooks/filter'
+import useFilter, { ServiceFilter } from '../../components/shared/filter'
+import useSaveFilter from '../../hooks/saveFilterParams'
 
 export const Loading = () => {
   return (
@@ -30,7 +31,10 @@ export const Loading = () => {
 
 const ShinomontazhsList = () => {
   const { num } = useParams(1)
-  const { search, setSearch, showSearch, setShowSearch } = useFilter(num, getItemsFiltered)
+  const { search, setSearch, showSearch, setShowSearch, applyFilter } = useFilter(
+    num,
+    getItemsFiltered
+  )
   const auth = useSelector((s) => s.auth)
   OnLoadPlace(num ? Number(num) : 1, showSearch, auth.place)
   const dispatch = useDispatch()
@@ -39,7 +43,6 @@ const ShinomontazhsList = () => {
 
   const role = useSelector((s) => s.auth.roles)
 
-  const history = useHistory()
   const postsPerPage = 14
   // function secondsDiff(d1, d2) {
   //   const secDiff = Math.floor((d2 - d1) / 1000)
@@ -58,11 +61,14 @@ const ShinomontazhsList = () => {
   }
 
   // const [loading] = useState(true)
+  const { navigateWithQueryParams } = useSaveFilter(search)
 
   const paginate = (pageNumber) => {
-    history.push(`/shinomontazh/list/${pageNumber}`)
+    navigateWithQueryParams(`/shinomontazh/list/${pageNumber}`)
   }
   toast.configure()
+
+  const filters = ['number']
 
   return (
     <div>
@@ -78,10 +84,12 @@ const ShinomontazhsList = () => {
         ) : null}
         <ServiceFilter
           path="shinomontazh"
+          filters={filters}
           search={search}
           setSearch={setSearch}
           showSearch={showSearch}
           setShowSearch={setShowSearch}
+          applyFilter={applyFilter}
         />
         <div className="overflow-x-auto rounded-lg overflow-y-auto relative lg:my-3 mt-1 lg:shadow lg:mx-4">
           <table className="border-collapse w-full">

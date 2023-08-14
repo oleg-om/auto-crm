@@ -103,14 +103,10 @@ export function getItemsByPage(page) {
   }
 }
 
-export function getItemsFiltered(page, place, number, reg) {
+export function getItemsFiltered(queryParams) {
   return (dispatch) => {
     // dispatch({ type: GET_STOS, isLoaded: false })
-    fetch(
-      `/api/v1/stofilter${page ? `?page=${page}` : ''}${place ? `&place=${place}` : ''}${
-        number ? `&number=${number}` : ''
-      }${reg ? `&reg=${reg}` : ''}`
-    )
+    fetch(`/api/v1/stofilter${queryParams}`)
       .then((r) => r.json())
       .then(({ data: stos, currentPage, numberOfPages }) => {
         dispatch({

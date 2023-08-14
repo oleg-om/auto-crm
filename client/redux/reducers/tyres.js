@@ -79,28 +79,10 @@ export function getItemsByPage(page) {
   }
 }
 
-export function getItemsFiltered(
-  page,
-  status,
-  vin,
-  place,
-  phone,
-  number,
-  sizeone,
-  sizetwo,
-  sizethree
-) {
+export function getItemsFiltered(queryParams) {
   return (dispatch) => {
     // dispatch({ type: GET_TYRES, isLoaded: false })
-    fetch(
-      `/api/v1/tyrefilter${page ? `?page=${page}` : ''}${status ? `&status=${status}` : ''}${
-        vin ? `&vin=${vin}` : ''
-      }${place ? `&place=${place}` : ''}${phone ? `&phone=${phone}` : ''}${
-        number ? `&number=${number}` : ''
-      }${sizeone ? `&sizeone=${sizeone}` : ''}${sizetwo ? `&sizetwo=${sizetwo}` : ''}${
-        sizethree ? `&sizethree=${sizethree}` : ''
-      }`
-    )
+    fetch(`/api/v1/tyrefilter${queryParams}`)
       .then((r) => r.json())
       .then(({ data: tyres, currentPage, numberOfPages }) => {
         dispatch({ type: GET_TYRES, tyres, currentPage, numberOfPages, isLoaded: true })

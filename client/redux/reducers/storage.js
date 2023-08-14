@@ -152,14 +152,10 @@ export function getItemsByPage(page) {
   }
 }
 
-export function getItemsFiltered(page, status, place, phone, number) {
+export function getItemsFiltered(queryParams) {
   return (dispatch) => {
     // dispatch({ type: GET_STORAGES, isLoaded: false })
-    fetch(
-      `/api/v1/storagefilter${page ? `?page=${page}` : ''}${status ? `&status=${status}` : ''}${
-        place ? `&place=${place}` : ''
-      }${phone ? `&phone=${phone}` : ''}${number ? `&number=${number}` : ''}`
-    )
+    fetch(`/api/v1/storagefilter${queryParams}`)
       .then((r) => r.json())
       .then(({ data: storages, currentPage, numberOfPages }) => {
         dispatch({ type: GET_STORAGES, storages, currentPage, numberOfPages, isLoaded: true })

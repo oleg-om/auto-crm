@@ -2,14 +2,18 @@ import { useEffect } from 'react'
 import { useDispatch } from 'react-redux'
 // import { socket } from '../../redux/sockets/socketReceivers'
 import { getItemsFiltered } from '../../redux/reducers/shinomontazhs'
+import useSaveFilter from '../../hooks/saveFilterParams'
 // import { socketCondition } from '../../utils/utils'
 
 const OnLoadPlace = (page, showSearch, place) => {
   const dispatch = useDispatch()
 
+  const filterObj = { page, place }
+  const { queryParamsToApi } = useSaveFilter(filterObj)
+
   useEffect(() => {
     if (!showSearch && place) {
-      dispatch(getItemsFiltered(page, place))
+      dispatch(getItemsFiltered(queryParamsToApi))
     }
   }, [dispatch, page, showSearch, place])
 

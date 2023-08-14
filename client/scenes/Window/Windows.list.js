@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import { Link, useParams, useHistory, useLocation } from 'react-router-dom'
 // import NumberFormat from 'react-number-format'
@@ -12,6 +12,7 @@ import Navbar from '../../components/Navbar'
 import Pagination from '../Pagination'
 import OnLoadPlace from './OnloadPyPlace'
 import OnLoad from './Onload'
+
 // import taskStatuses from '../../lists/task-statuses'
 
 export const getType = (location) => {
@@ -24,11 +25,14 @@ export const getType = (location) => {
 
 const WindowsList = () => {
   const { num } = useParams(1)
-  const [showSearch] = useState(false)
+
+  const showSearch = false
+
   const auth = useSelector((s) => s.auth)
   const role = useSelector((s) => s.auth.roles)
 
   const location = useLocation()
+
   const isBoss = location.pathname.includes('boss/')
 
   if (isBoss) {
