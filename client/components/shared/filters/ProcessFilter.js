@@ -2,7 +2,7 @@ import cx from 'classnames'
 import React from 'react'
 import { useSelector } from 'react-redux'
 
-const ProcessFilter = ({ search, setSearch, showSearch, path }) => {
+const ProcessFilter = ({ search, setSearch, showSearch, path, activeFilter }) => {
   const employeeList = useSelector((s) => s.employees.list)
   const onChangePlace = (e) => {
     const { name, value } = e.target
@@ -32,7 +32,7 @@ const ProcessFilter = ({ search, setSearch, showSearch, path }) => {
           className={cx(
             'block appearance-none w-full bg-grey-lighter border border-gray-300 focus:border-gray-500 focus:outline-none py-1 px-4 pr-8 rounded',
             {
-              'border-red-300 focus:border-red-500': search.process && showSearch === true
+              'border-red-300 focus:border-red-500': activeFilter?.process && showSearch === true
             }
           )}
           value={search.process}

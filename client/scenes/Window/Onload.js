@@ -6,6 +6,7 @@ import { getCondprices } from '../../redux/reducers/cond.prices'
 import { getItemsByPage } from '../../redux/reducers/windows'
 import { getCondItemsByPage } from '../../redux/reducers/conds'
 import { getWindowprices } from '../../redux/reducers/window.prices'
+import { checkQueryParamsAre } from '../../hooks/saveFilterParams'
 // import { socketCondition } from '../../utils/utils'
 
 export const getFunc = (location) => {
@@ -45,8 +46,9 @@ const OnLoad = (page, showSearch) => {
 
   usePrices()
 
+  const { search } = useLocation()
   useEffect(() => {
-    if (!showSearch && page) {
+    if (checkQueryParamsAre(showSearch, search) && page) {
       dispatch(getItemsByPageFunc(page, location))
     }
   }, [dispatch, page, showSearch, location])

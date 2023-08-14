@@ -1,7 +1,7 @@
 import cx from 'classnames'
 import React from 'react'
 
-const TyresSizeFilter = ({ search, setSearch, onEnterPress, showSearch }) => {
+const TyresSizeFilter = ({ search, setSearch, onEnterPress, showSearch, activeFilter }) => {
   const onChangeSize = (e) => {
     const { name, value } = e.target
 
@@ -23,7 +23,7 @@ const TyresSizeFilter = ({ search, setSearch, onEnterPress, showSearch }) => {
           className={cx(
             'block appearance-none w-1/3 bg-grey-lighter border border-gray-300 focus:border-gray-500 focus:outline-none p-1 rounded mr-1',
             {
-              'border-red-300 focus:border-red-500': search.sizeone && showSearch === true
+              'border-red-300 focus:border-red-500': activeFilter?.sizeone && showSearch === true
             }
           )}
           name="sizeone"
@@ -38,7 +38,7 @@ const TyresSizeFilter = ({ search, setSearch, onEnterPress, showSearch }) => {
           className={cx(
             'block appearance-none w-1/3 bg-grey-lighter border border-gray-300 focus:border-gray-500 focus:outline-none p-1 rounded mr-1 rounded',
             {
-              'border-red-300 focus:border-red-500': search.sizetwo && showSearch === true
+              'border-red-300 focus:border-red-500': activeFilter?.sizetwo && showSearch === true
             }
           )}
           name="sizetwo"
@@ -53,7 +53,7 @@ const TyresSizeFilter = ({ search, setSearch, onEnterPress, showSearch }) => {
           className={cx(
             'block appearance-none w-1/3 bg-grey-lighter border border-gray-300 focus:border-gray-500 focus:outline-none p-1 rounded',
             {
-              'border-red-300 focus:border-red-500': search.sizethree && showSearch === true
+              'border-red-300 focus:border-red-500': activeFilter?.sizethree && showSearch === true
             }
           )}
           name="sizethree"

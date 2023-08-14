@@ -18,6 +18,7 @@ import 'react-toastify/dist/ReactToastify.css'
 import FirstColumn from './moduls/firstcolumn'
 import TyreColumn from './moduls/tyrecolumn'
 import Statuses from '../../lists/storages-statuses'
+import useSaveFilter from '../../hooks/saveFilterParams'
 
 const dateNow = new Date()
 export const dateNew = `${dateNow
@@ -130,6 +131,8 @@ const StoragesUpdate = (props) => {
     }))
   }
 
+  const { navigateWithQueryParams, searchParamsToUrl } = useSaveFilter()
+
   const sendData = () => {
     if (!state.employee) notify('Заполните поле Принял заказ')
     if (!state.place) notify('Заполните поле Заказ принят на точке')
@@ -183,6 +186,7 @@ const StoragesUpdate = (props) => {
         })
       }
       history.push('/storages/order/list')
+      navigateWithQueryParams('/storages/order/list', searchParamsToUrl)
       notify('Хранение обновлено')
     }
   }
@@ -1113,7 +1117,7 @@ const StoragesUpdate = (props) => {
       </div>
       <div className=" flex my-2">
         <Link
-          to={`/storages/order/list/${props.num ? props.num : ''}`}
+          to={`/storages/order/list/${props.num ? props.num : ''}${searchParamsToUrl}`}
           className="my-3 mr-2 py-2 md:w-1/3 px-3 bg-red-600 text-white text-center hover:bg-red-700 hover:text-white rounded-lg"
         >
           Отмена

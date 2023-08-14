@@ -1,6 +1,6 @@
 import { useHistory, useLocation } from 'react-router-dom'
 
-function useSaveFilter(filterParams) {
+function useSaveFilter(filterParams = {}) {
   const { search } = useLocation()
   const history = useHistory()
 
@@ -15,15 +15,14 @@ function useSaveFilter(filterParams) {
   }
   // init query url
   const queryParams = new URLSearchParams(filter).toString()
-  const navigateWithQueryParams = (path) => {
-    console.log('navigate', path, queryParams)
+  const navigateWithQueryParams = (path, myQueryString) => {
     history.push({
       pathname: path,
-      search: `?${queryParams}`, // query string
-      state: {
-        // location state
-        update: true
-      }
+      search: myQueryString || `?${queryParams}` // query string
+      // state: {
+      //   // location state
+      //   update: true
+      // }
     })
   }
 
@@ -32,7 +31,7 @@ function useSaveFilter(filterParams) {
   }
 
   const currentQueryParams = getQueryParams().toString()
-
+  const searchParamsToUrl = getQueryParams().toString() ? `?${getQueryParams().toString()}` : ''
   const queryStringToObject = (url) => {
     return Object.fromEntries(new URLSearchParams(url))
   }
@@ -59,8 +58,13 @@ function useSaveFilter(filterParams) {
     getQueryParams,
     currentQueryParams,
     queryParamsToApi,
-    queryStringToObject
+    queryStringToObject,
+    searchParamsToUrl
   }
 }
 
 export default useSaveFilter
+
+export const checkQueryParamsAre = (showSearch, search) => {
+  return !showSearch && !search
+}

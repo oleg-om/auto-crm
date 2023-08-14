@@ -67,20 +67,27 @@ function useFilter(num, loadItems) {
   // }, [dispatch, num, showSearch, search])
 
   const applyFilter = () => {
-    if (showSearch) {
-      const phoneArray = search.phone.split(' ')
-      const phoneToRest = phoneArray[phoneArray.length - 1].replace(/_/g, '')
+    // if (showSearch) {
+    const phoneArray = search.phone.split(' ')
+    const phoneToRest = phoneArray[phoneArray.length - 1].replace(/_/g, '')
 
-      const searchObjectWithoutPhone = { ...search, phone: null }
+    const searchObjectWithoutPhone = { ...search, phone: null }
 
-      if (
-        (search.phone !== '' && phoneToRest.length > 6) ||
-        Object.values(searchObjectWithoutPhone).filter((key) => key)?.length > 0
-      ) {
-        dispatch(loadItems(queryParamsToApi))
-      }
+    if (
+      (search.phone !== '' && phoneToRest.length > 6) ||
+      Object.values(searchObjectWithoutPhone).filter((key) => key)?.length > 0
+    ) {
+      dispatch(loadItems(queryParamsToApi))
     }
+    // }
   }
+
+  useEffect(() => {
+    if (showSearch) {
+      applyFilter()
+    }
+    return () => {}
+  }, [num, showSearch])
 
   return { search, setSearch, showSearch, setShowSearch, applyFilter }
 }
@@ -96,10 +103,20 @@ export const ServiceFilter = ({
 }) => {
   const history = useHistory()
 
-  const { navigateWithQueryParams } = useSaveFilter(search)
+  const { navigateWithQueryParams, currentQueryParams, queryStringToObject } = useSaveFilter(search)
   const getPath = () => {
     return `/${path}/list/1`
   }
+
+  const [activeFilter, setActiveFilter] = useState({})
+  useEffect(() => {
+    if (currentQueryParams) {
+      setActiveFilter(queryStringToObject(currentQueryParams))
+    } else {
+      setActiveFilter({})
+    }
+    return () => {}
+  }, [currentQueryParams])
 
   toast.configure()
   const notify = (arg) => {
@@ -144,6 +161,7 @@ export const ServiceFilter = ({
                 setSearch={setSearch}
                 showSearch={showSearch}
                 onEnterPress={onEnterPress}
+                activeFilter={activeFilter}
               />
             )}
             {isPhone && (
@@ -152,6 +170,7 @@ export const ServiceFilter = ({
                 setSearch={setSearch}
                 showSearch={showSearch}
                 onEnterPress={onEnterPress}
+                activeFilter={activeFilter}
               />
             )}
             {isProcess && (
@@ -160,6 +179,7 @@ export const ServiceFilter = ({
                 setSearch={setSearch}
                 showSearch={showSearch}
                 path={path}
+                activeFilter={activeFilter}
               />
             )}
             {isTyresSize && (
@@ -168,6 +188,7 @@ export const ServiceFilter = ({
                 setSearch={setSearch}
                 showSearch={showSearch}
                 onEnterPress={onEnterPress}
+                activeFilter={activeFilter}
               />
             )}
             {isRegNumber && (
@@ -176,6 +197,7 @@ export const ServiceFilter = ({
                 setSearch={setSearch}
                 showSearch={showSearch}
                 onEnterPress={onEnterPress}
+                activeFilter={activeFilter}
               />
             )}
             {isStatus && (
@@ -184,10 +206,16 @@ export const ServiceFilter = ({
                 setSearch={setSearch}
                 showSearch={showSearch}
                 path={path}
+                activeFilter={activeFilter}
               />
             )}
             {isPlace && (
-              <PlaceFilter search={search} setSearch={setSearch} showSearch={showSearch} />
+              <PlaceFilter
+                search={search}
+                setSearch={setSearch}
+                showSearch={showSearch}
+                activeFilter={activeFilter}
+              />
             )}
 
             <div className="flex content-end  px-3 mb-6 md:mb-0">

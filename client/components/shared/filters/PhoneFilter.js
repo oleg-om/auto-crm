@@ -2,7 +2,7 @@ import NumberFormat from 'react-number-format'
 import cx from 'classnames'
 import React from 'react'
 
-const PhoneFilter = ({ search, setSearch, showSearch, onEnterPress }) => {
+const PhoneFilter = ({ search, setSearch, showSearch, onEnterPress, activeFilter }) => {
   const onChangePhone = (e) => {
     const { name, value } = e.target
     setSearch((prevState) => ({
@@ -23,7 +23,7 @@ const PhoneFilter = ({ search, setSearch, showSearch, onEnterPress }) => {
           className={cx(
             'block appearance-none w-full bg-grey-lighter border border-gray-300 focus:border-gray-500 focus:outline-none py-1 px-4 pr-8 rounded',
             {
-              'border-red-300 focus:border-red-500': search.phone && showSearch === true
+              'border-red-300 focus:border-red-500': activeFilter?.phone && showSearch === true
             }
           )}
           format="+7 (###) ###-##-##"

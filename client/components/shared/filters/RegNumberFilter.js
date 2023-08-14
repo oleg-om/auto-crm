@@ -1,7 +1,7 @@
 import cx from 'classnames'
 import React from 'react'
 
-const RegNumberFilter = ({ search, setSearch, showSearch, onEnterPress }) => {
+const RegNumberFilter = ({ search, setSearch, showSearch, onEnterPress, activeFilter }) => {
   const onChangeCustomerUppercaseRussian = (e) => {
     const { name, value } = e.target
     setSearch((prevState) => ({
@@ -25,7 +25,7 @@ const RegNumberFilter = ({ search, setSearch, showSearch, onEnterPress }) => {
           className={cx(
             'block appearance-none w-full bg-grey-lighter border border-gray-300 focus:border-gray-500 focus:outline-none py-1 px-4 pr-8 rounded',
             {
-              'border-red-300 focus:border-red-500': search.regnumber && showSearch === true
+              'border-red-300 focus:border-red-500': activeFilter?.regnumber && showSearch === true
             }
           )}
           value={search.regnumber}

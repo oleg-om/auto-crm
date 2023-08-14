@@ -3,7 +3,7 @@ import cx from 'classnames'
 import React from 'react'
 import { defaultSearchState } from '../filter'
 
-const PlaceFilter = ({ search, setSearch, showSearch }) => {
+const PlaceFilter = ({ search, setSearch, showSearch, activeFilter }) => {
   const placesList = useSelector((s) => s.places.list)
   const onChangePlace = (e) => {
     const { name, value } = e.target
@@ -26,7 +26,8 @@ const PlaceFilter = ({ search, setSearch, showSearch }) => {
           className={cx(
             'block appearance-none w-full bg-grey-lighter border border-gray-300 focus:border-gray-500 focus:outline-none py-1 px-4 pr-8 rounded',
             {
-              'border-red-300 focus:border-red-500': search.place.length >= 1 && showSearch === true
+              'border-red-300 focus:border-red-500':
+                activeFilter?.place?.length >= 1 && showSearch === true
             }
           )}
           value={search.place}

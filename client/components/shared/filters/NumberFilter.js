@@ -2,7 +2,7 @@ import cx from 'classnames'
 import React from 'react'
 import { defaultSearchState } from '../filter'
 
-const NumberFilter = ({ search, setSearch, showSearch, onEnterPress }) => {
+const NumberFilter = ({ search, setSearch, showSearch, onEnterPress, activeFilter }) => {
   const onChangeNumber = (e) => {
     const { name, value } = e.target
     setSearch(() => ({
@@ -24,7 +24,7 @@ const NumberFilter = ({ search, setSearch, showSearch, onEnterPress }) => {
             'block appearance-none w-full bg-grey-lighter border border-gray-300 focus:border-gray-500 focus:outline-none py-1 px-4 pr-8 rounded',
             {
               'border-red-300 focus:border-red-500':
-                search.number.length >= 1 && showSearch === true
+                activeFilter?.number?.length >= 1 && showSearch === true
             }
           )}
           value={search.number}

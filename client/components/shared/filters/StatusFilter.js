@@ -3,7 +3,7 @@ import React from 'react'
 import storageStatuses from '../../../lists/storages-statuses'
 import taskStatuses from '../../../lists/task-statuses'
 
-const StatusFilter = ({ search, setSearch, showSearch, path }) => {
+const StatusFilter = ({ search, setSearch, showSearch, path, activeFilter }) => {
   const onChangeStatus = (e) => {
     const { name, value } = e.target
     setSearch((prevState) => ({
@@ -13,7 +13,7 @@ const StatusFilter = ({ search, setSearch, showSearch, path }) => {
   }
 
   const getStatuses = () => {
-    if (path === 'storage') {
+    if (path.includes('storages')) {
       return storageStatuses
     }
     return taskStatuses
@@ -32,7 +32,7 @@ const StatusFilter = ({ search, setSearch, showSearch, path }) => {
           className={cx(
             'block appearance-none w-full bg-grey-lighter border border-gray-300 focus:border-gray-500 focus:outline-none py-1 px-4 pr-8 rounded',
             {
-              'border-red-300 focus:border-red-500': search.status && showSearch === true
+              'border-red-300 focus:border-red-500': activeFilter?.status && showSearch === true
             }
           )}
           value={search.status}

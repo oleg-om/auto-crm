@@ -1,8 +1,10 @@
 import { useEffect } from 'react'
 import { useDispatch } from 'react-redux'
+import { useLocation } from 'react-router-dom'
 // import { socket } from '../../redux/sockets/socketReceivers'
 import { getItemsFiltered } from '../../redux/reducers/stos'
-import useSaveFilter from '../../hooks/saveFilterParams'
+import useSaveFilter, { checkQueryParamsAre } from '../../hooks/saveFilterParams'
+
 // import { socketCondition } from '../../utils/utils'
 
 const OnLoadPlace = (page, showSearch, place) => {
@@ -11,8 +13,9 @@ const OnLoadPlace = (page, showSearch, place) => {
   const filterObj = { page, place }
   const { queryParamsToApi } = useSaveFilter(filterObj)
 
+  const { search } = useLocation()
   useEffect(() => {
-    if (!showSearch && place) {
+    if (checkQueryParamsAre(showSearch, search) && place) {
       dispatch(getItemsFiltered(queryParamsToApi))
     }
   }, [dispatch, page, showSearch, place])
