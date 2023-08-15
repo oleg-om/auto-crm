@@ -1,15 +1,7 @@
 import cx from 'classnames'
 import React from 'react'
 
-const TyresSizeFilter = ({ search, setSearch, onEnterPress, showSearch, activeFilter }) => {
-  const onChangeSize = (e) => {
-    const { name, value } = e.target
-
-    setSearch((prevState) => ({
-      ...prevState,
-      [name]: value
-    }))
-  }
+const TyresSizeFilter = ({ search, onChange, onEnterPress, showSearch, activeFilter }) => {
   return (
     <div className="md:w-1/2 px-3 mb-6 md:mb-0">
       <label
@@ -28,7 +20,7 @@ const TyresSizeFilter = ({ search, setSearch, onEnterPress, showSearch, activeFi
           )}
           name="sizeone"
           value={search.sizeone}
-          onChange={onChangeSize}
+          onChange={onChange}
           placeholder="175"
           type="number"
           onKeyDown={onEnterPress}
@@ -43,7 +35,7 @@ const TyresSizeFilter = ({ search, setSearch, onEnterPress, showSearch, activeFi
           )}
           name="sizetwo"
           value={search.sizetwo}
-          onChange={onChangeSize}
+          onChange={onChange}
           placeholder="70"
           type="number"
           onKeyDown={onEnterPress}
@@ -58,7 +50,7 @@ const TyresSizeFilter = ({ search, setSearch, onEnterPress, showSearch, activeFi
           )}
           name="sizethree"
           value={search.sizethree}
-          onChange={onChangeSize}
+          onChange={onChange}
           placeholder="13"
           type="number"
           onKeyDown={onEnterPress}

@@ -3,15 +3,7 @@ import React from 'react'
 import storageStatuses from '../../../lists/storages-statuses'
 import taskStatuses from '../../../lists/task-statuses'
 
-const StatusFilter = ({ search, setSearch, showSearch, path, activeFilter }) => {
-  const onChangeStatus = (e) => {
-    const { name, value } = e.target
-    setSearch((prevState) => ({
-      ...prevState,
-      [name]: value
-    }))
-  }
-
+const StatusFilter = ({ search, showSearch, path, activeFilter, onChange }) => {
   const getStatuses = () => {
     if (path.includes('storages')) {
       return storageStatuses
@@ -37,7 +29,7 @@ const StatusFilter = ({ search, setSearch, showSearch, path, activeFilter }) => 
           )}
           value={search.status}
           name="status"
-          onChange={onChangeStatus}
+          onChange={onChange}
         >
           <option value="" disabled hidden>
             Все

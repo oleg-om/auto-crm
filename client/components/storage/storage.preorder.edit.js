@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react'
-import { Link, useHistory } from 'react-router-dom'
+import { Link } from 'react-router-dom'
 import { useSelector } from 'react-redux'
 import { toast } from 'react-toastify'
 import { useReactToPrint } from 'react-to-print'
@@ -69,7 +69,6 @@ const StoragesUpdate = (props) => {
     content: () => uslRef.current
   })
 
-  const history = useHistory()
   const list = useSelector((s) => s.places.list)
   const employeeList = useSelector((s) => s.employees.list)
 
@@ -185,8 +184,7 @@ const StoragesUpdate = (props) => {
           ]
         })
       }
-      history.push('/storages/order/list')
-      navigateWithQueryParams('/storages/order/list', searchParamsToUrl)
+      navigateWithQueryParams(`/storages/order/list/${props.num || ''}`, searchParamsToUrl)
       notify('Хранение обновлено')
     }
   }

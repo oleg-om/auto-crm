@@ -1,15 +1,7 @@
 import cx from 'classnames'
 import React from 'react'
-import { defaultSearchState } from '../filter'
 
-const NumberFilter = ({ search, setSearch, showSearch, onEnterPress, activeFilter }) => {
-  const onChangeNumber = (e) => {
-    const { name, value } = e.target
-    setSearch(() => ({
-      ...defaultSearchState,
-      [name]: value
-    }))
-  }
+const NumberFilter = ({ search, onChange, showSearch, onEnterPress, activeFilter }) => {
   return (
     <div className="md:w-1/2 px-3 mb-6 md:mb-0">
       <label
@@ -30,7 +22,7 @@ const NumberFilter = ({ search, setSearch, showSearch, onEnterPress, activeFilte
           value={search.number}
           name="number"
           type="number"
-          onChange={onChangeNumber}
+          onChange={onChange}
           onKeyDown={onEnterPress}
         />
         <div className="pointer-events-none absolute top-0 mt-2  right-0 flex items-center px-2 text-gray-600">

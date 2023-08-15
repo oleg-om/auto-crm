@@ -2,14 +2,7 @@ import NumberFormat from 'react-number-format'
 import cx from 'classnames'
 import React from 'react'
 
-const PhoneFilter = ({ search, setSearch, showSearch, onEnterPress, activeFilter }) => {
-  const onChangePhone = (e) => {
-    const { name, value } = e.target
-    setSearch((prevState) => ({
-      ...prevState,
-      [name]: value
-    }))
-  }
+const PhoneFilter = ({ search, onChange, showSearch, onEnterPress, activeFilter }) => {
   return (
     <div className="md:w-1/2 px-3 mb-6 md:mb-0">
       <label
@@ -31,7 +24,7 @@ const PhoneFilter = ({ search, setSearch, showSearch, onEnterPress, activeFilter
           name="phone"
           placeholder="Начинайте ввод с 978"
           value={search.phone}
-          onChange={onChangePhone}
+          onChange={onChange}
           onKeyDown={onEnterPress}
         />
         <div className="pointer-events-none absolute top-0 mt-2  right-0 flex items-center px-2 text-gray-600">

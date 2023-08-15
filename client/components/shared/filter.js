@@ -142,6 +142,14 @@ export const ServiceFilter = ({
     handleEnterpress(e, onFilter)
   }
 
+  const onChange = (e) => {
+    const { name, value } = e.target
+    setSearch((prevState) => ({
+      ...prevState,
+      [name]: value
+    }))
+  }
+
   const isPhone = filters.includes('phone')
   const isNumber = filters.includes('number')
   const isStatus = filters.includes('status')
@@ -158,7 +166,7 @@ export const ServiceFilter = ({
             {isNumber && (
               <NumberFilter
                 search={search}
-                setSearch={setSearch}
+                onChange={onChange}
                 showSearch={showSearch}
                 onEnterPress={onEnterPress}
                 activeFilter={activeFilter}
@@ -167,28 +175,28 @@ export const ServiceFilter = ({
             {isPhone && (
               <PhoneFilter
                 search={search}
-                setSearch={setSearch}
                 showSearch={showSearch}
                 onEnterPress={onEnterPress}
                 activeFilter={activeFilter}
+                onChange={onChange}
               />
             )}
             {isProcess && (
               <ProcessFilter
                 search={search}
-                setSearch={setSearch}
                 showSearch={showSearch}
                 path={path}
                 activeFilter={activeFilter}
+                onChange={onChange}
               />
             )}
             {isTyresSize && (
               <TyresSizeFilter
                 search={search}
-                setSearch={setSearch}
                 showSearch={showSearch}
                 onEnterPress={onEnterPress}
                 activeFilter={activeFilter}
+                onChange={onChange}
               />
             )}
             {isRegNumber && (
@@ -203,18 +211,18 @@ export const ServiceFilter = ({
             {isStatus && (
               <StatusFilter
                 search={search}
-                setSearch={setSearch}
                 showSearch={showSearch}
                 path={path}
                 activeFilter={activeFilter}
+                onChange={onChange}
               />
             )}
             {isPlace && (
               <PlaceFilter
                 search={search}
-                setSearch={setSearch}
                 showSearch={showSearch}
                 activeFilter={activeFilter}
+                onChange={onChange}
               />
             )}
 

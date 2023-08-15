@@ -1,17 +1,17 @@
 import { useSelector } from 'react-redux'
 import cx from 'classnames'
 import React from 'react'
-import { defaultSearchState } from '../filter'
+// import { defaultSearchState } from '../filter'
 
-const PlaceFilter = ({ search, setSearch, showSearch, activeFilter }) => {
+const PlaceFilter = ({ search, showSearch, activeFilter, onChange }) => {
   const placesList = useSelector((s) => s.places.list)
-  const onChangePlace = (e) => {
-    const { name, value } = e.target
-    setSearch(() => ({
-      ...defaultSearchState,
-      [name]: value
-    }))
-  }
+  // const onChangePlace = (e) => {
+  //   const { name, value } = e.target
+  //   setSearch(() => ({
+  //     ...defaultSearchState,
+  //     [name]: value
+  //   }))
+  // }
 
   return (
     <div className="md:w-1/2 px-3 mb-6 md:mb-0">
@@ -32,7 +32,7 @@ const PlaceFilter = ({ search, setSearch, showSearch, activeFilter }) => {
           )}
           value={search.place}
           name="place"
-          onChange={onChangePlace}
+          onChange={onChange}
         >
           <option value="" disabled hidden>
             Все

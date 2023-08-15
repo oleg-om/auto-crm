@@ -2,15 +2,8 @@ import cx from 'classnames'
 import React from 'react'
 import { useSelector } from 'react-redux'
 
-const ProcessFilter = ({ search, setSearch, showSearch, path, activeFilter }) => {
+const ProcessFilter = ({ search, onChange, showSearch, path, activeFilter }) => {
   const employeeList = useSelector((s) => s.employees.list)
-  const onChangePlace = (e) => {
-    const { name, value } = e.target
-    setSearch((prevState) => ({
-      ...prevState,
-      [name]: value
-    }))
-  }
 
   const getRole = () => {
     if (path && path.includes('autoparts')) {
@@ -37,7 +30,7 @@ const ProcessFilter = ({ search, setSearch, showSearch, path, activeFilter }) =>
           )}
           value={search.process}
           name="process"
-          onChange={onChangePlace}
+          onChange={onChange}
         >
           <option value="" disabled hidden>
             Все
