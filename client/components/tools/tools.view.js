@@ -1,5 +1,5 @@
 import React, { useState, useRef } from 'react'
-import { Link, useHistory } from 'react-router-dom'
+import { useHistory } from 'react-router-dom'
 import { useSelector } from 'react-redux'
 import { toast } from 'react-toastify'
 import { useReactToPrint } from 'react-to-print'
@@ -9,6 +9,7 @@ import malePlaceholder from '../../assets/images/profile_placeholder_male.webp'
 import orderPlaceholder from '../../assets/images/order_placeholder.webp'
 import taskStatuses from '../../lists/task-statuses'
 import { CardStatus } from '../shared/goods/tables/TableStatuses'
+import SubmitButtons from '../shared/buttons/OrderSubmitButtons'
 
 const ToolViewOrder = (props) => {
   const history = useHistory()
@@ -502,21 +503,7 @@ const ToolViewOrder = (props) => {
         </div>
         <div className="-mx-3 md:flex flex-wrap mt-3" />
       </div>
-      <div className=" flex my-2">
-        <Link
-          to={`/tools/order/list/${props.num ? props.num : ''}`}
-          className="my-3 mr-2 py-2 w-1/3 px-3 bg-red-600 text-white text-center hover:bg-red-700 hover:text-white rounded-lg"
-        >
-          Отмена
-        </Link>
-        <button
-          className="my-3 ml-2 py-2 w-2/3 px-3 bg-blue-600 text-white hover:bg-blue-700 hover:text-white rounded-lg"
-          type="button"
-          onClick={changeTool}
-        >
-          Сохранить
-        </button>
-      </div>
+      <SubmitButtons sendData={changeTool} />
     </div>
   )
 }

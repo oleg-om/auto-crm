@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react'
-import { Link, useHistory, useLocation } from 'react-router-dom'
+import { useHistory, useLocation } from 'react-router-dom'
 import { useSelector } from 'react-redux'
 import { toast } from 'react-toastify'
 import cx from 'classnames'
@@ -13,6 +13,7 @@ import sizeThreeList from '../../lists/shinomontazhdiametr'
 import { useKeyboard } from '../../hooks/keyboard'
 import { useMaterials } from '../../hooks/handleMaterials'
 import { useServices } from '../../hooks/handleServices'
+import SubmitButtons from '../shared/buttons/OrderSubmitButtons'
 
 const StosCreate = (props) => {
   toast.configure()
@@ -1018,26 +1019,7 @@ const StosCreate = (props) => {
           />
         </div>
       </div>
-      <div className=" flex my-2">
-        <Link
-          to={
-            props.checkLink
-              ? `/${type || 'sto'}boss/list/${props.num ? props.num : ''}`
-              : `/${type || 'sto'}/list/${props.num ? props.num : ''}`
-          }
-          className="my-3 mr-2 py-3 w-1/3 px-3 bg-red-600 text-white text-center hover:bg-red-700 hover:text-white rounded-lg"
-        >
-          Отмена
-        </Link>
-
-        <button
-          className="my-3 ml-2 py-3 w-2/3 px-3 bg-blue-600 text-white hover:bg-blue-700 hover:text-white rounded-lg"
-          onClick={nextStep}
-          type="submit"
-        >
-          {active !== 'finish' ? 'Далее' : 'В работу'}
-        </button>
-      </div>
+      <SubmitButtons submitText={active !== 'finish' ? 'Далее' : 'В работу'} sendData={nextStep} />
     </div>
   )
 }

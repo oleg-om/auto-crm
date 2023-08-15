@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { Link, useHistory } from 'react-router-dom'
+import { useHistory } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
 import { toast } from 'react-toastify'
 import cx from 'classnames'
@@ -17,6 +17,7 @@ import { useFindCustomer } from '../../hooks/findCustomer'
 import { useKeyboard } from '../../hooks/keyboard'
 import { useMaterials } from '../../hooks/handleMaterials'
 import { useServices } from '../../hooks/handleServices'
+import { ServiceSubmitButtons } from '../shared/buttons/OrderSubmitButtons'
 
 const ShinomontazhsEdit = (props) => {
   toast.configure()
@@ -1094,58 +1095,14 @@ const ShinomontazhsEdit = (props) => {
           />
         </div>
       </div>
-      <div className=" flex my-2">
-        <Link
-          to={
-            checkLink()
-              ? `/shinomontazhboss/list/${props.num ? props.num : ''}`
-              : `/shinomontazh/list/${props.num ? props.num : ''}`
-          }
-          className="my-3 mr-2 py-3 w-1/3 px-3 bg-red-600 text-white text-center hover:bg-red-700 hover:text-white rounded-lg"
-        >
-          Отмена
-        </Link>
 
-        {props?.status === 'Новая запись' || active !== 'finish' ? (
-          <button
-            className="my-3 ml-2 py-3 w-2/3 px-3 bg-blue-600 text-white hover:bg-blue-700 hover:text-white rounded-lg"
-            onClick={nextStep}
-            type="submit"
-          >
-            {active !== 'finish' ? 'Далее' : 'В работу'}
-          </button>
-        ) : null}
-        {active === 'finish' && !props.dateFinish && props?.status !== 'Новая запись' ? (
-          <div className="w-2/3 flex flex-row">
-            <>
-              <button
-                className="my-3 mx-2 py-3 w-1/2 px-3 bg-blue-600 text-white hover:bg-blue-700 hover:text-white rounded-lg"
-                onClick={preChangeShinomontazh}
-                type="submit"
-              >
-                Сохранить
-              </button>
-
-              <button
-                className="my-3 ml-2 py-3 w-1/2 px-3 bg-green-600 text-white hover:bg-green-700 hover:text-white rounded-lg"
-                onClick={changeShinomontazh}
-                type="submit"
-              >
-                Завершить
-              </button>
-            </>
-          </div>
-        ) : null}
-        {active === 'finish' && props.dateFinish ? (
-          <button
-            className="my-3 ml-2 py-3 w-2/3 px-3 bg-blue-600 text-white hover:bg-blue-700 hover:text-white rounded-lg"
-            onClick={changeShinomontazh}
-            type="submit"
-          >
-            Сохранить
-          </button>
-        ) : null}
-      </div>
+      <ServiceSubmitButtons
+        active={active}
+        props={props}
+        nextStep={nextStep}
+        change={changeShinomontazh}
+        preChange={preChangeShinomontazh}
+      />
     </div>
   )
 }

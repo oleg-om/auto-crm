@@ -256,9 +256,7 @@ const StoragesRow = (props) => {
             </div>
           </div> */}
           <Link
-            to={`/storages/edit/${props.id_storages}/${props.num ? props.num : ''}${
-              props.searchParamsToUrl
-            }`}
+            to={`/storages/edit/${props.id_storages}/${props.num ? props.num : ''}`}
             className="px-5 py-1 text-xs border-blue-500 border text-blue-500 rounded transition duration-300 hover:bg-blue-700 hover:text-white focus:outline-none"
           >
             Подробнее

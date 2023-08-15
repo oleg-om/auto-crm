@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { Link, useHistory } from 'react-router-dom'
+import { useHistory } from 'react-router-dom'
 import { useSelector } from 'react-redux'
 import { toast } from 'react-toastify'
 import cx from 'classnames'
@@ -14,6 +14,7 @@ import statusList from '../../../common/enums/shinomontazh-statuses'
 import { useMaterials } from '../../hooks/handleMaterials'
 import { useKeyboard } from '../../hooks/keyboard'
 import { useServices } from '../../hooks/handleServices'
+import { ServiceSubmitButtons } from '../shared/buttons/OrderSubmitButtons'
 
 const WashsEdit = (props) => {
   toast.configure()
@@ -1078,54 +1079,14 @@ const WashsEdit = (props) => {
           />
         </div>
       </div>
-      <div className=" flex my-2">
-        <Link
-          to={
-            checkLink()
-              ? `/washboss/list/${props.num ? props.num : ''}`
-              : `/wash/list/${props.num ? props.num : ''}`
-          }
-          className="my-3 mr-2 py-3 w-1/3 px-3 bg-red-600 text-white text-center hover:bg-red-700 hover:text-white rounded-lg"
-        >
-          Отмена
-        </Link>
-        {active !== 'finish' ? (
-          <button
-            className="my-3 ml-2 py-3 w-2/3 px-3 bg-blue-600 text-white hover:bg-blue-700 hover:text-white rounded-lg"
-            onClick={nextStep}
-            type="submit"
-          >
-            Далее
-          </button>
-        ) : null}
-        {active === 'finish' && !props.dateFinish ? (
-          <div className="w-2/3 flex flex-row">
-            <button
-              className="my-3 mx-2 py-3 w-1/2 px-3 bg-blue-600 text-white hover:bg-blue-700 hover:text-white rounded-lg"
-              onClick={preChangeWash}
-              type="submit"
-            >
-              Сохранить
-            </button>
-            <button
-              className="my-3 ml-2 py-3 w-1/2 px-3 bg-green-600 text-white hover:bg-green-700 hover:text-white rounded-lg"
-              onClick={changeWash}
-              type="submit"
-            >
-              Завершить
-            </button>
-          </div>
-        ) : null}
-        {active === 'finish' && props.dateFinish ? (
-          <button
-            className="my-3 ml-2 py-3 w-2/3 px-3 bg-blue-600 text-white hover:bg-blue-700 hover:text-white rounded-lg"
-            onClick={changeWash}
-            type="submit"
-          >
-            Сохранить
-          </button>
-        ) : null}
-      </div>
+
+      <ServiceSubmitButtons
+        active={active}
+        props={props}
+        nextStep={nextStep}
+        change={changeWash}
+        preChange={preChangeWash}
+      />
     </div>
   )
 }

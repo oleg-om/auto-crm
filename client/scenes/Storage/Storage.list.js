@@ -41,7 +41,7 @@ const StoragesList = () => {
 
   const postsPerPage = 14
 
-  const { navigateWithQueryParams, searchParamsToUrl } = useSaveFilter(search)
+  const { navigateWithQueryParams } = useSaveFilter(search)
 
   const paginate = (pageNumber) => {
     navigateWithQueryParams(`/storages/order/list/${pageNumber}`)
@@ -146,7 +146,6 @@ const StoragesList = () => {
                       placesList={placesList.find((item) => item.id === it.place)}
                       settings={settings}
                       num={num}
-                      searchParamsToUrl={searchParamsToUrl}
                     />
                   ))
                 : null}
@@ -177,7 +176,7 @@ const StoragesList = () => {
           />
         </div>
 
-        <Link to={`/storages/order/create/${num ? Number(num) : 1}${searchParamsToUrl}`}>
+        <Link to={`/storages/order/create/${num ? Number(num) : 1}`}>
           <button
             type="button"
             className="fixed bottom-0 left-0 p-6 shadow bg-blue-600 text-white opacity-75 text-l hover:opacity-100 hover:bg-blue-700 hover:text-white rounded-full my-3 mx-3"

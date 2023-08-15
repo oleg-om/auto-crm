@@ -8,6 +8,7 @@ import FirstColumn from './moduls/firstcolumn'
 import TyreColumn from './moduls/tyrecolumn'
 import AkbColumn from './moduls/akbcolumn'
 import WheelColumn from './moduls/wheelcolumn'
+import SubmitButtons from '../shared/buttons/OrderSubmitButtons'
 
 const TyresCreate = (props) => {
   toast.configure()
@@ -880,22 +881,8 @@ const TyresCreate = (props) => {
           </div>
         </div>
       </div>
-      <div className=" flex my-2">
-        <Link
-          to={`/tyres/order/list/${props.num ? props.num : ''}`}
-          className="my-3 mr-2 py-2 md:w-1/3 px-3 bg-red-600 text-white text-center hover:bg-red-700 hover:text-white rounded-lg"
-        >
-          Отмена
-        </Link>
 
-        <button
-          className="my-3 ml-2 py-2 md:w-2/3 px-3 bg-blue-600 text-white hover:bg-blue-700 hover:text-white rounded-lg"
-          onClick={sendData}
-          type="submit"
-        >
-          Создать
-        </button>
-      </div>
+      <SubmitButtons sendData={sendData} submitText="Создать" />
     </div>
   )
 }

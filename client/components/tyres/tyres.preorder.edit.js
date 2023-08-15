@@ -14,6 +14,7 @@ import TyreColumn from './moduls/tyrecolumn'
 import AkbColumn from './moduls/akbcolumn'
 import WheelColumn from './moduls/wheelcolumn'
 import { CardStatus } from '../shared/goods/tables/TableStatuses'
+import SubmitButtons from '../shared/buttons/OrderSubmitButtons'
 
 const TyreUpdate = (props) => {
   const history = useHistory()
@@ -1016,21 +1017,7 @@ const TyreUpdate = (props) => {
         </div>
         <div className="-mx-3 md:flex flex-wrap mt-3" />
       </div>
-      <div className=" flex my-2">
-        <Link
-          to={`/tyres/order/list/${props.num ? props.num : ''}`}
-          className="my-3 mr-2 py-2 w-1/3 px-3 bg-red-600 text-white text-center hover:bg-red-700 hover:text-white rounded-lg"
-        >
-          Отмена
-        </Link>
-        <button
-          className="my-3 ml-2 py-2 w-2/3 px-3 bg-blue-600 text-white hover:bg-blue-700 hover:text-white rounded-lg"
-          type="button"
-          onClick={changeTyre}
-        >
-          Сохранить
-        </button>
-      </div>
+      <SubmitButtons sendData={changeTyre} />
     </div>
   )
 }

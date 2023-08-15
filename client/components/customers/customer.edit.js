@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { Link, useHistory } from 'react-router-dom'
+import { useHistory } from 'react-router-dom'
 import { toast } from 'react-toastify'
 import NumberFormat from 'react-number-format'
 import Modal from '../Modal.delete'
@@ -8,6 +8,7 @@ import sizeGruz from '../../lists/tyres/sizegruz'
 import sizeSelhoz from '../../lists/tyres/sizeselhoz'
 
 import 'react-toastify/dist/ReactToastify.css'
+import SubmitButtons from '../shared/buttons/OrderSubmitButtons'
 
 const CustomerUpdate = (props) => {
   const [state, setState] = useState({
@@ -510,28 +511,12 @@ const CustomerUpdate = (props) => {
           </div>
         </div>
       </div>
-      <div className=" flex my-2">
-        <Link
-          to="/customer/list"
-          className="my-3 mr-2 py-2 md:w-1/3 px-3 bg-green-600 text-white text-center hover:bg-green-700 hover:text-white rounded-lg"
-        >
-          Отмена
-        </Link>
-        <button
-          className="my-3 mr-2 py-2 w-1/3 px-3 bg-red-600 text-white text-center hover:bg-red-700 hover:text-white rounded-lg"
-          type="button"
-          onClick={() => SetIsOpen(true)}
-        >
-          Удалить
-        </button>
-        <button
-          className="my-3 ml-2 py-2 md:w-2/3 px-3 bg-blue-600 text-white hover:bg-blue-700 hover:text-white rounded-lg"
-          onClick={changeCustomer}
-          type="submit"
-        >
-          Сохранить
-        </button>
-      </div>
+
+      <SubmitButtons
+        sendData={changeCustomer}
+        deleteButton
+        deleteButtonAction={() => SetIsOpen(true)}
+      />
       <Modal open={isOpen} onClose={() => SetIsOpen(false)} onSubmit={removeCustomer} />
     </div>
   )

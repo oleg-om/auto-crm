@@ -1,9 +1,10 @@
 import React, { useState } from 'react'
-import { Link, useHistory, useLocation } from 'react-router-dom'
+import { useHistory, useLocation } from 'react-router-dom'
 import { toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
 // import categoryList from '../../lists/wash-categories'
 import { getPriceLocation } from '../../scenes/Window.prices/Window.prices.list'
+import SubmitButtons from '../shared/buttons/OrderSubmitButtons'
 
 export const categoryList = [{ name: 'Цена', id: 'price', class: 'price' }]
 
@@ -265,22 +266,8 @@ const WindowpriceCreate = (props) => {
           </div>
         </div>
       </div>
-      <div className=" flex my-2">
-        <Link
-          to={`/${currentLocation}/list/rus`}
-          className="my-3 mr-2 py-2 md:w-1/3 px-3 bg-red-600 text-white text-center hover:bg-red-700 hover:text-white rounded-lg"
-        >
-          Отмена
-        </Link>
 
-        <button
-          className="my-3 ml-2 py-2 md:w-2/3 px-3 bg-blue-600 text-white hover:bg-blue-700 hover:text-white rounded-lg"
-          onClick={sendData}
-          type="submit"
-        >
-          Добавить
-        </button>
-      </div>
+      <SubmitButtons sendData={sendData} submitText="Добавить" />
     </div>
   )
 }

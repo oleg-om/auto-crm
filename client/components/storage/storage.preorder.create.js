@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { Link, useHistory } from 'react-router-dom'
+import { useHistory } from 'react-router-dom'
 import { useSelector } from 'react-redux'
 import { toast } from 'react-toastify'
 import NumberFormat from 'react-number-format'
@@ -12,6 +12,7 @@ import 'react-toastify/dist/ReactToastify.css'
 import FirstColumn from './moduls/firstcolumn'
 import TyreColumn from './moduls/tyrecolumn'
 import Statuses from '../../lists/storages-statuses'
+import SubmitButtons from '../shared/buttons/OrderSubmitButtons'
 
 const StoragesCreate = (props) => {
   toast.configure()
@@ -1295,149 +1296,6 @@ const StoragesCreate = (props) => {
           </div>
         </div>
 
-        {/* <div className="flex flex-col mb-5 bg-green-200 rounded-lg p-3">
-        <p className="flex flex-row mb-2 text-lg font-mono font-extrabold">Шины</p>
-        <div className="flex flex-row w-full">
-          <div className="mr-2 md:w-2/12">
-            <label
-              className="block uppercase tracking-wide text-grey-darker text-xs text-left font-bold mb-2"
-              htmlFor="grid-first-name"
-            >
-              Ширина
-            </label>
-            <input
-              className="appearance-none w-full block bg-grey-lighter text-grey-darker border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-1 px-4"
-              type="number"
-              name="sizeone"
-              list="sizeone_list"
-              value={state.sizeone}
-              autoComplete="off"
-              onChange={onChange}
-            />
-            <datalist id="sizeone_list">
-              {sizeOneList.map((it, indexItem) => (
-                <option key={indexItem} value={it} />
-              ))}
-            </datalist>
-          </div>
-          <div className="mr-2 md:w-2/12">
-            <label
-              className="block uppercase tracking-wide text-grey-darker text-xs text-left font-bold mb-2"
-              htmlFor="grid-first-name"
-            >
-              Высота
-            </label>
-            <input
-              className="appearance-none w-full block bg-grey-lighter text-grey-darker border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-1 px-4"
-              type="number"
-              name="sizetwo"
-              list="sizetwo_list"
-              value={state.sizetwo}
-              autoComplete="off"
-              onChange={onChange}
-            />
-            <datalist id="sizetwo_list">
-              {sizeTwoList.map((it, indexItem) => (
-                <option key={indexItem} value={it} />
-              ))}
-            </datalist>
-          </div>
-          <div className="mr-2 md:w-2/12">
-            <label
-              className="block uppercase tracking-wide text-grey-darker text-xs text-left font-bold mb-2"
-              htmlFor="grid-first-name"
-            >
-              Диаметр
-            </label>
-            <input
-              className="appearance-none w-full block bg-grey-lighter text-grey-darker border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-1 px-4"
-              type="number"
-              name="sizethree"
-              list="sizethree_list"
-              value={state.sizethree}
-              autoComplete="off"
-              onChange={onChange}
-            />
-            <datalist id="sizethree_list">
-              {sizeThreeList.map((it, indexItem) => (
-                <option key={indexItem} value={it} />
-              ))}
-            </datalist>
-          </div>
-          <div className="mr-2 md:w-3/12">
-            <label
-              className="block uppercase tracking-wide text-grey-darker text-xs text-left font-bold mb-2"
-              htmlFor="grid-first-name"
-            >
-              Бренд
-            </label>
-            <input
-              className="appearance-none w-full block bg-grey-lighter text-grey-darker border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-1 px-4"
-              type="text"
-              placeholder="Например: Nokian"
-              name="brand"
-              list="tyres_list"
-              value={state.brand}
-              autoComplete="off"
-              onChange={onChange}
-            />
-            <datalist id="tyres_list">
-              {tyresList
-                .reduce((acc, rec) => [...acc, rec.brand], [])
-                .filter((item, id, array) => array.indexOf(item) === id)
-                .sort(function (a, b) {
-                  if (a > b) {
-                    return 1
-                  }
-                  if (a < b) {
-                    return -1
-                  }
-                  return 0
-                })
-                .map((it, indexItem) => (
-                  <option key={indexItem} value={it} />
-                ))}
-            </datalist>
-          </div>
-          <div className="mr-2 md:w-3/12">
-            <label
-              className="block uppercase tracking-wide text-grey-darker text-xs text-left font-bold mb-2"
-              htmlFor="grid-first-name"
-            >
-              Модель
-            </label>
-            <input
-              className="appearance-none w-full block bg-grey-lighter text-grey-darker border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-1 px-4"
-              type="text"
-              placeholder="Например: Nordman"
-              name="model"
-              list="tyres_model_list"
-              value={state.model}
-              autoComplete="off"
-              onChange={onChange}
-            />
-            <datalist id="tyres_model_list">
-              {tyresList
-                .filter((item) => item.brand === state.brand)
-                .reduce((acc, rec) => [...acc, rec.model], [])
-                .filter((item, id, array) => array.indexOf(item) === id)
-                .sort(function (a, b) {
-                  if (a > b) {
-                    return 1
-                  }
-                  if (a < b) {
-                    return -1
-                  }
-                  return 0
-                })
-                .map((it, indexItem) => (
-                  <option key={indexItem} value={it} />
-                ))}
-            </datalist>
-          </div>
-        </div>
-      </div> */}
-
         <div className="-mx-3 md:flex mb-2">
           <div className="md:w-full px-3 mb-6 md:mb-0">
             <label
@@ -1553,22 +1411,7 @@ const StoragesCreate = (props) => {
           </div>
         </div>
       </div>
-      <div className=" flex my-2">
-        <Link
-          to={`/storages/order/list/${props.num ? props.num : ''}`}
-          className="my-3 mr-2 py-2 md:w-1/3 px-3 bg-red-600 text-white text-center hover:bg-red-700 hover:text-white rounded-lg"
-        >
-          Отмена
-        </Link>
-
-        <button
-          className="my-3 ml-2 py-2 md:w-2/3 px-3 bg-blue-600 text-white hover:bg-blue-700 hover:text-white rounded-lg"
-          onClick={sendData}
-          type="submit"
-        >
-          Создать
-        </button>
-      </div>
+      <SubmitButtons sendData={sendData} />
     </div>
   )
 }

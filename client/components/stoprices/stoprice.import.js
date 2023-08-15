@@ -1,10 +1,11 @@
 import React, { useState } from 'react'
-import { Link, useHistory } from 'react-router-dom'
+import { useHistory } from 'react-router-dom'
 import { toast } from 'react-toastify'
 import XLSX from 'xlsx'
 import 'react-toastify/dist/ReactToastify.css'
 import LoadExample from './load.example'
 import Modal from '../Modal.delete'
+import SubmitButtons from '../shared/buttons/OrderSubmitButtons'
 
 const StopriceImport = (props) => {
   toast.configure()
@@ -161,22 +162,8 @@ const StopriceImport = (props) => {
           </div>
         </div>
       </div>
-      <div className=" flex my-2">
-        <Link
-          to="/stoprice/list/legk"
-          className="my-3 mr-2 py-2 md:w-1/3 px-3 bg-red-600 text-white text-center hover:bg-red-700 hover:text-white rounded-lg"
-        >
-          Отмена
-        </Link>
 
-        <button
-          className="my-3 ml-2 py-2 md:w-2/3 px-3 bg-blue-600 text-white hover:bg-blue-700 hover:text-white rounded-lg"
-          onClick={sendData}
-          type="submit"
-        >
-          Загрузить
-        </button>
-      </div>
+      <SubmitButtons sendData={sendData} submitText="Загрузить" />
       <Modal open={isOpen} onClose={() => SetIsOpen(false)} onSubmit={deleteData} />
     </div>
   )

@@ -19,6 +19,7 @@ import FirstColumn from './moduls/firstcolumn'
 import TyreColumn from './moduls/tyrecolumn'
 import Statuses from '../../lists/storages-statuses'
 import useSaveFilter from '../../hooks/saveFilterParams'
+import SubmitButtons from '../shared/buttons/OrderSubmitButtons'
 
 const dateNow = new Date()
 export const dateNew = `${dateNow
@@ -1113,22 +1114,7 @@ const StoragesUpdate = (props) => {
           </div>
         </div>
       </div>
-      <div className=" flex my-2">
-        <Link
-          to={`/storages/order/list/${props.num ? props.num : ''}${searchParamsToUrl}`}
-          className="my-3 mr-2 py-2 md:w-1/3 px-3 bg-red-600 text-white text-center hover:bg-red-700 hover:text-white rounded-lg"
-        >
-          Отмена
-        </Link>
-
-        <button
-          className="my-3 ml-2 py-2 md:w-2/3 px-3 bg-blue-600 text-white hover:bg-blue-700 hover:text-white rounded-lg"
-          onClick={sendData}
-          type="submit"
-        >
-          Сохранить
-        </button>
-      </div>
+      <SubmitButtons sendData={sendData} />
     </div>
   )
 }
