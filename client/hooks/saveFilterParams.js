@@ -16,9 +16,16 @@ function useSaveFilter(filterParams = {}) {
   // init query url
   const queryParams = new URLSearchParams(filter).toString()
   const navigateWithQueryParams = (path, myQueryString) => {
+    const searchObject =
+      myQueryString || queryParams
+        ? {
+            search: myQueryString || `?${queryParams}` // query string
+          }
+        : {}
+
     history.push({
       pathname: path,
-      search: myQueryString || `?${queryParams}` // query string
+      ...searchObject
       // state: {
       //   // location state
       //   update: true
