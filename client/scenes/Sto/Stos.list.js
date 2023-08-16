@@ -48,7 +48,7 @@ const StosList = () => {
   const { navigateWithQueryParams } = useSaveFilter(search)
 
   const paginate = (pageNumber) => {
-    navigateWithQueryParams(`/sto/order/list/${pageNumber}`)
+    navigateWithQueryParams(`/sto/list/${pageNumber}`)
   }
 
   toast.configure()

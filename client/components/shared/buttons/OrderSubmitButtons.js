@@ -13,7 +13,7 @@ const SubmitButtons = ({
       <GoBack />
       {deleteButton && (
         <button
-          className="my-3 mr-2 py-2 w-1/3 px-3 bg-red-600 text-white text-center hover:bg-red-700 hover:text-white rounded-lg"
+          className="my-3 mr-2 py-2 w-1/3 px-3 bg-red-800 text-white text-center hover:bg-red-900 hover:text-white rounded-lg"
           type="button"
           onClick={deleteButtonAction}
         >
