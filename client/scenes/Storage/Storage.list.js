@@ -41,7 +41,7 @@ const StoragesList = () => {
 
   const postsPerPage = 14
 
-  const { navigateWithQueryParams } = useSaveFilter(search)
+  const { navigateWithQueryParams, searchParamsToUrl } = useSaveFilter(search)
 
   const paginate = (pageNumber) => {
     navigateWithQueryParams(`/storages/order/list/${pageNumber}`)
@@ -146,6 +146,7 @@ const StoragesList = () => {
                       placesList={placesList.find((item) => item.id === it.place)}
                       settings={settings}
                       num={num}
+                      searchParamsToUrl={searchParamsToUrl}
                     />
                   ))
                 : null}
