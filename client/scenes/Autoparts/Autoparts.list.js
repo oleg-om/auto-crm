@@ -48,7 +48,7 @@ const AutopartsList = () => {
 
   const currentPosts = revList.slice(indexOfFirstPost, indexOfLastPost)
 
-  const { navigateWithQueryParams } = useSaveFilter(search)
+  const { navigateWithQueryParams, searchParamsToUrl } = useSaveFilter(search)
 
   const paginate = (pageNumber) => {
     navigateWithQueryParams(`/autoparts/order/list/${pageNumber}`)
@@ -145,6 +145,7 @@ const AutopartsList = () => {
                       placesList={placesList.find((item) => item.id === it.place)}
                       settings={settings}
                       num={num}
+                      searchParamsToUrl={searchParamsToUrl}
                     />
                   ))
                 : null}

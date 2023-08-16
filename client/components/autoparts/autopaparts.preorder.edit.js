@@ -1,5 +1,5 @@
-import React, { useState, useRef, useEffect } from 'react'
-import { Link, useHistory } from 'react-router-dom'
+import React, { useState, useRef } from 'react'
+import { Link } from 'react-router-dom'
 import { useSelector } from 'react-redux'
 import { toast } from 'react-toastify'
 import { useReactToPrint } from 'react-to-print'
@@ -12,10 +12,9 @@ import cancelStatuses from '../../lists/cancel-statuses'
 import autopartStatuses from '../../lists/autoparts-statuses'
 import { CardStatus } from '../shared/goods/tables/TableStatuses'
 import SubmitButtons from '../shared/buttons/OrderSubmitButtons'
+import useSaveFilter from '../../hooks/saveFilterParams'
 
 const AutopartUpdate = (props) => {
-  const history = useHistory()
-
   const componentRef = useRef()
 
   const handlePrint = useReactToPrint({
@@ -26,11 +25,11 @@ const AutopartUpdate = (props) => {
   const notify = (arg) => {
     toast.info(arg, { position: toast.POSITION.BOTTOM_RIGHT })
   }
-  useEffect(() => {
-    notify(
-      'Не забудь указать кол-во, закупку, розницу и дату выдачи. Для товаров в наличии тоже нужно указывать дату выдачи. Если эти поля есть будет считаться зарплата :)'
-    )
-  }, [history])
+  // useEffect(() => {
+  //   notify(
+  //     'Не забудь указать кол-во, закупку, розницу и дату выдачи. Для товаров в наличии тоже нужно указывать дату выдачи. Если эти поля есть будет считаться зарплата :)'
+  //   )
+  // }, [history])
 
   const employeeListLocal = useSelector((s) => s.employees.list)
   const vendorList = useSelector((s) => s.vendors.list)
@@ -69,6 +68,8 @@ const AutopartUpdate = (props) => {
     dateCancel: props.dateCancel,
     cancelReason: props.cancelReason
   })
+
+  const { navigateWithQueryParams, searchParamsToUrl } = useSaveFilter()
   const changeAutopart = () => {
     if (!state.process) notify('Поле Обработал заказ пустое')
     else if (state.status === taskStatuses[6] && !state.cancelReason)
@@ -78,7 +79,10 @@ const AutopartUpdate = (props) => {
         ...state,
         statusDates: [...props.statusDates, { status: state.status, date: dateNew }]
       })
-      history.push(`/autoparts/order/list/${props.num ? props.num : ''}`)
+      navigateWithQueryParams(
+        `/autoparts/order/list/${props.num ? props.num : ''}`,
+        searchParamsToUrl
+      )
       notify('Данные о заказе обновлены, заказ в работе')
     } else if (props.status !== state.status && state.status === taskStatuses[6]) {
       props.updateAutopart(props.id, {
@@ -86,11 +90,17 @@ const AutopartUpdate = (props) => {
         statusDates: [...props.statusDates, { status: state.status, date: dateNew }],
         cancelReason: state.cancelReason
       })
-      history.push(`/autoparts/order/list/${props.num ? props.num : ''}`)
+      navigateWithQueryParams(
+        `/autoparts/order/list/${props.num ? props.num : ''}`,
+        searchParamsToUrl
+      )
       notify('Данные о заказе обновлены, клиент отказался от заказа')
     } else {
       props.updateAutopart(props.id, state)
-      history.push(`/autoparts/order/list/${props.num ? props.num : ''}`)
+      navigateWithQueryParams(
+        `/autoparts/order/list/${props.num ? props.num : ''}`,
+        searchParamsToUrl
+      )
       notify('Данные о заказе обновлены')
     }
   }

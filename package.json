@@ -26,7 +26,8 @@
         "build:ssr": "cross-env NODE_ENV=production webpack --config webpack.ssr.config.js --progress --profile --colors",
         "heroku-postbuild": "yarn run build:prod",
         "storybook": "start-storybook -p 6006",
-        "build-storybook": "build-storybook"
+        "build-storybook": "build-storybook",
+        "find-unused": "npx dead-exports --e=./client"
     },
     "author": "",
     "license": "MIT",
@@ -87,6 +88,7 @@
         "core-js": "^3.6.5",
         "cors": "^2.8.5",
         "cross-env": "^7.0.2",
+        "dead-exports": "^1.0.13",
         "dotenv": "^8.2.0",
         "engine.io-parser": "^4.0.1",
         "express": "^4.17.1",

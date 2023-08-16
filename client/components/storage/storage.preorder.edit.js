@@ -1066,11 +1066,11 @@ const StoragesUpdate = (props) => {
               className="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2"
               htmlFor="grid-city"
             >
-              Комметнарий
+              Комментарий
             </label>
             <input
               className="appearance-none block w-full bg-grey-lighter text-grey-darker border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-1 px-4 mb-3"
-              placeholder="Комметнарий"
+              placeholder="Комментарий"
               value={state.comment2}
               name="comment2"
               id="comment2"

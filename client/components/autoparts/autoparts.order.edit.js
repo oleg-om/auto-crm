@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react'
-import { useHistory } from 'react-router-dom'
 import { useSelector } from 'react-redux'
 import { toast } from 'react-toastify'
 import NumberFormat from 'react-number-format'
@@ -7,6 +6,7 @@ import cx from 'classnames'
 import 'react-toastify/dist/ReactToastify.css'
 import autopartsList from '../../lists/autoparts-list'
 import SubmitButtons from '../shared/buttons/OrderSubmitButtons'
+import useSaveFilter from '../../hooks/saveFilterParams'
 
 const AutopartsEdit = (props) => {
   toast.configure()
@@ -14,7 +14,6 @@ const AutopartsEdit = (props) => {
     toast.info(arg, { position: toast.POSITION.BOTTOM_RIGHT })
   }
 
-  const history = useHistory()
   const list = useSelector((s) => s.places.list)
   const employeeList = useSelector((s) => s.employees.list)
   const customerList = useSelector((s) => s.customers.list)
@@ -241,6 +240,8 @@ const AutopartsEdit = (props) => {
       mod: value
     }))
   }
+
+  const { navigateWithQueryParams, searchParamsToUrl } = useSaveFilter()
   const sendData = () => {
     if (!state.employee) notify('Заполните поле Принял заказ')
     if (!state.place) notify('Заполните поле Заказ принят на точке')
@@ -261,7 +262,10 @@ const AutopartsEdit = (props) => {
       state.phone
     ) {
       props.updateAutopart(props.id, state)
-      history.push(`/autoparts/edit/${props.id_autoparts}/${props.num ? props.num : ''}`)
+      navigateWithQueryParams(
+        `/autoparts/edit/${props.id_autoparts}/${props.num ? props.num : ''}`,
+        searchParamsToUrl
+      )
       notify('Данные о заказе обновлены')
     }
   }
