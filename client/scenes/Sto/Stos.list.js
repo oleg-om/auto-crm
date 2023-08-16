@@ -17,7 +17,10 @@ import useSaveFilter from '../../hooks/saveFilterParams'
 
 const StosList = () => {
   const { num } = useParams(1)
-  const { search, setSearch, showSearch, setShowSearch } = useFilter(num, getItemsFiltered)
+  const { search, setSearch, showSearch, setShowSearch, applyFilter } = useFilter(
+    num,
+    getItemsFiltered
+  )
   const auth = useSelector((s) => s.auth)
   OnLoadPlace(num ? Number(num) : 1, showSearch, auth.place)
   const dispatch = useDispatch()
@@ -92,6 +95,7 @@ const StosList = () => {
           showSearch={showSearch}
           setShowSearch={setShowSearch}
           filters={['number']}
+          applyFilter={applyFilter}
         />
         <div className="overflow-x-auto rounded-lg overflow-y-auto relative lg:my-3 mt-1 lg:shadow lg:mx-4">
           <table className="border-collapse w-full">
