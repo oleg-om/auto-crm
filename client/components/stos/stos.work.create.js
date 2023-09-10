@@ -52,7 +52,8 @@ const StosCreate = (props) => {
     diametr: '',
     dateStart: new Date(),
     class: '',
-    category: SERVICES_WITHOUT_TYPE ? 'price' : ''
+    category: SERVICES_WITHOUT_TYPE ? 'price' : '',
+    mileage: null
   })
 
   // const [service, setService] = useState([])

@@ -61,7 +61,8 @@ const StosEdit = (props) => {
     payment: props.payment,
     talon: props[`id_${type || 'sto'}s`],
     class: props.class,
-    category: props.category || (SERVICES_WITHOUT_TYPE ? 'price' : '')
+    category: props.category || (SERVICES_WITHOUT_TYPE ? 'price' : ''),
+    mileage: props?.mileage || null
   })
 
   const [box, setBox] = useState(props.box ? props.box : '')
@@ -402,109 +403,6 @@ const StosEdit = (props) => {
   }, [state.diametr, state.kuzov, stoprices])
 
   const [active, setActive] = useState('finish')
-  // const checkboxServiceChange = (e) => {
-  //   const { name, placeholder, checked, attributes } = e.target
-  //   if (checked) {
-  //     setService((prevState) => [
-  //       ...prevState,
-  //       {
-  //         serviceName: name,
-  //         quantity: 1,
-  //         price: placeholder,
-  //         name: attributes.somename.value,
-  //         free: attributes.somefree?.value
-  //       }
-  //     ])
-  //   } else {
-  //     setService((prevState) => prevState.filter((it) => it.serviceName !== name))
-  //   }
-  // }
-  // const servicePlusChange = (e) => {
-  //   const { name } = e.target
-  //   setService(
-  //     service.map((object) => {
-  //       if (object.serviceName === name) {
-  //         return {
-  //           ...object,
-  //           quantity: object.quantity + 1
-  //         }
-  //       }
-  //       return object
-  //     })
-  //   )
-  // }
-
-  // const serviceMinusChange = (e) => {
-  //   const { name } = e.target
-  //   setService(
-  //     service.map((object) => {
-  //       if (object.serviceName === name && object.quantity >= 2) {
-  //         return {
-  //           ...object,
-  //           quantity: object.quantity - 1
-  //         }
-  //       }
-  //       return object
-  //     })
-  //   )
-  // }
-
-  // const onServiceQuantityChange = (e) => {
-  //   const { name, attributes, value } = e.target
-  //   if (!service.find((it) => it.serviceName.includes(name))) {
-  //     setService((prevState) => [
-  //       ...prevState,
-  //       {
-  //         serviceName: name,
-  //         quantity: value,
-  //         price: attributes.someprice.value,
-  //         name: attributes.somename.value,
-  //         free: attributes.somefree?.value
-  //       }
-  //     ])
-  //   } else {
-  //     setService(
-  //       service.map((object) => {
-  //         if (object.serviceName === name && object.quantity) {
-  //           return {
-  //             ...object,
-  //             quantity: value
-  //           }
-  //         }
-  //         return object
-  //       })
-  //     )
-  //   }
-  // }
-
-  // const servicePriceChange = (e) => {
-  //   const { value, id, attributes, name } = e.target
-
-  //   if (service.find((object) => object.serviceName === id)) {
-  //     setService(
-  //       service.map((object) => {
-  //         if (object.serviceName === id) {
-  //           return {
-  //             ...object,
-  //             price: value
-  //           }
-  //         }
-  //         return object
-  //       })
-  //     )
-  //   } else {
-  //     setService((prevState) => [
-  //       ...prevState,
-  //       {
-  //         serviceName: name,
-  //         quantity: 1,
-  //         price: value,
-  //         name: attributes.somename.value,
-  //         free: attributes.somefree.value
-  //       }
-  //     ])
-  //   }
-  // }
 
   const preChangeSto = () => {
     if (!state.regnumber) notify('Заполните поле гос.номер')
@@ -558,7 +456,8 @@ const StosEdit = (props) => {
         employee: employees,
         dateFinish: props.dateFinish ? props.dateFinish : new Date(),
         status: statusList[1],
-        customerId: activeCustomer || props.customerId || null
+        customerId: activeCustomer || props.customerId || null,
+        mileage: state.mileage || null
       })
       if (checkLink()) {
         history.push(`/${type}boss/list/${props.num ? props.num : ''}`)
@@ -572,7 +471,8 @@ const StosEdit = (props) => {
         payment: state.payment,
         comment: state.comment,
         status: statusList[2],
-        customerId: activeCustomer || props.customerId || null
+        customerId: activeCustomer || props.customerId || null,
+        mileage: state.mileage || null
       })
       if (checkLink()) {
         history.push(`/${type}boss/list/${props.num ? props.num : ''}`)
@@ -586,7 +486,8 @@ const StosEdit = (props) => {
         payment: state.payment,
         comment: state.comment,
         status: statusList[3],
-        customerId: activeCustomer || props.customerId || null
+        customerId: activeCustomer || props.customerId || null,
+        mileage: state.mileage || null
       })
       if (checkLink()) {
         history.push(`/${type}boss/list/${props.num ? props.num : ''}`)
@@ -600,7 +501,8 @@ const StosEdit = (props) => {
         payment: state.payment,
         comment: state.comment,
         status: statusList[4],
-        customerId: activeCustomer || props.customerId || null
+        customerId: activeCustomer || props.customerId || null,
+        mileage: state.mileage || null
       })
       if (checkLink()) {
         history.push(`/${type}boss/list/${props.num ? props.num : ''}`)
@@ -616,7 +518,8 @@ const StosEdit = (props) => {
         status: statusList[6],
         combTerm: termCash.terminal,
         combCash: termCash.cash,
-        customerId: activeCustomer || props.customerId || null
+        customerId: activeCustomer || props.customerId || null,
+        mileage: state.mileage || null
       })
       if (checkLink()) {
         history.push(`/${type}boss/list/${props.num ? props.num : ''}`)
@@ -630,7 +533,8 @@ const StosEdit = (props) => {
         payment: state.payment,
         comment: state.comment,
         status: statusList[5],
-        customerId: activeCustomer || props.customerId || null
+        customerId: activeCustomer || props.customerId || null,
+        mileage: state.mileage || null
       })
       if (checkLink()) {
         history.push(`/${type}boss/list/${props.num ? props.num : ''}`)
@@ -648,7 +552,8 @@ const StosEdit = (props) => {
         discount: state.discount,
         payment: state.payment,
         comment: state.comment,
-        customerId: activeCustomer || props.customerId || null
+        customerId: activeCustomer || props.customerId || null,
+        mileage: state.mileage || null
       })
       if (checkLink()) {
         history.push(`/${type}boss/list/${props.num ? props.num : ''}`)
@@ -658,40 +563,6 @@ const StosEdit = (props) => {
       notify('Запись изменена')
     }
   }
-
-  // const nextStep = () => {
-  //   if (active === 'employee') {
-  //     if (employees.length < 1) {
-  //       notify('Сначала выберите сотрудников')
-  //     } else {
-  //       setActive('car')
-  //     }
-  //   } else if (active === 'car') {
-  //     if (!state.regnumber) {
-  //       notify('Заполните гос. номер')
-  //     } else if (!state.mark) {
-  //       notify('Заполните поле Марка авто')
-  //     } else if (!state.model) {
-  //       notify('Заполните поле Модель авто')
-  //     } else if (!state.kuzov) {
-  //       notify('Выберите кузов')
-  //     } else if (!state.diametr) {
-  //       notify('Выберите диаметр')
-  //     } else {
-  //       setActive('service')
-  //     }
-  //   } else if (active === 'service') {
-  //     if (service.length < 1) {
-  //       notify('Выбериту услугу')
-  //     } else {
-  //       setActive('material')
-  //     }
-  //   } else if (active === 'material') {
-  //     setActive('finish')
-  //   } else if (active === 'finish') {
-  //     setActive('finish')
-  //   }
-  // }
 
   const nextStep = () => {
     if (active === 'employee') {

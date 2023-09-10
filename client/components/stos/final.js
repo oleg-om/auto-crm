@@ -317,161 +317,26 @@ const Final = ({
           </div>
         </div>
       ) : null}
-      {/* <div className="flex flex-row mt-3">
-        <button
-          className={cx('mb-3 flex flex-row rounded bg-gray-200 w-full text-lg', {
-            'bg-green-200 hover:bg-green-300': tyres.sale === 'yes',
-            'bg-gray-100 hover:bg-gray-300': tyres.sale !== 'yes'
-          })}
-          type="button"
-          name="sale"
-          onClick={checkboxTyresChange}
-        >
-          <label htmlFor="sale" className="w-full h-full p-2 text-left inline-block">
-            <input
-              className="mr-4"
-              value={tyres.sale}
-              checked={tyres.sale === 'yes'}
-              name="sale"
-              id="sale"
-              type="checkbox"
-            />
-            {tyres.sale !== 'yes' ? 'Шины куплены не у нас' : 'Шины куплены у нас'}
-          </label>
-        </button> 
-      </div> */}
-      {/* {tyres.sale === 'yes' ? (
-        <div className="flex flex-row">
-          <div className="mr-2 w-1/4">
-            <label
-              className="block uppercase tracking-wide text-grey-darker text-xs text-left font-bold mb-2"
-              htmlFor="grid-first-name"
-            >
-              Ширина
-            </label>
-            <input
-              className="appearance-none w-full block bg-grey-lighter text-grey-darker border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-1 px-4"
-              type="number"
-              name="sizeone"
-              list="sizeone_list"
-              value={tyres.sizeone}
-              autoComplete="off"
-              onChange={onChangeTyres}
-            />
-            <datalist id="sizeone_list">
-              {sizeOneList.map((it, indexItem) => (
-                <option key={indexItem} value={it} />
-              ))}
-            </datalist>
-          </div>
-          <div className="mr-2 w-1/4">
-            <label
-              className="block uppercase tracking-wide text-grey-darker text-xs text-left font-bold mb-2"
-              htmlFor="grid-first-name"
-            >
-              Высота
-            </label>
-            <input
-              className="appearance-none w-full block bg-grey-lighter text-grey-darker border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-1 px-4"
-              type="number"
-              name="sizetwo"
-              list="sizetwo_list"
-              value={tyres.sizetwo}
-              autoComplete="off"
-              onChange={onChangeTyres}
-            />
-            <datalist id="sizetwo_list">
-              {sizeTwoList.map((it, indexItem) => (
-                <option key={indexItem} value={it} />
-              ))}
-            </datalist>
-          </div>
-          <div className="mr-2 w-auto">
-            <label
-              className="block uppercase tracking-wide text-grey-darker text-xs text-left font-bold mb-2"
-              htmlFor="grid-first-name"
-            >
-              Диаметр
-            </label>
-            <div className="appearance-none w-full block bg-grey-lighter text-grey-darker border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-1 px-4">
-              {state.diametr}
-            </div>
-          </div>
-          <div className="mr-2 w-1/4">
-            <label
-              className="block uppercase tracking-wide text-grey-darker text-xs text-left font-bold mb-2"
-              htmlFor="grid-first-name"
-            >
-              Бренд
-            </label>
-            <input
-              className="appearance-none w-full block bg-grey-lighter text-grey-darker border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-1 px-4"
-              type="text"
-              placeholder="Например: Nokian"
-              name="brand"
-              list="tyres_list"
-              value={tyres.brand}
-              autoComplete="off"
-              onChange={onChangeTyres}
-            />
-            <datalist id="tyres_list">
-              {tyresList
-                .reduce((acc, rec) => [...acc, rec.brand], [])
-                .filter((item, id, array) => array.indexOf(item) === id)
-                .sort(function (a, b) {
-                  if (a > b) {
-                    return 1
-                  }
-                  if (a < b) {
-                    return -1
-                  }
-                  return 0
-                })
-                .map((it, indexItem) => (
-                  <option key={indexItem} value={it} />
-                ))}
-            </datalist>
-          </div>
-          <div className="mr-2 w-1/4">
-            <label
-              className="block uppercase tracking-wide text-grey-darker text-xs text-left font-bold mb-2"
-              htmlFor="grid-first-name"
-            >
-              Модель
-            </label>
-            <input
-              className="appearance-none w-full block bg-grey-lighter text-grey-darker border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-1 px-4"
-              type="text"
-              placeholder="Например: Nordman"
-              name="model"
-              list="tyres_model_list"
-              value={tyres.model}
-              autoComplete="off"
-              onChange={onChangeTyres}
-            />
-            <datalist id="tyres_model_list">
-              {tyresList
-                .filter((item) => item.brand === tyres.brand)
-                .reduce((acc, rec) => [...acc, rec.model], [])
-                .filter((item, id, array) => array.indexOf(item) === id)
-                .sort(function (a, b) {
-                  if (a > b) {
-                    return 1
-                  }
-                  if (a < b) {
-                    return -1
-                  }
-                  return 0
-                })
-                .map((it, indexItem) => (
-                  <option key={indexItem} value={it} />
-                ))}
-            </datalist>
-          </div>
-        </div>
-      ) : null} */}
+
       <div className="flex flex-row -mx-3 mt-5">
-        <div className="w-full px-3 mb-6 md:mb-0">
+        <div className="w-1/2 px-3 mb-6 md:mb-0">
+          <label
+            className="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2"
+            htmlFor="grid-city"
+          >
+            Пробег
+          </label>
+          <input
+            className="appearance-none block w-full bg-grey-lighter text-grey-darker border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-1 px-4 mb-3"
+            type="number"
+            placeholder="Пробег"
+            value={state.mileage}
+            name="mileage"
+            id="mileage"
+            onChange={onChange}
+          />
+        </div>
+        <div className="w-1/2 px-3 mb-6 md:mb-0">
           <label
             className="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2"
             htmlFor="grid-city"
