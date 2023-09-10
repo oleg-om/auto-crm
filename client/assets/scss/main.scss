@@ -36,3 +36,7 @@ body {
   align-items: center;
   justify-content: center;
 }
+.mask-password {
+  -webkit-text-security: disc;
+  text-security: disc;
+}
