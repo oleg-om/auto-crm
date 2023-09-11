@@ -49,10 +49,13 @@ const Report = () => {
   const onChangeTimeFinish = (e) => {
     setTimeFinish(e.target.value)
   }
+
+  const requestPasswordForReport = auth?.requestPasswordForReport
+
   return (
     <div>
       <Navbar />
-      {passwordIsCorrect ? (
+      {!requestPasswordForReport || passwordIsCorrect ? (
         <div className="flex flex-row">
           <ReportSidebar
             setActiveMonth={setActiveMonth}

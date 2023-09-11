@@ -25,6 +25,10 @@ const userSchema = new mongoose.Schema(
     place: {
       type: String,
       required: false
+    },
+    requestPasswordForReport: {
+      type: Boolean,
+      required: false
     }
   },
   {

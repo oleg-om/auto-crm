@@ -5,6 +5,7 @@ import { toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
 import roleList from '../../lists/account-role-list'
 import SubmitButtons from '../shared/buttons/OrderSubmitButtons'
+import RequestPassword from './containers/requestPassword'
 
 const AccountCreate = (props) => {
   toast.configure()
@@ -21,7 +22,8 @@ const AccountCreate = (props) => {
     password: '',
     role: [],
     userName: '',
-    place: ''
+    place: '',
+    requestPasswordForReport: false
   })
 
   const onChange = (e) => {
@@ -178,7 +180,7 @@ const AccountCreate = (props) => {
               className="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2"
               htmlFor="grid-first-name"
             >
-              Выберите должность
+              Выберите доступы
             </label>
             {roleList.map((it) => (
               <div key={it.id} className="mb-2">
@@ -197,6 +199,7 @@ const AccountCreate = (props) => {
             ))}
           </div>
         </div>
+        <RequestPassword state={state} onChange={onChange} />
         <div
           className="bg-teal-100 border-t-4 border-teal-500 rounded-b text-teal-900 px-4 py-3 shadow-md"
           role="alert"

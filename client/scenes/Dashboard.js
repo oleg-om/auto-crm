@@ -432,15 +432,18 @@ const Dashboard = () => {
                 </Link>
               </div>
             ) : null}
-            {auth.roles.includes('boss') ? (
+            {auth.roles.includes('kassa') ||
+            auth.roles.includes('bookkeeper') ||
+            auth.roles.includes('boss') ||
+            auth.roles.includes('report') ? (
               <div className="md:w-1/2 px-3 mb-6 flex flex-col">
                 <Link
-                  to="/boss"
+                  to="/report"
                   className="rounded-lg shadow-lg bg-gradient-to-r from-red-400 to-yellow-300 h-full"
                 >
                   <div className="m-2 p-2 flex flex-row">
                     <div className="w-1/2 px-3">
-                      <h2 className="text-3xl text-white font-bold">Босс</h2>
+                      <h2 className="text-3xl text-white font-bold">Отчет</h2>
                       <p className="my-2 text-white">Доступ к статистикам и отчетам</p>
                       <button
                         type="button"

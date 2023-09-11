@@ -13,7 +13,8 @@ const initialState = {
   roles: [],
   place: '',
   name: '',
-  id: ''
+  id: '',
+  requestPasswordForReport: false
 }
 
 export function updateLogin(login) {
@@ -115,8 +116,8 @@ export default function auth(state = initialState, action) {
         user: action.user,
         roles: action.user ? action.user.role : [],
         place: action.user ? action.user.place : '',
-        name: action.user ? action.user.userName : ''
-        // id: action.user ? action.user.id : ''
+        name: action.user ? action.user.userName : '',
+        requestPasswordForReport: action.user?.requestPasswordForReport || false
       }
     }
     case 'UPDATE_USERNAME': {

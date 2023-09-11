@@ -174,7 +174,7 @@ const Register = (props) => {
               className="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2"
               htmlFor="grid-first-name"
             >
-              Выберите должность
+              Выберите доступы
             </label>
             {roleList.map((it) => (
               <div key={it.value} className="mb-2">

@@ -6,6 +6,7 @@ import Modal from '../Modal.delete'
 import 'react-toastify/dist/ReactToastify.css'
 import roleList from '../../lists/account-role-list'
 import SubmitButtons from '../shared/buttons/OrderSubmitButtons'
+import RequestPassword from './containers/requestPassword'
 
 const AccountUpdate = (props) => {
   const history = useHistory()
@@ -22,7 +23,8 @@ const AccountUpdate = (props) => {
     login: props.login,
     role: props.role,
     userName: props.userName,
-    place: props.place
+    place: props.place,
+    requestPasswordForReport: props?.requestPasswordForReport || false
   })
   const removeAccount = (e) => {
     props.deleteAccount(props._id, e.target.value)
@@ -181,7 +183,7 @@ const AccountUpdate = (props) => {
               className="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2"
               htmlFor="grid-first-name"
             >
-              Выберите должность
+              Выберите доступы
             </label>
             {roleList.map((it) => (
               <div key={it.id} className="mb-2">
@@ -201,6 +203,7 @@ const AccountUpdate = (props) => {
             ))}
           </div>
         </div>
+        <RequestPassword state={state} onChange={onChange} />
       </div>
       <SubmitButtons
         sendData={changeAccount}
