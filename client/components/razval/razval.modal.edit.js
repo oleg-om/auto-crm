@@ -4,6 +4,7 @@ import 'react-toastify/dist/ReactToastify.css'
 import statusList from '../../lists/razval.statuses'
 import timeList from '../../lists/time-list'
 import { arrayFromNumber } from './razval'
+import OilType from './containers/OilType'
 
 const ModalEdit = ({
   open,
@@ -22,7 +23,9 @@ const ModalEdit = ({
     status: '',
     time: '',
     place: '',
-    date: ''
+    date: '',
+    purchasedFromUs: false,
+    bottledOil: false
   })
   const [choosedPlace, setChoosedPlace] = useState({})
 
@@ -31,7 +34,9 @@ const ModalEdit = ({
       status: itemId.status,
       time: itemId.time,
       place: itemId.place,
-      date: itemId.date
+      date: itemId.date,
+      purchasedFromUs: itemId?.purchasedFromUs || false,
+      bottledOil: itemId?.bottledOil || false
     })
     return () => {}
   }, [itemId])
@@ -56,6 +61,7 @@ const ModalEdit = ({
       ...prevState,
       [name]: value
     }))
+    console.log('s', changeStatus)
   }
   const propsDate = new Date(itemId.date)
   const propsCreateDate = new Date(itemId.dateofcreate)
@@ -368,6 +374,10 @@ const ModalEdit = ({
                     </div>
                   </div>
                 </div>
+
+                {itemType === 'Замена масла' ? (
+                  <OilType onChange={onChangeStatus} state={changeStatus} />
+                ) : null}
               </div>
             </div>
           </div>

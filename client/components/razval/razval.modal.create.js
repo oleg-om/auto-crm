@@ -5,6 +5,7 @@ import { useReactToPrint } from 'react-to-print'
 import { toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
 import ComponentToPrint from './razval.pre.print'
+import OilType from './containers/OilType'
 
 const ModalNew = ({
   open,
@@ -52,7 +53,9 @@ const ModalNew = ({
     place: '',
     name: '',
     dateofcreate: '',
-    post: ''
+    post: '',
+    purchasedFromUs: false,
+    bottledOil: false
   })
   const [access, setAccess] = useState()
   useEffect(() => {
@@ -300,7 +303,9 @@ const ModalNew = ({
           place: '',
           name: '',
           dateofcreate: '',
-          post: ''
+          post: '',
+          purchasedFromUs: false,
+          bottledOil: false
         })
         setCustomerOptions([])
         setStateId({
@@ -323,7 +328,9 @@ const ModalNew = ({
           place: '',
           name: '',
           dateofcreate: '',
-          post: ''
+          post: '',
+          purchasedFromUs: false,
+          bottledOil: false
         })
         setCustomerOptions([])
         setStateId({
@@ -385,10 +392,13 @@ const ModalNew = ({
         place: '',
         name: '',
         dateofcreate: '',
-        post: ''
+        post: '',
+        purchasedFromUs: false,
+        bottledOil: false
       })
     }
   }
+
   const checkAccess = () => {
     setAccess(true)
     sendAccess()
@@ -407,7 +417,9 @@ const ModalNew = ({
       place: '',
       name: '',
       dateofcreate: '',
-      post: ''
+      post: '',
+      purchasedFromUs: false,
+      bottledOil: false
     })
     setCustomerOptions([])
     setStateId({
@@ -594,6 +606,9 @@ const ModalNew = ({
                       />
                     </div>
                   </div>
+                  {itemType === 'Замена масла' ? (
+                    <OilType onChange={onChange} state={state} />
+                  ) : null}
                   {customerOptions.length >= 1 ? (
                     <div className="mt-4 flex flex-row">
                       <div className="w-full lg:w-auto p-2 text-xs text-gray-800 text-center border border-b block table-cell relative static">

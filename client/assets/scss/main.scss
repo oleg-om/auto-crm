@@ -40,3 +40,8 @@ body {
   -webkit-text-security: disc;
   text-security: disc;
 }
+.oil__icons {
+  &__icon:not(:last-child) {
+    margin-right: 5px;
+  }
+}

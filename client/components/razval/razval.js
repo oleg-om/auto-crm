@@ -4,11 +4,38 @@ import { toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
 import timeList from '../../lists/time-list'
 import statusList from '../../lists/razval.statuses'
+import ShopIocon from './icons/shop'
+import OilIcon from './icons/oil'
 
 export const arrayFromNumber = (num, type) =>
   [...new Array(Number(num))].fill(1).map((it, index) => {
     return { num: index + 1, name: `${type}${num}` }
   })
+
+const SHOW_OIL_ICONS = true
+
+const OilIcons = ({ item }) => {
+  const purchasedFromUs = item?.purchasedFromUs
+  const bottledOil = item?.bottledOil
+
+  if (SHOW_OIL_ICONS && (purchasedFromUs || bottledOil === false)) {
+    return (
+      <div className="flex justify-center mt-1 oil__icons">
+        {purchasedFromUs ? (
+          <span title="Куплено у нас" className="oil__icons__icon">
+            <ShopIocon />
+          </span>
+        ) : null}
+        {bottledOil === false ? (
+          <span title="Разливное масло" className="oil__icons__icon">
+            <OilIcon />
+          </span>
+        ) : null}
+      </div>
+    )
+  }
+  return null
+}
 
 const RazvalRow = (props) => {
   toast.configure()
@@ -238,6 +265,7 @@ const RazvalRow = (props) => {
                                 <div>
                                   <p>{`${item.mark} ${item.model}`}</p>
                                   <p>{item.phone}</p>
+                                  <OilIcons item={item} />
                                 </div>
                               ) : (
                                 <p>Запись недоступна</p>
@@ -278,6 +306,7 @@ const RazvalRow = (props) => {
                                 <div>
                                   <p>{`${item.mark} ${item.model}`}</p>
                                   <p>{item.phone}</p>
+                                  <OilIcons item={item} />
                                 </div>
                               ) : (
                                 <p>Запись недоступна</p>
@@ -600,6 +629,7 @@ const RazvalRow = (props) => {
                                   <div>
                                     <p>{`${item.mark} ${item.model}`}</p>
                                     <p>{item.phone}</p>
+                                    <OilIcons item={item} />
                                   </div>
                                 ) : (
                                   <p>Запись недоступна</p>
@@ -641,6 +671,7 @@ const RazvalRow = (props) => {
                                   <div>
                                     <p>{`${item.mark} ${item.model}`}</p>
                                     <p>{item.phone}</p>
+                                    <OilIcons item={item} />
                                   </div>
                                 ) : (
                                   <p>Запись недоступна</p>

@@ -5,6 +5,7 @@ import cx from 'classnames'
 import { useReactToPrint } from 'react-to-print'
 import ComponentToPrint from './razval.pre.print'
 import 'react-toastify/dist/ReactToastify.css'
+import OilType from './containers/OilType'
 
 const statusList = [
   'Новая запись',
@@ -30,7 +31,9 @@ const ModalView = ({
   activeAdress
 }) => {
   const [changeStatus, setChangeStatus] = useState({
-    status: ''
+    status: '',
+    purchasedFromUs: false,
+    bottledOil: false
   })
 
   const componentRef = useRef()
@@ -39,7 +42,11 @@ const ModalView = ({
   })
 
   useEffect(() => {
-    setChangeStatus({ status: itemId.status })
+    setChangeStatus({
+      status: itemId.status,
+      purchasedFromUs: itemId?.purchasedFromUs || false,
+      bottledOil: itemId?.bottledOil || false
+    })
     return () => {}
   }, [itemId])
   if (!open) return null
@@ -95,6 +102,12 @@ const ModalView = ({
       updateOil(itemId.id, changeStatus)
     }
   }
+
+  const oilTypeKeysAreExist =
+    !!Object.getOwnPropertyDescriptor(itemId, 'purchasedFromUs') ||
+    !!Object.getOwnPropertyDescriptor(itemId, 'bottledOil')
+  // itemId.hasOwnProperty('purchasedFromUs') || itemId.hasOwnProperty('bottledOil')
+
   return (
     <div className="fixed z-10 inset-0 overflow-y-auto">
       <div className="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
@@ -299,6 +312,19 @@ const ModalView = ({
                 </div>
               </div>
             </div>
+            {oilTypeKeysAreExist && itemType === 'Замена масла' ? (
+              <>
+                {activeAdress === itemId.place &&
+                itemId.status !== 'Оплачено' &&
+                itemId.status !== 'Работа выполнена' &&
+                itemId.status !== 'Терминал' &&
+                itemId.status !== 'Безнал' ? (
+                  <OilType onChange={onChangeStatus} state={changeStatus} />
+                ) : (
+                  <OilType onChange={() => {}} state={changeStatus} />
+                )}
+              </>
+            ) : null}
           </div>
 
           <div className="bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">

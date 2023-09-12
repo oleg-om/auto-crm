@@ -63,6 +63,14 @@ const Oil = new mongoose.Schema({
   post: {
     type: String,
     required: false
+  },
+  purchasedFromUs: {
+    type: Boolean,
+    required: false
+  },
+  bottledOil: {
+    type: Boolean,
+    required: false
   }
 })
 
