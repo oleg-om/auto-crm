@@ -83,18 +83,16 @@ const ReportSidebar = (props) => {
         >
           День
         </button>
-        {props.active === 'material' ? (
-          <button
-            type="button"
-            onClick={() => props.setCalendarType('diapason')}
-            className={cx(' mx-2 font-semibold', {
-              'text-white': props.calendarType !== 'diapason',
-              'text-yellow-500 underline': props.calendarType === 'diapason'
-            })}
-          >
-            Диапазон
-          </button>
-        ) : null}
+        <button
+          type="button"
+          onClick={() => props.setCalendarType('diapason')}
+          className={cx(' mx-2 font-semibold', {
+            'text-white': props.calendarType !== 'diapason',
+            'text-yellow-500 underline': props.calendarType === 'diapason'
+          })}
+        >
+          Диапазон
+        </button>
       </div>
       <div className="bg-white p-3 m-2 rounded">
         {props.calendarType === 'month' ? (
