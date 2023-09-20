@@ -22,5 +22,5 @@ jobs:
         username: ${{ secrets.USERNAME }}
         password: ${{ secrets.SSH_PASSWORD }}
         port: 22
-    - run: cd /var/www/autodom-crm
+        script: 'cd /var/www/autodom-crm'
     - run: yarn reinstall
