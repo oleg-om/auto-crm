@@ -6,9 +6,9 @@ name: Deploy
 
 on: workflow_dispatch
 
-defaults:
-  run:
-    working-directory: autodom-crm
+#defaults:
+#  run:
+#    working-directory: autodom-crm
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
@@ -27,4 +27,4 @@ jobs:
         password: ${{ secrets.SSH_PASSWORD }}
         port: 22
     - name: Build app
-      run: yarn reinstall
+      run: bash ./deploy.sh
