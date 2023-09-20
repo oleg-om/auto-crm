@@ -28,5 +28,4 @@ jobs:
         port: 22
     - name: Build app
       uses: borales/actions-yarn@v4
-      with:
-        cmd: reinstall # will run `yarn reinstall` command
+      run: yarn reinstall
