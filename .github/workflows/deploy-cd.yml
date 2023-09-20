@@ -26,4 +26,4 @@ jobs:
         username: ${{ secrets.USERNAME }}
         password: ${{ secrets.SSH_PASSWORD }}
         port: 22
-    - run: yarn reinstall
+      run: yarn reinstall
