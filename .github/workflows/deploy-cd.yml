@@ -27,4 +27,4 @@ jobs:
         password: ${{ secrets.SSH_PASSWORD }}
         port: 22
     - name: Build app
-      run: bash ./deploy.sh
+      run: bash deploy.sh
