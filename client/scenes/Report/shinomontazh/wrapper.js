@@ -1,10 +1,12 @@
 import React, { useEffect, useState } from 'react'
 import cx from 'classnames'
+import { useDispatch, useSelector } from 'react-redux'
 import taskStatuses from '../../../lists/task-statuses'
 import Salary from './Salary'
 import Material from './Material'
-// import onLoad from './Onload'
 import statuses from '../../../../common/enums/shinomontazh-statuses'
+import { getEmployeeArray } from '../../../utils/admin/reportUtils'
+import { updateEmployeeReport } from '../../../redux/reducers/employees'
 
 const Shinomontazh = ({
   calendarType,
@@ -16,11 +18,12 @@ const Shinomontazh = ({
   active,
   employeeList,
   range
-  // auth
 }) => {
-  // onLoad()
   const [shinList, setShinList] = useState([])
   const [isLoaded, setIsLoaded] = useState(false)
+
+  const employee = useSelector((s) => s.employees.employee)
+  const dispatch = useDispatch()
 
   useEffect(() => {
     const getType = () => {
@@ -118,6 +121,7 @@ const Shinomontazh = ({
       setReport(
         shinList
           .filter((it) => (place ? place === it.place : it))
+
           .filter(
             (it) =>
               it.status === statuses[1] ||
@@ -135,10 +139,10 @@ const Shinomontazh = ({
       )
     }
     if (calendarType === 'day') {
-      // console.log('day')
       setReport(
         shinList
           .filter((it) => (place ? place === it.place : it))
+
           .filter(
             (it) =>
               it.status === statuses[1] ||
@@ -157,12 +161,13 @@ const Shinomontazh = ({
       )
     }
     return () => {}
-  }, [shinList, activeMonth, activeDay, place])
+  }, [shinList, activeMonth, activeDay, place, employee])
 
   useEffect(() => {
     if (calendarType === 'month') {
       setReport(
         shinList
+
           .filter(
             (it) =>
               it.status === statuses[1] ||
@@ -171,6 +176,7 @@ const Shinomontazh = ({
               it.status === statuses[4] ||
               it.status === statuses[6]
           )
+
           .filter((it) => (place ? place === it.place : it))
           .filter((it) => it.payment && it.payment !== 'cancel')
           .filter(
@@ -183,6 +189,7 @@ const Shinomontazh = ({
     if (calendarType === 'day' && !timeStart && !timeFinish) {
       setReport(
         shinList
+
           .filter(
             (it) =>
               it.status === statuses[1] ||
@@ -191,6 +198,7 @@ const Shinomontazh = ({
               it.status === statuses[4] ||
               it.status === statuses[6]
           )
+
           .filter((it) => (place ? place === it.place : it))
           .filter((it) => it.payment && it.payment !== 'cancel')
           .filter(
@@ -204,6 +212,7 @@ const Shinomontazh = ({
     if (calendarType === 'day' && timeStart && timeFinish) {
       setReport(
         shinList
+
           .filter(
             (it) =>
               it.status === statuses[1] ||
@@ -212,6 +221,7 @@ const Shinomontazh = ({
               it.status === statuses[4] ||
               it.status === statuses[6]
           )
+
           .filter((it) => (place ? place === it.place : it))
           .filter((it) => it.payment && it.payment !== 'cancel')
           .filter(
@@ -249,7 +259,14 @@ const Shinomontazh = ({
       setReport(getFilteredByRange(shinList))
     }
     return () => {}
-  }, [shinList, activeMonth, activeDay, place, timeStart, timeFinish])
+  }, [shinList, activeMonth, activeDay, place, timeStart, timeFinish, employee])
+
+  const employeeArray = getEmployeeArray(report)
+  useEffect(() => {
+    dispatch(updateEmployeeReport(employeeArray))
+
+    return () => {}
+  }, [report])
 
   const loading = () => {
     return (
@@ -267,25 +284,7 @@ const Shinomontazh = ({
       </div>
     )
   }
-  // const repFinal = report
-  //   ? report.reduce((acc, rec) => {
-  //       return [
-  //         ...acc,
-  //         {
-  //           ...rec,
-  //           services: rec.services.reduce((bat, cur) => {
-  //             if (cur.free === 'yes') {
-  //               return [...bat, { ...cur, price: 0 }]
-  //             }
-  //             if (cur.free !== 'yes') {
-  //               return [...bat, cur]
-  //             }
-  //             return bat
-  //           }, [])
-  //         }
-  //       ]
-  //     }, [])
-  //   : []
+
   return (
     <>
       {active === 'sh-kassa' ||
@@ -304,7 +303,6 @@ const Shinomontazh = ({
             <Salary
               employeeList={employeeList}
               report={report}
-              // reportWithDiscount={repFinal}
               taskStatuses={taskStatuses}
               shinList={shinList}
               place={place}
@@ -315,18 +313,19 @@ const Shinomontazh = ({
               timeStart={timeStart}
               timeFinish={timeFinish}
               calendarType={calendarType}
-              // auth={auth}
               active={active}
+              employee={employee}
+              employeeArray={employeeArray}
             />
           ) : null}
           {isLoaded && report.length <= 0 ? <p className="my-3">Записей нет</p> : null}
         </div>
       ) : null}
-      {active === 'material' ? (
+      {active.includes('material') ? (
         <div
           className={cx('', {
-            block: active === 'material',
-            hidden: active !== 'material'
+            block: active.includes('material'),
+            hidden: !active.includes('material')
           })}
         >
           {' '}

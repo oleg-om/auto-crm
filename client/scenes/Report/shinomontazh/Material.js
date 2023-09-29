@@ -1,9 +1,13 @@
 import React from 'react'
+import { useSelector } from 'react-redux'
 import ExportCSV from '../../../components/excel'
+import { filterReportByEmployee } from '../../../utils/admin/reportUtils'
 
 const Material = ({ report }) => {
-  const materialNums = report
+  const currentEmployee = useSelector((s) => s.employees.employee)
 
+  const materialNums = report
+    .filter((it) => filterReportByEmployee(it, currentEmployee))
     .reduce((acc, rec) => [...acc, rec.material], [])
     .reduce((acc, rec) => acc.concat(rec), [])
     .reduce((acc, rec) => {
@@ -86,6 +90,7 @@ const Material = ({ report }) => {
               </td>
             </tr>
           ))}
+          {!materialNums?.length ? <span>Материалы не найдены</span> : null}
         </tbody>
       </table>
       <ExportCSV csvData={toExcel(materialNums)} fileName="материалы" />

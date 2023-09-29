@@ -2,11 +2,15 @@ import {
   GET_EMPLOYEES,
   CREATE_EMPLOYEE,
   UPDATE_EMPLOYEE,
-  DELETE_EMPLOYEE
+  DELETE_EMPLOYEE,
+  UPDATE_EMPLOYEE_REPORT,
+  UPDATE_CURRENT_EMPLOYEE_REPORT
 } from '../actions/employees'
 
 const initialState = {
-  list: []
+  list: [],
+  report: [],
+  employee: null
 }
 
 export default (state = initialState, action) => {
@@ -31,6 +35,12 @@ export default (state = initialState, action) => {
           return action.id !== it.id
         })
       }
+    }
+    case UPDATE_EMPLOYEE_REPORT: {
+      return { ...state, report: action.report }
+    }
+    case UPDATE_CURRENT_EMPLOYEE_REPORT: {
+      return { ...state, employee: action.employee }
     }
     default:
       return state
@@ -88,5 +98,17 @@ export function deleteEmployee(id) {
       .then(() => {
         dispatch({ type: DELETE_EMPLOYEE, id })
       })
+  }
+}
+
+export function updateEmployeeReport(data) {
+  return (dispatch) => {
+    dispatch({ type: UPDATE_EMPLOYEE_REPORT, report: data })
+  }
+}
+
+export function updateCurrentEmployeeReport(data) {
+  return (dispatch) => {
+    dispatch({ type: UPDATE_CURRENT_EMPLOYEE_REPORT, employee: data })
   }
 }

@@ -1,11 +1,21 @@
-import React from 'react'
+import React, { useEffect } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
 import cx from 'classnames'
 import Calendar from 'react-calendar'
 import 'react-calendar/dist/Calendar.css'
+import { updateCurrentEmployeeReport } from '../../redux/reducers/employees'
 
 const ReportSidebar = (props) => {
+  const dispatch = useDispatch()
+  const employeeList = useSelector((s) => s.employees?.report)
+  const currentEmployee = useSelector((s) => s.employees.employee)
   const propsDate = new Date(props.activeMonth)
   const OrderDate = `${propsDate.toLocaleString('default', { month: 'long' })}`.toString()
+
+  useEffect(() => {
+    dispatch(updateCurrentEmployeeReport(''))
+    return () => {}
+  }, [props?.place])
 
   const timeOptions = [
     '00:00',
@@ -233,15 +243,8 @@ const ReportSidebar = (props) => {
                 name="cancelReason"
                 onChange={props.onChangePlace}
               >
-                {/* <option value="">Все</option> */}
                 {props.placeList
-                  .filter(
-                    (it) => it.id === props.place
-                    //  ||
-                    // it.name.includes('Чкалова') ||
-                    // it.name.includes('Новониколаевка') ||
-                    // it.name.includes('Вокзальное шоссе 44')
-                  )
+                  .filter((it) => it.id === props.place)
                   .map((it) => (
                     <option key={it} value={it.id}>
                       {it.name}
@@ -261,14 +264,7 @@ const ReportSidebar = (props) => {
           </div>
         </div>
       </div>
-      {props.calendarType !== 'diapason' ? (
-        <div className="text-white mx-2">
-          <h5 className="text-white font-semibold">Выбранный месяц</h5>
-          <p className="bg-white rounded text-gray-900 p-2 my-2 text-center border-l-8 border-blue-600 font-bold">
-            {OrderDate}
-          </p>
-        </div>
-      ) : null}
+
       {props.calendarType === 'diapason' ? (
         <div className="text-white mx-2">
           <h5 className="text-white font-semibold">С дня</h5>
@@ -290,6 +286,53 @@ const ReportSidebar = (props) => {
               month: 'long',
               year: 'numeric'
             })}`.toString()}
+          </p>
+        </div>
+      ) : null}
+      {employeeList ? (
+        <div className="bg-white p-3 m-2 rounded">
+          <div className="px-3">
+            <label
+              className="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2"
+              htmlFor="grid-zip"
+            >
+              Выберите сотрудника
+            </label>
+            <div className="flex-shrink w-full inline-block relative mb-3">
+              <select
+                className="block appearance-none w-full bg-grey-lighter border border-gray-300 focus:border-gray-500 focus:outline-none py-1 px-4 pr-8 rounded"
+                value={currentEmployee}
+                name="employee"
+                onChange={props.onChangeEmployee}
+              >
+                <option value="">Все</option>
+                {employeeList
+                  ?.sort((a, b) => a?.name - b?.name)
+                  .map((it) => (
+                    <option key={it} value={it.id}>
+                      {it.name} {it.surname}
+                    </option>
+                  ))}
+              </select>
+
+              <div className="pointer-events-none absolute top-0 mt-2 right-0 flex items-center px-2 text-gray-600">
+                <svg
+                  className="fill-current h-4 w-4"
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 20 20"
+                >
+                  <path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z" />
+                </svg>
+              </div>
+            </div>
+          </div>
+        </div>
+      ) : null}
+      {props.calendarType !== 'diapason' ? (
+        <div className="text-white mx-2">
+          <h5 className="text-white font-semibold">Выбранный месяц</h5>
+          <p className="bg-white rounded text-gray-900 p-2 my-2 text-center border-l-8 border-blue-600 font-bold">
+            {OrderDate}
           </p>
         </div>
       ) : null}

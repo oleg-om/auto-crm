@@ -1,10 +1,11 @@
 import React, { useEffect, useState, Suspense } from 'react'
-import { useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import cx from 'classnames'
 import Navbar from '../../components/Navbar'
 import ReportSidebar from './Report.sidebar'
 import Shinomontazh from './shinomontazh/wrapper'
 import PasswordChecker from './PasswordChecker'
+import { updateCurrentEmployeeReport } from '../../redux/reducers/employees'
 
 const Autoparts = React.lazy(() => import('./Autoparts/wrapper'))
 
@@ -12,6 +13,7 @@ const Report = () => {
   const placeList = useSelector((s) => s.places.list)
   const employeeList = useSelector((s) => s.employees.list)
   const auth = useSelector((s) => s.auth)
+  const dispatch = useDispatch()
 
   const mockPassword = '320208'
   const [passwordIsCorrect, setPasswordIsCorrect] = useState(false)
@@ -41,6 +43,11 @@ const Report = () => {
 
   const onChangePlace = (e) => {
     setPlace(e.target.value)
+  }
+
+  const onChangeEmployee = (e) => {
+    const { value } = e.target
+    dispatch(updateCurrentEmployeeReport(value))
   }
 
   const onChangeTimeStart = (e) => {
@@ -76,6 +83,7 @@ const Report = () => {
             setRange={setRange}
             active={active}
             auth={auth}
+            onChangeEmployee={onChangeEmployee}
           />
           <div className="w-full mx-auto px-4">
             <h1 className="text-3xl py-4 border-b mb-6">Статистика</h1>
@@ -213,12 +221,60 @@ const Report = () => {
                   <button
                     type="button"
                     className={cx('p-4 bg-gray-200 rounded w-full h-full overflow-hidden', {
-                      block: active !== 'material',
-                      'border-b-8 border-blue-400': active === 'material'
+                      block: active !== 'sh-material',
+                      'border-b-8 border-blue-400': active === 'sh-material'
                     })}
-                    onClick={() => setActive('material')}
+                    onClick={() => setActive('sh-material')}
                   >
                     Материалы (шиномонтаж)
+                  </button>
+                </div>
+                <div className="w-1/5 p-2">
+                  <button
+                    type="button"
+                    className={cx('p-4 bg-gray-200 rounded w-full h-full overflow-hidden', {
+                      block: active !== 'sto-material',
+                      'border-b-8 border-blue-400': active === 'sto-material'
+                    })}
+                    onClick={() => setActive('sto-material')}
+                  >
+                    Материалы (СТО)
+                  </button>
+                </div>
+                <div className="w-1/5 p-2">
+                  <button
+                    type="button"
+                    className={cx('p-4 bg-gray-200 rounded w-full h-full overflow-hidden', {
+                      block: active !== 'wash-material',
+                      'border-b-8 border-blue-400': active === 'wash-material'
+                    })}
+                    onClick={() => setActive('wash-material')}
+                  >
+                    Материалы (Мойка)
+                  </button>
+                </div>
+                <div className="w-1/5 p-2">
+                  <button
+                    type="button"
+                    className={cx('p-4 bg-gray-200 rounded w-full h-full overflow-hidden', {
+                      block: active !== 'window-material',
+                      'border-b-8 border-blue-400': active === 'window-material'
+                    })}
+                    onClick={() => setActive('window-material')}
+                  >
+                    Материалы (Стекла)
+                  </button>
+                </div>
+                <div className="w-1/5 p-2">
+                  <button
+                    type="button"
+                    className={cx('p-4 bg-gray-200 rounded w-full h-full overflow-hidden', {
+                      block: active !== 'cond-material',
+                      'border-b-8 border-blue-400': active === 'cond-material'
+                    })}
+                    onClick={() => setActive('cond-material')}
+                  >
+                    Материалы (Кондиционеры)
                   </button>
                 </div>
                 <div className="w-1/5 p-2">
@@ -233,18 +289,6 @@ const Report = () => {
                     Автозапчасти
                   </button>
                 </div>
-                {/* {checkIsAdmin ? (
-                <div className="w-1/5 p-2">
-                  <a
-                    href="https://docs.google.com/spreadsheets/d/1L6mR3e0bmu13y7OqIlMQbziWb4a7Ev0k9X_zu-kEBTg/edit?usp=sharing"
-                    target="_blank"
-                    rel="noreferrer"
-                    className={cx('p-4 bg-gray-200 rounded w-full h-full block text-center', {})}
-                  >
-                    Программа
-                  </a>
-                </div>
-              ) : null} */}
               </div>
               <Shinomontazh
                 calendarType={calendarType}
@@ -256,7 +300,6 @@ const Report = () => {
                 timeStart={timeStart}
                 active={active}
                 range={range}
-                // auth={auth}
               />
               {active === 'autopart' ? (
                 <div
