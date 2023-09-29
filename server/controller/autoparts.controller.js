@@ -38,22 +38,6 @@ exports.getFiltered = async (req, res) => {
     const LIMIT = 14
     const startIndex = (Number(page) - 1) * LIMIT // get the starting index of every page
 
-    // const posts = await Autopart.find({
-    //   $or: [
-    //     {
-    //       status: `${decodeURIComponent(req.query.status ? status : '').toString()}`
-    //     },
-    //     { id_autoparts: number },
-    //     {
-    //       process: req.query.process ? `${process.toString()}` : 'smth'
-    //     },
-    //     { phone: { $regex: req.query.phone ? `${phone.toString()}` : 'smth', $options: 'i' } },
-
-    //     { place: req.query.place ? `${place.toString()}` : 'smth' },
-    //     { upsert: false, useFindAndModify: false }
-    //   ]
-    // })
-
     const orderStatField =
       req.query.status && req.query.status === 'itemsInStock'
         ? {

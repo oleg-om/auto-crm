@@ -149,3 +149,13 @@ exports.getByPage = async (req, res) => {
     res.status(404).json({ message: error.message })
   }
 }
+
+exports.getMonth = async (req, res) => {
+  const { yearmonth } = req.query
+
+  const list = await Tyre.find({
+    'order.come': { $regex: `${yearmonth.toString()}`, $options: 'i' }
+  })
+
+  return res.json({ status: 'ok', data: list })
+}

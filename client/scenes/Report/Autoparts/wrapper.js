@@ -1,28 +1,25 @@
 import React, { useState, useEffect } from 'react'
 import { useSelector } from 'react-redux'
 import cx from 'classnames'
-// import taskStatuses from '../../../lists/task-statuses'
 import Salary from './autoparts'
 
-const Autoparts = ({
-  calendarType,
-  place,
-  activeMonth,
-  activeDay,
-  // timeFinish,
-  // timeStart,
-  active,
-  employeeList
-}) => {
+const Autoparts = ({ calendarType, place, activeMonth, activeDay, active, employeeList }) => {
   const [autoList, setShinList] = useState([])
   const [isLoaded, setIsLoaded] = useState(false)
+
+  const transformProductTabName = (name) => {
+    return name.replace('-product', '')
+  }
+
   useEffect(() => {
+    setShinList([])
     const year = (dt) => dt.getFullYear()
     const month = (dt) => `0${dt.getMonth() + 1}`.slice(-2)
     const yearmonth = (dt) => `${year(dt)}-${month(dt)}`
     if (activeMonth && calendarType === 'month') {
       setIsLoaded(false)
-      fetch(`api/v1/autopartsmonth?yearmonth=${yearmonth(activeMonth)}`)
+
+      fetch(`api/v1/${transformProductTabName(active)}month?yearmonth=${yearmonth(activeMonth)}`)
         .then((res) => res.json())
         .then((it) => {
           setShinList(it.data)
@@ -31,7 +28,7 @@ const Autoparts = ({
     }
     if (activeDay && calendarType === 'day') {
       setIsLoaded(false)
-      fetch(`api/v1/autopartsmonth?yearmonth=${yearmonth(activeDay)}`)
+      fetch(`api/v1/${transformProductTabName(active)}month?yearmonth=${yearmonth(activeDay)}`)
         .then((res) => res.json())
         .then((it) => {
           setShinList(it.data)
@@ -39,19 +36,11 @@ const Autoparts = ({
         })
     }
     return () => {}
-  }, [activeMonth.getMonth(), activeDay.getMonth()])
+  }, [activeMonth.getMonth(), activeDay.getMonth(), active])
 
   const employeeListFull = useSelector((s) => s.employees.list)
-  //   const autoList = () => {
-  //     if (autosProps) {
-  //       return autosProps
-  //     }
-  //     return []
-  //   }
-  const [report, setReport] = useState([])
 
-  //   const [bossPercent, setBossPercent] = useState(30)
-  //   const [isMaterial, setIsMaterial] = useState('yes')
+  const [report, setReport] = useState([])
 
   useEffect(() => {
     if (calendarType === 'month' && autoList && autoList.length > 0) {
@@ -87,8 +76,7 @@ const Autoparts = ({
           }, [])
           .filter((item) => item.order.length > 0)
       )
-    }
-    if (calendarType === 'day' && autoList && autoList.length > 0) {
+    } else if (calendarType === 'day' && autoList && autoList.length > 0) {
       setReport(
         autoList
           .filter((it) => (place ? place === it.place : it))
@@ -121,67 +109,13 @@ const Autoparts = ({
             ]
           }, [])
           .filter((item) => item.order.length > 0)
-        // .filter((it) => it.payment === 'yes')
       )
+    } else {
+      setReport([])
     }
     return () => {}
   }, [autoList, activeMonth, activeDay, place])
 
-  //   useEffect(() => {
-  //     if (calendarType === 'month') {
-  //       setReport(
-  //         autoList()
-  //           .filter((it) => (place ? place === it.place : it))
-  //           // .filter((it) => it.payment === 'yes')
-  //           .filter(
-  //             (item) =>
-  //               new Date(item.dateFinish).getFullYear() === activeMonth.getFullYear() &&
-  //               new Date(item.dateFinish).getMonth() + 1 === activeMonth.getMonth() + 1
-  //           )
-  //       )
-  //     }
-  //     if (calendarType === 'day' && !timeStart && !timeFinish) {
-  //       setReport(
-  //         autoList()
-  //           .filter((it) => (place ? place === it.place : it))
-  //           // .filter((it) => it.payment === 'yes')
-  //           .filter(
-  //             (item) =>
-  //               new Date(item.dateFinish).getFullYear() === activeDay.getFullYear() &&
-  //               new Date(item.dateFinish).getMonth() + 1 === activeDay.getMonth() + 1 &&
-  //               new Date(item.dateFinish).getDate() === activeDay.getDate()
-  //           )
-  //       )
-  //     }
-  //     if (calendarType === 'day' && timeStart && timeFinish) {
-  //       setReport(
-  //         autoList()
-  //           .filter((it) => (place ? place === it.place : it))
-  //           // .filter((it) => it.payment === 'yes')
-  //           .filter(
-  //             (item) =>
-  //               new Date(item.dateFinish).getFullYear() === activeDay.getFullYear() &&
-  //               new Date(item.dateFinish).getMonth() + 1 === activeDay.getMonth() + 1 &&
-  //               new Date(item.dateFinish).getDate() === activeDay.getDate() &&
-  //               new Date(item.dateFinish).getHours() >=
-  //                 new Date(
-  //                   `${activeDay.getFullYear()}.${
-  //                     activeDay.getMonth() + 1
-  //                   }.${activeDay.getDate()} ${timeStart}`
-  //                 ).getHours() &&
-  //               (timeFinish !== '24:00'
-  //                 ? new Date(item.dateFinish).getHours() <=
-  //                   new Date(
-  //                     `${activeDay.getFullYear()}.${
-  //                       activeDay.getMonth() + 1
-  //                     }.${activeDay.getDate()} ${timeFinish}`
-  //                   ).getHours()
-  //                 : 24)
-  //           )
-  //       )
-  //     }
-  //     return () => {}
-  //   }, [autoList, activeMonth, activeDay, place, timeStart, timeFinish])
   const loading = () => {
     return (
       <div className="flex w-100 justify-center my-3">
@@ -201,13 +135,7 @@ const Autoparts = ({
 
   return (
     <>
-      <div
-        className={cx('', {
-          block: active === 'autopart',
-          hidden: active !== 'autopart'
-        })}
-      >
-        {' '}
+      <div className={cx('', {})}>
         {isLoaded ? null : loading()}
         {report.length > 0 && isLoaded ? (
           <Salary

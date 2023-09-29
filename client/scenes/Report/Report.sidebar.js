@@ -93,7 +93,7 @@ const ReportSidebar = (props) => {
         >
           День
         </button>
-        {props?.active !== 'autopart' ? (
+        {!props?.active.includes('product') ? (
           <button
             type="button"
             onClick={() => props.setCalendarType('diapason')}

@@ -9,6 +9,55 @@ import { updateCurrentEmployeeReport } from '../../redux/reducers/employees'
 
 const Autoparts = React.lazy(() => import('./Autoparts/wrapper'))
 
+const ReportTab = ({ active, onChangeTab, tab }) => {
+  const { value, name } = tab
+  return (
+    <div className="w-1/5 p-2">
+      <button
+        type="button"
+        className={cx('p-4 bg-gray-200 rounded w-full h-full overflow-hidden', {
+          block: active !== value,
+          'border-b-8 border-blue-400': active === value
+        })}
+        value={value}
+        onClick={onChangeTab}
+      >
+        {name}
+      </button>
+    </div>
+  )
+}
+
+const KASSA_TABS = [
+  { name: 'Шиномонтаж (касса)', value: 'sh-kassa' },
+  { name: 'СТО (касса)', value: 'sto-kassa' },
+  { name: 'Мойка (касса)', value: 'wash-kassa' },
+  { name: 'Стекла (касса)', value: 'window-kassa' },
+  { name: 'Кондиционеры (касса)', value: 'cond-kassa' }
+]
+
+const BUH_TABS = [
+  { name: 'Шиномонтаж (бухгалтерия)', value: 'sh-buh' },
+  { name: 'СТО (бухгалтерия)', value: 'sto-buh' },
+  { name: 'Мойка (бухгалтерия)', value: 'wash-buh' },
+  { name: 'Стекла (бухгалтерия)', value: 'window-buh' },
+  { name: 'Кондиционеры (бухгалтерия)', value: 'cond-buh' }
+]
+
+const MATERIAL_TABS = [
+  { name: 'Шиномонтаж (метериалы)', value: 'sh-material' },
+  { name: 'СТО (метериалы)', value: 'sto-material' },
+  { name: 'Мойка (метериалы)', value: 'wash-material' },
+  { name: 'Стекла (метериалы)', value: 'window-material' },
+  { name: 'Кондиционеры (метериалы)', value: 'cond-material' }
+]
+
+const PRODUCT_TABS = [
+  { name: 'Автозапчасти', value: 'autoparts-product' },
+  { name: 'Инструмент', value: 'tools-product' },
+  { name: 'Шины', value: 'tyres-product' }
+]
+
 const Report = () => {
   const placeList = useSelector((s) => s.places.list)
   const employeeList = useSelector((s) => s.employees.list)
@@ -59,6 +108,11 @@ const Report = () => {
 
   const requestPasswordForReport = auth?.requestPasswordForReport
 
+  const onChangeTab = (e) => {
+    const { value } = e.target
+    setActive(value)
+  }
+
   return (
     <div>
       <Navbar />
@@ -91,224 +145,55 @@ const Report = () => {
               <div className="flex flex-wrap">
                 {auth.roles.includes('kassa') || auth.roles.includes('boss') ? (
                   <>
-                    <div className="w-1/5 p-2">
-                      <button
-                        type="button"
-                        className={cx('p-4 bg-gray-200 rounded w-full h-full overflow-hidden', {
-                          block: active !== 'sh-kassa',
-                          'border-b-8 border-blue-400': active === 'sh-kassa'
-                        })}
-                        onClick={() => setActive('sh-kassa')}
-                      >
-                        Шиномонтаж (касса)
-                      </button>
-                    </div>
-                    <div className="w-1/5 p-2">
-                      <button
-                        type="button"
-                        className={cx('p-4 bg-gray-200 rounded w-full h-full overflow-hidden', {
-                          block: active !== 'sto-kassa',
-                          'border-b-8 border-blue-400': active === 'sto-kassa'
-                        })}
-                        onClick={() => setActive('sto-kassa')}
-                      >
-                        СТО (касса)
-                      </button>
-                    </div>
-                    <div className="w-1/5 p-2">
-                      <button
-                        type="button"
-                        className={cx('p-4 bg-gray-200 rounded w-full h-full overflow-hidden', {
-                          block: active !== 'wash-kassa',
-                          'border-b-8 border-blue-400': active === 'wash-kassa'
-                        })}
-                        onClick={() => setActive('wash-kassa')}
-                      >
-                        Мойка (касса)
-                      </button>
-                    </div>
-                    <div className="w-1/5 p-2">
-                      <button
-                        type="button"
-                        className={cx('p-4 bg-gray-200 rounded w-full h-full overflow-hidden', {
-                          block: active !== 'window-kassa',
-                          'border-b-8 border-blue-400': active === 'window-kassa'
-                        })}
-                        onClick={() => setActive('window-kassa')}
-                      >
-                        Стекла (касса)
-                      </button>
-                    </div>
-                    <div className="w-1/5 p-2">
-                      <button
-                        type="button"
-                        className={cx('p-4 bg-gray-200 rounded w-full h-full overflow-hidden', {
-                          block: active !== 'cond-kassa',
-                          'border-b-8 border-blue-400': active === 'cond-kassa'
-                        })}
-                        onClick={() => setActive('cond-kassa')}
-                      >
-                        Кондиционеры (касса)
-                      </button>
-                    </div>
+                    {KASSA_TABS.map((tab) => (
+                      <ReportTab
+                        active={active}
+                        onChangeTab={onChangeTab}
+                        tab={tab}
+                        key={tab.value}
+                      />
+                    ))}
                   </>
                 ) : null}
                 {auth.roles.includes('bookkeeper') || auth.roles.includes('boss') ? (
                   <>
-                    <div className="w-1/5 p-2">
-                      <button
-                        type="button"
-                        className={cx('p-4 bg-gray-200 rounded w-full h-full overflow-hidden', {
-                          block: active !== 'sh-buh',
-                          'border-b-8 border-blue-400': active === 'sh-buh'
-                        })}
-                        onClick={() => setActive('sh-buh')}
-                      >
-                        Шиномонтаж (бухгалтерия)
-                      </button>
-                    </div>
-                    <div className="w-1/5 p-2">
-                      <button
-                        type="button"
-                        className={cx('p-4 bg-gray-200 rounded w-full h-full overflow-hidden', {
-                          block: active !== 'sto-buh',
-                          'border-b-8 border-blue-400': active === 'sto-buh'
-                        })}
-                        onClick={() => setActive('sto-buh')}
-                      >
-                        СТО (бухгалтерия)
-                      </button>
-                    </div>
-                    <div className="w-1/5 p-2">
-                      <button
-                        type="button"
-                        className={cx('p-4 bg-gray-200 rounded w-full h-full overflow-hidden', {
-                          block: active !== 'wash-buh',
-                          'border-b-8 border-blue-400': active === 'wash-buh'
-                        })}
-                        onClick={() => setActive('wash-buh')}
-                      >
-                        Мойка (бухгалтерия)
-                      </button>
-                    </div>
-                    <div className="w-1/5 p-2">
-                      <button
-                        type="button"
-                        className={cx('p-4 bg-gray-200 rounded w-full h-full overflow-hidden', {
-                          block: active !== 'window-buh',
-                          'border-b-8 border-blue-400': active === 'window-buh'
-                        })}
-                        onClick={() => setActive('window-buh')}
-                      >
-                        Стекла (бухгалтерия)
-                      </button>
-                    </div>
-                    <div className="w-1/5 p-2">
-                      <button
-                        type="button"
-                        className={cx('p-4 bg-gray-200 rounded w-full h-full overflow-hidden', {
-                          block: active !== 'cond-buh',
-                          'border-b-8 border-blue-400': active === 'cond-buh'
-                        })}
-                        onClick={() => setActive('cond-buh')}
-                      >
-                        Кондиционеры (бухгалтерия)
-                      </button>
-                    </div>
+                    {BUH_TABS.map((tab) => (
+                      <ReportTab
+                        active={active}
+                        onChangeTab={onChangeTab}
+                        tab={tab}
+                        key={tab.value}
+                      />
+                    ))}
                   </>
                 ) : null}
-                <div className="w-1/5 p-2">
-                  <button
-                    type="button"
-                    className={cx('p-4 bg-gray-200 rounded w-full h-full overflow-hidden', {
-                      block: active !== 'sh-material',
-                      'border-b-8 border-blue-400': active === 'sh-material'
-                    })}
-                    onClick={() => setActive('sh-material')}
-                  >
-                    Материалы (шиномонтаж)
-                  </button>
-                </div>
-                <div className="w-1/5 p-2">
-                  <button
-                    type="button"
-                    className={cx('p-4 bg-gray-200 rounded w-full h-full overflow-hidden', {
-                      block: active !== 'sto-material',
-                      'border-b-8 border-blue-400': active === 'sto-material'
-                    })}
-                    onClick={() => setActive('sto-material')}
-                  >
-                    Материалы (СТО)
-                  </button>
-                </div>
-                <div className="w-1/5 p-2">
-                  <button
-                    type="button"
-                    className={cx('p-4 bg-gray-200 rounded w-full h-full overflow-hidden', {
-                      block: active !== 'wash-material',
-                      'border-b-8 border-blue-400': active === 'wash-material'
-                    })}
-                    onClick={() => setActive('wash-material')}
-                  >
-                    Материалы (Мойка)
-                  </button>
-                </div>
-                <div className="w-1/5 p-2">
-                  <button
-                    type="button"
-                    className={cx('p-4 bg-gray-200 rounded w-full h-full overflow-hidden', {
-                      block: active !== 'window-material',
-                      'border-b-8 border-blue-400': active === 'window-material'
-                    })}
-                    onClick={() => setActive('window-material')}
-                  >
-                    Материалы (Стекла)
-                  </button>
-                </div>
-                <div className="w-1/5 p-2">
-                  <button
-                    type="button"
-                    className={cx('p-4 bg-gray-200 rounded w-full h-full overflow-hidden', {
-                      block: active !== 'cond-material',
-                      'border-b-8 border-blue-400': active === 'cond-material'
-                    })}
-                    onClick={() => setActive('cond-material')}
-                  >
-                    Материалы (Кондиционеры)
-                  </button>
-                </div>
-                <div className="w-1/5 p-2">
-                  <button
-                    type="button"
-                    className={cx('p-4 bg-gray-200 rounded w-full h-full overflow-hidden', {
-                      block: active !== 'autopart',
-                      'border-b-8 border-blue-400': active === 'autopart'
-                    })}
-                    onClick={() => setActive('autopart')}
-                  >
-                    Автозапчасти
-                  </button>
-                </div>
+                {MATERIAL_TABS.map((tab) => (
+                  <ReportTab active={active} onChangeTab={onChangeTab} tab={tab} key={tab.value} />
+                ))}
+                {PRODUCT_TABS.map((tab) => (
+                  <ReportTab active={active} onChangeTab={onChangeTab} tab={tab} key={tab.value} />
+                ))}
               </div>
-              <Shinomontazh
-                calendarType={calendarType}
-                place={place}
-                activeMonth={activeMonth}
-                activeDay={activeDay}
-                timeFinish={timeFinish}
-                employeeList={employeeList}
-                timeStart={timeStart}
-                active={active}
-                range={range}
-              />
-              {active === 'autopart' ? (
+              {!active.includes('product') ? (
+                <Shinomontazh
+                  calendarType={calendarType}
+                  place={place}
+                  activeMonth={activeMonth}
+                  activeDay={activeDay}
+                  timeFinish={timeFinish}
+                  employeeList={employeeList}
+                  timeStart={timeStart}
+                  active={active}
+                  range={range}
+                />
+              ) : null}
+              {active.includes('product') ? (
                 <div
                   className={cx('', {
-                    block: active === 'autopart',
-                    hidden: active !== 'autopart'
+                    block: active.includes('product'),
+                    hidden: !active.includes('product')
                   })}
                 >
-                  {' '}
                   <Suspense fallback={<div>Загрузка...</div>}>
                     <Autoparts
                       calendarType={calendarType}
