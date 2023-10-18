@@ -36,8 +36,6 @@ import Access from '../scenes/Access'
 import Dashboard from '../scenes/Dashboard'
 import Boss from '../scenes/Boss/Boss'
 import RazvalList from '../scenes/Razval/Razval.list'
-import RazvalNew from '../scenes/Razval/Razval.create'
-import RazvalEdit from '../scenes/Razval/Razval.edit'
 import SettingEdit from '../scenes/Settings/Settings'
 import MaterialList from '../scenes/Materials/Materials.list'
 import MaterialNew from '../scenes/Materials/Materials.create'
@@ -99,6 +97,7 @@ import WindowpriceEdit from '../scenes/Window.prices/Window.prices.edit'
 import WindowsList from '../scenes/Window/Windows.list'
 import WindowsNew from '../scenes/Window/Windows.work.create'
 import WindowEditFull from '../scenes/Window/Windows.edit'
+import OilList from '../scenes/Razval/Oil.list'
 
 const OnlyAnonymousRoute = ({ component: Component, ...rest }) => {
   const auth = useSelector((s) => s.auth)
@@ -227,8 +226,7 @@ const RootComponent = (props) => {
             <PrivateRoute exact path="/customer/create" component={CustomerNew} />
             <PrivateRoute exact path="/customer/edit/:id" component={CustomerEdit} />
             <PrivateRoute exact path="/razval/list" component={RazvalList} />
-            <PrivateRoute exact path="/razval/create" component={RazvalNew} />
-            <PrivateRoute exact path="/razval/edit/:id" component={RazvalEdit} />
+            <PrivateRoute exact path="/oil/list" component={OilList} />
             <PrivateRoute exact path="/settings" component={SettingEdit} />
             <PrivateRoute exact path="/material/list" component={MaterialList} />
             <PrivateRoute exact path="/material/create" component={MaterialNew} />
@@ -345,6 +343,8 @@ const RootComponent = (props) => {
             <PrivateRoute exact path="/washboss/edit/:id" component={WashEditFull} />
 
             <PrivateRoute exact path="/preentry/shinomontazh" component={PreentryList} />
+            <PrivateRoute exact path="/preentry/sto" component={PreentryList} />
+            <PrivateRoute exact path="/preentry/oil" component={PreentryList} />
             {/* window */}
             <PrivateRoute exact path="/windowprice/list/" component={WindowpriceList} />
             <PrivateRoute exact path="/windowprice/list/:type" component={WindowpriceList} />

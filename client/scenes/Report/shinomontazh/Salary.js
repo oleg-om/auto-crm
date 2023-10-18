@@ -1,9 +1,179 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
+import { useReactToPrint } from 'react-to-print'
 import SalaryTableComponent from './SalaryTableComponent'
 import { filterByEmployee, filterReportByEmployee } from '../../../utils/admin/reportUtils'
 import { updateCurrentEmployeeReport } from '../../../redux/reducers/employees'
+
+const SalaryByDay = ({
+  dateArray,
+  totalWithDiscount,
+  report,
+  employee,
+  getLinkToWork,
+  onEmployeeClick,
+  getWorkId
+}) => {
+  const componentRef = useRef()
+  const handlePrint = useReactToPrint({
+    content: () => componentRef.current
+  })
+  return (
+    <div className="m-5">
+      <button
+        type="submit"
+        onClick={handlePrint}
+        className="py-2 px-3 my-3 bg-blue-600 text-white text-sm hover:bg-blue-700 hover:text-white rounded-full h-22 w-22"
+      >
+        <div className="flex flex-row">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            version="1.1"
+            width="20"
+            height="20"
+            x="0"
+            y="0"
+            viewBox="0 0 512 512"
+            xmlSpace="preserve"
+            className="mr-2"
+          >
+            <g>
+              <path
+                xmlns="http://www.w3.org/2000/svg"
+                d="m414 80h-316c-5.523 0-10-4.477-10-10v-26c0-24.301 19.699-44 44-44h248c24.301 0 44 19.699 44 44v26c0 5.523-4.477 10-10 10z"
+                fill="#ffffff"
+                data-original="#000000"
+              />
+              <path
+                xmlns="http://www.w3.org/2000/svg"
+                d="m458 112h-404c-29.776 0-54 24.224-54 54v188c0 29.776 24.224 54 54 54h34v-80c0-39.701 32.299-72 72-72h192c39.701 0 72 32.299 72 72v80h34c29.776 0 54-24.224 54-54v-188c0-29.776-24.224-54-54-54zm-361.98 120c-13.255 0-24.005-10.745-24.005-24s10.74-24 23.995-24h.01c13.255 0 24 10.745 24 24s-10.745 24-24 24z"
+                fill="#ffffff"
+                data-original="#000000"
+              />
+              <path
+                xmlns="http://www.w3.org/2000/svg"
+                d="m352 304h-192c-13.255 0-24 10.745-24 24v80 32c0 13.255 10.745 24 24 24h192c13.255 0 24-10.745 24-24v-32-80c0-13.255-10.745-24-24-24z"
+                fill="#ffffff"
+                data-original="#000000"
+              />
+            </g>
+          </svg>
+
+          <p> Печать талонов</p>
+        </div>
+      </button>
+      <div ref={componentRef}>
+        <h2 className="text-xl font-semibold mb-2">Разбивка по дням:</h2>
+        {dateArray.map((date) => (
+          <div key={date}>
+            <h3 key={date}>
+              {new Date(date).getDate()}.{new Date(date).getMonth() + 1}.
+              {new Date(date).getFullYear()}
+            </h3>
+            <table className="border-collapse w-full" key={date}>
+              <thead>
+                <tr>
+                  <th className="p-3 font-bold bg-gray-100 text-gray-600 border border-gray-300 table-cell">
+                    Талон №
+                  </th>
+                  <th className="p-3 font-bold bg-gray-100 text-gray-600 border border-gray-300 table-cell">
+                    Имя
+                  </th>
+                  <th className="p-3 font-bold bg-gray-100 text-gray-600 border border-gray-300 table-cell">
+                    Время
+                  </th>
+                  <th className="p-3 font-bold bg-gray-100 text-gray-600 border border-gray-300 table-cell">
+                    Услуги
+                  </th>
+                  <th className="p-3 font-bold bg-gray-100 text-gray-600 border border-gray-300 table-cell">
+                    Материалы
+                  </th>
+                  <th className="p-3 font-bold bg-gray-100 text-gray-600 border border-gray-300 table-cell">
+                    Скидка
+                  </th>
+                  <th className="p-3 font-bold bg-gray-100 text-gray-600 border border-gray-300 table-cell">
+                    Cумма
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                {report
+                  .filter((it) => new Date(it.dateStart).getDate() === new Date(date).getDate())
+                  .filter((it) => filterReportByEmployee(it, employee))
+                  .map((it) => (
+                    <tr key={it.id} className="bg-white hover:bg-gray-100 table-row mb-0">
+                      <td className="w-auto p-2 text-gray-800 text-left border border-b table-cell static">
+                        <Link
+                          to={() => getLinkToWork(it)}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="hover:underline"
+                        >
+                          {getWorkId(it)}
+                        </Link>
+                      </td>
+                      <td className="w-auto p-2 text-gray-800 text-left border border-b table-cell static">
+                        {it.employee
+                          .reduce((acc, rec) => acc.concat(rec), [])
+                          .reduce((acc, rec) => {
+                            const x = acc.find((item) => item.id === rec.id)
+                            if (!x) {
+                              return acc.concat([rec])
+                            }
+                            return acc
+                          }, [])
+                          .map((man) => (
+                            <button
+                              type="button"
+                              key={man.id}
+                              onClick={onEmployeeClick}
+                              value={man.id}
+                              className="text-left hover:underline"
+                            >
+                              {man.name} {man.surname}
+                            </button>
+                          ))}
+                      </td>
+                      <td className="w-auto p-2 text-gray-800 text-center border border-b table-cell static">
+                        <p>
+                          {new Date(it.dateFinish).getHours()}:
+                          {new Date(it.dateFinish)
+                            .getMinutes()
+                            .toString()
+                            .replace(/^(\d)$/, '0$1')}
+                        </p>
+                      </td>
+                      <td className="w-auto p-2 text-gray-800 text-center border border-b table-cell static">
+                        {it.services.reduce(
+                          (acc, rec) => acc + Number(rec.price) * rec.quantity,
+                          0
+                        )}{' '}
+                        руб.
+                      </td>
+                      <td className="w-auto p-2 text-gray-800 text-center border border-b table-cell static">
+                        {it.material.reduce(
+                          (acc, rec) => acc + Number(rec.price) * rec.quantity,
+                          0
+                        )}{' '}
+                        руб.
+                      </td>
+                      <td className="w-auto p-2 text-gray-800 text-center border border-b table-cell static">
+                        {it.discount ? `${it.discount}%` : ''}
+                      </td>
+                      <td className="w-auto p-2 text-gray-800 text-center border border-b table-cell static">
+                        {totalWithDiscount(it)}
+                      </td>
+                    </tr>
+                  ))}
+              </tbody>
+            </table>
+          </div>
+        ))}
+      </div>{' '}
+    </div>
+  )
+}
 
 const Salary = ({
   report,
@@ -674,139 +844,15 @@ const Salary = ({
         </tbody>
       </table>
       {calendarType === 'day' || employee ? (
-        <>
-          <h2 className="text-xl font-semibold mb-2">Разбивка по дням:</h2>
-          {dateArray.map((date) => (
-            <div key={date}>
-              <h3 key={date}>
-                {new Date(date).getDate()}.{new Date(date).getMonth() + 1}.
-                {new Date(date).getFullYear()}
-              </h3>
-              <table className="border-collapse w-full" key={date}>
-                <thead>
-                  <tr>
-                    <th className="p-3 font-bold bg-gray-100 text-gray-600 border border-gray-300 hidden lg:table-cell">
-                      Талон №
-                    </th>
-                    <th className="p-3 font-bold bg-gray-100 text-gray-600 border border-gray-300 hidden lg:table-cell">
-                      Имя
-                    </th>
-                    <th className="p-3 font-bold bg-gray-100 text-gray-600 border border-gray-300 hidden lg:table-cell">
-                      Время
-                    </th>
-                    <th className="p-3 font-bold bg-gray-100 text-gray-600 border border-gray-300 hidden lg:table-cell">
-                      Услуги
-                    </th>
-                    <th className="p-3 font-bold bg-gray-100 text-gray-600 border border-gray-300 hidden lg:table-cell">
-                      Материалы
-                    </th>
-                    <th className="p-3 font-bold bg-gray-100 text-gray-600 border border-gray-300 hidden lg:table-cell">
-                      Скидка
-                    </th>
-                    <th className="p-3 font-bold bg-gray-100 text-gray-600 border border-gray-300 hidden lg:table-cell">
-                      Cумма
-                    </th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {report
-                    .filter((it) => new Date(it.dateStart).getDate() === new Date(date).getDate())
-                    .filter((it) => filterReportByEmployee(it, employee))
-                    .map((it) => (
-                      <tr
-                        key={it.id}
-                        className="bg-white lg:hover:bg-gray-100 flex lg:table-row flex-row lg:flex-row flex-wrap lg:flex-no-wrap mb-5 lg:mb-0"
-                      >
-                        <td className="w-full lg:w-auto p-2 text-gray-800 text-left border border-b block lg:table-cell relative lg:static">
-                          <span className="lg:hidden px-2 py-1 text-xs font-bold uppercase">
-                            Номер:
-                          </span>
-
-                          <Link
-                            to={() => getLinkToWork(it)}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="hover:underline"
-                          >
-                            {getWorkId(it)}
-                          </Link>
-                        </td>
-                        <td className="w-full lg:w-auto p-2 text-gray-800 text-left border border-b block lg:table-cell relative lg:static">
-                          <span className="lg:hidden px-2 py-1 text-xs font-bold uppercase">
-                            Имя:
-                          </span>
-                          {it.employee
-                            .reduce((acc, rec) => acc.concat(rec), [])
-                            .reduce((acc, rec) => {
-                              const x = acc.find((item) => item.id === rec.id)
-                              if (!x) {
-                                return acc.concat([rec])
-                              }
-                              return acc
-                            }, [])
-                            .map((man) => (
-                              <button
-                                type="button"
-                                key={man.id}
-                                onClick={onEmployeeClick}
-                                value={man.id}
-                                className="text-left hover:underline"
-                              >
-                                {man.name} {man.surname}
-                              </button>
-                            ))}
-                        </td>
-                        <td className="w-full lg:w-auto p-2 text-gray-800 text-left lg:text-center border border-b block lg:table-cell relative lg:static">
-                          <span className="lg:hidden px-2 py-1 text-xs font-bold uppercase">
-                            Время:
-                          </span>
-                          <p>
-                            {new Date(it.dateFinish).getHours()}:
-                            {new Date(it.dateFinish)
-                              .getMinutes()
-                              .toString()
-                              .replace(/^(\d)$/, '0$1')}
-                          </p>
-                        </td>
-                        <td className="w-full lg:w-auto p-2 text-gray-800 text-left lg:text-center border border-b block lg:table-cell relative lg:static">
-                          <span className="lg:hidden px-2 py-1 text-xs font-bold uppercase">
-                            Услуги:
-                          </span>
-                          {it.services.reduce(
-                            (acc, rec) => acc + Number(rec.price) * rec.quantity,
-                            0
-                          )}{' '}
-                          руб.
-                        </td>
-                        <td className="w-full lg:w-auto p-2 text-gray-800 text-left lg:text-center border border-b block lg:table-cell relative lg:static">
-                          <span className="lg:hidden px-2 py-1 text-xs font-bold uppercase">
-                            Материалы:
-                          </span>
-                          {it.material.reduce(
-                            (acc, rec) => acc + Number(rec.price) * rec.quantity,
-                            0
-                          )}{' '}
-                          руб.
-                        </td>
-                        <td className="w-full lg:w-auto p-2 text-gray-800 text-left lg:text-center border border-b block lg:table-cell relative lg:static">
-                          <span className="lg:hidden px-2 py-1 text-xs font-bold uppercase">
-                            Скидка:
-                          </span>
-                          {it.discount ? `${it.discount}%` : ''}
-                        </td>
-                        <td className="w-full lg:w-auto p-2 text-gray-800 text-left lg:text-center border border-b block lg:table-cell relative lg:static">
-                          <span className="lg:hidden px-2 py-1 text-xs font-bold uppercase">
-                            Сумма:
-                          </span>
-                          {totalWithDiscount(it)}
-                        </td>
-                      </tr>
-                    ))}
-                </tbody>
-              </table>
-            </div>
-          ))}
-        </>
+        <SalaryByDay
+          dateArray={dateArray}
+          totalWithDiscount={totalWithDiscount}
+          report={report}
+          employee={employee}
+          getLinkToWork={getLinkToWork}
+          onEmployeeClick={onEmployeeClick}
+          getWorkId={getWorkId}
+        />
       ) : null}
     </div>
   )

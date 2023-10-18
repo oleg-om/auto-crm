@@ -6,6 +6,7 @@ import timeList from '../../lists/time-list'
 import timeList24 from '../../lists/time-list24'
 import statusList from '../../lists/razval.statuses'
 import { isoDateWithoutTimeZone } from './ShinomontazhEntryCreate'
+import { OilIcons } from '../razval/razval'
 // import { isoDateWithoutTimeZone } from './ShinomontazhEntryCreate'
 
 export const arrayFromNumber = (num, type) =>
@@ -69,25 +70,13 @@ const ShinomontazhEntryRow = (props) => {
     props.openAccess(item, type)
   }
 
-  // const formatDate = (d) => {
-  //   if (d) {
-  //     const dt = new Date(d)
-  //     // return `${dt.getFullYear()}-${(dt.getMonth() + 1).toString().replace(/^(\d)$/, '0$1')}-${dt
-  //     //   .getDate()
-  //     //   .toString()
-  //     //   .replace(/^(\d)$/, '0$1')}`
-  //     return isoDateWithoutTimeZone(dt)
-  //   }
-  //   return d
-  // }
-
-  // const dateActive = formatDate(props.activeDay)
-
   const getTimeList = () => (props.adress?.workTime === 24 ? timeList24 : timeList)
   const timeNumberIs10 = (tm) =>
     Number(tm.replace(':', '')) >= 800 || Number(tm.replace(':', '')) <= 1700
   const timeNumberIs24 = (tm) =>
     Number(tm.replace(':', '')) < 800 || Number(tm.replace(':', '')) > 1700
+
+  const isOil = props?.preentryType === 'oil'
 
   if (props.viewType === 'classic' || !props.viewType) {
     return (
@@ -111,7 +100,7 @@ const ShinomontazhEntryRow = (props) => {
               <th className="p-3 font-bold uppercase bg-gray-100 text-gray-600 border border-gray-300 hidden lg:table-cell">
                 Время
               </th>
-              {props.adress.shinomontazh === 'true' ? (
+              {props.adress[props.preentryType] === 'true' ? (
                 <th className="p-3 font-bold uppercase bg-gray-100 text-gray-600 border border-gray-300 hidden lg:table-cell">
                   {props.preentryTypeRus}
                 </th>
@@ -169,6 +158,7 @@ const ShinomontazhEntryRow = (props) => {
                                 <div>
                                   <p>{`${item.mark} ${item.model}`}</p>
                                   <p>{item.phone || item.regnumber}</p>
+                                  {isOil ? <OilIcons item={item} /> : null}
                                 </div>
                               )}
                             </button>
@@ -193,6 +183,7 @@ const ShinomontazhEntryRow = (props) => {
                                 <div>
                                   <p>{`${item.mark} ${item.model}`}</p>
                                   <p>{item.phone}</p>
+                                  {isOil ? <OilIcons item={item} /> : null}
                                 </div>
                               )}
                             </button>
@@ -207,7 +198,7 @@ const ShinomontazhEntryRow = (props) => {
                           item.status !== statusList[2] &&
                           item.status !== statusList[3] &&
                           item.status !== statusList[4]
-                      ).length < Number(props.adress[`${props.preentryType}quantity`]) &&
+                      ).length < Number(props.adress[`${props?.boxesAmount}`]) &&
                       props.dataList.filter(
                         (item) =>
                           getTime(item?.dateStart || item?.datePreentry) === it &&
@@ -275,7 +266,7 @@ const ShinomontazhEntryRow = (props) => {
             </th>
             {props.adress[props.preentryType] === 'true' ? (
               <>
-                {arrayFromNumber(props[`${props.preentryType}quantity`]).map((it) => (
+                {arrayFromNumber(props[`${props?.boxesAmount}`]).map((it) => (
                   <th
                     key={it.name}
                     className={cx(
@@ -309,7 +300,7 @@ const ShinomontazhEntryRow = (props) => {
               </td>
               {props.adress[props.preentryType] === 'true' ? (
                 <>
-                  {arrayFromNumber(props[`${props.preentryType}quantity`]).map((raz) => (
+                  {arrayFromNumber(props[`${props?.boxesAmount}`]).map((raz) => (
                     <td
                       key={`${it}-${raz.num}`}
                       className={cx(
@@ -354,6 +345,7 @@ const ShinomontazhEntryRow = (props) => {
                                   <div>
                                     <p>{`${item.mark} ${item.model}`}</p>
                                     <p>{item.phone || item.regnumber}</p>
+                                    {isOil ? <OilIcons item={item} /> : null}
                                   </div>
                                 )}
                               </button>
@@ -378,6 +370,7 @@ const ShinomontazhEntryRow = (props) => {
                                   <div>
                                     <p>{`${item.mark} ${item.model}`}</p>
                                     <p>{item.phone}</p>
+                                    {isOil ? <OilIcons item={item} /> : null}
                                   </div>
                                 )}
                               </button>

@@ -6,6 +6,7 @@ import { useReactToPrint } from 'react-to-print'
 import { toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
 import ComponentToPrint from '../razval/razval.pre.print'
+import OilType from '../razval/containers/OilType'
 
 export function isoDateWithoutTimeZone(date) {
   if (!date) return date
@@ -20,6 +21,26 @@ export function isoDateWithoutTimeZone(date) {
   return ''
 }
 
+export const SHINIMONTAZH_STATE = {
+  mark: '',
+  model: '',
+  regnumber: '',
+  phone: '',
+  employeeplace: '',
+  employeePreentry: '',
+  place: '',
+  name: '',
+  datePreentry: '',
+  box: '',
+  comment: ''
+}
+
+export const OIL_STATE = {
+  ...SHINIMONTAZH_STATE,
+  purchasedFromUs: false,
+  bottledOil: false
+}
+
 const ShinomontazhEntryCreate = ({
   open,
   onClose,
@@ -31,7 +52,8 @@ const ShinomontazhEntryCreate = ({
   createFunc,
   createCust,
   createIsOpen,
-  activePost
+  activePost,
+  preentryType
 }) => {
   toast.configure()
   const notify = (arg) => {
@@ -54,21 +76,11 @@ const ShinomontazhEntryCreate = ({
 
   const dispatch = useDispatch()
 
-  const [state, setState] = useState({
-    mark: '',
-    model: '',
-    regnumber: '',
-    phone: '',
-    employeeplace: '',
-    employeePreentry: '',
-    // date: '',
-    // time: '',
-    place: '',
-    name: '',
-    datePreentry: '',
-    box: '',
-    comment: ''
-  })
+  const isShinomontazh = preentryType === 'shinomontazh'
+  // const isSto = preentryType === 'sto'
+  const isOil = preentryType === 'oil'
+
+  const [state, setState] = useState(OIL_STATE)
 
   const [access, setAccess] = useState()
 
@@ -100,7 +112,6 @@ const ShinomontazhEntryCreate = ({
       place: activeAdress.id,
       employeePreentry: employee.name,
       employeeplace: employee.place,
-      // datePreentry: isoDateWithoutTimeZone(new Date(`${OrderDate} ${timeActive}`)),
       datePreentry: new Date(`${OrderDate} ${timeActive}`),
       box: activePost,
       status: 'Новая запись'
@@ -119,26 +130,10 @@ const ShinomontazhEntryCreate = ({
   })
   const [activeCustomer, setActiveCustomer] = useState('')
   const [customerOptions, setCustomerOptions] = useState([])
-  // useEffect(() => {
-  //   if (state.phone !== '' || state.regnumber !== '') {
-  //     setCustomerOptions(
-  //       customerList.filter(
-  //         (it) =>
-  //           (it.phone === state.phone && it.phone !== '' && it.phone) ||
-  //           (it.regnumber === state.regnumber && it.regnumber !== '' && it.regnumber)
-  //       )
-  //     )
-  //   } else if (state.phone === '' || state.regnumber === '' || state.vinnumber === '') {
-  //     setCustomerOptions([])
-  //   }
-  // }, [state.phone, state.regnumber, state.vinnumber, customerList])
+
   const throttling = useRef(false)
 
   useEffect(() => {
-    // if (throttling.current) {
-    //   return
-    // }
-
     // If there is no search term, do not make API call
     throttling.current = true
     setTimeout(() => {
@@ -280,21 +275,7 @@ const ShinomontazhEntryCreate = ({
       else if (!activeCustomer) {
         dispatch(() => createFunc({ ...state, customerId: activeCustomer || null }))
         dispatch(() => createCust(state))
-        setState({
-          mark: '',
-          model: '',
-          phone: '',
-          regnumber: '',
-          employeeplace: '',
-          employeePreentry: '',
-          //   date: '',
-          //   time: '',
-          place: '',
-          name: '',
-          datePreentry: '',
-          box: '',
-          comment: ''
-        })
+        setState(OIL_STATE)
         setCustomerOptions([])
         setStateId({
           mark: '',
@@ -304,21 +285,7 @@ const ShinomontazhEntryCreate = ({
         setActiveCustomer('')
       } else {
         dispatch(() => createFunc({ ...state, customerId: activeCustomer || null }))
-        setState({
-          mark: '',
-          model: '',
-          phone: '',
-          regnumber: '',
-          employeeplace: '',
-          employeePreentry: '',
-          //   date: '',
-          //   time: '',
-          place: '',
-          name: '',
-          datePreentry: '',
-          box: '',
-          comment: ''
-        })
+        setState(OIL_STATE)
         setCustomerOptions([])
         setStateId({
           mark: '',
@@ -335,27 +302,12 @@ const ShinomontazhEntryCreate = ({
       createFunc({
         access: 'false',
         date: state.date,
-        // time: state.time,
         place: state.place,
         datePreentry: state.datePreentry,
         box: state?.box || null
       })
     )
-    setState({
-      mark: '',
-      model: '',
-      phone: '',
-      regnumber: '',
-      employeeplace: '',
-      employeePreentry: '',
-      //  date: '',
-      //   time: '',
-      place: '',
-      name: '',
-      datePreentry: '',
-      box: '',
-      comment: ''
-    })
+    setState(OIL_STATE)
   }
   const checkAccess = () => {
     setAccess(true)
@@ -363,21 +315,7 @@ const ShinomontazhEntryCreate = ({
   }
   const closeFunc = () => {
     onClose()
-    setState({
-      mark: '',
-      model: '',
-      phone: '',
-      regnumber: '',
-      employeeplace: '',
-      employeePreentry: '',
-      //   date: '',
-      //   time: '',
-      place: '',
-      name: '',
-      datePreentry: '',
-      box: '',
-      comment: ''
-    })
+    setState(OIL_STATE)
     setCustomerOptions([])
     setStateId({
       mark: '',
@@ -582,61 +520,68 @@ const ShinomontazhEntryCreate = ({
                       />
                     </div>
                   </div>
-                  <div className="mt-3 flex flex-col">
-                    <label
-                      className="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2"
-                      htmlFor="phone"
-                    >
-                      Хранение, №
-                    </label>
-                    <div className="flex-shrink w-full inline-block relative">
-                      <input
-                        className="block appearance-none w-full bg-grey-lighter border border-gray-300 focus:border-gray-500 focus:outline-none py-1 px-4 pr-8 rounded"
-                        type="number"
-                        name="storage"
-                        id="storage"
-                        // list="storage_list"
-                        placeholder="Номер хранения"
-                        value={state.storage}
-                        onChange={onChange}
-                      />
-                      {showStorageOptions &&
-                      state?.storage &&
-                      storageOptions &&
-                      storageOptions?.data?.length ? (
-                        <div className="absolute flex bg-gray-300 right-0 left-0">
-                          {storageOptions?.data.map((it, index) => (
-                            // eslint-disable-next-line jsx-a11y/aria-role, jsx-a11y/click-events-have-key-events, jsx-a11y/no-static-element-interactions
-                            <button
-                              type="button"
-                              className="p-3"
-                              key={index}
-                              onClick={() => setCustomerFromStorage(it)}
-                            >{`№${it.id_storages}, ${it?.phone || ''}, ${it?.name || ''}`}</button>
-                          ))}
-                        </div>
-                      ) : null}
+                  {isShinomontazh ? (
+                    <div className="mt-3 flex flex-col">
+                      <label
+                        className="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2"
+                        htmlFor="phone"
+                      >
+                        Хранение, №
+                      </label>
+                      <div className="flex-shrink w-full inline-block relative">
+                        <input
+                          className="block appearance-none w-full bg-grey-lighter border border-gray-300 focus:border-gray-500 focus:outline-none py-1 px-4 pr-8 rounded"
+                          type="number"
+                          name="storage"
+                          id="storage"
+                          // list="storage_list"
+                          placeholder="Номер хранения"
+                          value={state.storage}
+                          onChange={onChange}
+                        />
+                        {showStorageOptions &&
+                        state?.storage &&
+                        storageOptions &&
+                        storageOptions?.data?.length ? (
+                          <div className="absolute flex bg-gray-300 right-0 left-0">
+                            {storageOptions?.data.map((it, index) => (
+                              // eslint-disable-next-line jsx-a11y/aria-role, jsx-a11y/click-events-have-key-events, jsx-a11y/no-static-element-interactions
+                              <button
+                                type="button"
+                                className="p-3"
+                                key={index}
+                                onClick={() => setCustomerFromStorage(it)}
+                              >{`№${it.id_storages}, ${it?.phone || ''}, ${
+                                it?.name || ''
+                              }`}</button>
+                            ))}
+                          </div>
+                        ) : null}
+                      </div>
                     </div>
-                  </div>
-                  <div className="mt-3 flex flex-col">
-                    <label
-                      className="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2"
-                      htmlFor="comment"
-                    >
-                      Комментарий
-                    </label>
-                    <div className="flex-shrink w-full inline-block relative">
-                      <input
-                        className="block appearance-none w-full bg-grey-lighter border border-gray-300 focus:border-gray-500 focus:outline-none py-1 px-4 pr-8 rounded"
-                        type="text"
-                        name="comment"
-                        id="comment"
-                        placeholder="Примечание"
-                        value={state.comment}
-                        onChange={onChange}
-                      />
+                  ) : null}
+                  {isOil ? <OilType onChange={onChange} state={state} /> : null}
+                  {isShinomontazh ? (
+                    <div className="mt-3 flex flex-col">
+                      <label
+                        className="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2"
+                        htmlFor="comment"
+                      >
+                        Комментарий
+                      </label>
+                      <div className="flex-shrink w-full inline-block relative">
+                        <input
+                          className="block appearance-none w-full bg-grey-lighter border border-gray-300 focus:border-gray-500 focus:outline-none py-1 px-4 pr-8 rounded"
+                          type="text"
+                          name="comment"
+                          id="comment"
+                          placeholder="Примечание"
+                          value={state.comment}
+                          onChange={onChange}
+                        />
+                      </div>
                     </div>
-                  </div>
+                  ) : null}
                   {customerOptions.length >= 1 ? (
                     <div className="mt-4 flex flex-row">
                       <div className="w-full lg:w-auto p-2 text-xs text-gray-800 text-center border border-b block table-cell relative static">

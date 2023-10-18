@@ -51,8 +51,11 @@ exports.getByPage = async (req, res) => {
     const LIMIT = 14
     const startIndex = (Number(page) - 1) * LIMIT // get the starting index of every page
 
-    const total = await Sto.countDocuments({})
-    const posts = await Sto.find().sort({ id_stos: -1 }).limit(LIMIT).skip(startIndex)
+    const total = await Sto.countDocuments({ dateStart: { $exists: true } })
+    const posts = await Sto.find({ dateStart: { $exists: true } })
+      .sort({ dateStart: -1 })
+      .limit(LIMIT)
+      .skip(startIndex)
 
     res.json({
       status: 'ok',
@@ -81,7 +84,7 @@ exports.getFiltered = async (req, res) => {
       place: req.query.place ? `${place.toString()}` : { $exists: true },
       regnumber: req.query.reg ? { $regex: `${reg.toString()}`, $options: 'i' } : { $exists: true }
     })
-      .sort({ id_stos: -1 })
+      .sort({ dateStart: -1 })
       .limit(LIMIT)
       .skip(startIndex)
 
@@ -110,6 +113,42 @@ exports.getMonth = async (req, res) => {
 
   return res.json({ status: 'ok', data: list })
 }
+
+exports.getMonthForPreentry = async (req, res) => {
+  // eslint-disable-next-line no-unused-vars
+  const { year, month, day, isOil } = req.query
+
+  const isOilFilter = isOil
+    ? {
+        isOil: true
+      }
+    : {}
+
+  const list = await Sto.find({
+    ...isOilFilter,
+    $expr: {
+      $or: [
+        {
+          $and: [
+            { $eq: [{ $year: '$dateStart' }, Number(year)] },
+            { $eq: [{ $month: '$dateStart' }, Number(month)] },
+            { $eq: [{ $dayOfMonth: '$dateStart' }, Number(day)] }
+          ]
+        },
+        {
+          $and: [
+            { $eq: [{ $year: '$datePreentry' }, Number(year)] },
+            { $eq: [{ $month: '$datePreentry' }, Number(month)] },
+            { $eq: [{ $dayOfMonth: '$datePreentry' }, Number(day)] }
+          ]
+        }
+      ]
+    }
+  })
+
+  return res.json({ status: 'ok', data: list })
+}
+
 exports.getRange = async (req, res) => {
   const { month, year, secMonth, secYear } = req.query
   // const { month, year } = req.query
@@ -132,6 +171,7 @@ exports.getRange = async (req, res) => {
   // const dtt = getDate(secMonth, secYear)
 
   const list = await Sto.find({
+    dateStart: { $exists: true },
     dateFinish: { $gte: getDate(month, year), $lt: getDateSec(secMonth, secYear) }
   })
 

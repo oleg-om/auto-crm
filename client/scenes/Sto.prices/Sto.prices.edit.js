@@ -22,7 +22,8 @@ const StopriceEdit = () => {
   }
   const StoTypeList = [
     { value: 'rus', name: 'Отечественные' },
-    { value: 'foreign', name: 'Иномарки' }
+    { value: 'foreign', name: 'Иномарки' },
+    { value: 'card', name: 'Безнал' }
   ]
 
   // const StoCategoryList = [

@@ -648,6 +648,12 @@ const Car = ({
                           .filter((it) => it.class === 'foreign')
                           .map((it) => <option value={it.id} label={it.name} key={it.id} />)
                       : null}
+
+                    {state.class === 'card'
+                      ? stoCategories
+                          .filter((it) => it.class === 'card')
+                          .map((it) => <option value={it.id} label={it.name} key={it.id} />)
+                      : null}
                   </select>
                   <div className="pointer-events-none hidden absolute top-0 mt-3 right-0 lg:flex items-center px-2 text-gray-600">
                     <svg
@@ -682,6 +688,7 @@ const Car = ({
                     </option>
                     <option value="rus">Отечественные</option>
                     <option value="foreign">Иномарки</option>
+                    <option value="card">Безнал</option>
                   </select>
                   <div className="pointer-events-none hidden absolute top-0 mt-3 right-0 lg:flex items-center px-2 text-gray-600">
                     <svg

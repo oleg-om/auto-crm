@@ -19,7 +19,7 @@ import { socket } from '../../redux/sockets/socketReceivers'
 import onLoad from './Onload'
 import { Loading } from '../Shinomontazhs/Shinomontazhs.list'
 
-const RazvalList = () => {
+const RazvalList = ({ isOil = false, isRazval = true }) => {
   const [activeDay, setActiveDay] = useState(new Date())
   onLoad(activeDay)
   toast.configure()
@@ -153,6 +153,16 @@ const RazvalList = () => {
     notify('Сотрудник удален')
   }
 
+  const filterByType = (it) => {
+    if (isRazval) {
+      return it.razval === 'true'
+    }
+    if (isOil) {
+      return it.oil === 'true'
+    }
+    return true
+  }
+
   return (
     <div>
       <Navbar />
@@ -163,7 +173,7 @@ const RazvalList = () => {
             <div className="rounded-lg relative lg:my-3 mt-1 flex flex-wrap mx-3">
               {place
                 .filter((it) => it.id === auth.place)
-                .filter((it) => it.razval === 'true' || it.oil === 'true')
+                .filter((it) => filterByType(it))
                 .map((it) => (
                   <div key={it.id}>
                     <RazvalRow
@@ -180,13 +190,15 @@ const RazvalList = () => {
                       activePlace="true"
                       activeAdress={auth.place}
                       activeRole={auth.roles}
+                      isOil={isOil}
+                      isRazval={isRazval}
                       {...it}
                     />
                   </div>
                 ))}
               {place
                 .filter((it) => it.id !== auth.place)
-                .filter((it) => it.razval === 'true' || it.oil === 'true')
+                .filter((it) => filterByType(it))
                 .map((it) => (
                   <div key={it.id}>
                     <RazvalRow
@@ -203,6 +215,8 @@ const RazvalList = () => {
                       activePlace="false"
                       activeAdress={auth.place}
                       activeRole={auth.roles}
+                      isOil={isOil}
+                      isRazval={isRazval}
                       {...it}
                     />
                   </div>

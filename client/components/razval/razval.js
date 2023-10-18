@@ -14,7 +14,7 @@ export const arrayFromNumber = (num, type) =>
 
 const SHOW_OIL_ICONS = true
 
-const OilIcons = ({ item }) => {
+export const OilIcons = ({ item }) => {
   const purchasedFromUs = item?.purchasedFromUs
   const bottledOil = item?.bottledOil
 
@@ -75,12 +75,12 @@ const RazvalRow = (props) => {
               <th className="p-3 font-bold uppercase bg-gray-100 text-gray-600 border border-gray-300 hidden lg:table-cell">
                 Время
               </th>
-              {props.adress.razval === 'true' ? (
+              {props?.isRazval && props.adress.razval === 'true' ? (
                 <th className="p-3 font-bold uppercase bg-gray-100 text-gray-600 border border-gray-300 hidden lg:table-cell">
                   Развал
                 </th>
               ) : null}
-              {props.adress.oil === 'true' ? (
+              {props?.isOil && props.adress.oil === 'true' ? (
                 <th className="p-3 font-bold uppercase bg-gray-100 text-gray-600 border border-gray-300 hidden lg:table-cell">
                   Замена масла
                 </th>
@@ -96,7 +96,7 @@ const RazvalRow = (props) => {
                 <td className="w-full lg:w-auto p-2 text-gray-800 text-left lg:text-center border border-b block lg:table-cell relative lg:static">
                   {it}
                 </td>
-                {props.adress.razval === 'true' ? (
+                {props?.isRazval && props.adress.razval === 'true' ? (
                   <td className="w-full lg:w-auto p-2 text-gray-800 text-left lg:text-center border border-b block lg:table-cell relative lg:static">
                     {props.razvalList
                       .filter(
@@ -226,7 +226,7 @@ const RazvalRow = (props) => {
                     </div>
                   </td>
                 ) : null}
-                {props.adress.oil === 'true' ? (
+                {props?.isOil && props.adress.oil === 'true' ? (
                   <td className="w-full lg:w-auto p-2 text-gray-800 text-left lg:text-center border border-b block lg:table-cell relative lg:static">
                     {props.oilList
                       .filter(
@@ -381,7 +381,7 @@ const RazvalRow = (props) => {
             <th className="p-3 font-bold uppercase bg-gray-100 text-gray-600 border border-gray-300 hidden lg:table-cell">
               Время
             </th>
-            {props.adress.razval === 'true' ? (
+            {props?.isRazval && props.adress.razval === 'true' ? (
               <>
                 {arrayFromNumber(props.razvalquantity).map((it) => (
                   <th
@@ -398,7 +398,7 @@ const RazvalRow = (props) => {
                 ))}
               </>
             ) : null}
-            {props.adress.oil === 'true' ? (
+            {props?.isOil && props.adress.oil === 'true' ? (
               <>
                 {arrayFromNumber(props.oilquantity).map((it) => (
                   <th
@@ -426,7 +426,7 @@ const RazvalRow = (props) => {
               <td className="w-full lg:w-auto p-2 text-gray-800 text-left lg:text-center border border-b block lg:table-cell relative lg:static">
                 {it}
               </td>
-              {props.adress.razval === 'true' ? (
+              {props?.isRazval && props.adress.razval === 'true' ? (
                 <>
                   {arrayFromNumber(props.razvalquantity).map((raz) => (
                     <td
@@ -576,7 +576,7 @@ const RazvalRow = (props) => {
                   ))}
                 </>
               ) : null}
-              {props.adress.oil === 'true' ? (
+              {props?.isOil && props.adress.oil === 'true' ? (
                 <>
                   {arrayFromNumber(props.oilquantity).map((oill) => (
                     <td

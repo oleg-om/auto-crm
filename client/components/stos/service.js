@@ -7,7 +7,6 @@ import { getActualPrice } from '../../utils/services'
 const Service = ({
   actualService,
   service,
-
   checkboxServiceChange,
   servicePlusChange,
   serviceMinusChange,

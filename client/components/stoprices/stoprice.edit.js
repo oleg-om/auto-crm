@@ -30,9 +30,13 @@ const StopriceUpdate = (props) => {
     foreignSecond: props.foreignSecond,
     foreignThird: props.foreignThird,
 
+    cardAmbulanceForeign: props?.cardAmbulanceForeign,
+    cardAmbulanceOur: props?.cardAmbulanceOur,
+
     number: props.number,
     free: props.free
   })
+  console.log('st', state)
   const removeStoprice = (e) => {
     props.deleteStoprice(props.id, e.target.value)
     history.push(`/stoprice/list/${props.type}`)
@@ -382,6 +386,45 @@ const StopriceUpdate = (props) => {
                 value={state.foreignThird}
                 name="foreignThird"
                 id="foreignThird"
+                type="number"
+                placeholder="Введите цену"
+                onChange={onChange}
+              />
+            </div>
+          </div>
+        ) : null}
+
+        {state.type === 'card' ? (
+          <div className="-mx-3 md:flex flex-wrap mt-3">
+            <div className="md:w-1/5 px-3 mb-6 md:mb-0 flex flex-col">
+              <label
+                className="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2"
+                htmlFor="grid-first-name"
+              >
+                Скорая (газель)
+              </label>
+              <input
+                className="appearance-none block w-full bg-grey-lighter text-grey-darker border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-3 px-4 mb-3"
+                value={state.cardAmbulanceOur}
+                name="cardAmbulanceOur"
+                id="cardAmbulanceOur"
+                type="number"
+                placeholder="Введите цену"
+                onChange={onChange}
+              />
+            </div>
+            <div className="md:w-1/5 px-3 mb-6 md:mb-0 flex flex-col">
+              <label
+                className="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2"
+                htmlFor="grid-first-name"
+              >
+                Скорая (Ford)
+              </label>
+              <input
+                className="appearance-none block w-full bg-grey-lighter text-grey-darker border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-3 px-4 mb-3"
+                value={state.cardAmbulanceForeign}
+                name="cardAmbulanceForeign"
+                id="cardAmbulanceForeign"
                 type="number"
                 placeholder="Введите цену"
                 onChange={onChange}

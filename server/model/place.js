@@ -97,6 +97,20 @@ const Place = new mongoose.Schema({
     type: Number,
     required: false,
     default: () => 10
+  },
+  sto: {
+    type: String,
+    required: false
+  },
+  stoType: {
+    type: String,
+    required: false,
+    default: () => 'classic'
+  },
+  oilType: {
+    type: String,
+    required: false,
+    default: () => 'classic'
   }
 })
 

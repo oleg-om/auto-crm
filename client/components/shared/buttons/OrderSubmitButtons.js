@@ -64,7 +64,7 @@ export const ServiceSubmitButtons = ({ active, props, nextStep, change, preChang
             onClick={change}
             type="submit"
           >
-            Завершить
+            {props?.status === 'Новая запись' ? 'В работу' : 'Завершить'}
           </button>
         </div>
       ) : null}

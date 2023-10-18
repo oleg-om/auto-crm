@@ -13,5 +13,6 @@ router.patch('/sto/:id', stosController.update)
 router.delete('/sto/:id', stosController.delete)
 router.get('/stolast/', stosController.getLastTwoDays)
 router.get('/storange/', stosController.getRange)
+router.get('/stopreentry/', stosController.getMonthForPreentry)
 
 module.exports = router

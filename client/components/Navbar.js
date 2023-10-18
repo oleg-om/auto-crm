@@ -101,6 +101,28 @@ const Navbar = () => {
               Развал
             </NavLink>
           ) : null}
+          {auth.roles.includes('razval') ||
+          auth.roles.includes('boss') ||
+          auth.roles.includes('admin') ? (
+            <NavLink
+              to="/oil/list"
+              className="block mt-4 lg:inline-block lg:mt-0 text-gray-800 hover:text-blue-700 mr-4"
+              activeClassName="text-blue-600 underline font-semibold"
+            >
+              Масло (старый)
+            </NavLink>
+          ) : null}
+          {auth.roles.includes('razval') ||
+          auth.roles.includes('boss') ||
+          auth.roles.includes('admin') ? (
+            <NavLink
+              to="/preentry/oil"
+              className="block mt-4 lg:inline-block lg:mt-0 text-gray-800 hover:text-blue-700 mr-4"
+              activeClassName="text-blue-600 underline font-semibold"
+            >
+              Масло
+            </NavLink>
+          ) : null}
           {auth.roles.includes('tyrefull') ||
           auth.roles.includes('tyresimple') ||
           auth.roles.includes('boss') ||

@@ -7,6 +7,7 @@ import ComponentToPrint from '../razval/razval.pre.print'
 import 'react-toastify/dist/ReactToastify.css'
 import { getTime } from './ShinomontazhEntryRow'
 import { isoDateWithoutTimeZone } from './ShinomontazhEntryCreate'
+import OilType from '../razval/containers/OilType'
 
 const statusList = [
   'Новая запись',
@@ -37,7 +38,6 @@ const ModalView = ({
   open,
   onClose,
   itemId,
-
   itemType,
   updateRazval,
   updateOil,
@@ -50,8 +50,14 @@ const ModalView = ({
   const [changeStatus, setChangeStatus] = useState({
     status: '',
     staroge: null,
-    comment: ''
+    comment: '',
+    purchasedFromUs: false,
+    bottledOil: false
   })
+
+  const isShinomontazh = preentryType === 'shinomontazh'
+  // const isSto = preentryType === 'sto'
+  const isOil = preentryType === 'oil'
 
   const [storageOptions, setStorageOptions] = useState()
 
@@ -84,7 +90,9 @@ const ModalView = ({
     setChangeStatus({
       status: itemId.status,
       storage: itemId?.storage || null,
-      comment: itemId?.comment || ''
+      comment: itemId?.comment || '',
+      purchasedFromUs: itemId?.purchasedFromUs || false,
+      bottledOil: itemId?.bottledOil || false
     })
     return () => {}
   }, [itemId])
@@ -256,7 +264,7 @@ const ModalView = ({
                     Услуга: <b>{itemType}</b>
                   </p>
                   <p className="text-sm leading-5 text-gray-900 mb-2">
-                    Номер заказа: <b>{itemId[`id_${preentryType}s`]}</b>
+                    Номер заказа: <b>{itemId[`id_${isOil ? 'sto' : preentryType}s`]}</b>
                   </p>
                   {/* {itemId?.storage ? (
                     <p className="text-sm leading-5 text-gray-900 mb-2">
@@ -283,37 +291,52 @@ const ModalView = ({
                   {itemId.dateofcreate ? (
                     <p className="text-sm leading-5 text-gray-900">Заказ принят: {dateCreate}</p>
                   ) : null}
-                  <div className="mt-3 flex flex-col">
-                    <label
-                      className="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2"
-                      htmlFor="phone"
-                    >
-                      Хранение, №
-                    </label>
-                    <div className="flex-shrink w-full inline-block relative">
-                      <input
-                        className="block appearance-none w-full bg-grey-lighter border border-gray-300 focus:border-gray-500 focus:outline-none py-1 px-4 pr-8 rounded"
-                        type="number"
-                        name="storage"
-                        id="storage"
-                        list="storage_list"
-                        placeholder="Номер хранения"
-                        value={changeStatus?.storage || ''}
-                        onChange={onChangeStatus}
-                      />
-                      {changeStatus?.storage && storageOptions && storageOptions?.data?.length ? (
-                        <datalist id="storage_list">
-                          {storageOptions?.data.map((it, index) => (
-                            <option
-                              key={index}
-                              value={it.id_storages}
-                              label={`№${it.id_storages}, ${it?.phone || ''}, ${it?.name || ''}`}
-                            />
-                          ))}
-                        </datalist>
-                      ) : null}
+                  {isShinomontazh ? (
+                    <div className="mt-3 flex flex-col">
+                      <label
+                        className="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2"
+                        htmlFor="phone"
+                      >
+                        Хранение, №
+                      </label>
+                      <div className="flex-shrink w-full inline-block relative">
+                        <input
+                          className="block appearance-none w-full bg-grey-lighter border border-gray-300 focus:border-gray-500 focus:outline-none py-1 px-4 pr-8 rounded"
+                          type="number"
+                          name="storage"
+                          id="storage"
+                          list="storage_list"
+                          placeholder="Номер хранения"
+                          value={changeStatus?.storage || ''}
+                          onChange={onChangeStatus}
+                        />
+                        {changeStatus?.storage && storageOptions && storageOptions?.data?.length ? (
+                          <datalist id="storage_list">
+                            {storageOptions?.data.map((it, index) => (
+                              <option
+                                key={index}
+                                value={it.id_storages}
+                                label={`№${it.id_storages}, ${it?.phone || ''}, ${it?.name || ''}`}
+                              />
+                            ))}
+                          </datalist>
+                        ) : null}
+                      </div>
                     </div>
-                  </div>
+                  ) : null}
+                  {isOil ? (
+                    <>
+                      {activeAdress === itemId.place &&
+                      itemId.status !== 'Оплачено' &&
+                      itemId.status !== 'Работа выполнена' &&
+                      itemId.status !== 'Терминал' &&
+                      itemId.status !== 'Безнал' ? (
+                        <OilType onChange={onChangeStatus} state={changeStatus} />
+                      ) : (
+                        <OilType onChange={() => {}} state={changeStatus} />
+                      )}
+                    </>
+                  ) : null}
                   {activeAdress === itemId.place &&
                   itemId.status !== 'Оплачено' &&
                   itemId.status !== 'Работа выполнена' &&
@@ -427,7 +450,9 @@ const ModalView = ({
             {activeAdress === itemId.place && itemId.status === 'Новая запись' ? (
               <span className="flex w-full rounded-md shadow-sm sm:ml-3 sm:w-auto">
                 <a
-                  href={`/${preentryType}/edit/${itemId[`id_${preentryType}s`]}?from=preentry`}
+                  href={`/${isOil ? 'sto' : preentryType}/edit/${
+                    itemId[`id_${isOil ? 'sto' : preentryType}s`]
+                  }?from=preentry`}
                   className="inline-flex whitespace-nowrap justify-center w-full rounded-md border border-transparent px-4 py-2 bg-orange-600 text-base leading-6 font-medium text-white shadow-sm hover:bg-orange-500 focus:outline-none focus:border-orange-700 focus:shadow-outline-orange transition ease-in-out duration-150 sm:text-sm sm:leading-5"
                 >
                   В работу

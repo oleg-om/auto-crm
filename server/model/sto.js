@@ -94,6 +94,45 @@ const Sto = new mongoose.Schema({
   mileage: {
     type: Number,
     required: false
+  },
+
+  // for preentry
+  access: {
+    type: String,
+    required: false
+    // default: 'true'
+  },
+  datePreentry: {
+    type: Date,
+    required: false
+  },
+  employeeplace: {
+    type: String,
+    required: false
+  },
+  employeePreentry: {
+    type: String,
+    required: false
+  },
+  name: {
+    type: String,
+    required: false
+  },
+  phone: {
+    type: String,
+    required: false
+  },
+  isOil: {
+    type: Boolean,
+    required: false
+  },
+  purchasedFromUs: {
+    type: Boolean,
+    required: false
+  },
+  bottledOil: {
+    type: Boolean,
+    required: false
   }
 })
 

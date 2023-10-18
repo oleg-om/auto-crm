@@ -13,7 +13,8 @@ import OnLoad from '../Categorys/Onload'
 
 const StoTypeList = [
   { value: 'rus', name: 'Отечественные' },
-  { value: 'foreign', name: 'Иномарки' }
+  { value: 'foreign', name: 'Иномарки' },
+  { value: 'card', name: 'Безнал' }
 ]
 
 const StopriceList = () => {
@@ -102,7 +103,6 @@ const StopriceList = () => {
                   <th className="p-3 uppercase bg-gray-100 text-gray-600 border border-gray-300 hidden lg:table-cell">
                     Категория
                   </th>
-
                   <th className="p-3 uppercase bg-gray-100 text-gray-600 border border-gray-300 hidden lg:table-cell">
                     Номер
                   </th>

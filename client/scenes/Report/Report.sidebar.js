@@ -15,7 +15,7 @@ const ReportSidebar = (props) => {
   useEffect(() => {
     dispatch(updateCurrentEmployeeReport(''))
     return () => {}
-  }, [props?.place])
+  }, [props?.place, props?.calendarType, props?.active, props.activeMonth])
 
   const timeOptions = [
     '00:00',

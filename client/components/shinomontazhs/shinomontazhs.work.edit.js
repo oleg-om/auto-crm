@@ -94,12 +94,6 @@ const ShinomontazhsEdit = (props) => {
     const removeItem = regNumber.filter((element, index) => index < regNumber.length - 1)
     setRegNumber(removeItem)
   }
-  // useEffect(() => {
-  //   setState((prevState) => ({
-  //     ...prevState,
-  //     regnumber: regNumber.join('').toString()
-  //   }))
-  // }, [regNumber])
 
   const checkboxEmployeeChange = (e) => {
     const { name, placeholder, checked, attributes } = e.target
@@ -174,11 +168,6 @@ const ShinomontazhsEdit = (props) => {
     }))
   }
 
-  // const switchKeyboard = () => {
-  //   setKeyboard(true)
-  //   setRegOpen(false)
-  // }
-
   const acceptRegnumber = () => {
     setRegOpen(false)
   }
@@ -208,17 +197,6 @@ const ShinomontazhsEdit = (props) => {
     activeCustomer,
     setActiveCustomer
   } = useFindCustomer(props, state)
-  // const [customer, setCustomer] = useState({
-  //   regnumber: '',
-  //   vinnumber: '',
-  //   mark: '',
-  //   model: '',
-  //   gen: '',
-  //   mod: '',
-  //   name: '',
-  //   phone: '',
-  //   idOfItem: ''
-  // })
 
   const onChangeMark = (e) => {
     const { value } = e.target
@@ -259,73 +237,6 @@ const ShinomontazhsEdit = (props) => {
       model: value
     }))
   }
-
-  // const [search, setSearch] = useState()
-  // const [activeCustomer, setActiveCustomer] = useState('')
-
-  // // find client
-  // useEffect(() => {
-  //   if (props.customerId && !activeCustomer) {
-  //     setActiveCustomer(props.customerId)
-  //     setSearch(props.customerId)
-  //   }
-  //   return () => {}
-  // }, [props.customerId])
-
-  // const [customerList, setCustomerOptions] = useState([])
-
-  // // eslint-disable-next-line no-unused-vars
-  // const throttling = useRef(false)
-
-  // useEffect(() => {
-  //   // if (throttling.current) {
-  //   //   return
-  //   // }
-
-  //   // If there is no search term, do not make API call
-  //   throttling.current = true
-  //   setTimeout(() => {
-  //     throttling.current = false
-  //     if (state.regnumber !== '' && state.regnumber.length > 4) {
-  //       fetch(
-  //         `/api/v1/customerfind/${state.regnumber ? state.regnumber : 'reg'}/${
-  //           state.vinnumber ? state.vinnumber : 'vin'
-  //         }/${state.phone ? state.phone : 'phone'}`
-  //       )
-  //         .then((res) => res.json())
-  //         .then((it) => {
-  //           setCustomerOptions(it.data)
-  //         })
-  //     } else if (state.regnumber === '') {
-  //       setCustomerOptions([])
-  //     }
-  //   }, 200)
-  // }, [state.regnumber])
-
-  // useEffect(() => {
-  //   if (props.customerId) {
-  //     fetch(`/api/v1/customer/${props.customerId}`)
-  //       .then((res) => res.json())
-  //       .then((it) => {
-  //         if (it?.data) {
-  //           setCustomerOptions([it.data])
-  //           setCustomer({ ...it.data, idOfItem: it.data.id })
-  //         }
-  //       })
-  //   }
-  // }, [props.customerId])
-
-  // useEffect(() => {
-  //   if (state.regnumber !== '') {
-  //     setCustomerOptions(
-  //       customerList.filter(
-  //         (it) => it.regnumber === state.regnumber && it.regnumber !== '' && state.regnumber !== ''
-  //       )
-  //     )
-  //   } else if (state.regnumber === '') {
-  //     setCustomerOptions([])
-  //   }
-  // }, [state.regnumber])
 
   useEffect(() => {
     const findCar = options.mark ? options.mark.find((it) => props.mark === it.name) : null
@@ -541,67 +452,6 @@ const ShinomontazhsEdit = (props) => {
   }, [state.diametr, state.kuzov, shinomontazhprices])
 
   const [active, setActive] = useState(isFromPreentry ? 'employee' : 'finish')
-  // const checkboxServiceChange = (e) => {
-  //   const { name, placeholder, checked, attributes } = e.target
-  //   if (checked) {
-  //     setService((prevState) => [
-  //       ...prevState,
-  //       {
-  //         serviceName: name,
-  //         quantity: 1,
-  //         price: placeholder,
-  //         name: attributes.somename.value,
-  //         free: attributes.somefree.value
-  //       }
-  //     ])
-  //   } else {
-  //     setService((prevState) => prevState.filter((it) => it.serviceName !== name))
-  //   }
-  // }
-  // const servicePlusChange = (e) => {
-  //   const { name } = e.target
-  //   setService(
-  //     service.map((object) => {
-  //       if (object.serviceName === name) {
-  //         return {
-  //           ...object,
-  //           quantity: object.quantity + 1
-  //         }
-  //       }
-  //       return object
-  //     })
-  //   )
-  // }
-
-  // const serviceMinusChange = (e) => {
-  //   const { name } = e.target
-  //   setService(
-  //     service.map((object) => {
-  //       if (object.serviceName === name && object.quantity >= 2) {
-  //         return {
-  //           ...object,
-  //           quantity: object.quantity - 1
-  //         }
-  //       }
-  //       return object
-  //     })
-  //   )
-  // }
-
-  // const servicePriceChange = (e) => {
-  //   const { value, id } = e.target
-  //   setService(
-  //     service.map((object) => {
-  //       if (object.serviceName === id) {
-  //         return {
-  //           ...object,
-  //           price: value
-  //         }
-  //       }
-  //       return object
-  //     })
-  //   )
-  // }
 
   const dispatch = useDispatch()
 

@@ -1,10 +1,8 @@
 import React, { useState } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import { Link, useLocation } from 'react-router-dom'
-// import { Link } from 'react-router-dom'
 import { toast } from 'react-toastify'
 import { deleteEmployee } from '../../redux/reducers/employees'
-
 import { createCustomer } from '../../redux/reducers/customers'
 import Navbar from '../../components/Navbar'
 import RazvalSidebar from './ShinomontazhPreentry.sidebar'
@@ -23,6 +21,7 @@ import {
   deleteShinomontazhPreentry
 } from '../../redux/reducers/shinomontazhs'
 import { Loading } from '../Shinomontazhs/Shinomontazhs.list'
+import { createStoPreentry, deleteStoPreentry, updateStoPreentry } from '../../redux/reducers/stos'
 
 const PreentryList = () => {
   const location = useLocation()
@@ -33,24 +32,40 @@ const PreentryList = () => {
     if (location?.pathname.includes('/shinomontazh')) {
       return 'shinomontazh'
     }
-    return 'shinomontazh'
+    if (location?.pathname.includes('/oil')) {
+      return 'oil'
+    }
+    return 'sto'
   }
   const getPreentryTypeRus = () => {
     if (location?.pathname.includes('/shinomontazh')) {
       return 'Шиномонтаж'
     }
-    return 'Шиномонтаж'
+    if (location?.pathname.includes('/oil')) {
+      return 'Замена масла'
+    }
+    return 'Сто'
   }
 
   const preentryType = getPreentryType()
   const preentryTypeRus = getPreentryTypeRus()
 
   const isShinomontazh = preentryType === 'shinomontazh'
+  const isSto = preentryType === 'sto'
+  const isOil = preentryType === 'oil'
 
   const getPreentryCreateFunc = (it) => {
     if (isShinomontazh) {
       dispatch(createShinomontazhPreentry(it))
       socket.emit('new shinomontazh', { name: it })
+    }
+    if (isSto) {
+      dispatch(createStoPreentry(it))
+      socket.emit('new sto', { name: it })
+    }
+    if (isOil) {
+      dispatch(createStoPreentry({ ...it, isOil: true }))
+      socket.emit('new sto', { name: it })
     }
     return () => {}
   }
@@ -60,12 +75,19 @@ const PreentryList = () => {
       dispatch(updateShinomontazhPreentry(id, it))
       socket.emit('edit shinomontazh', { name: it })
     }
+    if (isSto || isOil) {
+      dispatch(updateStoPreentry(id, it))
+      socket.emit('edit sto', { name: it })
+    }
     return () => {}
   }
 
   const getPreentryDeleteFunc = (id) => {
     if (isShinomontazh) {
       dispatch(deleteShinomontazhPreentry(id))
+    }
+    if (isSto || isOil) {
+      dispatch(deleteStoPreentry(id))
     }
     return () => {}
   }
@@ -81,16 +103,61 @@ const PreentryList = () => {
   const employee = useSelector((s) => s.employees.list)
 
   const shinomontazhList = useSelector((s) => s.shinomontazhs.preentryList)
-  const isLoaded = useSelector((s) => s.shinomontazhs.preentryIsLoaded)
+  const stoList = useSelector((s) => s.stos.preentryList)
+  const shinomontazhIsLoaded = useSelector((s) => s.shinomontazhs.preentryIsLoaded)
+  const stoIsLoaded = useSelector((s) => s.stos.preentryIsLoaded)
+  const getIsLoaded = () => {
+    if (isShinomontazh) {
+      return shinomontazhIsLoaded
+    }
+    if (isSto || isOil) {
+      return stoIsLoaded
+    }
+    return false
+  }
+
+  const isLoaded = getIsLoaded()
 
   const getData = () => {
     if (isShinomontazh) {
       return shinomontazhList
     }
+    if (isSto || isOil) {
+      return stoList
+    }
     return []
   }
 
   const dataList = getData()
+
+  const getBoxesAmount = () => {
+    if (isShinomontazh) {
+      return 'shinomontazhquantity'
+    }
+    if (isSto) {
+      return 'stoboxes'
+    }
+    if (isOil) {
+      return 'oilquantity'
+    }
+    return ''
+  }
+
+  const getViewType = () => {
+    if (isShinomontazh) {
+      return 'shinomontazhType'
+    }
+    if (isSto) {
+      return 'stoType'
+    }
+    if (isOil) {
+      return 'razvalAndOilType'
+    }
+    return ''
+  }
+
+  const boxesAmount = getBoxesAmount()
+  const viewType = getViewType()
 
   const auth = useSelector((s) => s.auth)
   const [isOpen, setIsOpen] = useState(false)
@@ -181,7 +248,7 @@ const PreentryList = () => {
   return (
     <div>
       <Navbar />
-      <div className="flex flex-row">
+      <div className="flex flex-row" key={preentryType}>
         <RazvalSidebar setActiveDay={setActiveDay} activeDay={activeDay} />
         <div className="w-full mx-auto my-2">
           {isLoaded ? (
@@ -206,7 +273,8 @@ const PreentryList = () => {
                       activeRole={auth.roles}
                       preentryType={preentryType}
                       preentryTypeRus={preentryTypeRus}
-                      viewType={it[`${preentryType}Type`]}
+                      viewType={viewType}
+                      boxesAmount={boxesAmount}
                       {...it}
                     />
                   </div>
@@ -231,7 +299,8 @@ const PreentryList = () => {
                       activeRole={auth.roles}
                       preentryType={preentryType}
                       preentryTypeRus={preentryTypeRus}
-                      viewType={it[`${preentryType}Type`]}
+                      viewType={viewType}
+                      boxesAmount={boxesAmount}
                       {...it}
                     />
                   </div>
@@ -307,7 +376,7 @@ const PreentryList = () => {
           preentryType={preentryType}
         />
       </div>
-      <Link to="/shinomontazh/create/">
+      <Link to={`/${preentryType}/create/`}>
         <button
           type="button"
           className="fixed bottom-0 right-0 p-6 shadow bg-blue-600 text-white opacity-75 text-2xl hover:opacity-100 hover:bg-blue-700 hover:text-white rounded-full my-3 mx-3"

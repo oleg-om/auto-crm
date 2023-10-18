@@ -78,6 +78,14 @@ const StoPrice = new mongoose.Schema({
   foreignThird: {
     type: Number,
     required: false
+  },
+  cardAmbulanceForeign: {
+    type: Number,
+    required: false
+  },
+  cardAmbulanceOur: {
+    type: Number,
+    required: false
   }
 })
 
