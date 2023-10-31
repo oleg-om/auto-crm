@@ -129,10 +129,9 @@ const SalaryByDay = ({
                               key={man.id}
                               onClick={onEmployeeClick}
                               value={man.id}
-                              className="text-left hover:underline"
+                              className="text-left hover:underline pr-3"
                             >
                               {man.name} {man.surname}
-                              {', '}
                             </button>
                           ))}
                       </td>
