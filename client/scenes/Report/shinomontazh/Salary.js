@@ -132,6 +132,7 @@ const SalaryByDay = ({
                               className="text-left hover:underline"
                             >
                               {man.name} {man.surname}
+                              {', '}
                             </button>
                           ))}
                       </td>
