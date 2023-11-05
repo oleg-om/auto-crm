@@ -70,7 +70,7 @@ const StopriceImport = (props) => {
     if (loadingData === undefined) notify('Загрузите файл')
     else {
       props.create(loadingData)
-      history.push(`/stoprice/list/legk`)
+      history.push(`/stoprice/list/rus`)
       notify('Услуги добавлены')
       props.getStoprice()
     }

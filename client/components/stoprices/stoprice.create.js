@@ -74,7 +74,7 @@ const StopriceCreate = (props) => {
     else if (!state.type) notify('Поле Тип пустое')
     else {
       props.create(state)
-      history.push(`/stoprice/list/legk`)
+      history.push(`/stoprice/list/rus`)
       notify('Услуга добавлена')
     }
   }
