@@ -56,6 +56,9 @@ const StopriceCreate = (props) => {
     cardAmbulanceForeign: '',
     cardAmbulanceOur: '',
 
+    minGazel: '',
+    minLoganDuster: '',
+
     number: '',
     free: ''
   })
@@ -446,6 +449,40 @@ const StopriceCreate = (props) => {
                 value={state.cardAmbulanceForeign}
                 name="cardAmbulanceForeign"
                 id="cardAmbulanceForeign"
+                type="number"
+                placeholder="Введите цену"
+                onChange={onChange}
+              />
+            </div>
+            <div className="md:w-1/5 px-3 mb-6 md:mb-0 flex flex-col">
+              <label
+                className="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2"
+                htmlFor="grid-first-name"
+              >
+                Минтранс (Газель)
+              </label>
+              <input
+                className="appearance-none block w-full bg-grey-lighter text-grey-darker border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-3 px-4 mb-3"
+                value={state.minGazel}
+                name="minGazel"
+                id="minGazel"
+                type="number"
+                placeholder="Введите цену"
+                onChange={onChange}
+              />
+            </div>
+            <div className="md:w-1/5 px-3 mb-6 md:mb-0 flex flex-col">
+              <label
+                className="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2"
+                htmlFor="grid-first-name"
+              >
+                Минтранс (Логан-Дастер)
+              </label>
+              <input
+                className="appearance-none block w-full bg-grey-lighter text-grey-darker border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-3 px-4 mb-3"
+                value={state.minLoganDuster}
+                name="minLoganDuster"
+                id="minLoganDuster"
                 type="number"
                 placeholder="Введите цену"
                 onChange={onChange}

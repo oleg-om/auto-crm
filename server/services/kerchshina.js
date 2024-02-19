@@ -121,74 +121,74 @@ async function kerchshinaCheck(io) {
                 quantity: rec.quantity,
                 brand: brandsnew.find(
                   (item) => item.id === productssnew.find((it) => it.id === rec.product_id).brand_id
-                ).title,
+                )?.title,
                 model: modelsnew.find(
                   (item) => item.id === productssnew.find((it) => it.id === rec.product_id).model_id
-                ).title,
-                type: productssnew.find((it) => it.id === rec.product_id).category_id,
+                )?.title,
+                type: productssnew.find((it) => it.id === rec.product_id)?.category_id,
                 sizeone:
                   productssnew.find((it) => it.id === rec.product_id).category_id === '1'
-                    ? productssnew.find((it) => it.id === rec.product_id).size1
+                    ? productssnew.find((it) => it.id === rec.product_id)?.size1
                     : '',
                 sizetwo:
                   productssnew.find((it) => it.id === rec.product_id).category_id === '1'
-                    ? productssnew.find((it) => it.id === rec.product_id).size2
+                    ? productssnew.find((it) => it.id === rec.product_id)?.size2
                     : '',
                 sizethree:
                   productssnew.find((it) => it.id === rec.product_id).category_id === '1'
-                    ? productssnew.find((it) => it.id === rec.product_id).size3
+                    ? productssnew.find((it) => it.id === rec.product_id)?.size3
                     : '',
                 indexone:
                   productssnew.find((it) => it.id === rec.product_id).category_id === '1'
-                    ? productssnew.find((it) => it.id === rec.product_id).f1
+                    ? productssnew.find((it) => it.id === rec.product_id)?.f1
                     : '',
                 indextwo:
                   productssnew.find((it) => it.id === rec.product_id).category_id === '1'
-                    ? productssnew.find((it) => it.id === rec.product_id).f2
+                    ? productssnew.find((it) => it.id === rec.product_id)?.f2
                     : '',
                 season:
                   productssnew.find((it) => it.id === rec.product_id).category_id === '1'
-                    ? productssnew.find((it) => it.id === rec.product_id).season
+                    ? productssnew.find((it) => it.id === rec.product_id)?.season
                     : '',
                 stud:
                   productssnew.find((it) => it.id === rec.product_id).category_id === '1'
-                    ? productssnew.find((it) => it.id === rec.product_id).stud
+                    ? productssnew.find((it) => it.id === rec.product_id)?.stud
                     : '',
                 diametr:
                   productssnew.find((it) => it.id === rec.product_id).category_id === '2'
-                    ? productssnew.find((it) => it.id === rec.product_id).size1
+                    ? productssnew.find((it) => it.id === rec.product_id)?.size1
                     : '',
                 pcd:
                   productssnew.find((it) => it.id === rec.product_id).category_id === '2'
-                    ? productssnew.find((it) => it.id === rec.product_id).size2
+                    ? productssnew.find((it) => it.id === rec.product_id)?.size2
                     : '',
                 et:
                   productssnew.find((it) => it.id === rec.product_id).category_id === '2'
-                    ? productssnew.find((it) => it.id === rec.product_id).et
+                    ? productssnew.find((it) => it.id === rec.product_id)?.et
                     : '',
                 dia:
                   productssnew.find((it) => it.id === rec.product_id).category_id === '2'
-                    ? productssnew.find((it) => it.id === rec.product_id).hub
+                    ? productssnew.find((it) => it.id === rec.product_id)?.hub
                     : '',
                 wheelwidth:
                   productssnew.find((it) => it.id === rec.product_id).category_id === '2'
-                    ? productssnew.find((it) => it.id === rec.product_id).size3
+                    ? productssnew.find((it) => it.id === rec.product_id)?.size3
                     : '',
                 tok:
                   productssnew.find((it) => it.id === rec.product_id).category_id === '3'
-                    ? productssnew.find((it) => it.id === rec.product_id).current
+                    ? productssnew.find((it) => it.id === rec.product_id)?.current
                     : '',
                 emkost:
                   productssnew.find((it) => it.id === rec.product_id).category_id === '3'
-                    ? productssnew.find((it) => it.id === rec.product_id).ah
+                    ? productssnew.find((it) => it.id === rec.product_id)?.ah
                     : '',
                 typeakb:
                   productssnew.find((it) => it.id === rec.product_id).category_id === '3'
-                    ? productssnew.find((it) => it.id === rec.product_id).f1
+                    ? productssnew.find((it) => it.id === rec.product_id)?.f1
                     : '',
                 polar:
                   productssnew.find((it) => it.id === rec.product_id).category_id === '3'
-                    ? productssnew.find((it) => it.id === rec.product_id).f2
+                    ? productssnew.find((it) => it.id === rec.product_id)?.f2
                     : ''
               }
             : null

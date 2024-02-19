@@ -86,6 +86,14 @@ const StoPrice = new mongoose.Schema({
   cardAmbulanceOur: {
     type: Number,
     required: false
+  },
+  minGazel: {
+    type: Number,
+    required: false
+  },
+  minLoganDuster: {
+    type: Number,
+    required: false
   }
 })
 

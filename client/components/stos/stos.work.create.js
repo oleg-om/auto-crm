@@ -744,8 +744,7 @@ const StosCreate = (props) => {
     if (active === 'employee') {
       if (employees.length < 1) {
         notify('Сначала выберите сотрудников')
-      }
-      if (!box) {
+      } else if (!box) {
         notify('Выберите бокс')
       } else {
         setActive('car')
