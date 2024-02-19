@@ -3,6 +3,8 @@ import Tyre from '../model/tyres'
 import Setting from '../model/settings'
 import tyresController from '../controller/tyres.controller'
 
+const LAST_ORDER = 3292
+
 function takeOrderNumber() {
   return new Promise((resolve) => {
     Tyre.find()
@@ -36,7 +38,9 @@ async function takeOrderFromKerchshina() {
       fetch('http://kerchshina.com/api/orders')
         .then((response) => response.json())
         // .then((data) => (data.find((it) => it.Order.id === JSON.stringify(result))? data.find((it) => it.Order.id === JSON.stringify(result)) : data.find((it) => it.Order.id === JSON.stringify(result+1))))
-        .then((data) => data.find((it) => Number(it.Order.id) >= result))
+        .then((data) =>
+          data.find((it) => Number(it.Order.id) >= result && Number(it.Order.id) >= LAST_ORDER)
+        )
         .then((data) => (data ? resolve(data) : console.log('There is no new orders')))
         .catch((err) => console.log(err))
     } else if (!result) {
