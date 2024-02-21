@@ -41,7 +41,7 @@ const StopriceUpdate = (props) => {
     number: props.number,
     free: props.free
   })
-  console.log('st', state)
+
   const removeStoprice = (e) => {
     props.deleteStoprice(props.id, e.target.value)
     history.push(`/stoprice/list/${props.type}`)

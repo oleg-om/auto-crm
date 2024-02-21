@@ -14,7 +14,8 @@ import OnLoad from '../Categorys/Onload'
 const StoTypeList = [
   { value: 'rus', name: 'Отечественные' },
   { value: 'foreign', name: 'Иномарки' },
-  { value: 'card', name: 'Безнал' }
+  { value: 'card', name: 'Скорая помощь' },
+  { value: 'mintrans', name: 'Минтранс' }
 ]
 
 const StopriceList = () => {
