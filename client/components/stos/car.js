@@ -688,7 +688,8 @@ const Car = ({
                     </option>
                     <option value="rus">Отечественные</option>
                     <option value="foreign">Иномарки</option>
-                    <option value="card">Безнал</option>
+                    <option value="card">Скорая помощь</option>
+                    <option value="card">Минтранс</option>
                   </select>
                   <div className="pointer-events-none hidden absolute top-0 mt-3 right-0 lg:flex items-center px-2 text-gray-600">
                     <svg
