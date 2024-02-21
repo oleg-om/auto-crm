@@ -7,7 +7,8 @@ import SubmitButtons from '../shared/buttons/OrderSubmitButtons'
 const StoTypeList = [
   { value: 'rus', name: 'Отечественные' },
   { value: 'foreign', name: 'Иномарки' },
-  { value: 'card', name: 'Безнал' }
+  { value: 'card', name: 'Скорая' },
+  { value: 'mintrans', name: 'Минтранс' }
 ]
 
 // const StoCategoryList = [
@@ -57,7 +58,9 @@ const StopriceCreate = (props) => {
     cardAmbulanceOur: '',
 
     minGazel: '',
-    minLoganDuster: '',
+    minLogan: '',
+    minOther: '',
+    minDuster: '',
 
     number: '',
     free: ''
@@ -454,6 +457,11 @@ const StopriceCreate = (props) => {
                 onChange={onChange}
               />
             </div>
+          </div>
+        ) : null}
+
+        {state.type === 'mintrans' ? (
+          <div className="-mx-3 md:flex flex-wrap mt-3">
             <div className="md:w-1/5 px-3 mb-6 md:mb-0 flex flex-col">
               <label
                 className="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2"
@@ -476,13 +484,47 @@ const StopriceCreate = (props) => {
                 className="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2"
                 htmlFor="grid-first-name"
               >
-                Минтранс (Логан-Дастер)
+                Минтранс (Логан)
               </label>
               <input
                 className="appearance-none block w-full bg-grey-lighter text-grey-darker border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-3 px-4 mb-3"
-                value={state.minLoganDuster}
-                name="minLoganDuster"
-                id="minLoganDuster"
+                value={state.minLogan}
+                name="minLogan"
+                id="minLogan"
+                type="number"
+                placeholder="Введите цену"
+                onChange={onChange}
+              />
+            </div>
+            <div className="md:w-1/5 px-3 mb-6 md:mb-0 flex flex-col">
+              <label
+                className="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2"
+                htmlFor="grid-first-name"
+              >
+                Минтранс (Duster)
+              </label>
+              <input
+                className="appearance-none block w-full bg-grey-lighter text-grey-darker border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-3 px-4 mb-3"
+                value={state.minDuster}
+                name="minDuster"
+                id="minDuster"
+                type="number"
+                placeholder="Введите цену"
+                onChange={onChange}
+              />
+            </div>
+            <div className="md:w-1/5 px-3 mb-6 md:mb-0 flex flex-col">
+              <label
+                className="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2"
+                htmlFor="grid-first-name"
+              >
+                Минтранс (Прочее)
+              </label>
+              <input
+                className="appearance-none block w-full bg-grey-lighter text-grey-darker border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-3 px-4 mb-3"
+                value={state.minOther}
+                name="minOther"
+                id="minOther"
                 type="number"
                 placeholder="Введите цену"
                 onChange={onChange}

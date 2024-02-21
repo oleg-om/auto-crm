@@ -15,8 +15,11 @@ module.exports = [
   { name: '2 категория', id: 'foreignSecond', class: 'foreign' },
   { name: '3 категория', id: 'foreignThird', class: 'foreign' },
 
-  { name: 'Скорая (Газель)', id: 'cardAmbulanceOur', class: 'card' },
-  { name: 'Скорая (Ford)', id: 'cardAmbulanceForeign', class: 'card' },
-  { name: 'Минтранс (Газель)', id: 'minGazel', class: 'card' },
-  { name: 'Минтранс (Логан-Дастер)', id: 'minLoganDuster', class: 'card' }
+  { name: 'УАЗ', id: 'cardAmbulanceOur', class: 'card' },
+  { name: 'Ford', id: 'cardAmbulanceForeign', class: 'card' },
+
+  { name: 'Logan', id: 'minLogan', class: 'mintrans' },
+  { name: 'Duster', id: 'minDuster', class: 'mintrans' },
+  { name: 'Газель', id: 'minGazel', class: 'mintrans' },
+  { name: 'Прочее', id: 'minOther', class: 'mintrans' }
 ]

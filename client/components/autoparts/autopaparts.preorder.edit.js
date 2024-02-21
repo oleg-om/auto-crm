@@ -382,7 +382,7 @@ const AutopartUpdate = (props) => {
                 </div>
               </div>
             </div>
-            {state.status === taskStatuses[6] ? (
+            {state.status === taskStatuses[7] ? (
               <div className="px-3">
                 <label
                   className="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2"

@@ -91,7 +91,15 @@ const StoPrice = new mongoose.Schema({
     type: Number,
     required: false
   },
-  minLoganDuster: {
+  minLogan: {
+    type: Number,
+    required: false
+  },
+  minDuster: {
+    type: Number,
+    required: false
+  },
+  minOther: {
     type: Number,
     required: false
   }
