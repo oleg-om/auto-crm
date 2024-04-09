@@ -124,6 +124,10 @@ const Cond = new mongoose.Schema({
   customerId: {
     type: String,
     required: false
+  },
+  mileage: {
+    type: Number,
+    required: false
   }
 })
 
