@@ -143,13 +143,13 @@ const WindowsList = () => {
               {list && list?.length > 0
                 ? list.map((it) => (
                     <StosRow
-                      key={it.id}
+                      key={it?.id}
                       {...it}
                       updateStatus={updateStatusLocal}
                       role={role}
-                      employeeList={employeeList.find((item) => item.id === it.employee)}
-                      processList={employeeList.find((item) => item.id === it.process)}
-                      placesList={placesList.find((item) => item.id === it.place)}
+                      employeeList={employeeList.find((item) => item?.id === it?.employee)}
+                      processList={employeeList.find((item) => item?.id === it?.process)}
+                      placesList={placesList.find((item) => item?.id === it?.place)}
                       settings={settings}
                       num={num}
                       type={`${getType(location)}`}
