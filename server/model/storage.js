@@ -113,6 +113,10 @@ const Storage = new mongoose.Schema({
   doplata: {
     type: String,
     required: false
+  },
+  phoneSecond: {
+    type: String,
+    required: false
   }
 })
 

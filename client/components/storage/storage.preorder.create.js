@@ -66,7 +66,8 @@ const StoragesCreate = (props) => {
     dateStart: '',
     dateFinish: '',
     doplata: '',
-    comment2: ''
+    comment2: '',
+    phoneSecond: ''
   })
   const [customer, setCustomer] = useState({
     regnumber: '',
@@ -1293,6 +1294,28 @@ const StoragesCreate = (props) => {
                 </svg>
               </div>
             </div>
+          </div>
+        </div>
+
+        <div className="-mx-3 md:flex mb-2">
+          <div className="md:w-1/3 px-3 mb-6 md:mb-0">
+            <label
+              className="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2"
+              htmlFor="grid-city"
+            >
+              Дополнительный номер телефона
+            </label>
+            <NumberFormat
+              format="+7 (###) ###-##-##"
+              mask="_"
+              className="appearance-none block w-full bg-grey-lighter text-grey-darker border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-1 px-4 mb-3"
+              type="text"
+              placeholder="Начинайте ввод с 978"
+              value={state.phoneSecond}
+              name="phoneSecond"
+              id="phoneSecond"
+              onChange={onChangeCustomer}
+            />
           </div>
         </div>
 
