@@ -30,5 +30,18 @@ module.exports = [
   { name: 'ФАВ', id_car_mark: '10051' },
   { name: 'ФОРД', id_car_mark: '10051' },
   { name: 'Прочие иномарки', id_car_mark: '10051' },
-  { name: 'Прочие отечественные', id_car_mark: '10051' }
+  { name: 'Прочие отечественные', id_car_mark: '10051' },
+  { name: 'Фотон', id_car_mark: '10051' },
+  { name: 'УРАЛ', id_car_mark: '10051' },
+  { name: 'КРАЗ', id_car_mark: '10051' },
+  { name: 'Mitsubishi', id_car_mark: '10051' },
+  { name: 'Hyundai', id_car_mark: '10051' },
+  { name: 'Terex', id_car_mark: '10051' },
+  { name: 'ELAZ', id_car_mark: '10051' },
+  { name: 'FAW', id_car_mark: '10051' },
+  { name: 'GAC', id_car_mark: '10051' },
+  { name: 'Lovol', id_car_mark: '10051' },
+  { name: 'Ling KONG', id_car_mark: '10051' },
+  { name: 'Газель NEXT', id_car_mark: '10051' },
+  { name: 'Валдай', id_car_mark: '10051' }
 ]
