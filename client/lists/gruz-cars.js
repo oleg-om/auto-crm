@@ -10,7 +10,7 @@ module.exports = [
   { name: 'JCB', id_car_mark: '10051' },
   { name: 'Iveco', id_car_mark: '10051' },
   { name: 'ДАФ', id_car_mark: '10051' },
-  { name: 'ВОЛДАЙ', id_car_mark: '10051' },
+  { name: 'БОБКЕТ', id_car_mark: '10051' },
   { name: 'ЛУИДОР', id_car_mark: '10051' },
   { name: 'Мерседес', id_car_mark: '10051' },
   { name: 'Фронт. Погрузчик', id_car_mark: '10051' },
