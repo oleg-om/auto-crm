@@ -119,6 +119,10 @@ const Autopart = new mongoose.Schema({
   cancelReason: {
     type: String,
     required: false
+  },
+  phoneSecond: {
+    type: String,
+    required: false
   }
 })
 

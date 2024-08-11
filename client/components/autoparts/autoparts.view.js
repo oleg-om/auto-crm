@@ -13,7 +13,6 @@ import SubmitButtons from '../shared/buttons/OrderSubmitButtons'
 
 const AutopartViewOrder = (props) => {
   const history = useHistory()
-
   const componentRef = useRef()
   const handlePrint = useReactToPrint({
     content: () => componentRef.current
@@ -159,6 +158,11 @@ const AutopartViewOrder = (props) => {
                   <li>
                     <b>Телефон:</b> {props.phone}
                   </li>
+                  {props?.phoneSecond ? (
+                    <li>
+                      <b>Дополнительный телефон:</b> {props.phoneSecond}
+                    </li>
+                  ) : null}
                 </ul>
                 {/* <Link
                   to={`/autoparts/editfull/${props.id_autoparts}`}

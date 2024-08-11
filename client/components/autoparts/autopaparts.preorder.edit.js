@@ -66,7 +66,8 @@ const AutopartUpdate = (props) => {
     dateFinish: props.dateFinish,
     dateMiscall: props.dateMiscall,
     dateCancel: props.dateCancel,
-    cancelReason: props.cancelReason
+    cancelReason: props.cancelReason,
+    phoneSecond: props?.phoneSecond || ''
   })
 
   const { navigateWithQueryParams, searchParamsToUrl } = useSaveFilter()
@@ -261,6 +262,11 @@ const AutopartUpdate = (props) => {
                   <li>
                     <b>Телефон:</b> {props.phone}
                   </li>
+                  {props?.phoneSecond ? (
+                    <li>
+                      <b>Дополнительный телефон:</b> {props.phoneSecond}
+                    </li>
+                  ) : null}
                 </ul>
                 {/* <Link
                   to={`/autoparts/editfull/${props.id_autoparts}`}
