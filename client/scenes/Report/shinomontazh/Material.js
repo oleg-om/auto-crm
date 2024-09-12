@@ -16,7 +16,12 @@ const Material = ({ report }) => {
         return [...acc, rec]
       }
       return [
-        { name: x.name, quantity: x.quantity + rec.quantity, price: x.price, free: x.free },
+        {
+          name: x.name,
+          quantity: Number(x.quantity) + Number(rec.quantity),
+          price: x.price,
+          free: x.free
+        },
         ...acc.filter((it) => it.name !== rec.name)
       ]
     }, [])
