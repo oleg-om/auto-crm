@@ -45,7 +45,7 @@ const CustomerEdit = () => {
     <div>
       <Navbar />
       <div className="container mx-auto px-4">
-        <h1 className="text-3xl py-4 border-b mb-6">Редатировать клиента</h1>
+        <h1 className="text-3xl py-4 border-b mb-6">Редактировать клиента</h1>
         {loading
           ? list.map((it) => (
               <CustomerUpdate

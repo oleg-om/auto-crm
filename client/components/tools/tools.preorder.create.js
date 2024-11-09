@@ -170,7 +170,7 @@ const ToolsCreate = (props) => {
                 onChange={onChange}
               >
                 <option value="" disabled hidden className="text-gray-800">
-                  Выберете сотрудника
+                  Выберите сотрудника
                 </option>
                 {employeeList
                   .filter(
@@ -213,7 +213,7 @@ const ToolsCreate = (props) => {
                 onChange={onChange}
               >
                 <option value="" disabled hidden className="text-gray-800">
-                  Выберете место
+                  Выберите место
                 </option>
                 {list.map((it, index) => {
                   return (

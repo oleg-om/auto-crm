@@ -771,14 +771,14 @@ const Car = ({
                   value={state.model}
                   name="model"
                   id="model"
-                  placeholder={state.mark.length < 1 ? 'Сначала выберете марку' : 'Выберите модель'}
+                  placeholder={state.mark.length < 1 ? 'Сначала выберите марку' : 'Выберите модель'}
                   disabled={state.mark.length < 1}
                   autoComplete="off"
                   required
                   onChange={onChangeModel}
                 >
                   <option value="" hidden>
-                    {state.mark.length < 1 ? 'Сначала выберете марку' : 'Выберите модель'}
+                    {state.mark.length < 1 ? 'Сначала выберите марку' : 'Выберите модель'}
                   </option>
                   {state.mark
                     ? options.model

@@ -20,7 +20,7 @@ const MaterialEdit = () => {
     <div>
       <Navbar />
       <div className="container mx-auto px-4">
-        <h1 className="text-3xl py-4 border-b mb-6">Редатировать материал</h1>
+        <h1 className="text-3xl py-4 border-b mb-6">Редактировать материал</h1>
         {list.map((it) => (
           <MaterialUpdate
             key={id}

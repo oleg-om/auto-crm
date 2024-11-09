@@ -469,7 +469,7 @@ const StoragesCreate = (props) => {
                     onChange={onChange}
                   >
                     <option value="" disabled hidden className="text-gray-800">
-                      Выберете сотрудника
+                      Выберите сотрудника
                     </option>
                     {employeeList
                       .filter((it) => it.role.includes('Хранение'))
@@ -508,7 +508,7 @@ const StoragesCreate = (props) => {
                     onChange={onChange}
                   >
                     <option value="" disabled hidden className="text-gray-800">
-                      Выберете место
+                      Выберите место
                     </option>
                     {list.map((it, index) => {
                       return (
@@ -1125,7 +1125,7 @@ const StoragesCreate = (props) => {
               name="model"
               id="model"
               list="model_list"
-              placeholder={state.mark.length < 2 ? 'Сначала выберете марку' : 'Выберите модель'}
+              placeholder={state.mark.length < 2 ? 'Сначала выберите марку' : 'Выберите модель'}
               disabled={state.mark.length < 2}
               autoComplete="off"
               required

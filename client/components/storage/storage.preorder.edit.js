@@ -257,7 +257,7 @@ const StoragesUpdate = (props) => {
                         onChange={onChange}
                       >
                         <option value="" disabled hidden className="text-gray-800">
-                          Выберете сотрудника
+                          Выберите сотрудника
                         </option>
                         {employeeList
                           .filter((it) => it.role.includes('Хранение'))
@@ -288,7 +288,7 @@ const StoragesUpdate = (props) => {
                         onChange={onChange}
                       >
                         <option value="" disabled hidden className="text-gray-800">
-                          Выберете место
+                          Выберите место
                         </option>
                         {list.map((it, index) => {
                           return (
@@ -621,7 +621,7 @@ const StoragesUpdate = (props) => {
                 onChange={onChange}
               >
                 <option value="" disabled hidden className="text-gray-800">
-                  Выберете место
+                  Выберите место
                 </option>
                 {list.map((it, index) => {
                   return (

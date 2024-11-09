@@ -49,7 +49,7 @@ const StopriceEdit = () => {
     <div>
       <Navbar />
       <div className="container mx-auto px-4">
-        <h1 className="text-3xl py-4 border-b mb-6">Редатировать услугу</h1>
+        <h1 className="text-3xl py-4 border-b mb-6">Редактировать услугу</h1>
         {list.map((it) => (
           <StopriceUpdate
             key={id}

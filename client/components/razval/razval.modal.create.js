@@ -553,7 +553,7 @@ const ModalNew = ({
                       id="model"
                       list="model_list"
                       placeholder={
-                        state.mark.length < 2 ? 'Сначала выберете марку' : 'Выберите модель'
+                        state.mark.length < 2 ? 'Сначала выберите марку' : 'Выберите модель'
                       }
                       disabled={state.mark.length < 2}
                       autoComplete="off"

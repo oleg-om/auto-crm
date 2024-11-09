@@ -51,7 +51,7 @@ const AccountCreate = (props) => {
   const sendData = () => {
     if (!state.login) notify('Поле Логин пустое')
     else if (!state.password) notify('Поле Пароль пустое')
-    else if (state.role.length === 0) notify('Выберете должность')
+    else if (state.role.length === 0) notify('Выберите должность')
     else {
       props.create(state)
       history.push('/account/list')

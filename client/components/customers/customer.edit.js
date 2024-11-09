@@ -298,7 +298,7 @@ const CustomerUpdate = (props) => {
               name="model"
               id="model"
               list="model_list"
-              placeholder={state.mark.length < 2 ? 'Сначала выберете марку' : 'Выберите модель'}
+              placeholder={state.mark.length < 2 ? 'Сначала выберите марку' : 'Выберите модель'}
               disabled={state.mark.length < 2}
               autoComplete="off"
               required
@@ -326,7 +326,7 @@ const CustomerUpdate = (props) => {
               id="gen"
               list="gen_list"
               placeholder={
-                state.model.length < 1 ? 'Сначала выберете модель' : 'Выберите или введите год'
+                state.model.length < 1 ? 'Сначала выберите модель' : 'Выберите или введите год'
               }
               disabled={state.model.length < 1}
               autoComplete="off"
@@ -361,7 +361,7 @@ const CustomerUpdate = (props) => {
               id="mod"
               list="mod_list"
               placeholder={
-                state.gen.length < 2 ? 'Сначала выберете год' : 'Выберите или введите объем'
+                state.gen.length < 2 ? 'Сначала выберите год' : 'Выберите или введите объем'
               }
               disabled={state.gen.length < 2}
               autoComplete="off"

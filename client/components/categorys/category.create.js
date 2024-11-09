@@ -73,7 +73,7 @@ const CategoryCreate = (props) => {
               onChange={onChange}
             >
               <option value="" disabled hidden className="text-gray-800">
-                Выберете подкатегорию
+                Выберите подкатегорию
               </option>
               {categoryList.map((it) => {
                 return (

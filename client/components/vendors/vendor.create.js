@@ -93,7 +93,7 @@ const VendorCreate = (props) => {
               onChange={onChange}
             >
               <option value="" disabled hidden className="text-gray-800">
-                Выберете категорию
+                Выберите категорию
               </option>
               {vendorList.map((it) => {
                 return (

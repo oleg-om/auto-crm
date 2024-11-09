@@ -177,7 +177,7 @@ const ToolsEdit = (props) => {
                 onChange={onChange}
               >
                 <option value="" disabled selected hidden className="text-gray-800">
-                  Выберете место
+                  Выберите место
                 </option>
                 {list.map((it) => {
                   return (
