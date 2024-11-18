@@ -4,6 +4,9 @@ import { socket } from '../../redux/sockets/socketReceivers'
 import { getByMonth } from '../../redux/reducers/razvals'
 import { getByMonthOil } from '../../redux/reducers/oils'
 
+const LOCAL_STORAGE_RAZVAL_KEY = 'AT_CRM_RAZVAL_PREENTRY_DATE'
+const LOCAL_STORAGE_OIL_KEY = 'AT_CRM_OIL_PREENTRY_DATE'
+
 const OnLoad = (dt) => {
   const toDate = new Date(dt)
   const getMonth = toDate.getMonth()
@@ -21,28 +24,40 @@ const OnLoad = (dt) => {
     dispatch(getByMonthOil(yearmonth))
   }, [dispatch, getMonth])
 
+  const updateRazvalWithSocket = () => {
+    const localDate = localStorage.getItem(LOCAL_STORAGE_RAZVAL_KEY)?.split('-')
+    const localDateYear = localDate[0]
+    const localDateMonth = localDate[1]
+
+    if (localDateYear) {
+      dispatch(getByMonth(`${localDateYear}-${localDateMonth}`))
+    }
+  }
+
+  const updateOilWithSocket = () => {
+    const localDate = localStorage.getItem(LOCAL_STORAGE_OIL_KEY)?.split('-')
+    const localDateYear = localDate[0]
+    const localDateMonth = localDate[1]
+
+    if (localDateYear) {
+      dispatch(getByMonthOil(`${localDateYear}-${localDateMonth}`))
+    }
+  }
+
   useEffect(() => {
-    socket.on('update razval', function () {
-      dispatch(getByMonth(yearmonth))
-    })
+    socket.on('update razval', updateRazvalWithSocket)
   }, [])
 
   useEffect(() => {
-    socket.on('update edited razval', function () {
-      dispatch(getByMonth(yearmonth))
-    })
+    socket.on('update edited razval', updateRazvalWithSocket)
   }, [])
 
   useEffect(() => {
-    socket.on('update oil', function () {
-      dispatch(getByMonthOil(yearmonth))
-    })
+    socket.on('update oil', updateOilWithSocket)
   }, [])
 
   useEffect(() => {
-    socket.on('update edited oil', function () {
-      dispatch(getByMonthOil(yearmonth))
-    })
+    socket.on('update edited oil', updateOilWithSocket)
   }, [])
 }
 

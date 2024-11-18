@@ -61,7 +61,6 @@ const ModalEdit = ({
       ...prevState,
       [name]: value
     }))
-    console.log('s', changeStatus)
   }
   const propsDate = new Date(itemId.date)
   const propsCreateDate = new Date(itemId.dateofcreate)
