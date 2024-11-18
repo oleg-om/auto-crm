@@ -248,9 +248,6 @@ const PreentryList = () => {
   return (
     <div>
       <Navbar />
-      <button type="button" onClick={() => socket.emit('edit shinomontazh', { name: '2' })}>
-        edit shinomontazh
-      </button>
       <div className="flex flex-row" key={preentryType}>
         <RazvalSidebar setActiveDay={setActiveDay} activeDay={activeDay} />
         <div className="w-full mx-auto my-2">
