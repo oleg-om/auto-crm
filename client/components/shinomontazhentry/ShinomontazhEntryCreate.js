@@ -631,7 +631,7 @@ const ShinomontazhEntryCreate = ({
                           <button
                             onClick={() => notify('Выберите клиента')}
                             type="button"
-                            className="py-1 px-3 bg-blue-600 text-white text-xs hover:text-white rounded-lg"
+                            className="py-1 px-3 bg-main-600 text-white text-xs hover:text-white rounded-lg"
                           >
                             Выберите клиента
                           </button>
@@ -687,7 +687,7 @@ const ShinomontazhEntryCreate = ({
               <button
                 type="button"
                 onClick={sendData}
-                className="inline-flex justify-center w-full rounded-md border border-transparent px-4 py-2 bg-blue-600 text-base leading-6 font-medium text-white shadow-sm hover:bg-blue-500 focus:outline-none focus:border-blue-700 focus:shadow-outline-blue transition ease-in-out duration-150 sm:text-sm sm:leading-5"
+                className="inline-flex justify-center w-full rounded-md border border-transparent px-4 py-2 bg-main-600 text-base leading-6 font-medium text-white shadow-sm hover:bg-main-500 focus:outline-none focus:border-main-700 focus:shadow-outline-blue transition ease-in-out duration-150 sm:text-sm sm:leading-5"
               >
                 Добавить запись
               </button>

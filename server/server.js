@@ -285,6 +285,17 @@ io.on('connection', (socket) => {
     delete userNames[id]
   })
 
+  const isStudyMode = process.env?.MODE === 'study'
+  const socketObj = (obj) => {
+    if (!obj) {
+      return obj
+    }
+    return {
+      ...obj,
+      ...(isStudyMode ? { crmMode: 'study' } : { crmMode: 'main' })
+    }
+  }
+
   socket.on('new autopart', () => {
     io.emit('update autopart', { status: 'test', place: 'test' })
   })
@@ -303,7 +314,7 @@ io.on('connection', (socket) => {
 
   socket.on('new razval', ({ razval }) => {
     // io.emit('update razval', { result: razval })
-    io.emit('update razval', razval)
+    io.emit('update razval', socketObj(razval))
   })
 
   socket.on('edit razval', () => {
@@ -311,7 +322,7 @@ io.on('connection', (socket) => {
   })
 
   socket.on('new oil', ({ oil }) => {
-    io.emit('update oil', oil)
+    io.emit('update oil', socketObj(oil))
   })
 
   socket.on('edit oil', () => {
@@ -327,38 +338,38 @@ io.on('connection', (socket) => {
   // })
 
   socket.on('shinomontazh one print', (shinomontazh) => {
-    io.emit('shinoneprint', shinomontazh)
+    io.emit('shinoneprint', socketObj(shinomontazh))
   })
   socket.on('shinomontazh two print', (shinomontazh) => {
-    io.emit('shintwoprint', shinomontazh)
+    io.emit('shintwoprint', socketObj(shinomontazh))
   })
 
   socket.on('sto one print', (sto) => {
-    io.emit('stooneprint', sto)
+    io.emit('stooneprint', socketObj(sto))
   })
   socket.on('sto two print', (sto) => {
-    io.emit('stotwoprint', sto)
+    io.emit('stotwoprint', socketObj(sto))
   })
 
   socket.on('wash one print', (sto) => {
-    io.emit('washoneprint', sto)
+    io.emit('washoneprint', socketObj(sto))
   })
   socket.on('wash two print', (sto) => {
-    io.emit('washtwoprint', sto)
+    io.emit('washtwoprint', socketObj(sto))
   })
 
   socket.on('cond one print', (shinomontazh) => {
-    io.emit('condoneprint', shinomontazh)
+    io.emit('condoneprint', socketObj(shinomontazh))
   })
   socket.on('cond two print', (shinomontazh) => {
-    io.emit('condtwoprint', shinomontazh)
+    io.emit('condtwoprint', socketObj(shinomontazh))
   })
 
   socket.on('window one print', (shinomontazh) => {
-    io.emit('windowoneprint', shinomontazh)
+    io.emit('windowoneprint', socketObj(shinomontazh))
   })
   socket.on('window two print', (shinomontazh) => {
-    io.emit('windowtwoprint', shinomontazh)
+    io.emit('windowtwoprint', socketObj(shinomontazh))
   })
 
   socket.on('new shinomontazh', () => {
@@ -381,4 +392,6 @@ io.on('connection', (socket) => {
 
 console.log(`Serving at http://localhost:${port}`)
 
-setInterval(() => kerchshinaCheck(io), 440000)
+if (!isStudyMode) {
+  setInterval(() => kerchshinaCheck(io), 440000)
+}

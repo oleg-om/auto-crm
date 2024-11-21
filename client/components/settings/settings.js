@@ -68,7 +68,7 @@ const SettingUpdate = (props) => {
       </div>
       <div className=" flex my-2">
         <button
-          className="my-3 py-2 w-full px-3 bg-blue-600 text-white hover:bg-blue-700 hover:text-white rounded-lg"
+          className="my-3 py-2 w-full px-3 bg-main-600 text-white hover:bg-main-700 hover:text-white rounded-lg"
           type="button"
           onClick={changeSetting}
         >

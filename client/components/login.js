@@ -45,7 +45,7 @@ const LoginForm = () => {
           </div>
           <div className="flex items-center justify-between">
             <button
-              className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+              className="bg-main-500 hover:bg-main-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
               type="button"
               onClick={() => {
                 dispatch(signIn())
@@ -54,7 +54,7 @@ const LoginForm = () => {
               Войти
             </button>
             <Link to="/register">
-              <button type="button" className="text-blue-500 hover:text-blue-700">
+              <button type="button" className="text-main-500 hover:text-main-700">
                 Регистрация
               </button>
             </Link>

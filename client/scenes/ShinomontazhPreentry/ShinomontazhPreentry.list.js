@@ -379,7 +379,7 @@ const PreentryList = () => {
       <Link to={`/${preentryType}/create/`}>
         <button
           type="button"
-          className="fixed bottom-0 right-0 p-6 shadow bg-blue-600 text-white opacity-75 text-2xl hover:opacity-100 hover:bg-blue-700 hover:text-white rounded-full my-3 mx-3"
+          className="fixed bottom-0 right-0 p-6 shadow bg-main-600 text-white opacity-75 text-2xl hover:opacity-100 hover:bg-main-700 hover:text-white rounded-full my-3 mx-3"
         >
           Новый
           <br />

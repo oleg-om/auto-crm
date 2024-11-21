@@ -56,7 +56,7 @@ const CustomerList = () => {
       <div className="flex w-100 justify-center my-3">
         <button
           type="button"
-          className="bg-blue-500 p-3 text-white rounded flex items-center"
+          className="bg-main-500 p-3 text-white rounded flex items-center"
           disabled
         >
           <div className=" flex justify-center items-center pr-3">
@@ -134,14 +134,14 @@ const CustomerList = () => {
           />
         </div>
         {/* <Link to="/customer/create">
-          <button className="py-2 w-full bg-blue-600 text-white hover:bg-blue-700 hover:text-white rounded-lg lg:my-3 my-0">
+          <button className="py-2 w-full bg-main-600 text-white hover:bg-main-700 hover:text-white rounded-lg lg:my-3 my-0">
             Добавить нового клиента
           </button>
         </Link> */}
         <Link to="/customer/create">
           <button
             type="button"
-            className="fixed bottom-0 h-32 w-32 left-0 p-6 shadow bg-blue-600 text-white text-l hover:bg-blue-700 hover:text-white rounded-full my-3 mx-3"
+            className="fixed bottom-0 h-32 w-32 left-0 p-6 shadow bg-main-600 text-white text-l hover:bg-main-700 hover:text-white rounded-full my-3 mx-3"
           >
             Новый
             <br />

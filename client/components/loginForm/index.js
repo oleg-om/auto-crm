@@ -58,7 +58,7 @@ const LoginForm = () => {
           <div className="flex items-center justify-between">
             <ButtonLogin />
             {/* <Link to="/registration">
-              <button type="button" className="text-blue-500 hover:text-blue-700">
+              <button type="button" className="text-main-500 hover:text-main-700">
                 Регистрация
               </button>
             </Link> */}

@@ -19,7 +19,7 @@ const BossSidebar = (props) => {
       </div>
       <div className="text-white mx-2">
         <h5 className="text-white font-semibold">Выбранный месяц</h5>
-        <p className="bg-white rounded text-gray-900 p-2 my-2 text-center border-l-8 border-blue-600 font-bold">
+        <p className="bg-white rounded text-gray-900 p-2 my-2 text-center border-l-8 border-main-600 font-bold">
           {OrderDate}
         </p>
       </div>

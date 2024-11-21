@@ -2,9 +2,12 @@ import React, { useState } from 'react'
 import { Link, NavLink } from 'react-router-dom'
 import cx from 'classnames'
 import { useSelector, useDispatch } from 'react-redux'
+// import dotenv from 'dotenv'
 import { signOut } from '../redux/reducers/auth'
 
 import { socket } from '../redux/sockets/socketReceivers'
+
+// dotenv.config()
 
 const Navbar = () => {
   const dispatch = useDispatch()
@@ -40,7 +43,9 @@ const Navbar = () => {
           >
             <path d="M13.5 22.1c1.8-7.2 6.3-10.8 13.5-10.8 10.8 0 12.15 8.1 17.55 9.45 3.6.9 6.75-.45 9.45-4.05-1.8 7.2-6.3 10.8-13.5 10.8-10.8 0-12.15-8.1-17.55-9.45-3.6-.9-6.75.45-9.45 4.05zM0 38.3c1.8-7.2 6.3-10.8 13.5-10.8 10.8 0 12.15 8.1 17.55 9.45 3.6.9 6.75-.45 9.45-4.05-1.8 7.2-6.3 10.8-13.5 10.8-10.8 0-12.15-8.1-17.55-9.45-3.6-.9-6.75.45-9.45 4.05z" />
           </svg>
-          <span className="font-semibold text-xl tracking-tight">Autodom CRM</span>
+          <span className="font-semibold text-xl tracking-tight">
+            {process.env?.MODE === 'study' ? 'Autodom Обучениe' : 'Autodom CRM'}
+          </span>
         </div>
       </Link>
       <div className="block lg:hidden">
@@ -72,8 +77,8 @@ const Navbar = () => {
           auth.roles.includes('admin') ? (
             <NavLink
               to="/autoparts/order/list"
-              className="block mt-4 lg:inline-block lg:mt-0 text-gray-800 hover:text-blue-700 mr-4"
-              activeClassName="text-blue-600 underline font-semibold"
+              className="block mt-4 lg:inline-block lg:mt-0 text-gray-800 hover:text-main-700 mr-4"
+              activeClassName="text-main-600 underline font-semibold"
             >
               Автозапчасти
             </NavLink>
@@ -84,8 +89,8 @@ const Navbar = () => {
           auth.roles.includes('admin') ? (
             <NavLink
               to="/tools/order/list"
-              className="block mt-4 lg:inline-block lg:mt-0 text-gray-800 hover:text-blue-700 mr-4"
-              activeClassName="text-blue-600 underline font-semibold"
+              className="block mt-4 lg:inline-block lg:mt-0 text-gray-800 hover:text-main-700 mr-4"
+              activeClassName="text-main-600 underline font-semibold"
             >
               Инструмент
             </NavLink>
@@ -95,8 +100,8 @@ const Navbar = () => {
           auth.roles.includes('admin') ? (
             <NavLink
               to="/razval/list"
-              className="block mt-4 lg:inline-block lg:mt-0 text-gray-800 hover:text-blue-700 mr-4"
-              activeClassName="text-blue-600 underline font-semibold"
+              className="block mt-4 lg:inline-block lg:mt-0 text-gray-800 hover:text-main-700 mr-4"
+              activeClassName="text-main-600 underline font-semibold"
             >
               Развал
             </NavLink>
@@ -106,8 +111,8 @@ const Navbar = () => {
           auth.roles.includes('admin') ? (
             <NavLink
               to="/oil/list"
-              className="block mt-4 lg:inline-block lg:mt-0 text-gray-800 hover:text-blue-700 mr-4"
-              activeClassName="text-blue-600 underline font-semibold"
+              className="block mt-4 lg:inline-block lg:mt-0 text-gray-800 hover:text-main-700 mr-4"
+              activeClassName="text-main-600 underline font-semibold"
             >
               Масло (старый)
             </NavLink>
@@ -117,8 +122,8 @@ const Navbar = () => {
           auth.roles.includes('admin') ? (
             <NavLink
               to="/preentry/oil"
-              className="block mt-4 lg:inline-block lg:mt-0 text-gray-800 hover:text-blue-700 mr-4"
-              activeClassName="text-blue-600 underline font-semibold"
+              className="block mt-4 lg:inline-block lg:mt-0 text-gray-800 hover:text-main-700 mr-4"
+              activeClassName="text-main-600 underline font-semibold"
             >
               Масло
             </NavLink>
@@ -129,24 +134,24 @@ const Navbar = () => {
           auth.roles.includes('admin') ? (
             <NavLink
               to="/tyres/order/list"
-              className="block mt-4 lg:inline-block lg:mt-0 text-gray-800 hover:text-blue-700 mr-4"
-              activeClassName="text-blue-600 underline font-semibold"
+              className="block mt-4 lg:inline-block lg:mt-0 text-gray-800 hover:text-main-700 mr-4"
+              activeClassName="text-main-600 underline font-semibold"
             >
               Шины
             </NavLink>
           ) : null}
           {/* <NavLink
             to="/place/list"
-            className="block mt-4 lg:inline-block lg:mt-0 text-gray-800 hover:text-blue-700 mr-4"
-            activeClassName="text-blue-600 underline font-semibold"
+            className="block mt-4 lg:inline-block lg:mt-0 text-gray-800 hover:text-main-700 mr-4"
+            activeClassName="text-main-600 underline font-semibold"
           >
             Адреса
           </NavLink> */}
           {auth.roles.includes('shinomontazh') && !auth.roles.includes('boss') ? (
             <NavLink
               to="/shinomontazh/list"
-              className="block mt-4 lg:inline-block lg:mt-0 text-gray-800 hover:text-blue-700 mr-4"
-              activeClassName="text-blue-600 underline font-semibold"
+              className="block mt-4 lg:inline-block lg:mt-0 text-gray-800 hover:text-main-700 mr-4"
+              activeClassName="text-main-600 underline font-semibold"
             >
               Шиномонтаж
             </NavLink>
@@ -154,8 +159,8 @@ const Navbar = () => {
           {auth.roles.includes('boss') || auth.roles.includes('bookkeeper') ? (
             <NavLink
               to="/shinomontazhboss/list"
-              className="block mt-4 lg:inline-block lg:mt-0 text-gray-800 hover:text-blue-700 mr-4"
-              activeClassName="text-blue-600 underline font-semibold"
+              className="block mt-4 lg:inline-block lg:mt-0 text-gray-800 hover:text-main-700 mr-4"
+              activeClassName="text-main-600 underline font-semibold"
             >
               Шиномонтаж (Босс)
             </NavLink>
@@ -166,8 +171,8 @@ const Navbar = () => {
           auth.roles.includes('shinomontazh') ? (
             <NavLink
               to="/preentry/shinomontazh"
-              className="block mt-4 lg:inline-block lg:mt-0 text-gray-800 hover:text-blue-700 mr-4"
-              activeClassName="text-blue-600 underline font-semibold"
+              className="block mt-4 lg:inline-block lg:mt-0 text-gray-800 hover:text-main-700 mr-4"
+              activeClassName="text-main-600 underline font-semibold"
             >
               Шиномонтаж (запись)
             </NavLink>
@@ -177,8 +182,8 @@ const Navbar = () => {
           !auth.roles.includes('bookkeeper') ? (
             <NavLink
               to="/sto/list"
-              className="block mt-4 lg:inline-block lg:mt-0 text-gray-800 hover:text-blue-700 mr-4"
-              activeClassName="text-blue-600 underline font-semibold"
+              className="block mt-4 lg:inline-block lg:mt-0 text-gray-800 hover:text-main-700 mr-4"
+              activeClassName="text-main-600 underline font-semibold"
             >
               СТО
             </NavLink>
@@ -186,8 +191,8 @@ const Navbar = () => {
           {auth.roles.includes('boss') || auth.roles.includes('bookkeeper') ? (
             <NavLink
               to="/stoboss/list"
-              className="block mt-4 lg:inline-block lg:mt-0 text-gray-800 hover:text-blue-700 mr-4"
-              activeClassName="text-blue-600 underline font-semibold"
+              className="block mt-4 lg:inline-block lg:mt-0 text-gray-800 hover:text-main-700 mr-4"
+              activeClassName="text-main-600 underline font-semibold"
             >
               СТО (Босс)
             </NavLink>
@@ -197,8 +202,8 @@ const Navbar = () => {
           !auth.roles.includes('bookkeeper') ? (
             <NavLink
               to="/wash/list"
-              className="block mt-4 lg:inline-block lg:mt-0 text-gray-800 hover:text-blue-700 mr-4"
-              activeClassName="text-blue-600 underline font-semibold"
+              className="block mt-4 lg:inline-block lg:mt-0 text-gray-800 hover:text-main-700 mr-4"
+              activeClassName="text-main-600 underline font-semibold"
             >
               Мойка
             </NavLink>
@@ -206,8 +211,8 @@ const Navbar = () => {
           {auth.roles.includes('boss') || auth.roles.includes('bookkeeper') ? (
             <NavLink
               to="/washboss/list"
-              className="block mt-4 lg:inline-block lg:mt-0 text-gray-800 hover:text-blue-700 mr-4"
-              activeClassName="text-blue-600 underline font-semibold"
+              className="block mt-4 lg:inline-block lg:mt-0 text-gray-800 hover:text-main-700 mr-4"
+              activeClassName="text-main-600 underline font-semibold"
             >
               Мойка (Босс)
             </NavLink>
@@ -218,8 +223,8 @@ const Navbar = () => {
           !auth.roles.includes('bookkeeper') ? (
             <NavLink
               to="/window/list"
-              className="block mt-4 lg:inline-block lg:mt-0 text-gray-800 hover:text-blue-700 mr-4"
-              activeClassName="text-blue-600 underline font-semibold"
+              className="block mt-4 lg:inline-block lg:mt-0 text-gray-800 hover:text-main-700 mr-4"
+              activeClassName="text-main-600 underline font-semibold"
             >
               Стекла
             </NavLink>
@@ -227,8 +232,8 @@ const Navbar = () => {
           {auth.roles.includes('boss') || auth.roles.includes('bookkeeper') ? (
             <NavLink
               to="/windowboss/list"
-              className="block mt-4 lg:inline-block lg:mt-0 text-gray-800 hover:text-blue-700 mr-4"
-              activeClassName="text-blue-600 underline font-semibold"
+              className="block mt-4 lg:inline-block lg:mt-0 text-gray-800 hover:text-main-700 mr-4"
+              activeClassName="text-main-600 underline font-semibold"
             >
               Стекла (Босс)
             </NavLink>
@@ -239,8 +244,8 @@ const Navbar = () => {
           !auth.roles.includes('bookkeeper') ? (
             <NavLink
               to="/cond/list"
-              className="block mt-4 lg:inline-block lg:mt-0 text-gray-800 hover:text-blue-700 mr-4"
-              activeClassName="text-blue-600 underline font-semibold"
+              className="block mt-4 lg:inline-block lg:mt-0 text-gray-800 hover:text-main-700 mr-4"
+              activeClassName="text-main-600 underline font-semibold"
             >
               Кондиционеры
             </NavLink>
@@ -248,8 +253,8 @@ const Navbar = () => {
           {auth.roles.includes('boss') || auth.roles.includes('bookkeeper') ? (
             <NavLink
               to="/condboss/list"
-              className="block mt-4 lg:inline-block lg:mt-0 text-gray-800 hover:text-blue-700 mr-4"
-              activeClassName="text-blue-600 underline font-semibold"
+              className="block mt-4 lg:inline-block lg:mt-0 text-gray-800 hover:text-main-700 mr-4"
+              activeClassName="text-main-600 underline font-semibold"
             >
               Кондиционеры (Босс)
             </NavLink>
@@ -261,8 +266,8 @@ const Navbar = () => {
           auth.roles.includes('admin') ? (
             <NavLink
               to="/storages/order/list"
-              className="block mt-4 lg:inline-block lg:mt-0 text-gray-800 hover:text-blue-700 mr-4"
-              activeClassName="text-blue-600 underline font-semibold"
+              className="block mt-4 lg:inline-block lg:mt-0 text-gray-800 hover:text-main-700 mr-4"
+              activeClassName="text-main-600 underline font-semibold"
             >
               Хранение
             </NavLink>
@@ -275,8 +280,8 @@ const Navbar = () => {
           auth.roles.includes('admin') ? (
             <NavLink
               to="/customer/list"
-              className="block mt-4 lg:inline-block lg:mt-0 text-gray-800 hover:text-blue-700 mr-4"
-              activeClassName="text-blue-600 underline font-semibold"
+              className="block mt-4 lg:inline-block lg:mt-0 text-gray-800 hover:text-main-700 mr-4"
+              activeClassName="text-main-600 underline font-semibold"
             >
               Клиенты
             </NavLink>
@@ -286,8 +291,8 @@ const Navbar = () => {
           auth.roles.includes('admin') ? (
             <NavLink
               to="/vendor/list"
-              className="block mt-4 lg:inline-block lg:mt-0 text-gray-800 hover:text-blue-700 mr-4"
-              activeClassName="text-blue-600 underline font-semibold"
+              className="block mt-4 lg:inline-block lg:mt-0 text-gray-800 hover:text-main-700 mr-4"
+              activeClassName="text-main-600 underline font-semibold"
             >
               Поставщики
             </NavLink>
@@ -295,32 +300,32 @@ const Navbar = () => {
           {auth.roles.includes('admin') ? (
             <NavLink
               to="/place/list"
-              className="block mt-4 lg:inline-block lg:mt-0 text-gray-800 hover:text-blue-700 mr-4"
-              activeClassName="text-blue-600 underline font-semibold"
+              className="block mt-4 lg:inline-block lg:mt-0 text-gray-800 hover:text-main-700 mr-4"
+              activeClassName="text-main-600 underline font-semibold"
             >
               Администратор
             </NavLink>
           ) : null}
           {/* <NavLink
             to="/employee/list"
-            className="block mt-4 lg:inline-block lg:mt-0 text-gray-800 hover:text-blue-700 mr-4"
-            activeClassName="text-blue-600 underline font-semibold"
+            className="block mt-4 lg:inline-block lg:mt-0 text-gray-800 hover:text-main-700 mr-4"
+            activeClassName="text-main-600 underline font-semibold"
           >
             Сотрудники
           </NavLink> */}
 
           {/* <NavLink
             to="/account/list"
-            className="block mt-4 lg:inline-block lg:mt-0 text-gray-800 hover:text-blue-700 mr-4"
-            activeClassName="text-blue-600 underline font-semibold"
+            className="block mt-4 lg:inline-block lg:mt-0 text-gray-800 hover:text-main-700 mr-4"
+            activeClassName="text-main-600 underline font-semibold"
           >
             Аккаунты
           </NavLink> */}
           {/* {auth.roles.includes('boss') ? (
             <NavLink
               to="/boss"
-              className="block mt-4 lg:inline-block lg:mt-0 text-gray-800 hover:text-blue-700 mr-4"
-              activeClassName="text-blue-600 underline font-semibold"
+              className="block mt-4 lg:inline-block lg:mt-0 text-gray-800 hover:text-main-700 mr-4"
+              activeClassName="text-main-600 underline font-semibold"
             >
               Босс
             </NavLink>
@@ -328,8 +333,8 @@ const Navbar = () => {
           {auth.roles.includes('bookkeeper') ? (
             <NavLink
               to="/shinomontazhprice/list/legk"
-              className="block mt-4 lg:inline-block lg:mt-0 text-gray-800 hover:text-blue-700 mr-4"
-              activeClassName="text-blue-600 underline font-semibold"
+              className="block mt-4 lg:inline-block lg:mt-0 text-gray-800 hover:text-main-700 mr-4"
+              activeClassName="text-main-600 underline font-semibold"
             >
               Цены (шиномонтаж)
             </NavLink>
@@ -337,8 +342,8 @@ const Navbar = () => {
           {auth.roles.includes('bookkeeper') ? (
             <NavLink
               to="/stoprice/list/rus"
-              className="block mt-4 lg:inline-block lg:mt-0 text-gray-800 hover:text-blue-700 mr-4"
-              activeClassName="text-blue-600 underline font-semibold"
+              className="block mt-4 lg:inline-block lg:mt-0 text-gray-800 hover:text-main-700 mr-4"
+              activeClassName="text-main-600 underline font-semibold"
             >
               Цены (СТО)
             </NavLink>
@@ -346,8 +351,8 @@ const Navbar = () => {
           {auth.roles.includes('bookkeeper') ? (
             <NavLink
               to="/washprice/list/rus"
-              className="block mt-4 lg:inline-block lg:mt-0 text-gray-800 hover:text-blue-700 mr-4"
-              activeClassName="text-blue-600 underline font-semibold"
+              className="block mt-4 lg:inline-block lg:mt-0 text-gray-800 hover:text-main-700 mr-4"
+              activeClassName="text-main-600 underline font-semibold"
             >
               Цены (Мойка)
             </NavLink>
@@ -355,8 +360,8 @@ const Navbar = () => {
           {auth.roles.includes('bookkeeper') ? (
             <NavLink
               to="/windowprice/list/legk"
-              className="block mt-4 lg:inline-block lg:mt-0 text-gray-800 hover:text-blue-700 mr-4"
-              activeClassName="text-blue-600 underline font-semibold"
+              className="block mt-4 lg:inline-block lg:mt-0 text-gray-800 hover:text-main-700 mr-4"
+              activeClassName="text-main-600 underline font-semibold"
             >
               Цены (Стекла)
             </NavLink>
@@ -364,8 +369,8 @@ const Navbar = () => {
           {auth.roles.includes('bookkeeper') ? (
             <NavLink
               to="/condprice/list/legk"
-              className="block mt-4 lg:inline-block lg:mt-0 text-gray-800 hover:text-blue-700 mr-4"
-              activeClassName="text-blue-600 underline font-semibold"
+              className="block mt-4 lg:inline-block lg:mt-0 text-gray-800 hover:text-main-700 mr-4"
+              activeClassName="text-main-600 underline font-semibold"
             >
               Цены (Кондиционеры)
             </NavLink>
@@ -373,8 +378,8 @@ const Navbar = () => {
           {auth.roles.includes('bookkeeper') ? (
             <NavLink
               to="/material/list"
-              className="block mt-4 lg:inline-block lg:mt-0 text-gray-800 hover:text-blue-700 mr-4"
-              activeClassName="text-blue-600 underline font-semibold"
+              className="block mt-4 lg:inline-block lg:mt-0 text-gray-800 hover:text-main-700 mr-4"
+              activeClassName="text-main-600 underline font-semibold"
             >
               Цены (материалы)
             </NavLink>
@@ -382,8 +387,8 @@ const Navbar = () => {
           {auth.roles.includes('bookkeeper') ? (
             <NavLink
               to="/category/list"
-              className="block mt-4 lg:inline-block lg:mt-0 text-gray-800 hover:text-blue-700 mr-4"
-              activeClassName="text-blue-600 underline font-semibold"
+              className="block mt-4 lg:inline-block lg:mt-0 text-gray-800 hover:text-main-700 mr-4"
+              activeClassName="text-main-600 underline font-semibold"
             >
               Категории
             </NavLink>
@@ -394,8 +399,8 @@ const Navbar = () => {
           auth.roles.includes('report') ? (
             <NavLink
               to="/report"
-              className="block mt-4 lg:inline-block lg:mt-0 text-gray-800 hover:text-blue-700 mr-4"
-              activeClassName="text-blue-600 underline font-semibold"
+              className="block mt-4 lg:inline-block lg:mt-0 text-gray-800 hover:text-main-700 mr-4"
+              activeClassName="text-main-600 underline font-semibold"
             >
               Отчет
             </NavLink>

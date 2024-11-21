@@ -74,7 +74,7 @@ const Dashboard = () => {
               <div className="md:w-1/2 px-3 mb-6 flex flex-col">
                 <Link
                   to="/autoparts/order/list"
-                  className="rounded-lg shadow-lg bg-gradient-to-r from-teal-400 to-blue-500 h-full"
+                  className="rounded-lg shadow-lg bg-gradient-to-r from-teal-400 to-main-500 h-full"
                 >
                   <div className="m-2 p-2 flex flex-row">
                     <div className="w-1/2 px-3">
@@ -84,7 +84,7 @@ const Dashboard = () => {
                       </p>
                       <button
                         type="button"
-                        className="bottom-0 py-2 px-4 bg-blue-600 text-white hover:bg-blue-700 hover:text-white rounded-lg lg:my-3 my-0"
+                        className="bottom-0 py-2 px-4 bg-main-600 text-white hover:bg-main-700 hover:text-white rounded-lg lg:my-3 my-0"
                       >
                         Перейти
                       </button>
@@ -117,7 +117,7 @@ const Dashboard = () => {
                       </p>
                       <button
                         type="button"
-                        className="bottom-0 py-2 px-4 bg-blue-600 text-white hover:bg-blue-700 hover:text-white rounded-lg lg:my-3 my-0"
+                        className="bottom-0 py-2 px-4 bg-main-600 text-white hover:bg-main-700 hover:text-white rounded-lg lg:my-3 my-0"
                       >
                         Перейти
                       </button>
@@ -140,7 +140,7 @@ const Dashboard = () => {
                       ? '/washboss/list'
                       : '/wash/list'
                   }
-                  className="rounded-lg shadow-lg bg-gradient-to-r from-blue-700 to-gray-400 h-full"
+                  className="rounded-lg shadow-lg bg-gradient-to-r from-main-700 to-gray-400 h-full"
                 >
                   <div className="m-2 p-2 flex flex-row">
                     <div className="w-1/2 px-3">
@@ -150,7 +150,7 @@ const Dashboard = () => {
                       </p>
                       <button
                         type="button"
-                        className="bottom-0 py-2 px-4 bg-blue-600 text-white hover:bg-blue-700 hover:text-white rounded-lg lg:my-3 my-0"
+                        className="bottom-0 py-2 px-4 bg-main-600 text-white hover:bg-main-700 hover:text-white rounded-lg lg:my-3 my-0"
                       >
                         Перейти
                       </button>
@@ -179,7 +179,7 @@ const Dashboard = () => {
                       </p>
                       <button
                         type="button"
-                        className="bottom-0 py-2 px-4 bg-blue-600 text-white hover:bg-blue-700 hover:text-white rounded-lg lg:my-3 my-0"
+                        className="bottom-0 py-2 px-4 bg-main-600 text-white hover:bg-main-700 hover:text-white rounded-lg lg:my-3 my-0"
                       >
                         Перейти
                       </button>
@@ -208,7 +208,7 @@ const Dashboard = () => {
                       </p>
                       <button
                         type="button"
-                        className="bottom-0 py-2 px-4 bg-blue-600 text-white hover:bg-blue-700 hover:text-white rounded-lg lg:my-3 my-0"
+                        className="bottom-0 py-2 px-4 bg-main-600 text-white hover:bg-main-700 hover:text-white rounded-lg lg:my-3 my-0"
                       >
                         Перейти
                       </button>
@@ -238,7 +238,7 @@ const Dashboard = () => {
                       </p>
                       <button
                         type="button"
-                        className="bottom-0 py-2 px-4 bg-blue-600 text-white hover:bg-blue-700 hover:text-white rounded-lg lg:my-3 my-0"
+                        className="bottom-0 py-2 px-4 bg-main-600 text-white hover:bg-main-700 hover:text-white rounded-lg lg:my-3 my-0"
                       >
                         Перейти
                       </button>
@@ -268,7 +268,7 @@ const Dashboard = () => {
                       </p>
                       <button
                         type="button"
-                        className="bottom-0 py-2 px-4 bg-blue-600 text-white hover:bg-blue-700 hover:text-white rounded-lg lg:my-3 my-0"
+                        className="bottom-0 py-2 px-4 bg-main-600 text-white hover:bg-main-700 hover:text-white rounded-lg lg:my-3 my-0"
                       >
                         Перейти
                       </button>
@@ -298,7 +298,7 @@ const Dashboard = () => {
                       </p>
                       <button
                         type="button"
-                        className="bottom-0 py-2 px-4 bg-blue-600 text-white hover:bg-blue-700 hover:text-white rounded-lg lg:my-3 my-0"
+                        className="bottom-0 py-2 px-4 bg-main-600 text-white hover:bg-main-700 hover:text-white rounded-lg lg:my-3 my-0"
                       >
                         Перейти
                       </button>
@@ -333,7 +333,7 @@ const Dashboard = () => {
                       </p>
                       <button
                         type="button"
-                        className="bottom-0 py-2 px-4 bg-blue-600 text-white hover:bg-blue-700 hover:text-white rounded-lg lg:my-3 my-0"
+                        className="bottom-0 py-2 px-4 bg-main-600 text-white hover:bg-main-700 hover:text-white rounded-lg lg:my-3 my-0"
                       >
                         Перейти
                       </button>
@@ -368,7 +368,7 @@ const Dashboard = () => {
                       </p>
                       <button
                         type="button"
-                        className="bottom-0 py-2 px-4 bg-blue-600 text-white hover:bg-blue-700 hover:text-white rounded-lg lg:my-3 my-0"
+                        className="bottom-0 py-2 px-4 bg-main-600 text-white hover:bg-main-700 hover:text-white rounded-lg lg:my-3 my-0"
                       >
                         Перейти
                       </button>
@@ -394,7 +394,7 @@ const Dashboard = () => {
                     </p>
                     <button
                       type="button"
-                      className="bottom-0 py-2 px-4 bg-blue-600 text-white hover:bg-blue-700 hover:text-white rounded-lg lg:my-3 my-0"
+                      className="bottom-0 py-2 px-4 bg-main-600 text-white hover:bg-main-700 hover:text-white rounded-lg lg:my-3 my-0"
                     >
                       Перейти
                     </button>
@@ -420,7 +420,7 @@ const Dashboard = () => {
                       </p>
                       <button
                         type="button"
-                        className="bottom-0 py-2 px-4 bg-blue-600 text-white hover:bg-blue-700 hover:text-white rounded-lg lg:my-3 my-0"
+                        className="bottom-0 py-2 px-4 bg-main-600 text-white hover:bg-main-700 hover:text-white rounded-lg lg:my-3 my-0"
                       >
                         Перейти
                       </button>
@@ -447,7 +447,7 @@ const Dashboard = () => {
                       <p className="my-2 text-white">Доступ к статистикам и отчетам</p>
                       <button
                         type="button"
-                        className="bottom-0 py-2 px-4 bg-blue-600 text-white hover:bg-blue-700 hover:text-white rounded-lg lg:my-3 my-0"
+                        className="bottom-0 py-2 px-4 bg-main-600 text-white hover:bg-main-700 hover:text-white rounded-lg lg:my-3 my-0"
                       >
                         Перейти
                       </button>
@@ -471,7 +471,7 @@ const Dashboard = () => {
                       <p className="my-2 text-white">Хранение шин, возможность печати договоров</p>
                       <button
                         type="button"
-                        className="bottom-0 py-2 px-4 bg-blue-600 text-white hover:bg-blue-700 hover:text-white rounded-lg lg:my-3 my-0"
+                        className="bottom-0 py-2 px-4 bg-main-600 text-white hover:bg-main-700 hover:text-white rounded-lg lg:my-3 my-0"
                         onClick={() => notify('Данная страница в разработке')}
                       >
                         Перейти
@@ -501,7 +501,7 @@ const Dashboard = () => {
                       </p>
                       <button
                         type="button"
-                        className="bottom-0 py-2 px-4 bg-blue-600 text-white hover:bg-blue-700 hover:text-white rounded-lg lg:my-3 my-0"
+                        className="bottom-0 py-2 px-4 bg-main-600 text-white hover:bg-main-700 hover:text-white rounded-lg lg:my-3 my-0"
                       >
                         Перейти
                       </button>

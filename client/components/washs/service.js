@@ -242,7 +242,7 @@ const Service = ({
                             name={item.id}
                             placeholder={item.actualprice}
                             onClick={servicePlusChange}
-                            className="py-1 px-4 bg-blue-500 text-white font-bold hover:bg-blue-700 hover:text-white rounded-lg m-1"
+                            className="py-1 px-4 bg-main-500 text-white font-bold hover:bg-main-700 hover:text-white rounded-lg m-1"
                           >
                             +
                           </button>
@@ -250,7 +250,7 @@ const Service = ({
                           // <label htmlFor={item.id} >
                           <label
                             htmlFor={item.id}
-                            className="flex items-center py-1 px-4 bg-blue-500 text-white font-bold hover:bg-blue-700 hover:text-white rounded-lg m-1"
+                            className="flex items-center py-1 px-4 bg-main-500 text-white font-bold hover:bg-main-700 hover:text-white rounded-lg m-1"
                           >
                             +
                           </label>
@@ -340,7 +340,7 @@ const Service = ({
                           type="button"
                           name={item.id}
                           disabled
-                          className="py-1 px-4 bg-blue-500 text-white font-bold hover:bg-blue-700 hover:text-white rounded-lg m-1"
+                          className="py-1 px-4 bg-main-500 text-white font-bold hover:bg-main-700 hover:text-white rounded-lg m-1"
                         >
                           +
                         </button>
@@ -348,7 +348,7 @@ const Service = ({
                         // <label htmlFor={item.id} >
                         <label
                           htmlFor={item.id}
-                          className="flex items-center py-1 px-4 bg-blue-500 text-white font-bold hover:bg-blue-700 hover:text-white rounded-lg m-1"
+                          className="flex items-center py-1 px-4 bg-main-500 text-white font-bold hover:bg-main-700 hover:text-white rounded-lg m-1"
                         >
                           +
                         </label>

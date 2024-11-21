@@ -121,7 +121,7 @@ const Autoparts = ({ calendarType, place, activeMonth, activeDay, active, employ
       <div className="flex w-100 justify-center my-3">
         <button
           type="button"
-          className="bg-blue-500 p-3 text-white rounded flex items-center"
+          className="bg-main-500 p-3 text-white rounded flex items-center"
           disabled
         >
           <div className=" flex justify-center items-center pr-3">

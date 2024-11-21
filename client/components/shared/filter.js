@@ -229,7 +229,7 @@ export const ServiceFilter = ({
             <div className="flex content-end  px-3 mb-6 md:mb-0">
               <button
                 type="button"
-                className="text-sm py-1 px-4 mt-3 lg:mt-6 w-full bg-blue-600 text-white hover:bg-blue-700 hover:text-white rounded-lg"
+                className="text-sm py-1 px-4 mt-3 lg:mt-6 w-full bg-main-600 text-white hover:bg-main-700 hover:text-white rounded-lg"
                 onClick={onFilter}
               >
                 Фильтр
@@ -248,7 +248,7 @@ export const ServiceFilter = ({
       {showSearch ? (
         <div className="mx-2">
           <b className="text-gray-700">Вы применили фильтр</b>
-          <button type="button" className="mx-1 hover:text-blue-600" onClick={onReset}>
+          <button type="button" className="mx-1 hover:text-main-600" onClick={onReset}>
             ✖
           </button>
         </div>

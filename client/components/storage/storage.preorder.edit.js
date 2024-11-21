@@ -355,7 +355,7 @@ const StoragesUpdate = (props) => {
                     <button
                       type="submit"
                       onClick={handlePrintDogovor}
-                      className="py-2 px-3 bg-blue-600 text-white text-sm hover:bg-blue-700 hover:text-white rounded-full h-22 w-22"
+                      className="py-2 px-3 bg-main-600 text-white text-sm hover:bg-main-700 hover:text-white rounded-full h-22 w-22"
                     >
                       <div className="flex flex-row">
                         <svg
@@ -407,7 +407,7 @@ const StoragesUpdate = (props) => {
                     <button
                       type="submit"
                       onClick={handlePrintPeredacha}
-                      className="py-2 px-3 bg-blue-600 text-white text-sm hover:bg-blue-700 hover:text-white rounded-full h-22 w-22"
+                      className="py-2 px-3 bg-main-600 text-white text-sm hover:bg-main-700 hover:text-white rounded-full h-22 w-22"
                     >
                       <div className="flex flex-row">
                         <svg
@@ -455,7 +455,7 @@ const StoragesUpdate = (props) => {
                     <button
                       type="submit"
                       onClick={handlePrintVozvrat}
-                      className="py-2 px-3 bg-blue-600 text-white text-sm hover:bg-blue-700 hover:text-white rounded-full h-22 w-22"
+                      className="py-2 px-3 bg-main-600 text-white text-sm hover:bg-main-700 hover:text-white rounded-full h-22 w-22"
                     >
                       <div className="flex flex-row">
                         <svg
@@ -504,7 +504,7 @@ const StoragesUpdate = (props) => {
                     <button
                       type="submit"
                       onClick={handlePrintNakleika}
-                      className="py-2 px-3 bg-blue-600 text-white text-sm hover:bg-blue-700 hover:text-white rounded-full h-22 w-22"
+                      className="py-2 px-3 bg-main-600 text-white text-sm hover:bg-main-700 hover:text-white rounded-full h-22 w-22"
                     >
                       <div className="flex flex-row">
                         <svg
@@ -556,7 +556,7 @@ const StoragesUpdate = (props) => {
                     <button
                       type="submit"
                       onClick={handlePrintUsl}
-                      className="py-2 px-3 bg-blue-600 text-white text-sm hover:bg-blue-700 hover:text-white rounded-full h-22 w-22"
+                      className="py-2 px-3 bg-main-600 text-white text-sm hover:bg-main-700 hover:text-white rounded-full h-22 w-22"
                     >
                       <div className="flex flex-row">
                         <svg
@@ -682,7 +682,7 @@ const StoragesUpdate = (props) => {
             <div className="flex flex-row">
               <button
                 type="button"
-                className=" px-2 mx-2  w-1/5  rounded-lg bg-blue-600 hover:bg-blue-400 text-white text-sm"
+                className=" px-2 mx-2  w-1/5  rounded-lg bg-main-600 hover:bg-blue-400 text-white text-sm"
                 id="1"
                 onClick={onChangeDateFinish}
               >
@@ -690,7 +690,7 @@ const StoragesUpdate = (props) => {
               </button>
               <button
                 type="button"
-                className=" px-2 mx-2 w-1/5 rounded-lg bg-blue-600 hover:bg-blue-400 text-white text-sm"
+                className=" px-2 mx-2 w-1/5 rounded-lg bg-main-600 hover:bg-blue-400 text-white text-sm"
                 id="2"
                 onClick={onChangeDateFinish}
               >
@@ -698,7 +698,7 @@ const StoragesUpdate = (props) => {
               </button>
               <button
                 type="button"
-                className=" px-2 mx-2 w-1/5 rounded-lg bg-blue-600 hover:bg-blue-400 text-white text-sm"
+                className=" px-2 mx-2 w-1/5 rounded-lg bg-main-600 hover:bg-blue-400 text-white text-sm"
                 id="3"
                 onClick={onChangeDateFinish}
               >
@@ -706,7 +706,7 @@ const StoragesUpdate = (props) => {
               </button>
               <button
                 type="button"
-                className=" px-2 mx-2 w-1/5 rounded-lg bg-blue-600 hover:bg-blue-400 text-white text-sm"
+                className=" px-2 mx-2 w-1/5 rounded-lg bg-main-600 hover:bg-blue-400 text-white text-sm"
                 id="6"
                 onClick={onChangeDateFinish}
               >
@@ -714,7 +714,7 @@ const StoragesUpdate = (props) => {
               </button>
               <button
                 type="button"
-                className=" px-2 mx-2 w-1/5 rounded-lg bg-blue-600 hover:bg-blue-400 text-white text-sm"
+                className=" px-2 mx-2 w-1/5 rounded-lg bg-main-600 hover:bg-blue-400 text-white text-sm"
                 id="12"
                 onClick={onChangeDateFinish}
               >
@@ -1030,7 +1030,7 @@ const StoragesUpdate = (props) => {
                       <button
                         onClick={() => handleAddFields()}
                         type="button"
-                        className="py-1 px-3 bg-blue-500 text-white font-bold hover:bg-blue-700 hover:text-white rounded-lg"
+                        className="py-1 px-3 bg-main-500 text-white font-bold hover:bg-main-700 hover:text-white rounded-lg"
                       >
                         +
                       </button>

@@ -713,7 +713,7 @@ const AutopartsCreate = (props) => {
                       <button
                         onClick={applyCustomer}
                         type="button"
-                        className="py-1 px-3 text-white text-xs bg-blue-500 hover:text-white rounded-lg"
+                        className="py-1 px-3 text-white text-xs bg-main-500 hover:text-white rounded-lg"
                       >
                         Выберите клиента
                       </button>
@@ -979,7 +979,7 @@ const AutopartsCreate = (props) => {
                       <button
                         onClick={() => handleAddFields()}
                         type="button"
-                        className="py-1 px-3 bg-blue-500 text-white font-bold hover:bg-blue-700 hover:text-white rounded-lg"
+                        className="py-1 px-3 bg-main-500 text-white font-bold hover:bg-main-700 hover:text-white rounded-lg"
                       >
                         +
                       </button>

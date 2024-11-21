@@ -65,7 +65,7 @@ const TyresList = () => {
       <div className="flex w-100 justify-center my-3">
         <button
           type="button"
-          className="bg-blue-500 p-3 text-white rounded flex items-center"
+          className="bg-main-500 p-3 text-white rounded flex items-center"
           disabled
         >
           <div className=" flex justify-center items-center pr-3">
@@ -172,7 +172,7 @@ const TyresList = () => {
         <Link to={`/tyres/order/create/${num ? Number(num) : ''}`}>
           <button
             type="button"
-            className="fixed bottom-0 left-0 p-6 shadow bg-blue-600 text-white opacity-75 text-l hover:opacity-100 hover:bg-blue-700 hover:text-white rounded-full my-3 mx-3"
+            className="fixed bottom-0 left-0 p-6 shadow bg-main-600 text-white opacity-75 text-l hover:opacity-100 hover:bg-main-700 hover:text-white rounded-full my-3 mx-3"
           >
             Новый
             <br />

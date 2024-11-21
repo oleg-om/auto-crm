@@ -120,7 +120,7 @@ const Car = ({
                 <div className="p-1 w-1/5">
                   <button
                     type="button"
-                    className="p-1 m-1 text-xl rounded font-bold bg-blue-200 hover:bg-blue-300 border-blue-600 border-2 text-gray-900 w-full h-full"
+                    className="p-1 m-1 text-xl rounded font-bold bg-blue-200 hover:bg-blue-300 border-main-600 border-2 text-gray-900 w-full h-full"
                     onClick={onDeleteRegNumber}
                   >
                     <svg
@@ -572,7 +572,7 @@ const Car = ({
                   <button
                     onClick={applyCustomer}
                     type="button"
-                    className="md:py-1 px-3 w-full h-full text-white text-xs md:text-sm bg-blue-500 hover:text-white rounded-r-lg"
+                    className="md:py-1 px-3 w-full h-full text-white text-xs md:text-sm bg-main-500 hover:text-white rounded-r-lg"
                   >
                     Выберите клиента
                   </button>
@@ -884,7 +884,7 @@ const Car = ({
                     <button
                       onClick={applyCustomer}
                       type="button"
-                      className="py-1 px-3 text-white text-xs bg-blue-500 hover:text-white rounded-lg"
+                      className="py-1 px-3 text-white text-xs bg-main-500 hover:text-white rounded-lg"
                     >
                       Выберите клиента
                     </button>

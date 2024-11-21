@@ -119,7 +119,7 @@ const SalaryTableComponent = ({
           >
             <span className="flex">
               <input
-                className="w-full border-solid border-4 border-light-blue-500"
+                className="w-full border-solid border-4 border-light-main-500"
                 type="number"
                 value={userPercent[it.id]}
                 onChange={onChangePercent}
@@ -141,7 +141,7 @@ const SalaryTableComponent = ({
             {' '}
             <span className="flex">
               <select
-                className="w-full border-solid border-4 border-light-blue-500"
+                className="w-full border-solid border-4 border-light-main-500"
                 // type="number"
                 value={userOformlen[it.id]}
                 defaultValue="false"
@@ -168,7 +168,7 @@ const SalaryTableComponent = ({
               >
                 <span className="flex">
                   <input
-                    className="w-full border-solid border-4 border-light-blue-500"
+                    className="w-full border-solid border-4 border-light-main-500"
                     type="number"
                     value={userNalog[it.id]}
                     onChange={onChangeNalog}
@@ -189,7 +189,7 @@ const SalaryTableComponent = ({
               >
                 <span className="flex">
                   <input
-                    className="w-full border-solid border-4 border-light-blue-500"
+                    className="w-full border-solid border-4 border-light-main-500"
                     type="number"
                     value={userCardSum[it.id]}
                     onChange={onChangeCardSum}

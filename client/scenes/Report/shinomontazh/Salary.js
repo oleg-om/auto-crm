@@ -24,7 +24,7 @@ const SalaryByDay = ({
       <button
         type="submit"
         onClick={handlePrint}
-        className="py-2 px-3 my-3 bg-blue-600 text-white text-sm hover:bg-blue-700 hover:text-white rounded-full h-22 w-22"
+        className="py-2 px-3 my-3 bg-main-600 text-white text-sm hover:bg-main-700 hover:text-white rounded-full h-22 w-22"
       >
         <div className="flex flex-row">
           <svg

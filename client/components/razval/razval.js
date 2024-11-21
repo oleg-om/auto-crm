@@ -118,7 +118,7 @@ const RazvalRow = (props) => {
                                   item.status === statusList[2] ||
                                   item.status === statusList[3] ||
                                   item.status === statusList[4],
-                                'bg-blue-400 hover:bg-blue-500':
+                                'bg-blue-400 hover:bg-main-500':
                                   item.status === statusList[0] &&
                                   item.employeeplace !== props.activeAdress &&
                                   item.place === props.activeAdress
@@ -157,7 +157,7 @@ const RazvalRow = (props) => {
                                   (item.status === statusList[2] ||
                                     item.status === statusList[3] ||
                                     item.status === statusList[4]),
-                                'bg-blue-400 hover:bg-blue-500':
+                                'bg-blue-400 hover:bg-main-500':
                                   item.status === statusList[0] &&
                                   item.employeeplace !== props.activeAdress &&
                                   item.place === props.activeAdress &&
@@ -248,7 +248,7 @@ const RazvalRow = (props) => {
                                   item.status === statusList[2] ||
                                   item.status === statusList[3] ||
                                   item.status === statusList[4],
-                                'bg-blue-400 hover:bg-blue-500':
+                                'bg-blue-400 hover:bg-main-500':
                                   item.status === statusList[0] &&
                                   item.employeeplace !== props.activeAdress &&
                                   item.place === props.activeAdress
@@ -288,7 +288,7 @@ const RazvalRow = (props) => {
                                   (item.status === statusList[2] ||
                                     item.status === statusList[3] ||
                                     item.status === statusList[4]),
-                                'bg-blue-400 hover:bg-blue-500':
+                                'bg-blue-400 hover:bg-main-500':
                                   item.status === statusList[0] &&
                                   item.employeeplace !== props.activeAdress &&
                                   item.place === props.activeAdress &&
@@ -337,7 +337,7 @@ const RazvalRow = (props) => {
                           onClick={() =>
                             openCreateModal(it, props.adress, 'Замена масла', props.activeAdress)
                           }
-                          className="shadow px-2 bg-blue-400 text-white text-l hover:bg-blue-600 hover:text-white rounded-lg"
+                          className="shadow px-2 bg-blue-400 text-white text-l hover:bg-main-600 hover:text-white rounded-lg"
                         >
                           +
                         </button>
@@ -460,7 +460,7 @@ const RazvalRow = (props) => {
                                     item.status === statusList[2] ||
                                     item.status === statusList[3] ||
                                     item.status === statusList[4],
-                                  'bg-blue-400 hover:bg-blue-500':
+                                  'bg-blue-400 hover:bg-main-500':
                                     item.status === statusList[0] &&
                                     item.employeeplace !== props.activeAdress &&
                                     item.place === props.activeAdress
@@ -500,7 +500,7 @@ const RazvalRow = (props) => {
                                     (item.status === statusList[2] ||
                                       item.status === statusList[3] ||
                                       item.status === statusList[4]),
-                                  'bg-blue-400 hover:bg-blue-500':
+                                  'bg-blue-400 hover:bg-main-500':
                                     item.status === statusList[0] &&
                                     item.employeeplace !== props.activeAdress &&
                                     item.place === props.activeAdress &&
@@ -612,7 +612,7 @@ const RazvalRow = (props) => {
                                     item.status === statusList[2] ||
                                     item.status === statusList[3] ||
                                     item.status === statusList[4],
-                                  'bg-blue-400 hover:bg-blue-500':
+                                  'bg-blue-400 hover:bg-main-500':
                                     item.status === statusList[0] &&
                                     item.employeeplace !== props.activeAdress &&
                                     item.place === props.activeAdress
@@ -653,7 +653,7 @@ const RazvalRow = (props) => {
                                     (item.status === statusList[2] ||
                                       item.status === statusList[3] ||
                                       item.status === statusList[4]),
-                                  'bg-blue-400 hover:bg-blue-500':
+                                  'bg-blue-400 hover:bg-main-500':
                                     item.status === statusList[0] &&
                                     item.employeeplace !== props.activeAdress &&
                                     item.place === props.activeAdress &&
@@ -703,7 +703,7 @@ const RazvalRow = (props) => {
                                     item.status === statusList[2] ||
                                     item.status === statusList[3] ||
                                     item.status === statusList[4],
-                                  'bg-blue-400 hover:bg-blue-500':
+                                  'bg-blue-400 hover:bg-main-500':
                                     item.status === statusList[0] &&
                                     item.employeeplace !== props.activeAdress &&
                                     item.place === props.activeAdress
@@ -743,7 +743,7 @@ const RazvalRow = (props) => {
                                     (item.status === statusList[2] ||
                                       item.status === statusList[3] ||
                                       item.status === statusList[4]),
-                                  'bg-blue-400 hover:bg-blue-500':
+                                  'bg-blue-400 hover:bg-main-500':
                                     item.status === statusList[0] &&
                                     item.employeeplace !== props.activeAdress &&
                                     item.place === props.activeAdress &&
@@ -847,7 +847,7 @@ const RazvalRow = (props) => {
                                 oill.num
                               )
                             }
-                            className="shadow px-2 bg-blue-400 text-white text-l hover:bg-blue-600 hover:text-white rounded-lg"
+                            className="shadow px-2 bg-blue-400 text-white text-l hover:bg-main-600 hover:text-white rounded-lg"
                           >
                             +
                           </button>

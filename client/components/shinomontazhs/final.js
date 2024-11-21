@@ -516,7 +516,7 @@ const Final = ({
         <div className="flex flex-row -mx-3 mt-5">
           <button
             type="submit"
-            className="py-2 px-3 bg-blue-600 text-white text-sm hover:bg-blue-700 hover:text-white rounded-full h-22 w-22"
+            className="py-2 px-3 bg-main-600 text-white text-sm hover:bg-main-700 hover:text-white rounded-full h-22 w-22"
             onClick={() =>
               printOne(totalSumWithoutMaterials, totalMaterial, totalSumm, totalWithDiscount)
             }

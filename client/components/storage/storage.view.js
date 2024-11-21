@@ -123,7 +123,7 @@ const StorageViewOrder = (props) => {
                   </li>
                 </ul>
                 <button
-                  className="py-2 px-3 bg-blue-600 text-white text-sm hover:bg-blue-700 hover:text-white rounded-full h-22 w-22"
+                  className="py-2 px-3 bg-main-600 text-white text-sm hover:bg-main-700 hover:text-white rounded-full h-22 w-22"
                   type="button"
                   onClick={() => notify('У вас недостаточно полномочий')}
                 >
@@ -162,14 +162,14 @@ const StorageViewOrder = (props) => {
                 </ul>
                 {/* <Link
                   to={`/storages/editfull/${props.id_storages}`}
-                  className="py-2 px-3 bg-blue-600 text-white text-sm hover:bg-blue-700 hover:text-white rounded-full h-22 w-22"
+                  className="py-2 px-3 bg-main-600 text-white text-sm hover:bg-main-700 hover:text-white rounded-full h-22 w-22"
                 >
                   Заказы клиента
                 </Link> */}
                 <button
                   type="submit"
                   onClick={handlePrintPlusUpdateStatus}
-                  className="py-2 px-3 bg-blue-600 text-white text-sm hover:bg-blue-700 hover:text-white rounded-full h-22 w-22"
+                  className="py-2 px-3 bg-main-600 text-white text-sm hover:bg-main-700 hover:text-white rounded-full h-22 w-22"
                 >
                   <div className="flex flex-row">
                     <svg
@@ -437,7 +437,7 @@ const StorageViewOrder = (props) => {
                   Сумма товаров в работе
                 </label>
                 <button
-                  className="ml-3 px-3 rounded-full text-white bg-blue-600 opacity-75 text-l hover:opacity-100 hover:bg-blue-700"
+                  className="ml-3 px-3 rounded-full text-white bg-main-600 opacity-75 text-l hover:opacity-100 hover:bg-main-700"
                   type="button"
                   onClick={() =>
                     notify(

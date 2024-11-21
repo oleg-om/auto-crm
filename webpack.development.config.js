@@ -179,6 +179,13 @@ const config = {
       chunkFilename: 'css/[id].css',
       ignoreOrder: false
     }),
+    new webpack.DefinePlugin({
+      process: {
+        env: {
+          MODE: JSON.stringify(process.env?.MODE)
+        }
+      }
+    }),
     new CopyWebpackPlugin(
       {
         patterns: [

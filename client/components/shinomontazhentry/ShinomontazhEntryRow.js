@@ -48,7 +48,7 @@ const getEntryStyle = (item, activeAdress) => {
           item.status === statusList[4] ||
           item.status === 'Отмена')) ||
       item.status === 'Отмена',
-    'bg-blue-400 hover:bg-blue-500':
+    'bg-blue-400 hover:bg-main-500':
       item.status === statusList[0] &&
       item.employeeplace !== activeAdress &&
       item.place === activeAdress

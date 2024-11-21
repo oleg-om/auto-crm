@@ -13,7 +13,7 @@ const RazvalUpdate = (props) => {
     toast.info(arg, { position: toast.POSITION.BOTTOM_RIGHT })
   }
   const [state, setState] = useState({
-    mark: props.mark,
+    mark: props.mark
   })
   const removeRazval = (e) => {
     props.deleteRazval(props.id, e.target.value)
@@ -75,7 +75,7 @@ const RazvalUpdate = (props) => {
           Удалить
         </button>
         <button
-          className="my-3 ml-2 py-2 w-2/3 px-3 bg-blue-600 text-white hover:bg-blue-700 hover:text-white rounded-lg"
+          className="my-3 ml-2 py-2 w-2/3 px-3 bg-main-600 text-white hover:bg-main-700 hover:text-white rounded-lg"
           type="button"
           onClick={changeRazval}
         >

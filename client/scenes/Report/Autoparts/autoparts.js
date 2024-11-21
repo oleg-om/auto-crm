@@ -213,7 +213,7 @@ const Salary = ({ report, employeeListFull }) => {
               <td className="w-full lg:w-auto p-2 text-gray-800 text-left border border-b block lg:table-cell relative lg:static">
                 <span className="lg:hidden px-2 py-1 text-xs font-bold uppercase">Процент:</span>
                 <input
-                  className="border-solid border-4 border-light-blue-500"
+                  className="border-solid border-4 border-light-main-500"
                   type="number"
                   value={userPercent[it.id]}
                   onChange={onChangePercent}

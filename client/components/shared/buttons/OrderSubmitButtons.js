@@ -22,7 +22,7 @@ const SubmitButtons = ({
       )}
       <button
         className={cx(
-          'my-3 ml-2 py-2 px-3 bg-blue-600 text-white hover:bg-blue-700 hover:text-white rounded-lg',
+          'my-3 ml-2 py-2 px-3 bg-main-600 text-white hover:bg-main-700 hover:text-white rounded-lg',
           {
             'md:w-2/3': !deleteButton,
             'md:w-1/3': deleteButton
@@ -43,7 +43,7 @@ export const ServiceSubmitButtons = ({ active, props, nextStep, change, preChang
       <GoBack />
       {active !== 'finish' ? (
         <button
-          className="my-3 ml-2 py-3 w-2/3 px-3 bg-blue-600 text-white hover:bg-blue-700 hover:text-white rounded-lg"
+          className="my-3 ml-2 py-3 w-2/3 px-3 bg-main-600 text-white hover:bg-main-700 hover:text-white rounded-lg"
           onClick={nextStep}
           type="submit"
         >
@@ -53,7 +53,7 @@ export const ServiceSubmitButtons = ({ active, props, nextStep, change, preChang
       {active === 'finish' && !props.dateFinish ? (
         <div className="w-2/3 flex flex-row">
           <button
-            className="my-3 mx-2 py-3 w-1/2 px-3 bg-blue-600 text-white hover:bg-blue-700 hover:text-white rounded-lg"
+            className="my-3 mx-2 py-3 w-1/2 px-3 bg-main-600 text-white hover:bg-main-700 hover:text-white rounded-lg"
             onClick={preChange}
             type="submit"
           >
@@ -70,7 +70,7 @@ export const ServiceSubmitButtons = ({ active, props, nextStep, change, preChang
       ) : null}
       {active === 'finish' && props.dateFinish ? (
         <button
-          className="my-3 ml-2 py-3 w-2/3 px-3 bg-blue-600 text-white hover:bg-blue-700 hover:text-white rounded-lg"
+          className="my-3 ml-2 py-3 w-2/3 px-3 bg-main-600 text-white hover:bg-main-700 hover:text-white rounded-lg"
           onClick={change}
           type="submit"
         >

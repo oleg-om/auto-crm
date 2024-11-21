@@ -207,7 +207,13 @@ const config = {
 
   plugins: [
     new StringReplacePlugin(),
-
+    new webpack.DefinePlugin({
+      process: {
+        env: {
+          MODE: JSON.stringify(process.env?.MODE)
+        }
+      }
+    }),
     new CopyWebpackPlugin(
       {
         patterns: [

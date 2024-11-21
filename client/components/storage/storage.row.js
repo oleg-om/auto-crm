@@ -259,7 +259,7 @@ const StoragesRow = (props) => {
             to={`/storages/edit/${props.id_storages}/${props.num ? props.num : ''}${
               props.searchParamsToUrl
             }`}
-            className="px-5 py-1 text-xs border-blue-500 border text-blue-500 rounded transition duration-300 hover:bg-blue-700 hover:text-white focus:outline-none"
+            className="px-5 py-1 text-xs border-main-500 border text-main-500 rounded transition duration-300 hover:bg-main-700 hover:text-white focus:outline-none"
           >
             Подробнее
           </Link>
