@@ -74,7 +74,7 @@ const Dashboard = () => {
               <div className="md:w-1/2 px-3 mb-6 flex flex-col">
                 <Link
                   to="/autoparts/order/list"
-                  className="rounded-lg shadow-lg bg-gradient-to-r from-teal-400 to-main-500 h-full"
+                  className="rounded-lg shadow-lg bg-gradient-to-r from-teal-400 to-blue-500 h-full"
                 >
                   <div className="m-2 p-2 flex flex-row">
                     <div className="w-1/2 px-3">
@@ -140,7 +140,7 @@ const Dashboard = () => {
                       ? '/washboss/list'
                       : '/wash/list'
                   }
-                  className="rounded-lg shadow-lg bg-gradient-to-r from-main-700 to-gray-400 h-full"
+                  className="rounded-lg shadow-lg bg-gradient-to-r from-blue-700 to-gray-400 h-full"
                 >
                   <div className="m-2 p-2 flex flex-row">
                     <div className="w-1/2 px-3">
