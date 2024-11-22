@@ -210,7 +210,7 @@ const config = {
     new webpack.DefinePlugin({
       process: {
         env: {
-          MODE: JSON.stringify(process.env?.MODE)
+          MODE: JSON.stringify(process.env.MODE)
         }
       }
     }),
