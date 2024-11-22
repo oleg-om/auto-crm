@@ -179,13 +179,6 @@ const config = {
       chunkFilename: 'css/[id].css',
       ignoreOrder: false
     }),
-    new webpack.DefinePlugin({
-      process: {
-        env: {
-          MODE: JSON.stringify(process.env.MODE)
-        }
-      }
-    }),
     new CopyWebpackPlugin(
       {
         patterns: [
@@ -229,7 +222,8 @@ const config = {
         (res, key) => ({ ...res, [key]: JSON.stringify(process.env[key]) }),
         {
           APP_VERSION: +new Date(),
-          ENABLE_SOCKETS: JSON.stringify(process.env.ENABLE_SOCKETS || false)
+          ENABLE_SOCKETS: JSON.stringify(process.env.ENABLE_SOCKETS || false),
+          MODE: JSON.stringify(process.env.MODE)
         }
       )
     ),
