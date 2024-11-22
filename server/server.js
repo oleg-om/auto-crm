@@ -285,7 +285,7 @@ io.on('connection', (socket) => {
     delete userNames[id]
   })
 
-  const isStudyMode = process.env?.MODE === 'study'
+  const isStudyMode = process.env.MODE === 'study'
   const socketObj = (obj) => {
     if (!obj) {
       return obj
