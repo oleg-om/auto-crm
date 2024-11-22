@@ -223,7 +223,11 @@ const config = {
         {
           APP_VERSION: +new Date(),
           ENABLE_SOCKETS: JSON.stringify(process.env.ENABLE_SOCKETS || false),
-          MODE: JSON.stringify(process.env.MODE)
+          process: {
+            env: {
+              MODE: JSON.stringify(process.env.MODE)
+            }
+          }
         }
       )
     ),
