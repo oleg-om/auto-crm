@@ -26,7 +26,7 @@ const Dashboard = () => {
   }
 
   const auth = useSelector((s) => s.auth)
-
+  console.log('process', process)
   return (
     <div>
       <Navbar />
