@@ -6,8 +6,9 @@ import { updateSocketsInfo } from '../reducers/adminInformation'
 import { deleteUser } from '../reducers/auth'
 import store from '../index'
 
-// export const socket = io('http://localhost:8090', { transports: ['websocket'], autoConnect: false })
-export const socket = io('http://195.2.76.23:8090', {
+const isStudy = process.env.MODE === 'study'
+
+export const socket = io(isStudy ? 'http://89.110.97.155:8090' : 'http://195.2.76.23:8090', {
   transports: ['websocket'],
   autoConnect: false
 })

@@ -12,6 +12,8 @@ import React from 'react'
 import cookieParser from 'cookie-parser'
 import passport from 'passport'
 import jwt from 'jsonwebtoken'
+import { createProxyMiddleware } from 'http-proxy-middleware'
+
 import config from './config'
 import connectDatabase from './services/mongoose'
 import passportJWT from './services/passport'
@@ -99,6 +101,68 @@ function createCookie(token, res) {
 function getFormatMessages(messages) {
   const formatedMessages = messages.map((it) => ({ [it.userName]: it.message }))
   return formatedMessages
+}
+
+const isStudyMode = process.env.MODE === 'study'
+
+// proxy if is study mode
+const placesProxy = createProxyMiddleware({
+  target: `${process.env.WORK_DOMAIN}/api/v1/place`,
+  changeOrigin: true
+})
+const carsProxy = createProxyMiddleware({
+  target: `${process.env.WORK_DOMAIN}/api/v1/car`,
+  changeOrigin: true
+})
+const customerProxy = createProxyMiddleware({
+  target: `${process.env.WORK_DOMAIN}/api/v1/customer`,
+  changeOrigin: true
+})
+const materialProxy = createProxyMiddleware({
+  target: `${process.env.WORK_DOMAIN}/api/v1/material`,
+  changeOrigin: true
+})
+const shinomontazhPriceProxy = createProxyMiddleware({
+  target: `${process.env.WORK_DOMAIN}/api/v1/shinomontazhprice`,
+  changeOrigin: true
+})
+const vendorProxy = createProxyMiddleware({
+  target: `${process.env.WORK_DOMAIN}/api/v1/vendor`,
+  changeOrigin: true
+})
+const stoPriceProxy = createProxyMiddleware({
+  target: `${process.env.WORK_DOMAIN}/api/v1/stoprice`,
+  changeOrigin: true
+})
+const washPriceProxy = createProxyMiddleware({
+  target: `${process.env.WORK_DOMAIN}/api/v1/washprice`,
+  changeOrigin: true
+})
+const condPriceProxy = createProxyMiddleware({
+  target: `${process.env.WORK_DOMAIN}/api/v1/condprice`,
+  changeOrigin: true
+})
+const windowPriceProxy = createProxyMiddleware({
+  target: `${process.env.WORK_DOMAIN}/api/v1/windowprice`,
+  changeOrigin: true
+})
+const categoryProxy = createProxyMiddleware({
+  target: `${process.env.WORK_DOMAIN}/api/v1/category`,
+  changeOrigin: true
+})
+
+if (isStudyMode) {
+  server.use('/api/v1/place', placesProxy)
+  server.use('/api/v1/car', carsProxy)
+  server.use('/api/v1/customer', customerProxy)
+  server.use('/api/v1/material', materialProxy)
+  server.use('/api/v1/shinomontazhprice', shinomontazhPriceProxy)
+  server.use('/api/v1/vendor', vendorProxy)
+  server.use('/api/v1/stoprice', stoPriceProxy)
+  server.use('/api/v1/washprice', washPriceProxy)
+  server.use('/api/v1/condprice', condPriceProxy)
+  server.use('/api/v1/windowprice', windowPriceProxy)
+  server.use('/api/v1/category', categoryProxy)
 }
 
 server.use('/api/v1', placeRoutes)
@@ -285,7 +349,6 @@ io.on('connection', (socket) => {
     delete userNames[id]
   })
 
-  const isStudyMode = process.env.MODE === 'study'
   const socketObj = (obj) => {
     if (!obj) {
       return obj

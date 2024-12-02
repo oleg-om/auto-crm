@@ -30,6 +30,8 @@ const Navbar = () => {
 
   socket.connect()
 
+  const isStudy = process.env.MODE === 'study'
+
   return (
     <nav className="flex items-center justify-between flex-wrap bg-white shadow px-6 py-3 z-20">
       <Link to="/">
@@ -44,7 +46,7 @@ const Navbar = () => {
             <path d="M13.5 22.1c1.8-7.2 6.3-10.8 13.5-10.8 10.8 0 12.15 8.1 17.55 9.45 3.6.9 6.75-.45 9.45-4.05-1.8 7.2-6.3 10.8-13.5 10.8-10.8 0-12.15-8.1-17.55-9.45-3.6-.9-6.75.45-9.45 4.05zM0 38.3c1.8-7.2 6.3-10.8 13.5-10.8 10.8 0 12.15 8.1 17.55 9.45 3.6.9 6.75-.45 9.45-4.05-1.8 7.2-6.3 10.8-13.5 10.8-10.8 0-12.15-8.1-17.55-9.45-3.6-.9-6.75.45-9.45 4.05z" />
           </svg>
           <span className="font-semibold text-xl tracking-tight">
-            {process.env.MODE === 'study' ? 'Autodom Обучениe' : 'Autodom CRM'}
+            {isStudy ? 'Autodom Обучениe' : 'Autodom CRM'}
           </span>
         </div>
       </Link>
@@ -70,243 +72,244 @@ const Navbar = () => {
           block: toggle === true
         })}
       >
-        <div className="text-sm lg:flex-grow">
-          {auth.roles.includes('autopartfull') ||
-          auth.roles.includes('autopartsimple') ||
-          auth.roles.includes('boss') ||
-          auth.roles.includes('admin') ? (
-            <NavLink
-              to="/autoparts/order/list"
-              className="block mt-4 lg:inline-block lg:mt-0 text-gray-800 hover:text-main-700 mr-4"
-              activeClassName="text-main-600 underline font-semibold"
-            >
-              Автозапчасти
-            </NavLink>
-          ) : null}
-          {auth.roles.includes('toolfull') ||
-          auth.roles.includes('toolsimple') ||
-          auth.roles.includes('boss') ||
-          auth.roles.includes('admin') ? (
-            <NavLink
-              to="/tools/order/list"
-              className="block mt-4 lg:inline-block lg:mt-0 text-gray-800 hover:text-main-700 mr-4"
-              activeClassName="text-main-600 underline font-semibold"
-            >
-              Инструмент
-            </NavLink>
-          ) : null}
-          {auth.roles.includes('razval') ||
-          auth.roles.includes('boss') ||
-          auth.roles.includes('admin') ? (
-            <NavLink
-              to="/razval/list"
-              className="block mt-4 lg:inline-block lg:mt-0 text-gray-800 hover:text-main-700 mr-4"
-              activeClassName="text-main-600 underline font-semibold"
-            >
-              Развал
-            </NavLink>
-          ) : null}
-          {auth.roles.includes('razval') ||
-          auth.roles.includes('boss') ||
-          auth.roles.includes('admin') ? (
-            <NavLink
-              to="/oil/list"
-              className="block mt-4 lg:inline-block lg:mt-0 text-gray-800 hover:text-main-700 mr-4"
-              activeClassName="text-main-600 underline font-semibold"
-            >
-              Масло (старый)
-            </NavLink>
-          ) : null}
-          {auth.roles.includes('razval') ||
-          auth.roles.includes('boss') ||
-          auth.roles.includes('admin') ? (
-            <NavLink
-              to="/preentry/oil"
-              className="block mt-4 lg:inline-block lg:mt-0 text-gray-800 hover:text-main-700 mr-4"
-              activeClassName="text-main-600 underline font-semibold"
-            >
-              Масло
-            </NavLink>
-          ) : null}
-          {auth.roles.includes('tyrefull') ||
-          auth.roles.includes('tyresimple') ||
-          auth.roles.includes('boss') ||
-          auth.roles.includes('admin') ? (
-            <NavLink
-              to="/tyres/order/list"
-              className="block mt-4 lg:inline-block lg:mt-0 text-gray-800 hover:text-main-700 mr-4"
-              activeClassName="text-main-600 underline font-semibold"
-            >
-              Шины
-            </NavLink>
-          ) : null}
-          {/* <NavLink
+        {!isStudy ? (
+          <div className="text-sm lg:flex-grow">
+            {auth.roles.includes('autopartfull') ||
+            auth.roles.includes('autopartsimple') ||
+            auth.roles.includes('boss') ||
+            auth.roles.includes('admin') ? (
+              <NavLink
+                to="/autoparts/order/list"
+                className="block mt-4 lg:inline-block lg:mt-0 text-gray-800 hover:text-main-700 mr-4"
+                activeClassName="text-main-600 underline font-semibold"
+              >
+                Автозапчасти
+              </NavLink>
+            ) : null}
+            {auth.roles.includes('toolfull') ||
+            auth.roles.includes('toolsimple') ||
+            auth.roles.includes('boss') ||
+            auth.roles.includes('admin') ? (
+              <NavLink
+                to="/tools/order/list"
+                className="block mt-4 lg:inline-block lg:mt-0 text-gray-800 hover:text-main-700 mr-4"
+                activeClassName="text-main-600 underline font-semibold"
+              >
+                Инструмент
+              </NavLink>
+            ) : null}
+            {auth.roles.includes('razval') ||
+            auth.roles.includes('boss') ||
+            auth.roles.includes('admin') ? (
+              <NavLink
+                to="/razval/list"
+                className="block mt-4 lg:inline-block lg:mt-0 text-gray-800 hover:text-main-700 mr-4"
+                activeClassName="text-main-600 underline font-semibold"
+              >
+                Развал
+              </NavLink>
+            ) : null}
+            {auth.roles.includes('razval') ||
+            auth.roles.includes('boss') ||
+            auth.roles.includes('admin') ? (
+              <NavLink
+                to="/oil/list"
+                className="block mt-4 lg:inline-block lg:mt-0 text-gray-800 hover:text-main-700 mr-4"
+                activeClassName="text-main-600 underline font-semibold"
+              >
+                Масло (старый)
+              </NavLink>
+            ) : null}
+            {auth.roles.includes('razval') ||
+            auth.roles.includes('boss') ||
+            auth.roles.includes('admin') ? (
+              <NavLink
+                to="/preentry/oil"
+                className="block mt-4 lg:inline-block lg:mt-0 text-gray-800 hover:text-main-700 mr-4"
+                activeClassName="text-main-600 underline font-semibold"
+              >
+                Масло
+              </NavLink>
+            ) : null}
+            {auth.roles.includes('tyrefull') ||
+            auth.roles.includes('tyresimple') ||
+            auth.roles.includes('boss') ||
+            auth.roles.includes('admin') ? (
+              <NavLink
+                to="/tyres/order/list"
+                className="block mt-4 lg:inline-block lg:mt-0 text-gray-800 hover:text-main-700 mr-4"
+                activeClassName="text-main-600 underline font-semibold"
+              >
+                Шины
+              </NavLink>
+            ) : null}
+            {/* <NavLink
             to="/place/list"
             className="block mt-4 lg:inline-block lg:mt-0 text-gray-800 hover:text-main-700 mr-4"
             activeClassName="text-main-600 underline font-semibold"
           >
             Адреса
           </NavLink> */}
-          {auth.roles.includes('shinomontazh') && !auth.roles.includes('boss') ? (
-            <NavLink
-              to="/shinomontazh/list"
-              className="block mt-4 lg:inline-block lg:mt-0 text-gray-800 hover:text-main-700 mr-4"
-              activeClassName="text-main-600 underline font-semibold"
-            >
-              Шиномонтаж
-            </NavLink>
-          ) : null}
-          {auth.roles.includes('boss') || auth.roles.includes('bookkeeper') ? (
-            <NavLink
-              to="/shinomontazhboss/list"
-              className="block mt-4 lg:inline-block lg:mt-0 text-gray-800 hover:text-main-700 mr-4"
-              activeClassName="text-main-600 underline font-semibold"
-            >
-              Шиномонтаж (Босс)
-            </NavLink>
-          ) : null}
-          {auth.roles.includes('kassa') ||
-          auth.roles.includes('boss') ||
-          auth.roles.includes('admin') ||
-          auth.roles.includes('shinomontazh') ? (
-            <NavLink
-              to="/preentry/shinomontazh"
-              className="block mt-4 lg:inline-block lg:mt-0 text-gray-800 hover:text-main-700 mr-4"
-              activeClassName="text-main-600 underline font-semibold"
-            >
-              Шиномонтаж (запись)
-            </NavLink>
-          ) : null}
-          {auth.roles.includes('sto') &&
-          !auth.roles.includes('boss') &&
-          !auth.roles.includes('bookkeeper') ? (
-            <NavLink
-              to="/sto/list"
-              className="block mt-4 lg:inline-block lg:mt-0 text-gray-800 hover:text-main-700 mr-4"
-              activeClassName="text-main-600 underline font-semibold"
-            >
-              СТО
-            </NavLink>
-          ) : null}
-          {auth.roles.includes('boss') || auth.roles.includes('bookkeeper') ? (
-            <NavLink
-              to="/stoboss/list"
-              className="block mt-4 lg:inline-block lg:mt-0 text-gray-800 hover:text-main-700 mr-4"
-              activeClassName="text-main-600 underline font-semibold"
-            >
-              СТО (Босс)
-            </NavLink>
-          ) : null}
-          {auth.roles.includes('wash') &&
-          !auth.roles.includes('boss') &&
-          !auth.roles.includes('bookkeeper') ? (
-            <NavLink
-              to="/wash/list"
-              className="block mt-4 lg:inline-block lg:mt-0 text-gray-800 hover:text-main-700 mr-4"
-              activeClassName="text-main-600 underline font-semibold"
-            >
-              Мойка
-            </NavLink>
-          ) : null}
-          {auth.roles.includes('boss') || auth.roles.includes('bookkeeper') ? (
-            <NavLink
-              to="/washboss/list"
-              className="block mt-4 lg:inline-block lg:mt-0 text-gray-800 hover:text-main-700 mr-4"
-              activeClassName="text-main-600 underline font-semibold"
-            >
-              Мойка (Босс)
-            </NavLink>
-          ) : null}
+            {auth.roles.includes('shinomontazh') && !auth.roles.includes('boss') ? (
+              <NavLink
+                to="/shinomontazh/list"
+                className="block mt-4 lg:inline-block lg:mt-0 text-gray-800 hover:text-main-700 mr-4"
+                activeClassName="text-main-600 underline font-semibold"
+              >
+                Шиномонтаж
+              </NavLink>
+            ) : null}
+            {auth.roles.includes('boss') || auth.roles.includes('bookkeeper') ? (
+              <NavLink
+                to="/shinomontazhboss/list"
+                className="block mt-4 lg:inline-block lg:mt-0 text-gray-800 hover:text-main-700 mr-4"
+                activeClassName="text-main-600 underline font-semibold"
+              >
+                Шиномонтаж (Босс)
+              </NavLink>
+            ) : null}
+            {auth.roles.includes('kassa') ||
+            auth.roles.includes('boss') ||
+            auth.roles.includes('admin') ||
+            auth.roles.includes('shinomontazh') ? (
+              <NavLink
+                to="/preentry/shinomontazh"
+                className="block mt-4 lg:inline-block lg:mt-0 text-gray-800 hover:text-main-700 mr-4"
+                activeClassName="text-main-600 underline font-semibold"
+              >
+                Шиномонтаж (запись)
+              </NavLink>
+            ) : null}
+            {auth.roles.includes('sto') &&
+            !auth.roles.includes('boss') &&
+            !auth.roles.includes('bookkeeper') ? (
+              <NavLink
+                to="/sto/list"
+                className="block mt-4 lg:inline-block lg:mt-0 text-gray-800 hover:text-main-700 mr-4"
+                activeClassName="text-main-600 underline font-semibold"
+              >
+                СТО
+              </NavLink>
+            ) : null}
+            {auth.roles.includes('boss') || auth.roles.includes('bookkeeper') ? (
+              <NavLink
+                to="/stoboss/list"
+                className="block mt-4 lg:inline-block lg:mt-0 text-gray-800 hover:text-main-700 mr-4"
+                activeClassName="text-main-600 underline font-semibold"
+              >
+                СТО (Босс)
+              </NavLink>
+            ) : null}
+            {auth.roles.includes('wash') &&
+            !auth.roles.includes('boss') &&
+            !auth.roles.includes('bookkeeper') ? (
+              <NavLink
+                to="/wash/list"
+                className="block mt-4 lg:inline-block lg:mt-0 text-gray-800 hover:text-main-700 mr-4"
+                activeClassName="text-main-600 underline font-semibold"
+              >
+                Мойка
+              </NavLink>
+            ) : null}
+            {auth.roles.includes('boss') || auth.roles.includes('bookkeeper') ? (
+              <NavLink
+                to="/washboss/list"
+                className="block mt-4 lg:inline-block lg:mt-0 text-gray-800 hover:text-main-700 mr-4"
+                activeClassName="text-main-600 underline font-semibold"
+              >
+                Мойка (Босс)
+              </NavLink>
+            ) : null}
 
-          {auth.roles.includes('window') &&
-          !auth.roles.includes('boss') &&
-          !auth.roles.includes('bookkeeper') ? (
-            <NavLink
-              to="/window/list"
-              className="block mt-4 lg:inline-block lg:mt-0 text-gray-800 hover:text-main-700 mr-4"
-              activeClassName="text-main-600 underline font-semibold"
-            >
-              Стекла
-            </NavLink>
-          ) : null}
-          {auth.roles.includes('boss') || auth.roles.includes('bookkeeper') ? (
-            <NavLink
-              to="/windowboss/list"
-              className="block mt-4 lg:inline-block lg:mt-0 text-gray-800 hover:text-main-700 mr-4"
-              activeClassName="text-main-600 underline font-semibold"
-            >
-              Стекла (Босс)
-            </NavLink>
-          ) : null}
+            {auth.roles.includes('window') &&
+            !auth.roles.includes('boss') &&
+            !auth.roles.includes('bookkeeper') ? (
+              <NavLink
+                to="/window/list"
+                className="block mt-4 lg:inline-block lg:mt-0 text-gray-800 hover:text-main-700 mr-4"
+                activeClassName="text-main-600 underline font-semibold"
+              >
+                Стекла
+              </NavLink>
+            ) : null}
+            {auth.roles.includes('boss') || auth.roles.includes('bookkeeper') ? (
+              <NavLink
+                to="/windowboss/list"
+                className="block mt-4 lg:inline-block lg:mt-0 text-gray-800 hover:text-main-700 mr-4"
+                activeClassName="text-main-600 underline font-semibold"
+              >
+                Стекла (Босс)
+              </NavLink>
+            ) : null}
 
-          {auth.roles.includes('cond') &&
-          !auth.roles.includes('boss') &&
-          !auth.roles.includes('bookkeeper') ? (
-            <NavLink
-              to="/cond/list"
-              className="block mt-4 lg:inline-block lg:mt-0 text-gray-800 hover:text-main-700 mr-4"
-              activeClassName="text-main-600 underline font-semibold"
-            >
-              Кондиционеры
-            </NavLink>
-          ) : null}
-          {auth.roles.includes('boss') || auth.roles.includes('bookkeeper') ? (
-            <NavLink
-              to="/condboss/list"
-              className="block mt-4 lg:inline-block lg:mt-0 text-gray-800 hover:text-main-700 mr-4"
-              activeClassName="text-main-600 underline font-semibold"
-            >
-              Кондиционеры (Босс)
-            </NavLink>
-          ) : null}
+            {auth.roles.includes('cond') &&
+            !auth.roles.includes('boss') &&
+            !auth.roles.includes('bookkeeper') ? (
+              <NavLink
+                to="/cond/list"
+                className="block mt-4 lg:inline-block lg:mt-0 text-gray-800 hover:text-main-700 mr-4"
+                activeClassName="text-main-600 underline font-semibold"
+              >
+                Кондиционеры
+              </NavLink>
+            ) : null}
+            {auth.roles.includes('boss') || auth.roles.includes('bookkeeper') ? (
+              <NavLink
+                to="/condboss/list"
+                className="block mt-4 lg:inline-block lg:mt-0 text-gray-800 hover:text-main-700 mr-4"
+                activeClassName="text-main-600 underline font-semibold"
+              >
+                Кондиционеры (Босс)
+              </NavLink>
+            ) : null}
 
-          {auth.roles.includes('kassa') ||
-          auth.roles.includes('boss') ||
-          auth.roles.includes('hranenie') ||
-          auth.roles.includes('admin') ? (
-            <NavLink
-              to="/storages/order/list"
-              className="block mt-4 lg:inline-block lg:mt-0 text-gray-800 hover:text-main-700 mr-4"
-              activeClassName="text-main-600 underline font-semibold"
-            >
-              Хранение
-            </NavLink>
-          ) : null}
-          {auth.roles.includes('autopartfull') ||
-          auth.roles.includes('autopartsimple') ||
-          auth.roles.includes('razval') ||
-          auth.roles.includes('kassa') ||
-          auth.roles.includes('boss') ||
-          auth.roles.includes('admin') ? (
-            <NavLink
-              to="/customer/list"
-              className="block mt-4 lg:inline-block lg:mt-0 text-gray-800 hover:text-main-700 mr-4"
-              activeClassName="text-main-600 underline font-semibold"
-            >
-              Клиенты
-            </NavLink>
-          ) : null}
-          {auth.roles.includes('autopartfull') ||
-          auth.roles.includes('boss') ||
-          auth.roles.includes('admin') ? (
-            <NavLink
-              to="/vendor/list"
-              className="block mt-4 lg:inline-block lg:mt-0 text-gray-800 hover:text-main-700 mr-4"
-              activeClassName="text-main-600 underline font-semibold"
-            >
-              Поставщики
-            </NavLink>
-          ) : null}
-          {auth.roles.includes('admin') ? (
-            <NavLink
-              to="/place/list"
-              className="block mt-4 lg:inline-block lg:mt-0 text-gray-800 hover:text-main-700 mr-4"
-              activeClassName="text-main-600 underline font-semibold"
-            >
-              Администратор
-            </NavLink>
-          ) : null}
-          {/* <NavLink
+            {auth.roles.includes('kassa') ||
+            auth.roles.includes('boss') ||
+            auth.roles.includes('hranenie') ||
+            auth.roles.includes('admin') ? (
+              <NavLink
+                to="/storages/order/list"
+                className="block mt-4 lg:inline-block lg:mt-0 text-gray-800 hover:text-main-700 mr-4"
+                activeClassName="text-main-600 underline font-semibold"
+              >
+                Хранение
+              </NavLink>
+            ) : null}
+            {auth.roles.includes('autopartfull') ||
+            auth.roles.includes('autopartsimple') ||
+            auth.roles.includes('razval') ||
+            auth.roles.includes('kassa') ||
+            auth.roles.includes('boss') ||
+            auth.roles.includes('admin') ? (
+              <NavLink
+                to="/customer/list"
+                className="block mt-4 lg:inline-block lg:mt-0 text-gray-800 hover:text-main-700 mr-4"
+                activeClassName="text-main-600 underline font-semibold"
+              >
+                Клиенты
+              </NavLink>
+            ) : null}
+            {auth.roles.includes('autopartfull') ||
+            auth.roles.includes('boss') ||
+            auth.roles.includes('admin') ? (
+              <NavLink
+                to="/vendor/list"
+                className="block mt-4 lg:inline-block lg:mt-0 text-gray-800 hover:text-main-700 mr-4"
+                activeClassName="text-main-600 underline font-semibold"
+              >
+                Поставщики
+              </NavLink>
+            ) : null}
+            {auth.roles.includes('admin') ? (
+              <NavLink
+                to="/place/list"
+                className="block mt-4 lg:inline-block lg:mt-0 text-gray-800 hover:text-main-700 mr-4"
+                activeClassName="text-main-600 underline font-semibold"
+              >
+                Администратор
+              </NavLink>
+            ) : null}
+            {/* <NavLink
             to="/employee/list"
             className="block mt-4 lg:inline-block lg:mt-0 text-gray-800 hover:text-main-700 mr-4"
             activeClassName="text-main-600 underline font-semibold"
@@ -314,14 +317,14 @@ const Navbar = () => {
             Сотрудники
           </NavLink> */}
 
-          {/* <NavLink
+            {/* <NavLink
             to="/account/list"
             className="block mt-4 lg:inline-block lg:mt-0 text-gray-800 hover:text-main-700 mr-4"
             activeClassName="text-main-600 underline font-semibold"
           >
             Аккаунты
           </NavLink> */}
-          {/* {auth.roles.includes('boss') ? (
+            {/* {auth.roles.includes('boss') ? (
             <NavLink
               to="/boss"
               className="block mt-4 lg:inline-block lg:mt-0 text-gray-800 hover:text-main-700 mr-4"
@@ -330,82 +333,125 @@ const Navbar = () => {
               Босс
             </NavLink>
           ) : null} */}
-          {auth.roles.includes('bookkeeper') ? (
-            <NavLink
-              to="/shinomontazhprice/list/legk"
-              className="block mt-4 lg:inline-block lg:mt-0 text-gray-800 hover:text-main-700 mr-4"
-              activeClassName="text-main-600 underline font-semibold"
-            >
-              Цены (шиномонтаж)
-            </NavLink>
-          ) : null}
-          {auth.roles.includes('bookkeeper') ? (
-            <NavLink
-              to="/stoprice/list/rus"
-              className="block mt-4 lg:inline-block lg:mt-0 text-gray-800 hover:text-main-700 mr-4"
-              activeClassName="text-main-600 underline font-semibold"
-            >
-              Цены (СТО)
-            </NavLink>
-          ) : null}
-          {auth.roles.includes('bookkeeper') ? (
-            <NavLink
-              to="/washprice/list/rus"
-              className="block mt-4 lg:inline-block lg:mt-0 text-gray-800 hover:text-main-700 mr-4"
-              activeClassName="text-main-600 underline font-semibold"
-            >
-              Цены (Мойка)
-            </NavLink>
-          ) : null}
-          {auth.roles.includes('bookkeeper') ? (
-            <NavLink
-              to="/windowprice/list/legk"
-              className="block mt-4 lg:inline-block lg:mt-0 text-gray-800 hover:text-main-700 mr-4"
-              activeClassName="text-main-600 underline font-semibold"
-            >
-              Цены (Стекла)
-            </NavLink>
-          ) : null}
-          {auth.roles.includes('bookkeeper') ? (
-            <NavLink
-              to="/condprice/list/legk"
-              className="block mt-4 lg:inline-block lg:mt-0 text-gray-800 hover:text-main-700 mr-4"
-              activeClassName="text-main-600 underline font-semibold"
-            >
-              Цены (Кондиционеры)
-            </NavLink>
-          ) : null}
-          {auth.roles.includes('bookkeeper') ? (
-            <NavLink
-              to="/material/list"
-              className="block mt-4 lg:inline-block lg:mt-0 text-gray-800 hover:text-main-700 mr-4"
-              activeClassName="text-main-600 underline font-semibold"
-            >
-              Цены (материалы)
-            </NavLink>
-          ) : null}
-          {auth.roles.includes('bookkeeper') ? (
-            <NavLink
-              to="/category/list"
-              className="block mt-4 lg:inline-block lg:mt-0 text-gray-800 hover:text-main-700 mr-4"
-              activeClassName="text-main-600 underline font-semibold"
-            >
-              Категории
-            </NavLink>
-          ) : null}
-          {auth.roles.includes('kassa') ||
-          auth.roles.includes('bookkeeper') ||
-          auth.roles.includes('boss') ||
-          auth.roles.includes('report') ? (
-            <NavLink
-              to="/report"
-              className="block mt-4 lg:inline-block lg:mt-0 text-gray-800 hover:text-main-700 mr-4"
-              activeClassName="text-main-600 underline font-semibold"
-            >
-              Отчет
-            </NavLink>
-          ) : null}
-        </div>
+            {auth.roles.includes('bookkeeper') ? (
+              <NavLink
+                to="/shinomontazhprice/list/legk"
+                className="block mt-4 lg:inline-block lg:mt-0 text-gray-800 hover:text-main-700 mr-4"
+                activeClassName="text-main-600 underline font-semibold"
+              >
+                Цены (шиномонтаж)
+              </NavLink>
+            ) : null}
+            {auth.roles.includes('bookkeeper') ? (
+              <NavLink
+                to="/stoprice/list/rus"
+                className="block mt-4 lg:inline-block lg:mt-0 text-gray-800 hover:text-main-700 mr-4"
+                activeClassName="text-main-600 underline font-semibold"
+              >
+                Цены (СТО)
+              </NavLink>
+            ) : null}
+            {auth.roles.includes('bookkeeper') ? (
+              <NavLink
+                to="/washprice/list/rus"
+                className="block mt-4 lg:inline-block lg:mt-0 text-gray-800 hover:text-main-700 mr-4"
+                activeClassName="text-main-600 underline font-semibold"
+              >
+                Цены (Мойка)
+              </NavLink>
+            ) : null}
+            {auth.roles.includes('bookkeeper') ? (
+              <NavLink
+                to="/windowprice/list/legk"
+                className="block mt-4 lg:inline-block lg:mt-0 text-gray-800 hover:text-main-700 mr-4"
+                activeClassName="text-main-600 underline font-semibold"
+              >
+                Цены (Стекла)
+              </NavLink>
+            ) : null}
+            {auth.roles.includes('bookkeeper') ? (
+              <NavLink
+                to="/condprice/list/legk"
+                className="block mt-4 lg:inline-block lg:mt-0 text-gray-800 hover:text-main-700 mr-4"
+                activeClassName="text-main-600 underline font-semibold"
+              >
+                Цены (Кондиционеры)
+              </NavLink>
+            ) : null}
+            {auth.roles.includes('bookkeeper') ? (
+              <NavLink
+                to="/material/list"
+                className="block mt-4 lg:inline-block lg:mt-0 text-gray-800 hover:text-main-700 mr-4"
+                activeClassName="text-main-600 underline font-semibold"
+              >
+                Цены (материалы)
+              </NavLink>
+            ) : null}
+            {auth.roles.includes('bookkeeper') ? (
+              <NavLink
+                to="/category/list"
+                className="block mt-4 lg:inline-block lg:mt-0 text-gray-800 hover:text-main-700 mr-4"
+                activeClassName="text-main-600 underline font-semibold"
+              >
+                Категории
+              </NavLink>
+            ) : null}
+            {auth.roles.includes('kassa') ||
+            auth.roles.includes('bookkeeper') ||
+            auth.roles.includes('boss') ||
+            auth.roles.includes('report') ? (
+              <NavLink
+                to="/report"
+                className="block mt-4 lg:inline-block lg:mt-0 text-gray-800 hover:text-main-700 mr-4"
+                activeClassName="text-main-600 underline font-semibold"
+              >
+                Отчет
+              </NavLink>
+            ) : null}
+          </div>
+        ) : (
+          <div className="text-sm lg:flex-grow">
+            {auth.roles.includes('shinomontazh') && !auth.roles.includes('boss') ? (
+              <NavLink
+                to="/shinomontazh/list"
+                className="block mt-4 lg:inline-block lg:mt-0 text-gray-800 hover:text-main-700 mr-4"
+                activeClassName="text-main-600 underline font-semibold"
+              >
+                Шиномонтаж
+              </NavLink>
+            ) : null}
+            {auth.roles.includes('boss') || auth.roles.includes('bookkeeper') ? (
+              <NavLink
+                to="/shinomontazhboss/list"
+                className="block mt-4 lg:inline-block lg:mt-0 text-gray-800 hover:text-main-700 mr-4"
+                activeClassName="text-main-600 underline font-semibold"
+              >
+                Шиномонтаж (Босс)
+              </NavLink>
+            ) : null}
+            {auth.roles.includes('admin') ? (
+              <NavLink
+                to="/place/list"
+                className="block mt-4 lg:inline-block lg:mt-0 text-gray-800 hover:text-main-700 mr-4"
+                activeClassName="text-main-600 underline font-semibold"
+              >
+                Администратор
+              </NavLink>
+            ) : null}
+            {auth.roles.includes('kassa') ||
+            auth.roles.includes('bookkeeper') ||
+            auth.roles.includes('boss') ||
+            auth.roles.includes('report') ? (
+              <NavLink
+                to="/report"
+                className="block mt-4 lg:inline-block lg:mt-0 text-gray-800 hover:text-main-700 mr-4"
+                activeClassName="text-main-600 underline font-semibold"
+              >
+                Отчет
+              </NavLink>
+            ) : null}
+          </div>
+        )}
         <div className="relative inline-block text-left">
           <div>
             <button

@@ -28,7 +28,7 @@ const ReportTab = ({ active, onChangeTab, tab }) => {
   )
 }
 
-const KASSA_TABS = [
+let KASSA_TABS = [
   { name: 'Шиномонтаж (касса)', value: 'sh-kassa' },
   { name: 'СТО (касса)', value: 'sto-kassa' },
   { name: 'Мойка (касса)', value: 'wash-kassa' },
@@ -36,7 +36,7 @@ const KASSA_TABS = [
   { name: 'Кондиционеры (касса)', value: 'cond-kassa' }
 ]
 
-const BUH_TABS = [
+let BUH_TABS = [
   { name: 'Шиномонтаж (бухгалтерия)', value: 'sh-buh' },
   { name: 'СТО (бухгалтерия)', value: 'sto-buh' },
   { name: 'Мойка (бухгалтерия)', value: 'wash-buh' },
@@ -44,7 +44,7 @@ const BUH_TABS = [
   { name: 'Кондиционеры (бухгалтерия)', value: 'cond-buh' }
 ]
 
-const MATERIAL_TABS = [
+let MATERIAL_TABS = [
   { name: 'Шиномонтаж (метериалы)', value: 'sh-material' },
   { name: 'СТО (метериалы)', value: 'sto-material' },
   { name: 'Мойка (метериалы)', value: 'wash-material' },
@@ -52,7 +52,7 @@ const MATERIAL_TABS = [
   { name: 'Кондиционеры (метериалы)', value: 'cond-material' }
 ]
 
-const PRODUCT_TABS = [
+let PRODUCT_TABS = [
   { name: 'Автозапчасти', value: 'autoparts-product' },
   { name: 'Инструмент', value: 'tools-product' },
   { name: 'Шины', value: 'tyres-product' }
@@ -63,6 +63,15 @@ const Report = () => {
   const employeeList = useSelector((s) => s.employees.list)
   const auth = useSelector((s) => s.auth)
   const dispatch = useDispatch()
+
+  const isStudy = process.env.MODE === 'study'
+
+  if (isStudy) {
+    KASSA_TABS = [{ name: 'Шиномонтаж (касса)', value: 'sh-kassa' }]
+    BUH_TABS = [{ name: 'Шиномонтаж (бухгалтерия)', value: 'sh-buh' }]
+    MATERIAL_TABS = [{ name: 'Шиномонтаж (метериалы)', value: 'sh-material' }]
+    PRODUCT_TABS = []
+  }
 
   const mockPassword = '320208'
   const [passwordIsCorrect, setPasswordIsCorrect] = useState(false)
