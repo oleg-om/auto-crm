@@ -12,7 +12,6 @@ import React from 'react'
 import cookieParser from 'cookie-parser'
 import passport from 'passport'
 import jwt from 'jsonwebtoken'
-import proxy from 'http-proxy-middleware'
 
 import config from './config'
 import connectDatabase from './services/mongoose'
@@ -21,6 +20,8 @@ import User from './model/User.model'
 import Message from './model/Message.model'
 import Html from '../client/html'
 import kerchshinaCheck from './services/kerchshina'
+
+const { createProxyMiddleware } = require('http-proxy-middleware')
 
 const taskRoutes = require('./routes/api/task.routes')
 const placeRoutes = require('./routes/api/place.routes')
@@ -106,47 +107,47 @@ function getFormatMessages(messages) {
 const isStudyMode = process.env.MODE === 'study'
 
 // proxy if is study mode
-const placesProxy = proxy({
+const placesProxy = createProxyMiddleware({
   target: `${process.env.WORK_DOMAIN}/api/v1/place`,
   changeOrigin: true
 })
-const carsProxy = proxy({
+const carsProxy = createProxyMiddleware({
   target: `${process.env.WORK_DOMAIN}/api/v1/car`,
   changeOrigin: true
 })
-const customerProxy = proxy({
+const customerProxy = createProxyMiddleware({
   target: `${process.env.WORK_DOMAIN}/api/v1/customer`,
   changeOrigin: true
 })
-const materialProxy = proxy({
+const materialProxy = createProxyMiddleware({
   target: `${process.env.WORK_DOMAIN}/api/v1/material`,
   changeOrigin: true
 })
-const shinomontazhPriceProxy = proxy({
+const shinomontazhPriceProxy = createProxyMiddleware({
   target: `${process.env.WORK_DOMAIN}/api/v1/shinomontazhprice`,
   changeOrigin: true
 })
-const vendorProxy = proxy({
+const vendorProxy = createProxyMiddleware({
   target: `${process.env.WORK_DOMAIN}/api/v1/vendor`,
   changeOrigin: true
 })
-const stoPriceProxy = proxy({
+const stoPriceProxy = createProxyMiddleware({
   target: `${process.env.WORK_DOMAIN}/api/v1/stoprice`,
   changeOrigin: true
 })
-const washPriceProxy = proxy({
+const washPriceProxy = createProxyMiddleware({
   target: `${process.env.WORK_DOMAIN}/api/v1/washprice`,
   changeOrigin: true
 })
-const condPriceProxy = proxy({
+const condPriceProxy = createProxyMiddleware({
   target: `${process.env.WORK_DOMAIN}/api/v1/condprice`,
   changeOrigin: true
 })
-const windowPriceProxy = proxy({
+const windowPriceProxy = createProxyMiddleware({
   target: `${process.env.WORK_DOMAIN}/api/v1/windowprice`,
   changeOrigin: true
 })
-const categoryProxy = proxy({
+const categoryProxy = createProxyMiddleware({
   target: `${process.env.WORK_DOMAIN}/api/v1/category`,
   changeOrigin: true
 })
