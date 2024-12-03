@@ -106,47 +106,47 @@ function getFormatMessages(messages) {
 const isStudyMode = process.env.MODE === 'study'
 
 // proxy if is study mode
-const placesProxy = proxy.createProxyMiddleware({
+const placesProxy = proxy({
   target: `${process.env.WORK_DOMAIN}/api/v1/place`,
   changeOrigin: true
 })
-const carsProxy = proxy.createProxyMiddleware({
+const carsProxy = proxy({
   target: `${process.env.WORK_DOMAIN}/api/v1/car`,
   changeOrigin: true
 })
-const customerProxy = proxy.createProxyMiddleware({
+const customerProxy = proxy({
   target: `${process.env.WORK_DOMAIN}/api/v1/customer`,
   changeOrigin: true
 })
-const materialProxy = proxy.createProxyMiddleware({
+const materialProxy = proxy({
   target: `${process.env.WORK_DOMAIN}/api/v1/material`,
   changeOrigin: true
 })
-const shinomontazhPriceProxy = proxy.createProxyMiddleware({
+const shinomontazhPriceProxy = proxy({
   target: `${process.env.WORK_DOMAIN}/api/v1/shinomontazhprice`,
   changeOrigin: true
 })
-const vendorProxy = proxy.createProxyMiddleware({
+const vendorProxy = proxy({
   target: `${process.env.WORK_DOMAIN}/api/v1/vendor`,
   changeOrigin: true
 })
-const stoPriceProxy = proxy.createProxyMiddleware({
+const stoPriceProxy = proxy({
   target: `${process.env.WORK_DOMAIN}/api/v1/stoprice`,
   changeOrigin: true
 })
-const washPriceProxy = proxy.createProxyMiddleware({
+const washPriceProxy = proxy({
   target: `${process.env.WORK_DOMAIN}/api/v1/washprice`,
   changeOrigin: true
 })
-const condPriceProxy = proxy.createProxyMiddleware({
+const condPriceProxy = proxy({
   target: `${process.env.WORK_DOMAIN}/api/v1/condprice`,
   changeOrigin: true
 })
-const windowPriceProxy = proxy.createProxyMiddleware({
+const windowPriceProxy = proxy({
   target: `${process.env.WORK_DOMAIN}/api/v1/windowprice`,
   changeOrigin: true
 })
-const categoryProxy = proxy.createProxyMiddleware({
+const categoryProxy = proxy({
   target: `${process.env.WORK_DOMAIN}/api/v1/category`,
   changeOrigin: true
 })
