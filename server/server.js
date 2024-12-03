@@ -12,7 +12,7 @@ import React from 'react'
 import cookieParser from 'cookie-parser'
 import passport from 'passport'
 import jwt from 'jsonwebtoken'
-import createProxyMiddleware from 'http-proxy-middleware'
+import { createProxyMiddleware } from 'http-proxy-middleware'
 
 import config from './config'
 import connectDatabase from './services/mongoose'
