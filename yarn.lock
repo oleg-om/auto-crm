@@ -5568,7 +5568,7 @@ data-urls@^2.0.0:
 
 dead-exports@^1.0.13:
   version "1.0.13"
-  resolved "https://verdaccio.revlab.dev/dead-exports/-/dead-exports-1.0.13.tgz#3fdd14748c543721596c74d1bf1edd86580f5418"
+  resolved "https://registry.yarnpkg.com/dead-exports/-/dead-exports-1.0.13.tgz#3fdd14748c543721596c74d1bf1edd86580f5418"
   integrity sha512-fhotilwQfZkTAxGV18NDrhsVm0VwWQ/ZrmQ4VsdZuziOZSZMPdKLhRcIrxVuPGVO5Buf4flBeHE5cE/BzgTq/A==
 
 debug@2.6.9, debug@^2.2.0, debug@^2.3.3, debug@^2.6.0, debug@^2.6.8, debug@^2.6.9:
