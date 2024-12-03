@@ -762,7 +762,7 @@ const StosEdit = (props) => {
               type="button"
               className={cx('p-4 bg-gray-200 rounded w-full h-full overflow-hidden', {
                 block: active !== 'employee',
-                'border-b-8 border-blue-400': active === 'employee'
+                'border-b-8 border-main-400': active === 'employee'
               })}
               onClick={() => changeStep('employee')}
             >
@@ -774,7 +774,7 @@ const StosEdit = (props) => {
               type="button"
               className={cx('p-4 bg-gray-200 rounded w-full h-full overflow-hidden', {
                 block: active !== 'car',
-                'border-b-8 border-blue-400': active === 'car'
+                'border-b-8 border-main-400': active === 'car'
               })}
               onClick={() => changeStep('car')}
             >
@@ -786,7 +786,7 @@ const StosEdit = (props) => {
               type="button"
               className={cx('p-4 bg-gray-200 rounded w-full h-full overflow-hidden', {
                 block: active !== 'service',
-                'border-b-8 border-blue-400': active === 'service'
+                'border-b-8 border-main-400': active === 'service'
               })}
               onClick={() => changeStep('service')}
             >
@@ -798,7 +798,7 @@ const StosEdit = (props) => {
               type="button"
               className={cx('p-4 bg-gray-200 rounded w-full h-full overflow-hidden', {
                 block: active !== 'material',
-                'border-b-8 border-blue-400': active === 'material'
+                'border-b-8 border-main-400': active === 'material'
               })}
               onClick={() => changeStep('material')}
             >
@@ -810,7 +810,7 @@ const StosEdit = (props) => {
               type="button"
               className={cx('p-4 bg-gray-200 rounded w-full h-full overflow-hidden', {
                 block: active !== 'finish',
-                'border-b-8 border-blue-400': active === 'finish'
+                'border-b-8 border-main-400': active === 'finish'
               })}
               onClick={() => changeStep('finish')}
             >

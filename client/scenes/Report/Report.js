@@ -17,7 +17,7 @@ const ReportTab = ({ active, onChangeTab, tab }) => {
         type="button"
         className={cx('p-4 bg-gray-200 rounded w-full h-full overflow-hidden', {
           block: active !== value,
-          'border-b-8 border-blue-400': active === value
+          'border-b-8 border-main-400': active === value
         })}
         value={value}
         onClick={onChangeTab}

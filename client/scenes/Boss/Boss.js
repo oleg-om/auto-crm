@@ -88,7 +88,7 @@ const Boss = () => {
                   type="button"
                   className={cx('p-4 bg-gray-200 rounded w-full h-full', {
                     block: active !== 'autoparts',
-                    'border-b-8 border-blue-400': active === 'autoparts'
+                    'border-b-8 border-main-400': active === 'autoparts'
                   })}
                   onClick={() => setActive('autoparts')}
                 >
@@ -100,7 +100,7 @@ const Boss = () => {
                   type="button"
                   className={cx('p-4 bg-gray-200 rounded w-full h-full', {
                     block: active !== 'razval',
-                    'border-b-8 border-blue-400': active === 'razval'
+                    'border-b-8 border-main-400': active === 'razval'
                   })}
                   onClick={() => setActive('razval')}
                 >
@@ -113,7 +113,7 @@ const Boss = () => {
                     type="button"
                     className={cx('p-4 bg-gray-200 rounded w-full h-full', {
                       block: active !== 'common',
-                      'border-b-8 border-blue-400': active === 'common'
+                      'border-b-8 border-main-400': active === 'common'
                     })}
                     onClick={() => setActive('common')}
                   >

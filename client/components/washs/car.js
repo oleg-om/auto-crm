@@ -190,7 +190,7 @@ const Car = ({
                 <div className="w-1/3 p-1">
                   <button
                     type="button"
-                    className="p-3 m-1 text-lg rounded bg-yellow-200 hover:bg-yellow-300 border-blue-400 border-2 text-gray-900 w-full"
+                    className="p-3 m-1 text-lg rounded bg-yellow-200 hover:bg-yellow-300 border-main-400 border-2 text-gray-900 w-full"
                     onClick={onChangeRegNumber}
                     value="А"
                   >
@@ -200,7 +200,7 @@ const Car = ({
                 <div className="w-1/3 p-1">
                   <button
                     type="button"
-                    className="p-3 m-1 text-lg rounded bg-yellow-200 hover:bg-yellow-300 border-blue-400 border-2 text-gray-900 w-full"
+                    className="p-3 m-1 text-lg rounded bg-yellow-200 hover:bg-yellow-300 border-main-400 border-2 text-gray-900 w-full"
                     onClick={onChangeRegNumber}
                     value="В"
                   >
@@ -210,7 +210,7 @@ const Car = ({
                 <div className="w-1/3 p-1">
                   <button
                     type="button"
-                    className="p-3 m-1 text-lg rounded bg-yellow-200 hover:bg-yellow-300 border-blue-400 border-2 text-gray-900 w-full"
+                    className="p-3 m-1 text-lg rounded bg-yellow-200 hover:bg-yellow-300 border-main-400 border-2 text-gray-900 w-full"
                     onClick={onChangeRegNumber}
                     value="Е"
                   >
@@ -220,7 +220,7 @@ const Car = ({
                 <div className="w-1/3 p-1">
                   <button
                     type="button"
-                    className="p-3 m-1 text-lg rounded bg-yellow-200 hover:bg-yellow-300 border-blue-400 border-2 text-gray-900 w-full"
+                    className="p-3 m-1 text-lg rounded bg-yellow-200 hover:bg-yellow-300 border-main-400 border-2 text-gray-900 w-full"
                     onClick={onChangeRegNumber}
                     value="К"
                   >
@@ -230,7 +230,7 @@ const Car = ({
                 <div className="w-1/3 p-1">
                   <button
                     type="button"
-                    className="p-3 m-1 text-lg rounded bg-yellow-200 hover:bg-yellow-300 border-blue-400 border-2 text-gray-900 w-full"
+                    className="p-3 m-1 text-lg rounded bg-yellow-200 hover:bg-yellow-300 border-main-400 border-2 text-gray-900 w-full"
                     onClick={onChangeRegNumber}
                     value="М"
                   >
@@ -240,7 +240,7 @@ const Car = ({
                 <div className="w-1/3 p-1">
                   <button
                     type="button"
-                    className="p-3 m-1 text-lg rounded bg-yellow-200 hover:bg-yellow-300 border-blue-400 border-2 text-gray-900 w-full"
+                    className="p-3 m-1 text-lg rounded bg-yellow-200 hover:bg-yellow-300 border-main-400 border-2 text-gray-900 w-full"
                     onClick={onChangeRegNumber}
                     value="Н"
                   >
@@ -250,7 +250,7 @@ const Car = ({
                 <div className="w-1/3 p-1">
                   <button
                     type="button"
-                    className="p-3 m-1 text-lg rounded bg-yellow-200 hover:bg-yellow-300 border-blue-400 border-2 text-gray-900 w-full"
+                    className="p-3 m-1 text-lg rounded bg-yellow-200 hover:bg-yellow-300 border-main-400 border-2 text-gray-900 w-full"
                     onClick={onChangeRegNumber}
                     value="О"
                   >
@@ -260,7 +260,7 @@ const Car = ({
                 <div className="w-1/3 p-1">
                   <button
                     type="button"
-                    className="p-3 m-1 text-lg rounded bg-yellow-200 hover:bg-yellow-300 border-blue-400 border-2 text-gray-900 w-full"
+                    className="p-3 m-1 text-lg rounded bg-yellow-200 hover:bg-yellow-300 border-main-400 border-2 text-gray-900 w-full"
                     onClick={onChangeRegNumber}
                     value="Р"
                   >
@@ -270,7 +270,7 @@ const Car = ({
                 <div className="w-1/3 p-1">
                   <button
                     type="button"
-                    className="p-3 m-1 text-lg rounded bg-yellow-200 hover:bg-yellow-300 border-blue-400 border-2 text-gray-900 w-full"
+                    className="p-3 m-1 text-lg rounded bg-yellow-200 hover:bg-yellow-300 border-main-400 border-2 text-gray-900 w-full"
                     onClick={onChangeRegNumber}
                     value="С"
                   >
@@ -280,7 +280,7 @@ const Car = ({
                 <div className="w-1/3 p-1">
                   <button
                     type="button"
-                    className="p-3 m-1 text-lg rounded bg-yellow-200 hover:bg-yellow-300 border-blue-400 border-2 text-gray-900 w-full"
+                    className="p-3 m-1 text-lg rounded bg-yellow-200 hover:bg-yellow-300 border-main-400 border-2 text-gray-900 w-full"
                     onClick={onChangeRegNumber}
                     value="Т"
                   >
@@ -290,7 +290,7 @@ const Car = ({
                 <div className="w-1/3 p-1">
                   <button
                     type="button"
-                    className="p-3 m-1 text-lg rounded bg-yellow-200 hover:bg-yellow-300 border-blue-400 border-2 text-gray-900 w-full"
+                    className="p-3 m-1 text-lg rounded bg-yellow-200 hover:bg-yellow-300 border-main-400 border-2 text-gray-900 w-full"
                     onClick={onChangeRegNumber}
                     value="У"
                   >
@@ -300,7 +300,7 @@ const Car = ({
                 <div className="w-1/3 p-1">
                   <button
                     type="button"
-                    className="p-3 m-1 text-lg rounded bg-yellow-200 border-blue-400 border-2 text-gray-900 w-full"
+                    className="p-3 m-1 text-lg rounded bg-yellow-200 border-main-400 border-2 text-gray-900 w-full"
                     onClick={onChangeRegNumber}
                     value="Х"
                   >
@@ -313,7 +313,7 @@ const Car = ({
                 <div className="w-1/3 p-1">
                   <button
                     type="button"
-                    className="p-3 m-1 text-lg rounded bg-white hover:bg-yellow-300 border-blue-400 border-2 text-gray-900 w-full"
+                    className="p-3 m-1 text-lg rounded bg-white hover:bg-yellow-300 border-main-400 border-2 text-gray-900 w-full"
                     onClick={onChangeRegNumber}
                     value="1"
                   >
@@ -323,7 +323,7 @@ const Car = ({
                 <div className="w-1/3 p-1">
                   <button
                     type="button"
-                    className="p-3 m-1 text-lg rounded bg-white hover:bg-yellow-300 border-blue-400 border-2 text-gray-900 w-full"
+                    className="p-3 m-1 text-lg rounded bg-white hover:bg-yellow-300 border-main-400 border-2 text-gray-900 w-full"
                     onClick={onChangeRegNumber}
                     value="2"
                   >
@@ -333,7 +333,7 @@ const Car = ({
                 <div className="w-1/3 p-1">
                   <button
                     type="button"
-                    className="p-3 m-1 text-lg rounded bg-white hover:bg-yellow-300 border-blue-400 border-2 text-gray-900 w-full"
+                    className="p-3 m-1 text-lg rounded bg-white hover:bg-yellow-300 border-main-400 border-2 text-gray-900 w-full"
                     onClick={onChangeRegNumber}
                     value="3"
                   >
@@ -343,7 +343,7 @@ const Car = ({
                 <div className="w-1/3 p-1">
                   <button
                     type="button"
-                    className="p-3 m-1 text-lg rounded bg-white hover:bg-yellow-300 border-blue-400 border-2 text-gray-900 w-full"
+                    className="p-3 m-1 text-lg rounded bg-white hover:bg-yellow-300 border-main-400 border-2 text-gray-900 w-full"
                     onClick={onChangeRegNumber}
                     value="4"
                   >
@@ -353,7 +353,7 @@ const Car = ({
                 <div className="w-1/3 p-1">
                   <button
                     type="button"
-                    className="p-3 m-1 text-lg rounded bg-white hover:bg-yellow-300 border-blue-400 border-2 text-gray-900 w-full"
+                    className="p-3 m-1 text-lg rounded bg-white hover:bg-yellow-300 border-main-400 border-2 text-gray-900 w-full"
                     onClick={onChangeRegNumber}
                     value="5"
                   >
@@ -363,7 +363,7 @@ const Car = ({
                 <div className="w-1/3 p-1">
                   <button
                     type="button"
-                    className="p-3 m-1 text-lg rounded bg-white hover:bg-yellow-300 border-blue-400 border-2 text-gray-900 w-full"
+                    className="p-3 m-1 text-lg rounded bg-white hover:bg-yellow-300 border-main-400 border-2 text-gray-900 w-full"
                     onClick={onChangeRegNumber}
                     value="6"
                   >
@@ -373,7 +373,7 @@ const Car = ({
                 <div className="w-1/3 p-1">
                   <button
                     type="button"
-                    className="p-3 m-1 text-lg rounded bg-white hover:bg-yellow-300 border-blue-400 border-2 text-gray-900 w-full"
+                    className="p-3 m-1 text-lg rounded bg-white hover:bg-yellow-300 border-main-400 border-2 text-gray-900 w-full"
                     onClick={onChangeRegNumber}
                     value="7"
                   >
@@ -383,7 +383,7 @@ const Car = ({
                 <div className="w-1/3 p-1">
                   <button
                     type="button"
-                    className="p-3 m-1 text-lg rounded bg-white hover:bg-yellow-300 border-blue-400 border-2 text-gray-900 w-full"
+                    className="p-3 m-1 text-lg rounded bg-white hover:bg-yellow-300 border-main-400 border-2 text-gray-900 w-full"
                     onClick={onChangeRegNumber}
                     value="8"
                   >
@@ -393,7 +393,7 @@ const Car = ({
                 <div className="w-1/3 p-1">
                   <button
                     type="button"
-                    className="p-3 m-1 text-lg rounded bg-white hover:bg-yellow-300 border-blue-400 border-2 text-gray-900 w-full"
+                    className="p-3 m-1 text-lg rounded bg-white hover:bg-yellow-300 border-main-400 border-2 text-gray-900 w-full"
                     onClick={onChangeRegNumber}
                     value="9"
                   >
@@ -403,7 +403,7 @@ const Car = ({
                 <div className="w-1/3 p-1">
                   <button
                     type="button"
-                    className="p-3 m-1 text-lg rounded bg-white hover:bg-yellow-300 border-blue-400 border-2 text-gray-900 w-full"
+                    className="p-3 m-1 text-lg rounded bg-white hover:bg-yellow-300 border-main-400 border-2 text-gray-900 w-full"
                     onClick={onChangeRegNumber}
                     value="0"
                   >

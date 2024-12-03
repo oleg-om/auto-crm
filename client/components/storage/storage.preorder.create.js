@@ -653,7 +653,7 @@ const StoragesCreate = (props) => {
                     <div className="w-1/3 p-1">
                       <button
                         type="button"
-                        className="p-3 m-1 text-lg rounded bg-yellow-200 hover:bg-yellow-300 border-blue-400 border-2 text-gray-900 w-full"
+                        className="p-3 m-1 text-lg rounded bg-yellow-200 hover:bg-yellow-300 border-main-400 border-2 text-gray-900 w-full"
                         onClick={onChangeRegNumber}
                         value="А"
                       >
@@ -663,7 +663,7 @@ const StoragesCreate = (props) => {
                     <div className="w-1/3 p-1">
                       <button
                         type="button"
-                        className="p-3 m-1 text-lg rounded bg-yellow-200 hover:bg-yellow-300 border-blue-400 border-2 text-gray-900 w-full"
+                        className="p-3 m-1 text-lg rounded bg-yellow-200 hover:bg-yellow-300 border-main-400 border-2 text-gray-900 w-full"
                         onClick={onChangeRegNumber}
                         value="В"
                       >
@@ -673,7 +673,7 @@ const StoragesCreate = (props) => {
                     <div className="w-1/3 p-1">
                       <button
                         type="button"
-                        className="p-3 m-1 text-lg rounded bg-yellow-200 hover:bg-yellow-300 border-blue-400 border-2 text-gray-900 w-full"
+                        className="p-3 m-1 text-lg rounded bg-yellow-200 hover:bg-yellow-300 border-main-400 border-2 text-gray-900 w-full"
                         onClick={onChangeRegNumber}
                         value="Е"
                       >
@@ -683,7 +683,7 @@ const StoragesCreate = (props) => {
                     <div className="w-1/3 p-1">
                       <button
                         type="button"
-                        className="p-3 m-1 text-lg rounded bg-yellow-200 hover:bg-yellow-300 border-blue-400 border-2 text-gray-900 w-full"
+                        className="p-3 m-1 text-lg rounded bg-yellow-200 hover:bg-yellow-300 border-main-400 border-2 text-gray-900 w-full"
                         onClick={onChangeRegNumber}
                         value="К"
                       >
@@ -693,7 +693,7 @@ const StoragesCreate = (props) => {
                     <div className="w-1/3 p-1">
                       <button
                         type="button"
-                        className="p-3 m-1 text-lg rounded bg-yellow-200 hover:bg-yellow-300 border-blue-400 border-2 text-gray-900 w-full"
+                        className="p-3 m-1 text-lg rounded bg-yellow-200 hover:bg-yellow-300 border-main-400 border-2 text-gray-900 w-full"
                         onClick={onChangeRegNumber}
                         value="М"
                       >
@@ -703,7 +703,7 @@ const StoragesCreate = (props) => {
                     <div className="w-1/3 p-1">
                       <button
                         type="button"
-                        className="p-3 m-1 text-lg rounded bg-yellow-200 hover:bg-yellow-300 border-blue-400 border-2 text-gray-900 w-full"
+                        className="p-3 m-1 text-lg rounded bg-yellow-200 hover:bg-yellow-300 border-main-400 border-2 text-gray-900 w-full"
                         onClick={onChangeRegNumber}
                         value="Н"
                       >
@@ -713,7 +713,7 @@ const StoragesCreate = (props) => {
                     <div className="w-1/3 p-1">
                       <button
                         type="button"
-                        className="p-3 m-1 text-lg rounded bg-yellow-200 hover:bg-yellow-300 border-blue-400 border-2 text-gray-900 w-full"
+                        className="p-3 m-1 text-lg rounded bg-yellow-200 hover:bg-yellow-300 border-main-400 border-2 text-gray-900 w-full"
                         onClick={onChangeRegNumber}
                         value="О"
                       >
@@ -723,7 +723,7 @@ const StoragesCreate = (props) => {
                     <div className="w-1/3 p-1">
                       <button
                         type="button"
-                        className="p-3 m-1 text-lg rounded bg-yellow-200 hover:bg-yellow-300 border-blue-400 border-2 text-gray-900 w-full"
+                        className="p-3 m-1 text-lg rounded bg-yellow-200 hover:bg-yellow-300 border-main-400 border-2 text-gray-900 w-full"
                         onClick={onChangeRegNumber}
                         value="Р"
                       >
@@ -733,7 +733,7 @@ const StoragesCreate = (props) => {
                     <div className="w-1/3 p-1">
                       <button
                         type="button"
-                        className="p-3 m-1 text-lg rounded bg-yellow-200 hover:bg-yellow-300 border-blue-400 border-2 text-gray-900 w-full"
+                        className="p-3 m-1 text-lg rounded bg-yellow-200 hover:bg-yellow-300 border-main-400 border-2 text-gray-900 w-full"
                         onClick={onChangeRegNumber}
                         value="С"
                       >
@@ -743,7 +743,7 @@ const StoragesCreate = (props) => {
                     <div className="w-1/3 p-1">
                       <button
                         type="button"
-                        className="p-3 m-1 text-lg rounded bg-yellow-200 hover:bg-yellow-300 border-blue-400 border-2 text-gray-900 w-full"
+                        className="p-3 m-1 text-lg rounded bg-yellow-200 hover:bg-yellow-300 border-main-400 border-2 text-gray-900 w-full"
                         onClick={onChangeRegNumber}
                         value="Т"
                       >
@@ -753,7 +753,7 @@ const StoragesCreate = (props) => {
                     <div className="w-1/3 p-1">
                       <button
                         type="button"
-                        className="p-3 m-1 text-lg rounded bg-yellow-200 hover:bg-yellow-300 border-blue-400 border-2 text-gray-900 w-full"
+                        className="p-3 m-1 text-lg rounded bg-yellow-200 hover:bg-yellow-300 border-main-400 border-2 text-gray-900 w-full"
                         onClick={onChangeRegNumber}
                         value="У"
                       >
@@ -763,7 +763,7 @@ const StoragesCreate = (props) => {
                     <div className="w-1/3 p-1">
                       <button
                         type="button"
-                        className="p-3 m-1 text-lg rounded bg-yellow-200 border-blue-400 border-2 text-gray-900 w-full"
+                        className="p-3 m-1 text-lg rounded bg-yellow-200 border-main-400 border-2 text-gray-900 w-full"
                         onClick={onChangeRegNumber}
                         value="Х"
                       >
@@ -776,7 +776,7 @@ const StoragesCreate = (props) => {
                     <div className="w-1/3 p-1">
                       <button
                         type="button"
-                        className="p-3 m-1 text-lg rounded bg-white hover:bg-yellow-300 border-blue-400 border-2 text-gray-900 w-full"
+                        className="p-3 m-1 text-lg rounded bg-white hover:bg-yellow-300 border-main-400 border-2 text-gray-900 w-full"
                         onClick={onChangeRegNumber}
                         value="1"
                       >
@@ -786,7 +786,7 @@ const StoragesCreate = (props) => {
                     <div className="w-1/3 p-1">
                       <button
                         type="button"
-                        className="p-3 m-1 text-lg rounded bg-white hover:bg-yellow-300 border-blue-400 border-2 text-gray-900 w-full"
+                        className="p-3 m-1 text-lg rounded bg-white hover:bg-yellow-300 border-main-400 border-2 text-gray-900 w-full"
                         onClick={onChangeRegNumber}
                         value="2"
                       >
@@ -796,7 +796,7 @@ const StoragesCreate = (props) => {
                     <div className="w-1/3 p-1">
                       <button
                         type="button"
-                        className="p-3 m-1 text-lg rounded bg-white hover:bg-yellow-300 border-blue-400 border-2 text-gray-900 w-full"
+                        className="p-3 m-1 text-lg rounded bg-white hover:bg-yellow-300 border-main-400 border-2 text-gray-900 w-full"
                         onClick={onChangeRegNumber}
                         value="3"
                       >
@@ -806,7 +806,7 @@ const StoragesCreate = (props) => {
                     <div className="w-1/3 p-1">
                       <button
                         type="button"
-                        className="p-3 m-1 text-lg rounded bg-white hover:bg-yellow-300 border-blue-400 border-2 text-gray-900 w-full"
+                        className="p-3 m-1 text-lg rounded bg-white hover:bg-yellow-300 border-main-400 border-2 text-gray-900 w-full"
                         onClick={onChangeRegNumber}
                         value="4"
                       >
@@ -816,7 +816,7 @@ const StoragesCreate = (props) => {
                     <div className="w-1/3 p-1">
                       <button
                         type="button"
-                        className="p-3 m-1 text-lg rounded bg-white hover:bg-yellow-300 border-blue-400 border-2 text-gray-900 w-full"
+                        className="p-3 m-1 text-lg rounded bg-white hover:bg-yellow-300 border-main-400 border-2 text-gray-900 w-full"
                         onClick={onChangeRegNumber}
                         value="5"
                       >
@@ -826,7 +826,7 @@ const StoragesCreate = (props) => {
                     <div className="w-1/3 p-1">
                       <button
                         type="button"
-                        className="p-3 m-1 text-lg rounded bg-white hover:bg-yellow-300 border-blue-400 border-2 text-gray-900 w-full"
+                        className="p-3 m-1 text-lg rounded bg-white hover:bg-yellow-300 border-main-400 border-2 text-gray-900 w-full"
                         onClick={onChangeRegNumber}
                         value="6"
                       >
@@ -836,7 +836,7 @@ const StoragesCreate = (props) => {
                     <div className="w-1/3 p-1">
                       <button
                         type="button"
-                        className="p-3 m-1 text-lg rounded bg-white hover:bg-yellow-300 border-blue-400 border-2 text-gray-900 w-full"
+                        className="p-3 m-1 text-lg rounded bg-white hover:bg-yellow-300 border-main-400 border-2 text-gray-900 w-full"
                         onClick={onChangeRegNumber}
                         value="7"
                       >
@@ -846,7 +846,7 @@ const StoragesCreate = (props) => {
                     <div className="w-1/3 p-1">
                       <button
                         type="button"
-                        className="p-3 m-1 text-lg rounded bg-white hover:bg-yellow-300 border-blue-400 border-2 text-gray-900 w-full"
+                        className="p-3 m-1 text-lg rounded bg-white hover:bg-yellow-300 border-main-400 border-2 text-gray-900 w-full"
                         onClick={onChangeRegNumber}
                         value="8"
                       >
@@ -856,7 +856,7 @@ const StoragesCreate = (props) => {
                     <div className="w-1/3 p-1">
                       <button
                         type="button"
-                        className="p-3 m-1 text-lg rounded bg-white hover:bg-yellow-300 border-blue-400 border-2 text-gray-900 w-full"
+                        className="p-3 m-1 text-lg rounded bg-white hover:bg-yellow-300 border-main-400 border-2 text-gray-900 w-full"
                         onClick={onChangeRegNumber}
                         value="9"
                       >
@@ -866,7 +866,7 @@ const StoragesCreate = (props) => {
                     <div className="w-1/3 p-1">
                       <button
                         type="button"
-                        className="p-3 m-1 text-lg rounded bg-white hover:bg-yellow-300 border-blue-400 border-2 text-gray-900 w-full"
+                        className="p-3 m-1 text-lg rounded bg-white hover:bg-yellow-300 border-main-400 border-2 text-gray-900 w-full"
                         onClick={onChangeRegNumber}
                         value="0"
                       >

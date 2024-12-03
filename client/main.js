@@ -8,9 +8,13 @@ import './assets/scss/main.scss'
 const target = document.getElementById('root')
 
 const render = (Component) => {
+  const isStudy = process.env.MODE === 'study'
+
   ;(module.hot ? ReactDOM.render : ReactDOM.hydrate)(
     <AppContainer>
-      <Component />
+      <div className={isStudy ? 'study-crm' : 'main-crm'}>
+        <Component />
+      </div>
     </AppContainer>,
     target
   )
