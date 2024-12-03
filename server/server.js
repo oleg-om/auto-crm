@@ -12,7 +12,7 @@ import React from 'react'
 import cookieParser from 'cookie-parser'
 import passport from 'passport'
 import jwt from 'jsonwebtoken'
-// import proxy from 'http-proxy-middleware'
+import proxy from 'http-proxy-middleware'
 
 import config from './config'
 import connectDatabase from './services/mongoose'
@@ -106,64 +106,64 @@ function getFormatMessages(messages) {
 const isStudyMode = process.env.MODE === 'study'
 
 // proxy if is study mode
-// const placesProxy = proxy.createProxyMiddleware({
-//   target: `${process.env.WORK_DOMAIN}/api/v1/place`,
-//   changeOrigin: true
-// })
-// const carsProxy = proxy.createProxyMiddleware({
-//   target: `${process.env.WORK_DOMAIN}/api/v1/car`,
-//   changeOrigin: true
-// })
-// const customerProxy = proxy.createProxyMiddleware({
-//   target: `${process.env.WORK_DOMAIN}/api/v1/customer`,
-//   changeOrigin: true
-// })
-// const materialProxy = proxy.createProxyMiddleware({
-//   target: `${process.env.WORK_DOMAIN}/api/v1/material`,
-//   changeOrigin: true
-// })
-// const shinomontazhPriceProxy = proxy.createProxyMiddleware({
-//   target: `${process.env.WORK_DOMAIN}/api/v1/shinomontazhprice`,
-//   changeOrigin: true
-// })
-// const vendorProxy = proxy.createProxyMiddleware({
-//   target: `${process.env.WORK_DOMAIN}/api/v1/vendor`,
-//   changeOrigin: true
-// })
-// const stoPriceProxy = proxy.createProxyMiddleware({
-//   target: `${process.env.WORK_DOMAIN}/api/v1/stoprice`,
-//   changeOrigin: true
-// })
-// const washPriceProxy = proxy.createProxyMiddleware({
-//   target: `${process.env.WORK_DOMAIN}/api/v1/washprice`,
-//   changeOrigin: true
-// })
-// const condPriceProxy = proxy.createProxyMiddleware({
-//   target: `${process.env.WORK_DOMAIN}/api/v1/condprice`,
-//   changeOrigin: true
-// })
-// const windowPriceProxy = proxy.createProxyMiddleware({
-//   target: `${process.env.WORK_DOMAIN}/api/v1/windowprice`,
-//   changeOrigin: true
-// })
-// const categoryProxy = proxy.createProxyMiddleware({
-//   target: `${process.env.WORK_DOMAIN}/api/v1/category`,
-//   changeOrigin: true
-// })
-//
-// if (isStudyMode) {
-//   server.use('/api/v1/place', placesProxy)
-//   server.use('/api/v1/car', carsProxy)
-//   server.use('/api/v1/customer', customerProxy)
-//   server.use('/api/v1/material', materialProxy)
-//   server.use('/api/v1/shinomontazhprice', shinomontazhPriceProxy)
-//   server.use('/api/v1/vendor', vendorProxy)
-//   server.use('/api/v1/stoprice', stoPriceProxy)
-//   server.use('/api/v1/washprice', washPriceProxy)
-//   server.use('/api/v1/condprice', condPriceProxy)
-//   server.use('/api/v1/windowprice', windowPriceProxy)
-//   server.use('/api/v1/category', categoryProxy)
-// }
+const placesProxy = proxy.createProxyMiddleware({
+  target: `${process.env.WORK_DOMAIN}/api/v1/place`,
+  changeOrigin: true
+})
+const carsProxy = proxy.createProxyMiddleware({
+  target: `${process.env.WORK_DOMAIN}/api/v1/car`,
+  changeOrigin: true
+})
+const customerProxy = proxy.createProxyMiddleware({
+  target: `${process.env.WORK_DOMAIN}/api/v1/customer`,
+  changeOrigin: true
+})
+const materialProxy = proxy.createProxyMiddleware({
+  target: `${process.env.WORK_DOMAIN}/api/v1/material`,
+  changeOrigin: true
+})
+const shinomontazhPriceProxy = proxy.createProxyMiddleware({
+  target: `${process.env.WORK_DOMAIN}/api/v1/shinomontazhprice`,
+  changeOrigin: true
+})
+const vendorProxy = proxy.createProxyMiddleware({
+  target: `${process.env.WORK_DOMAIN}/api/v1/vendor`,
+  changeOrigin: true
+})
+const stoPriceProxy = proxy.createProxyMiddleware({
+  target: `${process.env.WORK_DOMAIN}/api/v1/stoprice`,
+  changeOrigin: true
+})
+const washPriceProxy = proxy.createProxyMiddleware({
+  target: `${process.env.WORK_DOMAIN}/api/v1/washprice`,
+  changeOrigin: true
+})
+const condPriceProxy = proxy.createProxyMiddleware({
+  target: `${process.env.WORK_DOMAIN}/api/v1/condprice`,
+  changeOrigin: true
+})
+const windowPriceProxy = proxy.createProxyMiddleware({
+  target: `${process.env.WORK_DOMAIN}/api/v1/windowprice`,
+  changeOrigin: true
+})
+const categoryProxy = proxy.createProxyMiddleware({
+  target: `${process.env.WORK_DOMAIN}/api/v1/category`,
+  changeOrigin: true
+})
+
+if (isStudyMode) {
+  server.use('/api/v1/place', placesProxy)
+  server.use('/api/v1/car', carsProxy)
+  server.use('/api/v1/customer', customerProxy)
+  server.use('/api/v1/material', materialProxy)
+  server.use('/api/v1/shinomontazhprice', shinomontazhPriceProxy)
+  server.use('/api/v1/vendor', vendorProxy)
+  server.use('/api/v1/stoprice', stoPriceProxy)
+  server.use('/api/v1/washprice', washPriceProxy)
+  server.use('/api/v1/condprice', condPriceProxy)
+  server.use('/api/v1/windowprice', windowPriceProxy)
+  server.use('/api/v1/category', categoryProxy)
+}
 
 server.use('/api/v1', placeRoutes)
 server.use('/api/v1', taskRoutes)
