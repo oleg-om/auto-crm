@@ -71,19 +71,19 @@ const OnLoad = (dt, preentryType) => {
 
   useEffect(() => {
     if (isShinomontazh) {
-      socket.on('update shinomontazh', updateShinomontazhWithSocket)
+      socket.on('update shinomontazh', () => updateShinomontazhWithSocket())
     }
     if (isSto || isOil) {
-      socket.on('update sto', updateStoWithSocket)
+      socket.on('update sto', () => updateStoWithSocket())
     }
   }, [])
 
   useEffect(() => {
     if (isShinomontazh) {
-      socket.on('update edited shinomontazh', updateShinomontazhWithSocket)
+      socket.on('update edited shinomontazh', () => updateShinomontazhWithSocket())
     }
     if (isSto || isOil) {
-      socket.on('update edited sto', updateStoWithSocket)
+      socket.on('update edited sto', () => updateStoWithSocket())
     }
   }, [])
 }
