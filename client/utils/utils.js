@@ -12,6 +12,6 @@ export const printWithAdditionalInfo = (obj, auth) => {
   }
   return {
     ...obj,
-    accountPostNumber: auth?.post || null
+    accountPostNumber: auth?.user?.post || null
   }
 }

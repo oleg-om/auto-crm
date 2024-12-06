@@ -402,7 +402,6 @@ io.on('connection', (socket) => {
   // })
 
   socket.on('shinomontazh one print', (shinomontazh, sec) => {
-    console.log('shin', shinomontazh, sec)
     io.emit('shinoneprint', socketObj(shinomontazh))
   })
   socket.on('shinomontazh two print', (shinomontazh) => {
