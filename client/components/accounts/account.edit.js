@@ -7,6 +7,7 @@ import 'react-toastify/dist/ReactToastify.css'
 import roleList from '../../lists/account-role-list'
 import SubmitButtons from '../shared/buttons/OrderSubmitButtons'
 import RequestPassword from './containers/requestPassword'
+import PostsField from './containers/postsField'
 
 const AccountUpdate = (props) => {
   const history = useHistory()
@@ -24,7 +25,8 @@ const AccountUpdate = (props) => {
     role: props.role,
     userName: props.userName,
     place: props.place,
-    requestPasswordForReport: props?.requestPasswordForReport || false
+    requestPasswordForReport: props?.requestPasswordForReport || false,
+    post: props?.post || null
   })
   const removeAccount = (e) => {
     props.deleteAccount(props._id, e.target.value)
@@ -203,7 +205,10 @@ const AccountUpdate = (props) => {
             ))}
           </div>
         </div>
-        <RequestPassword state={state} onChange={onChange} />
+        <div className="-mx-3 md:flex flex-wrap">
+          <RequestPassword state={state} onChange={onChange} />
+          <PostsField state={state} onChange={onChange} />
+        </div>
       </div>
       <SubmitButtons
         sendData={changeAccount}

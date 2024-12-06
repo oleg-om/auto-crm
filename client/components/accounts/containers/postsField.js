@@ -1,25 +1,34 @@
 import React from 'react'
 
-const RequestPassword = ({ state, onChange }) => {
+const POSTS = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+
+const PostsField = ({ state, onChange }) => {
   return (
     <div className="md:w-1/2 px-3 mb-6 md:mb-0 flex flex-col">
       <label
         className="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2"
         htmlFor="grid-first-name"
       >
-        Запрашивать пароль на странице Отчет
+        Пост № (для печати талонов на одной точке на разных ПК)
       </label>
       <div className="flex-shrink w-full inline-block relative mb-3">
         <select
           className="appearance-none block w-full bg-grey-lighter text-grey-darker border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-3 px-4 mb-3"
-          value={state.requestPasswordForReport}
-          name="requestPasswordForReport"
-          id="requestPasswordForReport"
+          value={state.post}
+          name="post"
+          id="post"
           onChange={onChange}
-          defaultValue={false}
         >
-          <option value={false}>Нет</option>
-          <option value>Да</option>
+          <option value="" className="text-gray-800">
+            Не выбран
+          </option>
+          {POSTS.map((it) => {
+            return (
+              <option value={it} key={`post-${it}`}>
+                №{it}
+              </option>
+            )
+          })}
         </select>
         <div className="pointer-events-none absolute top-0 mt-2  right-0 flex items-center px-2 text-gray-600">
           <svg
@@ -35,4 +44,4 @@ const RequestPassword = ({ state, onChange }) => {
   )
 }
 
-export default RequestPassword
+export default PostsField

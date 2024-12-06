@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { useParams } from 'react-router-dom'
 import { toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
@@ -7,12 +7,14 @@ import { socket } from '../../redux/sockets/socketReceivers'
 import StosEdit from '../../components/stos/stos.work.edit'
 import Navbar from '../../components/Navbar'
 import { updateSto } from '../../redux/reducers/stos'
+import { printWithAdditionalInfo } from '../../utils/utils'
 
 const StoEditFull = () => {
   socket.connect()
   const { id } = useParams()
   const { num } = useParams(1)
   const dispatch = useDispatch()
+  const auth = useSelector((s) => s.auth)
   const [loading, setLoading] = useState(false)
   const [list, setList] = useState([])
   useEffect(() => {
@@ -35,12 +37,12 @@ const StoEditFull = () => {
   }
 
   const stoPrintOne = (sto) => {
-    socket.emit('sto one print', sto)
+    socket.emit('sto one print', printWithAdditionalInfo(sto, auth))
     notify('Печатаю один чек')
   }
 
   const stoPrintTwo = (sto) => {
-    socket.emit('sto two print', sto)
+    socket.emit('sto two print', printWithAdditionalInfo(sto, auth))
     notify('Печатаю два чека')
   }
   const loadingComponent = () => {

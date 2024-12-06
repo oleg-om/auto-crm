@@ -6,6 +6,7 @@ import 'react-toastify/dist/ReactToastify.css'
 import roleList from '../../lists/account-role-list'
 import SubmitButtons from '../shared/buttons/OrderSubmitButtons'
 import RequestPassword from './containers/requestPassword'
+import PostsField from './containers/postsField'
 
 const AccountCreate = (props) => {
   toast.configure()
@@ -23,7 +24,8 @@ const AccountCreate = (props) => {
     role: [],
     userName: '',
     place: '',
-    requestPasswordForReport: false
+    requestPasswordForReport: false,
+    post: null
   })
 
   const onChange = (e) => {
@@ -199,7 +201,10 @@ const AccountCreate = (props) => {
             ))}
           </div>
         </div>
-        <RequestPassword state={state} onChange={onChange} />
+        <div className="-mx-3 md:flex flex-wrap">
+          <RequestPassword state={state} onChange={onChange} />
+          <PostsField state={state} onChange={onChange} />
+        </div>
         <div
           className="bg-teal-100 border-t-4 border-teal-500 rounded-b text-teal-900 px-4 py-3 shadow-md"
           role="alert"

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { useParams } from 'react-router-dom'
 import { toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
@@ -7,12 +7,14 @@ import { socket } from '../../redux/sockets/socketReceivers'
 import ShinomontazhsEdit from '../../components/shinomontazhs/shinomontazhs.work.edit'
 import Navbar from '../../components/Navbar'
 import { updateShinomontazh } from '../../redux/reducers/shinomontazhs'
+import { printWithAdditionalInfo } from '../../utils/utils'
 
 const ShinomontazhEditFull = () => {
   socket.connect()
   const { id } = useParams()
   const { num } = useParams(1)
   const dispatch = useDispatch()
+  const auth = useSelector((s) => s.auth)
   const [loading, setLoading] = useState(false)
   const [list, setList] = useState([])
   useEffect(() => {
@@ -35,12 +37,12 @@ const ShinomontazhEditFull = () => {
   }
 
   const shinomontazhPrintOne = (shinomontazh) => {
-    socket.emit('shinomontazh one print', shinomontazh)
+    socket.emit('shinomontazh one print', printWithAdditionalInfo(shinomontazh, auth))
     notify('Печатаю один чек')
   }
 
   const shinomontazhPrintTwo = (shinomontazh) => {
-    socket.emit('shinomontazh two print', shinomontazh)
+    socket.emit('shinomontazh two print', printWithAdditionalInfo(shinomontazh, auth))
     notify('Печатаю два чека')
   }
   const loadingComponent = () => {

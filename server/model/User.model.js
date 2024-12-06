@@ -29,6 +29,10 @@ const userSchema = new mongoose.Schema(
     requestPasswordForReport: {
       type: Boolean,
       required: false
+    },
+    post: {
+      type: Number,
+      required: false
     }
   },
   {
