@@ -401,7 +401,7 @@ io.on('connection', (socket) => {
   //   io.emit('update edited tyre')
   // })
 
-  socket.on('shinomontazh one print', (shinomontazh, sec) => {
+  socket.on('shinomontazh one print', (shinomontazh) => {
     io.emit('shinoneprint', socketObj(shinomontazh))
   })
   socket.on('shinomontazh two print', (shinomontazh) => {
