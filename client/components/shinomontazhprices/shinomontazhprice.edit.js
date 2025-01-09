@@ -971,8 +971,8 @@ const ShinomontazhpriceUpdate = (props) => {
               <input
                 className="appearance-none block w-full bg-grey-lighter text-grey-darker border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-3 px-4 mb-3"
                 value={state.R38}
-                name="R33"
-                id="R33"
+                name="R38"
+                id="R38"
                 type="number"
                 placeholder="Введите цену"
                 onChange={onChange}
