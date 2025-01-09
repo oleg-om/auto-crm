@@ -11,6 +11,7 @@ import {
   getShinomontazhprices
 } from '../../redux/reducers/shinomotazh.prices'
 import Navbar from '../../components/Navbar'
+import ShinomontazhPricesDonwload from './Shinomontazh.prices.donwload'
 
 const ShinomontazhpriceNew = () => {
   const { type } = useParams()
@@ -54,6 +55,7 @@ const ShinomontazhpriceNew = () => {
           >
             Загрузить из Excel
           </button>
+          <ShinomontazhPricesDonwload />
         </div>
         {typeOfLoad === 'single' ? (
           <div>
