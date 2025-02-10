@@ -25,6 +25,7 @@ const Final = ({
 }) => {
   const kuzovCheck = () => {
     if (state.kuzov === 'sedan') return 'Седан'
+    if (state.kuzov === 'sedan-shtamp') return 'Седан (штампованные диски)'
     if (state.kuzov === 'crossover') return 'Кроссовер'
     if (state.kuzov === 'runflat') return 'RUN FLAT'
     if (state.kuzov === 'gruz') return 'Грузовой'

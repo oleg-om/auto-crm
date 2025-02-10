@@ -310,7 +310,10 @@ const ShinomontazhsCreate = (props) => {
     }
     if (
       state.diametr &&
-      (state.kuzov === 'sedan' || state.kuzov === 'crossover' || state.kuzov === 'runflat')
+      (state.kuzov === 'sedan' ||
+        state.kuzov === 'sedan-shtamp' ||
+        state.kuzov === 'crossover' ||
+        state.kuzov === 'runflat')
     ) {
       setActualService(
         shinomontazhprices

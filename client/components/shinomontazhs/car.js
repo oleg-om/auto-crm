@@ -638,6 +638,7 @@ const Car = ({
                     {state.kuzov ? 'Выберите диаметр' : 'Сначала выберите кузов'}
                   </option>
                   {state.kuzov === 'sedan' ||
+                  state.kuzov === 'sedan-shtamp' ||
                   state.kuzov === 'crossover' ||
                   state.kuzov === 'runflat'
                     ? sizeThreeList.map((it) => <option value={it} label={it} key={it} />)
@@ -681,6 +682,7 @@ const Car = ({
                     Выберите кузов
                   </option>
                   <option value="sedan">Седан</option>
+                  <option value="sedan-shtamp">Седан (штампованные диски)</option>
                   <option value="crossover">Кроссовер</option>
                   <option value="runflat">RUN FLAT</option>
                   <option value="gruz">Грузовой</option>
