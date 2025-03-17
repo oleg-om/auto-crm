@@ -15,7 +15,7 @@
         "build": "cross-env npm run clean && webpack --config webpack.production.config.js --progress --profile --colors",
         "lint": "eslint ./client/**/**.js ./server/**/**.js ",
         "prettier": "prettier ./client/**/**.js ./server/**/**.js --write ",
-        "reinstall": "pm2 stop all && git pull && npm run build && pm2 start all",
+        "reinstall": "git pull && npm run build && pm2 restart all",
         "lint:server": "eslint ./server/**/**.js",
         "test": "jest",
         "test:watch": "jest --watch",

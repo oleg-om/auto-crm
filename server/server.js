@@ -457,5 +457,5 @@ io.on('connection', (socket) => {
 console.log(`Serving at http://localhost:${port}`)
 
 if (process.env.MODE !== 'study') {
-  setInterval(() => kerchshinaCheck(io), 40000)
+  setInterval(() => kerchshinaCheck(io), 200000)
 }
