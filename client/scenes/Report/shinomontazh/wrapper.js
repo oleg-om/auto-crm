@@ -167,6 +167,9 @@ const Shinomontazh = ({
           )
       )
     }
+
+    setShowRazval('no')
+
     return () => {}
   }, [shinList, activeMonth, activeDay, place, employee])
 
