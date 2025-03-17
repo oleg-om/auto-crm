@@ -124,10 +124,12 @@ async function kerchshinaCheck(io) {
                 tyreItem: '',
                 quantity: rec.quantity,
                 brand: brandsnew.find(
-                  (item) => item.id === productssnew.find((it) => it.id === rec.product_id).brand_id
+                  (item) =>
+                    item.id === productssnew.find((it) => it.id === rec.product_id)?.brand_id
                 )?.title,
                 model: modelsnew.find(
-                  (item) => item.id === productssnew.find((it) => it.id === rec.product_id).model_id
+                  (item) =>
+                    item.id === productssnew.find((it) => it.id === rec.product_id)?.model_id
                 )?.title,
                 type: productssnew.find((it) => it.id === rec.product_id)?.category_id,
                 sizeone:
