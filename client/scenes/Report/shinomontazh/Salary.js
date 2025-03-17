@@ -5,15 +5,19 @@ import { useReactToPrint } from 'react-to-print'
 import SalaryTableComponent from './SalaryTableComponent'
 import { filterByEmployee, filterReportByEmployee } from '../../../utils/admin/reportUtils'
 import { updateCurrentEmployeeReport } from '../../../redux/reducers/employees'
+import razvalIcon from '../../../assets/images/priority-product-large.png'
+import { checkIsRazvalService } from './wrapper'
 
 const SalaryByDay = ({
   dateArray,
   totalWithDiscount,
+  totalFreeService,
   report,
   employee,
   getLinkToWork,
   onEmployeeClick,
-  getWorkId
+  getWorkId,
+  clearEmployee
 }) => {
   const componentRef = useRef()
   const handlePrint = useReactToPrint({
@@ -21,48 +25,59 @@ const SalaryByDay = ({
   })
   return (
     <div className="m-5">
-      <button
-        type="submit"
-        onClick={handlePrint}
-        className="py-2 px-3 my-3 bg-main-600 text-white text-sm hover:bg-main-700 hover:text-white rounded-full h-22 w-22"
-      >
-        <div className="flex flex-row">
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            version="1.1"
-            width="20"
-            height="20"
-            x="0"
-            y="0"
-            viewBox="0 0 512 512"
-            xmlSpace="preserve"
-            className="mr-2"
-          >
-            <g>
-              <path
-                xmlns="http://www.w3.org/2000/svg"
-                d="m414 80h-316c-5.523 0-10-4.477-10-10v-26c0-24.301 19.699-44 44-44h248c24.301 0 44 19.699 44 44v26c0 5.523-4.477 10-10 10z"
-                fill="#ffffff"
-                data-original="#000000"
-              />
-              <path
-                xmlns="http://www.w3.org/2000/svg"
-                d="m458 112h-404c-29.776 0-54 24.224-54 54v188c0 29.776 24.224 54 54 54h34v-80c0-39.701 32.299-72 72-72h192c39.701 0 72 32.299 72 72v80h34c29.776 0 54-24.224 54-54v-188c0-29.776-24.224-54-54-54zm-361.98 120c-13.255 0-24.005-10.745-24.005-24s10.74-24 23.995-24h.01c13.255 0 24 10.745 24 24s-10.745 24-24 24z"
-                fill="#ffffff"
-                data-original="#000000"
-              />
-              <path
-                xmlns="http://www.w3.org/2000/svg"
-                d="m352 304h-192c-13.255 0-24 10.745-24 24v80 32c0 13.255 10.745 24 24 24h192c13.255 0 24-10.745 24-24v-32-80c0-13.255-10.745-24-24-24z"
-                fill="#ffffff"
-                data-original="#000000"
-              />
-            </g>
-          </svg>
+      <div className="flex">
+        <button
+          type="submit"
+          onClick={handlePrint}
+          className="py-2 px-3 my-3 bg-main-600 text-white text-sm hover:bg-main-700 hover:text-white rounded-full h-22 w-22"
+        >
+          <div className="flex flex-row">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              version="1.1"
+              width="20"
+              height="20"
+              x="0"
+              y="0"
+              viewBox="0 0 512 512"
+              xmlSpace="preserve"
+              className="mr-2"
+            >
+              <g>
+                <path
+                  xmlns="http://www.w3.org/2000/svg"
+                  d="m414 80h-316c-5.523 0-10-4.477-10-10v-26c0-24.301 19.699-44 44-44h248c24.301 0 44 19.699 44 44v26c0 5.523-4.477 10-10 10z"
+                  fill="#ffffff"
+                  data-original="#000000"
+                />
+                <path
+                  xmlns="http://www.w3.org/2000/svg"
+                  d="m458 112h-404c-29.776 0-54 24.224-54 54v188c0 29.776 24.224 54 54 54h34v-80c0-39.701 32.299-72 72-72h192c39.701 0 72 32.299 72 72v80h34c29.776 0 54-24.224 54-54v-188c0-29.776-24.224-54-54-54zm-361.98 120c-13.255 0-24.005-10.745-24.005-24s10.74-24 23.995-24h.01c13.255 0 24 10.745 24 24s-10.745 24-24 24z"
+                  fill="#ffffff"
+                  data-original="#000000"
+                />
+                <path
+                  xmlns="http://www.w3.org/2000/svg"
+                  d="m352 304h-192c-13.255 0-24 10.745-24 24v80 32c0 13.255 10.745 24 24 24h192c13.255 0 24-10.745 24-24v-32-80c0-13.255-10.745-24-24-24z"
+                  fill="#ffffff"
+                  data-original="#000000"
+                />
+              </g>
+            </svg>
 
-          <p> Печать талонов</p>
-        </div>
-      </button>
+            <p> Печать талонов</p>
+          </div>
+        </button>
+        {employee ? (
+          <button
+            type="submit"
+            onClick={clearEmployee}
+            className="py-2 px-3 my-3 ml-3 bg-green-600 text-white text-sm hover:bg-green-700 hover:text-white rounded-full h-22 w-22"
+          >
+            Показать всех
+          </button>
+        ) : null}
+      </div>
       <div ref={componentRef}>
         <h2 className="text-xl font-semibold mb-2">Разбивка по дням:</h2>
         {dateArray.map((date) => (
@@ -90,6 +105,9 @@ const SalaryByDay = ({
                     Материалы
                   </th>
                   <th className="p-3 font-bold bg-gray-100 text-gray-600 border border-gray-300 table-cell">
+                    Акция
+                  </th>
+                  <th className="p-3 font-bold bg-gray-100 text-gray-600 border border-gray-300 table-cell">
                     Скидка
                   </th>
                   <th className="p-3 font-bold bg-gray-100 text-gray-600 border border-gray-300 table-cell">
@@ -104,14 +122,19 @@ const SalaryByDay = ({
                   .map((it) => (
                     <tr key={it.id} className="bg-white hover:bg-gray-100 table-row mb-0">
                       <td className="w-auto p-2 text-gray-800 text-left border border-b table-cell static">
-                        <Link
-                          to={() => getLinkToWork(it)}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="hover:underline"
-                        >
-                          {getWorkId(it)}
-                        </Link>
+                        <div className="flex items-center">
+                          <Link
+                            to={() => getLinkToWork(it)}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="hover:underline"
+                          >
+                            {getWorkId(it)}
+                          </Link>
+                          {it.services?.filter((s) => checkIsRazvalService(s?.name))?.length ? (
+                            <img className="w-6 ml-1" src={razvalIcon} alt="" />
+                          ) : null}
+                        </div>
                       </td>
                       <td className="w-auto p-2 text-gray-800 text-left border border-b table-cell static">
                         {it.employee
@@ -159,6 +182,9 @@ const SalaryByDay = ({
                         руб.
                       </td>
                       <td className="w-auto p-2 text-gray-800 text-center border border-b table-cell static">
+                        {totalFreeService(it) ? <>{totalFreeService(it)} руб.</> : null}
+                      </td>
+                      <td className="w-auto p-2 text-gray-800 text-center border border-b table-cell static">
                         {it.discount ? `${it.discount}%` : ''}
                       </td>
                       <td className="w-auto p-2 text-gray-800 text-center border border-b table-cell static">
@@ -182,7 +208,9 @@ const Salary = ({
   calendarType,
   active,
   employeeList,
-  employeeArray
+  employeeArray,
+  showRazval,
+  onChangeShowRazval
 }) => {
   const dispatch = useDispatch()
   const employee = useSelector((s) => s.employees.employee)
@@ -251,7 +279,6 @@ const Salary = ({
       .filter((it) => it.employee.length > 0)
 
       .filter((it) => (filterBy ? it.status === filterBy || it.status === CombFilterBy : it))
-
       .reduce((acc, rec) => {
         if (calendarType === 'day' && discountType === 'summa') {
           return [
@@ -288,6 +315,7 @@ const Salary = ({
             }
           ]
         }
+
         return [...acc, rec]
       }, [])
 
@@ -412,6 +440,7 @@ const Salary = ({
             }
           ]
         }
+
         return [...acc, rec]
       }, [])
       .reduce((acc, rec) => {
@@ -509,7 +538,8 @@ const Salary = ({
     return Number(number) - Number(number)
   }
   function roundTo5(num) {
-    return Math.round(num / 5) * 5
+    // return Math.round(num / 5) * 5
+    return num
   }
   const totalMaterial = (item) =>
     item.material.reduce((acc, rec) => acc + rec.price * rec.quantity, 0)
@@ -649,21 +679,44 @@ const Salary = ({
     dispatch(updateCurrentEmployeeReport(value))
   }
 
+  const clearEmployee = () => {
+    dispatch(updateCurrentEmployeeReport(''))
+  }
+
   return (
     <div className="mb-3">
       <h2 className="text-xl font-semibold mb-2">Зарплаты</h2>
-      <p>Учитывать материалы:</p>
-      <select
-        className="appearance-none block bg-grey-lighter text-sm text-grey-darker border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-1 px-4"
-        value={isMaterial}
-        onChange={onChangeMat}
-      >
-        <option value="yes" className="text-gray-800">
-          Да
-        </option>
+      <div className="flex mb-3">
+        <div className="mr-5">
+          <p>Учитывать материалы:</p>
+          <select
+            className="appearance-none block bg-grey-lighter text-sm text-grey-darker border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-1 px-4"
+            value={isMaterial}
+            onChange={onChangeMat}
+          >
+            <option value="yes" className="text-gray-800">
+              Да
+            </option>
 
-        <option value="no">Нет</option>
-      </select>
+            <option value="no">Нет</option>
+          </select>
+        </div>
+        {checkIsSto ? (
+          <div>
+            <p>Только развал:</p>
+            <select
+              className="appearance-none block bg-grey-lighter text-sm text-grey-darker border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-1 px-4"
+              value={showRazval}
+              onChange={onChangeShowRazval}
+            >
+              <option value="yes" className="text-gray-800">
+                Да
+              </option>
+              <option value="no">Нет</option>
+            </select>
+          </div>
+        ) : null}
+      </div>
       <table className="border-collapse w-full">
         <thead>
           <tr>
@@ -749,109 +802,115 @@ const Salary = ({
               onEmployeeClick={onEmployeeClick}
             />
           ))}
-          <tr className="bg-purple-100 font-bold lg:hover:bg-gray-100 flex lg:table-row flex-row lg:flex-row flex-wrap lg:flex-no-wrap mb-5 lg:mb-0">
-            <td className="w-full lg:w-auto p-2 text-gray-800 text-left border border-b block lg:table-cell relative lg:static">
-              <span className="lg:hidden px-2 py-1 bg-purple-100 font-bold uppercase">Всего:</span>
-              Всего
-            </td>
-            {checkIsBookkeper ? (
-              <>
-                <td className="w-full lg:w-auto p-2 text-gray-800 text-left lg:text-center border border-b block lg:table-cell relative lg:static">
-                  <span className="lg:hidden px-2 py-1 bg-purple-100 font-bold uppercase">
-                    Вал:
-                  </span>
-                  {Math.round(getSalaryfull(''), '')} руб.
-                </td>
-                <td className="w-full lg:w-auto p-2 text-gray-800 text-left border border-b block lg:table-cell relative lg:static">
-                  <span className="lg:hidden px-2 py-1 bg-purple-100 font-bold uppercase">
-                    Процент:
-                  </span>
-                </td>
-                <td className="w-full lg:w-auto p-2 text-gray-800 text-left border border-b block lg:table-cell relative lg:static">
-                  <span className="lg:hidden px-2 py-1 bg-purple-100 font-bold uppercase">
-                    Оформлен:
-                  </span>
-                </td>
-                {calendarType === 'month' ? (
-                  <>
-                    <td className="w-full lg:w-auto p-2 text-gray-800 text-left border border-b block lg:table-cell relative lg:static">
-                      <span className="lg:hidden px-2 py-1 bg-purple-100 font-bold uppercase">
-                        Налог:
-                      </span>
-                    </td>
-                    <td className="w-full lg:w-auto p-2 text-gray-800 text-left border border-b block lg:table-cell relative lg:static">
-                      <span className="lg:hidden px-2 py-1 bg-purple-100 font-bold uppercase">
-                        Сумма на карту:
-                      </span>
-                    </td>
-                  </>
-                ) : null}
-              </>
-            ) : null}
-            {!checkIsBookkeper ? (
-              <>
-                <td className="w-full lg:w-auto p-2 text-gray-800 text-left lg:text-center border border-b block lg:table-cell relative lg:static">
-                  <span className="lg:hidden px-2 py-1 bg-purple-100 font-bold uppercase">
-                    Терминал:
-                  </span>
-                  {Math.round(getSalaryfull('', 'Терминал', 'Комбинированный', 'summa'), '')} руб.
-                </td>
-                <td className="w-full lg:w-auto p-2 text-gray-800 text-left lg:text-center border border-b block lg:table-cell relative lg:static">
-                  <span className="lg:hidden px-2 py-1 bg-purple-100 font-bold uppercase">
-                    Безнал:
-                  </span>
-                  {Math.round(getSalaryfull('', 'Безнал', '', 'summa'), '')} руб.
-                </td>
-                <td className="w-full lg:w-auto p-2 text-gray-800 text-left lg:text-center border border-b block lg:table-cell relative lg:static">
-                  <span className="lg:hidden px-2 py-1 bg-purple-100 font-bold uppercase">
-                    Наличка:
-                  </span>
-                  {Math.round(getSalaryfull('', 'Оплачено', 'Комбинированный', 'summa'), '')} руб.
-                </td>
-                {calendarType === 'day' ? (
-                  <td className="w-full lg:w-auto p-2 text-gray-800 text-left lg:text-center border border-b block lg:table-cell relative lg:static">
-                    <span className="lg:hidden px-2 py-1 bg-purple-100 font-bold uppercase">
-                      Сумма:
-                    </span>
-                    {Math.round(getSalaryfull('', '', '', 'summa'), '')} руб.
-                  </td>
-                ) : null}
-                {calendarType === 'day' ? (
-                  <td className="w-full lg:w-auto p-2 text-gray-800 text-left lg:text-center border border-b block lg:table-cell relative lg:static">
-                    <span className="lg:hidden px-2 py-1 bg-purple-100 font-bold uppercase">
-                      Акция:
-                    </span>
-                    {Math.round(getSalaryfull('', '', '', 'discountonly'), '')} руб.
-                  </td>
-                ) : null}
-                <td className="w-full lg:w-auto p-2 text-gray-800 text-left lg:text-center border border-b block lg:table-cell relative lg:static">
-                  <span className="lg:hidden px-2 py-1 bg-purple-100 font-bold uppercase">
-                    Вал:
-                  </span>
-                  {Math.round(getSalaryfull(''), '')} руб.
-                </td>
-              </>
-            ) : null}
-
-            {checkIsBookkeper ? (
-              <td className="w-full lg:w-auto p-2 text-gray-800 text-left lg:text-center border border-b block lg:table-cell relative lg:static">
+          {!employee ? (
+            <tr className="bg-purple-100 font-bold lg:hover:bg-gray-100 flex lg:table-row flex-row lg:flex-row flex-wrap lg:flex-no-wrap mb-5 lg:mb-0">
+              <td className="w-full lg:w-auto p-2 text-gray-800 text-left border border-b block lg:table-cell relative lg:static">
                 <span className="lg:hidden px-2 py-1 bg-purple-100 font-bold uppercase">
-                  Зарплата:
+                  Всего:
                 </span>
+                Всего
               </td>
-            ) : null}
-          </tr>
+              {checkIsBookkeper ? (
+                <>
+                  <td className="w-full lg:w-auto p-2 text-gray-800 text-left lg:text-center border border-b block lg:table-cell relative lg:static">
+                    <span className="lg:hidden px-2 py-1 bg-purple-100 font-bold uppercase">
+                      Вал:
+                    </span>
+                    {Math.round(getSalaryfull(''), '')} руб.
+                  </td>
+                  <td className="w-full lg:w-auto p-2 text-gray-800 text-left border border-b block lg:table-cell relative lg:static">
+                    <span className="lg:hidden px-2 py-1 bg-purple-100 font-bold uppercase">
+                      Процент:
+                    </span>
+                  </td>
+                  <td className="w-full lg:w-auto p-2 text-gray-800 text-left border border-b block lg:table-cell relative lg:static">
+                    <span className="lg:hidden px-2 py-1 bg-purple-100 font-bold uppercase">
+                      Оформлен:
+                    </span>
+                  </td>
+                  {calendarType === 'month' ? (
+                    <>
+                      <td className="w-full lg:w-auto p-2 text-gray-800 text-left border border-b block lg:table-cell relative lg:static">
+                        <span className="lg:hidden px-2 py-1 bg-purple-100 font-bold uppercase">
+                          Налог:
+                        </span>
+                      </td>
+                      <td className="w-full lg:w-auto p-2 text-gray-800 text-left border border-b block lg:table-cell relative lg:static">
+                        <span className="lg:hidden px-2 py-1 bg-purple-100 font-bold uppercase">
+                          Сумма на карту:
+                        </span>
+                      </td>
+                    </>
+                  ) : null}
+                </>
+              ) : null}
+              {!checkIsBookkeper ? (
+                <>
+                  <td className="w-full lg:w-auto p-2 text-gray-800 text-left lg:text-center border border-b block lg:table-cell relative lg:static">
+                    <span className="lg:hidden px-2 py-1 bg-purple-100 font-bold uppercase">
+                      Терминал:
+                    </span>
+                    {Math.round(getSalaryfull('', 'Терминал', 'Комбинированный', 'summa'), '')} руб.
+                  </td>
+                  <td className="w-full lg:w-auto p-2 text-gray-800 text-left lg:text-center border border-b block lg:table-cell relative lg:static">
+                    <span className="lg:hidden px-2 py-1 bg-purple-100 font-bold uppercase">
+                      Безнал:
+                    </span>
+                    {Math.round(getSalaryfull('', 'Безнал', '', 'summa'), '')} руб.
+                  </td>
+                  <td className="w-full lg:w-auto p-2 text-gray-800 text-left lg:text-center border border-b block lg:table-cell relative lg:static">
+                    <span className="lg:hidden px-2 py-1 bg-purple-100 font-bold uppercase">
+                      Наличка:
+                    </span>
+                    {Math.round(getSalaryfull('', 'Оплачено', 'Комбинированный', 'summa'), '')} руб.
+                  </td>
+                  {calendarType === 'day' ? (
+                    <td className="w-full lg:w-auto p-2 text-gray-800 text-left lg:text-center border border-b block lg:table-cell relative lg:static">
+                      <span className="lg:hidden px-2 py-1 bg-purple-100 font-bold uppercase">
+                        Сумма:
+                      </span>
+                      {Math.round(getSalaryfull('', '', '', 'summa'), '')} руб.
+                    </td>
+                  ) : null}
+                  {calendarType === 'day' ? (
+                    <td className="w-full lg:w-auto p-2 text-gray-800 text-left lg:text-center border border-b block lg:table-cell relative lg:static">
+                      <span className="lg:hidden px-2 py-1 bg-purple-100 font-bold uppercase">
+                        Акция:
+                      </span>
+                      {Math.round(getSalaryfull('', '', '', 'discountonly'), '')} руб.
+                    </td>
+                  ) : null}
+                  <td className="w-full lg:w-auto p-2 text-gray-800 text-left lg:text-center border border-b block lg:table-cell relative lg:static">
+                    <span className="lg:hidden px-2 py-1 bg-purple-100 font-bold uppercase">
+                      Вал:
+                    </span>
+                    {Math.round(getSalaryfull(''), '')} руб.
+                  </td>
+                </>
+              ) : null}
+
+              {checkIsBookkeper ? (
+                <td className="w-full lg:w-auto p-2 text-gray-800 text-left lg:text-center border border-b block lg:table-cell relative lg:static">
+                  <span className="lg:hidden px-2 py-1 bg-purple-100 font-bold uppercase">
+                    Зарплата:
+                  </span>
+                </td>
+              ) : null}
+            </tr>
+          ) : null}
         </tbody>
       </table>
       {calendarType === 'day' || employee ? (
         <SalaryByDay
           dateArray={dateArray}
           totalWithDiscount={totalWithDiscount}
+          totalFreeService={totalFreeService}
           report={report}
           employee={employee}
           getLinkToWork={getLinkToWork}
           onEmployeeClick={onEmployeeClick}
           getWorkId={getWorkId}
+          clearEmployee={clearEmployee}
         />
       ) : null}
     </div>

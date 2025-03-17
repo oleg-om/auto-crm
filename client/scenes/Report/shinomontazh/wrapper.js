@@ -8,6 +8,11 @@ import statuses from '../../../../common/enums/shinomontazh-statuses'
 import { getEmployeeArray } from '../../../utils/admin/reportUtils'
 import { updateEmployeeReport } from '../../../redux/reducers/employees'
 
+export const checkIsRazvalService = (s) =>
+  s?.includes('Развал схождения') ||
+  s?.includes('Развал-схождение') ||
+  s?.includes('Развал-схождения')
+
 const Shinomontazh = ({
   calendarType,
   place,
@@ -115,6 +120,8 @@ const Shinomontazh = ({
 
   const [bossPercent, setBossPercent] = useState(30)
   const [isMaterial, setIsMaterial] = useState('yes')
+
+  const [showRazval, setShowRazval] = useState('no')
 
   useEffect(() => {
     if (calendarType === 'month') {
@@ -258,8 +265,19 @@ const Shinomontazh = ({
           .filter((it) => (place ? place === it.place : it))
       setReport(getFilteredByRange(shinList))
     }
+
+    if (active.includes('sto-') && showRazval === 'yes') {
+      setReport(
+        shinList
+          .map((s) => {
+            return { ...s, services: s.services.filter((i) => checkIsRazvalService(i?.name || '')) }
+          })
+          .filter((i) => !!i?.services?.length)
+      )
+    }
+
     return () => {}
-  }, [shinList, activeMonth, activeDay, place, timeStart, timeFinish, employee])
+  }, [shinList, activeMonth, activeDay, place, timeStart, timeFinish, employee, showRazval])
 
   const employeeArray = getEmployeeArray(report)
   useEffect(() => {
@@ -267,6 +285,11 @@ const Shinomontazh = ({
 
     return () => {}
   }, [report])
+
+  const onChangeShowRazval = (e) => {
+    const { value } = e.target
+    setShowRazval(value)
+  }
 
   const loading = () => {
     return (
@@ -316,9 +339,30 @@ const Shinomontazh = ({
               active={active}
               employee={employee}
               employeeArray={employeeArray}
+              showRazval={showRazval}
+              onChangeShowRazval={onChangeShowRazval}
             />
           ) : null}
-          {isLoaded && report.length <= 0 ? <p className="my-3">Записей нет</p> : null}
+          {isLoaded && report.length <= 0 ? (
+            <div>
+              {active.includes('sto-') ? (
+                <div>
+                  <p>Только развал:</p>
+                  <select
+                    className="appearance-none block bg-grey-lighter text-sm text-grey-darker border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-1 px-4"
+                    value={showRazval}
+                    onChange={onChangeShowRazval}
+                  >
+                    <option value="yes" className="text-gray-800">
+                      Да
+                    </option>
+                    <option value="no">Нет</option>
+                  </select>
+                </div>
+              ) : null}
+              <p className="my-3">Записей нет</p>
+            </div>
+          ) : null}
         </div>
       ) : null}
       {active.includes('material') ? (

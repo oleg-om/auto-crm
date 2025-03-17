@@ -276,18 +276,35 @@ const Salary = ({ report, isMaterial, setIsMaterial }) => {
         value={bossPercent}
         onChange={onChange}
       /> */}
-      <p>Учитывать материалы:</p>
-      <select
-        className="appearance-none block bg-grey-lighter text-sm text-grey-darker border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-1 px-4"
-        value={isMaterial}
-        onChange={onChangeMat}
-      >
-        <option value="yes" className="text-gray-800">
-          Да
-        </option>
+      <div className="flex mb-3">
+        <div className="mr-2">
+          <p>Учитывать материалы:</p>
+          <select
+            className="appearance-none block bg-grey-lighter text-sm text-grey-darker border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-1 px-4"
+            value={isMaterial}
+            onChange={onChangeMat}
+          >
+            <option value="yes" className="text-gray-800">
+              Да
+            </option>
+            <option value="no">Нет</option>
+          </select>
+        </div>
+        <div>
+          <p>Только развал:</p>
+          <select
+            className="appearance-none block bg-grey-lighter text-sm text-grey-darker border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-1 px-4"
+            value={isMaterial}
+            onChange={onChangeMat}
+          >
+            <option value="yes" className="text-gray-800">
+              Да
+            </option>
+            <option value="no">Нет</option>
+          </select>
+        </div>
+      </div>
 
-        <option value="no">Нет</option>
-      </select>
       <table className="border-collapse w-full">
         <thead>
           <tr>
