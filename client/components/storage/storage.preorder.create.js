@@ -1203,10 +1203,10 @@ const StoragesCreate = (props) => {
               <button
                 type="button"
                 className=" px-2 mx-2 w-1/5 rounded-lg bg-main-600 hover:bg-blue-400 text-white text-sm"
-                id="6"
+                id="7"
                 onClick={onChangeDateFinish}
               >
-                +6
+                +7
               </button>
               <button
                 type="button"
