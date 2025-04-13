@@ -3,7 +3,7 @@ import Tyre from '../model/tyres'
 import Setting from '../model/settings'
 import tyresController from '../controller/tyres.controller'
 
-const LAST_ORDER = 3734
+const LAST_ORDER = 3762
 
 function takeOrderNumber() {
   return new Promise((resolve) => {
