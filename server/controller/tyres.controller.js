@@ -38,7 +38,7 @@ exports.create = async (req, res) => {
   if (tyreFind) {
     return res.json({ status: 'is exist' })
   }
-  const tyre = new Tyre(req.body)
+  const tyre = new Tyre({ ...req.body, date: new Date().toISOString() })
   await tyre.save()
   return res.json({ status: 'ok', data: tyre })
 }
