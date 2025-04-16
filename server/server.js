@@ -19,7 +19,6 @@ import passportJWT from './services/passport'
 import User from './model/User.model'
 import Message from './model/Message.model'
 import Html from '../client/html'
-import kerchshinaCheck from './services/kerchshina'
 
 const { createProxyMiddleware } = require('http-proxy-middleware')
 
@@ -455,7 +454,3 @@ io.on('connection', (socket) => {
 })
 
 console.log(`Serving at http://localhost:${port}`)
-
-if (process.env.MODE !== 'study') {
-  setInterval(() => kerchshinaCheck(io), 200000)
-}
