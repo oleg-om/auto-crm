@@ -131,7 +131,7 @@ const Shinomontazh = ({
 
           .filter(
             (it) =>
-              it.status === statuses[1] ||
+              // it.status === statuses[1] ||
               it.status === statuses[2] ||
               it.status === statuses[3] ||
               it.status === statuses[4] ||
@@ -152,7 +152,7 @@ const Shinomontazh = ({
 
           .filter(
             (it) =>
-              it.status === statuses[1] ||
+              // it.status === statuses[1] ||
               it.status === statuses[2] ||
               it.status === statuses[3] ||
               it.status === statuses[4] ||
@@ -168,6 +168,22 @@ const Shinomontazh = ({
       )
     }
 
+    if (calendarType === 'diapason') {
+      setReport(
+        shinList
+          .filter((it) => (place ? place === it.place : it))
+          .filter(
+            (it) =>
+              // it.status === statuses[1] ||
+              it.status === statuses[2] ||
+              it.status === statuses[3] ||
+              it.status === statuses[4] ||
+              it.status === statuses[6]
+          )
+          .filter((it) => it.payment && it.payment !== 'cancel')
+      )
+    }
+
     setShowRazval('no')
 
     return () => {}
@@ -180,7 +196,7 @@ const Shinomontazh = ({
 
           .filter(
             (it) =>
-              it.status === statuses[1] ||
+              // it.status === statuses[1] ||
               it.status === statuses[2] ||
               it.status === statuses[3] ||
               it.status === statuses[4] ||
@@ -202,7 +218,7 @@ const Shinomontazh = ({
 
           .filter(
             (it) =>
-              it.status === statuses[1] ||
+              // it.status === statuses[1] ||
               it.status === statuses[2] ||
               it.status === statuses[3] ||
               it.status === statuses[4] ||
@@ -225,7 +241,7 @@ const Shinomontazh = ({
 
           .filter(
             (it) =>
-              it.status === statuses[1] ||
+              // it.status === statuses[1] ||
               it.status === statuses[2] ||
               it.status === statuses[3] ||
               it.status === statuses[4] ||
@@ -264,6 +280,14 @@ const Shinomontazh = ({
 
       const getFilteredByRange = (cont) =>
         cont
+          .filter(
+            (it) =>
+              // it.status === statuses[1] ||
+              it.status === statuses[2] ||
+              it.status === statuses[3] ||
+              it.status === statuses[4] ||
+              it.status === statuses[6]
+          )
           .filter((arr) => new Date(arr.dateFinish) > firstDt && new Date(arr.dateFinish) < secDt)
           .filter((it) => (place ? place === it.place : it))
       setReport(getFilteredByRange(shinList))
@@ -272,6 +296,14 @@ const Shinomontazh = ({
     if (active.includes('sto-') && showRazval === 'yes') {
       setReport(
         shinList
+          .filter(
+            (it) =>
+              // it.status === statuses[1] ||
+              it.status === statuses[2] ||
+              it.status === statuses[3] ||
+              it.status === statuses[4] ||
+              it.status === statuses[6]
+          )
           .map((s) => {
             return { ...s, services: s.services.filter((i) => checkIsRazvalService(i?.name || '')) }
           })
