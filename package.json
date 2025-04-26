@@ -1,7 +1,7 @@
 {
     "name": "autodom-crm",
     "version": "0.0.3",
-    "description": "Autodom Crm",
+    "description": "Autodom CRM",
     "main": "index.js",
     "scripts": {
         "docker-start-dev": "docker-compose -f \"docker\\DEV.docker-compose.yml\" up",
