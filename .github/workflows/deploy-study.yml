@@ -1,0 +1,27 @@
+name: Deploy to study
+
+on:
+  push:
+    branches: [ "master" ] # Триггер на пуш в ветку master
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Install SSH key
+        uses: webfactory/ssh-agent@v0.8.0
+        with:
+          ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY_STUDY }}
+
+      - name: Pull changes and restart app
+        run: |
+          ssh -o StrictHostKeyChecking=no ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST_STUDY }} << 'EOF'
+            cd /var/www/autodom-crm
+            git pull origin master
+            npm run build
+            pm2 restart all
+          EOF
