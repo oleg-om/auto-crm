@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react'
 import { Link } from 'react-router-dom'
+import cx from 'classnames'
 import { useDispatch, useSelector } from 'react-redux'
 import { useReactToPrint } from 'react-to-print'
 import SalaryTableComponent from './SalaryTableComponent'
@@ -210,7 +211,9 @@ const Salary = ({
   employeeList,
   employeeArray,
   showRazval,
-  onChangeShowRazval
+  onChangeShowRazval,
+  showPaid,
+  onChangeShowPaid
 }) => {
   const dispatch = useDispatch()
   const employee = useSelector((s) => s.employees.employee)
@@ -685,7 +688,9 @@ const Salary = ({
 
   return (
     <div className="mb-3">
-      <h2 className="text-xl font-semibold mb-2">Зарплаты</h2>
+      <h2 className="text-xl font-semibold mb-2">
+        {showPaid === 'no' ? 'Сводка по не оплаченным таклонам' : 'Зарплаты'}
+      </h2>
       <div className="flex mb-3">
         <div className="mr-5">
           <p>Учитывать материалы:</p>
@@ -702,7 +707,7 @@ const Salary = ({
           </select>
         </div>
         {checkIsSto ? (
-          <div>
+          <div className="mr-5">
             <p>Только развал:</p>
             <select
               className="appearance-none block bg-grey-lighter text-sm text-grey-darker border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-1 px-4"
@@ -716,6 +721,22 @@ const Salary = ({
             </select>
           </div>
         ) : null}
+        <div>
+          <p>Только оплаченные:</p>
+          <select
+            className={cx(
+              'appearance-none block bg-grey-lighter text-sm text-grey-darker border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-1 px-4',
+              { 'border-red-600 focus:border-red-600 border-2': showPaid === 'no' }
+            )}
+            value={showPaid}
+            onChange={onChangeShowPaid}
+          >
+            <option value="yes" className="text-gray-800">
+              Да
+            </option>
+            <option value="no">Нет</option>
+          </select>
+        </div>
       </div>
       <table className="border-collapse w-full">
         <thead>
