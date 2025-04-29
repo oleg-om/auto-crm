@@ -21,7 +21,8 @@ const Final = ({
   termCash,
   dateEnd,
   printOne,
-  printTwo
+  printTwo,
+  groupCount
 }) => {
   const kuzovCheck = () => {
     if (state.kuzov === 'sedan') return 'Седан'
@@ -151,6 +152,11 @@ const Final = ({
               <table className="border-collapse w-full">
                 <thead>
                   <tr>
+                    {groupCount > 1 ? (
+                      <th className="p-3 font-bold uppercase bg-gray-100 text-gray-600 border border-gray-300 table-cell">
+                        Группа №
+                      </th>
+                    ) : null}
                     <th className="p-3 font-bold uppercase bg-gray-100 text-gray-600 border border-gray-300 table-cell">
                       Название
                     </th>
@@ -171,6 +177,11 @@ const Final = ({
                       key={it.id}
                       className="bg-white lg:hover:bg-gray-100 table-row flex-row flex-no-wrap mb-5 lg:mb-0"
                     >
+                      {groupCount > 1 ? (
+                        <td className="text-left w-auto p-2 text-gray-800 border border-b table-cell static">
+                          № {it?.group}
+                        </td>
+                      ) : null}
                       <td className="text-left w-auto p-2 text-gray-800 border border-b table-cell static">
                         {it.name}
                       </td>
@@ -190,6 +201,11 @@ const Final = ({
                       key={it.id}
                       className="bg-gray-200 lg:hover:bg-gray-300 table-row flex-row flex-no-wrap mb-5 lg:mb-0"
                     >
+                      {groupCount > 1 ? (
+                        <td className="text-left w-auto p-2 text-gray-800 border border-b table-cell static">
+                          № {it?.group}
+                        </td>
+                      ) : null}
                       <td className="text-left w-auto p-2 text-gray-800 border border-b table-cell static">
                         {it.name}
                       </td>

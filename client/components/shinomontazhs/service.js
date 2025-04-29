@@ -1,5 +1,6 @@
 import React from 'react'
 import cx from 'classnames'
+import { ChosenServices } from '../../hooks/useGroup'
 
 const Service = ({
   actualService,
@@ -9,7 +10,9 @@ const Service = ({
   serviceMinusChange,
   servicePriceChange,
   dateEnd,
-  onServiceQuantityChange
+  onServiceQuantityChange,
+  group,
+  groupCount
 }) => {
   return (
     <div className="flex flex-col -mx-3">
@@ -33,6 +36,11 @@ const Service = ({
                     }
                     return 0
                   })
+                  .filter(
+                    (item) =>
+                      groupCount === 1 ||
+                      !service.find((it) => it?.group !== group && it.serviceName.includes(item.id))
+                  )
                   .map((item) => (
                     <tr
                       key={item.id}
@@ -293,21 +301,7 @@ const Service = ({
           </table>
         </div>
       </div>
-      <div className="px-3 my-3 md:mb-0 w-full">
-        <label
-          className="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2"
-          htmlFor="grid-first-name"
-        >
-          Выбранные услуги
-        </label>
-        <div className="w-full p-3">
-          {service.map((it) => (
-            <p key={it.id}>
-              {it.name}, {it.price} руб, {it.quantity} шт.
-            </p>
-          ))}
-        </div>
-      </div>
+      <ChosenServices data={service} groupCount={groupCount} name="Выбранные услуги" />
     </div>
   )
 }

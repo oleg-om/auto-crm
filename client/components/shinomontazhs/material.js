@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import cx from 'classnames'
+import { ChosenServices } from '../../hooks/useGroup'
 
 const Material = ({
   materialprices,
@@ -11,7 +12,9 @@ const Material = ({
   materialEightChange,
   checkboxMaterialPlusChange,
   dateEnd,
-  materialOnChange
+  materialOnChange,
+  group,
+  groupCount
 }) => {
   const options = Array.from(
     new Set(materialprices.reduce((acc, rec) => [...acc, rec.category], []))
@@ -86,6 +89,13 @@ const Material = ({
                     }
                     return 0
                   })
+                  .filter(
+                    (item) =>
+                      groupCount === 1 ||
+                      !materials.find(
+                        (it) => it?.group !== group && it.serviceName.includes(item.id)
+                      )
+                  )
                   .map((item) => (
                     <tr
                       key={item.id}
@@ -363,21 +373,7 @@ const Material = ({
         </div>
       </div>
 
-      <div className="px-3 my-3 md:mb-0 w-full">
-        <label
-          className="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2"
-          htmlFor="grid-first-name"
-        >
-          Выбранные материалы
-        </label>
-        <div className="w-full p-3">
-          {materials.map((it) => (
-            <p key={it.id}>
-              {it.name}, {it.price} руб, {it.quantity} шт.
-            </p>
-          ))}
-        </div>
-      </div>
+      <ChosenServices data={materials} groupCount={groupCount} name="Выбранные услуги" />
     </div>
   )
 }

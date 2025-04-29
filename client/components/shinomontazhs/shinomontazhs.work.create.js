@@ -14,6 +14,7 @@ import { useKeyboard } from '../../hooks/keyboard'
 import { useMaterials } from '../../hooks/handleMaterials'
 import { useServices } from '../../hooks/handleServices'
 import SubmitButtons from '../shared/buttons/OrderSubmitButtons'
+import { GroupSwitch, useGroup } from '../../hooks/useGroup'
 
 const ShinomontazhsCreate = (props) => {
   toast.configure()
@@ -33,6 +34,7 @@ const ShinomontazhsCreate = (props) => {
 
   const [regNumber, setRegNumber] = useState([])
   const { keyboard, regOpen, setRegOpen, switchKeyboard } = useKeyboard()
+  const { group, onChangeGroup, groupCount, setGroupCount } = useGroup()
 
   const [box, setBox] = useState('')
 
@@ -47,8 +49,6 @@ const ShinomontazhsCreate = (props) => {
     dateStart: new Date()
   })
 
-  // const [service, setService] = useState([])
-
   const {
     materials,
     checkboxMaterialChange,
@@ -58,7 +58,7 @@ const ShinomontazhsCreate = (props) => {
     materialMinusChange,
     materialPriceChange,
     materialOnChange
-  } = useMaterials()
+  } = useMaterials(null, group)
 
   const {
     service,
@@ -67,7 +67,7 @@ const ShinomontazhsCreate = (props) => {
     serviceMinusChange,
     onServiceQuantityChange,
     servicePriceChange
-  } = useServices()
+  } = useServices(null, group)
 
   const [tyres, setTyres] = useState({ sale: 'no' })
   const [employees, setEmployees] = useState([])
@@ -405,7 +405,8 @@ const ShinomontazhsCreate = (props) => {
           tyre: tyres,
           employee: employees,
           box,
-          customerId: activeCustomer || null
+          customerId: activeCustomer || null,
+          groupCount
         })
         if (props.checkLink) {
           history.push('/shinomontazhboss/list')
@@ -424,7 +425,8 @@ const ShinomontazhsCreate = (props) => {
             tyre: [...tyres],
             employee: employees,
             box,
-            customerId: activeCustomer || null
+            customerId: activeCustomer || null,
+            groupCount
           }
         )
       } else {
@@ -435,7 +437,8 @@ const ShinomontazhsCreate = (props) => {
           tyre: [...tyres],
           employee: employees,
           box,
-          customerId: activeCustomer || null
+          customerId: activeCustomer || null,
+          groupCount
         })
         props.createCust({
           ...customer,
@@ -455,67 +458,6 @@ const ShinomontazhsCreate = (props) => {
   }
 
   const [active, setActive] = useState('employee')
-  // const checkboxServiceChange = (e) => {
-  //   const { name, placeholder, checked, attributes } = e.target
-  //   if (checked) {
-  //     setService((prevState) => [
-  //       ...prevState,
-  //       {
-  //         serviceName: name,
-  //         quantity: 1,
-  //         price: placeholder,
-  //         name: attributes.somename.value,
-  //         free: attributes.somefree.value
-  //       }
-  //     ])
-  //   } else {
-  //     setService((prevState) => prevState.filter((it) => it.serviceName !== name))
-  //   }
-  // }
-  // const servicePlusChange = (e) => {
-  //   const { name } = e.target
-  //   setService(
-  //     service.map((object) => {
-  //       if (object.serviceName === name) {
-  //         return {
-  //           ...object,
-  //           quantity: object.quantity + 1
-  //         }
-  //       }
-  //       return object
-  //     })
-  //   )
-  // }
-
-  // const serviceMinusChange = (e) => {
-  //   const { name } = e.target
-  //   setService(
-  //     service.map((object) => {
-  //       if (object.serviceName === name && object.quantity >= 2) {
-  //         return {
-  //           ...object,
-  //           quantity: object.quantity - 1
-  //         }
-  //       }
-  //       return object
-  //     })
-  //   )
-  // }
-
-  // const servicePriceChange = (e) => {
-  //   const { value, id } = e.target
-  //   setService(
-  //     service.map((object) => {
-  //       if (object.serviceName === id) {
-  //         return {
-  //           ...object,
-  //           price: value
-  //         }
-  //       }
-  //       return object
-  //     })
-  //   )
-  // }
 
   const checkboxEmployeeChange = (e) => {
     const { name, placeholder, checked, attributes } = e.target
@@ -527,7 +469,8 @@ const ShinomontazhsCreate = (props) => {
           numberId: placeholder,
           name: attributes.itemName.value,
           surname: attributes.itemSurname.value,
-          role: 'second'
+          role: 'second',
+          group
         }
       ])
     } else {
@@ -672,6 +615,13 @@ const ShinomontazhsCreate = (props) => {
   })
   return (
     <div>
+      <GroupSwitch
+        groupCount={groupCount}
+        group={group}
+        onChangeGroup={onChangeGroup}
+        setGroupCount={setGroupCount}
+        employees={employees}
+      />
       <div className="bg-white shadow rounded-lg px-8 py-6 mb-4 flex flex-col my-2">
         <div className="flex flex-row">
           <div className="w-1/5 p-2">
@@ -753,6 +703,10 @@ const ShinomontazhsCreate = (props) => {
             box={box}
             setBox={setBox}
             currentPlace={currentPlace}
+            group={group}
+            onChangeGroup={onChangeGroup}
+            groupCount={groupCount}
+            setGroupCount={setGroupCount}
           />
         </div>
         <div
@@ -804,6 +758,8 @@ const ShinomontazhsCreate = (props) => {
             servicePriceChange={servicePriceChange}
             dateEnd=""
             onServiceQuantityChange={onServiceQuantityChange}
+            group={group}
+            groupCount={groupCount}
           />
         </div>
         <div
@@ -824,6 +780,8 @@ const ShinomontazhsCreate = (props) => {
             materialEightChange={materialEightChange}
             checkboxMaterialPlusChange={checkboxMaterialPlusChange}
             materialOnChange={materialOnChange}
+            group={group}
+            groupCount={groupCount}
           />
         </div>
         <div
@@ -845,6 +803,7 @@ const ShinomontazhsCreate = (props) => {
             checkboxTyresChange={checkboxTyresChange}
             dateEnd=""
             termCash={termCash}
+            groupCount={groupCount}
           />
         </div>
       </div>

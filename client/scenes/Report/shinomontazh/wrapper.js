@@ -6,6 +6,7 @@ import Salary from './Salary'
 import Material from './Material'
 import { filterByStatus, getEmployeeArray } from '../../../utils/admin/reportUtils'
 import { updateEmployeeReport } from '../../../redux/reducers/employees'
+import { splitGroupedObjects } from '../../../hooks/useGroup'
 
 export const checkIsRazvalService = (s) =>
   s?.includes('Развал схождения') ||
@@ -83,7 +84,7 @@ const Shinomontazh = ({
       )
         .then((res) => res.json())
         .then((it) => {
-          setShinList(it.data)
+          setShinList(splitGroupedObjects(it.data))
           setIsLoaded(true)
         })
     }
@@ -92,7 +93,7 @@ const Shinomontazh = ({
       fetch(`api/v1/${getType()}?month=${activeDay.getMonth() + 1}&year=${activeDay.getFullYear()}`)
         .then((res) => res.json())
         .then((it) => {
-          setShinList(it.data)
+          setShinList(splitGroupedObjects(it.data))
           setIsLoaded(true)
         })
     }
@@ -108,7 +109,7 @@ const Shinomontazh = ({
       fetch(getRangeType(firstDt, secDt))
         .then((res) => res.json())
         .then((it) => {
-          setShinList(getFilteredByRange(it.data))
+          setShinList(splitGroupedObjects(getFilteredByRange(it.data)))
           setIsLoaded(true)
         })
     }
