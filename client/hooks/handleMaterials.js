@@ -1,6 +1,6 @@
 import { useState } from 'react'
 
-export function useMaterials(propsMaterials) {
+export function useMaterials(propsMaterials, group = 1) {
   const [materials, setMaterials] = useState(propsMaterials || [])
 
   const checkboxMaterialChange = (e) => {
@@ -13,7 +13,8 @@ export function useMaterials(propsMaterials) {
           quantity: 1,
           price: placeholder,
           name: attributes.somename.value,
-          free: attributes.somefree.value
+          free: attributes.somefree.value,
+          group
         }
       ])
     } else {
@@ -60,7 +61,8 @@ export function useMaterials(propsMaterials) {
           quantity: 8,
           price: attributes.someprice.value,
           name: attributes.somename.value,
-          free: attributes.somefree.value
+          free: attributes.somefree.value,
+          group
         }
       ])
     }
@@ -106,7 +108,8 @@ export function useMaterials(propsMaterials) {
           quantity: value,
           price: attributes.someprice.value,
           name: attributes.somename.value,
-          free: attributes.somefree.value
+          free: attributes.somefree.value,
+          group
         }
       ])
     } else {

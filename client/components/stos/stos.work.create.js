@@ -39,7 +39,7 @@ const StosCreate = (props) => {
   const currentPlace = placeList.find((it) => it.id === auth.place)
 
   const [regNumber, setRegNumber] = useState([])
-  // const [keyboard, setKeyboard] = useState(false)
+
   const { keyboard, regOpen, setRegOpen, switchKeyboard } = useKeyboard()
 
   const [state, setState] = useState({
@@ -55,9 +55,6 @@ const StosCreate = (props) => {
     category: SERVICES_WITHOUT_TYPE ? 'price' : '',
     mileage: null
   })
-
-  // const [service, setService] = useState([])
-  // const [materials, setMaterials] = useState([])
 
   const {
     materials,
@@ -289,44 +286,11 @@ const StosCreate = (props) => {
     return null
   }
   const [actualService, setActualService] = useState([])
-  // const applyDiscount = (number, percent) => {
-  //   const number_percent = (number / 100) * Number(percent)
-
-  //   return Number(number) - Number(number_percent)
-  // }
-  // const applyDiscountPlus = (number, percent) => {
-  //   const number_percent = (number / 100) * Number(percent)
-
-  //   return Number(number) + Number(number_percent)
-  // }
-  // function roundTo5(num) {
-  //   return Math.round(num / 5) * 5
-  // }
 
   useEffect(() => {
-    // const helpToGetDiametr = (item) => {
-    //   if (item === 'R16С (скорая)') {
-    //     return '16Camb'
-    //   }
-    //   if (item === '22.5 (спец шина)') {
-    //     return '23'
-    //   }
-    //   return item.replace(/[^C\d]/g, '')
-    // }
     const actualDiametr = state.category
 
-    // const percent = currentPlace ? currentPlace.shinostavka : ''
-    // const definition = currentPlace ? currentPlace.shinomeaning : ''
     const getPrice = (item) => {
-      // if (!percent) {
-      //   return item[actualDiametr]
-      // }
-      // if (percent && definition === 'negative') {
-      //   return roundTo5(applyDiscount(item[actualDiametr], percent))
-      // }
-      // if (percent && definition === 'positive') {
-      //   return roundTo5(applyDiscountPlus(item[actualDiametr], percent))
-      // }
       return item[actualDiametr]
     }
     if ((state.class && state.category) || SERVICES_WITHOUT_TYPE) {
@@ -344,44 +308,7 @@ const StosCreate = (props) => {
           }))
       )
     }
-    // if (state.diametr && state.kuzov === 'gruz') {
-    //   setActualService(
-    //     stoprices
-    //       .filter(
-    //         (it) =>
-    //           it.type === 'gruz' &&
-    //           (it.category === 'common' || it.category === 'other' || it.category === 'free')
-    //       )
-    //       .map((item) => ({
-    //         name: item.name,
-    //         id: item.id,
-    //         type: item.type,
-    //         category: item.category,
-    //         number: item.number,
-    //         actualprice: getPrice(item),
-    //         free: item.free
-    //       }))
-    //   )
-    // }
-    // if (state.diametr && state.kuzov === 'selhoz') {
-    //   setActualService(
-    //     stoprices
-    //       .filter(
-    //         (it) =>
-    //           it.type === 'selhoz' &&
-    //           (it.category === 'common' || it.category === 'other' || it.category === 'free')
-    //       )
-    //       .map((item) => ({
-    //         name: item.name,
-    //         id: item.id,
-    //         type: item.type,
-    //         category: item.category,
-    //         number: item.number,
-    //         actualprice: getPrice(item),
-    //         free: item.free
-    //       }))
-    //   )
-    // }
+
     return () => {}
   }, [state.diametr, state.kuzov, stoprices, state.class, state.category])
 
@@ -472,214 +399,6 @@ const StosCreate = (props) => {
   }
 
   const [active, setActive] = useState('employee')
-  // const checkboxServiceChange = (e) => {
-  //   const { name, placeholder, checked, attributes } = e.target
-
-  //   if (checked) {
-  //     setService((prevState) => [
-  //       ...prevState,
-  //       {
-  //         serviceName: name,
-  //         quantity: 1,
-  //         price: placeholder,
-  //         name: attributes.somename.value,
-  //         free: attributes.somefree?.value
-  //       }
-  //     ])
-  //   } else {
-  //     setService((prevState) => prevState.filter((it) => it.serviceName !== name))
-  //   }
-  // }
-  // const servicePlusChange = (e) => {
-  //   const { name } = e.target
-  //   setService(
-  //     service.map((object) => {
-  //       if (object.serviceName === name) {
-  //         return {
-  //           ...object,
-  //           quantity: object.quantity + 1
-  //         }
-  //       }
-  //       return object
-  //     })
-  //   )
-  // }
-
-  // const serviceMinusChange = (e) => {
-  //   const { name } = e.target
-  //   setService(
-  //     service.map((object) => {
-  //       if (object.serviceName === name && object.quantity >= 2) {
-  //         return {
-  //           ...object,
-  //           quantity: object.quantity - 1
-  //         }
-  //       }
-  //       return object
-  //     })
-  //   )
-  // }
-
-  // const servicePriceChange = (e) => {
-  //   const { value, id, attributes, name } = e.target
-
-  //   if (service.find((object) => object.serviceName === id)) {
-  //     setService(
-  //       service.map((object) => {
-  //         if (object.serviceName === id) {
-  //           return {
-  //             ...object,
-  //             price: value
-  //           }
-  //         }
-  //         return object
-  //       })
-  //     )
-  //   } else {
-  //     setService((prevState) => [
-  //       ...prevState,
-  //       {
-  //         serviceName: name,
-  //         quantity: 1,
-  //         price: value,
-  //         name: attributes.somename.value,
-  //         free: attributes.somefree.value
-  //       }
-  //     ])
-  //   }
-  // }
-
-  // const checkboxMaterialChange = (e) => {
-  //   const { name, placeholder, checked, attributes } = e.target
-  //   if (checked) {
-  //     setMaterials((prevState) => [
-  //       ...prevState,
-  //       {
-  //         serviceName: name,
-  //         quantity: 1,
-  //         price: placeholder,
-  //         name: attributes.somename.value,
-  //         free: attributes.somefree.value
-  //       }
-  //     ])
-  //   } else {
-  //     setMaterials((prevState) => prevState.filter((it) => it.serviceName !== name))
-  //   }
-  // }
-  // const materialPlusChange = (e) => {
-  //   const { name } = e.target
-  //   setMaterials(
-  //     materials.map((object) => {
-  //       if (object.serviceName === name) {
-  //         return {
-  //           ...object,
-  //           quantity: object.quantity + 1
-  //         }
-  //       }
-  //       return object
-  //     })
-  //   )
-  // }
-
-  // const materialEightChange = (e) => {
-  //   const { name } = e.target
-  //   setMaterials(
-  //     materials.map((object) => {
-  //       if (object.serviceName === name) {
-  //         return {
-  //           ...object,
-  //           quantity: 8
-  //         }
-  //       }
-  //       return object
-  //     })
-  //   )
-  // }
-
-  // const checkboxMaterialPlusChange = (e) => {
-  //   const { name, attributes } = e.target
-  //   if (!materials.find((it) => it.serviceName.includes(name))) {
-  //     setMaterials((prevState) => [
-  //       ...prevState,
-  //       {
-  //         serviceName: name,
-  //         quantity: 8,
-  //         price: attributes.someprice.value,
-  //         name: attributes.somename.value,
-  //         free: attributes.somefree.value
-  //       }
-  //     ])
-  //   }
-  // }
-
-  // const materialMinusChange = (e) => {
-  //   const { name } = e.target
-  //   setMaterials(
-  //     materials.map((object) => {
-  //       if (object.serviceName === name && object.quantity >= 2) {
-  //         return {
-  //           ...object,
-  //           quantity: object.quantity - 1
-  //         }
-  //       }
-  //       return object
-  //     })
-  //   )
-  // }
-
-  // const materialPriceChange = (e) => {
-  //   const { value, id } = e.target
-  //   setMaterials(
-  //     materials.map((object) => {
-  //       if (object.serviceName === id) {
-  //         return {
-  //           ...object,
-  //           price: value
-  //         }
-  //       }
-  //       return object
-  //     })
-  //   )
-  // }
-
-  // const materialOnChange = (e) => {
-  //   const { value, id } = e.target
-  //   setMaterials(
-  //     materials.map((object) => {
-  //       if (object.serviceName === id) {
-  //         return {
-  //           ...object,
-  //           quantity: value
-  //         }
-  //       }
-  //       return object
-  //     })
-  //   )
-  // }
-
-  // const checkboxEmployeeChange = (e) => {
-  //   const { name, checked, placeholder, attributes } = e.target
-  //   if (checked) {
-  //     setState((prevState) => ({
-  //       ...prevState,
-  //       employee: [
-  //         ...prevState.employee,
-  //         {
-  //           id: name,
-  //           numberId: placeholder,
-  //           name: attributes.itemName.value,
-  //           surname: attributes.itemSurname.value,
-  //           role: 'second'
-  //         }
-  //       ]
-  //     }))
-  //   } else {
-  //     setState((prevState) => ({
-  //       ...prevState,
-  //       employee: prevState.employee.filter((it) => it.id !== name)
-  //     }))
-  //   }
-  // }
 
   const checkboxEmployeeChange = (e) => {
     const { name, placeholder, checked, attributes } = e.target

@@ -1,3 +1,5 @@
+import statuses from '../../../common/enums/shinomontazh-statuses'
+
 // eslint-disable-next-line import/prefer-default-export
 export const filterByEmployee = (data, employeeId) => {
   if (employeeId && data) {
@@ -31,3 +33,21 @@ export const getEmployeeArray = (report) =>
           return acc
         }, [])
     : []
+
+export const filterByStatus = (it, showPaid) => {
+  if (
+    ((showPaid === 'yes' && it.status === statuses[2]) ||
+      it.status === statuses[3] ||
+      it.status === statuses[4] ||
+      it.status === statuses[6]) &&
+    it?.payment &&
+    it.payment !== 'cancel'
+  ) {
+    return true
+  }
+  if ((showPaid === 'no' && it.status === statuses[1]) || it.status === statuses[0]) {
+    return true
+  }
+
+  return false
+}

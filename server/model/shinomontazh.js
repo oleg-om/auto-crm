@@ -124,6 +124,10 @@ const Shinomontazh = new mongoose.Schema({
   customerId: {
     type: String,
     required: false
+  },
+  groupCount: {
+    type: Number,
+    required: false
   }
 })
 

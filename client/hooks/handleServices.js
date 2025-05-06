@@ -1,6 +1,6 @@
 import { useState } from 'react'
 
-export function useServices(propsServices) {
+export function useServices(propsServices, group) {
   const [service, setService] = useState(propsServices || [])
 
   const checkboxServiceChange = (e) => {
@@ -13,7 +13,8 @@ export function useServices(propsServices) {
           quantity: 1,
           price: placeholder,
           name: attributes.somename.value,
-          free: attributes.somefree?.value
+          free: attributes.somefree?.value,
+          group
         }
       ])
     } else {
@@ -60,7 +61,8 @@ export function useServices(propsServices) {
           quantity: value,
           price: attributes.someprice?.value || 0,
           name: attributes.somename.value,
-          free: attributes.somefree?.value
+          free: attributes.somefree?.value,
+          group
         }
       ])
     } else {
@@ -101,7 +103,8 @@ export function useServices(propsServices) {
           quantity: 1,
           price: value,
           name: attributes.somename.value,
-          free: attributes.somefree.value
+          free: attributes.somefree.value,
+          group
         }
       ])
     }

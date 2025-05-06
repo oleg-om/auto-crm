@@ -18,6 +18,7 @@ import { useKeyboard } from '../../hooks/keyboard'
 import { useMaterials } from '../../hooks/handleMaterials'
 import { useServices } from '../../hooks/handleServices'
 import { ServiceSubmitButtons } from '../shared/buttons/OrderSubmitButtons'
+import { GroupSwitch, useGroup } from '../../hooks/useGroup'
 
 const ShinomontazhsEdit = (props) => {
   toast.configure()
@@ -43,6 +44,7 @@ const ShinomontazhsEdit = (props) => {
 
   const [regNumber, setRegNumber] = useState([])
   const { keyboard, regOpen, setRegOpen, switchKeyboard } = useKeyboard()
+  const { group, onChangeGroup, groupCount, setGroupCount } = useGroup(props?.groupCount)
 
   const [state, setState] = useState({
     place: props.place,
@@ -490,7 +492,8 @@ const ShinomontazhsEdit = (props) => {
         dateStart: props?.dateStart ? props.dateStart : new Date(),
         status: props.status === 'Новая запись' ? 'В работе' : props.status,
         box,
-        customerId: activeCustomer || props.customerId || null
+        customerId: activeCustomer || props.customerId || null,
+        groupCount
       })
       if (checkLink()) {
         history.push(`/shinomontazhboss/list/${props.num ? props.num : ''}`)
@@ -529,7 +532,8 @@ const ShinomontazhsEdit = (props) => {
         ...dateFinishObj,
         status: props?.status === 'Новая запись' ? statusList[0] : statusList[1],
         box,
-        customerId: activeCustomer || props.customerId || null
+        customerId: activeCustomer || props.customerId || null,
+        groupCount
       })
       updateStorageStat(props?.storage, props?.id_shinomontazhs)
       if (checkLink()) {
@@ -545,7 +549,8 @@ const ShinomontazhsEdit = (props) => {
         comment: state.comment,
         status: statusList[2],
         box,
-        customerId: activeCustomer || props.customerId || null
+        customerId: activeCustomer || props.customerId || null,
+        groupCount
       })
       // updateStorageStat(state?.storage, state?.id_shinomontazhs)
       if (checkLink()) {
@@ -561,7 +566,8 @@ const ShinomontazhsEdit = (props) => {
         comment: state.comment,
         status: statusList[3],
         box,
-        customerId: activeCustomer || props.customerId || null
+        customerId: activeCustomer || props.customerId || null,
+        groupCount
       })
       // updateStorageStat(state?.storage, state?.id_shinomontazhs)
       if (checkLink()) {
@@ -577,7 +583,8 @@ const ShinomontazhsEdit = (props) => {
         comment: state.comment,
         status: statusList[4],
         box,
-        customerId: activeCustomer || props.customerId || null
+        customerId: activeCustomer || props.customerId || null,
+        groupCount
       })
       //  updateStorageStat(state?.storage, state?.id_shinomontazhs)
       if (checkLink()) {
@@ -595,7 +602,8 @@ const ShinomontazhsEdit = (props) => {
         combTerm: termCash.terminal,
         combCash: termCash.cash,
         box,
-        customerId: activeCustomer || props.customerId || null
+        customerId: activeCustomer || props.customerId || null,
+        groupCount
       })
       //  updateStorageStat(state?.storage, state?.id_shinomontazhs)
       if (checkLink()) {
@@ -611,7 +619,8 @@ const ShinomontazhsEdit = (props) => {
         comment: state.comment,
         status: statusList[5],
         box,
-        customerId: activeCustomer || props.customerId || null
+        customerId: activeCustomer || props.customerId || null,
+        groupCount
       })
       if (checkLink()) {
         history.push(`/shinomontazhboss/list/${props.num ? props.num : ''}`)
@@ -743,7 +752,8 @@ const ShinomontazhsEdit = (props) => {
       totalMaterial,
       totalSumm,
       totalWithDiscount,
-      id_shinomontazhs: props.id_shinomontazhs
+      id_shinomontazhs: props.id_shinomontazhs,
+      groupCount
     })
   }
 
@@ -758,12 +768,20 @@ const ShinomontazhsEdit = (props) => {
       totalMaterial,
       totalSumm,
       totalWithDiscount,
-      id_shinomontazhs: props.id_shinomontazhs
+      id_shinomontazhs: props.id_shinomontazhs,
+      groupCount
     })
   }
 
   return (
     <div>
+      <GroupSwitch
+        groupCount={groupCount}
+        group={group}
+        onChangeGroup={onChangeGroup}
+        setGroupCount={setGroupCount}
+        employees={employees}
+      />
       <div className="bg-white shadow rounded-lg px-8 py-6 mb-4 flex flex-col my-2">
         <div className="flex flex-row">
           <div className="w-1/5 p-2">
@@ -845,6 +863,10 @@ const ShinomontazhsEdit = (props) => {
             box={box}
             setBox={setBox}
             currentPlace={currentPlace}
+            group={group}
+            onChangeGroup={onChangeGroup}
+            groupCount={groupCount}
+            setGroupCount={setGroupCount}
           />
         </div>
         <div
@@ -896,6 +918,8 @@ const ShinomontazhsEdit = (props) => {
             servicePriceChange={servicePriceChange}
             dateEnd={props.dateFinish}
             onServiceQuantityChange={onServiceQuantityChange}
+            group={group}
+            groupCount={groupCount}
           />
         </div>
         <div
@@ -916,6 +940,8 @@ const ShinomontazhsEdit = (props) => {
             materialEightChange={materialEightChange}
             checkboxMaterialPlusChange={checkboxMaterialPlusChange}
             materialOnChange={materialOnChange}
+            group={group}
+            groupCount={groupCount}
           />
         </div>
         <div
@@ -942,6 +968,8 @@ const ShinomontazhsEdit = (props) => {
             printTwo={printTwo}
             id_shinomontazhs={props.id_shinomontazhs}
             setTermCash={setTermCash}
+            group={group}
+            groupCount={groupCount}
           />
         </div>
       </div>

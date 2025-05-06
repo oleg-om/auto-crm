@@ -4,9 +4,9 @@ import { useDispatch, useSelector } from 'react-redux'
 import taskStatuses from '../../../lists/task-statuses'
 import Salary from './Salary'
 import Material from './Material'
-import statuses from '../../../../common/enums/shinomontazh-statuses'
-import { getEmployeeArray } from '../../../utils/admin/reportUtils'
+import { filterByStatus, getEmployeeArray } from '../../../utils/admin/reportUtils'
 import { updateEmployeeReport } from '../../../redux/reducers/employees'
+import { splitGroupedObjects } from '../../../hooks/useGroup'
 
 export const checkIsRazvalService = (s) =>
   s?.includes('Развал схождения') ||
@@ -84,7 +84,7 @@ const Shinomontazh = ({
       )
         .then((res) => res.json())
         .then((it) => {
-          setShinList(it.data)
+          setShinList(splitGroupedObjects(it.data))
           setIsLoaded(true)
         })
     }
@@ -93,7 +93,7 @@ const Shinomontazh = ({
       fetch(`api/v1/${getType()}?month=${activeDay.getMonth() + 1}&year=${activeDay.getFullYear()}`)
         .then((res) => res.json())
         .then((it) => {
-          setShinList(it.data)
+          setShinList(splitGroupedObjects(it.data))
           setIsLoaded(true)
         })
     }
@@ -109,7 +109,7 @@ const Shinomontazh = ({
       fetch(getRangeType(firstDt, secDt))
         .then((res) => res.json())
         .then((it) => {
-          setShinList(getFilteredByRange(it.data))
+          setShinList(splitGroupedObjects(getFilteredByRange(it.data)))
           setIsLoaded(true)
         })
     }
@@ -122,6 +122,7 @@ const Shinomontazh = ({
   const [isMaterial, setIsMaterial] = useState('yes')
 
   const [showRazval, setShowRazval] = useState('no')
+  const [showPaid, setShowPaid] = useState('yes')
 
   useEffect(() => {
     if (calendarType === 'month') {
@@ -129,14 +130,7 @@ const Shinomontazh = ({
         shinList
           .filter((it) => (place ? place === it.place : it))
 
-          .filter(
-            (it) =>
-              // it.status === statuses[1] ||
-              it.status === statuses[2] ||
-              it.status === statuses[3] ||
-              it.status === statuses[4] ||
-              it.status === statuses[6]
-          )
+          .filter((it) => filterByStatus(it, showPaid))
           .filter((it) => it.payment && it.payment !== 'cancel')
           .filter(
             (item) =>
@@ -150,15 +144,7 @@ const Shinomontazh = ({
         shinList
           .filter((it) => (place ? place === it.place : it))
 
-          .filter(
-            (it) =>
-              // it.status === statuses[1] ||
-              it.status === statuses[2] ||
-              it.status === statuses[3] ||
-              it.status === statuses[4] ||
-              it.status === statuses[6]
-          )
-          .filter((it) => it.payment && it.payment !== 'cancel')
+          .filter((it) => filterByStatus(it, showPaid))
           .filter(
             (item) =>
               new Date(item.dateFinish).getFullYear() === activeDay.getFullYear() &&
@@ -172,15 +158,7 @@ const Shinomontazh = ({
       setReport(
         shinList
           .filter((it) => (place ? place === it.place : it))
-          .filter(
-            (it) =>
-              // it.status === statuses[1] ||
-              it.status === statuses[2] ||
-              it.status === statuses[3] ||
-              it.status === statuses[4] ||
-              it.status === statuses[6]
-          )
-          .filter((it) => it.payment && it.payment !== 'cancel')
+          .filter((it) => filterByStatus(it, showPaid))
       )
     }
 
@@ -194,17 +172,9 @@ const Shinomontazh = ({
       setReport(
         shinList
 
-          .filter(
-            (it) =>
-              // it.status === statuses[1] ||
-              it.status === statuses[2] ||
-              it.status === statuses[3] ||
-              it.status === statuses[4] ||
-              it.status === statuses[6]
-          )
+          .filter((it) => filterByStatus(it, showPaid))
 
           .filter((it) => (place ? place === it.place : it))
-          .filter((it) => it.payment && it.payment !== 'cancel')
           .filter(
             (item) =>
               new Date(item.dateFinish).getFullYear() === activeMonth.getFullYear() &&
@@ -216,17 +186,9 @@ const Shinomontazh = ({
       setReport(
         shinList
 
-          .filter(
-            (it) =>
-              // it.status === statuses[1] ||
-              it.status === statuses[2] ||
-              it.status === statuses[3] ||
-              it.status === statuses[4] ||
-              it.status === statuses[6]
-          )
+          .filter((it) => filterByStatus(it, showPaid))
 
           .filter((it) => (place ? place === it.place : it))
-          .filter((it) => it.payment && it.payment !== 'cancel')
           .filter(
             (item) =>
               new Date(item.dateFinish).getFullYear() === activeDay.getFullYear() &&
@@ -239,17 +201,9 @@ const Shinomontazh = ({
       setReport(
         shinList
 
-          .filter(
-            (it) =>
-              // it.status === statuses[1] ||
-              it.status === statuses[2] ||
-              it.status === statuses[3] ||
-              it.status === statuses[4] ||
-              it.status === statuses[6]
-          )
+          .filter((it) => filterByStatus(it, showPaid))
 
           .filter((it) => (place ? place === it.place : it))
-          .filter((it) => it.payment && it.payment !== 'cancel')
           .filter(
             (item) =>
               new Date(item.dateFinish).getFullYear() === activeDay.getFullYear() &&
@@ -280,14 +234,7 @@ const Shinomontazh = ({
 
       const getFilteredByRange = (cont) =>
         cont
-          .filter(
-            (it) =>
-              // it.status === statuses[1] ||
-              it.status === statuses[2] ||
-              it.status === statuses[3] ||
-              it.status === statuses[4] ||
-              it.status === statuses[6]
-          )
+          .filter((it) => filterByStatus(it, showPaid))
           .filter((arr) => new Date(arr.dateFinish) > firstDt && new Date(arr.dateFinish) < secDt)
           .filter((it) => (place ? place === it.place : it))
       setReport(getFilteredByRange(shinList))
@@ -296,14 +243,7 @@ const Shinomontazh = ({
     if (active.includes('sto-') && showRazval === 'yes') {
       setReport(
         shinList
-          .filter(
-            (it) =>
-              // it.status === statuses[1] ||
-              it.status === statuses[2] ||
-              it.status === statuses[3] ||
-              it.status === statuses[4] ||
-              it.status === statuses[6]
-          )
+          .filter((it) => filterByStatus(it, showPaid))
           .map((s) => {
             return { ...s, services: s.services.filter((i) => checkIsRazvalService(i?.name || '')) }
           })
@@ -312,7 +252,17 @@ const Shinomontazh = ({
     }
 
     return () => {}
-  }, [shinList, activeMonth, activeDay, place, timeStart, timeFinish, employee, showRazval])
+  }, [
+    shinList,
+    activeMonth,
+    activeDay,
+    place,
+    timeStart,
+    timeFinish,
+    employee,
+    showRazval,
+    showPaid
+  ])
 
   const employeeArray = getEmployeeArray(report)
   useEffect(() => {
@@ -324,6 +274,11 @@ const Shinomontazh = ({
   const onChangeShowRazval = (e) => {
     const { value } = e.target
     setShowRazval(value)
+  }
+
+  const onChangeShowPaid = (e) => {
+    const { value } = e.target
+    setShowPaid(value)
   }
 
   const loading = () => {
@@ -357,7 +312,7 @@ const Shinomontazh = ({
       active === 'cond-kassa' ? (
         <div className={cx('block', {})}>
           {isLoaded ? null : loading()}
-          {report.length > 0 && report && isLoaded ? (
+          {report && isLoaded ? (
             <Salary
               employeeList={employeeList}
               report={report}
@@ -376,6 +331,8 @@ const Shinomontazh = ({
               employeeArray={employeeArray}
               showRazval={showRazval}
               onChangeShowRazval={onChangeShowRazval}
+              showPaid={showPaid}
+              onChangeShowPaid={onChangeShowPaid}
             />
           ) : null}
           {isLoaded && report.length <= 0 ? (
