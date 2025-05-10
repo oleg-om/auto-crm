@@ -515,7 +515,7 @@ const ShinomontazhsEdit = (props) => {
     if (!state.mark) notify('Укажите марку авто')
     if (!state.model) notify('Укажите модель авто')
     if (!state.place) notify('Укажите место работы')
-    if (groupCount > 1 && !employees?.find((e) => e?.group === 2)?.length) {
+    if (groupCount > 1 && !!employees?.find((e) => e?.group === 2)?.length) {
       notify('Укажите сотрудников для группы 2')
       return
     }
