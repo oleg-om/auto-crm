@@ -12,5 +12,6 @@ router.get('/autopart/:id', autopartsController.getOne)
 router.post('/autopart/', autopartsController.create)
 router.patch('/autopart/:id', autopartsController.update)
 router.delete('/autopart/:id', autopartsController.delete)
+// router.delete('/autopart-remove-old', autopartsController.removeOld)
 
 module.exports = router

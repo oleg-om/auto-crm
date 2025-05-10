@@ -1,9 +1,9 @@
 import React, { useState } from 'react'
 // import cx from 'classnames'
 
-export function useGroup(propsGroupCount) {
+export function useGroup(propsGroupCount = 1) {
   const [group, setGroup] = useState(1)
-  const [groupCount, setGroupCount] = useState(propsGroupCount || 1)
+  const [groupCount, setGroupCount] = useState(propsGroupCount)
 
   const onChangeGroup = (number) => {
     setGroup(number)
@@ -12,11 +12,25 @@ export function useGroup(propsGroupCount) {
   return { group, onChangeGroup, groupCount, setGroupCount }
 }
 
-export const GroupSwitch = ({ groupCount, group, onChangeGroup, employees }) => {
+export const GroupSwitch = ({
+  groupCount,
+  group,
+  onChangeGroup,
+  employees,
+  dateEnd,
+  setGroupCount
+}) => {
   const [hoveredTab, setHoveredTab] = useState(null)
 
   if (!groupCount || groupCount === 1) {
-    return null
+    return (
+      <GroupAdd
+        groupCount={groupCount}
+        setGroupCount={setGroupCount}
+        dateEnd={dateEnd}
+        employees={employees}
+      />
+    )
   }
 
   return (
@@ -88,23 +102,58 @@ export const GroupSwitch = ({ groupCount, group, onChangeGroup, employees }) => 
   )
 }
 
-export const GroupAdd = ({ groupCount, setGroupCount }) => {
+export const GroupAdd = ({ groupCount, setGroupCount, dateEnd, employees }) => {
+  const [hoveredTab, setHoveredTab] = useState(false)
+
   if (groupCount !== 1) {
     return null
   }
 
   const addGroup = () => {
-    setGroupCount(2)
+    if (!dateEnd) {
+      setGroupCount(2)
+    }
   }
 
   return (
-    <button
-      className="px-4 py-2 rounded-full bg-blue-500 text-white text-sm font-medium hover:bg-blue-600 focus:outline-none"
-      type="button"
-      onClick={addGroup}
-    >
-      Добавить группу
-    </button>
+    <div className="w-full max-w-md mx-auto relative">
+      {/* Вкладки */}
+      <div className="flex border-b border-gray-300 relative justify-center">
+        <div className="relative">
+          <button
+            type="button"
+            className="px-4 py-2 text-sm font-medium focus:outline-none border-b-2 border-blue-500 text-blue-600"
+            onClick={addGroup}
+            onMouseEnter={() => setHoveredTab(true)}
+            onMouseLeave={() => setHoveredTab(false)}
+          >
+            Группа 1
+          </button>
+          {hoveredTab && (
+            <div className="absolute top-full left-0 mt-1 w-48 bg-white border border-gray-200 shadow-lg z-10">
+              <ul className="text-sm text-gray-800 divide-y divide-gray-100">
+                {employees.map((it, index) => (
+                  <li key={index} className="px-4 py-2 hover:bg-gray-100">
+                    {it.name} {it.surname}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
+        </div>
+        {dateEnd ? null : (
+          <div className="relative">
+            <button
+              type="button"
+              className="px-4 py-2 ml-2 text-sm font-medium focus:outline-none text-gray-600"
+              onClick={addGroup}
+            >
+              Добавить группу +
+            </button>
+          </div>
+        )}
+      </div>
+    </div>
   )
 }
 

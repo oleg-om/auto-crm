@@ -19,6 +19,7 @@ import { useMaterials } from '../../hooks/handleMaterials'
 import { useServices } from '../../hooks/handleServices'
 import { ServiceSubmitButtons } from '../shared/buttons/OrderSubmitButtons'
 import { GroupSwitch, useGroup } from '../../hooks/useGroup'
+import EmployeeTab from '../common/employeeTab'
 
 const ShinomontazhsEdit = (props) => {
   toast.configure()
@@ -74,7 +75,7 @@ const ShinomontazhsEdit = (props) => {
     materialMinusChange,
     materialPriceChange,
     materialOnChange
-  } = useMaterials(props.material)
+  } = useMaterials(props.material, group)
 
   const {
     service,
@@ -83,7 +84,7 @@ const ShinomontazhsEdit = (props) => {
     serviceMinusChange,
     onServiceQuantityChange,
     servicePriceChange
-  } = useServices(props.services)
+  } = useServices(props.services, group)
 
   const [tyres, setTyres] = useState(props.tyre ? props.tyre[0] : { sale: 'no' })
   const [employees, setEmployees] = useState(props.employee ? props.employee : [])
@@ -107,7 +108,8 @@ const ShinomontazhsEdit = (props) => {
           numberId: placeholder,
           name: attributes.itemName.value,
           surname: attributes.itemSurname.value,
-          role: 'second'
+          role: 'second',
+          group
         }
       ])
     } else {
@@ -513,6 +515,10 @@ const ShinomontazhsEdit = (props) => {
     if (!state.mark) notify('Укажите марку авто')
     if (!state.model) notify('Укажите модель авто')
     if (!state.place) notify('Укажите место работы')
+    if (groupCount > 1 && !employees?.find((e) => e?.group === 2)?.length) {
+      notify('Укажите сотрудников для группы 2')
+      return
+    }
     if (!state.payment && !props.dateFinish) {
       props.updateShinomontazh(props.id, {
         place: state.place,
@@ -781,21 +787,11 @@ const ShinomontazhsEdit = (props) => {
         onChangeGroup={onChangeGroup}
         setGroupCount={setGroupCount}
         employees={employees}
+        dateEnd={props.dateFinish}
       />
       <div className="bg-white shadow rounded-lg px-8 py-6 mb-4 flex flex-col my-2">
         <div className="flex flex-row">
-          <div className="w-1/5 p-2">
-            <button
-              type="button"
-              className={cx('p-4 bg-gray-200 rounded w-full h-full overflow-hidden', {
-                block: active !== 'employee',
-                'border-b-8 border-main-400': active === 'employee'
-              })}
-              onClick={() => changeStep('employee')}
-            >
-              Исполнители
-            </button>
-          </div>
+          <EmployeeTab changeStep={changeStep} employees={employees} active={active} />
           <div className="w-1/5 p-2">
             <button
               type="button"

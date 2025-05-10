@@ -176,12 +176,17 @@ const TyresRow = (props) => {
       </td>
       <td className="w-full lg:w-auto p-2 text-gray-800 text-left text-sm lg:text-center border border-b block lg:table-cell relative lg:static">
         <span className="lg:hidden px-2 py-1 text-xs font-bold uppercase">Точка:</span>
-        {props.placesList ? props.placesList.name : ''}
-        {props.siteNumber ? (
+        {props.placesList && props.siteNumber ? (
+          <div className="rounded py-1 px-3 text-xs font-bold bg-green-600 text-white">
+            {props.placesList.name} (№{props.siteNumber})
+          </div>
+        ) : props.siteNumber ? (
           <div className="rounded py-1 px-3 text-xs font-bold bg-green-600 text-white">
             Заказ с сайта №{props.siteNumber}
           </div>
-        ) : null}
+        ) : (
+          props.placesList.name
+        )}
       </td>
       <td className="w-full lg:w-auto p-2 text-gray-800 text-left text-sm lg:text-center border border-b block lg:table-cell relative lg:static">
         <span className="lg:hidden px-2 py-1 text-xs font-bold uppercase">Обработал:</span>

@@ -841,6 +841,12 @@ const TyreUpdate = (props) => {
                               </option>
                               {vendorList
                                 .filter((it) => it.type === 'tyres')
+                                .map((it) => it.value)
+                                .includes(inputField.vendor) ? null : (
+                                <option value={inputField.vendor}>{inputField.vendor}</option>
+                              )}
+                              {vendorList
+                                .filter((it) => it.type === 'tyres')
                                 .sort(function sortVendors(a, b) {
                                   if (a.name > b.name) {
                                     return 1

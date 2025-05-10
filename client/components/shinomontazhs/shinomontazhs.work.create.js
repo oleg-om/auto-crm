@@ -621,6 +621,7 @@ const ShinomontazhsCreate = (props) => {
         onChangeGroup={onChangeGroup}
         setGroupCount={setGroupCount}
         employees={employees}
+        dateEnd={null}
       />
       <div className="bg-white shadow rounded-lg px-8 py-6 mb-4 flex flex-col my-2">
         <div className="flex flex-row">

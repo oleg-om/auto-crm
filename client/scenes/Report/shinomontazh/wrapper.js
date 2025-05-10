@@ -119,7 +119,7 @@ const Shinomontazh = ({
   const [report, setReport] = useState([])
 
   const [bossPercent, setBossPercent] = useState(30)
-  const [isMaterial, setIsMaterial] = useState('yes')
+  const [isMaterial, setIsMaterial] = useState('no')
 
   const [showRazval, setShowRazval] = useState('no')
   const [showPaid, setShowPaid] = useState('yes')
