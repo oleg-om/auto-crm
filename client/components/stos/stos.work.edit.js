@@ -16,6 +16,7 @@ import { useKeyboard } from '../../hooks/keyboard'
 import { useMaterials } from '../../hooks/handleMaterials'
 import { useServices } from '../../hooks/handleServices'
 import { ServiceSubmitButtons } from '../shared/buttons/OrderSubmitButtons'
+import EmployeeTab from '../common/employeeTab'
 
 const StosEdit = (props) => {
   toast.configure()
@@ -757,18 +758,7 @@ const StosEdit = (props) => {
     <div>
       <div className="bg-white shadow rounded-lg px-8 py-6 mb-4 flex flex-col my-2">
         <div className="flex flex-row">
-          <div className="w-1/5 p-2">
-            <button
-              type="button"
-              className={cx('p-4 bg-gray-200 rounded w-full h-full overflow-hidden', {
-                block: active !== 'employee',
-                'border-b-8 border-main-400': active === 'employee'
-              })}
-              onClick={() => changeStep('employee')}
-            >
-              Исполнители
-            </button>
-          </div>
+          <EmployeeTab changeStep={changeStep} employees={employees} active={active} />
           <div className="w-1/5 p-2">
             <button
               type="button"

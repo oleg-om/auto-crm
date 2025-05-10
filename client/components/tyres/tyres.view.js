@@ -19,6 +19,7 @@ const TyreViewOrder = (props) => {
   const notify = (arg) => {
     toast.info(arg, { position: toast.POSITION.BOTTOM_RIGHT })
   }
+  const list = useSelector((s) => s.places.list)
   const employeeListLocal = useSelector((s) => s.employees.list)
   const componentRef = useRef()
   const handlePrint = useReactToPrint({
@@ -47,7 +48,9 @@ const TyreViewOrder = (props) => {
 
   const [state, setState] = useState({
     prepay: props.prepay,
-    comment: props.comment
+    comment: props.comment,
+    employee: props.employee,
+    place: props.place
   })
   const changeTyre = () => {
     props.updateTyre(props.id, state)
@@ -232,6 +235,81 @@ const TyreViewOrder = (props) => {
           </div>
           <div className="md:m-3 lg:flex flex-col rounded-lg px-6 py-2 w-auto shadow bg-gray-100 my-2">
             <CardStatus props={props} />
+            {props?.siteNumber ? (
+              <>
+                <div className="px-3 grid">
+                  <b>Принял заказ</b>
+                  <div className="flex-shrink w-full inline-block relative mb-3">
+                    <select
+                      className="block appearance-none w-full bg-grey-lighter border border-gray-300 focus:border-gray-500 focus:outline-none py-1 px-4 pr-8 rounded"
+                      value={state.employee}
+                      name="employee"
+                      onChange={onChange}
+                    >
+                      <option value="" disabled hidden className="text-gray-800">
+                        Выберите сотрудника
+                      </option>
+                      <option value="kerchshina.com" className="text-gray-800">
+                        Заказ с сайта kerchshina.com
+                      </option>
+                      {employeeListLocal
+                        .filter((it) => it.role.includes('Прием заказов (шины)'))
+                        .map((it) => {
+                          return (
+                            <option value={it.id} key={it.id}>
+                              {it.name} {it.surname}
+                            </option>
+                          )
+                        })}
+                    </select>
+                    <div className="pointer-events-none absolute top-0 mt-2 right-0 flex items-center px-2 text-gray-600">
+                      <svg
+                        className="fill-current h-4 w-4"
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 20 20"
+                      >
+                        <path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z" />
+                      </svg>
+                    </div>
+                  </div>
+                </div>
+                <div className="px-3 grid">
+                  <b>Заказ принят на точке</b>
+                  <div className="flex-shrink w-full inline-block relative mb-3">
+                    <select
+                      className="block appearance-none w-full bg-grey-lighter border border-gray-300 focus:border-gray-500 focus:outline-none py-1 px-4 pr-8 rounded"
+                      value={state.place}
+                      name="place"
+                      onChange={onChange}
+                    >
+                      <option value="" disabled hidden className="text-gray-800">
+                        Выберите место
+                      </option>
+                      <option value="kerchshina.com" className="text-gray-800">
+                        Заказ с сайта kerchshina.com
+                      </option>
+                      {list.map((it, index) => {
+                        return (
+                          <option value={it.id} key={index}>
+                            {it.name}
+                          </option>
+                        )
+                      })}
+                    </select>
+                    <div className="pointer-events-none absolute top-0 mt-2 right-0 flex items-center px-2 text-gray-600">
+                      <svg
+                        className="fill-current h-4 w-4"
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 20 20"
+                      >
+                        <path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z" />
+                      </svg>
+                    </div>
+                  </div>
+                </div>
+              </>
+            ) : null}
+
             <div className="px-3">
               <b>Обработал заказ</b>
               <div className="flex-shrink w-full inline-block relative mb-3">

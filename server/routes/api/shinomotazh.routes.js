@@ -14,5 +14,6 @@ router.delete('/shinomontazh/:id', shinomontazhsController.delete)
 router.get('/shinomontazhlast/', shinomontazhsController.getLastTwoDays)
 router.get('/shinomontazhrange/', shinomontazhsController.getRange)
 router.get('/shinomontazhpreentry/', shinomontazhsController.getMonthForPreentry)
+// router.delete('/shinomontazh-remove-old', shinomontazhsController.removeOld)
 
 module.exports = router

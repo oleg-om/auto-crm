@@ -1,6 +1,6 @@
 import React from 'react'
 import cx from 'classnames'
-import { employeeFilteredByGroup, GroupAdd } from '../../hooks/useGroup'
+import { employeeFilteredByGroup } from '../../hooks/useGroup'
 
 const Employee = ({
   employeeList,
@@ -12,9 +12,7 @@ const Employee = ({
   currentPlace,
   box,
   setBox,
-  group,
-  groupCount,
-  setGroupCount
+  group
 }) => {
   return (
     <div className="flex flex-col -mx-3">
@@ -52,7 +50,6 @@ const Employee = ({
             </div>
           </div>
         ) : null}
-        {dateEnd ? null : <GroupAdd groupCount={groupCount} setGroupCount={setGroupCount} />}
       </div>
       <div className="px-3 mb-6 md:mb-0 w-full">
         <label

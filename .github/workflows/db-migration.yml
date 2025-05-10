@@ -1,0 +1,67 @@
+name: Backup and Restore MongoDB
+
+on:
+  workflow_dispatch: # Ручной запуск
+
+jobs:
+  backup-restore:
+    runs-on: ubuntu-latest
+
+    steps:
+      # Checkout репозиторий
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      # Настроить SSH Agent
+      - name: Setup SSH agent
+        uses: webfactory/ssh-agent@v0.8.0
+        with:
+          ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
+
+      # Сделать mongodump
+      - name: Run mongodump
+        run: |
+          mongodump --db chat --gzip --archive > ./backup/dump.gz
+
+      # Делаем временную базу данных с дампа
+      - name: Restore to Temp DB
+        run: |
+          mongorestore --archive=./backup/dump.gz --gzip --nsFrom="*.*" --nsTo="/backup/temp_cleanup_db.*"
+
+      # Удаляем старые записи с временной базы
+      - name: Cleanup Old Records
+        env:
+          MONGO_URI_TEMP: "mongodb://localhost:27017/temp_cleanup_db"
+        run: |
+          mongosh "$MONGO_URI_TEMP" --eval "
+            // Получаем первый день ПРЕДЫДУЩЕГО месяца
+            const now = new Date();
+            const startOfPreviousMonth = new Date(now.getFullYear(), now.getMonth() - 1, 1);
+          
+            db.getCollectionNames().forEach(col => {
+              if (!['stos', 'shinomontazhs', 'autoparts', 'razvals'].includes(col)) return;
+              db[col].deleteMany({ dateStart: { \$lt: startOfPreviousMonth } });
+              print('Cleaned collection:', col);
+            });
+          "
+
+      - name: Create New Dump
+        run: |
+          mongodump --db=/backup/temp_cleanup_db --archive=/backup/cleaned_dump.gz --gzip
+
+      - name: Upload Cleaned Dump
+        uses: actions/upload-artifact@v3
+        with:
+          name: cleaned-mongodb-dump
+          path: cleaned_dump.gz
+
+      - name: Cleanup Temp DB
+        run: |
+          mongosh "mongodb://localhost:27017/temp_cleanup_db" --eval "db.dropDatabase()"
+
+      # Восстановить в MongoDB Atlas
+      - name: Restore dump to MongoDB Atlas
+        run: |
+          mongorestore \
+            --uri="${{ secrets.ATLAS_URI }}" \
+            --gzip --archive=./backup/cleaned_dump.gz

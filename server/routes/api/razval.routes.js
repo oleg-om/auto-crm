@@ -9,5 +9,6 @@ router.get('/razvalmonth/', razvalController.getMonth)
 router.post('/razval/', razvalController.create)
 router.patch('/razval/:id', razvalController.update)
 router.delete('/razval/:id', razvalController.delete)
+// router.delete('/razval-remove-old', razvalController.removeOld)
 
 module.exports = router

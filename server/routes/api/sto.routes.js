@@ -14,5 +14,6 @@ router.delete('/sto/:id', stosController.delete)
 router.get('/stolast/', stosController.getLastTwoDays)
 router.get('/storange/', stosController.getRange)
 router.get('/stopreentry/', stosController.getMonthForPreentry)
+// router.delete('/sto-remove-old', stosController.removeOld)
 
 module.exports = router

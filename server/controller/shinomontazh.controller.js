@@ -184,3 +184,11 @@ exports.getRange = async (req, res) => {
     data: list
   })
 }
+
+exports.removeOld = async (req, res) => {
+  const now = new Date()
+  const startOfPreviousMonth = new Date(now.getFullYear(), now.getMonth() - 1, 1)
+
+  const list = await Shinomontazh.deleteMany({ dateStart: { $lt: startOfPreviousMonth } })
+  return res.json({ status: 'ok', data: list })
+}
