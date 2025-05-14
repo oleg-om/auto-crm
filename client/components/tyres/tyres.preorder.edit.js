@@ -816,6 +816,17 @@ const TyreUpdate = (props) => {
                         </div>
                       </td>
                       <td className="lg:w-auto p-2 text-gray-800 text-center border border-b block table-cell relative static">
+                        {inputField?.vendorFromSite ? (
+                          <div className="flex-shrink w-full">
+                            <label
+                              className="block uppercase tracking-wide text-grey-darker text-xs text-left font-bold mb-2"
+                              htmlFor="grid-first-name"
+                            >
+                              Поставщик на сайте
+                            </label>
+                            <div className="mb-3 pl-4 text-left">Вершина</div>
+                          </div>
+                        ) : null}
                         <div className="flex-shrink w-full">
                           <label
                             className="block uppercase tracking-wide text-grey-darker text-xs text-left font-bold mb-2"
@@ -839,12 +850,6 @@ const TyreUpdate = (props) => {
                               <option value="" disabled selected hidden className="text-gray-800">
                                 Выберите поставщика
                               </option>
-                              {vendorList
-                                .filter((it) => it.type === 'tyres')
-                                .map((it) => it.value)
-                                .includes(inputField.vendor) ? null : (
-                                <option value={inputField.vendor}>{inputField.vendor}</option>
-                              )}
                               {vendorList
                                 .filter((it) => it.type === 'tyres')
                                 .sort(function sortVendors(a, b) {

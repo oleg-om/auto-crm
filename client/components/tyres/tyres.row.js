@@ -7,6 +7,7 @@ const TyresRow = (props) => {
   // const handlePrint = useReactToPrint({
   //   content: () => componentRef.current
   // })
+  console.log('props.role', props.role)
   const createDate = new Date(props.date)
   return (
     <tr className="bg-white lg:hover:bg-gray-100 flex lg:table-row flex-row lg:flex-row flex-wrap lg:flex-no-wrap mb-5 lg:mb-0">
@@ -177,7 +178,7 @@ const TyresRow = (props) => {
       <td className="w-full lg:w-auto p-2 text-gray-800 text-left text-sm lg:text-center border border-b block lg:table-cell relative lg:static">
         <span className="lg:hidden px-2 py-1 text-xs font-bold uppercase">Точка:</span>
         {props.placesList && props.siteNumber ? (
-          <div className="rounded py-1 px-3 text-xs font-bold bg-green-600 text-white">
+          <div className="rounded py-1 px-3 text-xs font-bold bg-yellow-500 text-black">
             {props.placesList.name} (№{props.siteNumber})
           </div>
         ) : props.siteNumber ? (
