@@ -45,11 +45,11 @@ let BUH_TABS = [
 ]
 
 let MATERIAL_TABS = [
-  { name: 'Шиномонтаж (метериалы)', value: 'sh-material' },
-  { name: 'СТО (метериалы)', value: 'sto-material' },
-  { name: 'Мойка (метериалы)', value: 'wash-material' },
-  { name: 'Стекла (метериалы)', value: 'window-material' },
-  { name: 'Кондиционеры (метериалы)', value: 'cond-material' }
+  { name: 'Шиномонтаж (материалы)', value: 'sh-material' },
+  { name: 'СТО (материалы)', value: 'sto-material' },
+  { name: 'Мойка (материалы)', value: 'wash-material' },
+  { name: 'Стекла (материалы)', value: 'window-material' },
+  { name: 'Кондиционеры (материалы)', value: 'cond-material' }
 ]
 
 let PRODUCT_TABS = [
@@ -69,7 +69,7 @@ const Report = () => {
   if (isStudy) {
     KASSA_TABS = [{ name: 'Шиномонтаж (касса)', value: 'sh-kassa' }]
     BUH_TABS = [{ name: 'Шиномонтаж (бухгалтерия)', value: 'sh-buh' }]
-    MATERIAL_TABS = [{ name: 'Шиномонтаж (метериалы)', value: 'sh-material' }]
+    MATERIAL_TABS = [{ name: 'Шиномонтаж (материалы)', value: 'sh-material' }]
     PRODUCT_TABS = []
   }
 
