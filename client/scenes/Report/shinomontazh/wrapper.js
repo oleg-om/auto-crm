@@ -333,6 +333,7 @@ const Shinomontazh = ({
               onChangeShowRazval={onChangeShowRazval}
               showPaid={showPaid}
               onChangeShowPaid={onChangeShowPaid}
+              activeMonth={activeMonth}
             />
           ) : null}
           {isLoaded && report.length <= 0 ? (

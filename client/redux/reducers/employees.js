@@ -4,7 +4,8 @@ import {
   UPDATE_EMPLOYEE,
   DELETE_EMPLOYEE,
   UPDATE_EMPLOYEE_REPORT,
-  UPDATE_CURRENT_EMPLOYEE_REPORT
+  UPDATE_CURRENT_EMPLOYEE_REPORT,
+  UPDATE_EMPLOYEE_SALARIES
 } from '../actions/employees'
 
 const initialState = {
@@ -41,6 +42,9 @@ export default (state = initialState, action) => {
     }
     case UPDATE_CURRENT_EMPLOYEE_REPORT: {
       return { ...state, employee: action.employee }
+    }
+    case UPDATE_EMPLOYEE_SALARIES: {
+      return { ...state, employee: { ...state.employee, salaries: action.employee.salaries } }
     }
     default:
       return state
@@ -85,6 +89,22 @@ export function updateEmployee(id, name) {
       .then((r) => r.json())
       .then(({ data: employee }) => {
         dispatch({ type: UPDATE_EMPLOYEE, employee })
+      })
+  }
+}
+
+export function updateEmployeeSalaries(id, name) {
+  return (dispatch) => {
+    fetch(`/api/v1/employee/${id}`, {
+      method: 'PATCH',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(name)
+    })
+      .then((r) => r.json())
+      .then(({ data: employee }) => {
+        dispatch({ type: UPDATE_EMPLOYEE_SALARIES, employee })
       })
   }
 }

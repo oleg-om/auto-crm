@@ -213,7 +213,8 @@ const Salary = ({
   showRazval,
   onChangeShowRazval,
   showPaid,
-  onChangeShowPaid
+  onChangeShowPaid,
+  activeMonth
 }) => {
   const dispatch = useDispatch()
   const employee = useSelector((s) => s.employees.employee)
@@ -762,6 +763,9 @@ const Salary = ({
                 {calendarType === 'month' ? (
                   <>
                     <th className="p-3 font-bold bg-gray-100 text-gray-600 border border-gray-300 hidden lg:table-cell">
+                      Аванс
+                    </th>
+                    <th className="p-3 font-bold bg-gray-100 text-gray-600 border border-gray-300 hidden lg:table-cell">
                       Налог, руб
                     </th>
                     <th className="p-3 font-bold bg-gray-100 text-gray-600 border border-gray-300 hidden lg:table-cell">
@@ -824,6 +828,7 @@ const Salary = ({
               userNalog={userNalog}
               userCardSum={userCardSum}
               onEmployeeClick={onEmployeeClick}
+              activeMonth={activeMonth}
             />
           ))}
           {!employee ? (
@@ -854,6 +859,7 @@ const Salary = ({
                   </td>
                   {calendarType === 'month' ? (
                     <>
+                      <td className="w-full lg:w-auto p-2 text-gray-800 text-left border border-b block lg:table-cell relative lg:static" />
                       <td className="w-full lg:w-auto p-2 text-gray-800 text-left border border-b block lg:table-cell relative lg:static">
                         <span className="lg:hidden px-2 py-1 bg-purple-100 font-bold uppercase">
                           Налог:

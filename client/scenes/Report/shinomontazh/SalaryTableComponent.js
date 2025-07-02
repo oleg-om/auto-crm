@@ -4,6 +4,7 @@ import { toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
 import { updateEmployee } from '../../../redux/reducers/employees'
 import saveIcon from '../../../assets/images/save.png'
+import SalaryCell from './SalaryCell'
 
 const ImageSave = () => (
   <img alt="save" className="img__save" src={saveIcon} width={16} height={16} />
@@ -23,7 +24,8 @@ const SalaryTableComponent = ({
   onChangeCardSum,
   userNalog,
   userCardSum,
-  onEmployeeClick
+  onEmployeeClick,
+  activeMonth
 }) => {
   const dispatch = useDispatch()
 
@@ -162,6 +164,12 @@ const SalaryTableComponent = ({
           </td>
           {calendarType === 'month' ? (
             <>
+              <td
+                id="nalog"
+                className="w-auto table-cell lg:w-auto p-2 text-gray-800 text-left border border-b relative lg:static"
+              >
+                <SalaryCell currentDate={activeMonth} employeeId={it.id} />
+              </td>
               <td
                 id="nalog"
                 className="w-auto table-cell lg:w-auto p-2 text-gray-800 text-left border border-b relative lg:static"

@@ -54,6 +54,10 @@ const Employee = new mongoose.Schema({
   //   type: Boolean,
   //   required: false
   // },
+  salaries: {
+    type: Array,
+    required: false
+  },
   cardSum: {
     type: Number,
     required: false
