@@ -85,7 +85,7 @@ const SalaryCell = ({ employeeId, currentDate }) => {
       {isModalOpen && (
         <div className="fixed inset-0 bg-gray-600 bg-opacity-50 flex items-center justify-center z-50">
           <div className="bg-white p-6 rounded-lg shadow-xl w-96">
-            <h2 className="text-lg font-bold mb-4">Зарплаты за {formattedDate(currentDate)}</h2>
+            <h2 className="text-lg font-bold mb-4">Авансы за {formattedDate(currentDate)}</h2>
 
             {/* Список зарплат */}
             {salariesList.map((salary, index) => (
@@ -114,7 +114,7 @@ const SalaryCell = ({ employeeId, currentDate }) => {
               className="bg-green-500 hover:bg-green-700 text-white font-bold py-1 px-2 rounded mt-4"
               onClick={handleAddSalary}
             >
-              Добавить зарплату +
+              Добавить аванс +
             </button>
 
             {/* Кнопки управления модальным окном */}
