@@ -45,6 +45,7 @@ const SalaryTableComponent = ({
   const [savedOformlen, setSavedOformlen] = useState(false)
   const [savedNalog, setSavedNalog] = useState(false)
   const [savedCardSum, setSavedCardSum] = useState(false)
+  const [totalAdvance, setTotalAdvance] = useState(0)
   //   const [error, setError] = useState(true)
 
   toast.configure()
@@ -91,6 +92,10 @@ const SalaryTableComponent = ({
       notify('Поле сумма на карту сохранено')
       setSavedCardSum(true)
     }
+  }
+
+  const countAdvance = (number) => {
+    return number - totalAdvance
   }
 
   return (
@@ -168,7 +173,12 @@ const SalaryTableComponent = ({
                 id="nalog"
                 className="w-auto table-cell lg:w-auto p-2 text-gray-800 text-left border border-b relative lg:static"
               >
-                <SalaryCell currentDate={activeMonth} employeeId={it.id} />
+                <SalaryCell
+                  currentDate={activeMonth}
+                  employeeId={it.id}
+                  totalAdvance={totalAdvance}
+                  setTotalAdvance={setTotalAdvance}
+                />
               </td>
               <td
                 id="nalog"
@@ -261,7 +271,7 @@ const SalaryTableComponent = ({
         <td className="w-full lg:w-auto p-2 text-gray-800 text-left lg:text-center border border-b block lg:table-cell relative lg:static">
           <span className="lg:hidden px-2 py-1 text-xs font-bold uppercase">Зарплата:</span>
           {userPercent[it.id]
-            ? Math.round(applyDiscount(getSalary(it.id), userPercent[it.id], it.id))
+            ? Math.round(countAdvance(applyDiscount(getSalary(it.id), userPercent[it.id], it.id)))
             : 0}{' '}
           руб.
         </td>

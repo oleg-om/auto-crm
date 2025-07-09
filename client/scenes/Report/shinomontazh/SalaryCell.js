@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import PropTypes from 'prop-types'
 import { updateEmployee } from '../../../redux/reducers/employees'
 
-const SalaryCell = ({ employeeId, currentDate }) => {
+const SalaryCell = ({ employeeId, currentDate, totalAdvance, setTotalAdvance }) => {
   const dispatch = useDispatch()
   const [isModalOpen, setIsModalOpen] = useState(false)
 
@@ -38,7 +38,9 @@ const SalaryCell = ({ employeeId, currentDate }) => {
     setOtherSalaries(getSalariesOfOtherMonths(salaries))
   }, [employeeId, employeeList, currentDate])
 
-  const totalSalary = salariesList?.reduce((sum, item) => sum + Number(item.val), 0)
+  useEffect(() => {
+    setTotalAdvance(salariesList?.reduce((sum, item) => sum + Number(item.val), 0))
+  }, [salariesList])
 
   const handleAddSalary = () => {
     setSalariesList([
@@ -67,8 +69,8 @@ const SalaryCell = ({ employeeId, currentDate }) => {
     <div className="relative" key={currentDate}>
       {/* Основная ячейка */}
       <div className="p-2 flex items-center justify-between">
-        {salariesList?.length > 0 && totalSalary ? (
-          <span className="pr-2">{totalSalary}</span>
+        {salariesList?.length > 0 && totalAdvance ? (
+          <span className="pr-2">{totalAdvance}</span>
         ) : (
           <span>-</span>
         )}
