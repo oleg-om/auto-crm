@@ -7,7 +7,7 @@ const TyresRow = (props) => {
   // const handlePrint = useReactToPrint({
   //   content: () => componentRef.current
   // })
-  console.log('props.role', props.role)
+
   const createDate = new Date(props.date)
   return (
     <tr className="bg-white lg:hover:bg-gray-100 flex lg:table-row flex-row lg:flex-row flex-wrap lg:flex-no-wrap mb-5 lg:mb-0">

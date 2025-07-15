@@ -40,7 +40,7 @@ const StosEdit = (props) => {
   // const customerList = useSelector((s) => s.customers.list)
   const auth = useSelector((s) => s.auth)
   const stoprices = useSelector((s) => s[`${type}prices`].list)
-  console.log('sstoprices', stoprices)
+
   const materialprices = useSelector((s) => s.materials.list).filter((it) => it.type === type)
 
   const placeList = useSelector((s) => s.places.list)
@@ -388,7 +388,7 @@ const StosEdit = (props) => {
     const getPrice = (item) => {
       return item[actualDiametr]
     }
-    console.log('state', state)
+
     if ((state.class && state.category) || SERVICES_WITHOUT_TYPE) {
       setActualService(
         stoprices
@@ -751,8 +751,6 @@ const StosEdit = (props) => {
       [`id_${type}s`]: props[`id_${type}s`]
     })
   }
-
-  console.log('service 1', service, actualService)
 
   return (
     <div>
