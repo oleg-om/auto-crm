@@ -70,9 +70,13 @@ const SalaryCell = ({
     ])
   }
 
-  const handleSalaryChange = (index, value) => {
+  const handleSalaryChange = (index, target) => {
     const updatedList = [...salariesList]
-    updatedList[index] = { ...updatedList[index], val: value, status: STATUSES.edit }
+    updatedList[index] = {
+      ...updatedList[index],
+      [target.name]: target.value,
+      status: STATUSES.edit
+    }
     setSalariesList(updatedList)
   }
 
@@ -91,6 +95,8 @@ const SalaryCell = ({
 
     setIsModalOpen(false)
   }
+
+  const withComment = data.type !== REPORT_SALARY_TYPES.salary
 
   return (
     <div className="relative" key={currentDate}>
@@ -114,7 +120,9 @@ const SalaryCell = ({
       {isModalOpen && (
         <div className="fixed inset-0 bg-gray-600 bg-opacity-50 flex items-center justify-center z-50">
           <div className="bg-white p-6 rounded-lg shadow-xl w-96">
-            <h2 className="text-lg font-bold mb-4">Авансы за {salaryFormattedDate(currentDate)}</h2>
+            <h2 className="text-lg font-bold mb-4">
+              {data.name} за {salaryFormattedDate(currentDate)}
+            </h2>
 
             {/* Список зарплат */}
             {salariesList.map((salary, index) => (
@@ -122,11 +130,23 @@ const SalaryCell = ({
                 <input
                   type="number"
                   value={salary.val}
-                  onChange={(e) => handleSalaryChange(index, e.target.value)}
+                  onChange={(e) => handleSalaryChange(index, e.target)}
                   className="w-24 p-1 border rounded mr-2"
                   placeholder="Сумма"
+                  name="val"
                 />
                 <span className="mr-2">{salary.date}</span>
+                {withComment ? (
+                  <input
+                    type="text"
+                    value={salary.comment}
+                    onChange={(e) => handleSalaryChange(index, e.target)}
+                    className="w-24 p-1 border rounded mr-2"
+                    placeholder="Комментарий"
+                    name="comment"
+                    style={{ width: '300px' }}
+                  />
+                ) : null}
                 <button
                   type="button"
                   className="bg-red-500 hover:bg-red-700 text-white font-bold py-1 px-2 rounded"

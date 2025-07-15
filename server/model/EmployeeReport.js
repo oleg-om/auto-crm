@@ -21,6 +21,10 @@ const EmployeeReport = new mongoose.Schema({
   type: {
     type: String,
     required: false
+  },
+  comment: {
+    type: String,
+    required: false
   }
 })
 
