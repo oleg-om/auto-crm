@@ -744,7 +744,7 @@ const Salary = ({
         </div>
       </div>
       <table className="border-collapse w-full">
-        <thead className="sticky top-0">
+        <thead className="sticky top-0 z-10">
           <tr>
             <th className="p-3 font-bold bg-gray-100 text-gray-600 border border-gray-300 hidden lg:table-cell">
               Имя
