@@ -163,7 +163,7 @@ const SalaryCell = ({
               className="bg-green-500 hover:bg-green-700 text-white font-bold py-1 px-2 rounded mt-4"
               onClick={handleAddSalary}
             >
-              Добавить аванс +
+              Добавить {data.singleName} +
             </button>
 
             {/* Кнопки управления модальным окном */}
