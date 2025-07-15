@@ -4,7 +4,7 @@ import { toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
 import { updateEmployee } from '../../../redux/reducers/employees'
 import saveIcon from '../../../assets/images/save.png'
-import SalaryCell from './SalaryCell'
+import SalaryCell, { REPORT_SALARY_TYPES } from './SalaryCell'
 
 const ImageSave = () => (
   <img alt="save" className="img__save" src={saveIcon} width={16} height={16} />
@@ -25,7 +25,8 @@ const SalaryTableComponent = ({
   userNalog,
   userCardSum,
   onEmployeeClick,
-  activeMonth
+  activeMonth,
+  dateArray
 }) => {
   const dispatch = useDispatch()
 
@@ -46,6 +47,8 @@ const SalaryTableComponent = ({
   const [savedNalog, setSavedNalog] = useState(false)
   const [savedCardSum, setSavedCardSum] = useState(false)
   const [totalAdvance, setTotalAdvance] = useState(0)
+  const [totalExpenses, setTotalExpenses] = useState(0)
+  const [totalFines, setTotalFines] = useState(0)
   //   const [error, setError] = useState(true)
 
   toast.configure()
@@ -95,7 +98,33 @@ const SalaryTableComponent = ({
   }
 
   const countAdvance = (number) => {
-    return number - totalAdvance
+    return number - (totalAdvance + totalFines + totalExpenses)
+  }
+
+  function getUniqueWorkingDays() {
+    const dates = dateArray(it.id) || []
+    if (!Array.isArray(dates) || !(activeMonth instanceof Date)) {
+      return 0
+    }
+
+    // Получаем год и месяц из activeMonth (месяцы 0-11)
+    const targetYear = activeMonth.getFullYear()
+    const targetMonth = activeMonth.getMonth()
+
+    const uniqueDays = new Set()
+
+    dates.forEach((dateStr) => {
+      const date = new Date(dateStr)
+
+      // Проверяем совпадение года и месяца
+      if (date.getFullYear() === targetYear && date.getMonth() === targetMonth) {
+        // Формируем ключ дня без времени
+        const dayKey = date.toISOString().split('T')[0] // "YYYY-MM-DD"
+        uniqueDays.add(dayKey)
+      }
+    })
+
+    return uniqueDays.size
   }
 
   return (
@@ -115,7 +144,16 @@ const SalaryTableComponent = ({
 
       {checkIsBookkeper ? (
         <>
-          {' '}
+          <td className="w-full lg:w-auto p-2 text-gray-800 text-left lg:text-center border border-b block lg:table-cell relative lg:static">
+            <button
+              type="button"
+              onClick={onEmployeeClick}
+              className="lg:hidden px-2 py-1 text-xs font-bold uppercase"
+            >
+              Рабочие дни:
+            </button>
+            {getUniqueWorkingDays()} дней
+          </td>
           <td className="w-full lg:w-auto p-2 text-gray-800 text-left lg:text-center border border-b block lg:table-cell relative lg:static">
             <span className="lg:hidden px-2 py-1 text-xs font-bold uppercase">Вал:</span>
             {Math.round(getSalary(it.id), userPercent[it.id])} руб.
@@ -167,19 +205,18 @@ const SalaryTableComponent = ({
               </button>{' '}
             </span>
           </td>
+          <td className="w-full lg:w-auto p-2 text-gray-800 text-left lg:text-center border border-b block lg:table-cell relative lg:static">
+            <span className="lg:hidden px-2 py-1 text-xs font-bold uppercase">Зарплата:</span>
+            {userPercent[it.id]
+              ? Math.round(
+                  applyDiscount(getSalary(it.id), userPercent[it.id], it.id) +
+                    (Number(userCardSum[it.id]) || 0)
+                )
+              : 0}{' '}
+            руб.
+          </td>
           {calendarType === 'month' ? (
             <>
-              <td
-                id="nalog"
-                className="w-auto table-cell lg:w-auto p-2 text-gray-800 text-left border border-b relative lg:static"
-              >
-                <SalaryCell
-                  currentDate={activeMonth}
-                  employeeId={it.id}
-                  totalAdvance={totalAdvance}
-                  setTotalAdvance={setTotalAdvance}
-                />
-              </td>
               <td
                 id="nalog"
                 className="w-auto table-cell lg:w-auto p-2 text-gray-800 text-left border border-b relative lg:static"
@@ -221,6 +258,52 @@ const SalaryTableComponent = ({
                     {savedCardSum ? '✓' : <ImageSave />}
                   </button>
                 </span>
+              </td>
+              <td
+                id="nalog"
+                className="w-auto table-cell lg:w-auto p-2 text-gray-800 text-left border border-b relative lg:static"
+              >
+                <SalaryCell
+                  currentDate={activeMonth}
+                  employeeId={it.id}
+                  totalAdvance={totalAdvance}
+                  setTotalAdvance={setTotalAdvance}
+                  payments={it?.data || []}
+                />
+              </td>
+              <td
+                id="nalog"
+                className="w-auto table-cell lg:w-auto p-2 text-gray-800 text-left border border-b relative lg:static"
+              >
+                <SalaryCell
+                  currentDate={activeMonth}
+                  employeeId={it.id}
+                  totalAdvance={totalExpenses}
+                  setTotalAdvance={setTotalExpenses}
+                  payments={it?.data || []}
+                  data={{
+                    name: 'Расходы',
+                    singleName: 'расход',
+                    type: REPORT_SALARY_TYPES.expenses
+                  }}
+                />
+              </td>
+              <td
+                id="nalog"
+                className="w-auto table-cell lg:w-auto p-2 text-gray-800 text-left border border-b relative lg:static"
+              >
+                <SalaryCell
+                  currentDate={activeMonth}
+                  employeeId={it.id}
+                  totalAdvance={totalFines}
+                  setTotalAdvance={setTotalFines}
+                  payments={it?.data || []}
+                  data={{
+                    name: 'Штрафы',
+                    singleName: 'штраф',
+                    type: REPORT_SALARY_TYPES.fine
+                  }}
+                />
               </td>
             </>
           ) : null}
@@ -269,7 +352,7 @@ const SalaryTableComponent = ({
 
       {checkIsBookkeper ? (
         <td className="w-full lg:w-auto p-2 text-gray-800 text-left lg:text-center border border-b block lg:table-cell relative lg:static">
-          <span className="lg:hidden px-2 py-1 text-xs font-bold uppercase">Зарплата:</span>
+          <span className="lg:hidden px-2 py-1 text-xs font-bold uppercase">Остаток:</span>
           {userPercent[it.id]
             ? Math.round(countAdvance(applyDiscount(getSalary(it.id), userPercent[it.id], it.id)))
             : 0}{' '}

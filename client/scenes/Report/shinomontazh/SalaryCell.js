@@ -1,67 +1,94 @@
 import React, { useEffect, useState } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
+import { useDispatch } from 'react-redux'
 import PropTypes from 'prop-types'
-import { updateEmployee } from '../../../redux/reducers/employees'
+import { createEmployeeData, deleteEmployeeData } from '../../../redux/reducers/employees'
 
-const SalaryCell = ({ employeeId, currentDate, totalAdvance, setTotalAdvance }) => {
+export const salaryFormattedDate = (date) =>
+  `${String(date.getMonth() + 1).padStart(2, '0')}.${date.getFullYear()}`
+
+export const REPORT_SALARY_TYPES = {
+  salary: 'salary',
+  fine: 'fine',
+  expenses: 'expenses'
+}
+
+const STATUSES = {
+  edit: 'edit'
+}
+
+const SalaryCell = ({
+  data = {
+    name: 'Авансы',
+    singleName: 'аванс',
+    type: REPORT_SALARY_TYPES.salary
+  },
+  employeeId,
+  currentDate,
+  totalAdvance,
+  setTotalAdvance,
+  payments = []
+}) => {
   const dispatch = useDispatch()
   const [isModalOpen, setIsModalOpen] = useState(false)
 
   // Форматирование даты в формат "месяц.год"
-  const formattedDate = (date) =>
-    `${String(date.getMonth() + 1).padStart(2, '0')}.${date.getFullYear()}`
+
   const formattedDayMonthYear = (date) =>
     `${String(date.getDate()).padStart(2, '0')}.${String(date.getMonth() + 1).padStart(
       2,
       '0'
     )}.${date.getFullYear()}`
 
-  // Получение списка сотрудников из Redux store
-  const employeeList = useSelector((s) => s.employees.list)
-
   const [salariesList, setSalariesList] = useState([])
-  const [otherSalaries, setOtherSalaries] = useState([])
+  const [deletedList, setDeletedList] = useState([])
 
   const getSalariesOfCurrentMonth = (sal) =>
-    sal?.filter((s) => s?.month === formattedDate(currentDate)) || []
-
-  const getSalariesOfOtherMonths = (sal) =>
-    sal?.filter((s) => s?.month !== formattedDate(currentDate)) || []
+    sal?.filter((s) => s?.month === salaryFormattedDate(currentDate)) || []
 
   useEffect(() => {
-    // Поиск сотрудника по employeeId
-    const employee = employeeList.find((emp) => emp.id === employeeId)
-
-    const salaries = employee?.salaries
-
-    setSalariesList(getSalariesOfCurrentMonth(salaries))
-    setOtherSalaries(getSalariesOfOtherMonths(salaries))
-  }, [employeeId, employeeList, currentDate])
+    setSalariesList(getSalariesOfCurrentMonth(payments.filter((s) => s.type === data.type)))
+  }, [payments])
 
   useEffect(() => {
-    setTotalAdvance(salariesList?.reduce((sum, item) => sum + Number(item.val), 0))
+    setTotalAdvance(
+      salariesList
+        ?.filter((s) => s?.type === data.type)
+        ?.reduce((sum, item) => sum + Number(item.val), 0)
+    )
   }, [salariesList])
 
   const handleAddSalary = () => {
     setSalariesList([
       ...salariesList,
-      { val: '', date: formattedDayMonthYear(new Date()), month: formattedDate(currentDate) }
+      {
+        val: '',
+        date: formattedDayMonthYear(new Date()),
+        month: salaryFormattedDate(currentDate),
+        employeeId,
+        type: data.type
+      }
     ])
   }
 
   const handleSalaryChange = (index, value) => {
     const updatedList = [...salariesList]
-    updatedList[index] = { ...updatedList[index], val: value }
+    updatedList[index] = { ...updatedList[index], val: value, status: STATUSES.edit }
     setSalariesList(updatedList)
   }
 
   const handleDeleteSalary = (index) => {
+    setDeletedList([...deletedList, salariesList.find((_, i) => i === index)])
     const updatedList = salariesList.filter((_, i) => i !== index)
+
     setSalariesList(updatedList)
   }
 
   const handleSave = async () => {
-    dispatch(updateEmployee(employeeId, { salaries: [...otherSalaries, ...salariesList] }))
+    salariesList
+      .filter((s) => s?.status === STATUSES.edit)
+      .map((s) => dispatch(createEmployeeData(s)))
+    deletedList.map((s) => dispatch(deleteEmployeeData(s?._id)))
+
     setIsModalOpen(false)
   }
 
@@ -87,7 +114,7 @@ const SalaryCell = ({ employeeId, currentDate, totalAdvance, setTotalAdvance }) 
       {isModalOpen && (
         <div className="fixed inset-0 bg-gray-600 bg-opacity-50 flex items-center justify-center z-50">
           <div className="bg-white p-6 rounded-lg shadow-xl w-96">
-            <h2 className="text-lg font-bold mb-4">Авансы за {formattedDate(currentDate)}</h2>
+            <h2 className="text-lg font-bold mb-4">Авансы за {salaryFormattedDate(currentDate)}</h2>
 
             {/* Список зарплат */}
             {salariesList.map((salary, index) => (

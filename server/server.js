@@ -47,6 +47,7 @@ const windowRoutes = require('./routes/api/window.routes')
 const windowPriceRoutes = require('./routes/api/window.price.routes')
 const condRoutes = require('./routes/api/cond.routes')
 const condPriceRoutes = require('./routes/api/cond.price.routes')
+const employeeReportRoutes = require('./routes/api/employeeReport.routes')
 
 const Root = () => ''
 
@@ -190,6 +191,7 @@ server.use('/api/v1', windowRoutes)
 server.use('/api/v1', windowPriceRoutes)
 server.use('/api/v1', condRoutes)
 server.use('/api/v1', condPriceRoutes)
+server.use('/api/v1', employeeReportRoutes)
 
 server.get('/api/v1/auth', async (req, res) => {
   try {

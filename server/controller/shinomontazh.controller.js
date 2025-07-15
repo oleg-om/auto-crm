@@ -1,4 +1,5 @@
 const Shinomontazh = require('../model/shinomontazh')
+const EmployeeReport = require('../model/EmployeeReport')
 
 exports.getAll = async (req, res) => {
   const list = await Shinomontazh.find({ dateStart: { $exists: true } })
@@ -109,18 +110,52 @@ exports.getFiltered = async (req, res) => {
   }
 }
 exports.getMonth = async (req, res) => {
-  const { month, year } = req.query
+  try {
+    const { month, year } = req.query
 
-  const list = await Shinomontazh.find({
-    $expr: {
-      $and: [
-        { $eq: [{ $year: '$dateFinish' }, Number(year)] },
-        { $eq: [{ $month: '$dateFinish' }, Number(month)] }
-      ]
-    }
-  })
+    // 1. Получаем все записи Shinomontazh за указанный месяц
+    const shinomontazhList = await Shinomontazh.find({
+      $expr: {
+        $and: [
+          { $eq: [{ $year: '$dateFinish' }, Number(year)] },
+          { $eq: [{ $month: '$dateFinish' }, Number(month)] }
+        ]
+      }
+    })
 
-  return res.json({ status: 'ok', data: list })
+    // 2. Для каждой записи обрабатываем массив employee
+    const enhancedList = await Promise.all(
+      shinomontazhList.map(async (record) => {
+        // 3. Обрабатываем каждого сотрудника в массиве
+        const enhancedEmployees = await Promise.all(
+          record.employee.map(async (emp) => {
+            // 4. Ищем соответствующие записи в EmployeeReport
+            const reports = await EmployeeReport.find({
+              employeeId: emp.id, // или emp.employeeId, в зависимости от структуры
+              month: `${month.padStart(2, '0')}.${year}`
+            })
+
+            // 5. Возвращаем сотрудника с дополненными данными
+            return {
+              ...(emp.toObject ? emp.toObject() : emp),
+              data: reports
+            }
+          })
+        )
+
+        // 6. Возвращаем запись с обновленным массивом employee
+        return {
+          ...record.toObject(),
+          employee: enhancedEmployees
+        }
+      })
+    )
+
+    return res.json({ status: 'ok', data: enhancedList })
+  } catch (error) {
+    console.error('Error in getMonth:', error)
+    return res.status(500).json({ status: 'error', message: error.message })
+  }
 }
 
 exports.getMonthForPreentry = async (req, res) => {

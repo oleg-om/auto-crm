@@ -221,27 +221,28 @@ const Salary = ({
 
   const employeeArrayFiltered = employeeArray.filter((data) => filterByEmployee(data, employee))
 
-  const dateArray = report
-    .filter((data) => filterReportByEmployee(data, employee))
-    .reduce((thing, current) => {
-      const x = thing.find(
-        (item) => new Date(item.dateFinish).getDate() === new Date(current.dateFinish).getDate()
-      )
-      if (!x) {
-        return thing.concat([current])
-      }
-      return thing
-    }, [])
-    .reduce((acc, rec) => [...acc, rec.dateFinish], [])
-    .sort(function sortVendors(a, b) {
-      if (new Date(a) < new Date(b)) {
-        return 1
-      }
-      if (new Date(a) > new Date(b)) {
-        return -1
-      }
-      return 0
-    })
+  const dateArray = (emp) =>
+    report
+      .filter((data) => filterReportByEmployee(data, emp))
+      .reduce((thing, current) => {
+        const x = thing.find(
+          (item) => new Date(item.dateFinish).getDate() === new Date(current.dateFinish).getDate()
+        )
+        if (!x) {
+          return thing.concat([current])
+        }
+        return thing
+      }, [])
+      .reduce((acc, rec) => [...acc, rec.dateFinish], [])
+      .sort(function sortVendors(a, b) {
+        if (new Date(a) < new Date(b)) {
+          return 1
+        }
+        if (new Date(a) > new Date(b)) {
+          return -1
+        }
+        return 0
+      })
 
   const onChangeMat = (e) => {
     const { value } = e.target
@@ -743,7 +744,7 @@ const Salary = ({
         </div>
       </div>
       <table className="border-collapse w-full">
-        <thead>
+        <thead className="sticky top-0">
           <tr>
             <th className="p-3 font-bold bg-gray-100 text-gray-600 border border-gray-300 hidden lg:table-cell">
               Имя
@@ -751,6 +752,11 @@ const Salary = ({
 
             {checkIsBookkeper ? (
               <>
+                {calendarType === 'month' ? (
+                  <th className="p-3 font-bold bg-gray-100 text-gray-600 border border-gray-300 hidden lg:table-cell">
+                    Раб.дни
+                  </th>
+                ) : null}
                 <th className="p-3 font-bold bg-gray-100 text-gray-600 border border-gray-300 hidden lg:table-cell">
                   Вал
                 </th>
@@ -760,16 +766,25 @@ const Salary = ({
                 <th className="p-3 font-bold bg-gray-100 text-gray-600 border border-gray-300 hidden lg:table-cell">
                   Оформлен
                 </th>
+                <th className="p-3 font-bold bg-gray-100 text-gray-600 border border-gray-300 hidden lg:table-cell">
+                  Зарплата
+                </th>
                 {calendarType === 'month' ? (
                   <>
-                    <th className="p-3 font-bold bg-gray-100 text-gray-600 border border-gray-300 hidden lg:table-cell">
-                      Аванс
-                    </th>
                     <th className="p-3 font-bold bg-gray-100 text-gray-600 border border-gray-300 hidden lg:table-cell">
                       Налог, руб
                     </th>
                     <th className="p-3 font-bold bg-gray-100 text-gray-600 border border-gray-300 hidden lg:table-cell">
                       Сумма на карту
+                    </th>
+                    <th className="p-3 font-bold bg-gray-100 text-gray-600 border border-gray-300 hidden lg:table-cell">
+                      Аванс
+                    </th>
+                    <th className="p-3 font-bold bg-gray-100 text-gray-600 border border-gray-300 hidden lg:table-cell">
+                      Расходы
+                    </th>
+                    <th className="p-3 font-bold bg-gray-100 text-gray-600 border border-gray-300 hidden lg:table-cell">
+                      Штрафы
                     </th>
                   </>
                 ) : null}
@@ -805,7 +820,7 @@ const Salary = ({
 
             {checkIsBookkeper ? (
               <th className="p-3 font-bold bg-gray-100 text-gray-600 border border-gray-300 hidden lg:table-cell">
-                Зарплата
+                Остаток
               </th>
             ) : null}
           </tr>
@@ -829,6 +844,7 @@ const Salary = ({
               userCardSum={userCardSum}
               onEmployeeClick={onEmployeeClick}
               activeMonth={activeMonth}
+              dateArray={dateArray}
             />
           ))}
           {!employee ? (
@@ -841,24 +857,23 @@ const Salary = ({
               </td>
               {checkIsBookkeper ? (
                 <>
+                  {calendarType === 'month' ? (
+                    <td className="w-full lg:w-auto p-2 text-gray-800 text-left border border-b block lg:table-cell relative lg:static" />
+                  ) : null}
                   <td className="w-full lg:w-auto p-2 text-gray-800 text-left lg:text-center border border-b block lg:table-cell relative lg:static">
                     <span className="lg:hidden px-2 py-1 bg-purple-100 font-bold uppercase">
                       Вал:
                     </span>
                     {Math.round(getSalaryfull(''), '')} руб.
                   </td>
-                  <td className="w-full lg:w-auto p-2 text-gray-800 text-left border border-b block lg:table-cell relative lg:static">
-                    <span className="lg:hidden px-2 py-1 bg-purple-100 font-bold uppercase">
-                      Процент:
-                    </span>
-                  </td>
-                  <td className="w-full lg:w-auto p-2 text-gray-800 text-left border border-b block lg:table-cell relative lg:static">
-                    <span className="lg:hidden px-2 py-1 bg-purple-100 font-bold uppercase">
-                      Оформлен:
-                    </span>
-                  </td>
+
+                  <td className="w-full lg:w-auto p-2 text-gray-800 text-left border border-b block lg:table-cell relative lg:static" />
+                  <td className="w-full lg:w-auto p-2 text-gray-800 text-left border border-b block lg:table-cell relative lg:static" />
+                  <td className="w-full lg:w-auto p-2 text-gray-800 text-left border border-b block lg:table-cell relative lg:static" />
                   {calendarType === 'month' ? (
                     <>
+                      <td className="w-full lg:w-auto p-2 text-gray-800 text-left border border-b block lg:table-cell relative lg:static" />
+                      <td className="w-full lg:w-auto p-2 text-gray-800 text-left border border-b block lg:table-cell relative lg:static" />
                       <td className="w-full lg:w-auto p-2 text-gray-800 text-left border border-b block lg:table-cell relative lg:static" />
                       <td className="w-full lg:w-auto p-2 text-gray-800 text-left border border-b block lg:table-cell relative lg:static">
                         <span className="lg:hidden px-2 py-1 bg-purple-100 font-bold uppercase">
@@ -922,7 +937,7 @@ const Salary = ({
               {checkIsBookkeper ? (
                 <td className="w-full lg:w-auto p-2 text-gray-800 text-left lg:text-center border border-b block lg:table-cell relative lg:static">
                   <span className="lg:hidden px-2 py-1 bg-purple-100 font-bold uppercase">
-                    Зарплата:
+                    Остаток:
                   </span>
                 </td>
               ) : null}
@@ -932,7 +947,7 @@ const Salary = ({
       </table>
       {calendarType === 'day' || employee ? (
         <SalaryByDay
-          dateArray={dateArray}
+          dateArray={dateArray(employee)}
           totalWithDiscount={totalWithDiscount}
           totalFreeService={totalFreeService}
           report={report}
