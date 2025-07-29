@@ -126,6 +126,16 @@ export default class ComponentToPrint extends React.PureComponent {
                 <p>{this.props.props.phone}</p>
               </div>
             ) : null}
+            {this.props?.props?.mark && this.props?.props?.regnumber ? (
+              <div className="flex justify-between text-sm w-4/5 ml-auto">
+                <p className="mr-5">Авто:</p>
+
+                <p>
+                  {this.props.props.mark} {this.props?.props?.model || ''}{' '}
+                  {this.props.props.regnumber}
+                </p>
+              </div>
+            ) : null}
           </div>
         </div>
       </div>
