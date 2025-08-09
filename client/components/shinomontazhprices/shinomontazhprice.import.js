@@ -8,7 +8,6 @@ import Modal from '../Modal.delete'
 import SubmitButtons from '../shared/buttons/OrderSubmitButtons'
 
 const ShinomontazhpriceImport = (props) => {
-  toast.configure()
   const notify = (arg) => {
     toast.info(arg, { position: toast.POSITION.BOTTOM_RIGHT })
   }
@@ -88,7 +87,7 @@ const ShinomontazhpriceImport = (props) => {
         <div className="-mx-3 md:flex flex-wrap mb-3">
           <div className="px-3 mb-4 md:mb-0 flex flex-col">
             <label
-              className="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2"
+              className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
               htmlFor="grid-first-name"
             >
               Перед загрузкой удалите все услуги
@@ -105,7 +104,7 @@ const ShinomontazhpriceImport = (props) => {
         <div className="-mx-3 md:flex flex-wrap mt-3">
           <div className="md:w-1/2 px-3 mb-6 md:mb-0 flex flex-col">
             <label
-              className="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2"
+              className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
               htmlFor="grid-first-name"
             >
               Загрузите файл Xls или Xlsx
@@ -128,7 +127,7 @@ const ShinomontazhpriceImport = (props) => {
         </div>
         <div>
           <label
-            className="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2"
+            className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
             htmlFor="grid-first-name"
           >
             Как должна выглядеть загружаемая таблица

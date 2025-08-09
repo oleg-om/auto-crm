@@ -342,7 +342,7 @@ const Shinomontazh = ({
                 <div>
                   <p>Только развал:</p>
                   <select
-                    className="appearance-none block bg-grey-lighter text-sm text-grey-darker border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-1 px-4"
+                    className="appearance-none block bg-gray-100 text-sm text-gray-700 border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-1 px-4"
                     value={showRazval}
                     onChange={onChangeShowRazval}
                   >

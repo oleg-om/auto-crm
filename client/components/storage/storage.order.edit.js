@@ -2,14 +2,13 @@ import React, { useEffect, useState } from 'react'
 import { useHistory } from 'react-router-dom'
 import { useSelector } from 'react-redux'
 import { toast } from 'react-toastify'
-import NumberFormat from 'react-number-format'
+import { NumericFormat as NumberFormat } from 'react-number-format'
 import cx from 'classnames'
 import 'react-toastify/dist/ReactToastify.css'
 import storagesList from '../../lists/storages-statuses'
 import SubmitButtons from '../shared/buttons/OrderSubmitButtons'
 
 const StoragesEdit = (props) => {
-  toast.configure()
   const notify = (arg) => {
     toast.info(arg, { position: toast.POSITION.BOTTOM_RIGHT })
   }
@@ -310,14 +309,14 @@ const StoragesEdit = (props) => {
             <div className="flex flex-row">
               <div className="mb-5 w-1/2 pr-3">
                 <label
-                  className="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2"
+                  className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
                   htmlFor="grid-first-name"
                 >
                   Принял заказ
                 </label>
                 <div className="flex-shrink w-full inline-block relative mb-3">
                   <select
-                    className="block appearance-none w-full bg-grey-lighter border border-gray-300 focus:border-gray-500 focus:outline-none py-1 px-4 pr-8 rounded"
+                    className="block appearance-none w-full bg-gray-100 border border-gray-300 focus:border-gray-500 focus:outline-none py-1 px-4 pr-8 rounded"
                     value={state.employee}
                     name="employee"
                     id="employee"
@@ -339,14 +338,14 @@ const StoragesEdit = (props) => {
               </div>
               <div className="mb-5 w-1/2 pl-3">
                 <label
-                  className="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2"
+                  className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
                   htmlFor="grid-first-name"
                 >
                   Заказ принят на точке
                 </label>
                 <div className="flex-shrink w-full inline-block relative mb-3">
                   <select
-                    className="block appearance-none w-full bg-grey-lighter border border-gray-300 focus:border-gray-500 focus:outline-none py-1 px-4 pr-8 rounded"
+                    className="block appearance-none w-full bg-gray-100 border border-gray-300 focus:border-gray-500 focus:outline-none py-1 px-4 pr-8 rounded"
                     value={state.place}
                     name="place"
                     id="place"
@@ -369,13 +368,13 @@ const StoragesEdit = (props) => {
             </div>
             <div className="mb-5">
               <label
-                className="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2"
+                className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
                 htmlFor="grid-city"
               >
                 Гос. номер
               </label>
               <input
-                className="appearance-none block w-full bg-grey-lighter text-grey-darker border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-1 px-4 mb-3"
+                className="appearance-none block w-full bg-gray-100 text-gray-700 border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-1 px-4 mb-3"
                 type="text"
                 placeholder="Введите гос. номер русскими буквами"
                 value={state.regnumber}
@@ -386,13 +385,13 @@ const StoragesEdit = (props) => {
             </div>
             <div className="md:mb-0">
               <label
-                className="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2"
+                className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
                 htmlFor="grid-city"
               >
                 VIN номер
               </label>
               <input
-                className="appearance-none block w-full bg-grey-lighter text-grey-darker border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-1 px-4 mb-3"
+                className="appearance-none block w-full bg-gray-100 text-gray-700 border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-1 px-4 mb-3"
                 type="text"
                 placeholder="Введите VIN"
                 value={state.vinnumber}
@@ -405,7 +404,7 @@ const StoragesEdit = (props) => {
           <div className="md:w-1/2 px-3">
             <div>
               <label
-                className="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2"
+                className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
                 htmlFor="grid-city"
               >
                 Авто в базе данных
@@ -435,7 +434,7 @@ const StoragesEdit = (props) => {
                   <td className="w-full lg:w-auto p-2 text-xs text-gray-800 text-center border border-b block table-cell relative static">
                     <div className="flex-shrink w-full inline-block relative">
                       <select
-                        className="block appearance-none w-full bg-grey-lighter border border-gray-300 focus:border-gray-500 focus:outline-none py-1 px-4 pr-8 rounded"
+                        className="block appearance-none w-full bg-gray-100 border border-gray-300 focus:border-gray-500 focus:outline-none py-1 px-4 pr-8 rounded"
                         value={search}
                         name="search"
                         id="searchBlock"
@@ -483,13 +482,13 @@ const StoragesEdit = (props) => {
         <div className="-mx-3 md:flex flex-wrap mb-3">
           <div className="md:w-1/4 px-3 mb-6 md:mb-0 flex flex-col">
             <label
-              className="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2"
+              className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
               htmlFor="grid-first-name"
             >
               Марка авто
             </label>
             <input
-              className="appearance-none block w-full bg-grey-lighter text-grey-darker border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-1 px-4 mb-3"
+              className="appearance-none block w-full bg-gray-100 text-gray-700 border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-1 px-4 mb-3"
               value={state.mark}
               name="mark"
               list="mark_list"
@@ -507,13 +506,13 @@ const StoragesEdit = (props) => {
 
           <div className="md:w-1/4 px-3 mb-6 md:mb-0 flex flex-col">
             <label
-              className="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2"
+              className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
               htmlFor="grid-first-name"
             >
               Модель авто
             </label>
             <input
-              className="appearance-none block w-full bg-grey-lighter text-grey-darker border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-1 px-4 mb-3"
+              className="appearance-none block w-full bg-gray-100 text-gray-700 border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-1 px-4 mb-3"
               value={state.model}
               name="model"
               id="model"
@@ -535,13 +534,13 @@ const StoragesEdit = (props) => {
 
           <div className="md:w-1/4 px-3 mb-6 md:mb-0 flex flex-col">
             <label
-              className="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2"
+              className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
               htmlFor="grid-first-name"
             >
               Год авто
             </label>
             <input
-              className="appearance-none block w-full bg-grey-lighter text-grey-darker border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-1 px-4 mb-3"
+              className="appearance-none block w-full bg-gray-100 text-gray-700 border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-1 px-4 mb-3"
               value={state.gen}
               name="gen"
               id="gen"
@@ -570,13 +569,13 @@ const StoragesEdit = (props) => {
           </div>
           <div className="md:w-1/4 px-3 mb-6 md:mb-0 flex flex-col">
             <label
-              className="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2"
+              className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
               htmlFor="grid-first-name"
             >
               Объем двигателя
             </label>
             <input
-              className="appearance-none block w-full bg-grey-lighter text-grey-darker border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-1 px-4 mb-3"
+              className="appearance-none block w-full bg-gray-100 text-gray-700 border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-1 px-4 mb-3"
               value={state.mod}
               name="mod"
               id="mod"
@@ -618,13 +617,13 @@ const StoragesEdit = (props) => {
         <div className="-mx-3 md:flex mb-2">
           <div className="md:w-1/2 px-3 mb-6 md:mb-0">
             <label
-              className="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2"
+              className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
               htmlFor="grid-city"
             >
               Имя клиента
             </label>
             <input
-              className="capitalize appearance-none block w-full bg-grey-lighter text-grey-darker border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-1 px-4 mb-3"
+              className="capitalize appearance-none block w-full bg-gray-100 text-gray-700 border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-1 px-4 mb-3"
               type="text"
               placeholder="Введите имя"
               value={state.name}
@@ -635,7 +634,7 @@ const StoragesEdit = (props) => {
           </div>
           <div className="md:w-1/2 px-3 mb-6 md:mb-0">
             <label
-              className="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2"
+              className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
               htmlFor="grid-city"
             >
               Номер телефона
@@ -643,7 +642,7 @@ const StoragesEdit = (props) => {
             <NumberFormat
               format="+7 (###) ###-##-##"
               mask="_"
-              className="appearance-none block w-full bg-grey-lighter text-grey-darker border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-1 px-4 mb-3"
+              className="appearance-none block w-full bg-gray-100 text-gray-700 border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-1 px-4 mb-3"
               type="text"
               placeholder="Начинайте ввод с 978"
               value={state.phone}
@@ -674,7 +673,7 @@ const StoragesEdit = (props) => {
                   >
                     <td className="w-full lg:w-auto p-2 text-gray-800 text-center border border-b block table-cell relative static">
                       <input
-                        className="appearance-none block w-full bg-grey-lighter text-grey-darker border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-1 px-4"
+                        className="appearance-none block w-full bg-gray-100 text-gray-700 border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-1 px-4"
                         type="text"
                         placeholder="Например: свечи"
                         name="storageItem"
@@ -718,14 +717,14 @@ const StoragesEdit = (props) => {
         <div className="-mx-3 md:flex mb-2">
           <div className="md:w-1/3 px-3 mb-6 md:mb-0">
             <label
-              className="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2"
+              className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
               htmlFor="grid-city"
             >
               Предоплата
             </label>
             <div className="flex flex-row">
               <input
-                className="appearance-none block w-full bg-grey-lighter text-grey-darker border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-1 px-4 mb-3"
+                className="appearance-none block w-full bg-gray-100 text-gray-700 border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-1 px-4 mb-3"
                 type="text"
                 placeholder="Вы можете оставить поле пустым"
                 value={state.prepay}
@@ -737,13 +736,13 @@ const StoragesEdit = (props) => {
           </div>
           <div className="md:w-2/3 px-3 mb-6 md:mb-0">
             <label
-              className="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2"
+              className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
               htmlFor="grid-city"
             >
               Комментарий
             </label>
             <input
-              className="appearance-none block w-full bg-grey-lighter text-grey-darker border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-1 px-4 mb-3"
+              className="appearance-none block w-full bg-gray-100 text-gray-700 border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-1 px-4 mb-3"
               type="text"
               placeholder="Оставьте комментарий"
               value={state.comment}

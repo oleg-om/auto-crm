@@ -71,7 +71,7 @@ const Car = ({
         <div className="inline-block text-left w-1/2 pr-5">
           <div>
             <label
-              className="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2"
+              className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
               htmlFor="phone"
             >
               Гос. номер
@@ -79,7 +79,7 @@ const Car = ({
             <div className="flex-shrink w-full inline-block relative">
               {keyboard === true ? (
                 <input
-                  className="block appearance-none w-full bg-grey-lighter border-2 border-black focus:border-gray-500 focus:outline-none py-2 px-4 pr-8 rounded-lg"
+                  className="block appearance-none w-full bg-gray-100 border-2 border-black focus:border-gray-500 focus:outline-none py-2 px-4 pr-8 rounded-lg"
                   type="text"
                   placeholder="Русскими буквами"
                   value={state.regnumber}
@@ -91,7 +91,7 @@ const Car = ({
                 />
               ) : (
                 <button
-                  className="block appearance-none text-left w-full bg-grey-lighter border-2 border-black focus:border-gray-500 focus:outline-none py-2 px-4 pr-8 rounded-lg"
+                  className="block appearance-none text-left w-full bg-gray-100 border-2 border-black focus:border-gray-500 focus:outline-none py-2 px-4 pr-8 rounded-lg"
                   value={state.regnumber}
                   name="regnumber"
                   id="regnumber"
@@ -522,7 +522,7 @@ const Car = ({
         <div className="relative inline-block text-left w-1/2">
           <div>
             <label
-              className="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2"
+              className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
               htmlFor="phone"
             >
               Авто в базе данных
@@ -530,7 +530,7 @@ const Car = ({
             <div className="flex-shrink inline-flex w-full">
               <div className="w-3/4 relative">
                 <select
-                  className="w-full block appearance-none bg-grey-lighter border border-gray-300 focus:border-gray-500 focus:outline-none py-2 pl-4 pr-6 rounded-l-lg"
+                  className="w-full block appearance-none bg-gray-100 border border-gray-300 focus:border-gray-500 focus:outline-none py-2 pl-4 pr-6 rounded-l-lg"
                   value={search}
                   name="search"
                   id="searchBlock"
@@ -623,7 +623,7 @@ const Car = ({
               </label>
               <div className="flex-shrink w-full inline-block relative">
                 <select
-                  className="block appearance-none w-full bg-grey-lighter border border-gray-300 focus:border-gray-500 focus:outline-none py-2 px-4 pr-8 rounded"
+                  className="block appearance-none w-full bg-gray-100 border border-gray-300 focus:border-gray-500 focus:outline-none py-2 px-4 pr-8 rounded"
                   name="category"
                   id="category"
                   value={state.category}
@@ -666,7 +666,7 @@ const Car = ({
               </label>
               <div className="flex-shrink w-full inline-block relative">
                 <select
-                  className="block appearance-none w-full bg-grey-lighter border border-gray-300 focus:border-gray-500 focus:outline-none py-2 px-4 pr-8 rounded"
+                  className="block appearance-none w-full bg-gray-100 border border-gray-300 focus:border-gray-500 focus:outline-none py-2 px-4 pr-8 rounded"
                   name="class"
                   id="class"
                   value={state.class}
@@ -708,14 +708,14 @@ const Car = ({
           <div className="flex flex-col w-full">
             <div className="flex flex-col w-full">
               <label
-                className="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2"
+                className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
                 htmlFor="phone"
               >
                 Марка авто
               </label>
               <div className="flex-shrink w-full inline-block relative">
                 <select
-                  className="block appearance-none w-full bg-grey-lighter border border-gray-300 focus:border-gray-500 focus:outline-none py-2 px-4 pr-8 rounded"
+                  className="block appearance-none w-full bg-gray-100 border border-gray-300 focus:border-gray-500 focus:outline-none py-2 px-4 pr-8 rounded"
                   name="mark"
                   id="mark"
                   value={state.mark}
@@ -754,14 +754,14 @@ const Car = ({
             </div>
             <div className="mt-3 flex flex-col w-full">
               <label
-                className="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2"
+                className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
                 htmlFor="phone"
               >
                 Модель авто
               </label>
               <div className="flex-shrink w-full inline-block relative">
                 <select
-                  className="block appearance-none w-full bg-grey-lighter border border-gray-300 focus:border-gray-500 focus:outline-none py-2 px-4 pr-8 rounded"
+                  className="block appearance-none w-full bg-gray-100 border border-gray-300 focus:border-gray-500 focus:outline-none py-2 px-4 pr-8 rounded"
                   value={state.model}
                   name="model"
                   id="model"
@@ -806,7 +806,7 @@ const Car = ({
         {/* <div className="mt-5 w-full">
           <div>
             <label
-              className="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2"
+              className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
               htmlFor="grid-city"
             >
               Авто в базе данных
@@ -837,7 +837,7 @@ const Car = ({
                 <td className="w-full lg:w-auto p-2 text-xs text-gray-800 text-center border border-b block table-cell relative static">
                   <div className="flex-shrink w-full inline-block relative">
                     <select
-                      className="block appearance-none w-full bg-grey-lighter border border-gray-300 focus:border-gray-500 focus:outline-none py-1 px-4 pr-8 rounded"
+                      className="block appearance-none w-full bg-gray-100 border border-gray-300 focus:border-gray-500 focus:outline-none py-1 px-4 pr-8 rounded"
                       value={search}
                       name="search"
                       id="searchBlock"

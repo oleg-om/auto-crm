@@ -67,7 +67,6 @@ const ModalEdit = ({
 
   if (!open) return null
 
-  toast.configure()
   const notify = (arg) => {
     toast.info(arg, { position: toast.POSITION.BOTTOM_RIGHT })
   }
@@ -138,7 +137,7 @@ const ModalEdit = ({
                   Дата записи: {dateActive}
                 </h3>
                 <div className="mt-2">
-                  <div className="flex flex-row appearance-none w-full bg-grey-lighter border border-gray-300 focus:border-gray-500 focus:outline-none py-1 px-4 pr-8 rounded mb-2">
+                  <div className="flex flex-row appearance-none w-full bg-gray-100 border border-gray-300 focus:border-gray-500 focus:outline-none py-1 px-4 pr-8 rounded mb-2">
                     <div className="mr-3">
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
@@ -185,14 +184,14 @@ const ModalEdit = ({
                   {/* <p className="text-sm leading-5 text-gray-900">Заказ принят: {dateCreate}</p> */}
                   <div className="mt-3 flex flex-col">
                     <label
-                      className="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2"
+                      className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
                       htmlFor="grid-first-name"
                     >
                       Время записи
                     </label>
                     <div className="flex-shrink w-full inline-block relative mb-3">
                       <select
-                        className="block appearance-none w-full bg-grey-lighter border border-gray-300 focus:border-gray-500 focus:outline-none py-1 px-4 pr-8 rounded"
+                        className="block appearance-none w-full bg-gray-100 border border-gray-300 focus:border-gray-500 focus:outline-none py-1 px-4 pr-8 rounded"
                         value={changeStatus.time}
                         name="time"
                         id="time"
@@ -222,14 +221,14 @@ const ModalEdit = ({
                   </div>
                   <div className="mt-3 flex flex-col">
                     <label
-                      className="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2"
+                      className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
                       htmlFor="grid-first-name"
                     >
                       Выберите дату
                     </label>
                     <div className="flex-shrink w-full inline-block relative mb-3">
                       <input
-                        className="block appearance-none w-full bg-grey-lighter border border-gray-300 focus:border-gray-500 focus:outline-none py-1 px-4 rounded"
+                        className="block appearance-none w-full bg-gray-100 border border-gray-300 focus:border-gray-500 focus:outline-none py-1 px-4 rounded"
                         value={changeStatus.datePreentry}
                         name="datePreentry"
                         id="datePreentry"
@@ -240,14 +239,14 @@ const ModalEdit = ({
                   </div>
                   <div className="mt-3 flex flex-col">
                     <label
-                      className="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2"
+                      className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
                       htmlFor="grid-first-name"
                     >
                       Место
                     </label>
                     <div className="flex-shrink w-full inline-block relative mb-3">
                       <select
-                        className="block appearance-none w-full bg-grey-lighter border border-gray-300 focus:border-gray-500 focus:outline-none py-1 px-4 pr-8 rounded"
+                        className="block appearance-none w-full bg-gray-100 border border-gray-300 focus:border-gray-500 focus:outline-none py-1 px-4 pr-8 rounded"
                         value={changeStatus.place}
                         name="place"
                         id="place"
@@ -278,14 +277,14 @@ const ModalEdit = ({
                   {choosedPlace?.razvalAndOilType === 'column' ? (
                     <div className="mt-3 flex flex-col">
                       <label
-                        className="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2"
+                        className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
                         htmlFor="grid-first-name"
                       >
                         Пост
                       </label>
                       <div className="flex-shrink w-full inline-block relative mb-3">
                         <select
-                          className="block appearance-none w-full bg-grey-lighter border border-gray-300 focus:border-gray-500 focus:outline-none py-1 px-4 pr-8 rounded"
+                          className="block appearance-none w-full bg-gray-100 border border-gray-300 focus:border-gray-500 focus:outline-none py-1 px-4 pr-8 rounded"
                           value={changeStatus.post}
                           name="post"
                           id="post"
@@ -321,14 +320,14 @@ const ModalEdit = ({
                   ) : null}
                   <div className="mt-3 flex flex-col">
                     <label
-                      className="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2"
+                      className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
                       htmlFor="grid-first-name"
                     >
                       Выберите статус записи
                     </label>
                     <div className="flex-shrink w-full inline-block relative mb-3">
                       <select
-                        className="block appearance-none w-full bg-grey-lighter border border-gray-300 focus:border-gray-500 focus:outline-none py-1 px-4 pr-8 rounded"
+                        className="block appearance-none w-full bg-gray-100 border border-gray-300 focus:border-gray-500 focus:outline-none py-1 px-4 pr-8 rounded"
                         value={changeStatus.status}
                         name="status"
                         id="status"

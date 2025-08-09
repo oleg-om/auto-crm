@@ -1,7 +1,7 @@
 import React from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import { Link, useParams } from 'react-router-dom'
-// import NumberFormat from 'react-number-format'
+// import { NumericFormat as NumberFormat } from 'react-number-format'
 // import cx from 'classnames'
 import { toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
@@ -54,7 +54,6 @@ const StosList = () => {
     navigateWithQueryParams(`/sto/list/${pageNumber}`)
   }
 
-  toast.configure()
   // const notify = (arg) => {
   //   toast.info(arg, { position: toast.POSITION.BOTTOM_RIGHT })
   // }

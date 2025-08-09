@@ -49,7 +49,6 @@ const StosListBoss = () => {
     navigateWithQueryParams(`/stoboss/list/${pageNumber}`)
   }
 
-  toast.configure()
 
   const loadingComponent = () => {
     return (

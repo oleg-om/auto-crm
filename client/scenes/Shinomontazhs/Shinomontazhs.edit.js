@@ -26,7 +26,6 @@ const ShinomontazhEditFull = () => {
       })
   }, [id])
 
-  toast.configure()
   const notify = (arg) => {
     toast.info(arg, { position: toast.POSITION.BOTTOM_RIGHT })
   }

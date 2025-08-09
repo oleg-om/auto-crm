@@ -19,7 +19,6 @@ import { ServiceSubmitButtons } from '../shared/buttons/OrderSubmitButtons'
 import EmployeeTab from '../common/employeeTab'
 
 const StosEdit = (props) => {
-  toast.configure()
   const notify = (arg) => {
     toast.info(arg, { position: toast.POSITION.BOTTOM_RIGHT })
   }
@@ -427,7 +426,7 @@ const StosEdit = (props) => {
         payment: state.payment,
         services: service,
         material: materials,
-        tyre: [...tyres],
+        tyre: [tyres],
         customerId: activeCustomer || props.customerId || null
       })
       if (checkLink()) {
@@ -457,7 +456,7 @@ const StosEdit = (props) => {
         payment: state.payment,
         services: service,
         material: materials,
-        tyre: [...tyres],
+        tyre: [tyres],
         employee: employees,
         dateFinish: props.dateFinish ? props.dateFinish : new Date(),
         status: statusList[1],
@@ -552,7 +551,7 @@ const StosEdit = (props) => {
         // ...state,
         // services: service,
         // material: materials,
-        // tyre: [...tyres],
+        // tyre: [tyres],
         // employee: employees,
         discount: state.discount,
         payment: state.payment,
@@ -725,7 +724,7 @@ const StosEdit = (props) => {
       ...state,
       services: service,
       material: materials,
-      tyre: [...tyres],
+      tyre: [tyres],
       employee: employees,
       totalSumWithoutMaterials,
       totalMaterial,
@@ -741,7 +740,7 @@ const StosEdit = (props) => {
       ...state,
       services: service,
       material: materials,
-      tyre: [...tyres],
+      tyre: [tyres],
       employee: employees,
       totalSumWithoutMaterials,
       totalMaterial,

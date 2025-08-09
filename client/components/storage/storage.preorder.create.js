@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { useHistory } from 'react-router-dom'
 import { useSelector } from 'react-redux'
 import { toast } from 'react-toastify'
-import NumberFormat from 'react-number-format'
+import { NumericFormat as NumberFormat } from 'react-number-format'
 import cx from 'classnames'
 import 'react-toastify/dist/ReactToastify.css'
 // import tyresList from '../../lists/tyres/tyres'
@@ -15,7 +15,6 @@ import Statuses from '../../lists/storages-statuses'
 import SubmitButtons from '../shared/buttons/OrderSubmitButtons'
 
 const StoragesCreate = (props) => {
-  toast.configure()
   const notify = (arg) => {
     toast.info(arg, { position: toast.POSITION.BOTTOM_RIGHT })
   }
@@ -455,14 +454,14 @@ const StoragesCreate = (props) => {
             <div className="flex flex-row">
               <div className="mb-5 w-1/2 pr-3">
                 <label
-                  className="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2"
+                  className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
                   htmlFor="grid-first-name"
                 >
                   Принял хранение
                 </label>
                 <div className="flex-shrink w-full inline-block relative mb-3">
                   <select
-                    className="block appearance-none w-full bg-grey-lighter border border-gray-300 focus:border-gray-500 focus:outline-none py-1 px-4 pr-8 rounded"
+                    className="block appearance-none w-full bg-gray-100 border border-gray-300 focus:border-gray-500 focus:outline-none py-1 px-4 pr-8 rounded"
                     value={state.employee}
                     name="employee"
                     id="employee"
@@ -494,14 +493,14 @@ const StoragesCreate = (props) => {
               </div>
               <div className="mb-5 w-1/2 pl-3">
                 <label
-                  className="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2"
+                  className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
                   htmlFor="grid-first-name"
                 >
                   Хранение принято на точке
                 </label>
                 <div className="flex-shrink w-full inline-block relative mb-3">
                   <select
-                    className="block appearance-none w-full bg-grey-lighter border border-gray-300 focus:border-gray-500 focus:outline-none py-1 px-4 pr-8 rounded"
+                    className="block appearance-none w-full bg-gray-100 border border-gray-300 focus:border-gray-500 focus:outline-none py-1 px-4 pr-8 rounded"
                     value={state.place}
                     name="place"
                     id="place"
@@ -533,7 +532,7 @@ const StoragesCreate = (props) => {
             <div className="inline-block text-left w-full">
               <div>
                 <label
-                  className="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2"
+                  className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
                   htmlFor="phone"
                 >
                   Гос. номер
@@ -541,7 +540,7 @@ const StoragesCreate = (props) => {
                 <div className="flex-shrink w-full inline-block relative">
                   {keyboard === true ? (
                     <input
-                      className="block appearance-none w-full bg-grey-lighter border-2 border-black focus:border-gray-500 focus:outline-none py-2 px-4 pr-8 rounded-lg"
+                      className="block appearance-none w-full bg-gray-100 border-2 border-black focus:border-gray-500 focus:outline-none py-2 px-4 pr-8 rounded-lg"
                       type="text"
                       placeholder="Русскими буквами"
                       value={state.regnumber}
@@ -554,7 +553,7 @@ const StoragesCreate = (props) => {
                     />
                   ) : (
                     <button
-                      className="block appearance-none text-left w-full bg-grey-lighter border-2 border-black focus:border-gray-500 focus:outline-none py-2 px-4 pr-8 rounded-lg"
+                      className="block appearance-none text-left w-full bg-gray-100 border-2 border-black focus:border-gray-500 focus:outline-none py-2 px-4 pr-8 rounded-lg"
                       value={state.regnumber}
                       name="regnumber"
                       id="regnumber"
@@ -986,7 +985,7 @@ const StoragesCreate = (props) => {
           <div className="md:w-1/2 px-3">
             <div>
               <label
-                className="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2"
+                className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
                 htmlFor="grid-city"
               >
                 Авто в базе данных
@@ -1014,7 +1013,7 @@ const StoragesCreate = (props) => {
                   <td className="w-full lg:w-auto p-2 text-xs text-gray-800 text-center border border-b block table-cell relative static">
                     <div className="flex-shrink w-full inline-block relative">
                       <select
-                        className="block appearance-none w-full bg-grey-lighter border border-gray-300 focus:border-gray-500 focus:outline-none py-1 px-4 pr-8 rounded"
+                        className="block appearance-none w-full bg-gray-100 border border-gray-300 focus:border-gray-500 focus:outline-none py-1 px-4 pr-8 rounded"
                         value={search}
                         name="search"
                         id="searchBlock"
@@ -1090,13 +1089,13 @@ const StoragesCreate = (props) => {
         <div className="-mx-3 md:flex flex-wrap mb-3">
           <div className="md:w-1/4 px-3 mb-6 md:mb-0 flex flex-col">
             <label
-              className="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2"
+              className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
               htmlFor="grid-first-name"
             >
               Марка авто
             </label>
             <input
-              className="appearance-none block w-full bg-grey-lighter text-grey-darker border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-1 px-4 mb-3"
+              className="appearance-none block w-full bg-gray-100 text-gray-700 border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-1 px-4 mb-3"
               value={state.mark}
               name="mark"
               list="mark_list"
@@ -1114,13 +1113,13 @@ const StoragesCreate = (props) => {
 
           <div className="md:w-1/4 px-3 mb-6 md:mb-0 flex flex-col">
             <label
-              className="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2"
+              className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
               htmlFor="grid-first-name"
             >
               Модель авто
             </label>
             <input
-              className="appearance-none block w-full bg-grey-lighter text-grey-darker border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-1 px-4 mb-3"
+              className="appearance-none block w-full bg-gray-100 text-gray-700 border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-1 px-4 mb-3"
               value={state.model}
               name="model"
               id="model"
@@ -1148,7 +1147,7 @@ const StoragesCreate = (props) => {
               Дата начала
             </label>
             <input
-              className="appearance-none block w-full bg-grey-lighter text-grey-darker border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-1 px-4 mb-3"
+              className="appearance-none block w-full bg-gray-100 text-gray-700 border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-1 px-4 mb-3"
               value={state.dateStart}
               name="dateStart"
               id="dateStart"
@@ -1166,7 +1165,7 @@ const StoragesCreate = (props) => {
               Дата завершения
             </label>
             <input
-              className="appearance-none block w-full bg-grey-lighter text-grey-darker border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-1 px-4 mb-3"
+              className="appearance-none block w-full bg-gray-100 text-gray-700 border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-1 px-4 mb-3"
               value={state.dateFinish}
               name="dateFinish"
               id="dateFinish"
@@ -1222,7 +1221,7 @@ const StoragesCreate = (props) => {
         <div className="-mx-3 md:flex mb-2">
           <div className="md:w-1/3 px-3 mb-6 md:mb-0">
             <label
-              className="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2"
+              className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
               htmlFor="grid-city"
             >
               Номер телефона
@@ -1230,7 +1229,7 @@ const StoragesCreate = (props) => {
             <NumberFormat
               format="+7 (###) ###-##-##"
               mask="_"
-              className="appearance-none block w-full bg-grey-lighter text-grey-darker border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-1 px-4 mb-3"
+              className="appearance-none block w-full bg-gray-100 text-gray-700 border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-1 px-4 mb-3"
               type="text"
               placeholder="Начинайте ввод с 978"
               value={state.phone}
@@ -1241,13 +1240,13 @@ const StoragesCreate = (props) => {
           </div>
           <div className="md:w-1/3 px-3 mb-6 md:mb-0">
             <label
-              className="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2"
+              className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
               htmlFor="grid-city"
             >
               ФИО клиента
             </label>
             <input
-              className="capitalize appearance-none block w-full bg-grey-lighter text-grey-darker border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-1 px-4 mb-3"
+              className="capitalize appearance-none block w-full bg-gray-100 text-gray-700 border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-1 px-4 mb-3"
               type="text"
               placeholder="Введите имя"
               value={state.name}
@@ -1258,7 +1257,7 @@ const StoragesCreate = (props) => {
           </div>
           <div className="md:w-1/3 px-3 mb-6 md:mb-0">
             <label
-              className="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2"
+              className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
               htmlFor="grid-city"
             >
               Оплата
@@ -1266,7 +1265,7 @@ const StoragesCreate = (props) => {
             <div className="flex-shrink w-full inline-block relative">
               <select
                 className={cx(
-                  'block appearance-none w-full bg-grey-lighter border border-gray-300 focus:border-gray-500 focus:outline-none py-1 px-4 mb-3 rounded',
+                  'block appearance-none w-full bg-gray-100 border border-gray-300 focus:border-gray-500 focus:outline-none py-1 px-4 mb-3 rounded',
                   {
                     'bg-green-200': state.payment === 'yes',
                     'bg-red-200': state.payment === 'no',
@@ -1300,7 +1299,7 @@ const StoragesCreate = (props) => {
         <div className="-mx-3 md:flex mb-2">
           <div className="md:w-1/3 px-3 mb-6 md:mb-0">
             <label
-              className="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2"
+              className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
               htmlFor="grid-city"
             >
               Дополнительный номер телефона
@@ -1308,7 +1307,7 @@ const StoragesCreate = (props) => {
             <NumberFormat
               format="+7 (###) ###-##-##"
               mask="_"
-              className="appearance-none block w-full bg-grey-lighter text-grey-darker border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-1 px-4 mb-3"
+              className="appearance-none block w-full bg-gray-100 text-gray-700 border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-1 px-4 mb-3"
               type="text"
               placeholder="Начинайте ввод с 978"
               value={state.phoneSecond}
@@ -1322,7 +1321,7 @@ const StoragesCreate = (props) => {
         <div className="-mx-3 md:flex mb-2">
           <div className="md:w-full px-3 mb-6 md:mb-0">
             <label
-              className="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2"
+              className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
               htmlFor="grid-city"
             >
               Хранение
@@ -1336,7 +1335,7 @@ const StoragesCreate = (props) => {
                   <th className="p-3 font-bold uppercase bg-green-300 text-gray-800 border border-gray-300 table-cell w-full">
                     Наименование
                   </th>
-                  <th className="p-3 font-bold uppercase bg-green-300 text-sm text-gray-800 border border-gray-300 table-cell whitespace-no-wrap">
+                  <th className="p-3 font-bold uppercase bg-green-300 text-sm text-gray-800 border border-gray-300 table-cell whitespace-nowrap">
                     Кол-во
                   </th>
 
@@ -1364,7 +1363,7 @@ const StoragesCreate = (props) => {
 
                     <td className="p-2 text-gray-800 text-center border border-b table-cell relative">
                       <input
-                        className="w-32 appearance-none block bg-grey-lighter text-grey-darker border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-1 px-4"
+                        className="w-32 appearance-none block bg-gray-100 text-gray-700 border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-1 px-4"
                         name="quantity"
                         type="number"
                         value={inputField.quantity}
@@ -1398,7 +1397,7 @@ const StoragesCreate = (props) => {
         <div className="-mx-3 md:flex my-2">
           <div className="w-full px-3 mb-6 md:mb-0">
             <label
-              className="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2"
+              className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
               htmlFor="grid-city"
             >
               {state.payment === 'free'
@@ -1406,7 +1405,7 @@ const StoragesCreate = (props) => {
                 : 'Цена'}
             </label>
             <input
-              className="appearance-none block w-full bg-grey-lighter text-grey-darker border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-1 px-4 mb-3"
+              className="appearance-none block w-full bg-gray-100 text-gray-700 border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-1 px-4 mb-3"
               type="number"
               placeholder="Сумма хранения"
               value={state.comment}
@@ -1418,13 +1417,13 @@ const StoragesCreate = (props) => {
           </div>
           <div className="w-full px-3 mb-6 md:mb-0">
             <label
-              className="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2"
+              className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
               htmlFor="grid-city"
             >
               Комментарий
             </label>
             <input
-              className="appearance-none block w-full bg-grey-lighter text-grey-darker border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-1 px-4 mb-3"
+              className="appearance-none block w-full bg-gray-100 text-gray-700 border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-1 px-4 mb-3"
               placeholder="Комментарий"
               value={state.comment2}
               name="comment2"

@@ -66,7 +66,6 @@ const ShinomontazhsList = () => {
   const paginate = (pageNumber) => {
     navigateWithQueryParams(`/shinomontazh/list/${pageNumber}`)
   }
-  toast.configure()
 
   const filters = ['number', 'regnumber']
 

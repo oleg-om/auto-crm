@@ -16,7 +16,6 @@ import { useServices } from '../../hooks/handleServices'
 import SubmitButtons from '../shared/buttons/OrderSubmitButtons'
 
 const WashsCreate = (props) => {
-  toast.configure()
   const notify = (arg) => {
     toast.info(arg, { position: toast.POSITION.BOTTOM_RIGHT })
   }

@@ -9,7 +9,7 @@ const AkbColumn = ({ inputField, handleChangeInput, index }) => {
       {inputField.mode === 'simple' ? (
         <div className="w-full">
           <input
-            className="appearance-none w-full block bg-grey-lighter text-grey-darker border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-1 px-4"
+            className="appearance-none w-full block bg-gray-100 text-gray-700 border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-1 px-4"
             type="text"
             placeholder="Например: Оригинальный аккумулятор на киа рио 3"
             name="tyreItem"
@@ -24,13 +24,13 @@ const AkbColumn = ({ inputField, handleChangeInput, index }) => {
             <div className="flex flex-row">
               <div className="mr-2 w-1/2">
                 <label
-                  className="block uppercase tracking-wide text-grey-darker text-xs text-left font-bold mb-2"
+                  className="block uppercase tracking-wide text-gray-700 text-xs text-left font-bold mb-2"
                   htmlFor="grid-first-name"
                 >
                   Бренд
                 </label>
                 <input
-                  className="appearance-none w-full block bg-grey-lighter text-grey-darker border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-1 px-4"
+                  className="appearance-none w-full block bg-gray-100 text-gray-700 border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-1 px-4"
                   type="text"
                   placeholder="Например: Bosch"
                   name="brand"
@@ -47,13 +47,13 @@ const AkbColumn = ({ inputField, handleChangeInput, index }) => {
               </div>
               <div className="mr-2 w-1/2">
                 <label
-                  className="block uppercase tracking-wide text-grey-darker text-xs text-left font-bold mb-2"
+                  className="block uppercase tracking-wide text-gray-700 text-xs text-left font-bold mb-2"
                   htmlFor="grid-first-name"
                 >
                   Модель
                 </label>
                 <input
-                  className="appearance-none w-full block bg-grey-lighter text-grey-darker border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-1 px-4"
+                  className="appearance-none w-full block bg-gray-100 text-gray-700 border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-1 px-4"
                   type="text"
                   placeholder="Например: S3"
                   name="model"
@@ -66,13 +66,13 @@ const AkbColumn = ({ inputField, handleChangeInput, index }) => {
             <div className="flex flex-row mt-2">
               <div className="mr-2 w-1/3">
                 <label
-                  className="block uppercase tracking-wide text-grey-darker text-xs text-left font-bold mb-2"
+                  className="block uppercase tracking-wide text-gray-700 text-xs text-left font-bold mb-2"
                   htmlFor="grid-first-name"
                 >
                   Размер
                 </label>
                 <input
-                  className="w-full appearance-none block bg-grey-lighter text-grey-darker border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-1 px-4"
+                  className="w-full appearance-none block bg-gray-100 text-gray-700 border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-1 px-4"
                   type="text"
                   name="size"
                   value={inputField.size}
@@ -82,13 +82,13 @@ const AkbColumn = ({ inputField, handleChangeInput, index }) => {
               </div>
               <div className="mr-2 w-1/3">
                 <label
-                  className="block uppercase tracking-wide text-grey-darker text-xs text-left font-bold mb-2"
+                  className="block uppercase tracking-wide text-gray-700 text-xs text-left font-bold mb-2"
                   htmlFor="grid-first-name"
                 >
                   Пусковой ток
                 </label>
                 <input
-                  className="w-full appearance-none block bg-grey-lighter text-grey-darker border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-1 px-4"
+                  className="w-full appearance-none block bg-gray-100 text-gray-700 border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-1 px-4"
                   type="number"
                   name="tok"
                   list="akbtok_list"
@@ -104,13 +104,13 @@ const AkbColumn = ({ inputField, handleChangeInput, index }) => {
               </div>
               <div className="mr-2 w-1/3">
                 <label
-                  className="block uppercase tracking-wide text-grey-darker text-xs text-left font-bold mb-2"
+                  className="block uppercase tracking-wide text-gray-700 text-xs text-left font-bold mb-2"
                   htmlFor="grid-first-name"
                 >
                   Емкость
                 </label>
                 <input
-                  className="w-full appearance-none block bg-grey-lighter text-grey-darker border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-1 px-4"
+                  className="w-full appearance-none block bg-gray-100 text-gray-700 border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-1 px-4"
                   type="number"
                   name="emkost"
                   list="akbah_list"
@@ -128,14 +128,14 @@ const AkbColumn = ({ inputField, handleChangeInput, index }) => {
             <div className="flex flex-row mt-2">
               <div className="mr-2 w-1/2">
                 <label
-                  className="block uppercase tracking-wide text-grey-darker text-xs text-left font-bold mb-2"
+                  className="block uppercase tracking-wide text-gray-700 text-xs text-left font-bold mb-2"
                   htmlFor="grid-first-name"
                 >
                   Тип
                 </label>
                 <div className="inline-block relative w-full">
                   <select
-                    className="appearance-none w-full block bg-grey-lighter text-grey-darker border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-1 px-4"
+                    className="appearance-none w-full block bg-gray-100 text-gray-700 border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-1 px-4"
                     name="typeakb"
                     list="autoparts_list"
                     value={inputField.typeakb}
@@ -164,14 +164,14 @@ const AkbColumn = ({ inputField, handleChangeInput, index }) => {
               </div>
               <div className="mr-2 w-1/2">
                 <label
-                  className="block uppercase tracking-wide text-grey-darker text-xs text-left font-bold mb-2"
+                  className="block uppercase tracking-wide text-gray-700 text-xs text-left font-bold mb-2"
                   htmlFor="grid-first-name"
                 >
                   Полярность
                 </label>
                 <div className="inline-block relative w-full">
                   <select
-                    className="appearance-none w-full block bg-grey-lighter text-grey-darker border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-1 px-4"
+                    className="appearance-none w-full block bg-gray-100 text-gray-700 border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-1 px-4"
                     name="polar"
                     list="autoparts_list"
                     value={inputField.polar}

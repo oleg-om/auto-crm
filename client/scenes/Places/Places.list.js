@@ -10,7 +10,6 @@ import Modal from '../../components/Modal.delete'
 import 'react-toastify/dist/ReactToastify.css'
 
 const PlaceList = () => {
-  toast.configure()
   const notify = (arg) => {
     toast.info(arg, { position: toast.POSITION.BOTTOM_RIGHT })
   }

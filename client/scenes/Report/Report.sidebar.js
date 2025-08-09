@@ -156,20 +156,20 @@ const ReportSidebar = (props) => {
             <div className="bg-white p-3 m-2 rounded">
               <div className="px-3">
                 <label
-                  className="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2"
+                  className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
                   htmlFor="grid-zip"
                 >
                   Выберите время (оба)
                 </label>
                 <div className="flex-shrink w-50 inline-block relative mb-3">
                   <label
-                    className="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2"
+                    className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
                     htmlFor="grid-zip"
                   >
                     Начало
                   </label>
                   <select
-                    className="block appearance-none w-full bg-grey-lighter border border-gray-300 focus:border-gray-500 focus:outline-none py-1 px-4 pr-8 rounded"
+                    className="block appearance-none w-full bg-gray-100 border border-gray-300 focus:border-gray-500 focus:outline-none py-1 px-4 pr-8 rounded"
                     value={props.timeStart}
                     name="timeStart"
                     onChange={props.onChangeTimeStart}
@@ -182,7 +182,7 @@ const ReportSidebar = (props) => {
                     ))}
                   </select>
 
-                  <div className="pointer-events-none absolute top-0 mt-2 right-0 flex items-center px-2 text-gray-600">
+                  <div className="pointer-events-none absolute top-0 right-0 flex items-center px-2 text-gray-600 mt-8">
                     <svg
                       className="fill-current h-4 w-4"
                       xmlns="http://www.w3.org/2000/svg"
@@ -197,13 +197,13 @@ const ReportSidebar = (props) => {
                 </div>
                 <div className="flex-shrink w-50 inline-block relative mb-3">
                   <label
-                    className="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2"
+                    className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
                     htmlFor="grid-zip"
                   >
                     Конец
                   </label>
                   <select
-                    className="block appearance-none w-full bg-grey-lighter border border-gray-300 focus:border-gray-500 focus:outline-none py-1 px-4 pr-8 rounded"
+                    className="block appearance-none w-full bg-gray-100 border border-gray-300 focus:border-gray-500 focus:outline-none py-1 px-4 pr-8 rounded"
                     value={props.timeFinish}
                     name="timeFinish"
                     onChange={props.onChangeTimeFinish}
@@ -216,7 +216,7 @@ const ReportSidebar = (props) => {
                     ))}
                   </select>
 
-                  <div className="pointer-events-none absolute top-0 mt-2 right-0 flex items-center px-2 text-gray-600">
+                  <div className="pointer-events-none absolute top-0 right-0 flex items-center px-2 text-gray-600 mt-8">
                     <svg
                       className="fill-current h-4 w-4"
                       xmlns="http://www.w3.org/2000/svg"
@@ -232,7 +232,7 @@ const ReportSidebar = (props) => {
           <div className="bg-white p-3 m-2 rounded">
             <div className="px-3">
               <label
-                className="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2"
+                className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
                 htmlFor="grid-zip"
               >
                 Выберите место
@@ -240,7 +240,7 @@ const ReportSidebar = (props) => {
               <div className="flex-shrink w-full inline-block relative mb-3">
                 {props.checkIsAdmin ? (
                   <select
-                    className="block appearance-none w-full bg-grey-lighter border border-gray-300 focus:border-gray-500 focus:outline-none py-1 px-4 pr-8 rounded"
+                    className="block appearance-none w-full bg-gray-100 border border-gray-300 focus:border-gray-500 focus:outline-none py-1 px-4 pr-8 rounded"
                     value={props.place}
                     name="cancelReason"
                     onChange={props.onChangePlace}
@@ -254,7 +254,7 @@ const ReportSidebar = (props) => {
                   </select>
                 ) : (
                   <select
-                    className="block appearance-none w-full bg-grey-lighter border border-gray-300 focus:border-gray-500 focus:outline-none py-1 px-4 pr-8 rounded"
+                    className="block appearance-none w-full bg-gray-100 border border-gray-300 focus:border-gray-500 focus:outline-none py-1 px-4 pr-8 rounded"
                     value={props.place}
                     name="cancelReason"
                     onChange={props.onChangePlace}
@@ -268,7 +268,7 @@ const ReportSidebar = (props) => {
                       ))}
                   </select>
                 )}
-                <div className="pointer-events-none absolute top-0 mt-2 right-0 flex items-center px-2 text-gray-600">
+                <div className="pointer-events-none absolute top-0 right-0 flex items-center px-2 text-gray-600 mt-2">
                   <svg
                     className="fill-current h-4 w-4"
                     xmlns="http://www.w3.org/2000/svg"
@@ -309,14 +309,14 @@ const ReportSidebar = (props) => {
             <div className="bg-white p-3 m-2 rounded">
               <div className="px-3">
                 <label
-                  className="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2"
+                  className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
                   htmlFor="grid-zip"
                 >
                   Выберите сотрудника
                 </label>
                 <div className="flex-shrink w-full inline-block relative mb-3">
                   <select
-                    className="block appearance-none w-full bg-grey-lighter border border-gray-300 focus:border-gray-500 focus:outline-none py-1 px-4 pr-8 rounded"
+                    className="block appearance-none w-full bg-gray-100 border border-gray-300 focus:border-gray-500 focus:outline-none py-1 px-4 pr-8 rounded"
                     value={currentEmployee}
                     name="employee"
                     onChange={props.onChangeEmployee}
@@ -331,7 +331,7 @@ const ReportSidebar = (props) => {
                       ))}
                   </select>
 
-                  <div className="pointer-events-none absolute top-0 mt-2 right-0 flex items-center px-2 text-gray-600">
+                  <div className="pointer-events-none absolute top-0 right-0 flex items-center px-2 text-gray-600 mt-2">
                     <svg
                       className="fill-current h-4 w-4"
                       xmlns="http://www.w3.org/2000/svg"

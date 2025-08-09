@@ -17,7 +17,6 @@ import { useServices } from '../../hooks/handleServices'
 import { ServiceSubmitButtons } from '../shared/buttons/OrderSubmitButtons'
 
 const WashsEdit = (props) => {
-  toast.configure()
   const notify = (arg) => {
     toast.info(arg, { position: toast.POSITION.BOTTOM_RIGHT })
   }
@@ -552,7 +551,7 @@ const WashsEdit = (props) => {
         payment: state.payment,
         services: service,
         material: materials,
-        tyre: [...tyres]
+        tyre: [tyres]
       })
       if (checkLink()) {
         history.push(`/washboss/list/${props.num ? props.num : ''}`)
@@ -581,7 +580,7 @@ const WashsEdit = (props) => {
         payment: state.payment,
         services: service,
         material: materials,
-        tyre: [...tyres],
+        tyre: [tyres],
         employee: employees,
         dateFinish: props.dateFinish ? props.dateFinish : new Date(),
         status: statusList[1]
@@ -664,7 +663,7 @@ const WashsEdit = (props) => {
         // ...state,
         // services: service,
         // material: materials,
-        // tyre: [...tyres],
+        // tyre: [tyres],
         // employee: employees,
         discount: state.discount,
         payment: state.payment,
@@ -869,7 +868,7 @@ const WashsEdit = (props) => {
       ...state,
       services: service,
       material: materials,
-      tyre: [...tyres],
+      tyre: [tyres],
       employee: employees,
       totalSumWithoutMaterials,
       totalMaterial,
@@ -885,7 +884,7 @@ const WashsEdit = (props) => {
       ...state,
       services: service,
       material: materials,
-      tyre: [...tyres],
+      tyre: [tyres],
       employee: employees,
       totalSumWithoutMaterials,
       totalMaterial,

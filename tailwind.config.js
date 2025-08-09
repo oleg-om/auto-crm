@@ -3,7 +3,7 @@ const dotenv = require('dotenv')
 dotenv.config()
 
 module.exports = {
-  purge: ['./client/**/*.html', './client/**/*.jsx', './client/**/*.js'],
+  content: ['./client/**/*.html', './client/**/*.jsx', './client/**/*.js'],
   theme: {
     extend: {
       colors: {
@@ -16,6 +16,5 @@ module.exports = {
       }
     }
   },
-  variants: {},
   plugins: []
 }

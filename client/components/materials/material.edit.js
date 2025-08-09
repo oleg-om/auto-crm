@@ -10,7 +10,6 @@ const MaterialUpdate = (props) => {
   const [isOpen, SetIsOpen] = useState(false)
   const history = useHistory()
 
-  toast.configure()
   const notify = (arg) => {
     toast.info(arg, { position: toast.POSITION.BOTTOM_RIGHT })
   }
@@ -56,13 +55,13 @@ const MaterialUpdate = (props) => {
         <div className="-mx-3 md:flex flex-wrap">
           <div className="md:w-1/2 px-3 mb-6 md:mb-0 flex flex-col">
             <label
-              className="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2"
+              className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
               htmlFor="grid-first-name"
             >
               Название
             </label>
             <input
-              className="appearance-none block w-full bg-grey-lighter text-grey-darker border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-3 px-4 mb-3"
+              className="appearance-none block w-full bg-gray-100 text-gray-700 border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-3 px-4 mb-3"
               value={state.name}
               name="name"
               id="name"
@@ -73,13 +72,13 @@ const MaterialUpdate = (props) => {
           </div>
           <div className="md:w-1/2 px-3 mb-6 md:mb-0 flex flex-col">
             <label
-              className="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2"
+              className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
               htmlFor="grid-first-name"
             >
               Артикул
             </label>
             <input
-              className="appearance-none block w-full bg-grey-lighter text-grey-darker border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-3 px-4 mb-3"
+              className="appearance-none block w-full bg-gray-100 text-gray-700 border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-3 px-4 mb-3"
               value={state.artikul}
               name="artikul"
               id="artikul"
@@ -91,13 +90,13 @@ const MaterialUpdate = (props) => {
         <div className="-mx-3 md:flex flex-wrap mt-3">
           <div className="md:w-1/3 px-3 mb-6 md:mb-0 flex flex-col">
             <label
-              className="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2"
+              className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
               htmlFor="grid-first-name"
             >
               Цена
             </label>
             <input
-              className="appearance-none block w-full bg-grey-lighter text-grey-darker border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-3 px-4 mb-3"
+              className="appearance-none block w-full bg-gray-100 text-gray-700 border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-3 px-4 mb-3"
               value={state.price}
               name="price"
               id="price"
@@ -108,13 +107,13 @@ const MaterialUpdate = (props) => {
           </div>
           <div className="md:w-1/3 px-3 mb-6 md:mb-0 flex flex-col">
             <label
-              className="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2"
+              className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
               htmlFor="grid-first-name"
             >
               Количество
             </label>
             <input
-              className="appearance-none block w-full bg-grey-lighter text-grey-darker border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-3 px-4 mb-3"
+              className="appearance-none block w-full bg-gray-100 text-gray-700 border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-3 px-4 mb-3"
               value={state.quantity}
               name="quantity"
               id="quantity"
@@ -126,14 +125,14 @@ const MaterialUpdate = (props) => {
           </div>
           <div className="md:w-1/3 px-3 mb-6 md:mb-0 flex flex-col">
             <label
-              className="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2"
+              className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
               htmlFor="grid-first-name"
             >
               Направление
             </label>
             <div className="flex-shrink w-full inline-block relative mb-3">
               <select
-                className="appearance-none block w-full bg-grey-lighter text-grey-darker border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-3 px-4 mb-3"
+                className="appearance-none block w-full bg-gray-100 text-gray-700 border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-3 px-4 mb-3"
                 value={state.type}
                 name="type"
                 id="type"
@@ -167,14 +166,14 @@ const MaterialUpdate = (props) => {
         <div className="-mx-3 md:flex flex-wrap mt-3">
           <div className="md:w-1/3 px-3 mb-6 md:mb-0 flex flex-col">
             <label
-              className="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2"
+              className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
               htmlFor="grid-first-name"
             >
               Категория
             </label>
             <div className="flex-shrink w-full inline-block relative mb-3">
               <input
-                className="appearance-none block w-full bg-grey-lighter text-grey-darker border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-3 px-4 mb-3"
+                className="appearance-none block w-full bg-gray-100 text-gray-700 border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-3 px-4 mb-3"
                 value={state.category}
                 name="category"
                 id="category"
@@ -200,14 +199,14 @@ const MaterialUpdate = (props) => {
           </div>
           <div className="md:w-1/3 px-3 mb-6 md:mb-0 flex flex-col">
             <label
-              className="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2"
+              className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
               htmlFor="grid-first-name"
             >
               Акция
             </label>
             <div className="flex-shrink w-full inline-block relative mb-3">
               <select
-                className="appearance-none block w-full bg-grey-lighter text-grey-darker border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-3 px-4 mb-3"
+                className="appearance-none block w-full bg-gray-100 text-gray-700 border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-3 px-4 mb-3"
                 value={state.free}
                 name="free"
                 id="free"
@@ -233,14 +232,14 @@ const MaterialUpdate = (props) => {
           </div>
           <div className="md:w-1/3 px-3 mb-6 md:mb-0 flex flex-col">
             <label
-              className="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2"
+              className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
               htmlFor="grid-first-name"
             >
               Доп.управление
             </label>
             <div className="flex-shrink w-full inline-block relative mb-3">
               <select
-                className="appearance-none block w-full bg-grey-lighter text-grey-darker border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-3 px-4 mb-3"
+                className="appearance-none block w-full bg-gray-100 text-gray-700 border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-3 px-4 mb-3"
                 value={state.plus}
                 name="plus"
                 id="plus"

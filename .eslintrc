@@ -1,22 +1,41 @@
 {
-  "parser": "@babel/eslint-parser",
   "root": true,
-  "extends": [
-    "airbnb",
-    "prettier",
-    "plugin:react/recommended"
-  ],
-  "parserOptions": {
-    "ecmaVersion": 2020,
-    "sourceType": "module",
-    "ecmaFeatures": {
-      "jsx": true
+  "overrides": [
+    {
+      "files": ["client/**/*.js", "client/**/*.jsx"],
+      "parser": "@babel/eslint-parser",
+      "extends": [
+        "airbnb",
+        "prettier",
+        "plugin:react/recommended"
+      ],
+      "parserOptions": {
+        "ecmaVersion": 2020,
+        "sourceType": "module",
+        "ecmaFeatures": {
+          "jsx": true
+        },
+        "requireConfigFile": false,
+        "babelOptions": {
+          "presets": ["@babel/preset-react"]
+        }
+      }
     },
-    "requireConfigFile": false,
-    "babelOptions": {
-      "presets": ["@babel/preset-react"]
-    }
-  },
+         {
+       "files": ["server/**/*.js", "*.js"],
+       "extends": [
+         "airbnb-base",
+         "prettier"
+       ],
+       "parserOptions": {
+         "ecmaVersion": 2020,
+         "sourceType": "module"
+       },
+       "rules": {
+         "no-underscore-dangle": ["error", { "allow": ["_id", "_doc"] }]
+       }
+     }
+  ],
   "plugins": [
     "prettier",
     "react-hooks"

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { useHistory } from 'react-router-dom'
 import { toast } from 'react-toastify'
-import NumberFormat from 'react-number-format'
+import { NumericFormat as NumberFormat } from 'react-number-format'
 import Modal from '../Modal.delete'
 import sizeThreeList from '../../lists/shinomontazhdiametr'
 import sizeGruz from '../../lists/tyres/sizegruz'
@@ -30,7 +30,6 @@ const CustomerUpdate = (props) => {
   const [isOpen, SetIsOpen] = useState(false)
   const history = useHistory()
 
-  toast.configure()
   const notify = (arg) => {
     toast.info(arg, { position: toast.POSITION.BOTTOM_RIGHT })
   }
@@ -226,13 +225,13 @@ const CustomerUpdate = (props) => {
         <div className="-mx-3 md:flex flex-wrap">
           <div className="md:w-1/2 px-3 mb-6 md:mb-0 flex flex-col">
             <label
-              className="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2"
+              className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
               htmlFor="grid-first-name"
             >
               Имя
             </label>
             <input
-              className="appearance-none block w-full bg-grey-lighter text-grey-darker border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-3 px-4 mb-3"
+              className="appearance-none block w-full bg-gray-100 text-gray-700 border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-3 px-4 mb-3"
               value={state.name}
               name="name"
               id="name"
@@ -243,7 +242,7 @@ const CustomerUpdate = (props) => {
           </div>
           <div className="md:w-1/2 px-3 mb-6 md:mb-0 flex flex-col">
             <label
-              className="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2"
+              className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
               htmlFor="grid-first-name"
             >
               Телефон
@@ -251,7 +250,7 @@ const CustomerUpdate = (props) => {
             <NumberFormat
               format="+7 (###) ###-##-##"
               mask="_"
-              className="appearance-none block w-full bg-grey-lighter text-grey-darker border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-3 px-4 mb-3"
+              className="appearance-none block w-full bg-gray-100 text-gray-700 border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-3 px-4 mb-3"
               value={state.phone}
               name="phone"
               id="phone"
@@ -264,13 +263,13 @@ const CustomerUpdate = (props) => {
         <div className="-mx-3 md:flex flex-wrap">
           <div className="md:w-1/4 px-3 mb-6 md:mb-0 flex flex-col">
             <label
-              className="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2"
+              className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
               htmlFor="grid-first-name"
             >
               Марка авто
             </label>
             <input
-              className="appearance-none block w-full bg-grey-lighter text-grey-darker border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-3 px-4 mb-3"
+              className="appearance-none block w-full bg-gray-100 text-gray-700 border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-3 px-4 mb-3"
               value={state.mark}
               name="mark"
               list="mark_list"
@@ -287,13 +286,13 @@ const CustomerUpdate = (props) => {
           </div>
           <div className="md:w-1/4 px-3 mb-6 md:mb-0 flex flex-col">
             <label
-              className="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2"
+              className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
               htmlFor="grid-first-name"
             >
               Модель авто
             </label>
             <input
-              className="appearance-none block w-full bg-grey-lighter text-grey-darker border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-3 px-4 mb-3"
+              className="appearance-none block w-full bg-gray-100 text-gray-700 border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-3 px-4 mb-3"
               value={state.model}
               name="model"
               id="model"
@@ -314,13 +313,13 @@ const CustomerUpdate = (props) => {
           </div>
           <div className="md:w-1/4 px-3 mb-6 md:mb-0 flex flex-col">
             <label
-              className="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2"
+              className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
               htmlFor="grid-first-name"
             >
               Год авто
             </label>
             <input
-              className="appearance-none block w-full bg-grey-lighter text-grey-darker border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-3 px-4 mb-3"
+              className="appearance-none block w-full bg-gray-100 text-gray-700 border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-3 px-4 mb-3"
               value={state.gen}
               name="gen"
               id="gen"
@@ -349,13 +348,13 @@ const CustomerUpdate = (props) => {
           </div>
           <div className="md:w-1/4 px-3 mb-6 md:mb-0 flex flex-col">
             <label
-              className="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2"
+              className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
               htmlFor="grid-first-name"
             >
               Объем двигателя
             </label>
             <input
-              className="appearance-none block w-full bg-grey-lighter text-grey-darker border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-3 px-4 mb-3"
+              className="appearance-none block w-full bg-gray-100 text-gray-700 border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-3 px-4 mb-3"
               value={state.mod}
               name="mod"
               id="mod"
@@ -397,13 +396,13 @@ const CustomerUpdate = (props) => {
 
           <div className="md:w-1/2 px-3 mb-6 md:mb-0 flex flex-col">
             <label
-              className="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2"
+              className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
               htmlFor="grid-first-name"
             >
               Гос. номер
             </label>
             <input
-              className="appearance-none block w-full bg-grey-lighter text-grey-darker border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-3 px-4 mb-3"
+              className="appearance-none block w-full bg-gray-100 text-gray-700 border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-3 px-4 mb-3"
               value={state.regnumber}
               name="regnumber"
               placeholder="Введите гос. номер русскими буквами"
@@ -414,13 +413,13 @@ const CustomerUpdate = (props) => {
           </div>
           <div className="md:w-1/2 px-3 mb-6 md:mb-0 flex flex-col">
             <label
-              className="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2"
+              className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
               htmlFor="grid-first-name"
             >
               VIN номер
             </label>
             <input
-              className="appearance-none block w-full bg-grey-lighter text-grey-darker border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-3 px-4 mb-3"
+              className="appearance-none block w-full bg-gray-100 text-gray-700 border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-3 px-4 mb-3"
               value={state.vinnumber}
               name="vinnumber"
               id="vinnumber"
@@ -439,7 +438,7 @@ const CustomerUpdate = (props) => {
             </label>
             <div className="flex-shrink w-full inline-block relative">
               <select
-                className="block appearance-none w-full bg-grey-lighter border border-gray-300 focus:border-gray-500 focus:outline-none py-2 px-4 pr-8 rounded"
+                className="block appearance-none w-full bg-gray-100 border border-gray-300 focus:border-gray-500 focus:outline-none py-2 px-4 pr-8 rounded"
                 name="kuzov"
                 id="kuzov"
                 value={state.kuzov}
@@ -477,7 +476,7 @@ const CustomerUpdate = (props) => {
             </label>
             <div className="flex-shrink w-full inline-block relative">
               <select
-                className="block appearance-none w-full bg-grey-lighter border border-gray-300 focus:border-gray-500 focus:outline-none py-2 px-4 pr-8 rounded"
+                className="block appearance-none w-full bg-gray-100 border border-gray-300 focus:border-gray-500 focus:outline-none py-2 px-4 pr-8 rounded"
                 name="diametr"
                 id="diametr"
                 value={state.diametr}

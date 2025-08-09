@@ -9,7 +9,6 @@ const StopriceUpdate = (props) => {
   const [isOpen, SetIsOpen] = useState(false)
   const history = useHistory()
 
-  toast.configure()
   const notify = (arg) => {
     toast.info(arg, { position: toast.POSITION.BOTTOM_RIGHT })
   }
@@ -72,13 +71,13 @@ const StopriceUpdate = (props) => {
         <div className="-mx-3 md:flex flex-wrap">
           <div className="md:w-1/3 px-3 mb-6 md:mb-0 flex flex-col">
             <label
-              className="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2"
+              className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
               htmlFor="grid-first-name"
             >
               Название услуги
             </label>
             <input
-              className="appearance-none block w-full bg-grey-lighter text-grey-darker border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-3 px-4 mb-3"
+              className="appearance-none block w-full bg-gray-100 text-gray-700 border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-3 px-4 mb-3"
               value={state.name}
               name="name"
               id="name"
@@ -89,14 +88,14 @@ const StopriceUpdate = (props) => {
           </div>
           <div className="md:w-1/3 px-3 mb-6 md:mb-0 flex flex-col">
             <label
-              className="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2"
+              className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
               htmlFor="grid-first-name"
             >
               Направление
             </label>
             <div className="flex-shrink w-full inline-block relative mb-3">
               <select
-                className="appearance-none block w-full bg-grey-lighter text-grey-darker border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-3 px-4 mb-3"
+                className="appearance-none block w-full bg-gray-100 text-gray-700 border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-3 px-4 mb-3"
                 value={state.type}
                 name="type"
                 id="type"
@@ -125,7 +124,7 @@ const StopriceUpdate = (props) => {
           </div>
           <div className="md:w-1/3 px-3 mb-6 md:mb-0 flex flex-col">
             <label
-              className="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2"
+              className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
               htmlFor="grid-first-name"
             >
               Категория
@@ -133,7 +132,7 @@ const StopriceUpdate = (props) => {
             <div className="flex-shrink w-full inline-block relative mb-3">
               {state.type !== 'gruz' && state.type !== 'selhoz' ? (
                 <select
-                  className="appearance-none block w-full bg-grey-lighter text-grey-darker border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-3 px-4 mb-3"
+                  className="appearance-none block w-full bg-gray-100 text-gray-700 border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-3 px-4 mb-3"
                   value={state.category}
                   name="category"
                   id="category"
@@ -151,7 +150,7 @@ const StopriceUpdate = (props) => {
                 </select>
               ) : (
                 <select
-                  className="appearance-none block w-full bg-grey-lighter text-grey-darker border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-3 px-4 mb-3"
+                  className="appearance-none block w-full bg-gray-100 text-gray-700 border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-3 px-4 mb-3"
                   value={state.category}
                   name="category"
                   id="category"
@@ -179,7 +178,7 @@ const StopriceUpdate = (props) => {
           </div>
         </div>
         <label
-          className="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2"
+          className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
           htmlFor="grid-first-name"
         >
           Цены:
@@ -190,13 +189,13 @@ const StopriceUpdate = (props) => {
           <div className="-mx-3 md:flex flex-wrap mt-3">
             <div className="md:w-1/5 px-3 mb-6 md:mb-0 flex flex-col">
               <label
-                className="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2"
+                className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
                 htmlFor="grid-first-name"
               >
                 ВАЗ 2101-07 (1 кат)
               </label>
               <input
-                className="appearance-none block w-full bg-grey-lighter text-grey-darker border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-3 px-4 mb-3"
+                className="appearance-none block w-full bg-gray-100 text-gray-700 border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-3 px-4 mb-3"
                 value={state.R210107first}
                 name="R210107first"
                 id="R210107first"
@@ -207,13 +206,13 @@ const StopriceUpdate = (props) => {
             </div>
             <div className="md:w-1/5 px-3 mb-6 md:mb-0 flex flex-col">
               <label
-                className="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2"
+                className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
                 htmlFor="grid-first-name"
               >
                 ВАЗ 2101-07 (2 кат)
               </label>
               <input
-                className="appearance-none block w-full bg-grey-lighter text-grey-darker border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-3 px-4 mb-3"
+                className="appearance-none block w-full bg-gray-100 text-gray-700 border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-3 px-4 mb-3"
                 value={state.R210107second}
                 name="R210107second"
                 id="R210107second"
@@ -224,13 +223,13 @@ const StopriceUpdate = (props) => {
             </div>
             <div className="md:w-1/5 px-3 mb-6 md:mb-0 flex flex-col">
               <label
-                className="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2"
+                className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
                 htmlFor="grid-first-name"
               >
                 ВАЗ 2101-07 (3 кат)
               </label>
               <input
-                className="appearance-none block w-full bg-grey-lighter text-grey-darker border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-3 px-4 mb-3"
+                className="appearance-none block w-full bg-gray-100 text-gray-700 border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-3 px-4 mb-3"
                 value={state.R210107third}
                 name="R210107third"
                 id="R210107third"
@@ -241,13 +240,13 @@ const StopriceUpdate = (props) => {
             </div>
             <div className="md:w-1/5 px-3 mb-6 md:mb-0 flex flex-col">
               <label
-                className="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2"
+                className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
                 htmlFor="grid-first-name"
               >
                 ВАЗ 2108-09 (1 кат)
               </label>
               <input
-                className="appearance-none block w-full bg-grey-lighter text-grey-darker border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-3 px-4 mb-3"
+                className="appearance-none block w-full bg-gray-100 text-gray-700 border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-3 px-4 mb-3"
                 value={state.R210809first}
                 name="R210809first"
                 id="R210809first"
@@ -258,13 +257,13 @@ const StopriceUpdate = (props) => {
             </div>
             <div className="md:w-1/5 px-3 mb-6 md:mb-0 flex flex-col">
               <label
-                className="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2"
+                className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
                 htmlFor="grid-first-name"
               >
                 ВАЗ 2108-09 (2 кат)
               </label>
               <input
-                className="appearance-none block w-full bg-grey-lighter text-grey-darker border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-3 px-4 mb-3"
+                className="appearance-none block w-full bg-gray-100 text-gray-700 border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-3 px-4 mb-3"
                 value={state.R210809second}
                 name="R210809second"
                 id="R210809second"
@@ -275,13 +274,13 @@ const StopriceUpdate = (props) => {
             </div>
             <div className="md:w-1/5 px-3 mb-6 md:mb-0 flex flex-col">
               <label
-                className="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2"
+                className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
                 htmlFor="grid-first-name"
               >
                 ВАЗ 2108-09 (3 кат)
               </label>
               <input
-                className="appearance-none block w-full bg-grey-lighter text-grey-darker border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-3 px-4 mb-3"
+                className="appearance-none block w-full bg-gray-100 text-gray-700 border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-3 px-4 mb-3"
                 value={state.R210809third}
                 name="R210809third"
                 id="R210809third"
@@ -292,13 +291,13 @@ const StopriceUpdate = (props) => {
             </div>
             <div className="md:w-1/5 px-3 mb-6 md:mb-0 flex flex-col">
               <label
-                className="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2"
+                className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
                 htmlFor="grid-first-name"
               >
                 ВАЗ 2110 (ПРИОРА) (1 кат)
               </label>
               <input
-                className="appearance-none block w-full bg-grey-lighter text-grey-darker border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-3 px-4 mb-3"
+                className="appearance-none block w-full bg-gray-100 text-gray-700 border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-3 px-4 mb-3"
                 value={state.R2110PrioraFirst}
                 name="R2110PrioraFirst"
                 id="R2110PrioraFirst"
@@ -309,13 +308,13 @@ const StopriceUpdate = (props) => {
             </div>
             <div className="md:w-1/5 px-3 mb-6 md:mb-0 flex flex-col">
               <label
-                className="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2"
+                className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
                 htmlFor="grid-first-name"
               >
                 ВАЗ 2110 (ПРИОРА) (2 кат)
               </label>
               <input
-                className="appearance-none block w-full bg-grey-lighter text-grey-darker border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-3 px-4 mb-3"
+                className="appearance-none block w-full bg-gray-100 text-gray-700 border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-3 px-4 mb-3"
                 value={state.R2110PrioraSecond}
                 name="R2110PrioraSecond"
                 id="R2110PrioraSecond"
@@ -326,13 +325,13 @@ const StopriceUpdate = (props) => {
             </div>
             <div className="md:w-1/5 px-3 mb-6 md:mb-0 flex flex-col">
               <label
-                className="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2"
+                className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
                 htmlFor="grid-first-name"
               >
                 ВАЗ 2110 (ПРИОРА) (3 кат)
               </label>
               <input
-                className="appearance-none block w-full bg-grey-lighter text-grey-darker border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-3 px-4 mb-3"
+                className="appearance-none block w-full bg-gray-100 text-gray-700 border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-3 px-4 mb-3"
                 value={state.R2110PrioraThird}
                 name="R2110PrioraThird"
                 id="R2110PrioraThird"
@@ -347,13 +346,13 @@ const StopriceUpdate = (props) => {
           <div className="-mx-3 md:flex flex-wrap mt-3">
             <div className="md:w-1/5 px-3 mb-6 md:mb-0 flex flex-col">
               <label
-                className="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2"
+                className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
                 htmlFor="grid-first-name"
               >
                 Иномарки (1 кат)
               </label>
               <input
-                className="appearance-none block w-full bg-grey-lighter text-grey-darker border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-3 px-4 mb-3"
+                className="appearance-none block w-full bg-gray-100 text-gray-700 border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-3 px-4 mb-3"
                 value={state.foreignFirst}
                 name="foreignFirst"
                 id="foreignFirst"
@@ -364,13 +363,13 @@ const StopriceUpdate = (props) => {
             </div>
             <div className="md:w-1/5 px-3 mb-6 md:mb-0 flex flex-col">
               <label
-                className="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2"
+                className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
                 htmlFor="grid-first-name"
               >
                 Иномарки (2 кат)
               </label>
               <input
-                className="appearance-none block w-full bg-grey-lighter text-grey-darker border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-3 px-4 mb-3"
+                className="appearance-none block w-full bg-gray-100 text-gray-700 border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-3 px-4 mb-3"
                 value={state.foreignSecond}
                 name="foreignSecond"
                 id="foreignSecond"
@@ -381,13 +380,13 @@ const StopriceUpdate = (props) => {
             </div>
             <div className="md:w-1/5 px-3 mb-6 md:mb-0 flex flex-col">
               <label
-                className="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2"
+                className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
                 htmlFor="grid-first-name"
               >
                 Иномарки (3 кат)
               </label>
               <input
-                className="appearance-none block w-full bg-grey-lighter text-grey-darker border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-3 px-4 mb-3"
+                className="appearance-none block w-full bg-gray-100 text-gray-700 border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-3 px-4 mb-3"
                 value={state.foreignThird}
                 name="foreignThird"
                 id="foreignThird"
@@ -403,13 +402,13 @@ const StopriceUpdate = (props) => {
           <div className="-mx-3 md:flex flex-wrap mt-3">
             <div className="md:w-1/5 px-3 mb-6 md:mb-0 flex flex-col">
               <label
-                className="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2"
+                className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
                 htmlFor="grid-first-name"
               >
                 Скорая (газель)
               </label>
               <input
-                className="appearance-none block w-full bg-grey-lighter text-grey-darker border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-3 px-4 mb-3"
+                className="appearance-none block w-full bg-gray-100 text-gray-700 border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-3 px-4 mb-3"
                 value={state.cardAmbulanceOur}
                 name="cardAmbulanceOur"
                 id="cardAmbulanceOur"
@@ -420,13 +419,13 @@ const StopriceUpdate = (props) => {
             </div>
             <div className="md:w-1/5 px-3 mb-6 md:mb-0 flex flex-col">
               <label
-                className="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2"
+                className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
                 htmlFor="grid-first-name"
               >
                 Скорая (Ford)
               </label>
               <input
-                className="appearance-none block w-full bg-grey-lighter text-grey-darker border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-3 px-4 mb-3"
+                className="appearance-none block w-full bg-gray-100 text-gray-700 border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-3 px-4 mb-3"
                 value={state.cardAmbulanceForeign}
                 name="cardAmbulanceForeign"
                 id="cardAmbulanceForeign"
@@ -441,13 +440,13 @@ const StopriceUpdate = (props) => {
           <div className="-mx-3 md:flex flex-wrap mt-3">
             <div className="md:w-1/5 px-3 mb-6 md:mb-0 flex flex-col">
               <label
-                className="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2"
+                className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
                 htmlFor="grid-first-name"
               >
                 Минтранс (Газель)
               </label>
               <input
-                className="appearance-none block w-full bg-grey-lighter text-grey-darker border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-3 px-4 mb-3"
+                className="appearance-none block w-full bg-gray-100 text-gray-700 border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-3 px-4 mb-3"
                 value={state.minGazel}
                 name="minGazel"
                 id="minGazel"
@@ -458,13 +457,13 @@ const StopriceUpdate = (props) => {
             </div>
             <div className="md:w-1/5 px-3 mb-6 md:mb-0 flex flex-col">
               <label
-                className="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2"
+                className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
                 htmlFor="grid-first-name"
               >
                 Минтранс (Logan)
               </label>
               <input
-                className="appearance-none block w-full bg-grey-lighter text-grey-darker border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-3 px-4 mb-3"
+                className="appearance-none block w-full bg-gray-100 text-gray-700 border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-3 px-4 mb-3"
                 value={state.minLogan}
                 name="minLogan"
                 id="minLogan"
@@ -475,13 +474,13 @@ const StopriceUpdate = (props) => {
             </div>
             <div className="md:w-1/5 px-3 mb-6 md:mb-0 flex flex-col">
               <label
-                className="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2"
+                className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
                 htmlFor="grid-first-name"
               >
                 Минтранс (Duster)
               </label>
               <input
-                className="appearance-none block w-full bg-grey-lighter text-grey-darker border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-3 px-4 mb-3"
+                className="appearance-none block w-full bg-gray-100 text-gray-700 border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-3 px-4 mb-3"
                 value={state.minDuster}
                 name="minDuster"
                 id="minDuster"
@@ -492,13 +491,13 @@ const StopriceUpdate = (props) => {
             </div>
             <div className="md:w-1/5 px-3 mb-6 md:mb-0 flex flex-col">
               <label
-                className="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2"
+                className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
                 htmlFor="grid-first-name"
               >
                 Минтранс (Прочее)
               </label>
               <input
-                className="appearance-none block w-full bg-grey-lighter text-grey-darker border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-3 px-4 mb-3"
+                className="appearance-none block w-full bg-gray-100 text-gray-700 border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-3 px-4 mb-3"
                 value={state.minOther}
                 name="minOther"
                 id="minOther"
@@ -513,13 +512,13 @@ const StopriceUpdate = (props) => {
         <div className="-mx-3 md:flex flex-wrap mt-3">
           <div className="md:w-1/3 px-3 mb-6 md:mb-0 flex flex-col">
             <label
-              className="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2"
+              className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
               htmlFor="grid-first-name"
             >
               Порядковый номер
             </label>
             <input
-              className="appearance-none block w-full bg-grey-lighter text-grey-darker border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-3 px-4 mb-3"
+              className="appearance-none block w-full bg-gray-100 text-gray-700 border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-3 px-4 mb-3"
               value={state.number}
               name="number"
               id="number"
@@ -530,14 +529,14 @@ const StopriceUpdate = (props) => {
           </div>
           <div className="md:w-1/3 px-3 mb-6 md:mb-0 flex flex-col">
             <label
-              className="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2"
+              className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
               htmlFor="grid-first-name"
             >
               Акция
             </label>
             <div className="flex-shrink w-full inline-block relative mb-3">
               <select
-                className="appearance-none block w-full bg-grey-lighter text-grey-darker border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-3 px-4 mb-3"
+                className="appearance-none block w-full bg-gray-100 text-gray-700 border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-3 px-4 mb-3"
                 value={state.free}
                 name="free"
                 id="free"

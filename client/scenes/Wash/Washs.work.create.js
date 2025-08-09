@@ -23,7 +23,6 @@ const ShinomontazhsNew = () => {
 
   const history = useHistory()
   const checkLink = () => history.location.pathname.split('/').includes('washboss')
-  toast.configure()
   const notify = (arg) => {
     toast.info(arg, { position: toast.POSITION.BOTTOM_RIGHT })
   }

@@ -40,7 +40,8 @@ const config = {
   resolve: {
     alias: {
       d3: 'd3/index.js'
-    }
+    },
+    modules: [resolve(__dirname, 'node_modules'), 'node_modules']
   },
   output: {
     filename: 'js/[name].bundle.js',

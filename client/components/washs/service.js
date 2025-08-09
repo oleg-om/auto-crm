@@ -35,7 +35,7 @@ const Service = ({
     <div className="flex flex-col -mx-3">
       <div className="px-3 mb-6 md:mb-0 w-full">
         {/* <label
-          className="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2"
+          className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
           htmlFor="grid-first-name"
         >
           {serviceType}
@@ -52,7 +52,7 @@ const Service = ({
                 </label>
                 <div className="flex-shrink w-full inline-block relative">
                   <select
-                    className="block appearance-none w-full bg-grey-lighter border border-gray-300 focus:border-gray-500 focus:outline-none py-2 px-4 pr-8 rounded"
+                    className="block appearance-none w-full bg-gray-100 border border-gray-300 focus:border-gray-500 focus:outline-none py-2 px-4 pr-8 rounded"
                     name="category"
                     id="category"
                     value={category}
@@ -363,7 +363,7 @@ const Service = ({
       </div>
       <div className="px-3 my-3 md:mb-0 w-full">
         <label
-          className="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2"
+          className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
           htmlFor="grid-first-name"
         >
           Выбранные услуги

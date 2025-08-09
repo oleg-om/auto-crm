@@ -28,7 +28,6 @@ export const categoryList = [{ name: 'Цена', id: 'price', class: 'price' }]
 // ]
 
 const WindowpriceCreate = (props) => {
-  toast.configure()
   const notify = (arg) => {
     toast.info(arg, { position: toast.POSITION.BOTTOM_RIGHT })
   }
@@ -71,13 +70,13 @@ const WindowpriceCreate = (props) => {
         <div className="-mx-3 md:flex flex-wrap">
           <div className="md:w-1/3 px-3 mb-6 md:mb-0 flex flex-col">
             <label
-              className="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2"
+              className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
               htmlFor="grid-first-name"
             >
               Название услуги
             </label>
             <input
-              className="appearance-none block w-full bg-grey-lighter text-grey-darker border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-3 px-4 mb-3"
+              className="appearance-none block w-full bg-gray-100 text-gray-700 border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-3 px-4 mb-3"
               value={state.name}
               name="name"
               id="name"
@@ -88,14 +87,14 @@ const WindowpriceCreate = (props) => {
           </div>
           <div className="md:w-1/3 px-3 mb-6 md:mb-0 flex flex-col">
             <label
-              className="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2"
+              className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
               htmlFor="grid-first-name"
             >
               Направление
             </label>
             <div className="flex-shrink w-full inline-block relative mb-3">
               <select
-                className="appearance-none block w-full bg-grey-lighter text-grey-darker border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-3 px-4 mb-3"
+                className="appearance-none block w-full bg-gray-100 text-gray-700 border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-3 px-4 mb-3"
                 value={state.type}
                 name="type"
                 id="type"
@@ -124,7 +123,7 @@ const WindowpriceCreate = (props) => {
           </div>
           <div className="md:w-1/3 px-3 mb-6 md:mb-0 flex flex-col">
             <label
-              className="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2"
+              className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
               htmlFor="grid-first-name"
             >
               Категория
@@ -132,7 +131,7 @@ const WindowpriceCreate = (props) => {
             <div className="flex-shrink w-full inline-block relative mb-3">
               {state.type !== 'gruz' && state.type !== 'selhoz' ? (
                 <select
-                  className="appearance-none block w-full bg-grey-lighter text-grey-darker border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-3 px-4 mb-3"
+                  className="appearance-none block w-full bg-gray-100 text-gray-700 border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-3 px-4 mb-3"
                   value={state.category}
                   name="category"
                   id="category"
@@ -150,7 +149,7 @@ const WindowpriceCreate = (props) => {
                 </select>
               ) : (
                 <select
-                  className="appearance-none block w-full bg-grey-lighter text-grey-darker border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-3 px-4 mb-3"
+                  className="appearance-none block w-full bg-gray-100 text-gray-700 border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-3 px-4 mb-3"
                   value={state.category}
                   name="category"
                   id="category"
@@ -178,7 +177,7 @@ const WindowpriceCreate = (props) => {
           </div>
         </div>
         <label
-          className="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2"
+          className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
           htmlFor="grid-first-name"
         >
           Цены:
@@ -193,13 +192,13 @@ const WindowpriceCreate = (props) => {
               return (
                 <div className="md:w-1/5 px-3 mb-6 md:mb-0 flex flex-col" key={it.name}>
                   <label
-                    className="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2"
+                    className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
                     htmlFor={it.id}
                   >
                     {it.name}
                   </label>
                   <input
-                    className="appearance-none block w-full bg-grey-lighter text-grey-darker border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-3 px-4 mb-3"
+                    className="appearance-none block w-full bg-gray-100 text-gray-700 border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-3 px-4 mb-3"
                     value={state[it.id]}
                     name={it.id}
                     id={it.id}
@@ -215,13 +214,13 @@ const WindowpriceCreate = (props) => {
         <div className="-mx-3 md:flex flex-wrap mt-3">
           <div className="md:w-1/3 px-3 mb-6 md:mb-0 flex flex-col">
             <label
-              className="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2"
+              className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
               htmlFor="grid-first-name"
             >
               Порядковый номер
             </label>
             <input
-              className="appearance-none block w-full bg-grey-lighter text-grey-darker border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-3 px-4 mb-3"
+              className="appearance-none block w-full bg-gray-100 text-gray-700 border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-3 px-4 mb-3"
               value={state.number}
               name="number"
               id="number"
@@ -232,14 +231,14 @@ const WindowpriceCreate = (props) => {
           </div>
           <div className="md:w-1/3 px-3 mb-6 md:mb-0 flex flex-col">
             <label
-              className="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2"
+              className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
               htmlFor="grid-first-name"
             >
               Акция
             </label>
             <div className="flex-shrink w-full inline-block relative mb-3">
               <select
-                className="appearance-none block w-full bg-grey-lighter text-grey-darker border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-3 px-4 mb-3"
+                className="appearance-none block w-full bg-gray-100 text-gray-700 border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-3 px-4 mb-3"
                 value={state.free}
                 name="free"
                 id="free"

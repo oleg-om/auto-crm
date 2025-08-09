@@ -4,14 +4,14 @@ const RequestPassword = ({ state, onChange }) => {
   return (
     <div className="md:w-1/2 px-3 mb-6 md:mb-0 flex flex-col">
       <label
-        className="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2"
+        className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
         htmlFor="grid-first-name"
       >
         Запрашивать пароль на странице Отчет
       </label>
       <div className="flex-shrink w-full inline-block relative mb-3">
         <select
-          className="appearance-none block w-full bg-grey-lighter text-grey-darker border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-3 px-4 mb-3"
+          className="appearance-none block w-full bg-gray-100 text-gray-700 border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-3 px-4 mb-3"
           value={state.requestPasswordForReport}
           name="requestPasswordForReport"
           id="requestPasswordForReport"

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { useHistory } from 'react-router-dom'
 import { useSelector, useDispatch } from 'react-redux'
-import NumberFormat from 'react-number-format'
+import { NumericFormat as NumberFormat } from 'react-number-format'
 import { toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
 import timeList from '../../lists/time-list'
@@ -13,7 +13,6 @@ const RazvalCreate = (props) => {
   const list = useSelector((s) => s.places.list)
   const employeeList = useSelector((s) => s.employees.list)
   const auth = useSelector((s) => s.auth)
-  toast.configure()
   const notify = (arg) => {
     toast.info(arg, { position: toast.POSITION.BOTTOM_RIGHT })
   }
@@ -121,14 +120,14 @@ const RazvalCreate = (props) => {
         <div className="-mx-3 md:flex flex-wrap">
           <div className="md:w-1/4 px-3 mb-6 md:mb-0 flex flex-col">
             <label
-              className="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2"
+              className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
               htmlFor="grid-first-name"
             >
               Принял заказ
             </label>
             <div className="flex-shrink w-full inline-block relative mb-3">
               <select
-                className="appearance-none block w-full bg-grey-lighter text-grey-darker border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-3 px-4 mb-3"
+                className="appearance-none block w-full bg-gray-100 text-gray-700 border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-3 px-4 mb-3"
                 value={state.employee}
                 name="employee"
                 id="employee"
@@ -160,14 +159,14 @@ const RazvalCreate = (props) => {
           </div>
           <div className="md:w-1/4 px-3 mb-6 md:mb-0 flex flex-col">
             <label
-              className="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2"
+              className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
               htmlFor="grid-first-name"
             >
               Куда записать?
             </label>
             <div className="flex-shrink w-full inline-block relative mb-3">
               <select
-                className="block appearance-none w-full bg-grey-lighter border border-gray-300 focus:border-gray-500 focus:outline-none py-3 px-4 pr-8 rounded"
+                className="block appearance-none w-full bg-gray-100 border border-gray-300 focus:border-gray-500 focus:outline-none py-3 px-4 pr-8 rounded"
                 value={state.place}
                 name="place"
                 id="place"
@@ -197,14 +196,14 @@ const RazvalCreate = (props) => {
           </div>
           <div className="md:w-1/4 px-3 mb-6 md:mb-0 flex flex-col">
             <label
-              className="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2"
+              className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
               htmlFor="grid-first-name"
             >
               Выберите услугу
             </label>
             <div className="flex-shrink w-full inline-block relative mb-3">
               <select
-                className="block appearance-none w-full bg-grey-lighter border border-gray-300 focus:border-gray-500 focus:outline-none py-3 px-4 pr-8 rounded"
+                className="block appearance-none w-full bg-gray-100 border border-gray-300 focus:border-gray-500 focus:outline-none py-3 px-4 pr-8 rounded"
                 value={type}
                 name="type"
                 id="type"
@@ -229,14 +228,14 @@ const RazvalCreate = (props) => {
           </div>
           <div className="md:w-1/4 px-3 mb-6 md:mb-0 flex flex-col">
             <label
-              className="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2"
+              className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
               htmlFor="grid-first-name"
             >
               Выберите дату
             </label>
             <div className="flex-shrink w-full inline-block relative mb-3">
               <input
-                className="block appearance-none w-full bg-grey-lighter border border-gray-300 focus:border-gray-500 focus:outline-none py-3 px-4 pr-8 rounded"
+                className="block appearance-none w-full bg-gray-100 border border-gray-300 focus:border-gray-500 focus:outline-none py-3 px-4 pr-8 rounded"
                 value={state.date}
                 name="date"
                 id="date"
@@ -247,14 +246,14 @@ const RazvalCreate = (props) => {
           </div>
           <div className="md:w-1/4 px-3 mb-6 md:mb-0 flex flex-col">
             <label
-              className="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2"
+              className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
               htmlFor="grid-first-name"
             >
               Выберите время
             </label>
             <div className="flex-shrink w-full inline-block relative mb-3">
               <select
-                className="block appearance-none w-full bg-grey-lighter border border-gray-300 focus:border-gray-500 focus:outline-none py-3 px-4 pr-8 rounded"
+                className="block appearance-none w-full bg-gray-100 border border-gray-300 focus:border-gray-500 focus:outline-none py-3 px-4 pr-8 rounded"
                 value={state.time}
                 name="time"
                 id="time"
@@ -280,14 +279,14 @@ const RazvalCreate = (props) => {
           </div>
           <div className="md:w-1/4 px-3 mb-6 md:mb-0 flex flex-col">
             <label
-              className="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2"
+              className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
               htmlFor="grid-first-name"
             >
               Номер телефона клиента
             </label>
             <div className="flex-shrink w-full inline-block relative mb-3">
               <NumberFormat
-                className="block appearance-none w-full bg-grey-lighter border border-gray-300 focus:border-gray-500 focus:outline-none py-3 px-4 pr-8 rounded"
+                className="block appearance-none w-full bg-gray-100 border border-gray-300 focus:border-gray-500 focus:outline-none py-3 px-4 pr-8 rounded"
                 format="+7 (###) ###-##-##"
                 mask="_"
                 name="phone"
@@ -299,13 +298,13 @@ const RazvalCreate = (props) => {
           </div>
           <div className="md:w-1/4 px-3 mb-6 md:mb-0 flex flex-col">
             <label
-              className="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2"
+              className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
               htmlFor="grid-first-name"
             >
               Марка авто
             </label>
             <input
-              className="appearance-none block w-full bg-grey-lighter text-grey-darker border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-3 px-4 mb-3"
+              className="appearance-none block w-full bg-gray-100 text-gray-700 border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-3 px-4 mb-3"
               value={state.mark}
               name="mark"
               list="mark_list"
@@ -323,13 +322,13 @@ const RazvalCreate = (props) => {
 
           <div className="md:w-1/4 px-3 mb-6 md:mb-0 flex flex-col">
             <label
-              className="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2"
+              className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
               htmlFor="grid-first-name"
             >
               Модель авто
             </label>
             <input
-              className="appearance-none block w-full bg-grey-lighter text-grey-darker border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-3 px-4 mb-3"
+              className="appearance-none block w-full bg-gray-100 text-gray-700 border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-3 px-4 mb-3"
               value={state.model}
               name="model"
               id="model"

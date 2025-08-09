@@ -56,7 +56,6 @@ const getEntryStyle = (item, activeAdress) => {
 }
 
 const ShinomontazhEntryRow = (props) => {
-  toast.configure()
   const notify = (arg) => {
     toast.info(arg, { position: toast.POSITION.BOTTOM_RIGHT })
   }
@@ -114,8 +113,8 @@ const ShinomontazhEntryRow = (props) => {
                 className={cx(
                   'flex lg:table-row flex-row lg:flex-row flex-wrap lg:flex-no-wrap mb-5 lg:mb-0',
                   {
-                    'bg-white lg:hover:bg-gray-100': timeNumberIs10(it),
-                    'bg-blue-100 lg:hover:bg-blue-200': timeNumberIs24(it)
+                    'bg-blue-100 lg:hover:bg-blue-200': timeNumberIs24(it),
+                    'bg-white lg:hover:bg-gray-100': timeNumberIs10(it) && !timeNumberIs24(it)
                   }
                 )}
               >
@@ -290,7 +289,7 @@ const ShinomontazhEntryRow = (props) => {
               className={cx(
                 'flex lg:table-row flex-row lg:flex-row flex-wrap lg:flex-no-wrap mb-5 lg:mb-0',
                 {
-                  'bg-white lg:hover:bg-gray-100': timeNumberIs10(it),
+                  'bg-white lg:hover:bg-gray-100': timeNumberIs10(it) && !timeNumberIs24(it),
                   'bg-blue-100 lg:hover:bg-blue-200': timeNumberIs24(it)
                 }
               )}

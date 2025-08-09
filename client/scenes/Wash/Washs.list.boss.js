@@ -51,7 +51,6 @@ const WashsListBoss = () => {
     navigateWithQueryParams(`/washboss/list/${pageNumber}`)
   }
 
-  toast.configure()
 
   const loadingComponent = () => {
     return (

@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react'
 import { useDispatch } from 'react-redux'
 import 'fix-date'
-import NumberFormat from 'react-number-format'
+import { NumericFormat as NumberFormat } from 'react-number-format'
 import { useReactToPrint } from 'react-to-print'
 import { toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
@@ -55,7 +55,6 @@ const ShinomontazhEntryCreate = ({
   activePost,
   preentryType
 }) => {
-  toast.configure()
   const notify = (arg) => {
     toast.info(arg, { position: toast.POSITION.BOTTOM_RIGHT })
   }
@@ -412,14 +411,14 @@ const ShinomontazhEntryCreate = ({
                   ) : null}
                   <div className="mt-3 flex flex-col">
                     <label
-                      className="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2"
+                      className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
                       htmlFor="phone"
                     >
                       Гос. номер
                     </label>
                     <div className="flex-shrink w-full inline-block relative">
                       <input
-                        className="block appearance-none w-full bg-grey-lighter border border-gray-300 focus:border-gray-500 focus:outline-none py-1 px-4 pr-8 rounded"
+                        className="block appearance-none w-full bg-gray-100 border border-gray-300 focus:border-gray-500 focus:outline-none py-1 px-4 pr-8 rounded"
                         type="text"
                         placeholder="Русскими буквами, необязательное поле"
                         value={state.regnumber}
@@ -432,13 +431,13 @@ const ShinomontazhEntryCreate = ({
 
                   <div className="mt-3 flex flex-col">
                     <label
-                      className="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2"
+                      className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
                       htmlFor="grid-first-name"
                     >
                       Марка авто
                     </label>
                     <input
-                      className="appearance-none block w-full bg-grey-lighter text-grey-darker border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-1 px-4"
+                      className="appearance-none block w-full bg-gray-100 text-gray-700 border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-1 px-4"
                       value={state.mark}
                       name="mark"
                       list="mark_list"
@@ -455,13 +454,13 @@ const ShinomontazhEntryCreate = ({
                   </div>
                   <div className="mt-3 flex flex-col">
                     <label
-                      className="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2"
+                      className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
                       htmlFor="grid-first-name"
                     >
                       Модель авто
                     </label>
                     <input
-                      className="appearance-none block w-full bg-grey-lighter text-grey-darker border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-1 px-4"
+                      className="appearance-none block w-full bg-gray-100 text-gray-700 border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-1 px-4"
                       value={state.model}
                       name="model"
                       id="model"
@@ -484,14 +483,14 @@ const ShinomontazhEntryCreate = ({
                   </div>
                   <div className="mt-3 flex flex-col">
                     <label
-                      className="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2"
+                      className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
                       htmlFor="phone"
                     >
                       Телефон
                     </label>
                     <div className="flex-shrink w-full inline-block relative">
                       <NumberFormat
-                        className="block appearance-none w-full bg-grey-lighter border border-gray-300 focus:border-gray-500 focus:outline-none py-1 px-4 pr-8 rounded"
+                        className="block appearance-none w-full bg-gray-100 border border-gray-300 focus:border-gray-500 focus:outline-none py-1 px-4 pr-8 rounded"
                         format="+7 (###) ###-##-##"
                         mask="_"
                         name="phone"
@@ -503,14 +502,14 @@ const ShinomontazhEntryCreate = ({
                   </div>
                   <div className="mt-3 flex flex-col">
                     <label
-                      className="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2"
+                      className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
                       htmlFor="phone"
                     >
                       Имя
                     </label>
                     <div className="flex-shrink w-full inline-block relative">
                       <input
-                        className="block appearance-none w-full bg-grey-lighter border border-gray-300 focus:border-gray-500 focus:outline-none py-1 px-4 pr-8 rounded"
+                        className="block appearance-none w-full bg-gray-100 border border-gray-300 focus:border-gray-500 focus:outline-none py-1 px-4 pr-8 rounded"
                         type="text"
                         name="name"
                         id="name"
@@ -523,14 +522,14 @@ const ShinomontazhEntryCreate = ({
                   {isShinomontazh ? (
                     <div className="mt-3 flex flex-col">
                       <label
-                        className="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2"
+                        className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
                         htmlFor="phone"
                       >
                         Хранение, №
                       </label>
                       <div className="flex-shrink w-full inline-block relative">
                         <input
-                          className="block appearance-none w-full bg-grey-lighter border border-gray-300 focus:border-gray-500 focus:outline-none py-1 px-4 pr-8 rounded"
+                          className="block appearance-none w-full bg-gray-100 border border-gray-300 focus:border-gray-500 focus:outline-none py-1 px-4 pr-8 rounded"
                           type="number"
                           name="storage"
                           id="storage"
@@ -564,14 +563,14 @@ const ShinomontazhEntryCreate = ({
                   {isShinomontazh ? (
                     <div className="mt-3 flex flex-col">
                       <label
-                        className="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2"
+                        className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
                         htmlFor="comment"
                       >
                         Комментарий
                       </label>
                       <div className="flex-shrink w-full inline-block relative">
                         <input
-                          className="block appearance-none w-full bg-grey-lighter border border-gray-300 focus:border-gray-500 focus:outline-none py-1 px-4 pr-8 rounded"
+                          className="block appearance-none w-full bg-gray-100 border border-gray-300 focus:border-gray-500 focus:outline-none py-1 px-4 pr-8 rounded"
                           type="text"
                           name="comment"
                           id="comment"
@@ -586,14 +585,14 @@ const ShinomontazhEntryCreate = ({
                     <div className="mt-4 flex flex-row">
                       <div className="w-full lg:w-auto p-2 text-xs text-gray-800 text-center border border-b block table-cell relative static">
                         <label
-                          className="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2"
+                          className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
                           htmlFor="search"
                         >
                           Найден клиент
                         </label>
                         <div className="flex-shrink w-full inline-block relative">
                           <select
-                            className="block appearance-none w-full bg-grey-lighter border border-gray-300 focus:border-gray-500 focus:outline-none py-1 px-4 pr-8 rounded"
+                            className="block appearance-none w-full bg-gray-100 border border-gray-300 focus:border-gray-500 focus:outline-none py-1 px-4 pr-8 rounded"
                             value={search}
                             name="search"
                             id="searchBlock"

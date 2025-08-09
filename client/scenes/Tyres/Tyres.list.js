@@ -49,7 +49,6 @@ const TyresList = () => {
     navigateWithQueryParams(`/tyres/order/list/${pageNumber}`)
   }
 
-  toast.configure()
 
   // useEffect(() => {
   //   if (showSearch === false && currentPosts.length === 0 && loading === true) {

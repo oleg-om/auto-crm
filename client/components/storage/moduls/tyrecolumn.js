@@ -12,7 +12,7 @@ const TyreColumn = ({ inputField, handleChangeInput, index }) => {
       {inputField.mode === 'simple' ? (
         <div className="w-full">
           <input
-            className="appearance-none w-full block bg-grey-lighter text-grey-darker border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-1 px-4"
+            className="appearance-none w-full block bg-gray-100 text-gray-700 border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-1 px-4"
             type="text"
             placeholder="Например: Зимние шины в размере 205/55 R16"
             name="tyreItem"
@@ -27,13 +27,13 @@ const TyreColumn = ({ inputField, handleChangeInput, index }) => {
             <div className="flex flex-row">
               <div className="mr-2 w-1/2">
                 <label
-                  className="block uppercase tracking-wide text-grey-darker text-xs text-left font-bold mb-2"
+                  className="block uppercase tracking-wide text-gray-700 text-xs text-left font-bold mb-2"
                   htmlFor="grid-first-name"
                 >
                   Бренд
                 </label>
                 <input
-                  className="appearance-none w-full block bg-grey-lighter text-grey-darker border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-1 px-4"
+                  className="appearance-none w-full block bg-gray-100 text-gray-700 border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-1 px-4"
                   type="text"
                   placeholder="Например: Nokian"
                   name="brand"
@@ -62,13 +62,13 @@ const TyreColumn = ({ inputField, handleChangeInput, index }) => {
               </div>
               <div className="mr-2 w-1/2">
                 <label
-                  className="block uppercase tracking-wide text-grey-darker text-xs text-left font-bold mb-2"
+                  className="block uppercase tracking-wide text-gray-700 text-xs text-left font-bold mb-2"
                   htmlFor="grid-first-name"
                 >
                   Модель
                 </label>
                 <input
-                  className="appearance-none w-full block bg-grey-lighter text-grey-darker border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-1 px-4"
+                  className="appearance-none w-full block bg-gray-100 text-gray-700 border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-1 px-4"
                   type="text"
                   placeholder="Например: Nordman"
                   name="model"
@@ -100,13 +100,13 @@ const TyreColumn = ({ inputField, handleChangeInput, index }) => {
             <div className="flex flex-row mt-2">
               <div className="mr-2 w-1/4">
                 <label
-                  className="block uppercase tracking-wide text-grey-darker text-xs text-left font-bold mb-2"
+                  className="block uppercase tracking-wide text-gray-700 text-xs text-left font-bold mb-2"
                   htmlFor="grid-first-name"
                 >
                   Ширина
                 </label>
                 <input
-                  className="w-full appearance-none block bg-grey-lighter text-grey-darker border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-1 px-4"
+                  className="w-full appearance-none block bg-gray-100 text-gray-700 border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-1 px-4"
                   type="number"
                   name="sizeone"
                   list="sizeone_list"
@@ -122,13 +122,13 @@ const TyreColumn = ({ inputField, handleChangeInput, index }) => {
               </div>
               <div className="mr-2 w-1/4">
                 <label
-                  className="block uppercase tracking-wide text-grey-darker text-xs text-left font-bold mb-2"
+                  className="block uppercase tracking-wide text-gray-700 text-xs text-left font-bold mb-2"
                   htmlFor="grid-first-name"
                 >
                   Высота
                 </label>
                 <input
-                  className="w-full appearance-none block bg-grey-lighter text-grey-darker border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-1 px-4"
+                  className="w-full appearance-none block bg-gray-100 text-gray-700 border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-1 px-4"
                   type="number"
                   name="sizetwo"
                   list="sizetwo_list"
@@ -144,13 +144,13 @@ const TyreColumn = ({ inputField, handleChangeInput, index }) => {
               </div>
               <div className="mr-2 w-1/4">
                 <label
-                  className="block uppercase tracking-wide text-grey-darker text-xs text-left font-bold mb-2"
+                  className="block uppercase tracking-wide text-gray-700 text-xs text-left font-bold mb-2"
                   htmlFor="grid-first-name"
                 >
                   Диаметр
                 </label>
                 <input
-                  className="w-full appearance-none block bg-grey-lighter text-grey-darker border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-1 px-4"
+                  className="w-full appearance-none block bg-gray-100 text-gray-700 border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-1 px-4"
                   type="text"
                   name="sizethree"
                   list="sizethree_list"
@@ -166,14 +166,14 @@ const TyreColumn = ({ inputField, handleChangeInput, index }) => {
               </div>
               <div className="mr-2 w-1/4">
                 <label
-                  className="block uppercase tracking-wide text-grey-darker text-xs text-left font-bold mb-2"
+                  className="block uppercase tracking-wide text-gray-700 text-xs text-left font-bold mb-2"
                   htmlFor="grid-first-name"
                 >
                   Шипы
                 </label>
                 <div className="inline-block relative w-full">
                   <select
-                    className="appearance-none w-full block bg-grey-lighter text-grey-darker border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-1 px-4"
+                    className="appearance-none w-full block bg-gray-100 text-gray-700 border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-1 px-4"
                     name="stus"
                     list="autoparts_list"
                     value={inputField.stud}
@@ -201,13 +201,13 @@ const TyreColumn = ({ inputField, handleChangeInput, index }) => {
             <div className="flex flex-row mt-2">
               <div className="mr-2 w-1/4">
                 <label
-                  className="block uppercase tracking-wide text-grey-darker text-xs text-left font-bold mb-2"
+                  className="block uppercase tracking-wide text-gray-700 text-xs text-left font-bold mb-2"
                   htmlFor="grid-first-name"
                 >
                   Ин. нагрузки
                 </label>
                 <input
-                  className="w-full appearance-none block bg-grey-lighter text-grey-darker border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-1 px-4"
+                  className="w-full appearance-none block bg-gray-100 text-gray-700 border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-1 px-4"
                   type="text"
                   name="indexone"
                   list="indexone_list"
@@ -223,13 +223,13 @@ const TyreColumn = ({ inputField, handleChangeInput, index }) => {
               </div>
               <div className="mr-2 w-1/4">
                 <label
-                  className="block uppercase tracking-wide text-grey-darker text-xs text-left font-bold mb-2"
+                  className="block uppercase tracking-wide text-gray-700 text-xs text-left font-bold mb-2"
                   htmlFor="grid-first-name"
                 >
                   Ин. скорости
                 </label>
                 <input
-                  className="w-full appearance-none block bg-grey-lighter text-grey-darker border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-1 px-4"
+                  className="w-full appearance-none block bg-gray-100 text-gray-700 border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-1 px-4"
                   type="text"
                   name="indextwo"
                   list="indextwo_list"
@@ -245,14 +245,14 @@ const TyreColumn = ({ inputField, handleChangeInput, index }) => {
               </div>
               <div className="mr-2 w-1/4">
                 <label
-                  className="block uppercase tracking-wide text-grey-darker text-xs text-left font-bold mb-2"
+                  className="block uppercase tracking-wide text-gray-700 text-xs text-left font-bold mb-2"
                   htmlFor="grid-first-name"
                 >
                   Сезон
                 </label>
                 <div className="inline-block relative w-full">
                   <select
-                    className="appearance-none w-full block bg-grey-lighter text-grey-darker border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-1 px-4"
+                    className="appearance-none w-full block bg-gray-100 text-gray-700 border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-1 px-4"
                     name="season"
                     list="autoparts_list"
                     value={inputField.season}
@@ -284,14 +284,14 @@ const TyreColumn = ({ inputField, handleChangeInput, index }) => {
               </div>
               <div className="mr-2 w-1/4">
                 <label
-                  className="block uppercase tracking-wide text-grey-darker text-xs text-left font-bold mb-2"
+                  className="block uppercase tracking-wide text-gray-700 text-xs text-left font-bold mb-2"
                   htmlFor="grid-first-name"
                 >
                   С дисками
                 </label>
                 <div className="inline-block relative w-full">
                   <select
-                    className="appearance-none w-full block bg-grey-lighter text-grey-darker border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-1 px-4"
+                    className="appearance-none w-full block bg-gray-100 text-gray-700 border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-1 px-4"
                     name="wheels"
                     value={inputField.wheels}
                     onChange={(event) => handleChangeInput(index, event)}
@@ -322,14 +322,14 @@ const TyreColumn = ({ inputField, handleChangeInput, index }) => {
               <div className="flex flex-row mt-2">
                 <div className="mr-2 w-1/4">
                   <label
-                    className="block uppercase tracking-wide text-grey-darker text-xs text-left font-bold mb-2"
+                    className="block uppercase tracking-wide text-gray-700 text-xs text-left font-bold mb-2"
                     htmlFor="grid-first-name"
                   >
                     Тип дисков
                   </label>
                   <div className="inline-block relative w-full">
                     <select
-                      className="w-full appearance-none block bg-grey-lighter text-grey-darker border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-1 px-4"
+                      className="w-full appearance-none block bg-gray-100 text-gray-700 border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-1 px-4"
                       type="text"
                       name="wheeltype"
                       value={inputField.wheeltype}
@@ -359,14 +359,14 @@ const TyreColumn = ({ inputField, handleChangeInput, index }) => {
                 </div>
                 <div className="mr-2 w-1/4">
                   <label
-                    className="block uppercase tracking-wide text-grey-darker text-xs text-left font-bold mb-2"
+                    className="block uppercase tracking-wide text-gray-700 text-xs text-left font-bold mb-2"
                     htmlFor="grid-first-name"
                   >
                     Колпачки
                   </label>
                   <div className="inline-block relative w-full">
                     <select
-                      className="w-full appearance-none block bg-grey-lighter text-grey-darker border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-1 px-4"
+                      className="w-full appearance-none block bg-gray-100 text-gray-700 border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-1 px-4"
                       type="text"
                       name="kolp"
                       value={inputField.kolp}
@@ -396,13 +396,13 @@ const TyreColumn = ({ inputField, handleChangeInput, index }) => {
                 </div>
                 <div className="mr-2 w-1/4">
                   <label
-                    className="block uppercase tracking-wide text-grey-darker text-xs text-left font-bold mb-2"
+                    className="block uppercase tracking-wide text-gray-700 text-xs text-left font-bold mb-2"
                     htmlFor="grid-first-name"
                   >
                     Кол-во дисков
                   </label>
                   <input
-                    className="appearance-none w-full block bg-grey-lighter text-grey-darker border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-1 px-4"
+                    className="appearance-none w-full block bg-gray-100 text-gray-700 border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-1 px-4"
                     name="wheelsquan"
                     type="number"
                     value={inputField.wheelsquan}

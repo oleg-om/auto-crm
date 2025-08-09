@@ -20,7 +20,6 @@ import cond from '../assets/images/Dashboard/cond.png'
 import tyresmountpreentry from '../assets/images/Dashboard/tyrepremount.png'
 
 const Dashboard = () => {
-  toast.configure()
   const notify = (arg) => {
     toast.info(arg, { position: toast.POSITION.BOTTOM_RIGHT })
   }

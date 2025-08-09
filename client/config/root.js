@@ -4,6 +4,8 @@ import PropTypes from 'prop-types'
 import { Provider, useSelector } from 'react-redux'
 import { ConnectedRouter } from 'connected-react-router'
 import { Switch, Route, Redirect, StaticRouter } from 'react-router-dom'
+import { ToastContainer } from 'react-toastify'
+import 'react-toastify/dist/ReactToastify.css'
 
 import store, { history } from '../redux'
 
@@ -384,6 +386,17 @@ const RootComponent = (props) => {
 
             <Route component={() => <NotFound />} />
           </Switch>
+          <ToastContainer
+            position="bottom-right"
+            autoClose={5000}
+            hideProgressBar={false}
+            newestOnTop={false}
+            closeOnClick
+            rtl={false}
+            pauseOnFocusLoss
+            draggable
+            pauseOnHover
+          />
         </Startup>
       </RouterSelector>
     </Provider>

@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { toast } from 'react-toastify'
-import NumberFormat from 'react-number-format'
+import { NumericFormat as NumberFormat } from 'react-number-format'
 import 'react-toastify/dist/ReactToastify.css'
 
 const SettingUpdate = (props) => {
@@ -8,7 +8,6 @@ const SettingUpdate = (props) => {
     helpphone: props.helpphone,
     lastKerchshina: props.lastKerchshina
   })
-  toast.configure()
   const notify = (arg) => {
     toast.info(arg, { position: toast.POSITION.BOTTOM_RIGHT })
   }
@@ -30,7 +29,7 @@ const SettingUpdate = (props) => {
         <div className="-mx-3 md:flex">
           <div className="md:w-full px-3 mb-6 md:mb-0">
             <label
-              className="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2"
+              className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
               htmlFor="grid-first-name"
             >
               Телефон поддержки автозапчастей
@@ -38,7 +37,7 @@ const SettingUpdate = (props) => {
             <NumberFormat
               format="+7 (###) ###-##-##"
               mask="_"
-              className="appearance-none block w-full bg-grey-lighter text-grey-darker border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-3 px-4 mb-3"
+              className="appearance-none block w-full bg-gray-100 text-gray-700 border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-3 px-4 mb-3"
               type="text"
               placeholder="Автозапчасти - номер поддержки"
               value={state.helpphone}
@@ -49,13 +48,13 @@ const SettingUpdate = (props) => {
           </div>
           <div className="md:w-full px-3 mb-6 md:mb-0">
             <label
-              className="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2"
+              className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
               htmlFor="grid-first-name"
             >
               Начиная с какого номера грузить заказы по шинам?
             </label>
             <input
-              className="appearance-none block w-full bg-grey-lighter text-grey-darker border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-3 px-4 mb-3"
+              className="appearance-none block w-full bg-gray-100 text-gray-700 border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-3 px-4 mb-3"
               type="number"
               placeholder="Введите номер"
               value={state.lastKerchshina}

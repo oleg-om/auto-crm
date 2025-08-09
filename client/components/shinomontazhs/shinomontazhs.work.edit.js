@@ -22,7 +22,6 @@ import { GroupSwitch, useGroup } from '../../hooks/useGroup'
 import EmployeeTab from '../common/employeeTab'
 
 const ShinomontazhsEdit = (props) => {
-  toast.configure()
   const notify = (arg) => {
     toast.info(arg, { position: toast.POSITION.BOTTOM_RIGHT })
   }
@@ -489,7 +488,7 @@ const ShinomontazhsEdit = (props) => {
         payment: state.payment,
         services: service,
         material: materials,
-        tyre: [...tyres],
+        tyre: [tyres],
         employee: employees,
         dateStart: props?.dateStart ? props.dateStart : new Date(),
         status: props.status === 'Новая запись' ? 'В работе' : props.status,
@@ -532,7 +531,7 @@ const ShinomontazhsEdit = (props) => {
         payment: state.payment,
         services: service,
         material: materials,
-        tyre: [...tyres],
+        tyre: [tyres],
         employee: employees,
         dateStart: props.dateStart ? props.dateStart : new Date(),
         ...dateFinishObj,
@@ -639,7 +638,7 @@ const ShinomontazhsEdit = (props) => {
         // ...state,
         // services: service,
         // material: materials,
-        // tyre: [...tyres],
+        // tyre: [tyres],
         // employee: employees,
         discount: state.discount,
         payment: state.payment,
@@ -752,7 +751,7 @@ const ShinomontazhsEdit = (props) => {
       ...state,
       services: service,
       material: materials,
-      tyre: [...tyres],
+      tyre: [tyres],
       employee: employees,
       totalSumWithoutMaterials,
       totalMaterial,
@@ -768,7 +767,7 @@ const ShinomontazhsEdit = (props) => {
       ...state,
       services: service,
       material: materials,
-      tyre: [...tyres],
+      tyre: [tyres],
       employee: employees,
       totalSumWithoutMaterials,
       totalMaterial,

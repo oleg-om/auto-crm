@@ -7,7 +7,6 @@ import ShinomontazhCategoryList from '../../lists/shinomontazhprice-list'
 import SubmitButtons from '../shared/buttons/OrderSubmitButtons'
 
 const ShinomontazhpriceCreate = (props) => {
-  toast.configure()
   const notify = (arg) => {
     toast.info(arg, { position: toast.POSITION.BOTTOM_RIGHT })
   }
@@ -84,13 +83,13 @@ const ShinomontazhpriceCreate = (props) => {
         <div className="-mx-3 md:flex flex-wrap">
           <div className="md:w-1/3 px-3 mb-6 md:mb-0 flex flex-col">
             <label
-              className="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2"
+              className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
               htmlFor="grid-first-name"
             >
               Название услуги
             </label>
             <input
-              className="appearance-none block w-full bg-grey-lighter text-grey-darker border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-3 px-4 mb-3"
+              className="appearance-none block w-full bg-gray-100 text-gray-700 border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-3 px-4 mb-3"
               value={state.name}
               name="name"
               id="name"
@@ -101,14 +100,14 @@ const ShinomontazhpriceCreate = (props) => {
           </div>
           <div className="md:w-1/3 px-3 mb-6 md:mb-0 flex flex-col">
             <label
-              className="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2"
+              className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
               htmlFor="grid-first-name"
             >
               Направление
             </label>
             <div className="flex-shrink w-full inline-block relative mb-3">
               <select
-                className="appearance-none block w-full bg-grey-lighter text-grey-darker border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-3 px-4 mb-3"
+                className="appearance-none block w-full bg-gray-100 text-gray-700 border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-3 px-4 mb-3"
                 value={state.type}
                 name="type"
                 id="type"
@@ -137,7 +136,7 @@ const ShinomontazhpriceCreate = (props) => {
           </div>
           <div className="md:w-1/3 px-3 mb-6 md:mb-0 flex flex-col">
             <label
-              className="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2"
+              className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
               htmlFor="grid-first-name"
             >
               Категория
@@ -145,7 +144,7 @@ const ShinomontazhpriceCreate = (props) => {
             <div className="flex-shrink w-full inline-block relative mb-3">
               {state.type !== 'gruz' && state.type !== 'selhoz' ? (
                 <select
-                  className="appearance-none block w-full bg-grey-lighter text-grey-darker border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-3 px-4 mb-3"
+                  className="appearance-none block w-full bg-gray-100 text-gray-700 border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-3 px-4 mb-3"
                   value={state.category}
                   name="category"
                   id="category"
@@ -163,7 +162,7 @@ const ShinomontazhpriceCreate = (props) => {
                 </select>
               ) : (
                 <select
-                  className="appearance-none block w-full bg-grey-lighter text-grey-darker border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-3 px-4 mb-3"
+                  className="appearance-none block w-full bg-gray-100 text-gray-700 border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-3 px-4 mb-3"
                   value={state.category}
                   name="category"
                   id="category"
@@ -192,7 +191,7 @@ const ShinomontazhpriceCreate = (props) => {
           </div>
         </div>
         <label
-          className="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2"
+          className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
           htmlFor="grid-first-name"
         >
           Цены:
@@ -203,13 +202,13 @@ const ShinomontazhpriceCreate = (props) => {
           <div className="-mx-3 md:flex flex-wrap mt-3">
             <div className="md:w-1/5 px-3 mb-6 md:mb-0 flex flex-col">
               <label
-                className="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2"
+                className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
                 htmlFor="grid-first-name"
               >
                 R13
               </label>
               <input
-                className="appearance-none block w-full bg-grey-lighter text-grey-darker border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-3 px-4 mb-3"
+                className="appearance-none block w-full bg-gray-100 text-gray-700 border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-3 px-4 mb-3"
                 value={state.R13}
                 name="R13"
                 id="R13"
@@ -220,13 +219,13 @@ const ShinomontazhpriceCreate = (props) => {
             </div>
             <div className="md:w-1/5 px-3 mb-6 md:mb-0 flex flex-col">
               <label
-                className="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2"
+                className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
                 htmlFor="grid-first-name"
               >
                 R14
               </label>
               <input
-                className="appearance-none block w-full bg-grey-lighter text-grey-darker border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-3 px-4 mb-3"
+                className="appearance-none block w-full bg-gray-100 text-gray-700 border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-3 px-4 mb-3"
                 value={state.R14}
                 name="R14"
                 id="R14"
@@ -237,13 +236,13 @@ const ShinomontazhpriceCreate = (props) => {
             </div>
             <div className="md:w-1/5 px-3 mb-6 md:mb-0 flex flex-col">
               <label
-                className="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2"
+                className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
                 htmlFor="grid-first-name"
               >
                 R15
               </label>
               <input
-                className="appearance-none block w-full bg-grey-lighter text-grey-darker border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-3 px-4 mb-3"
+                className="appearance-none block w-full bg-gray-100 text-gray-700 border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-3 px-4 mb-3"
                 value={state.R15}
                 name="R15"
                 id="R15"
@@ -254,13 +253,13 @@ const ShinomontazhpriceCreate = (props) => {
             </div>
             <div className="md:w-1/5 px-3 mb-6 md:mb-0 flex flex-col">
               <label
-                className="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2"
+                className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
                 htmlFor="grid-first-name"
               >
                 R16
               </label>
               <input
-                className="appearance-none block w-full bg-grey-lighter text-grey-darker border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-3 px-4 mb-3"
+                className="appearance-none block w-full bg-gray-100 text-gray-700 border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-3 px-4 mb-3"
                 value={state.R16}
                 name="R16"
                 id="R16"
@@ -271,13 +270,13 @@ const ShinomontazhpriceCreate = (props) => {
             </div>
             <div className="md:w-1/5 px-3 mb-6 md:mb-0 flex flex-col">
               <label
-                className="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2"
+                className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
                 htmlFor="grid-first-name"
               >
                 R17
               </label>
               <input
-                className="appearance-none block w-full bg-grey-lighter text-grey-darker border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-3 px-4 mb-3"
+                className="appearance-none block w-full bg-gray-100 text-gray-700 border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-3 px-4 mb-3"
                 value={state.R17}
                 name="R17"
                 id="R17"
@@ -288,13 +287,13 @@ const ShinomontazhpriceCreate = (props) => {
             </div>
             <div className="md:w-1/5 px-3 mb-6 md:mb-0 flex flex-col">
               <label
-                className="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2"
+                className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
                 htmlFor="grid-first-name"
               >
                 R18
               </label>
               <input
-                className="appearance-none block w-full bg-grey-lighter text-grey-darker border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-3 px-4 mb-3"
+                className="appearance-none block w-full bg-gray-100 text-gray-700 border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-3 px-4 mb-3"
                 value={state.R18}
                 name="R18"
                 id="R18"
@@ -305,13 +304,13 @@ const ShinomontazhpriceCreate = (props) => {
             </div>
             <div className="md:w-1/5 px-3 mb-6 md:mb-0 flex flex-col">
               <label
-                className="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2"
+                className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
                 htmlFor="grid-first-name"
               >
                 R19
               </label>
               <input
-                className="appearance-none block w-full bg-grey-lighter text-grey-darker border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-3 px-4 mb-3"
+                className="appearance-none block w-full bg-gray-100 text-gray-700 border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-3 px-4 mb-3"
                 value={state.R19}
                 name="R19"
                 id="R19"
@@ -322,13 +321,13 @@ const ShinomontazhpriceCreate = (props) => {
             </div>
             <div className="md:w-1/5 px-3 mb-6 md:mb-0 flex flex-col">
               <label
-                className="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2"
+                className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
                 htmlFor="grid-first-name"
               >
                 R20
               </label>
               <input
-                className="appearance-none block w-full bg-grey-lighter text-grey-darker border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-3 px-4 mb-3"
+                className="appearance-none block w-full bg-gray-100 text-gray-700 border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-3 px-4 mb-3"
                 value={state.R20}
                 name="R20"
                 id="R20"
@@ -339,13 +338,13 @@ const ShinomontazhpriceCreate = (props) => {
             </div>
             <div className="md:w-1/5 px-3 mb-6 md:mb-0 flex flex-col">
               <label
-                className="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2"
+                className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
                 htmlFor="grid-first-name"
               >
                 R21
               </label>
               <input
-                className="appearance-none block w-full bg-grey-lighter text-grey-darker border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-3 px-4 mb-3"
+                className="appearance-none block w-full bg-gray-100 text-gray-700 border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-3 px-4 mb-3"
                 value={state.R21}
                 name="R21"
                 id="R21"
@@ -356,13 +355,13 @@ const ShinomontazhpriceCreate = (props) => {
             </div>
             <div className="md:w-1/5 px-3 mb-6 md:mb-0 flex flex-col">
               <label
-                className="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2"
+                className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
                 htmlFor="grid-first-name"
               >
                 R22
               </label>
               <input
-                className="appearance-none block w-full bg-grey-lighter text-grey-darker border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-3 px-4 mb-3"
+                className="appearance-none block w-full bg-gray-100 text-gray-700 border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-3 px-4 mb-3"
                 value={state.R22}
                 name="R22"
                 id="R22"
@@ -373,13 +372,13 @@ const ShinomontazhpriceCreate = (props) => {
             </div>
             <div className="md:w-1/5 px-3 mb-6 md:mb-0 flex flex-col">
               <label
-                className="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2"
+                className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
                 htmlFor="grid-first-name"
               >
                 R23
               </label>
               <input
-                className="appearance-none block w-full bg-grey-lighter text-grey-darker border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-3 px-4 mb-3"
+                className="appearance-none block w-full bg-gray-100 text-gray-700 border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-3 px-4 mb-3"
                 value={state.R23}
                 name="R23"
                 id="R23"
@@ -390,13 +389,13 @@ const ShinomontazhpriceCreate = (props) => {
             </div>
             <div className="md:w-1/5 px-3 mb-6 md:mb-0 flex flex-col">
               <label
-                className="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2"
+                className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
                 htmlFor="grid-first-name"
               >
                 R24
               </label>
               <input
-                className="appearance-none block w-full bg-grey-lighter text-grey-darker border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-3 px-4 mb-3"
+                className="appearance-none block w-full bg-gray-100 text-gray-700 border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-3 px-4 mb-3"
                 value={state.R24}
                 name="R24"
                 id="R24"
@@ -411,13 +410,13 @@ const ShinomontazhpriceCreate = (props) => {
           <div className="-mx-3 md:flex flex-wrap mt-3">
             <div className="md:w-1/5 px-3 mb-6 md:mb-0 flex flex-col">
               <label
-                className="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2"
+                className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
                 htmlFor="grid-first-name"
               >
                 R13C
               </label>
               <input
-                className="appearance-none block w-full bg-grey-lighter text-grey-darker border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-3 px-4 mb-3"
+                className="appearance-none block w-full bg-gray-100 text-gray-700 border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-3 px-4 mb-3"
                 value={state.R13C}
                 name="R13C"
                 id="R13C"
@@ -428,13 +427,13 @@ const ShinomontazhpriceCreate = (props) => {
             </div>
             <div className="md:w-1/5 px-3 mb-6 md:mb-0 flex flex-col">
               <label
-                className="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2"
+                className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
                 htmlFor="grid-first-name"
               >
                 R14C
               </label>
               <input
-                className="appearance-none block w-full bg-grey-lighter text-grey-darker border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-3 px-4 mb-3"
+                className="appearance-none block w-full bg-gray-100 text-gray-700 border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-3 px-4 mb-3"
                 value={state.R14C}
                 name="R14C"
                 id="R14C"
@@ -445,13 +444,13 @@ const ShinomontazhpriceCreate = (props) => {
             </div>
             <div className="md:w-1/5 px-3 mb-6 md:mb-0 flex flex-col">
               <label
-                className="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2"
+                className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
                 htmlFor="grid-first-name"
               >
                 R15C
               </label>
               <input
-                className="appearance-none block w-full bg-grey-lighter text-grey-darker border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-3 px-4 mb-3"
+                className="appearance-none block w-full bg-gray-100 text-gray-700 border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-3 px-4 mb-3"
                 value={state.R15C}
                 name="R15C"
                 id="R15C"
@@ -462,13 +461,13 @@ const ShinomontazhpriceCreate = (props) => {
             </div>
             <div className="md:w-1/5 px-3 mb-6 md:mb-0 flex flex-col">
               <label
-                className="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2"
+                className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
                 htmlFor="grid-first-name"
               >
                 R16С
               </label>
               <input
-                className="appearance-none block w-full bg-grey-lighter text-grey-darker border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-3 px-4 mb-3"
+                className="appearance-none block w-full bg-gray-100 text-gray-700 border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-3 px-4 mb-3"
                 value={state.R16C}
                 name="R16C"
                 id="R16C"
@@ -479,13 +478,13 @@ const ShinomontazhpriceCreate = (props) => {
             </div>
             <div className="md:w-1/5 px-3 mb-6 md:mb-0 flex flex-col">
               <label
-                className="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2"
+                className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
                 htmlFor="grid-first-name"
               >
                 R17С
               </label>
               <input
-                className="appearance-none block w-full bg-grey-lighter text-grey-darker border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-3 px-4 mb-3"
+                className="appearance-none block w-full bg-gray-100 text-gray-700 border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-3 px-4 mb-3"
                 value={state.R17C}
                 name="R17C"
                 id="R17C"
@@ -496,13 +495,13 @@ const ShinomontazhpriceCreate = (props) => {
             </div>
             <div className="md:w-1/5 px-3 mb-6 md:mb-0 flex flex-col">
               <label
-                className="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2"
+                className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
                 htmlFor="grid-first-name"
               >
                 R17,5
               </label>
               <input
-                className="appearance-none block w-full bg-grey-lighter text-grey-darker border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-3 px-4 mb-3"
+                className="appearance-none block w-full bg-gray-100 text-gray-700 border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-3 px-4 mb-3"
                 value={state.R175}
                 name="R175"
                 id="R175"
@@ -513,13 +512,13 @@ const ShinomontazhpriceCreate = (props) => {
             </div>
             <div className="md:w-1/5 px-3 mb-6 md:mb-0 flex flex-col">
               <label
-                className="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2"
+                className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
                 htmlFor="grid-first-name"
               >
                 R19,5
               </label>
               <input
-                className="appearance-none block w-full bg-grey-lighter text-grey-darker border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-3 px-4 mb-3"
+                className="appearance-none block w-full bg-gray-100 text-gray-700 border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-3 px-4 mb-3"
                 value={state.R195}
                 name="R195"
                 id="R195"
@@ -530,13 +529,13 @@ const ShinomontazhpriceCreate = (props) => {
             </div>
             <div className="md:w-1/5 px-3 mb-6 md:mb-0 flex flex-col">
               <label
-                className="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2"
+                className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
                 htmlFor="grid-first-name"
               >
                 R20
               </label>
               <input
-                className="appearance-none block w-full bg-grey-lighter text-grey-darker border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-3 px-4 mb-3"
+                className="appearance-none block w-full bg-gray-100 text-gray-700 border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-3 px-4 mb-3"
                 value={state.R20}
                 name="R20"
                 id="R20"
@@ -547,13 +546,13 @@ const ShinomontazhpriceCreate = (props) => {
             </div>
             <div className="md:w-1/5 px-3 mb-6 md:mb-0 flex flex-col">
               <label
-                className="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2"
+                className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
                 htmlFor="grid-first-name"
               >
                 R20-240
               </label>
               <input
-                className="appearance-none block w-full bg-grey-lighter text-grey-darker border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-3 px-4 mb-3"
+                className="appearance-none block w-full bg-gray-100 text-gray-700 border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-3 px-4 mb-3"
                 value={state.R20240}
                 name="R20240"
                 id="R20240"
@@ -564,13 +563,13 @@ const ShinomontazhpriceCreate = (props) => {
             </div>
             <div className="md:w-1/5 px-3 mb-6 md:mb-0 flex flex-col">
               <label
-                className="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2"
+                className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
                 htmlFor="grid-first-name"
               >
                 R20-280
               </label>
               <input
-                className="appearance-none block w-full bg-grey-lighter text-grey-darker border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-3 px-4 mb-3"
+                className="appearance-none block w-full bg-gray-100 text-gray-700 border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-3 px-4 mb-3"
                 value={state.R20280}
                 name="R20280"
                 id="R20280"
@@ -581,13 +580,13 @@ const ShinomontazhpriceCreate = (props) => {
             </div>
             <div className="md:w-1/5 px-3 mb-6 md:mb-0 flex flex-col">
               <label
-                className="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2"
+                className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
                 htmlFor="grid-first-name"
               >
                 R20-320
               </label>
               <input
-                className="appearance-none block w-full bg-grey-lighter text-grey-darker border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-3 px-4 mb-3"
+                className="appearance-none block w-full bg-gray-100 text-gray-700 border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-3 px-4 mb-3"
                 value={state.R20320}
                 name="R20320"
                 id="R20320"
@@ -598,13 +597,13 @@ const ShinomontazhpriceCreate = (props) => {
             </div>
             <div className="md:w-1/5 px-3 mb-6 md:mb-0 flex flex-col">
               <label
-                className="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2"
+                className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
                 htmlFor="grid-first-name"
               >
                 R22,5
               </label>
               <input
-                className="appearance-none block w-full bg-grey-lighter text-grey-darker border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-3 px-4 mb-3"
+                className="appearance-none block w-full bg-gray-100 text-gray-700 border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-3 px-4 mb-3"
                 value={state.R225}
                 name="R225"
                 id="R225"
@@ -615,13 +614,13 @@ const ShinomontazhpriceCreate = (props) => {
             </div>
             <div className="md:w-1/5 px-3 mb-6 md:mb-0 flex flex-col">
               <label
-                className="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2"
+                className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
                 htmlFor="grid-first-name"
               >
                 R23
               </label>
               <input
-                className="appearance-none block w-full bg-grey-lighter text-grey-darker border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-3 px-4 mb-3"
+                className="appearance-none block w-full bg-gray-100 text-gray-700 border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-3 px-4 mb-3"
                 value={state.R23}
                 name="R23"
                 id="R23"
@@ -632,13 +631,13 @@ const ShinomontazhpriceCreate = (props) => {
             </div>
             <div className="md:w-1/5 px-3 mb-6 md:mb-0 flex flex-col">
               <label
-                className="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2"
+                className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
                 htmlFor="grid-first-name"
               >
                 R24
               </label>
               <input
-                className="appearance-none block w-full bg-grey-lighter text-grey-darker border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-3 px-4 mb-3"
+                className="appearance-none block w-full bg-gray-100 text-gray-700 border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-3 px-4 mb-3"
                 value={state.R24}
                 name="R24"
                 id="R24"
@@ -649,13 +648,13 @@ const ShinomontazhpriceCreate = (props) => {
             </div>
             <div className="md:w-1/5 px-3 mb-6 md:mb-0 flex flex-col">
               <label
-                className="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2"
+                className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
                 htmlFor="grid-first-name"
               >
                 R24,5
               </label>
               <input
-                className="appearance-none block w-full bg-grey-lighter text-grey-darker border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-3 px-4 mb-3"
+                className="appearance-none block w-full bg-gray-100 text-gray-700 border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-3 px-4 mb-3"
                 value={state.R245}
                 name="R245"
                 id="R245"
@@ -670,13 +669,13 @@ const ShinomontazhpriceCreate = (props) => {
           <div className="-mx-3 md:flex flex-wrap mt-3">
             <div className="md:w-1/5 px-3 mb-6 md:mb-0 flex flex-col">
               <label
-                className="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2"
+                className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
                 htmlFor="grid-first-name"
               >
                 R8
               </label>
               <input
-                className="appearance-none block w-full bg-grey-lighter text-grey-darker border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-3 px-4 mb-3"
+                className="appearance-none block w-full bg-gray-100 text-gray-700 border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-3 px-4 mb-3"
                 value={state.R8}
                 name="R8"
                 id="R8"
@@ -687,13 +686,13 @@ const ShinomontazhpriceCreate = (props) => {
             </div>
             <div className="md:w-1/5 px-3 mb-6 md:mb-0 flex flex-col">
               <label
-                className="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2"
+                className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
                 htmlFor="grid-first-name"
               >
                 R9
               </label>
               <input
-                className="appearance-none block w-full bg-grey-lighter text-grey-darker border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-3 px-4 mb-3"
+                className="appearance-none block w-full bg-gray-100 text-gray-700 border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-3 px-4 mb-3"
                 value={state.R9}
                 name="R9"
                 id="R9"
@@ -704,13 +703,13 @@ const ShinomontazhpriceCreate = (props) => {
             </div>
             <div className="md:w-1/5 px-3 mb-6 md:mb-0 flex flex-col">
               <label
-                className="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2"
+                className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
                 htmlFor="grid-first-name"
               >
                 R10
               </label>
               <input
-                className="appearance-none block w-full bg-grey-lighter text-grey-darker border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-3 px-4 mb-3"
+                className="appearance-none block w-full bg-gray-100 text-gray-700 border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-3 px-4 mb-3"
                 value={state.R10}
                 name="R10"
                 id="R10"
@@ -721,13 +720,13 @@ const ShinomontazhpriceCreate = (props) => {
             </div>
             <div className="md:w-1/5 px-3 mb-6 md:mb-0 flex flex-col">
               <label
-                className="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2"
+                className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
                 htmlFor="grid-first-name"
               >
                 R12
               </label>
               <input
-                className="appearance-none block w-full bg-grey-lighter text-grey-darker border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-3 px-4 mb-3"
+                className="appearance-none block w-full bg-gray-100 text-gray-700 border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-3 px-4 mb-3"
                 value={state.R12}
                 name="R12"
                 id="R12"
@@ -738,13 +737,13 @@ const ShinomontazhpriceCreate = (props) => {
             </div>
             <div className="md:w-1/5 px-3 mb-6 md:mb-0 flex flex-col">
               <label
-                className="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2"
+                className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
                 htmlFor="grid-first-name"
               >
                 R15
               </label>
               <input
-                className="appearance-none block w-full bg-grey-lighter text-grey-darker border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-3 px-4 mb-3"
+                className="appearance-none block w-full bg-gray-100 text-gray-700 border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-3 px-4 mb-3"
                 value={state.R15}
                 name="R15"
                 id="R15"
@@ -755,13 +754,13 @@ const ShinomontazhpriceCreate = (props) => {
             </div>
             <div className="md:w-1/5 px-3 mb-6 md:mb-0 flex flex-col">
               <label
-                className="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2"
+                className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
                 htmlFor="grid-first-name"
               >
                 R16,5
               </label>
               <input
-                className="appearance-none block w-full bg-grey-lighter text-grey-darker border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-3 px-4 mb-3"
+                className="appearance-none block w-full bg-gray-100 text-gray-700 border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-3 px-4 mb-3"
                 value={state.R165}
                 name="R165"
                 id="R165"
@@ -772,13 +771,13 @@ const ShinomontazhpriceCreate = (props) => {
             </div>
             <div className="md:w-1/5 px-3 mb-6 md:mb-0 flex flex-col">
               <label
-                className="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2"
+                className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
                 htmlFor="grid-first-name"
               >
                 R18
               </label>
               <input
-                className="appearance-none block w-full bg-grey-lighter text-grey-darker border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-3 px-4 mb-3"
+                className="appearance-none block w-full bg-gray-100 text-gray-700 border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-3 px-4 mb-3"
                 value={state.R18}
                 name="R18"
                 id="R18"
@@ -789,13 +788,13 @@ const ShinomontazhpriceCreate = (props) => {
             </div>
             <div className="md:w-1/5 px-3 mb-6 md:mb-0 flex flex-col">
               <label
-                className="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2"
+                className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
                 htmlFor="grid-first-name"
               >
                 R20
               </label>
               <input
-                className="appearance-none block w-full bg-grey-lighter text-grey-darker border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-3 px-4 mb-3"
+                className="appearance-none block w-full bg-gray-100 text-gray-700 border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-3 px-4 mb-3"
                 value={state.R20}
                 name="R20"
                 id="R20"
@@ -806,13 +805,13 @@ const ShinomontazhpriceCreate = (props) => {
             </div>
             <div className="md:w-1/5 px-3 mb-6 md:mb-0 flex flex-col">
               <label
-                className="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2"
+                className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
                 htmlFor="grid-first-name"
               >
                 R24
               </label>
               <input
-                className="appearance-none block w-full bg-grey-lighter text-grey-darker border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-3 px-4 mb-3"
+                className="appearance-none block w-full bg-gray-100 text-gray-700 border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-3 px-4 mb-3"
                 value={state.R24}
                 name="R24"
                 id="R24"
@@ -823,13 +822,13 @@ const ShinomontazhpriceCreate = (props) => {
             </div>
             <div className="md:w-1/5 px-3 mb-6 md:mb-0 flex flex-col">
               <label
-                className="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2"
+                className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
                 htmlFor="grid-first-name"
               >
                 R25
               </label>
               <input
-                className="appearance-none block w-full bg-grey-lighter text-grey-darker border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-3 px-4 mb-3"
+                className="appearance-none block w-full bg-gray-100 text-gray-700 border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-3 px-4 mb-3"
                 value={state.R25}
                 name="R25"
                 id="R25"
@@ -840,13 +839,13 @@ const ShinomontazhpriceCreate = (props) => {
             </div>
             <div className="md:w-1/5 px-3 mb-6 md:mb-0 flex flex-col">
               <label
-                className="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2"
+                className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
                 htmlFor="grid-first-name"
               >
                 R26
               </label>
               <input
-                className="appearance-none block w-full bg-grey-lighter text-grey-darker border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-3 px-4 mb-3"
+                className="appearance-none block w-full bg-gray-100 text-gray-700 border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-3 px-4 mb-3"
                 value={state.R26}
                 name="R26"
                 id="R26"
@@ -857,13 +856,13 @@ const ShinomontazhpriceCreate = (props) => {
             </div>
             <div className="md:w-1/5 px-3 mb-6 md:mb-0 flex flex-col">
               <label
-                className="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2"
+                className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
                 htmlFor="grid-first-name"
               >
                 R28
               </label>
               <input
-                className="appearance-none block w-full bg-grey-lighter text-grey-darker border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-3 px-4 mb-3"
+                className="appearance-none block w-full bg-gray-100 text-gray-700 border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-3 px-4 mb-3"
                 value={state.R28}
                 name="R28"
                 id="R28"
@@ -874,13 +873,13 @@ const ShinomontazhpriceCreate = (props) => {
             </div>
             <div className="md:w-1/5 px-3 mb-6 md:mb-0 flex flex-col">
               <label
-                className="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2"
+                className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
                 htmlFor="grid-first-name"
               >
                 R30
               </label>
               <input
-                className="appearance-none block w-full bg-grey-lighter text-grey-darker border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-3 px-4 mb-3"
+                className="appearance-none block w-full bg-gray-100 text-gray-700 border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-3 px-4 mb-3"
                 value={state.R30}
                 name="R30"
                 id="R30"
@@ -891,13 +890,13 @@ const ShinomontazhpriceCreate = (props) => {
             </div>
             <div className="md:w-1/5 px-3 mb-6 md:mb-0 flex flex-col">
               <label
-                className="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2"
+                className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
                 htmlFor="grid-first-name"
               >
                 R32
               </label>
               <input
-                className="appearance-none block w-full bg-grey-lighter text-grey-darker border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-3 px-4 mb-3"
+                className="appearance-none block w-full bg-gray-100 text-gray-700 border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-3 px-4 mb-3"
                 value={state.R32}
                 name="R32"
                 id="R32"
@@ -908,13 +907,13 @@ const ShinomontazhpriceCreate = (props) => {
             </div>
             <div className="md:w-1/5 px-3 mb-6 md:mb-0 flex flex-col">
               <label
-                className="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2"
+                className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
                 htmlFor="grid-first-name"
               >
                 R33
               </label>
               <input
-                className="appearance-none block w-full bg-grey-lighter text-grey-darker border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-3 px-4 mb-3"
+                className="appearance-none block w-full bg-gray-100 text-gray-700 border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-3 px-4 mb-3"
                 value={state.R33}
                 name="R33"
                 id="R33"
@@ -925,13 +924,13 @@ const ShinomontazhpriceCreate = (props) => {
             </div>
             <div className="md:w-1/5 px-3 mb-6 md:mb-0 flex flex-col">
               <label
-                className="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2"
+                className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
                 htmlFor="grid-first-name"
               >
                 R34
               </label>
               <input
-                className="appearance-none block w-full bg-grey-lighter text-grey-darker border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-3 px-4 mb-3"
+                className="appearance-none block w-full bg-gray-100 text-gray-700 border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-3 px-4 mb-3"
                 value={state.R34}
                 name="R34"
                 id="R34"
@@ -942,13 +941,13 @@ const ShinomontazhpriceCreate = (props) => {
             </div>
             <div className="md:w-1/5 px-3 mb-6 md:mb-0 flex flex-col">
               <label
-                className="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2"
+                className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
                 htmlFor="grid-first-name"
               >
                 R38
               </label>
               <input
-                className="appearance-none block w-full bg-grey-lighter text-grey-darker border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-3 px-4 mb-3"
+                className="appearance-none block w-full bg-gray-100 text-gray-700 border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-3 px-4 mb-3"
                 value={state.R38}
                 name="R33"
                 id="R33"
@@ -959,13 +958,13 @@ const ShinomontazhpriceCreate = (props) => {
             </div>
             <div className="md:w-1/5 px-3 mb-6 md:mb-0 flex flex-col">
               <label
-                className="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2"
+                className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
                 htmlFor="grid-first-name"
               >
                 R42
               </label>
               <input
-                className="appearance-none block w-full bg-grey-lighter text-grey-darker border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-3 px-4 mb-3"
+                className="appearance-none block w-full bg-gray-100 text-gray-700 border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-3 px-4 mb-3"
                 value={state.R42}
                 name="R42"
                 id="R42"
@@ -979,13 +978,13 @@ const ShinomontazhpriceCreate = (props) => {
         <div className="-mx-3 md:flex flex-wrap mt-3">
           <div className="md:w-1/3 px-3 mb-6 md:mb-0 flex flex-col">
             <label
-              className="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2"
+              className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
               htmlFor="grid-first-name"
             >
               Порядковый номер
             </label>
             <input
-              className="appearance-none block w-full bg-grey-lighter text-grey-darker border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-3 px-4 mb-3"
+              className="appearance-none block w-full bg-gray-100 text-gray-700 border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-3 px-4 mb-3"
               value={state.number}
               name="number"
               id="number"
@@ -996,14 +995,14 @@ const ShinomontazhpriceCreate = (props) => {
           </div>
           <div className="md:w-1/3 px-3 mb-6 md:mb-0 flex flex-col">
             <label
-              className="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2"
+              className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
               htmlFor="grid-first-name"
             >
               Акция
             </label>
             <div className="flex-shrink w-full inline-block relative mb-3">
               <select
-                className="appearance-none block w-full bg-grey-lighter text-grey-darker border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-3 px-4 mb-3"
+                className="appearance-none block w-full bg-gray-100 text-gray-700 border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-3 px-4 mb-3"
                 value={state.free}
                 name="free"
                 id="free"

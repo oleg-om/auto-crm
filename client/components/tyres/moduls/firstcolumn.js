@@ -5,14 +5,14 @@ const FirstColumn = ({ inputField, handleChangeInput, index }) => {
     <td className="lg:w-auto p-2 text-gray-800 text-center border border-b block table-cell relative static">
       <div className="flex-shrink w-full">
         <label
-          className="block uppercase tracking-wide text-grey-darker text-xs text-left font-bold mb-2"
+          className="block uppercase tracking-wide text-gray-700 text-xs text-left font-bold mb-2"
           htmlFor="grid-first-name"
         >
           Тип
         </label>
         <div className="flex-shrink w-full inline-block relative mb-3">
           <select
-            className="appearance-none block w-auto bg-grey-lighter text-grey-darker border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-1 pl-4"
+            className="appearance-none block w-auto bg-gray-100 text-gray-700 border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-1 pl-4"
             name="type"
             value={inputField.type}
             onChange={(event) => handleChangeInput(index, event)}
@@ -43,14 +43,14 @@ const FirstColumn = ({ inputField, handleChangeInput, index }) => {
       </div>
       <div className="flex-shrink w-full">
         <label
-          className="block uppercase tracking-wide text-grey-darker text-xs text-left font-bold mb-2"
+          className="block uppercase tracking-wide text-gray-700 text-xs text-left font-bold mb-2"
           htmlFor="grid-first-name"
         >
           Режим
         </label>
         <div className="flex-shrink w-full inline-block relative">
           <select
-            className="appearance-none w-full block bg-grey-lighter text-grey-darker border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-1 px-4  pr-8"
+            className="appearance-none w-full block bg-gray-100 text-gray-700 border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-1 px-4  pr-8"
             name="mode"
             value={inputField.mode}
             onChange={(event) => handleChangeInput(index, event)}

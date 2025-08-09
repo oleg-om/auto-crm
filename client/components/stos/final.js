@@ -78,20 +78,20 @@ const Final = ({
       <div className="flex flex-row -mx-3">
         <div className="px-3 mb-6 md:mb-0 w-1/4">
           <label
-            className="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2"
+            className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
             htmlFor="grid-first-name"
           >
             Гос номер
           </label>
           <div className="flex flex-col relative">
-            <div className="bg-grey-lighter border-2 border-black py-1 px-2 rounded-lg w-auto">
+            <div className="bg-gray-100 border-2 border-black py-1 px-2 rounded-lg w-auto">
               {state.regnumber}
             </div>
           </div>
         </div>
         <div className="px-3 mb-6 md:mb-0 w-1/4">
           <label
-            className="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2"
+            className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
             htmlFor="grid-first-name"
           >
             Авто
@@ -104,7 +104,7 @@ const Final = ({
         </div>
         {/* <div className="px-3 mb-6 md:mb-0 w-1/4">
           <label
-            className="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2"
+            className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
             htmlFor="grid-first-name"
           >
             Класс авто
@@ -115,7 +115,7 @@ const Final = ({
         </div> */}
         <div className="px-3 mb-6 md:mb-0 w-1/4">
           <label
-            className="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2"
+            className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
             htmlFor="grid-first-name"
           >
             Номер талона
@@ -128,7 +128,7 @@ const Final = ({
       <div className="flex flex-row -mx-3 mt-5">
         <div className="px-3 mb-6 md:mb-0 w-full">
           <label
-            className="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2"
+            className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
             htmlFor="grid-first-name"
           >
             Услуги
@@ -220,7 +220,7 @@ const Final = ({
             </label>
             <div className="flex-shrink w-full inline-block relative">
               <select
-                className="block appearance-none w-full bg-grey-lighter border border-gray-300 focus:border-gray-500 focus:outline-none py-2 px-4 pr-8 rounded"
+                className="block appearance-none w-full bg-gray-100 border border-gray-300 focus:border-gray-500 focus:outline-none py-2 px-4 pr-8 rounded"
                 name="discount"
                 id="discount"
                 value={state.discount}
@@ -253,7 +253,7 @@ const Final = ({
             </label>
             <div className="flex-shrink w-full inline-block relative">
               <select
-                className="block appearance-none w-full bg-grey-lighter border border-gray-300 focus:border-gray-500 focus:outline-none py-2 px-4 pr-8 rounded"
+                className="block appearance-none w-full bg-gray-100 border border-gray-300 focus:border-gray-500 focus:outline-none py-2 px-4 pr-8 rounded"
                 name="payment"
                 id="payment"
                 value={state.payment}
@@ -286,13 +286,13 @@ const Final = ({
         <div className="flex flex-row">
           <div className="mr-2 w-1/4">
             <label
-              className="block uppercase tracking-wide text-grey-darker text-xs text-left font-bold mb-2"
+              className="block uppercase tracking-wide text-gray-700 text-xs text-left font-bold mb-2"
               htmlFor="grid-first-name"
             >
               Терминал
             </label>
             <input
-              className="appearance-none w-full block bg-grey-lighter text-grey-darker border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-1 px-4"
+              className="appearance-none w-full block bg-gray-100 text-gray-700 border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-1 px-4"
               type="number"
               name="terminal"
               value={termCash.terminal ? termCash.terminal : 0}
@@ -302,13 +302,13 @@ const Final = ({
           </div>
           <div className="mr-2 w-1/4">
             <label
-              className="block uppercase tracking-wide text-grey-darker text-xs text-left font-bold mb-2"
+              className="block uppercase tracking-wide text-gray-700 text-xs text-left font-bold mb-2"
               htmlFor="grid-first-name"
             >
               Наличные
             </label>
             <input
-              className="appearance-none w-full block bg-grey-lighter text-grey-darker border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-1 px-4"
+              className="appearance-none w-full block bg-gray-100 text-gray-700 border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-1 px-4"
               type="number"
               name="cash"
               value={termCash.cash}
@@ -321,13 +321,13 @@ const Final = ({
       <div className="flex flex-row -mx-3 mt-5">
         <div className="w-1/2 px-3 mb-6 md:mb-0">
           <label
-            className="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2"
+            className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
             htmlFor="grid-city"
           >
             Пробег
           </label>
           <input
-            className="appearance-none block w-full bg-grey-lighter text-grey-darker border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-1 px-4 mb-3"
+            className="appearance-none block w-full bg-gray-100 text-gray-700 border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-1 px-4 mb-3"
             type="number"
             placeholder="Пробег"
             value={state.mileage}
@@ -338,13 +338,13 @@ const Final = ({
         </div>
         <div className="w-1/2 px-3 mb-6 md:mb-0">
           <label
-            className="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2"
+            className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
             htmlFor="grid-city"
           >
             Комментарий
           </label>
           <input
-            className="appearance-none block w-full bg-grey-lighter text-grey-darker border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-1 px-4 mb-3"
+            className="appearance-none block w-full bg-gray-100 text-gray-700 border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-1 px-4 mb-3"
             type="text"
             placeholder="Оставьте комментарий"
             value={state.comment}

@@ -5,7 +5,7 @@ const TyresSizeFilter = ({ search, onChange, onEnterPress, showSearch, activeFil
   return (
     <div className="md:w-1/2 px-3 mb-6 md:mb-0">
       <label
-        className="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2"
+        className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
         htmlFor="grid-first-name"
       >
         Размер шин
@@ -13,7 +13,7 @@ const TyresSizeFilter = ({ search, onChange, onEnterPress, showSearch, activeFil
       <div className="flex-shrink w-full flex relative">
         <input
           className={cx(
-            'block appearance-none w-1/3 bg-grey-lighter border border-gray-300 focus:border-gray-500 focus:outline-none p-1 rounded mr-1',
+            'block appearance-none w-1/3 bg-gray-100 border border-gray-300 focus:border-gray-500 focus:outline-none p-1 rounded mr-1',
             {
               'border-red-300 focus:border-red-500': activeFilter?.sizeone && showSearch === true
             }
@@ -28,7 +28,7 @@ const TyresSizeFilter = ({ search, onChange, onEnterPress, showSearch, activeFil
         <span className="flex my-auto mr-1">/</span>
         <input
           className={cx(
-            'block appearance-none w-1/3 bg-grey-lighter border border-gray-300 focus:border-gray-500 focus:outline-none p-1 rounded mr-1 rounded',
+            'block appearance-none w-1/3 bg-gray-100 border border-gray-300 focus:border-gray-500 focus:outline-none p-1 rounded mr-1 rounded',
             {
               'border-red-300 focus:border-red-500': activeFilter?.sizetwo && showSearch === true
             }
@@ -43,7 +43,7 @@ const TyresSizeFilter = ({ search, onChange, onEnterPress, showSearch, activeFil
         <span className="flex my-auto mr-1">R</span>
         <input
           className={cx(
-            'block appearance-none w-1/3 bg-grey-lighter border border-gray-300 focus:border-gray-500 focus:outline-none p-1 rounded',
+            'block appearance-none w-1/3 bg-gray-100 border border-gray-300 focus:border-gray-500 focus:outline-none p-1 rounded',
             {
               'border-red-300 focus:border-red-500': activeFilter?.sizethree && showSearch === true
             }

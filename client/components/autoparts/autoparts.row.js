@@ -33,7 +33,7 @@ const AutopartsRow = (props) => {
         <span className="lg:hidden px-2 py-1 text-xs font-bold uppercase">Авто:</span>
         {props.mark} {props.model}
       </td>
-      <td className="whitespace-no-wrap w-full lg:w-auto p-2 text-gray-800 text-sm text-left lg:text-center border border-b block lg:table-cell relative lg:static">
+      <td className="whitespace-nowrap w-full lg:w-auto p-2 text-gray-800 text-sm text-left lg:text-center border border-b block lg:table-cell relative lg:static">
         <span className="lg:hidden px-2 py-1 text-xs font-bold uppercase">Телефон:</span>
         {props.phone}
       </td>
@@ -69,7 +69,7 @@ const AutopartsRow = (props) => {
           .toString()
           .replace(/^(\d)$/, '0$1')}`}
       </td>
-      <td className="w-full lg:w-auto p-2 text-gray-800 text-center border border-b block lg:table-cell relative lg:static whitespace-no-wrap">
+      <td className="w-full lg:w-auto p-2 text-gray-800 text-center border border-b block lg:table-cell relative lg:static whitespace-nowrap">
         <div className="flex flex-row justify-center">
           {/* <div
             title="Печать предчека"

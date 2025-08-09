@@ -18,7 +18,7 @@ const BalanceCell = ({ data, value }) => {
       onMouseEnter={() => setVisible(true)}
       onMouseLeave={() => setVisible(false)}
     >
-      <span className="whitespace-no-wrap">{countAdvance(value)} р.</span>
+      <span className="whitespace-nowrap">{countAdvance(value)} р.</span>
 
       {visible && (
         <div

@@ -50,7 +50,7 @@ const ToggleSwitchOption = ({ name, value, inputName, onChange, stateValue, icon
       onClick={onRadioChange}
       onKeyDown={onRadioChange}
     >
-      <div className="flex items-center pl-3 pointer-events-none whitespace-no-wrap">
+      <div className="flex items-center pl-3 pointer-events-none whitespace-nowrap">
         <input
           id="horizontal-list-radio-license"
           type="radio"
@@ -73,7 +73,7 @@ const ToggleSwitch = ({ title, options, inputName, stateValue, onChange }) => {
   return (
     <div className="mt-3">
       <label
-        className="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2 text-center"
+        className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2 text-center"
         htmlFor={inputName}
       >
         {title}

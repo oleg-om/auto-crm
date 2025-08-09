@@ -97,7 +97,6 @@ const ModalView = ({
     return () => {}
   }, [itemId])
   if (!open) return null
-  toast.configure()
   const notify = (arg) => {
     toast.info(arg, { position: toast.POSITION.BOTTOM_RIGHT })
   }
@@ -222,7 +221,7 @@ const ModalView = ({
                   <p className="text-sm leading-5 text-gray-900">Пост: {itemId.box}</p>
                 ) : null}
                 <div className="mt-2">
-                  <div className="flex flex-row appearance-none w-full bg-grey-lighter border border-gray-300 focus:border-gray-500 focus:outline-none py-1 px-4 pr-8 rounded mb-2">
+                  <div className="flex flex-row appearance-none w-full bg-gray-100 border border-gray-300 focus:border-gray-500 focus:outline-none py-1 px-4 pr-8 rounded mb-2">
                     <div className="mr-3">
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
@@ -294,14 +293,14 @@ const ModalView = ({
                   {isShinomontazh ? (
                     <div className="mt-3 flex flex-col">
                       <label
-                        className="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2"
+                        className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
                         htmlFor="phone"
                       >
                         Хранение, №
                       </label>
                       <div className="flex-shrink w-full inline-block relative">
                         <input
-                          className="block appearance-none w-full bg-grey-lighter border border-gray-300 focus:border-gray-500 focus:outline-none py-1 px-4 pr-8 rounded"
+                          className="block appearance-none w-full bg-gray-100 border border-gray-300 focus:border-gray-500 focus:outline-none py-1 px-4 pr-8 rounded"
                           type="number"
                           name="storage"
                           id="storage"
@@ -347,14 +346,14 @@ const ModalView = ({
                   itemId.status !== 'Комбинированный' ? (
                     <div className="mt-3 flex flex-col">
                       <label
-                        className="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2"
+                        className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
                         htmlFor="grid-first-name"
                       >
                         Выберите статус записи
                       </label>
                       <div className="flex-shrink w-full inline-block relative mb-3">
                         <select
-                          className="block appearance-none w-full bg-grey-lighter border border-gray-300 focus:border-gray-500 focus:outline-none py-1 px-4 pr-8 rounded"
+                          className="block appearance-none w-full bg-gray-100 border border-gray-300 focus:border-gray-500 focus:outline-none py-1 px-4 pr-8 rounded"
                           value={changeStatus.status}
                           name="status"
                           id="status"
@@ -385,7 +384,7 @@ const ModalView = ({
                   ) : (
                     <div className="mt-3 flex flex-col">
                       <label
-                        className="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2"
+                        className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
                         htmlFor="grid-first-name"
                       >
                         Статус записи
@@ -413,14 +412,14 @@ const ModalView = ({
                   )}
                   <div className="mt-3 flex flex-col">
                     <label
-                      className="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2"
+                      className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
                       htmlFor="comment"
                     >
                       Комментарий
                     </label>
                     <div className="flex-shrink w-full inline-block relative">
                       <input
-                        className="block appearance-none w-full bg-grey-lighter border border-gray-300 focus:border-gray-500 focus:outline-none py-1 px-4 pr-8 rounded"
+                        className="block appearance-none w-full bg-gray-100 border border-gray-300 focus:border-gray-500 focus:outline-none py-1 px-4 pr-8 rounded"
                         type="text"
                         name="comment"
                         id="comment"

@@ -24,7 +24,6 @@ const TyreUpdate = (props) => {
     content: () => componentRef.current
   })
 
-  toast.configure()
   const notify = (arg) => {
     toast.info(arg, { position: toast.POSITION.BOTTOM_RIGHT })
   }
@@ -348,7 +347,7 @@ const TyreUpdate = (props) => {
               <b>Обработал заказ</b>
               <div className="flex-shrink w-full inline-block relative mb-3">
                 <select
-                  className="block appearance-none w-full bg-grey-lighter border border-gray-300 focus:border-gray-500 focus:outline-none py-1 px-4 pr-8 rounded"
+                  className="block appearance-none w-full bg-gray-100 border border-gray-300 focus:border-gray-500 focus:outline-none py-1 px-4 pr-8 rounded"
                   value={state.process}
                   name="process"
                   onChange={onChange}
@@ -381,7 +380,7 @@ const TyreUpdate = (props) => {
               <b>Изменить статус заказа</b>
               <div className="flex-shrink w-full inline-block relative mb-3">
                 <select
-                  className="block appearance-none w-full bg-grey-lighter border border-gray-300 focus:border-gray-500 focus:outline-none py-1 px-4 pr-8 rounded"
+                  className="block appearance-none w-full bg-gray-100 border border-gray-300 focus:border-gray-500 focus:outline-none py-1 px-4 pr-8 rounded"
                   value={state.status}
                   name="status"
                   onChange={onChange}
@@ -404,14 +403,14 @@ const TyreUpdate = (props) => {
             {state.status === taskStatuses[6] ? (
               <div className="px-3">
                 <label
-                  className="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2"
+                  className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
                   htmlFor="grid-zip"
                 >
                   Причина отказа
                 </label>
                 <div className="flex-shrink w-full inline-block relative mb-3">
                   <select
-                    className="block appearance-none w-full bg-grey-lighter border border-gray-300 focus:border-gray-500 focus:outline-none py-1 px-4 pr-8 rounded"
+                    className="block appearance-none w-full bg-gray-100 border border-gray-300 focus:border-gray-500 focus:outline-none py-1 px-4 pr-8 rounded"
                     value={state.cancelReason}
                     name="cancelReason"
                     onChange={onChange}
@@ -606,7 +605,7 @@ const TyreUpdate = (props) => {
         <div className="-mx-3 md:flex mb-2">
           <div className="md:w-full px-3 mb-6 md:mb-0">
             <label
-              className="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2"
+              className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
               htmlFor="grid-city"
             >
               Заказ у поставщика
@@ -615,13 +614,13 @@ const TyreUpdate = (props) => {
               <table className="border-collapse w-full">
                 <thead>
                   <tr>
-                    <th className="p-3 font-bold uppercase bg-gray-100 text-sm text-gray-600 border border-gray-300 table-cell whitespace-no-wrap">
+                    <th className="p-3 font-bold uppercase bg-gray-100 text-sm text-gray-600 border border-gray-300 table-cell whitespace-nowrap">
                       Тип
                     </th>
                     <th className="p-3 font-bold uppercase bg-gray-100 text-sm text-gray-600 border border-gray-300 table-cell">
                       Наименование
                     </th>
-                    <th className="p-3 font-bold uppercase bg-gray-100 text-sm text-gray-600 border border-gray-300 table-cell whitespace-no-wrap">
+                    <th className="p-3 font-bold uppercase bg-gray-100 text-sm text-gray-600 border border-gray-300 table-cell whitespace-nowrap">
                       Цена
                     </th>
                     <th className="p-3 px-6 font-bold uppercase bg-gray-100 text-sm text-gray-600 border border-gray-300 hidden md:table-cell">
@@ -647,14 +646,14 @@ const TyreUpdate = (props) => {
                       <td className="lg:w-auto p-2 text-gray-800 text-center border border-b block table-cell relative static">
                         <div className="flex-shrink w-full">
                           <label
-                            className="block uppercase tracking-wide text-grey-darker text-xs text-left font-bold mb-2"
+                            className="block uppercase tracking-wide text-gray-700 text-xs text-left font-bold mb-2"
                             htmlFor="grid-first-name"
                           >
                             Тип
                           </label>
                           <div className="flex-shrink w-full inline-block relative mb-3">
                             <select
-                              className="appearance-none block w-full bg-grey-lighter text-grey-darker border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-1 pl-4 pr-6"
+                              className="appearance-none block w-full bg-gray-100 text-gray-700 border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-1 pl-4 pr-6"
                               name="type"
                               value={inputField.type}
                               onChange={(event) => handleChangeInput(index, event)}
@@ -708,14 +707,14 @@ const TyreUpdate = (props) => {
                       <td className="lg:w-auto p-2 text-gray-800 text-center border border-b block table-cell relative static">
                         <div className="flex-shrink w-full">
                           <label
-                            className="block uppercase tracking-wide text-grey-darker text-xs text-left font-bold mb-2"
+                            className="block uppercase tracking-wide text-gray-700 text-xs text-left font-bold mb-2"
                             htmlFor="grid-first-name"
                           >
                             Цена (закупка)
                           </label>
                           <div className="flex-shrink w-full inline-block  mb-3">
                             <input
-                              className="w-32 appearance-none block bg-grey-lighter text-sm text-grey-darker border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-1 px-4"
+                              className="w-32 appearance-none block bg-gray-100 text-sm text-gray-700 border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-1 px-4"
                               name="zakup"
                               type="number"
                               value={inputField.zakup}
@@ -731,14 +730,14 @@ const TyreUpdate = (props) => {
                         </div>
                         <div className="flex-shrink w-full">
                           <label
-                            className="block uppercase tracking-wide text-grey-darker text-xs text-left font-bold mb-2"
+                            className="block uppercase tracking-wide text-gray-700 text-xs text-left font-bold mb-2"
                             htmlFor="grid-first-name"
                           >
                             Цена (розница)
                           </label>
                           <div className="flex-shrink w-full inline-block  mb-3">
                             <input
-                              className="w-32 appearance-none block bg-grey-lighter text-sm text-grey-darker border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-1 px-4"
+                              className="w-32 appearance-none block bg-gray-100 text-sm text-gray-700 border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-1 px-4"
                               name="price"
                               type="number"
                               value={inputField.price}
@@ -754,14 +753,14 @@ const TyreUpdate = (props) => {
                         </div>
                         <div className="flex-shrink w-full">
                           <label
-                            className="block uppercase tracking-wide text-grey-darker text-xs text-left font-bold mb-2"
+                            className="block uppercase tracking-wide text-gray-700 text-xs text-left font-bold mb-2"
                             htmlFor="grid-first-name"
                           >
                             Количество
                           </label>
                           <div className="flex-shrink w-full inline-block  mb-3">
                             <input
-                              className="w-32 appearance-none block bg-grey-lighter text-sm text-grey-darker border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-1 px-4"
+                              className="w-32 appearance-none block bg-gray-100 text-sm text-gray-700 border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-1 px-4"
                               name="quantity"
                               type="number"
                               value={inputField.quantity}
@@ -786,7 +785,7 @@ const TyreUpdate = (props) => {
                       <td className="w-full lg:w-auto p-2 text-gray-800 text-center border border-b table-cell relative">
                         <div className="flex-shrink w-full inline-block relative">
                           <select
-                            className="appearance-none block w-full bg-grey-lighter text-sm text-grey-darker border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-1 pl-4 pr-6"
+                            className="appearance-none block w-full bg-gray-100 text-sm text-gray-700 border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-1 pl-4 pr-6"
                             name="stat"
                             value={inputField.stat}
                             defaultValue={
@@ -819,7 +818,7 @@ const TyreUpdate = (props) => {
                         {inputField?.vendorFromSite ? (
                           <div className="flex-shrink w-full">
                             <label
-                              className="block uppercase tracking-wide text-grey-darker text-xs text-left font-bold mb-2"
+                              className="block uppercase tracking-wide text-gray-700 text-xs text-left font-bold mb-2"
                               htmlFor="grid-first-name"
                             >
                               Поставщик на сайте
@@ -829,14 +828,14 @@ const TyreUpdate = (props) => {
                         ) : null}
                         <div className="flex-shrink w-full">
                           <label
-                            className="block uppercase tracking-wide text-grey-darker text-xs text-left font-bold mb-2"
+                            className="block uppercase tracking-wide text-gray-700 text-xs text-left font-bold mb-2"
                             htmlFor="grid-first-name"
                           >
                             Поставщик
                           </label>
                           <div className="flex-shrink w-full inline-block relative mb-3">
                             <select
-                              className="appearance-none block w-full bg-grey-lighter text-sm text-grey-darker border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-1 pl-4 pr-6"
+                              className="appearance-none block w-full bg-gray-100 text-sm text-gray-700 border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-1 pl-4 pr-6"
                               name="vendor"
                               value={inputField.vendor}
                               defaultValue={
@@ -881,14 +880,14 @@ const TyreUpdate = (props) => {
                         </div>
                         <div className="flex-shrink w-full">
                           <label
-                            className="block uppercase tracking-wide text-grey-darker text-xs text-left font-bold mb-2"
+                            className="block uppercase tracking-wide text-gray-700 text-xs text-left font-bold mb-2"
                             htmlFor="grid-first-name"
                           >
                             Дата прибытия
                           </label>
                           <div className="flex-shrink w-full inline-block  mb-3">
                             <input
-                              className="appearance-none block w-full bg-grey-lighter text-sm text-grey-darker border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-1 px-4"
+                              className="appearance-none block w-full bg-gray-100 text-sm text-gray-700 border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-1 px-4"
                               type="date"
                               name="come"
                               value={inputField.come}
@@ -933,7 +932,7 @@ const TyreUpdate = (props) => {
             <div className="px-3 mb-6 md:mb-0">
               <div className="flex flex-row">
                 <label
-                  className="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2"
+                  className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
                   htmlFor="grid-city"
                 >
                   Общая сумма
@@ -955,7 +954,7 @@ const TyreUpdate = (props) => {
               <div className="px-3 mb-6 md:mb-0">
                 <div className="flex flex-row">
                   <label
-                    className="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2"
+                    className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
                     htmlFor="grid-city"
                   >
                     Сумма товаров в работе
@@ -990,14 +989,14 @@ const TyreUpdate = (props) => {
         <div className="-mx-3 md:flex mb-2">
           <div className="md:w-1/2 px-3 mb-6 md:mb-0">
             <label
-              className="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2"
+              className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
               htmlFor="grid-city"
             >
               Предоплата
             </label>
             <div className="flex flex-row">
               <input
-                className="appearance-none block w-full bg-grey-lighter text-grey-darker border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-1 px-4 mb-3"
+                className="appearance-none block w-full bg-gray-100 text-gray-700 border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-1 px-4 mb-3"
                 type="text"
                 placeholder="Сумма предоплаты"
                 value={state.prepay}
@@ -1010,13 +1009,13 @@ const TyreUpdate = (props) => {
 
           <div className="md:w-1/2 px-3 mb-6 md:mb-0">
             <label
-              className="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2"
+              className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
               htmlFor="grid-city"
             >
               Комментарий
             </label>
             <input
-              className="appearance-none block w-full bg-grey-lighter text-grey-darker border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-1 px-4 mb-3"
+              className="appearance-none block w-full bg-gray-100 text-gray-700 border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-1 px-4 mb-3"
               type="text"
               placeholder="Оставьте комментарий"
               value={state.commentOrder}

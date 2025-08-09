@@ -17,7 +17,6 @@ import SubmitButtons from '../shared/buttons/OrderSubmitButtons'
 import { GroupSwitch, useGroup } from '../../hooks/useGroup'
 
 const ShinomontazhsCreate = (props) => {
-  toast.configure()
   const notify = (arg) => {
     toast.info(arg, { position: toast.POSITION.BOTTOM_RIGHT })
   }
@@ -422,7 +421,7 @@ const ShinomontazhsCreate = (props) => {
             ...state,
             services: service,
             material: materials,
-            tyre: [...tyres],
+            tyre: [tyres],
             employee: employees,
             box,
             customerId: activeCustomer || null,
@@ -434,7 +433,7 @@ const ShinomontazhsCreate = (props) => {
           ...state,
           services: service,
           material: materials,
-          tyre: [...tyres],
+          tyre: [tyres],
           employee: employees,
           box,
           customerId: activeCustomer || null,

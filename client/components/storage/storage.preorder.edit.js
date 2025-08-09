@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom'
 import { useSelector } from 'react-redux'
 import { toast } from 'react-toastify'
 import { useReactToPrint } from 'react-to-print'
-import NumberFormat from 'react-number-format'
+import { NumericFormat as NumberFormat } from 'react-number-format'
 import cx from 'classnames'
 import ComponentToPrint from './dogovor.print'
 import PeredachaToPrint from './peredacha.print'
@@ -36,7 +36,6 @@ export const dateNew = `${dateNow
   .replace(/^(\d)$/, '0$1')}`
 
 const StoragesUpdate = (props) => {
-  toast.configure()
   const notify = (arg) => {
     toast.info(arg, { position: toast.POSITION.BOTTOM_RIGHT })
   }
@@ -242,14 +241,14 @@ const StoragesUpdate = (props) => {
                 <div className="flex flex-row">
                   <div className="mb-5 w-1/2 pr-3">
                     <label
-                      className="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2"
+                      className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
                       htmlFor="grid-first-name"
                     >
                       Принял хранение
                     </label>
                     <div className="flex-shrink w-full inline-block relative mb-3">
                       <select
-                        className="block appearance-none w-full bg-grey-lighter border border-gray-300 focus:border-gray-500 focus:outline-none py-1 px-4 pr-8 rounded"
+                        className="block appearance-none w-full bg-gray-100 border border-gray-300 focus:border-gray-500 focus:outline-none py-1 px-4 pr-8 rounded"
                         value={props.employee}
                         name="employee"
                         id="employee"
@@ -273,14 +272,14 @@ const StoragesUpdate = (props) => {
                   </div>
                   <div className="mb-5 w-1/2 pl-3">
                     <label
-                      className="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2"
+                      className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
                       htmlFor="grid-first-name"
                     >
                       Хранение принято на точке
                     </label>
                     <div className="flex-shrink w-full inline-block relative mb-3">
                       <select
-                        className="block appearance-none w-full bg-grey-lighter border border-gray-300 focus:border-gray-500 focus:outline-none py-1 px-4 pr-8 rounded"
+                        className="block appearance-none w-full bg-gray-100 border border-gray-300 focus:border-gray-500 focus:outline-none py-1 px-4 pr-8 rounded"
                         value={props.place}
                         name="place"
                         id="place"
@@ -304,13 +303,13 @@ const StoragesUpdate = (props) => {
                 <div className="flex flex-row">
                   <div className="mb-5 w-1/2 pr-3">
                     <label
-                      className="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2"
+                      className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
                       htmlFor="grid-city"
                     >
                       Авто
                     </label>
                     <div
-                      className="appearance-none block w-full bg-grey-lighter text-grey-darker border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-1 px-4 mb-3"
+                      className="appearance-none block w-full bg-gray-100 text-gray-700 border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-1 px-4 mb-3"
                       type="text"
                       name="regnumber"
                       id="regnumber"
@@ -320,14 +319,14 @@ const StoragesUpdate = (props) => {
                   </div>
                   <div className="mb-5 w-1/2 pl-3">
                     <label
-                      className="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2"
+                      className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
                       htmlFor="grid-city"
                     >
                       Изменить статус хранения
                     </label>
                     <div className="flex-shrink w-full inline-block relative mb-3">
                       <select
-                        className="block appearance-none w-full bg-grey-lighter border border-gray-300 focus:border-gray-500 focus:outline-none py-1 px-4 pr-8 rounded"
+                        className="block appearance-none w-full bg-gray-100 border border-gray-300 focus:border-gray-500 focus:outline-none py-1 px-4 pr-8 rounded"
                         value={state.status}
                         name="status"
                         onChange={onChange}
@@ -607,14 +606,14 @@ const StoragesUpdate = (props) => {
         <div className="-mx-3 md:flex flex-wrap mb-3">
           <div className="mb-5 w-1/2 pl-3">
             <label
-              className="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2"
+              className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
               htmlFor="grid-first-name"
             >
               Текущее место хранения
             </label>
             <div className="flex-shrink w-full inline-block relative mb-3">
               <select
-                className="block appearance-none w-full bg-grey-lighter border border-gray-300 focus:border-gray-500 focus:outline-none py-1 px-4 pr-8 rounded"
+                className="block appearance-none w-full bg-gray-100 border border-gray-300 focus:border-gray-500 focus:outline-none py-1 px-4 pr-8 rounded"
                 value={state.currentplace}
                 name="currentplace"
                 id="currentplace"
@@ -651,7 +650,7 @@ const StoragesUpdate = (props) => {
               Дата начала
             </label>
             <input
-              className="appearance-none block w-full bg-grey-lighter text-grey-darker border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-1 px-4 mb-3"
+              className="appearance-none block w-full bg-gray-100 text-gray-700 border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-1 px-4 mb-3"
               value={state.dateStart}
               name="dateStart"
               id="dateStart"
@@ -670,7 +669,7 @@ const StoragesUpdate = (props) => {
               Дата завершения
             </label>
             <input
-              className="appearance-none block w-full bg-grey-lighter text-grey-darker border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-1 px-4 mb-3"
+              className="appearance-none block w-full bg-gray-100 text-gray-700 border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-1 px-4 mb-3"
               value={state.dateFinish}
               name="dateFinish"
               id="dateFinish"
@@ -726,7 +725,7 @@ const StoragesUpdate = (props) => {
         <div className="-mx-3 md:flex mb-2">
           <div className="md:w-1/3 px-3 mb-6 md:mb-0">
             <label
-              className="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2"
+              className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
               htmlFor="grid-city"
             >
               Номер телефона
@@ -734,7 +733,7 @@ const StoragesUpdate = (props) => {
             <NumberFormat
               format="+7 (###) ###-##-##"
               mask="_"
-              className="appearance-none block w-full bg-grey-lighter text-grey-darker border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-1 px-4 mb-3"
+              className="appearance-none block w-full bg-gray-100 text-gray-700 border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-1 px-4 mb-3"
               type="text"
               placeholder="Начинайте ввод с 978"
               value={state.phone}
@@ -745,13 +744,13 @@ const StoragesUpdate = (props) => {
           </div>
           <div className="md:w-1/3 px-3 mb-6 md:mb-0">
             <label
-              className="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2"
+              className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
               htmlFor="grid-city"
             >
               ФИО клиента
             </label>
             <input
-              className="capitalize appearance-none block w-full bg-grey-lighter text-grey-darker border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-1 px-4 mb-3"
+              className="capitalize appearance-none block w-full bg-gray-100 text-gray-700 border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-1 px-4 mb-3"
               type="text"
               placeholder="Введите имя"
               value={state.name}
@@ -762,7 +761,7 @@ const StoragesUpdate = (props) => {
           </div>
           <div className="md:w-1/3 px-3 mb-6 md:mb-0">
             <label
-              className="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2"
+              className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
               htmlFor="grid-city"
             >
               Оплата
@@ -770,7 +769,7 @@ const StoragesUpdate = (props) => {
             <div className="flex-shrink w-full inline-block relative">
               <select
                 className={cx(
-                  'block appearance-none w-full bg-grey-lighter border border-gray-300 focus:border-gray-500 focus:outline-none py-1 px-4 mb-3 rounded',
+                  'block appearance-none w-full bg-gray-100 border border-gray-300 focus:border-gray-500 focus:outline-none py-1 px-4 mb-3 rounded',
                   {
                     'bg-green-200': state.payment === 'yes',
                     'bg-red-200': state.payment === 'no',
@@ -804,7 +803,7 @@ const StoragesUpdate = (props) => {
         <div className="-mx-3 md:flex mb-2">
           <div className="md:w-1/3 px-3 mb-6 md:mb-0">
             <label
-              className="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2"
+              className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
               htmlFor="grid-city"
             >
               Дополнительный номер телефона
@@ -812,7 +811,7 @@ const StoragesUpdate = (props) => {
             <NumberFormat
               format="+7 (###) ###-##-##"
               mask="_"
-              className="appearance-none block w-full bg-grey-lighter text-grey-darker border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-1 px-4 mb-3"
+              className="appearance-none block w-full bg-gray-100 text-gray-700 border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-1 px-4 mb-3"
               type="text"
               placeholder="Начинайте ввод с 978"
               value={state.phoneSecond}
@@ -828,13 +827,13 @@ const StoragesUpdate = (props) => {
           <div className="flex flex-row w-full">
             <div className="mr-2 md:w-2/12">
               <label
-                className="block uppercase tracking-wide text-grey-darker text-xs text-left font-bold mb-2"
+                className="block uppercase tracking-wide text-gray-700 text-xs text-left font-bold mb-2"
                 htmlFor="grid-first-name"
               >
                 Ширина
               </label>
               <input
-                className="appearance-none w-full block bg-grey-lighter text-grey-darker border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-1 px-4"
+                className="appearance-none w-full block bg-gray-100 text-gray-700 border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-1 px-4"
                 type="number"
                 name="sizeone"
                 list="sizeone_list"
@@ -850,13 +849,13 @@ const StoragesUpdate = (props) => {
             </div>
             <div className="mr-2 md:w-2/12">
               <label
-                className="block uppercase tracking-wide text-grey-darker text-xs text-left font-bold mb-2"
+                className="block uppercase tracking-wide text-gray-700 text-xs text-left font-bold mb-2"
                 htmlFor="grid-first-name"
               >
                 Высота
               </label>
               <input
-                className="appearance-none w-full block bg-grey-lighter text-grey-darker border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-1 px-4"
+                className="appearance-none w-full block bg-gray-100 text-gray-700 border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-1 px-4"
                 type="number"
                 name="sizetwo"
                 list="sizetwo_list"
@@ -872,13 +871,13 @@ const StoragesUpdate = (props) => {
             </div>
             <div className="mr-2 md:w-2/12">
               <label
-                className="block uppercase tracking-wide text-grey-darker text-xs text-left font-bold mb-2"
+                className="block uppercase tracking-wide text-gray-700 text-xs text-left font-bold mb-2"
                 htmlFor="grid-first-name"
               >
                 Диаметр
               </label>
               <input
-                className="appearance-none w-full block bg-grey-lighter text-grey-darker border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-1 px-4"
+                className="appearance-none w-full block bg-gray-100 text-gray-700 border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-1 px-4"
                 type="number"
                 name="sizethree"
                 list="sizethree_list"
@@ -894,13 +893,13 @@ const StoragesUpdate = (props) => {
             </div>
             <div className="mr-2 md:w-3/12">
               <label
-                className="block uppercase tracking-wide text-grey-darker text-xs text-left font-bold mb-2"
+                className="block uppercase tracking-wide text-gray-700 text-xs text-left font-bold mb-2"
                 htmlFor="grid-first-name"
               >
                 Бренд
               </label>
               <input
-                className="appearance-none w-full block bg-grey-lighter text-grey-darker border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-1 px-4"
+                className="appearance-none w-full block bg-gray-100 text-gray-700 border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-1 px-4"
                 type="text"
                 placeholder="Например: Nokian"
                 name="brand"
@@ -929,13 +928,13 @@ const StoragesUpdate = (props) => {
             </div>
             <div className="mr-2 md:w-3/12">
               <label
-                className="block uppercase tracking-wide text-grey-darker text-xs text-left font-bold mb-2"
+                className="block uppercase tracking-wide text-gray-700 text-xs text-left font-bold mb-2"
                 htmlFor="grid-first-name"
               >
                 Модель
               </label>
               <input
-                className="appearance-none w-full block bg-grey-lighter text-grey-darker border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-1 px-4"
+                className="appearance-none w-full block bg-gray-100 text-gray-700 border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-1 px-4"
                 type="text"
                 placeholder="Например: Nordman"
                 name="model"
@@ -969,7 +968,7 @@ const StoragesUpdate = (props) => {
         <div className="-mx-3 md:flex mb-2">
           <div className="md:w-full px-3 mb-6 md:mb-0">
             <label
-              className="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2"
+              className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
               htmlFor="grid-city"
             >
               Хранение
@@ -983,7 +982,7 @@ const StoragesUpdate = (props) => {
                   <th className="p-3 font-bold uppercase bg-green-300 text-gray-800 border border-gray-300 table-cell w-full">
                     Наименование
                   </th>
-                  <th className="p-3 font-bold uppercase bg-green-300 text-sm text-gray-800 border border-gray-300 table-cell whitespace-no-wrap">
+                  <th className="p-3 font-bold uppercase bg-green-300 text-sm text-gray-800 border border-gray-300 table-cell whitespace-nowrap">
                     Кол-во
                   </th>
 
@@ -1011,7 +1010,7 @@ const StoragesUpdate = (props) => {
 
                     <td className="p-2 text-gray-800 text-center border border-b table-cell relative">
                       <input
-                        className="w-32 appearance-none block bg-grey-lighter text-grey-darker border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-1 px-4"
+                        className="w-32 appearance-none block bg-gray-100 text-gray-700 border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-1 px-4"
                         name="quantity"
                         type="number"
                         value={inputField.quantity}
@@ -1045,7 +1044,7 @@ const StoragesUpdate = (props) => {
         <div className="-mx-3 md:flex my-2">
           <div className="w-full px-3 mb-6 md:mb-0">
             <label
-              className="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2"
+              className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
               htmlFor="grid-city"
             >
               {state.payment === 'free'
@@ -1053,7 +1052,7 @@ const StoragesUpdate = (props) => {
                 : 'Цена'}
             </label>
             <input
-              className="appearance-none block w-full bg-grey-lighter text-grey-darker border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-1 px-4 mb-3"
+              className="appearance-none block w-full bg-gray-100 text-gray-700 border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-1 px-4 mb-3"
               type="number"
               placeholder="Сумма хранения"
               value={state.comment}
@@ -1065,13 +1064,13 @@ const StoragesUpdate = (props) => {
           </div>
           <div className="w-full px-3 mb-6 md:mb-0">
             <label
-              className="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2"
+              className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
               htmlFor="grid-city"
             >
               Доплата за просрочку
             </label>
             <input
-              className="appearance-none block w-full bg-grey-lighter text-grey-darker border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-1 px-4 mb-3"
+              className="appearance-none block w-full bg-gray-100 text-gray-700 border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-1 px-4 mb-3"
               type="number"
               placeholder="Доплата за просрочку"
               value={state.doplata}
@@ -1086,13 +1085,13 @@ const StoragesUpdate = (props) => {
         <div className="-mx-3 md:flex my-2">
           <div className="w-full px-3 mb-6 md:mb-0">
             <label
-              className="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2"
+              className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
               htmlFor="grid-city"
             >
               Комментарий
             </label>
             <input
-              className="appearance-none block w-full bg-grey-lighter text-grey-darker border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-1 px-4 mb-3"
+              className="appearance-none block w-full bg-gray-100 text-gray-700 border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-1 px-4 mb-3"
               placeholder="Комментарий"
               value={state.comment2}
               name="comment2"

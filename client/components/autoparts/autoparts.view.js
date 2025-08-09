@@ -40,7 +40,6 @@ const AutopartViewOrder = (props) => {
   }
 
   const employeeListLocal = useSelector((s) => s.employees.list)
-  toast.configure()
   const notify = (arg) => {
     toast.info(arg, { position: toast.POSITION.BOTTOM_RIGHT })
   }
@@ -243,7 +242,7 @@ const AutopartViewOrder = (props) => {
             {props.status === taskStatuses[6] ? (
               <div className="px-3">
                 <label
-                  className="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2"
+                  className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
                   htmlFor="grid-zip"
                 >
                   Причина отказа
@@ -348,7 +347,7 @@ const AutopartViewOrder = (props) => {
           <div className="-mx-3 md:flex mb-2">
             <div className="md:w-full px-3 mb-6 md:mb-0">
               <label
-                className="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2"
+                className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
                 htmlFor="grid-city"
               >
                 Заказ у поставщика
@@ -360,7 +359,7 @@ const AutopartViewOrder = (props) => {
                       <th className="p-3 font-bold uppercase bg-gray-100 text-sm text-gray-600 border border-gray-300 table-cell">
                         Запчасти
                       </th>
-                      <th className="p-3 font-bold uppercase bg-gray-100 text-sm text-gray-600 border border-gray-300 table-cell whitespace-no-wrap">
+                      <th className="p-3 font-bold uppercase bg-gray-100 text-sm text-gray-600 border border-gray-300 table-cell whitespace-nowrap">
                         Кол-во
                       </th>
                       <th className="p-3 px-8 font-bold uppercase bg-gray-100 text-sm text-gray-600 border border-gray-300 table-cell">
@@ -372,7 +371,7 @@ const AutopartViewOrder = (props) => {
                       <th className="p-3 font-bold uppercase bg-gray-100 text-sm text-gray-600 border border-gray-300 table-cell">
                         Статус
                       </th>
-                      <th className="p-3 font-bold uppercase bg-gray-100 text-sm text-gray-600 border border-gray-300 table-cell whitespace-no-wrap">
+                      <th className="p-3 font-bold uppercase bg-gray-100 text-sm text-gray-600 border border-gray-300 table-cell whitespace-nowrap">
                         Дата прибытия
                       </th>
                     </tr>
@@ -414,7 +413,7 @@ const AutopartViewOrder = (props) => {
             <div className="px-3 mb-6 md:mb-0">
               <div className="flex flex-row">
                 <label
-                  className="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2"
+                  className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
                   htmlFor="grid-city"
                 >
                   Общая сумма
@@ -435,7 +434,7 @@ const AutopartViewOrder = (props) => {
             <div className="px-3 mb-6 md:mb-0">
               <div className="flex flex-row">
                 <label
-                  className="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2"
+                  className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
                   htmlFor="grid-city"
                 >
                   Сумма товаров в работе
@@ -469,14 +468,14 @@ const AutopartViewOrder = (props) => {
         <div className="-mx-3 md:flex mb-2">
           <div className="md:w-1/2 px-3 mb-6 md:mb-0">
             <label
-              className="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2"
+              className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
               htmlFor="grid-city"
             >
               Предоплата
             </label>
             <div className="flex flex-row">
               <input
-                className="appearance-none block w-full bg-grey-lighter text-grey-darker border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-1 px-4 mb-3"
+                className="appearance-none block w-full bg-gray-100 text-gray-700 border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-1 px-4 mb-3"
                 type="text"
                 placeholder="Сумма предоплаты"
                 value={state.prepay}
@@ -489,13 +488,13 @@ const AutopartViewOrder = (props) => {
 
           <div className="md:w-1/2 px-3 mb-6 md:mb-0">
             <label
-              className="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2"
+              className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
               htmlFor="grid-city"
             >
               Комментарий
             </label>
             <input
-              className="appearance-none block w-full bg-grey-lighter text-grey-darker border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-1 px-4 mb-3"
+              className="appearance-none block w-full bg-gray-100 text-gray-700 border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-1 px-4 mb-3"
               type="text"
               placeholder="Оставьте комментарий"
               value={state.comment}

@@ -16,7 +16,6 @@ import { useServices } from '../../hooks/handleServices'
 import SubmitButtons from '../shared/buttons/OrderSubmitButtons'
 
 const StosCreate = (props) => {
-  toast.configure()
   const notify = (arg) => {
     toast.info(arg, { position: toast.POSITION.BOTTOM_RIGHT })
   }
@@ -364,7 +363,7 @@ const StosCreate = (props) => {
             ...state,
             services: service,
             material: materials,
-            tyre: [...tyres],
+            tyre: [tyres],
             employee: employees,
             box,
             customerId: activeCustomer || props.customerId || null
@@ -375,7 +374,7 @@ const StosCreate = (props) => {
           ...state,
           services: service,
           material: materials,
-          tyre: [...tyres],
+          tyre: [tyres],
           employee: employees,
           box,
           customerId: activeCustomer || props.customerId || null

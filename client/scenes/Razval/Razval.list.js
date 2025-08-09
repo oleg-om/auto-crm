@@ -22,7 +22,6 @@ import { Loading } from '../Shinomontazhs/Shinomontazhs.list'
 const RazvalList = ({ isOil = false, isRazval = true }) => {
   const [activeDay, setActiveDay] = useState(new Date())
   onLoad(activeDay)
-  toast.configure()
   const notify = (arg) => {
     toast.info(arg, { position: toast.POSITION.BOTTOM_RIGHT })
   }

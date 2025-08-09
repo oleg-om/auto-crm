@@ -14,7 +14,7 @@ const ServiceItem = ({
     <div className="md:flex md:flex-row -mx-3">
       <div className="px-3 mb-6 md:mb-0 w-full">
         <label
-          className="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2"
+          className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
           htmlFor="grid-first-name"
         >
           {serviceType}

@@ -163,7 +163,7 @@ export const ChosenServices = ({ name, groupCount, data }) => {
   return (
     <div className="px-3 my-3 md:mb-0 w-full">
       <label
-        className="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2"
+        className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
         htmlFor="grid-first-name"
       >
         {name}
@@ -178,7 +178,7 @@ export const ChosenServices = ({ name, groupCount, data }) => {
         </div>
       ) : (
         <div className="w-full p-3">
-          <p className="text-grey-darker text-xs font-bold">Группа 1:</p>
+          <p className="text-gray-700 text-xs font-bold">Группа 1:</p>
           {data
             .filter((it) => it?.group === 1)
             .map((it) => (
@@ -186,7 +186,7 @@ export const ChosenServices = ({ name, groupCount, data }) => {
                 {it.name}, {it.price} руб, {it.quantity} шт.
               </p>
             ))}
-          <p className="text-grey-darker text-xs font-bold mt-3">Группа 2:</p>
+          <p className="text-gray-700 text-xs font-bold mt-3">Группа 2:</p>
           {data
             .filter((it) => it?.group === 2)
             .map((it) => (

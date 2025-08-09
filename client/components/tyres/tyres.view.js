@@ -15,7 +15,6 @@ import SubmitButtons from '../shared/buttons/OrderSubmitButtons'
 const TyreViewOrder = (props) => {
   const history = useHistory()
 
-  toast.configure()
   const notify = (arg) => {
     toast.info(arg, { position: toast.POSITION.BOTTOM_RIGHT })
   }
@@ -241,7 +240,7 @@ const TyreViewOrder = (props) => {
                   <b>Принял заказ</b>
                   <div className="flex-shrink w-full inline-block relative mb-3">
                     <select
-                      className="block appearance-none w-full bg-grey-lighter border border-gray-300 focus:border-gray-500 focus:outline-none py-1 px-4 pr-8 rounded"
+                      className="block appearance-none w-full bg-gray-100 border border-gray-300 focus:border-gray-500 focus:outline-none py-1 px-4 pr-8 rounded"
                       value={state.employee}
                       name="employee"
                       onChange={onChange}
@@ -277,7 +276,7 @@ const TyreViewOrder = (props) => {
                   <b>Заказ принят на точке</b>
                   <div className="flex-shrink w-full inline-block relative mb-3">
                     <select
-                      className="block appearance-none w-full bg-grey-lighter border border-gray-300 focus:border-gray-500 focus:outline-none py-1 px-4 pr-8 rounded"
+                      className="block appearance-none w-full bg-gray-100 border border-gray-300 focus:border-gray-500 focus:outline-none py-1 px-4 pr-8 rounded"
                       value={state.place}
                       name="place"
                       onChange={onChange}
@@ -326,7 +325,7 @@ const TyreViewOrder = (props) => {
             {props.status === taskStatuses[6] ? (
               <div className="px-3">
                 <label
-                  className="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2"
+                  className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
                   htmlFor="grid-zip"
                 >
                   Причина отказа
@@ -519,7 +518,7 @@ const TyreViewOrder = (props) => {
           <div className="-mx-3 md:flex mb-2">
             <div className="md:w-full px-3 mb-6 md:mb-0">
               <label
-                className="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2"
+                className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
                 htmlFor="grid-city"
               >
                 Заказ у поставщика
@@ -528,13 +527,13 @@ const TyreViewOrder = (props) => {
                 <table className="border-collapse w-full">
                   <thead>
                     <tr>
-                      <th className="p-3 font-bold uppercase bg-gray-100 text-sm text-gray-600 border border-gray-300 table-cell whitespace-no-wrap">
+                      <th className="p-3 font-bold uppercase bg-gray-100 text-sm text-gray-600 border border-gray-300 table-cell whitespace-nowrap">
                         Тип
                       </th>
                       <th className="p-3 font-bold uppercase bg-gray-100 text-sm text-gray-600 border border-gray-300 table-cell">
                         Наименование
                       </th>
-                      <th className="p-3 font-bold uppercase bg-gray-100 text-sm text-gray-600 border border-gray-300 table-cell whitespace-no-wrap">
+                      <th className="p-3 font-bold uppercase bg-gray-100 text-sm text-gray-600 border border-gray-300 table-cell whitespace-nowrap">
                         Цена
                       </th>
                       <th className="p-3 px-6 font-bold uppercase bg-gray-100 text-sm text-gray-600 border border-gray-300 hidden md:table-cell">
@@ -642,7 +641,7 @@ const TyreViewOrder = (props) => {
             <div className="px-3 mb-6 md:mb-0">
               <div className="flex flex-row">
                 <label
-                  className="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2"
+                  className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
                   htmlFor="grid-city"
                 >
                   Общая сумма
@@ -664,7 +663,7 @@ const TyreViewOrder = (props) => {
               <div className="px-3 mb-6 md:mb-0">
                 <div className="flex flex-row">
                   <label
-                    className="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2"
+                    className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
                     htmlFor="grid-city"
                   >
                     Сумма товаров в работе
@@ -699,14 +698,14 @@ const TyreViewOrder = (props) => {
         <div className="-mx-3 md:flex mb-2">
           <div className="md:w-1/2 px-3 mb-6 md:mb-0">
             <label
-              className="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2"
+              className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
               htmlFor="grid-city"
             >
               Предоплата
             </label>
             <div className="flex flex-row">
               <input
-                className="appearance-none block w-full bg-grey-lighter text-grey-darker border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-1 px-4 mb-3"
+                className="appearance-none block w-full bg-gray-100 text-gray-700 border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-1 px-4 mb-3"
                 type="text"
                 placeholder="Сумма предоплаты"
                 value={state.prepay}
@@ -719,13 +718,13 @@ const TyreViewOrder = (props) => {
 
           <div className="md:w-1/2 px-3 mb-6 md:mb-0">
             <label
-              className="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2"
+              className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
               htmlFor="grid-city"
             >
               Комментарий
             </label>
             <input
-              className="appearance-none block w-full bg-grey-lighter text-grey-darker border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-1 px-4 mb-3"
+              className="appearance-none block w-full bg-gray-100 text-gray-700 border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-1 px-4 mb-3"
               type="text"
               placeholder="Оставьте комментарий"
               value={state.comment}

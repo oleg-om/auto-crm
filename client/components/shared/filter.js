@@ -118,7 +118,6 @@ export const ServiceFilter = ({
     return () => {}
   }, [currentQueryParams])
 
-  toast.configure()
   const notify = (arg) => {
     toast.info(arg, { position: toast.POSITION.BOTTOM_RIGHT })
   }

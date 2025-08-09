@@ -12,7 +12,7 @@ const WheelColumn = ({ inputField, handleChangeInput, index }) => {
       {inputField.mode === 'simple' ? (
         <div className="w-full">
           <input
-            className="appearance-none w-full block bg-grey-lighter text-grey-darker border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-1 px-4"
+            className="appearance-none w-full block bg-gray-100 text-gray-700 border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-1 px-4"
             type="text"
             placeholder="Например: Оригинальные диски R17 на форд фокус 3"
             name="tyreItem"
@@ -27,13 +27,13 @@ const WheelColumn = ({ inputField, handleChangeInput, index }) => {
             <div className="flex flex-row">
               <div className="mr-2 w-1/2">
                 <label
-                  className="block uppercase tracking-wide text-grey-darker text-xs text-left font-bold mb-2"
+                  className="block uppercase tracking-wide text-gray-700 text-xs text-left font-bold mb-2"
                   htmlFor="grid-first-name"
                 >
                   Бренд
                 </label>
                 <input
-                  className="appearance-none w-full block bg-grey-lighter text-grey-darker border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-1 px-4"
+                  className="appearance-none w-full block bg-gray-100 text-gray-700 border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-1 px-4"
                   type="text"
                   placeholder="Например: Кик"
                   name="brand"
@@ -50,13 +50,13 @@ const WheelColumn = ({ inputField, handleChangeInput, index }) => {
               </div>
               <div className="mr-2 w-1/2">
                 <label
-                  className="block uppercase tracking-wide text-grey-darker text-xs text-left font-bold mb-2"
+                  className="block uppercase tracking-wide text-gray-700 text-xs text-left font-bold mb-2"
                   htmlFor="grid-first-name"
                 >
                   Модель
                 </label>
                 <input
-                  className="appearance-none w-full block bg-grey-lighter text-grey-darker border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-1 px-4"
+                  className="appearance-none w-full block bg-gray-100 text-gray-700 border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-1 px-4"
                   type="text"
                   placeholder="Например: КС670"
                   name="model"
@@ -69,13 +69,13 @@ const WheelColumn = ({ inputField, handleChangeInput, index }) => {
             <div className="flex flex-row mt-2">
               <div className="mr-2 w-1/4">
                 <label
-                  className="block uppercase tracking-wide text-grey-darker text-xs text-left font-bold mb-2"
+                  className="block uppercase tracking-wide text-gray-700 text-xs text-left font-bold mb-2"
                   htmlFor="grid-first-name"
                 >
                   Диаметр
                 </label>
                 <input
-                  className="w-full appearance-none block bg-grey-lighter text-grey-darker border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-1 px-4"
+                  className="w-full appearance-none block bg-gray-100 text-gray-700 border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-1 px-4"
                   type="text"
                   name="diametr"
                   list="sizethree_list"
@@ -91,13 +91,13 @@ const WheelColumn = ({ inputField, handleChangeInput, index }) => {
               </div>
               <div className="mr-2 w-1/4">
                 <label
-                  className="block uppercase tracking-wide text-grey-darker text-xs text-left font-bold mb-2"
+                  className="block uppercase tracking-wide text-gray-700 text-xs text-left font-bold mb-2"
                   htmlFor="grid-first-name"
                 >
                   PCD
                 </label>
                 <input
-                  className="w-full appearance-none block bg-grey-lighter text-grey-darker border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-1 px-4"
+                  className="w-full appearance-none block bg-gray-100 text-gray-700 border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-1 px-4"
                   type="text"
                   name="pcd"
                   list="wheelpcd_list"
@@ -113,13 +113,13 @@ const WheelColumn = ({ inputField, handleChangeInput, index }) => {
               </div>
               <div className="mr-2 w-1/4">
                 <label
-                  className="block uppercase tracking-wide text-grey-darker text-xs text-left font-bold mb-2"
+                  className="block uppercase tracking-wide text-gray-700 text-xs text-left font-bold mb-2"
                   htmlFor="grid-first-name"
                 >
                   Вылет (ET)
                 </label>
                 <input
-                  className="w-full appearance-none block bg-grey-lighter text-grey-darker border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-1 px-4"
+                  className="w-full appearance-none block bg-gray-100 text-gray-700 border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-1 px-4"
                   type="number"
                   name="et"
                   list="wheelet_list"
@@ -135,13 +135,13 @@ const WheelColumn = ({ inputField, handleChangeInput, index }) => {
               </div>
               <div className="mr-2 w-1/4">
                 <label
-                  className="block uppercase tracking-wide text-grey-darker text-xs text-left font-bold mb-2"
+                  className="block uppercase tracking-wide text-gray-700 text-xs text-left font-bold mb-2"
                   htmlFor="grid-first-name"
                 >
                   Ступица (D)
                 </label>
                 <input
-                  className="w-full appearance-none block bg-grey-lighter text-grey-darker border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-1 px-4"
+                  className="w-full appearance-none block bg-gray-100 text-gray-700 border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-1 px-4"
                   type="text"
                   name="dia"
                   list="wheeldia_list"
@@ -159,14 +159,14 @@ const WheelColumn = ({ inputField, handleChangeInput, index }) => {
             <div className="flex flex-row mt-2">
               <div className="mr-2 w-1/3">
                 <label
-                  className="block uppercase tracking-wide text-grey-darker text-xs text-left font-bold mb-2"
+                  className="block uppercase tracking-wide text-gray-700 text-xs text-left font-bold mb-2"
                   htmlFor="grid-first-name"
                 >
                   Ширина
                 </label>
                 <div className="inline-block relative w-full">
                   <input
-                    className="appearance-none w-full block bg-grey-lighter text-grey-darker border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-1 px-4"
+                    className="appearance-none w-full block bg-gray-100 text-gray-700 border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-1 px-4"
                     name="wheelwidth"
                     type="text"
                     list="wheelwidth_list"
@@ -182,14 +182,14 @@ const WheelColumn = ({ inputField, handleChangeInput, index }) => {
               </div>
               <div className="mr-2 w-1/3">
                 <label
-                  className="block uppercase tracking-wide text-grey-darker text-xs text-left font-bold mb-2"
+                  className="block uppercase tracking-wide text-gray-700 text-xs text-left font-bold mb-2"
                   htmlFor="grid-first-name"
                 >
                   Тип диска
                 </label>
                 <div className="inline-block relative w-full">
                   <select
-                    className="appearance-none w-full block bg-grey-lighter text-grey-darker border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-1 px-4"
+                    className="appearance-none w-full block bg-gray-100 text-gray-700 border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-1 px-4"
                     name="typewheel"
                     list="autoparts_list"
                     value={inputField.typewheel}
@@ -221,14 +221,14 @@ const WheelColumn = ({ inputField, handleChangeInput, index }) => {
               </div>
               <div className="mr-2 w-1/3">
                 <label
-                  className="block uppercase tracking-wide text-grey-darker text-xs text-left font-bold mb-2"
+                  className="block uppercase tracking-wide text-gray-700 text-xs text-left font-bold mb-2"
                   htmlFor="grid-first-name"
                 >
                   Цвет
                 </label>
                 <div className="inline-block relative w-full">
                   <input
-                    className="appearance-none w-full block bg-grey-lighter text-grey-darker border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-1 px-4"
+                    className="appearance-none w-full block bg-gray-100 text-gray-700 border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-1 px-4"
                     name="color"
                     type="text"
                     value={inputField.color}

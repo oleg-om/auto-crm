@@ -16,7 +16,7 @@ const PlaceFilter = ({ search, showSearch, activeFilter, onChange }) => {
   return (
     <div className="md:w-1/2 px-3 mb-6 md:mb-0">
       <label
-        className="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2"
+        className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
         htmlFor="grid-first-name"
       >
         Магазин
@@ -24,7 +24,7 @@ const PlaceFilter = ({ search, showSearch, activeFilter, onChange }) => {
       <div className="flex-shrink w-full inline-block relative">
         <select
           className={cx(
-            'block appearance-none w-full bg-grey-lighter border border-gray-300 focus:border-gray-500 focus:outline-none py-1 px-4 pr-8 rounded',
+            'block appearance-none w-full bg-gray-100 border border-gray-300 focus:border-gray-500 focus:outline-none py-1 px-4 pr-8 rounded',
             {
               'border-red-300 focus:border-red-500':
                 activeFilter?.place?.length >= 1 && showSearch === true

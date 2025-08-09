@@ -10,25 +10,22 @@ module.exports = {
         loose: true
       }
     ],
-    '@babel/react',
-    '@babel/typescript'
+    '@babel/preset-react',
+    '@babel/preset-typescript'
   ],
 
-  plugins: (process.env.NODE_ENV === 'development'
-    ? ['react-hot-loader/babel']
-    : []
-  ).concat([
-    'emotion',
+  plugins: [
+    'babel-plugin-emotion',
     '@babel/plugin-syntax-dynamic-import',
     '@babel/plugin-proposal-export-default-from',
     '@babel/plugin-proposal-class-properties',
     '@babel/plugin-transform-runtime',
     ['@babel/plugin-proposal-decorators', { legacy: true }],
     [
-      'css-modules-transform',
+      'babel-plugin-css-modules-transform',
       {
         extensions: ['.styl', '.css', '.scss']
       }
     ]
-  ])
+  ]
 }
