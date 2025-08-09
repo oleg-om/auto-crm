@@ -148,6 +148,7 @@ const Report = () => {
             auth={auth}
             onChangeEmployee={onChangeEmployee}
           />
+
           <div className="w-full mx-auto px-4">
             <h1 className="text-3xl py-4 border-b mb-6">Статистика</h1>
             <div className="py-3 px-4 my-3 rounded-lg shadow bg-white">
