@@ -14,11 +14,12 @@ const BalanceCell = ({ data, value }) => {
 
   return (
     <div
-      className="relative inline-block"
+      className="relative inline-block "
       onMouseEnter={() => setVisible(true)}
       onMouseLeave={() => setVisible(false)}
     >
-      {countAdvance(value)} р.
+      <span className="whitespace-no-wrap">{countAdvance(value)} р.</span>
+
       {visible && (
         <div
           className="absolute top-full right-full mb-2 px-2 py-1 text-sm text-white bg-gray-800 rounded shadow-lg whitespace-nowrap text-left"
