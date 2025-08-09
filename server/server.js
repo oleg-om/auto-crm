@@ -69,7 +69,7 @@ const io = socketServer(serve)
 
 const middleware = [
   cors({
-    origin: 'http://localhost:8087/'
+    origin: true
   }),
   passport.initialize(),
   express.static(path.resolve(__dirname, '../dist/assets')),
@@ -294,7 +294,7 @@ server.get('/*', (req, res) => {
   )
 })
 
-serve.listen(port)
+serve.listen(port, '0.0.0.0')
 
 io.on('connection', (socket) => {
   console.log('new user')
