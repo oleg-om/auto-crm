@@ -1,5 +1,5 @@
 // MongoDB initialization script
-db = db.getSiblingDB('auto-crm');
+db = db.getSiblingDB('chat');
 
 // Create application user
 db.createUser({
@@ -8,7 +8,7 @@ db.createUser({
   roles: [
     {
       role: 'readWrite',
-      db: 'auto-crm'
+      db: 'chat'
     }
   ]
 });

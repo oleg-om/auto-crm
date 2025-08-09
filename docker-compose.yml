@@ -9,7 +9,7 @@ services:
     environment:
       MONGO_INITDB_ROOT_USERNAME: admin
       MONGO_INITDB_ROOT_PASSWORD: password123
-      MONGO_INITDB_DATABASE: auto-crm
+      MONGO_INITDB_DATABASE: chat
     ports:
       - "27017:27017"
     volumes:
@@ -28,7 +28,7 @@ services:
     restart: always
     environment:
       - NODE_ENV=production
-      - MONGO_URL=mongodb://app_user:app_password@mongodb:27017/auto-crm?authSource=auto-crm
+      - MONGO_URL=mongodb://app_user:app_password@mongodb:27017/chat?authSource=chat
       - PORT=8081
       - SECRET_JWT=your-super-secret-jwt-key-change-this-in-production
       - ENABLE_SOCKETS=true
