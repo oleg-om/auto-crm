@@ -1,9 +1,10 @@
 module.exports = {
   presets: [
     [
-      '@babel/env',
+      '@babel/preset-env',
       {
         targets: {
+          node: '22',
           browsers: '> 0.25%, not dead'
         },
         loose: true
@@ -14,7 +15,7 @@ module.exports = {
   ],
 
   plugins: (process.env.NODE_ENV === 'development'
-    ? ['react-hot-loader/babel', 'react-refresh/babel']
+    ? ['react-hot-loader/babel']
     : []
   ).concat([
     'emotion',

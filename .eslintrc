@@ -1,17 +1,20 @@
 {
-  "parser": "babel-eslint",
+  "parser": "@babel/eslint-parser",
   "root": true,
   "extends": [
     "airbnb",
     "prettier",
-    "prettier/babel",
-    "prettier/react",
     "plugin:react/recommended"
   ],
   "parserOptions": {
-    "ecmaVersion": 6,
+    "ecmaVersion": 2020,
+    "sourceType": "module",
     "ecmaFeatures": {
       "jsx": true
+    },
+    "requireConfigFile": false,
+    "babelOptions": {
+      "presets": ["@babel/preset-react"]
     }
   },
   "plugins": [
@@ -35,6 +38,7 @@
   },
   "rules": {
     "prettier/prettier": ["warn"],
+    "react/function-component-definition": "off",
     "space-before-function-paren": "off",
     "react/prefer-stateless-function": "warn",
     "react/jsx-filename-extension": [1, { "extensions": [".js", ".jsx"] }],
@@ -79,6 +83,14 @@
     "react/jsx-props-no-spreading": ["off"],
     "camelcase": "off",
     "no-plusplus": [2, { "allowForLoopAfterthoughts": true }],
-    "no-nested-ternary": "off"
+    "no-nested-ternary": "off",
+    "react/no-unknown-property": "off",
+    "react/jsx-no-useless-fragment": "off",
+    "react/no-unstable-nested-components": "off",
+    "import/no-import-module-exports": "off",
+    "default-param-last": "off",
+    "prefer-arrow-callback": "off",
+    "no-dupe-else-if": "off",
+    "no-unsafe-optional-chaining": "off"
   }
 }

@@ -1,5 +1,5 @@
 #--------------------------------------STAGE 1-----------------------------
-FROM node:alpine AS nodeServer
+FROM node:22-alpine AS nodeServer
 CMD [ "yarn","start" ]
 WORKDIR /app
 COPY package*.json ./

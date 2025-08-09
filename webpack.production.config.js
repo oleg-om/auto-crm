@@ -6,9 +6,10 @@ const webpack = require('webpack')
 const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 const CopyWebpackPlugin = require('copy-webpack-plugin')
 const GitRevisionPlugin = require('git-revision-webpack-plugin')
-const StringReplacePlugin = require('string-replace-webpack-plugin')
-const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin')
+
+const CssMinimizerPlugin = require('css-minimizer-webpack-plugin')
 const TerserJSPlugin = require('terser-webpack-plugin')
+const ESLintPlugin = require('eslint-webpack-plugin')
 const { v4: uuidv4 } = require('uuid')
 
 const gitRevisionPlugin = new GitRevisionPlugin()
@@ -18,29 +19,16 @@ const config = {
   optimization: {
     minimize: true,
     minimizer: [
-      new TerserJSPlugin(
-        {
-          parallel: true,
-          // compress: {
-          //   drop_console: true
-          // }
-          terserOptions: {
-            compress: {
-              drop_console: true
-            }
-          }
-        },
-        {
-          terserOptions: {
-            compress: {
-              drop_console: true
-            }
+      new TerserJSPlugin({
+        parallel: true,
+        terserOptions: {
+          compress: {
+            drop_console: true
           }
         }
-      ),
-      new OptimizeCSSAssetsPlugin({
-        cssProcessor: require('cssnano'),
-        cssProcessorPluginOptions: {
+      }),
+      new CssMinimizerPlugin({
+        minimizerOptions: {
           preset: ['default', { discardComments: { removeAll: true } }]
         }
       })
@@ -72,33 +60,24 @@ const config = {
     rules: [
       {
         test: /.html$/,
-        loader: StringReplacePlugin.replace({
-          replacements: [
-            {
-              pattern: /COMMITHASH/gi,
-              replacement() {
-                return gitRevisionPlugin.commithash()
-              }
-            }
-          ]
-        })
-      },
-      {
-        enforce: 'pre',
-        test: /\.js$/,
-        exclude: /node_modules/,
-        loader: [
+        use: [
           {
-            loader: 'eslint-loader',
+            loader: 'string-replace-loader',
             options: {
-              cache: true
+              multiple: [
+                {
+                  search: /COMMITHASH/gi,
+                  replace: gitRevisionPlugin.commithash()
+                }
+              ]
             }
           }
         ]
       },
+
       {
         test: /\.js$/,
-        loaders: ['babel-loader'],
+        use: ['babel-loader'],
         exclude: /node_modules/
       },
       {
@@ -139,7 +118,7 @@ const config = {
           },
           {
             loader: 'sass-loader',
-            query: {
+            options: {
               sourceMap: false
             }
           }
@@ -152,43 +131,31 @@ const config = {
       },
       {
         test: /\.(jpg|png|gif|webp)$/,
-        use: [
-          {
-            loader: 'file-loader'
-          }
-        ]
+        type: 'asset/resource',
+        generator: {
+          filename: 'images/[name].[ext]'
+        }
       },
       {
         test: /\.eot$/,
-        use: [
-          {
-            loader: 'file-loader'
-          }
-        ]
+        type: 'asset/resource',
+        generator: {
+          filename: 'fonts/[name].[ext]'
+        }
       },
       {
         test: /\.woff(2)$/,
-        use: [
-          {
-            loader: 'file-loader',
-            options: {
-              name: '[name].[ext]',
-              outputPath: 'fonts/'
-            }
-          }
-        ]
+        type: 'asset/resource',
+        generator: {
+          filename: 'fonts/[name].[ext]'
+        }
       },
       {
         test: /\.[ot]tf$/,
-        use: [
-          {
-            loader: 'file-loader',
-            options: {
-              name: '[name].[ext]',
-              outputPath: 'fonts/'
-            }
-          }
-        ]
+        type: 'asset/resource',
+        generator: {
+          filename: 'fonts/[name].[ext]'
+        }
       },
       {
         test: /\.svg$/,
@@ -206,7 +173,12 @@ const config = {
   },
 
   plugins: [
-    new StringReplacePlugin(),
+    // Temporarily disabled ESLint to resolve function component definition errors
+    // new ESLintPlugin({
+    //   context: resolve(__dirname, 'client'),
+    //   exclude: 'node_modules',
+    //   cache: true
+    // }),
     new CopyWebpackPlugin(
       {
         patterns: [

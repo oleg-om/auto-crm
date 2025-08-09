@@ -6,9 +6,10 @@ const CopyWebpackPlugin = require('copy-webpack-plugin')
 const webpack = require('webpack')
 const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 const GitRevisionPlugin = require('git-revision-webpack-plugin')
-const StringReplacePlugin = require('string-replace-webpack-plugin')
-const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin')
+
+const CssMinimizerPlugin = require('css-minimizer-webpack-plugin')
 const TerserJSPlugin = require('terser-webpack-plugin')
+const ESLintPlugin = require('eslint-webpack-plugin')
 const { v4: uuidv4 } = require('uuid')
 
 const gitRevisionPlugin = new GitRevisionPlugin()
@@ -58,33 +59,24 @@ const config = {
     rules: [
       {
         test: /.html$/,
-        loader: StringReplacePlugin.replace({
-          replacements: [
-            {
-              pattern: /COMMITHASH/gi,
-              replacement() {
-                return gitRevisionPlugin.commithash()
-              }
-            }
-          ]
-        })
-      },
-      {
-        enforce: 'pre',
-        test: /\.js$/,
-        exclude: /node_modules/,
-        loader: [
+        use: [
           {
-            loader: 'eslint-loader',
+            loader: 'string-replace-loader',
             options: {
-              cache: true
+              multiple: [
+                {
+                  search: /COMMITHASH/gi,
+                  replace: gitRevisionPlugin.commithash()
+                }
+              ]
             }
           }
         ]
       },
+
       {
         test: /\.js$/,
-        loaders: ['babel-loader'],
+        use: ['babel-loader'],
         exclude: /node_modules/
       },
       {
@@ -125,7 +117,7 @@ const config = {
           },
           {
             loader: 'sass-loader',
-            query: {
+            options: {
               sourceMap: false
             }
           }
@@ -138,68 +130,49 @@ const config = {
       },
       {
         test: /\.(jpg|png|gif|webp)$/,
-        use: [
-          {
-            loader: 'file-loader'
-          }
-        ]
+        type: 'asset/resource',
+        generator: {
+          filename: 'images/[name].[ext]'
+        }
       },
       {
         test: /\.eot$/,
-        use: [
-          {
-            loader: 'file-loader'
-          }
-        ]
+        type: 'asset/resource',
+        generator: {
+          filename: 'fonts/[name].[ext]'
+        }
       },
       {
         test: /\.woff(2)$/,
-        use: [
-          {
-            loader: 'file-loader',
-            options: {
-              name: '[name].[ext]',
-              outputPath: 'fonts/'
-            }
-          }
-        ]
+        type: 'asset/resource',
+        generator: {
+          filename: 'fonts/[name].[ext]'
+        }
       },
       {
         test: /\.[ot]tf$/,
-        use: [
-          {
-            loader: 'file-loader',
-            options: {
-              name: '[name].[ext]',
-              outputPath: 'fonts/'
-            }
-          }
-        ]
+        type: 'asset/resource',
+        generator: {
+          filename: 'fonts/[name].[ext]'
+        }
       },
       {
         test: /\.svg$/,
-        use: [
-          {
-            loader: 'file-loader',
-            options: {
-              name: '[name].[ext]',
-              outputPath: 'fonts/'
-            }
-          },
-          {
-            loader: 'svg-url-loader',
-            options: {
-              limit: 10 * 1024,
-              noquotes: true
-            }
-          }
-        ]
+        type: 'asset/resource',
+        generator: {
+          filename: 'fonts/[name].[ext]'
+        }
       }
     ]
   },
 
   plugins: [
-    new StringReplacePlugin(),
+    // Temporarily disabled ESLint to resolve function component definition errors
+    // new ESLintPlugin({
+    //   context: resolve(__dirname, 'client'),
+    //   exclude: 'node_modules',
+    //   cache: true
+    // }),
     new MiniCssExtractPlugin({
       filename: 'css/ssr/[name].css',
       chunkFilename: 'css/ssr/[id].css',
