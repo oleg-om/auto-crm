@@ -1,141 +1,181 @@
-# Auto
-## Quick start
+# Auto CRM
 
+Система управления автосервисом с полным функционалом для работы с клиентами, заказами, запчастями и услугами.
 
+## 🚀 Быстрый старт с Docker
 
-1. To install dependencies and clean the git repo run:
+### Предварительные требования
 
-  ```shell
-  $ yarn install
-  ```
+- Docker Desktop
+- Docker Compose
 
-  *I recommend using `yarn` for installing packages, but you can use `npm` instead*:
+### Запуск приложения
 
-  ```shell
-  $ npm install
-  ```
-3. Create first build
+1. **Клонируйте репозиторий:**
+   ```bash
+   git clone <repository-url>
+   cd auto-crm
+   ```
 
-  ```shell
-  $ yarn run build:prod
-  ```
-4. Copy .env.example file to .env and make the necessary changes there
+2. **Запустите приложение:**
+   ```bash
+   ./docker-start.sh
+   ```
 
-5. Run project in Dev mode
+3. **Откройте в браузере:**
+   ```
+   http://localhost
+   ```
 
-  ```shell
-  $ yarn run dev
-  ```
+### Управление Docker контейнерами
 
-## Features
+```bash
+# Запуск
+docker-compose up -d
 
-* Redux
-* Modern ES6 for using template strings, JSX syntax, object destructuring arrow functions and more
-* Babel for old browser support
-* SASS/SCSS: make styles greate again, with no tears
-* React Router
-* Hot Module Replacement for comfortable development
+# Остановка
+docker-compose down
 
-## Project Structure
+# Просмотр логов
+docker-compose logs -f
 
-#### `client/components`
+# Перезапуск
+docker-compose restart
+```
 
-This folder contains all your components
+## 🏗️ Архитектура
 
-#### `dist/assets`
-This directory contains compiled project files
+Приложение состоит из трех сервисов:
 
-#### `webpack.development.config.js` `and webpack.production.frontend.config.js`
-Project environment configs. Webpack uses proper config depending on defined application environment.
-By default `webpack.development.config.js` is used unless you build the application with --config webpack.production.frontend.config.js variable.
+- **mongodb** - База данных MongoDB 6.0 (порт 27017)
+- **app** - Node.js приложение (порт 8081)
+- **nginx** - Веб-сервер и обратный прокси (порт 80)
 
+## 💾 Сохранение данных
 
-## Command Line Commands
+Данные MongoDB сохраняются в именованном томе `mongodb_data`. При перезапуске контейнеров данные остаются нетронутыми.
 
-#### Installation
+## 🔧 Разработка
 
-```Shell
+### Локальная разработка
+
+```bash
+# Установка зависимостей
 yarn install
-```
-Installs the dependencies.
 
-#### Development
+# Запуск в режиме разработки
+yarn dev
 
-```Shell
-yarn run dev
-```
-
-Starts the development server running on `http://localhost:8080` using the webpack.development.config.js with Hot Module Replacement (HMR) (Changes in the application code will be hot-reloaded)
-
-```Shell
-yarn run dev:server
+# Сборка для продакшена
+yarn build
 ```
 
-Starts the development server and makes your application accessible at http://localhost:8080.
+### Переменные окружения
 
-```Shell
-yarn run clean
-```
-Removes a directory "dist" from a project
+Создайте файл `.env` на основе `.env.example`:
 
-#### Building
-
-```Shell
-yarn build:prod
-```
-
-Prepares your app for deployment to production environment (using the webpack.production.frontend.config.js) (does not run tests). Optimizes and minifies all files, piping them to the `dist` folder.
-
-
-#### Testing
-
-```Shell
-yarn run test
+```env
+NODE_ENV=development
+PORT=8087
+MONGO_URL=mongodb://localhost:27017/auto-crm
+SECRET_JWT=your-secret-key
+ENABLE_SOCKETS=true
+MODE=production
 ```
 
-Tests your application modern JavaScript Testing Framework - Jest with the unit tests specified in the `**/__tests__/*.spec.js` files
-throughout the application.
+## 📋 Функциональность
 
-```Shell
-yarn run test:watch
+- **Управление клиентами** - создание, редактирование, поиск клиентов
+- **Заказы** - создание и отслеживание заказов на услуги
+- **Запчасти** - управление автозапчастями и их наличием
+- **Услуги** - шиномонтаж, СТО, мойка, окна, кондиционеры
+- **Отчеты** - различные отчеты по работе сервиса
+- **Пользователи** - система ролей и прав доступа
+
+## 🗄️ База данных
+
+### MongoDB Collections
+
+- `users` - пользователи системы
+- `customers` - клиенты
+- `autoparts` - автозапчасти
+- `shinomontazhs` - шиномонтаж
+- `stos` - СТО услуги
+- `washs` - мойка
+- `materials` - материалы
+- `vendors` - поставщики
+- `places` - места работы
+- `categorys` - категории
+
+### Доступ к MongoDB
+
+```bash
+# Через командную строку
+docker exec -it auto-crm-mongodb mongosh -u app_user -p app_password auto-crm
+
+# Через MongoDB Compass
+mongodb://app_user:app_password@localhost:27017/auto-crm?authSource=auto-crm
 ```
 
-Watches changes to your application and re-runs tests whenever a file changes.
+## 🔒 Безопасность
 
-```Shell
-yarn run coverage
+### В продакшене обязательно измените:
+
+1. **Пароли MongoDB** в `docker-compose.yml`
+2. **JWT секрет** в переменных окружения
+3. **Порты** на нестандартные
+4. **Настройте SSL/TLS**
+
+## 🆘 Устранение неполадок
+
+### Проблемы с Docker
+
+```bash
+# Проверка статуса контейнеров
+docker-compose ps
+
+# Просмотр логов
+docker-compose logs app
+docker-compose logs mongodb
+docker-compose logs nginx
+
+# Пересборка образов
+docker-compose build --no-cache
 ```
 
-Generates test coverage.
+### Проблемы с базой данных
 
+```bash
+# Проверка подключения к MongoDB
+docker exec -it auto-crm-mongodb mongosh
 
-It’s also possible to leave out the run in this command, each script can be executed with its name, e.g:
-yarn test:watch
-yarn test:coverage
-
-#### Linting
-
-```Shell
-yarn run lint
-```
-Will analyse your code for potential errors. Will check both: `./client/**/**.js` and `./server/**/**.js` files.
-Code linting is a type of static analysis that is frequently used to find problematic patterns or code that doesn’t adhere to certain style guidelines.
-
-
-```Shell
-yarn run lint:server
+# Сброс данных (осторожно!)
+docker-compose down -v
 ```
 
-Will analyse only  `server/**/**.js` files
+## 📁 Структура проекта
 
-#### Docker
-Nginx web server working on 443, 80 ports on localhost
+```
+auto-crm/
+├── client/                 # React приложение
+│   ├── components/         # React компоненты
+│   ├── scenes/            # Страницы приложения
+│   ├── redux/             # Redux store
+│   └── assets/            # Статические файлы
+├── server/                # Node.js сервер
+│   ├── controller/        # Контроллеры API
+│   ├── model/            # Mongoose модели
+│   └── routes/           # API маршруты
+├── docker/               # Docker конфигурация
+├── docker-compose.yml    # Docker Compose
+├── webpack.*.config.js   # Webpack конфигурации
+└── package.json          # Зависимости
+```
 
-```run production
-docker-compose -f .\docker\PROD.docker-compose.yml up (Options: --build for build, -d to detach )
-docker-compose -f .\docker\PROD.docker-compose.yml down (To stop contaiters)
-```
-```run develop
-docker-compose -f .\docker\DEV.docker-compose.yml up (Options: --build for build, -d to detach )
-docker-compose -f .\docker\DEV.docker-compose.yml down (To stop contaiters)
-```
+## 📄 Лицензия
+
+MIT License
+
+## 🤝 Поддержка
+
+Для получения поддержки создайте issue в репозитории или обратитесь к команде разработки.
