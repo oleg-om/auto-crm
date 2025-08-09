@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { Link, useHistory } from 'react-router-dom'
-import { NumericFormat as NumberFormat } from 'react-number-format'
+import NumberFormat from 'react-number-format'
 import employeeList from '../../lists/empoyees-list'
 // import placeList from "../../lists/test-list"
 

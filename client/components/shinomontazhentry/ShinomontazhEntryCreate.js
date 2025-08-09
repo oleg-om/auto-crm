@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react'
 import { useDispatch } from 'react-redux'
 import 'fix-date'
-import { NumericFormat as NumberFormat } from 'react-number-format'
+import NumberFormat from 'react-number-format'
 import { useReactToPrint } from 'react-to-print'
 import { toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'

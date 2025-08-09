@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { useDispatch } from 'react-redux'
-import { NumericFormat as NumberFormat } from 'react-number-format'
+import NumberFormat from 'react-number-format'
 import { toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
 import { createRazval } from '../../redux/reducers/razvals'

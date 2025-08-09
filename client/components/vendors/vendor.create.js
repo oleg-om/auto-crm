@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { useHistory } from 'react-router-dom'
-import { NumericFormat as NumberFormat } from 'react-number-format'
+import NumberFormat from 'react-number-format'
 import { toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
 import vendorList from '../../lists/vendor-list'

@@ -1,4 +1,4 @@
-import { NumericFormat as NumberFormat } from 'react-number-format'
+import NumberFormat from 'react-number-format'
 import cx from 'classnames'
 import React from 'react'
 

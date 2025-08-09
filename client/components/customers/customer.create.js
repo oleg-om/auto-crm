@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { useHistory } from 'react-router-dom'
 import { toast } from 'react-toastify'
-import { NumericFormat as NumberFormat } from 'react-number-format'
+import NumberFormat from 'react-number-format'
 import 'react-toastify/dist/ReactToastify.css'
 import SubmitButtons from '../shared/buttons/OrderSubmitButtons'
 
