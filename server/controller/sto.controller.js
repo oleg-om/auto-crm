@@ -126,10 +126,23 @@ exports.getMonth = async (req, res) => {
               month: `${month.padStart(2, '0')}.${year}`
             })
 
+            // предыдущий месяц
+            const currentMonth = parseInt(month, 10)
+            const currentYear = parseInt(year, 10)
+
+            const prevMonthNum = currentMonth === 1 ? 12 : currentMonth - 1
+            const prevMonthYear = currentMonth === 1 ? currentYear - 1 : currentYear
+
+            const prevMonthReports = await EmployeeReport.find({
+              employeeId: emp.id, // или emp.employeeId, в зависимости от структуры
+              month: `${prevMonthNum.toString().padStart(2, '0')}.${prevMonthYear}`
+            })
+
             // 5. Возвращаем сотрудника с дополненными данными
             return {
               ...(emp.toObject ? emp.toObject() : emp),
-              data: reports
+              data: reports,
+              prevMonthData: prevMonthReports
             }
           })
         )

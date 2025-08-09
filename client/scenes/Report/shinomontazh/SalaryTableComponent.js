@@ -5,6 +5,8 @@ import 'react-toastify/dist/ReactToastify.css'
 import { updateEmployee } from '../../../redux/reducers/employees'
 import saveIcon from '../../../assets/images/save.png'
 import SalaryCell, { REPORT_SALARY_TYPES } from './SalaryCell'
+import WorkingDaysCell from './WorkingDaysCell'
+import BalanceCell from './BalanceCell'
 
 const ImageSave = () => (
   <img alt="save" className="img__save" src={saveIcon} width={16} height={16} />
@@ -97,10 +99,6 @@ const SalaryTableComponent = ({
     }
   }
 
-  const countAdvance = (number) => {
-    return number - (totalAdvance + totalFines + totalExpenses)
-  }
-
   function getUniqueWorkingDays() {
     const dates = dateArray(it.id) || []
     if (!Array.isArray(dates) || !(activeMonth instanceof Date)) {
@@ -153,7 +151,7 @@ const SalaryTableComponent = ({
               >
                 Рабочие дни:
               </button>
-              {getUniqueWorkingDays()} дней
+              <WorkingDaysCell value={getUniqueWorkingDays()} />
             </td>
           ) : null}
           <td className="w-full lg:w-auto p-2 text-gray-800 text-left lg:text-center border border-b block lg:table-cell relative lg:static">
@@ -355,10 +353,12 @@ const SalaryTableComponent = ({
       {checkIsBookkeper ? (
         <td className="w-full lg:w-auto p-2 text-gray-800 text-left lg:text-center border border-b block lg:table-cell relative lg:static">
           <span className="lg:hidden px-2 py-1 text-xs font-bold uppercase">Остаток:</span>
-          {userPercent[it.id]
-            ? Math.round(countAdvance(applyDiscount(getSalary(it.id), userPercent[it.id], it.id)))
-            : 0}{' '}
-          руб.
+          <BalanceCell
+            data={it?.prevMonthData || []}
+            value={
+              userPercent[it.id] ? applyDiscount(getSalary(it.id), userPercent[it.id], it.id) : 0
+            }
+          />
         </td>
       ) : null}
     </tr>

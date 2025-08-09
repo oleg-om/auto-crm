@@ -83,11 +83,11 @@ const SalaryByDay = ({
         <h2 className="text-xl font-semibold mb-2">Разбивка по дням:</h2>
         {dateArray.map((date) => (
           <div key={date}>
-            <h3 key={date}>
+            <h3 key={date} className="font-semibold">
               {new Date(date).getDate()}.{new Date(date).getMonth() + 1}.
               {new Date(date).getFullYear()}
             </h3>
-            <table className="border-collapse w-full" key={date}>
+            <table className="border-collapse w-full mb-2" key={date}>
               <thead>
                 <tr>
                   <th className="p-3 font-bold bg-gray-100 text-gray-600 border border-gray-300 table-cell">
@@ -118,7 +118,7 @@ const SalaryByDay = ({
               </thead>
               <tbody>
                 {report
-                  .filter((it) => new Date(it.dateStart).getDate() === new Date(date).getDate())
+                  .filter((it) => new Date(it.dateFinish).getDate() === new Date(date).getDate())
                   .filter((it) => filterReportByEmployee(it, employee))
                   .map((it) => (
                     <tr key={it.id} className="bg-white hover:bg-gray-100 table-row mb-0">
@@ -221,8 +221,12 @@ const Salary = ({
 
   const employeeArrayFiltered = employeeArray.filter((data) => filterByEmployee(data, employee))
 
-  const dateArray = (emp) =>
-    report
+  const dateArray = (emp) => {
+    console.log(
+      '      .filter((data) => filterReportByEmployee(data, emp))',
+      report.filter((data) => filterReportByEmployee(data, emp))
+    )
+    return report
       .filter((data) => filterReportByEmployee(data, emp))
       .reduce((thing, current) => {
         const x = thing.find(
@@ -243,6 +247,9 @@ const Salary = ({
         }
         return 0
       })
+  }
+
+  console.log('dateArray', dateArray('295c02f8-dc31-484b-a074-2d2cffe74b7f'))
 
   const onChangeMat = (e) => {
     const { value } = e.target
