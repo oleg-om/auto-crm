@@ -6,9 +6,21 @@ import { updateSocketsInfo } from '../reducers/adminInformation'
 import { deleteUser } from '../reducers/auth'
 import store from '../index'
 
-const isStudy = process.env.MODE === 'study'
+// Используем переменные окружения или относительные URL
+const getWebSocketUrl = () => {
+  if (process.env.NODE_ENV === 'main') {
+    return process.env.REACT_APP_MAIN_WEBSOCKET_URL || 'http://89.110.97.155:8090'
+  }
+  
+  if (process.env.MODE === 'study') {
+    return process.env.REACT_APP_STUDY_WEBSOCKET_URL || 'http://89.110.97.155:8090'
+  }
+  
+  // В продакшене используем относительный URL для работы через nginx
+  return process.env.REACT_APP_PRODUCTION_WEBSOCKET_URL || 'http://89.110.97.155:8090'
+}
 
-export const socket = io(isStudy ? 'http://89.110.97.155:8090' : 'http://195.2.76.23:8090', {
+export const socket = io(getWebSocketUrl(), {
   transports: ['websocket'],
   autoConnect: false
 })
