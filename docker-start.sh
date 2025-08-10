@@ -8,6 +8,16 @@ if ! docker info > /dev/null 2>&1; then
     exit 1
 fi
 
+# Check if .env file exists
+if [ ! -f .env ]; then
+    echo "❌ .env file not found!"
+    echo "📝 Please create .env file first:"
+    echo "   ./create-env.sh"
+    exit 1
+fi
+
+echo "✅ .env file found"
+
 # Build and start containers
 echo "📦 Building and starting containers..."
 docker-compose up --build -d

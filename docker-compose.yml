@@ -41,6 +41,7 @@ services:
       - auto-crm-network
     volumes:
       - ./uploads:/app/uploads
+      - ./.env:/app/.env:rw
 
   # Nginx Reverse Proxy
   nginx:
