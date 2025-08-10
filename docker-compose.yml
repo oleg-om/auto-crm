@@ -29,13 +29,6 @@ services:
     restart: always
     env_file:
       - .env
-    environment:
-      - MONGO_URL=${MONGO_URL}
-      - NODE_ENV=${NODE_ENV}
-      - PORT=${PORT}
-      - SECRET_JWT=${SECRET_JWT}
-      - ENABLE_SOCKETS=${ENABLE_SOCKETS}
-      - MODE=${MODE}
     ports:
       - "8081:8081"
     depends_on:
