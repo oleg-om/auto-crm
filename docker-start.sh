@@ -8,15 +8,13 @@ if ! docker info > /dev/null 2>&1; then
     exit 1
 fi
 
-# Check if .env file exists
-if [ ! -f .env ]; then
-    echo "❌ .env file not found!"
-    echo "📝 Please create .env file first:"
-    echo "   ./create-env.sh"
-    exit 1
+# Check if env volume exists and initialize if needed
+if ! docker volume inspect auto-crm_env_file >/dev/null 2>&1; then
+    echo "📝 Initializing .env file in Docker volume..."
+    ./init-env.sh
+else
+    echo "✅ .env volume already exists"
 fi
-
-echo "✅ .env file found"
 
 # Build and start containers
 echo "📦 Building and starting containers..."
