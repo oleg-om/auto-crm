@@ -24,20 +24,18 @@ services:
       context: .
       dockerfile: docker/PROD.Dockerfile
       target: nodeServer
-
     container_name: auto-crm-app
     restart: always
     env_file:
       - .env
     ports:
-      - "8081:8081"
+      - "8090:8090"
     depends_on:
       - mongodb
     networks:
       - auto-crm-network
     volumes:
       - ./uploads:/app/uploads
-      - ./.env:/app/.env:ro
 
   # Nginx Reverse Proxy
   nginx:
@@ -60,8 +58,6 @@ services:
 
 volumes:
   mongodb_data:
-    driver: local
-  env_file:
     driver: local
 
 networks:

@@ -6,6 +6,18 @@ const TerserPlugin = require('terser-webpack-plugin')
 const CssMinimizerPlugin = require('css-minimizer-webpack-plugin')
 const CopyWebpackPlugin = require('copy-webpack-plugin')
 
+// Load environment variables from .env file
+require('dotenv').config()
+
+// Create environment variables object for webpack
+const env = {}
+Object.keys(process.env).forEach(key => {
+  env[key] = JSON.stringify(process.env[key])
+})
+
+// Ensure NODE_ENV is set correctly
+env.NODE_ENV = JSON.stringify('production')
+
 module.exports = {
   mode: 'production',
   entry: './client/main.js',
@@ -40,8 +52,7 @@ module.exports = {
   },
   plugins: [
     new webpack.DefinePlugin({
-      'process.env.NODE_ENV': JSON.stringify('production'),
-      'process.env.MODE': JSON.stringify(process.env.MODE || 'production')
+      'process.env': env
     }),
 
     new MiniCssExtractPlugin({
