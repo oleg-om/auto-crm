@@ -24,15 +24,11 @@ services:
       context: .
       dockerfile: docker/PROD.Dockerfile
       target: nodeServer
+
     container_name: auto-crm-app
     restart: always
-    environment:
-      - NODE_ENV=production
-      - MONGO_URL=mongodb://app_user:app_password@mongodb:27017/chat?authSource=chat
-      - PORT=8081
-      - SECRET_JWT=your-super-secret-jwt-key-change-this-in-production
-      - ENABLE_SOCKETS=true
-      - MODE=production
+    env_file:
+      - .env
     ports:
       - "8081:8081"
     depends_on:
