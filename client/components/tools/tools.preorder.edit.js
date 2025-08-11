@@ -471,7 +471,7 @@ const ToolUpdate = (props) => {
                     <th className="p-3 font-bold uppercase bg-gray-100 text-sm text-gray-600 border border-gray-300 table-cell">
                       Запчасти
                     </th>
-                    <th className="p-3 font-bold uppercase bg-gray-100 text-sm text-gray-600 border border-gray-300 table-cell whitespace-nowrap">
+                    <th className="p-3 font-bold uppercase bg-gray-100 text-sm text-gray-600 border border-gray-300 table-cell whitespace-no-wrap">
                       Кол-во
                     </th>
                     <th className="p-3 px-3 font-bold uppercase bg-gray-100 text-sm text-gray-600 border border-gray-300 table-cell">
@@ -489,7 +489,7 @@ const ToolUpdate = (props) => {
                     <th className="p-3 font-bold uppercase bg-gray-100 text-sm text-gray-600 border border-gray-300 table-cell">
                       Поставщик
                     </th>
-                    <th className="p-3 font-bold uppercase bg-gray-100 text-sm text-gray-600 border border-gray-300 table-cell whitespace-nowrap">
+                    <th className="p-3 font-bold uppercase bg-gray-100 text-sm text-gray-600 border border-gray-300 table-cell whitespace-no-wrap">
                       Дата выдачи
                     </th>
                     <th className="p-3 font-bold uppercase bg-gray-100 text-sm text-gray-600 border border-gray-300 table-cell">

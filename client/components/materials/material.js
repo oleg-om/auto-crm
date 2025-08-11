@@ -34,7 +34,7 @@ const MaterialRow = (props) => {
         <span className="lg:hidden px-2 py-1 text-xs font-bold uppercase">Категория:</span>
         {props.category}
       </td>
-      <td className="w-full lg:w-auto p-2 text-gray-800 text-center border border-b block lg:table-cell relative lg:static whitespace-nowrap">
+      <td className="w-full lg:w-auto p-2 text-gray-800 text-center border border-b block lg:table-cell relative lg:static whitespace-no-wrap">
         <Link
           to={`/material/edit/${props.id}`}
           className="px-5 py-1 text-xs border-main-500 border text-main-500 rounded transition duration-300 hover:bg-main-700 hover:text-white focus:outline-none"

@@ -50,7 +50,7 @@ const ToggleSwitchOption = ({ name, value, inputName, onChange, stateValue, icon
       onClick={onRadioChange}
       onKeyDown={onRadioChange}
     >
-      <div className="flex items-center pl-3 pointer-events-none whitespace-nowrap">
+      <div className="flex items-center pl-3 pointer-events-none whitespace-no-wrap">
         <input
           id="horizontal-list-radio-license"
           type="radio"

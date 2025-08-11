@@ -142,7 +142,7 @@ const SalaryTableComponent = ({
       {checkIsBookkeper ? (
         <>
           {calendarType === 'month' ? (
-            <td className="w-full lg:w-auto p-2 text-gray-800 text-left lg:text-center border border-b block lg:table-cell relative lg:static whitespace-nowrap">
+            <td className="w-full lg:w-auto p-2 text-gray-800 text-left lg:text-center border border-b block lg:table-cell relative lg:static whitespace-no-wrap">
               <button
                 type="button"
                 onClick={onEmployeeClick}
@@ -153,7 +153,7 @@ const SalaryTableComponent = ({
               <WorkingDaysCell value={getUniqueWorkingDays()} />
             </td>
           ) : null}
-          <td className="w-full lg:w-auto p-2 text-gray-800 text-left lg:text-center border border-b block lg:table-cell relative lg:static whitespace-nowrap">
+          <td className="w-full lg:w-auto p-2 text-gray-800 text-left lg:text-center border border-b block lg:table-cell relative lg:static whitespace-no-wrap">
             <span className="lg:hidden px-2 py-1 text-xs font-bold uppercase">Вал:</span>
             {Math.round(getSalary(it.id), userPercent[it.id])} р.
           </td>
@@ -204,7 +204,7 @@ const SalaryTableComponent = ({
               </button>{' '}
             </span>
           </td>
-          <td className="w-full lg:w-auto p-2 text-gray-800 text-left lg:text-center border border-b block lg:table-cell relative lg:static whitespace-nowrap">
+          <td className="w-full lg:w-auto p-2 text-gray-800 text-left lg:text-center border border-b block lg:table-cell relative lg:static whitespace-no-wrap">
             <span className="lg:hidden px-2 py-1 text-xs font-bold uppercase">Зарплата:</span>
             {userPercent[it.id]
               ? Math.round(

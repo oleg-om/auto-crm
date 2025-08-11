@@ -26,7 +26,7 @@ const statusColor = (props) => {
 
 const TablesStatusCell = ({ props }) => {
   return (
-    <td className="w-full lg:w-auto block p-2 text-gray-800 text-left text-sm lg:text-center border border-b lg:table-cell relative lg:static whitespace-nowrap">
+    <td className="w-full lg:w-auto block p-2 text-gray-800 text-left text-sm lg:text-center border border-b lg:table-cell relative lg:static whitespace-no-wrap">
       <span className="lg:hidden px-2 py-1 text-xs font-bold uppercase">Статус:</span>
       <div
         className={cx(

@@ -29,7 +29,7 @@ const ToolsRow = (props) => {
           : props.preorder.slice(0, 2).map((it, index) => <p key={index}>{it.toolItem}</p>)}
       </td>
 
-      <td className="whitespace-nowrap w-full lg:w-auto p-2 text-gray-800 text-sm text-left lg:text-center border border-b block lg:table-cell relative lg:static">
+      <td className="whitespace-no-wrap w-full lg:w-auto p-2 text-gray-800 text-sm text-left lg:text-center border border-b block lg:table-cell relative lg:static">
         <span className="lg:hidden px-2 py-1 text-xs font-bold uppercase">Телефон:</span>
         {props.phone}
       </td>
@@ -65,7 +65,7 @@ const ToolsRow = (props) => {
           .toString()
           .replace(/^(\d)$/, '0$1')}`}
       </td>
-      <td className="w-full lg:w-auto p-2 text-gray-800 text-center border border-b block lg:table-cell relative lg:static whitespace-nowrap">
+      <td className="w-full lg:w-auto p-2 text-gray-800 text-center border border-b block lg:table-cell relative lg:static whitespace-no-wrap">
         <div className="flex flex-row justify-center">
           {/* <div
             title="Печать предчека"

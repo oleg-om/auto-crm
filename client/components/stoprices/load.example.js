@@ -53,15 +53,15 @@ const LoadExample = () => {
               <span className="lg:hidden px-2 py-1 text-xs font-bold uppercase">Категория:</span>
               sedan
             </td>
-            <td className="w-full lg:w-auto p-2 text-gray-800 text-center border border-b block lg:table-cell relative lg:static whitespace-nowrap">
+            <td className="w-full lg:w-auto p-2 text-gray-800 text-center border border-b block lg:table-cell relative lg:static whitespace-no-wrap">
               <span className="lg:hidden px-2 py-1 text-xs font-bold uppercase">Free:</span>
               no
             </td>
-            <td className="w-full lg:w-auto p-2 text-gray-800 text-center border border-b block lg:table-cell relative lg:static whitespace-nowrap">
+            <td className="w-full lg:w-auto p-2 text-gray-800 text-center border border-b block lg:table-cell relative lg:static whitespace-no-wrap">
               <span className="lg:hidden px-2 py-1 text-xs font-bold uppercase">Тип:</span>
               legk
             </td>
-            <td className="w-full lg:w-auto p-2 text-gray-800 text-center border border-b block lg:table-cell relative lg:static whitespace-nowrap">
+            <td className="w-full lg:w-auto p-2 text-gray-800 text-center border border-b block lg:table-cell relative lg:static whitespace-no-wrap">
               <span className="lg:hidden px-2 py-1 text-xs font-bold uppercase">Номер:</span>1
             </td>
           </tr>
@@ -85,15 +85,15 @@ const LoadExample = () => {
               <span className="lg:hidden px-2 py-1 text-xs font-bold uppercase">Категория:</span>
               crossover
             </td>
-            <td className="w-full lg:w-auto p-2 text-gray-800 text-center border border-b block lg:table-cell relative lg:static whitespace-nowrap">
+            <td className="w-full lg:w-auto p-2 text-gray-800 text-center border border-b block lg:table-cell relative lg:static whitespace-no-wrap">
               <span className="lg:hidden px-2 py-1 text-xs font-bold uppercase">Free:</span>
               yes
             </td>
-            <td className="w-full lg:w-auto p-2 text-gray-800 text-center border border-b block lg:table-cell relative lg:static whitespace-nowrap">
+            <td className="w-full lg:w-auto p-2 text-gray-800 text-center border border-b block lg:table-cell relative lg:static whitespace-no-wrap">
               <span className="lg:hidden px-2 py-1 text-xs font-bold uppercase">Тип:</span>
               legk
             </td>
-            <td className="w-full lg:w-auto p-2 text-gray-800 text-center border border-b block lg:table-cell relative lg:static whitespace-nowrap">
+            <td className="w-full lg:w-auto p-2 text-gray-800 text-center border border-b block lg:table-cell relative lg:static whitespace-no-wrap">
               <span className="lg:hidden px-2 py-1 text-xs font-bold uppercase">Номер:</span>2
             </td>
           </tr>
@@ -117,15 +117,15 @@ const LoadExample = () => {
               <span className="lg:hidden px-2 py-1 text-xs font-bold uppercase">Категория:</span>
               runflat
             </td>
-            <td className="w-full lg:w-auto p-2 text-gray-800 text-center border border-b block lg:table-cell relative lg:static whitespace-nowrap">
+            <td className="w-full lg:w-auto p-2 text-gray-800 text-center border border-b block lg:table-cell relative lg:static whitespace-no-wrap">
               <span className="lg:hidden px-2 py-1 text-xs font-bold uppercase">Free:</span>
               no
             </td>
-            <td className="w-full lg:w-auto p-2 text-gray-800 text-center border border-b block lg:table-cell relative lg:static whitespace-nowrap">
+            <td className="w-full lg:w-auto p-2 text-gray-800 text-center border border-b block lg:table-cell relative lg:static whitespace-no-wrap">
               <span className="lg:hidden px-2 py-1 text-xs font-bold uppercase">Тип:</span>
               legk
             </td>
-            <td className="w-full lg:w-auto p-2 text-gray-800 text-center border border-b block lg:table-cell relative lg:static whitespace-nowrap">
+            <td className="w-full lg:w-auto p-2 text-gray-800 text-center border border-b block lg:table-cell relative lg:static whitespace-no-wrap">
               <span className="lg:hidden px-2 py-1 text-xs font-bold uppercase">Номер:</span>3
             </td>
           </tr>

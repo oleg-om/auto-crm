@@ -18,11 +18,11 @@ const BalanceCell = ({ data, value }) => {
       onMouseEnter={() => setVisible(true)}
       onMouseLeave={() => setVisible(false)}
     >
-      <span className="whitespace-nowrap">{countAdvance(value)} р.</span>
+      <span className="whitespace-no-wrap">{countAdvance(value)} р.</span>
 
       {visible && (
         <div
-          className="absolute top-full right-full mb-2 px-2 py-1 text-sm text-white bg-gray-800 rounded shadow-lg whitespace-nowrap text-left"
+          className="absolute top-full right-full mb-2 px-2 py-1 text-sm text-white bg-gray-800 rounded shadow-lg whitespace-no-wrap text-left"
           style={{ bottom: '24px', right: '0', zIndex: 11, width: '180px' }}
         >
           <h3 className="font-semibold">Вычтено с предыдущего месяца:</h3>

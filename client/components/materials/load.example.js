@@ -53,7 +53,7 @@ const LoadExample = () => {
               <span className="lg:hidden px-2 py-1 text-xs font-bold uppercase">Категория:</span>
               Вентили для легковых автомобилей
             </td>
-            <td className="w-full lg:w-auto p-2 text-gray-800 text-center border border-b block lg:table-cell relative lg:static whitespace-nowrap">
+            <td className="w-full lg:w-auto p-2 text-gray-800 text-center border border-b block lg:table-cell relative lg:static whitespace-no-wrap">
               <span className="lg:hidden px-2 py-1 text-xs font-bold uppercase">Тип:</span>
               shinomontazh
             </td>
@@ -61,7 +61,7 @@ const LoadExample = () => {
               <span className="lg:hidden px-2 py-1 text-xs font-bold uppercase">Акцию:</span>
               no
             </td>
-            <td className="w-full lg:w-auto p-2 text-gray-800 text-center border border-b block lg:table-cell relative lg:static whitespace-nowrap">
+            <td className="w-full lg:w-auto p-2 text-gray-800 text-center border border-b block lg:table-cell relative lg:static whitespace-no-wrap">
               <span className="lg:hidden px-2 py-1 text-xs font-bold uppercase">Плюс:</span>
               no
             </td>
@@ -87,7 +87,7 @@ const LoadExample = () => {
               <span className="lg:hidden px-2 py-1 text-xs font-bold uppercase">Категория:</span>
               Латки универсальные
             </td>
-            <td className="w-full lg:w-auto p-2 text-gray-800 text-center border border-b block lg:table-cell relative lg:static whitespace-nowrap">
+            <td className="w-full lg:w-auto p-2 text-gray-800 text-center border border-b block lg:table-cell relative lg:static whitespace-no-wrap">
               <span className="lg:hidden px-2 py-1 text-xs font-bold uppercase">Тип:</span>
               shinomontazh
             </td>
@@ -95,7 +95,7 @@ const LoadExample = () => {
               <span className="lg:hidden px-2 py-1 text-xs font-bold uppercase">Акция:</span>
               yes
             </td>
-            <td className="w-full lg:w-auto p-2 text-gray-800 text-center border border-b block lg:table-cell relative lg:static whitespace-nowrap">
+            <td className="w-full lg:w-auto p-2 text-gray-800 text-center border border-b block lg:table-cell relative lg:static whitespace-no-wrap">
               <span className="lg:hidden px-2 py-1 text-xs font-bold uppercase">Плюс:</span>
               no
             </td>
@@ -121,7 +121,7 @@ const LoadExample = () => {
               <span className="lg:hidden px-2 py-1 text-xs font-bold uppercase">Категория:</span>
               Химия
             </td>
-            <td className="w-full lg:w-auto p-2 text-gray-800 text-center border border-b block lg:table-cell relative lg:static whitespace-nowrap">
+            <td className="w-full lg:w-auto p-2 text-gray-800 text-center border border-b block lg:table-cell relative lg:static whitespace-no-wrap">
               <span className="lg:hidden px-2 py-1 text-xs font-bold uppercase">Тип:</span>
               moika
             </td>
@@ -129,7 +129,7 @@ const LoadExample = () => {
               <span className="lg:hidden px-2 py-1 text-xs font-bold uppercase">Акция:</span>
               no
             </td>
-            <td className="w-full lg:w-auto p-2 text-gray-800 text-center border border-b block lg:table-cell relative lg:static whitespace-nowrap">
+            <td className="w-full lg:w-auto p-2 text-gray-800 text-center border border-b block lg:table-cell relative lg:static whitespace-no-wrap">
               <span className="lg:hidden px-2 py-1 text-xs font-bold uppercase">Плюс:</span>
               yes
             </td>

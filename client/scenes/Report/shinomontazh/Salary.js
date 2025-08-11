@@ -898,26 +898,26 @@ const Salary = ({
               ) : null}
               {!checkIsBookkeper ? (
                 <>
-                  <td className="w-full lg:w-auto p-2 text-gray-800 text-left lg:text-center border border-b block lg:table-cell relative lg:static whitespace-nowrap">
+                  <td className="w-full lg:w-auto p-2 text-gray-800 text-left lg:text-center border border-b block lg:table-cell relative lg:static whitespace-no-wrap">
                     <span className="lg:hidden px-2 py-1 bg-purple-100 font-bold uppercase">
                       Терминал:
                     </span>
                     {Math.round(getSalaryfull('', 'Терминал', 'Комбинированный', 'summa'), '')} руб.
                   </td>
-                  <td className="w-full lg:w-auto p-2 text-gray-800 text-left lg:text-center border border-b block lg:table-cell relative lg:static whitespace-nowrap">
+                  <td className="w-full lg:w-auto p-2 text-gray-800 text-left lg:text-center border border-b block lg:table-cell relative lg:static whitespace-no-wrap">
                     <span className="lg:hidden px-2 py-1 bg-purple-100 font-bold uppercase">
                       Безнал:
                     </span>
                     {Math.round(getSalaryfull('', 'Безнал', '', 'summa'), '')} руб.
                   </td>
-                  <td className="w-full lg:w-auto p-2 text-gray-800 text-left lg:text-center border border-b block lg:table-cell relative lg:static whitespace-nowrap">
+                  <td className="w-full lg:w-auto p-2 text-gray-800 text-left lg:text-center border border-b block lg:table-cell relative lg:static whitespace-no-wrap">
                     <span className="lg:hidden px-2 py-1 bg-purple-100 font-bold uppercase">
                       Наличка:
                     </span>
                     {Math.round(getSalaryfull('', 'Оплачено', 'Комбинированный', 'summa'), '')} руб.
                   </td>
                   {calendarType === 'day' ? (
-                    <td className="w-full lg:w-auto p-2 text-gray-800 text-left lg:text-center border border-b block lg:table-cell relative lg:static whitespace-nowrap">
+                    <td className="w-full lg:w-auto p-2 text-gray-800 text-left lg:text-center border border-b block lg:table-cell relative lg:static whitespace-no-wrap">
                       <span className="lg:hidden px-2 py-1 bg-purple-100 font-bold uppercase">
                         Сумма:
                       </span>
@@ -925,14 +925,14 @@ const Salary = ({
                     </td>
                   ) : null}
                   {calendarType === 'day' ? (
-                    <td className="w-full lg:w-auto p-2 text-gray-800 text-left lg:text-center border border-b block lg:table-cell relative lg:static whitespace-nowrap">
+                    <td className="w-full lg:w-auto p-2 text-gray-800 text-left lg:text-center border border-b block lg:table-cell relative lg:static whitespace-no-wrap">
                       <span className="lg:hidden px-2 py-1 bg-purple-100 font-bold uppercase">
                         Акция:
                       </span>
                       {Math.round(getSalaryfull('', '', '', 'discountonly'), '')} руб.
                     </td>
                   ) : null}
-                  <td className="w-full lg:w-auto p-2 text-gray-800 text-left lg:text-center border border-b block lg:table-cell relative lg:static whitespace-nowrap">
+                  <td className="w-full lg:w-auto p-2 text-gray-800 text-left lg:text-center border border-b block lg:table-cell relative lg:static whitespace-no-wrap">
                     <span className="lg:hidden px-2 py-1 bg-purple-100 font-bold uppercase">
                       Вал:
                     </span>
@@ -942,7 +942,7 @@ const Salary = ({
               ) : null}
 
               {checkIsBookkeper ? (
-                <td className="w-full lg:w-auto p-2 text-gray-800 text-left lg:text-center border border-b block lg:table-cell relative lg:static whitespace-nowrap">
+                <td className="w-full lg:w-auto p-2 text-gray-800 text-left lg:text-center border border-b block lg:table-cell relative lg:static whitespace-no-wrap">
                   <span className="lg:hidden px-2 py-1 bg-purple-100 font-bold uppercase">
                     Остаток:
                   </span>

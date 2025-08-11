@@ -29,7 +29,7 @@ export default class NakleikaPrint extends React.PureComponent {
                             <td className="border border-black text-center p-2 py-3">
                               <p>{this.props.props.phone}</p>
                               <p>{this.props.props.name}</p>
-                              <p className="whitespace-nowrap">
+                              <p className="whitespace-no-wrap">
                                 с{' '}
                                 <b>{`${new Date(this.props.props.dateStart)
                                   .getDate()
@@ -55,7 +55,7 @@ export default class NakleikaPrint extends React.PureComponent {
                               ) : (
                                 ''
                               )}
-                              <p className="whitespace-nowrap">
+                              <p className="whitespace-no-wrap">
                                 до{' '}
                                 {`${new Date(this.props.props.dateFinish)
                                   .getDate()
@@ -118,7 +118,7 @@ export default class NakleikaPrint extends React.PureComponent {
                           <td className="border border-black text-center p-2 py-3">
                             <p>{this.props.props.phone}</p>
                             <p>{this.props.props.name}</p>
-                            <p className="whitespace-nowrap">
+                            <p className="whitespace-no-wrap">
                               с{' '}
                               <b>{`${new Date(this.props.props.dateStart)
                                 .getDate()
@@ -143,7 +143,7 @@ export default class NakleikaPrint extends React.PureComponent {
                               ''
                             )}
 
-                            <p className="whitespace-nowrap">
+                            <p className="whitespace-no-wrap">
                               до{' '}
                               {`${new Date(this.props.props.dateFinish)
                                 .getDate()
