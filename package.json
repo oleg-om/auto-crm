@@ -4,8 +4,8 @@
     "description": "Autodom CRM",
     "main": "index.js",
     "engines": {
-        "node": ">=22.0.0",
-        "npm": ">=10.0.0"
+        "node": ">=18.0.0",
+        "npm": ">=8.0.0"
     },
     "scripts": {
         "docker-start-dev": "docker-compose -f \"docker\\DEV.docker-compose.yml\" up",

@@ -8,16 +8,11 @@ import store from '../index'
 
 // Используем переменные окружения или относительные URL
 const getWebSocketUrl = () => {
-  if (process.env.NODE_ENV === 'main') {
-    return process.env.REACT_APP_MAIN_WEBSOCKET_URL || 'http://89.110.97.155:8090'
-  }
-  
   if (process.env.MODE === 'study') {
     return process.env.REACT_APP_STUDY_WEBSOCKET_URL || 'http://89.110.97.155:8090'
   }
-  
-  // В продакшене используем относительный URL для работы через nginx
-  return process.env.REACT_APP_PRODUCTION_WEBSOCKET_URL || 'http://89.110.97.155:8090'
+
+  return process.env.REACT_APP_MAIN_WEBSOCKET_URL || 'http://89.110.97.155:8090'
 }
 
 export const socket = io(getWebSocketUrl(), {
