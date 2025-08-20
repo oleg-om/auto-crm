@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import cx from 'classnames'
 import Calendar from 'react-calendar'
@@ -11,8 +11,6 @@ const ReportSidebar = (props) => {
   const currentEmployee = useSelector((s) => s.employees.employee)
   const propsDate = new Date(props.activeMonth)
   const OrderDate = `${propsDate.toLocaleString('default', { month: 'long' })}`.toString()
-
-  const [showReport, setShowReport] = useState(true)
 
   useEffect(() => {
     dispatch(updateCurrentEmployeeReport(''))
@@ -73,16 +71,16 @@ const ReportSidebar = (props) => {
   return (
     <nav
       className="left-0 top-0 bg-gray-800 w-72 flex flex-col pt-3 sidebar"
-      style={showReport ? {} : { width: '50px' }}
+      style={props.showReport ? {} : { width: '50px' }}
     >
       <button
         className="mb-2 text-white text-left pl-3"
         type="button"
-        onClick={() => setShowReport(!showReport)}
+        onClick={() => props.setShowReport(!props.showReport)}
       >
-        {showReport ? 'Скрыть панель ←' : '→'}
+        {props.showReport ? 'Скрыть панель ←' : '→'}
       </button>
-      {showReport ? (
+      {props.showReport ? (
         <span>
           <div className="flex flex-row justify-around">
             {props.auth.roles.includes('bookkeeper') || props.auth.roles.includes('boss') ? (

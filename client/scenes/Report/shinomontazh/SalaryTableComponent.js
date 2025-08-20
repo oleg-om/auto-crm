@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useDispatch } from 'react-redux'
 import { toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
@@ -125,6 +125,14 @@ const SalaryTableComponent = ({
     return uniqueDays.size
   }
 
+  const [showPercent, setShowPercent] = useState(false)
+
+  useEffect(() => {
+    if (!userPercent[it.id]) {
+      setShowPercent(true)
+    }
+  }, [userPercent[it.id]])
+
   return (
     <tr className="bg-white lg:hover:bg-gray-100 flex lg:table-row flex-row lg:flex-row flex-wrap lg:flex-no-wrap mb-5 lg:mb-0">
       <td className="w-full lg:w-auto p-2 text-gray-800 text-left border border-b block lg:table-cell relative lg:static">
@@ -162,7 +170,14 @@ const SalaryTableComponent = ({
             id="procent"
             className="w-auto table-cell lg:w-auto p-2 text-gray-800 text-left border border-b relative lg:static"
           >
-            <span className="flex">
+            <span className="flex relative">
+              {!showPercent && (
+                <button
+                  type="button"
+                  className="absolute top-0 right-0 bottom-0 left-0 bg-gray-200 cursor-pointer hover:bg-gray-300"
+                  onClick={() => setShowPercent(!showPercent)}
+                />
+              )}
               <input
                 className="w-full border-solid border-4 border-light-main-500"
                 type="number"
