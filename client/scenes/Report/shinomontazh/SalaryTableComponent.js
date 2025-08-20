@@ -125,11 +125,13 @@ const SalaryTableComponent = ({
     return uniqueDays.size
   }
 
-  const [showPercent, setShowPercent] = useState(false)
+  const [showPercentOverlay, setShowPercentOverlay] = useState(false)
+  const [overlayIsShown, setOverlayIsShown] = useState(false)
 
   useEffect(() => {
-    if (!userPercent[it.id]) {
-      setShowPercent(true)
+    if (!overlayIsShown && (userPercent[it.id] || userPercent[it.id]?.length)) {
+      setShowPercentOverlay(true)
+      setOverlayIsShown(true)
     }
   }, [userPercent[it.id]])
 
@@ -171,18 +173,21 @@ const SalaryTableComponent = ({
             className="w-auto table-cell lg:w-auto p-2 text-gray-800 text-left border border-b relative lg:static"
           >
             <span className="flex relative">
-              {!showPercent && (
+              {showPercentOverlay && (
                 <button
                   type="button"
                   className="absolute top-0 right-0 bottom-0 left-0 bg-gray-200 cursor-pointer hover:bg-gray-300"
-                  onClick={() => setShowPercent(!showPercent)}
+                  onClick={() => setShowPercentOverlay(!showPercentOverlay)}
                 />
               )}
               <input
                 className="w-full border-solid border-4 border-light-main-500"
                 type="number"
                 value={userPercent[it.id]}
-                onChange={onChangePercent}
+                onChange={(e) => {
+                  onChangePercent(e)
+                  setOverlayIsShown(true)
+                }}
                 name={it.id}
               />
               <button
