@@ -22,7 +22,8 @@ const Shinomontazh = ({
   timeStart,
   active,
   employeeList,
-  range
+  range,
+  showReport
 }) => {
   const [shinList, setShinList] = useState([])
   const [isLoaded, setIsLoaded] = useState(false)
@@ -334,6 +335,7 @@ const Shinomontazh = ({
               showPaid={showPaid}
               onChangeShowPaid={onChangeShowPaid}
               activeMonth={activeMonth}
+              showReport={showReport}
             />
           ) : null}
           {isLoaded && report.length <= 0 ? (

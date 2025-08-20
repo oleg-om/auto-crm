@@ -122,6 +122,8 @@ const Report = () => {
     setActive(value)
   }
 
+  const [showReport, setShowReport] = useState(true)
+
   return (
     <div>
       <Navbar />
@@ -147,6 +149,8 @@ const Report = () => {
             active={active}
             auth={auth}
             onChangeEmployee={onChangeEmployee}
+            showReport={showReport}
+            setShowReport={setShowReport}
           />
 
           <div className="w-full mx-auto px-4">
@@ -195,6 +199,7 @@ const Report = () => {
                   timeStart={timeStart}
                   active={active}
                   range={range}
+                  showReport={showReport}
                 />
               ) : null}
               {active.includes('product') ? (

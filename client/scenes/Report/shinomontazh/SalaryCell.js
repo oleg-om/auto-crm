@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { useDispatch } from 'react-redux'
 import PropTypes from 'prop-types'
+import dayjs from 'dayjs'
 import { createEmployeeData, deleteEmployeeData } from '../../../redux/reducers/employees'
 
 export const salaryFormattedDate = (date) =>
@@ -98,6 +99,22 @@ const SalaryCell = ({
 
   const withComment = data.type !== REPORT_SALARY_TYPES.salary
 
+  const formatDate = (dateString) => {
+    if (!dateString) return ''
+
+    const [year, month, day] = dateString.split('-')
+
+    return dayjs(`${year}-${month}-${day}`).format('DD.MM.YYYY')
+  }
+
+  const formatDateToValue = (dateString) => {
+    if (!dateString) return ''
+
+    const [day, month, year] = dateString.split('.')
+
+    return dayjs(`${year}-${month}-${day}`).format('YYYY-MM-DD')
+  }
+
   return (
     <div className="relative" key={currentDate}>
       {/* Основная ячейка */}
@@ -135,7 +152,19 @@ const SalaryCell = ({
                   placeholder="Сумма"
                   name="val"
                 />
-                <span className="mr-2">{salary.date}</span>
+                <input
+                  type="date"
+                  className="mr-2"
+                  value={formatDateToValue(salary.date)}
+                  name="date"
+                  onChange={(e) => {
+                    handleSalaryChange(index, {
+                      name: 'date',
+                      value: formatDate(e.target.value)
+                    })
+                  }}
+                />
+
                 {withComment ? (
                   <input
                     type="text"

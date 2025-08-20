@@ -214,18 +214,16 @@ const Salary = ({
   onChangeShowRazval,
   showPaid,
   onChangeShowPaid,
-  activeMonth
+  activeMonth,
+  showReport
 }) => {
   const dispatch = useDispatch()
   const employee = useSelector((s) => s.employees.employee)
+  const employeeListFiltered = useSelector((s) => s.employees?.report)
 
   const employeeArrayFiltered = employeeArray.filter((data) => filterByEmployee(data, employee))
 
   const dateArray = (emp) => {
-    console.log(
-      '      .filter((data) => filterReportByEmployee(data, emp))',
-      report.filter((data) => filterReportByEmployee(data, emp))
-    )
     return report
       .filter((data) => filterReportByEmployee(data, emp))
       .reduce((thing, current) => {
@@ -248,8 +246,6 @@ const Salary = ({
         return 0
       })
   }
-
-  console.log('dateArray', dateArray('295c02f8-dc31-484b-a074-2d2cffe74b7f'))
 
   const onChangeMat = (e) => {
     const { value } = e.target
@@ -695,12 +691,17 @@ const Salary = ({
     dispatch(updateCurrentEmployeeReport(''))
   }
 
+  const onChangeEmployee = (e) => {
+    const { value } = e.target
+    dispatch(updateCurrentEmployeeReport(value))
+  }
+
   return (
     <div className="mb-3">
       <h2 className="text-xl font-semibold mb-2">
-        {showPaid === 'no' ? 'Сводка по не оплаченным таклонам' : 'Зарплаты'}
+        {showPaid === 'no' ? 'Сводка по не оплаченным талонам' : 'Зарплаты'}
       </h2>
-      <div className="flex mb-3">
+      <div className="flex mb-3 gap-4">
         <div className="mr-5">
           <p>Учитывать материалы:</p>
           <select
@@ -719,7 +720,7 @@ const Salary = ({
           </select>
         </div>
         {checkIsSto ? (
-          <div className="mr-5">
+          <div>
             <p>Только развал:</p>
             <select
               className="appearance-none block bg-gray-100 text-sm text-gray-700 border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-1 px-4"
@@ -749,6 +750,30 @@ const Salary = ({
             <option value="no">Нет</option>
           </select>
         </div>
+
+        {!showReport ? (
+          <div>
+            <p>Выберите сотрудника:</p>
+            <select
+              className={cx(
+                'appearance-none block bg-grey-lighter text-sm text-grey-darker border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-1 px-4',
+                {}
+              )}
+              value={employee}
+              name="employee"
+              onChange={onChangeEmployee}
+            >
+              <option value="">Все</option>
+              {employeeListFiltered
+                ?.sort((a, b) => a?.name - b?.name)
+                .map((it) => (
+                  <option key={it} value={it.id}>
+                    {it.name} {it.surname}
+                  </option>
+                ))}
+            </select>
+          </div>
+        ) : null}
       </div>
       <table className="border-collapse w-full">
         <thead className="sticky top-0 z-10">

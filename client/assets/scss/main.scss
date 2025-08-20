@@ -7,6 +7,10 @@ body {
 }
 .sidebar {
   min-height: calc(100vh - 64px);
+
+  &.horizontal {
+    min-height: auto;
+  }
 }
 
 @media print {
