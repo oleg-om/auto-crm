@@ -5573,10 +5573,10 @@ data-urls@^2.0.0:
     whatwg-mimetype "^2.3.0"
     whatwg-url "^8.0.0"
 
-dayjs@^1.11.13:
-  version "1.11.13"
-  resolved "https://registry.yarnpkg.com/dayjs/-/dayjs-1.11.13.tgz#92430b0139055c3ebb60150aa13e860a4b5a366c"
-  integrity sha512-oaMBel6gjolK862uaPQOVTA7q3TZhuSvuMQAAglQDOWYO9A91IrAOUJEyKVlqJlHE0vq5p5UXxzdPfMH/x6xNg==
+dayjs@1.5.15:
+  version "1.5.15"
+  resolved "https://registry.yarnpkg.com/dayjs/-/dayjs-1.5.15.tgz#2395ec7e522dec0af12e6c55286121bb7649e2a4"
+  integrity sha512-tFzqM7D4JDGjXPLZ/oJZ/EiEQgCmQNOllRNiYAJ9MMfIiDIjp1Vtyj3KDGelGF1o3mwmJhK16tNrDaMopE74Kw==
 
 dead-exports@^1.0.13:
   version "1.0.13"
