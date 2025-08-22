@@ -17,7 +17,7 @@
         "start": "cross-env NODE_ENV=production && node start.js",
         "clean": "rimraf dist",
         "build": "cross-env npm run clean && webpack --config webpack.production.config.js --progress --profile",
-        "build:docker": "cross-env npm run clean && webpack --config webpack.docker.config.js --progress --profile",
+        "build:docker": "cross-env npm run clean && webpack --config webpack.production.config.js --progress --profile",
         "lint": "eslint ./client/**/**.js ./server/**/**.js ",
         "prettier": "prettier ./client/**/**.js ./server/**/**.js --write ",
         "reinstall": "git pull && npm run build && pm2 restart all",

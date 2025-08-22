@@ -17,7 +17,7 @@ RUN yarn install
 COPY . .
 
 # Build the application
-RUN yarn build:docker
+RUN yarn build
 
 # Expose port
 EXPOSE 8081
