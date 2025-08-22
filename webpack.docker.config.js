@@ -23,7 +23,7 @@ module.exports = {
   entry: './client/main.js',
   output: {
     path: path.resolve(__dirname, 'dist'),
-    filename: 'js/[name].[contenthash:8].bundle.js',
+    filename: 'js/[name].[contenthash:8].bundle1.js',
     chunkFilename: 'js/[id].[contenthash:8].chunk.js',
     clean: true
   },
@@ -45,7 +45,8 @@ module.exports = {
         vendor: {
           test: /[\\/]node_modules[\\/]/,
           name: 'vendors',
-          chunks: 'all'
+          chunks: 'all',
+          filename: 'js/[name].[contenthash:8].bundle.js'
         }
       }
     }
@@ -134,6 +135,20 @@ module.exports = {
             }
           }
         ]
+      },
+      {
+        test: /\.(png|jpe?g|gif|svg|ico|webp)$/i,
+        type: 'asset/resource',
+        generator: {
+          filename: 'images/[name].[contenthash:8][ext]'
+        }
+      },
+      {
+        test: /\.(woff|woff2|eot|ttf|otf)$/i,
+        type: 'asset/resource',
+        generator: {
+          filename: 'fonts/[name].[contenthash:8][ext]'
+        }
       },
       {
         test: /\.(jpg|png|gif|webp)$/,

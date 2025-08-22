@@ -23,7 +23,7 @@ module.exports = {
   entry: './client/main.js',
   output: {
     path: path.resolve(__dirname, 'dist'),
-    filename: 'js/[name].bundle.js',
+    filename: 'js/[name].bundle3.js',
     chunkFilename: 'js/[id].js',
     clean: true
   },

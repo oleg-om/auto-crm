@@ -23,7 +23,7 @@ const config = {
     modules: [resolve(__dirname, 'node_modules'), 'node_modules']
   },
   output: {
-    filename: 'js/[name].bundle.js',
+    filename: 'js/[name].bundle2.js',
     path: resolve(__dirname, 'dist/assets'),
     publicPath: '/',
     chunkFilename: 'js/[name].[contenthash].js'
