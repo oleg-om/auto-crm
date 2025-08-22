@@ -20,7 +20,7 @@ jobs:
       - name: Pull changes and restart app
         run: |
           ssh -o StrictHostKeyChecking=no ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST_STUDY }} << 'EOF'
-            cd /auto-crm
+            cd /root/auto-crm
             git pull
             docker compose build --no-cache
             docker compose up -d --force-recreate
