@@ -23,8 +23,8 @@ module.exports = {
   entry: './client/main.js',
   output: {
     path: path.resolve(__dirname, 'dist'),
-    filename: 'js/[name].bundle.js',
-    chunkFilename: 'js/[id].js',
+    filename: 'js/[name].[contenthash:8].bundle.js',
+    chunkFilename: 'js/[id].[contenthash:8].chunk.js',
     clean: true
   },
   optimization: {
@@ -55,9 +55,27 @@ module.exports = {
       'process.env': env
     }),
 
+    new HtmlWebpackPlugin({
+      template: './client/index.docker.html',
+      filename: 'index.html',
+      inject: true,
+      minify: {
+        removeComments: true,
+        collapseWhitespace: true,
+        removeRedundantAttributes: true,
+        useShortDoctype: true,
+        removeEmptyAttributes: true,
+        removeStyleLinkTypeAttributes: true,
+        keepClosingSlash: true,
+        minifyJS: true,
+        minifyCSS: true,
+        minifyURLs: true,
+      },
+    }),
+
     new MiniCssExtractPlugin({
-      filename: 'css/[name].css',
-      chunkFilename: 'css/[id].css'
+      filename: 'css/[name].[contenthash:8].css',
+      chunkFilename: 'css/[id].[contenthash:8].css'
     }),
     new CopyWebpackPlugin({
       patterns: [
@@ -65,8 +83,7 @@ module.exports = {
         { from: 'public', to: '.' },
         { from: 'client/install-sw.js', to: '.' },
         { from: 'client/sw.js', to: '.' },
-        { from: 'client/html.js', to: '.' },
-        { from: 'client/index.docker.html', to: 'index.html' }
+        { from: 'client/html.js', to: '.' }
       ]
     })
   ],
