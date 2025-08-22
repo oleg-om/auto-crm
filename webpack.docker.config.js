@@ -24,7 +24,7 @@ module.exports = {
   output: {
     path: path.resolve(__dirname, 'dist'),
     filename: 'js/[name].bundle.js',
-    chunkFilename: 'js/[id].js',
+    chunkFilename: 'js/[id].js?id=[chunkhash]',
     clean: true
   },
   optimization: {
