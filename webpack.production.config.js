@@ -44,7 +44,7 @@ const config = {
     modules: [resolve(__dirname, 'node_modules'), 'node_modules']
   },
   output: {
-    filename: 'js/[name].bundle.js?id=[contenthash]',
+    filename: 'js/[name].bundle.test.js?id=[contenthash]',
     path: resolve(__dirname, 'dist/assets'),
     publicPath: '/',
     chunkFilename: 'js/[name].js?id=[chunkhash]'
