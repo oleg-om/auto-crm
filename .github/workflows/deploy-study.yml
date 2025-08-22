@@ -2,7 +2,7 @@ name: Deploy to study
 
 on:
   push:
-    branches: [ "master" ] # Триггер на пуш в ветку master
+    branches: [ "REACT-19" ] # Триггер на пуш в ветку master
 
 jobs:
   deploy:
@@ -23,8 +23,9 @@ jobs:
       - name: Pull changes and restart app
         run: |
           ssh -o StrictHostKeyChecking=no ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST_STUDY }} << 'EOF'
-            cd /var/www/autodom-crm
-            git pull origin master
-            npm run build
+            cd /auto-crm
+            git pull
+            docker compose build --no-cache
+            docker compose up -d --force-recreate
             pm2 restart all
           EOF
