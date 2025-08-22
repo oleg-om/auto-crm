@@ -11,7 +11,7 @@ require('dotenv').config()
 
 // Create environment variables object for webpack
 const env = {}
-Object.keys(process.env).forEach((key) => {
+Object.keys(process.env).forEach(key => {
   env[key] = JSON.stringify(process.env[key])
 })
 
@@ -23,7 +23,7 @@ module.exports = {
   entry: './client/main.js',
   output: {
     path: path.resolve(__dirname, 'dist'),
-    filename: 'js/[name].bundle3.js',
+    filename: 'js/[name].bundle.js',
     chunkFilename: 'js/[id].js',
     clean: true
   },
@@ -67,7 +67,7 @@ module.exports = {
         { from: 'client/sw.js', to: '.' },
         { from: 'client/html.js', to: '.' },
         {
-          from: 'client/index.html',
+          from: env.MODE === 'study' ? 'client/index.study.html' : 'client/index.html',
           to: 'index.html'
         }
       ]
