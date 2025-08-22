@@ -57,7 +57,7 @@ module.exports = {
     }),
 
     new HtmlWebpackPlugin({
-      template: './client/index.docker.html',
+      template: './client/index.html',
       filename: 'index.html',
       inject: true,
       minify: {

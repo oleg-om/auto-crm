@@ -22,6 +22,6 @@ jobs:
           ssh -o StrictHostKeyChecking=no ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST_STUDY }} << 'EOF'
             cd /root/auto-crm
             git pull
-            docker compose build --no-cache
+            docker compose -f docker/PROD.docker-compose.yml up --build -d
             docker compose up -d --force-recreate
           EOF
