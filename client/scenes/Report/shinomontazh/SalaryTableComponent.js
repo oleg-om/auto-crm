@@ -374,7 +374,8 @@ const SalaryTableComponent = ({
         <td className="w-full lg:w-auto p-2 text-gray-800 text-left lg:text-center border border-b block lg:table-cell relative lg:static">
           <span className="lg:hidden px-2 py-1 text-xs font-bold uppercase">Остаток:</span>
           <BalanceCell
-            data={it?.prevMonthData || []}
+            data={it?.data || []}
+            prevMonthData={it?.prevMonthData || []}
             value={
               userPercent[it.id] ? applyDiscount(getSalary(it.id), userPercent[it.id], it.id) : 0
             }
