@@ -10,6 +10,13 @@ exports.getOne = async (req, res) => {
   return res.json({ status: 'ok', data: employee })
 }
 
+exports.getSingle = async (req, res) => {
+  const employee = await EmployeeReport.find({
+    employeeId: req.params.employee
+  })
+  return res.json({ status: 'ok', data: employee })
+}
+
 exports.getMonth = async (req, res) => {
   const { yearmonth } = req.query
 

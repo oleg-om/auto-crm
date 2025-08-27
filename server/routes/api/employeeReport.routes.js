@@ -9,5 +9,6 @@ router.get('/employeereportmonth/', employeeController.getMonth)
 router.post('/employeereport/', employeeController.create)
 router.patch('/employeereport/:id', employeeController.update)
 router.delete('/employeereport/:id', employeeController.delete)
+router.get('/employeereportsingle/:employee', employeeController.getSingle)
 
 module.exports = router

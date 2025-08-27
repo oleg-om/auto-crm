@@ -14,6 +14,7 @@ export const REPORT_SALARY_TYPES = {
 }
 
 const STATUSES = {
+  new: 'new',
   edit: 'edit'
 }
 
@@ -30,7 +31,9 @@ const SalaryCell = ({
   payments = []
 }) => {
   const dispatch = useDispatch()
+
   const [isModalOpen, setIsModalOpen] = useState(false)
+  const [updatedPayments, setUpdatedPayments] = useState([])
 
   // Форматирование даты в формат "месяц.год"
 
@@ -47,8 +50,22 @@ const SalaryCell = ({
     sal?.filter((s) => s?.month === salaryFormattedDate(currentDate)) || []
 
   useEffect(() => {
-    setSalariesList(getSalariesOfCurrentMonth(payments.filter((s) => s.type === data.type)))
-  }, [payments])
+    if (isModalOpen) {
+      fetch(`/api/v1/employeereportsingle/${employeeId}`)
+        .then((r) => r.json())
+        .then((d) => {
+          if (d?.data) {
+            setUpdatedPayments(d.data)
+          }
+        })
+    } else if (!updatedPayments?.length) {
+      setUpdatedPayments(payments)
+    }
+  }, [isModalOpen])
+
+  useEffect(() => {
+    setSalariesList(getSalariesOfCurrentMonth(updatedPayments.filter((s) => s.type === data.type)))
+  }, [payments, updatedPayments])
 
   useEffect(() => {
     setTotalAdvance(
@@ -93,6 +110,17 @@ const SalaryCell = ({
       .filter((s) => s?.status === STATUSES.edit)
       .map((s) => dispatch(createEmployeeData(s)))
     deletedList.map((s) => dispatch(deleteEmployeeData(s?._id)))
+
+    setSalariesList(
+      salariesList.map((s) => {
+        if (s?.status === STATUSES.edit) {
+          return { ...s, status: STATUSES.new }
+        }
+        return s
+      })
+    )
+
+    setDeletedList([])
 
     setIsModalOpen(false)
   }
