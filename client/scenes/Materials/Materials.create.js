@@ -10,6 +10,7 @@ import {
   getMaterials
 } from '../../redux/reducers/materials'
 import Navbar from '../../components/Navbar'
+import MaterialricesDonwnload from './Materials.donwload'
 
 const MaterialNew = () => {
   const dispatch = useDispatch()
@@ -53,6 +54,7 @@ const MaterialNew = () => {
           >
             Загрузить из Excel
           </button>
+          <MaterialricesDonwnload />
         </div>
         {type === 'single' ? (
           <div>
