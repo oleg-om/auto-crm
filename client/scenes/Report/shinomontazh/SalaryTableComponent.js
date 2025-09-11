@@ -135,6 +135,10 @@ const SalaryTableComponent = ({
     }
   }, [userPercent[it.id]])
 
+  const countAdvance = (number) => {
+    return number - (totalAdvance + totalFines + totalExpenses)
+  }
+
   return (
     <tr className="bg-white lg:hover:bg-gray-100 flex lg:table-row flex-row lg:flex-row flex-wrap lg:flex-no-wrap mb-5 lg:mb-0">
       <td className="w-full lg:w-auto p-2 text-gray-800 text-left border border-b block lg:table-cell relative lg:static">
@@ -377,7 +381,11 @@ const SalaryTableComponent = ({
             data={it?.data || []}
             prevMonthData={it?.prevMonthData || []}
             value={
-              userPercent[it.id] ? applyDiscount(getSalary(it.id), userPercent[it.id], it.id) : 0
+              userPercent[it.id]
+                ? Math.round(
+                    countAdvance(applyDiscount(getSalary(it.id), userPercent[it.id], it.id))
+                  )
+                : 0
             }
           />
         </td>

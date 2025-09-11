@@ -15,7 +15,7 @@ const BalanceCell = ({ data, value, prevMonthData }) => {
   return (
     <div
       className="relative inline-block "
-      onMouseEnter={() => setVisible(true)}
+      onMouseEnter={() => setVisible(false)}
       onMouseLeave={() => setVisible(false)}
     >
       <span className="whitespace-no-wrap">{countAdvance(value)} р.</span>
