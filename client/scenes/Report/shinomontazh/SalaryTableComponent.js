@@ -379,7 +379,7 @@ const SalaryTableComponent = ({
           <span className="lg:hidden px-2 py-1 text-xs font-bold uppercase">Остаток:</span>
           <BalanceCell
             data={it?.data || []}
-            prevMonthData={it?.prevMonthData || []}
+            prevMonthData={[]}
             value={
               userPercent[it.id]
                 ? Math.round(
