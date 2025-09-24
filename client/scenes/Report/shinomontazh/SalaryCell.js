@@ -125,8 +125,6 @@ const SalaryCell = ({
     setIsModalOpen(false)
   }
 
-  const withComment = data.type !== REPORT_SALARY_TYPES.salary
-
   const formatDate = (dateString) => {
     if (!dateString) return ''
 
@@ -193,17 +191,15 @@ const SalaryCell = ({
                   }}
                 />
 
-                {withComment ? (
-                  <input
-                    type="text"
-                    value={salary.comment}
-                    onChange={(e) => handleSalaryChange(index, e.target)}
-                    className="w-24 p-1 border rounded mr-2"
-                    placeholder="Комментарий"
-                    name="comment"
-                    style={{ width: '300px' }}
-                  />
-                ) : null}
+                <input
+                  type="text"
+                  value={salary.comment}
+                  onChange={(e) => handleSalaryChange(index, e.target)}
+                  className="w-24 p-1 border rounded mr-2"
+                  placeholder="Комментарий"
+                  name="comment"
+                  style={{ width: '300px' }}
+                />
                 <button
                   type="button"
                   className="bg-red-500 hover:bg-red-700 text-white font-bold py-1 px-2 rounded"
