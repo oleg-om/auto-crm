@@ -215,7 +215,8 @@ const Salary = ({
   showPaid,
   onChangeShowPaid,
   activeMonth,
-  showReport
+  showReport,
+                  empSalaries
 }) => {
   const dispatch = useDispatch()
   const employee = useSelector((s) => s.employees.employee)
@@ -877,6 +878,7 @@ const Salary = ({
               onEmployeeClick={onEmployeeClick}
               activeMonth={activeMonth}
               dateArray={dateArray}
+              empSalaries={empSalaries}
             />
           ))}
           {!employee ? (

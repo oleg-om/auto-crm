@@ -27,6 +27,7 @@ const Shinomontazh = ({
 }) => {
   const [shinList, setShinList] = useState([])
   const [isLoaded, setIsLoaded] = useState(false)
+  const [empSalaries, setEmpSalaries] = useState([])
 
   const employee = useSelector((s) => s.employees.employee)
   const dispatch = useDispatch()
@@ -86,7 +87,9 @@ const Shinomontazh = ({
         .then((res) => res.json())
         .then((it) => {
           setShinList(splitGroupedObjects(it.data))
+          setEmpSalaries(it?.employees)
           setIsLoaded(true)
+
         })
     }
     if (activeDay && calendarType === 'day') {
@@ -336,6 +339,7 @@ const Shinomontazh = ({
               onChangeShowPaid={onChangeShowPaid}
               activeMonth={activeMonth}
               showReport={showReport}
+              empSalaries={empSalaries}
             />
           ) : null}
           {isLoaded && report.length <= 0 ? (

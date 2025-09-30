@@ -28,7 +28,8 @@ const SalaryTableComponent = ({
   userCardSum,
   onEmployeeClick,
   activeMonth,
-  dateArray
+  dateArray,
+  empSalaries
 }) => {
   const dispatch = useDispatch()
 
@@ -288,7 +289,7 @@ const SalaryTableComponent = ({
                   employeeId={it.id}
                   totalAdvance={totalAdvance}
                   setTotalAdvance={setTotalAdvance}
-                  payments={it?.data || []}
+                  payments={empSalaries ? empSalaries[it.id] : []}
                 />
               </td>
               <td
@@ -300,7 +301,7 @@ const SalaryTableComponent = ({
                   employeeId={it.id}
                   totalAdvance={totalExpenses}
                   setTotalAdvance={setTotalExpenses}
-                  payments={it?.data || []}
+                  payments={empSalaries ? empSalaries[it.id] : []}
                   data={{
                     name: 'Расходы',
                     singleName: 'расход',
@@ -317,7 +318,7 @@ const SalaryTableComponent = ({
                   employeeId={it.id}
                   totalAdvance={totalFines}
                   setTotalAdvance={setTotalFines}
-                  payments={it?.data || []}
+                  payments={empSalaries ? empSalaries[it.id] : []}
                   data={{
                     name: 'Штрафы',
                     singleName: 'штраф',
