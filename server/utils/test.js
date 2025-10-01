@@ -44,15 +44,34 @@ async function calculateTotalCostByEmployee(req, res, Model) {
   const isShinomontazh = req.path.includes('shinomontazh')
   try {
     // Получаем все заказы
-    const { month, year, day } = req.query
+    const { month, year } = req.query
+
+    const day = req.query?.day
+    const employee = req.query?.employee
 
     const orders = await Model.find({
       $expr: {
         $and: [
           { $eq: [{ $year: '$dateFinish' }, Number(year)] },
-          { $eq: [{ $month: '$dateFinish' }, Number(month)] }(
-            ...(day && { $eq: [{ $day: '$dateFinish' }, Number(day)] })
-          )
+          { $eq: [{ $month: '$dateFinish' }, Number(month)] },
+          ...(day ? [{ $eq: [{ $dayOfMonth: '$dateFinish' }, Number(day)] }] : []),
+          ...(employee
+            ? [
+                {
+                  $gt: [
+                    {
+                      $size: {
+                        $filter: {
+                          input: '$employee',
+                          cond: { $eq: ['$$this.id', employee] }
+                        }
+                      }
+                    },
+                    0
+                  ]
+                }
+              ]
+            : [])
         ]
       }
     })
