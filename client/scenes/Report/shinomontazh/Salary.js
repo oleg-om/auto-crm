@@ -1,10 +1,9 @@
-import React, {   useRef,   } from 'react'
+import React, { useRef } from 'react'
 import { Link } from 'react-router-dom'
 import cx from 'classnames'
-import {   useSelector } from 'react-redux'
+import { useSelector } from 'react-redux'
 import { useReactToPrint } from 'react-to-print'
 import SalaryTableComponent from './SalaryTableComponent'
-import { filterReportByEmployee } from '../../../utils/admin/reportUtils'
 import razvalIcon from '../../../assets/images/priority-product-large.png'
 import { checkIsRazvalService } from './wrapper'
 
@@ -83,7 +82,7 @@ const SalaryByDay = ({
         {Object.keys(orders).map((date) => (
           <div key={date}>
             <h3 key={date} className="font-semibold">
-              {date}
+              {date} ({orders[date]?.length || 0} талонов)
             </h3>
             <table className="border-collapse w-full mb-2" key={date}>
               <thead>
@@ -193,7 +192,6 @@ const SalaryByDay = ({
 
 const Salary = ({
   data,
-  report,
   isMaterial,
   setIsMaterial,
   calendarType,
@@ -205,71 +203,15 @@ const Salary = ({
   activeMonth,
   showReport,
   setEmployeeId,
-  employeeId,
+  employeeId
 }) => {
   const employee = useSelector((s) => s.employees.employee)
   const employeeListFiltered = useSelector((s) => s.employees?.report)
-
-  const dateArray = (emp) => {
-    return report
-      .filter((d) => filterReportByEmployee(d, emp))
-      .reduce((thing, current) => {
-        const x = thing.find(
-          (item) => new Date(item.dateFinish).getDate() === new Date(current.dateFinish).getDate()
-        )
-        if (!x) {
-          return thing.concat([current])
-        }
-        return thing
-      }, [])
-      .reduce((acc, rec) => [...acc, rec.dateFinish], [])
-      .sort(function sortVendors(a, b) {
-        if (new Date(a) < new Date(b)) {
-          return 1
-        }
-        if (new Date(a) > new Date(b)) {
-          return -1
-        }
-        return 0
-      })
-  }
 
   const onChangeMat = (e) => {
     const { value } = e.target
     setIsMaterial(value)
   }
-
-  const commonDiscount = (number, item) => {
-    const disc = item.discount ? item.discount : 0
-    const number_percent = (number / 100) * disc
-
-    return Number(number) - Number(number_percent)
-  }
-
-
-
-  const totalFreeService = (item) =>
-    item.services
-      .filter((it) => it.free === 'yes')
-      .reduce((acc, rec) => acc + rec.price * rec.quantity, 0)
-  const totalService = (item) =>
-    item.services
-      .filter((it) => it.free !== 'yes')
-      .reduce((acc, rec) => acc + rec.price * rec.quantity, 0)
-
-  const applyDiscountWithFreeService = (number) => {
-    return Number(number) - Number(number)
-  }
-  function roundTo5(num) {
-    // return Math.round(num / 5) * 5
-    return num
-  }
-  const totalMaterial = (item) =>
-    item.material.reduce((acc, rec) => acc + rec.price * rec.quantity, 0)
-  const totalWithDiscount = (item) =>
-    applyDiscountWithFreeService(totalFreeService(item)) +
-    roundTo5(commonDiscount(totalService(item), item)) +
-    totalMaterial(item)
 
   const checkIsBookkeper = active.includes('-buh')
   const checkIsShinomontazh = active.includes('sh-')
@@ -315,7 +257,6 @@ const Salary = ({
     }
     return null
   }
-
 
   const onEmployeeClick = (e) => {
     const { value } = e.target
@@ -506,111 +447,104 @@ const Salary = ({
               activeMonth={activeMonth}
             />
           ))}
-          {!employeeId ? (
-            <tr className="bg-purple-100 font-bold lg:hover:bg-gray-100 flex lg:table-row flex-row lg:flex-row flex-wrap lg:flex-no-wrap mb-5 lg:mb-0">
-              <td className="w-full lg:w-auto p-2 text-gray-800 text-left border border-b block lg:table-cell relative lg:static">
-                <span className="lg:hidden px-2 py-1 bg-purple-100 font-bold uppercase">
-                  Всего:
-                </span>
-                Всего
-              </td>
-              {checkIsBookkeper ? (
-                <>
-                  {calendarType === 'month' ? (
+
+          <tr className="bg-purple-100 font-bold lg:hover:bg-gray-100 flex lg:table-row flex-row lg:flex-row flex-wrap lg:flex-no-wrap mb-5 lg:mb-0">
+            <td className="w-full lg:w-auto p-2 text-gray-800 text-left border border-b block lg:table-cell relative lg:static">
+              <span className="lg:hidden px-2 py-1 bg-purple-100 font-bold uppercase">Всего:</span>
+              Всего
+            </td>
+            {checkIsBookkeper ? (
+              <>
+                {calendarType === 'month' ? (
+                  <td className="w-full lg:w-auto p-2 text-gray-800 text-left border border-b block lg:table-cell relative lg:static" />
+                ) : null}
+                <td className="w-full lg:w-auto p-2 text-gray-800 text-left lg:text-center border border-b block lg:table-cell relative lg:static">
+                  <span className="lg:hidden px-2 py-1 bg-purple-100 font-bold uppercase">
+                    Вал:
+                  </span>
+                  {data.total.all} р.
+                </td>
+
+                <td className="w-full lg:w-auto p-2 text-gray-800 text-left border border-b block lg:table-cell relative lg:static" />
+                <td className="w-full lg:w-auto p-2 text-gray-800 text-left border border-b block lg:table-cell relative lg:static" />
+                <td className="w-full lg:w-auto p-2 text-gray-800 text-left border border-b block lg:table-cell relative lg:static" />
+                {calendarType === 'month' ? (
+                  <>
                     <td className="w-full lg:w-auto p-2 text-gray-800 text-left border border-b block lg:table-cell relative lg:static" />
-                  ) : null}
-                  <td className="w-full lg:w-auto p-2 text-gray-800 text-left lg:text-center border border-b block lg:table-cell relative lg:static">
-                    <span className="lg:hidden px-2 py-1 bg-purple-100 font-bold uppercase">
-                      Вал:
-                    </span>
-                    {data.total.all} р.
-                  </td>
-
-                  <td className="w-full lg:w-auto p-2 text-gray-800 text-left border border-b block lg:table-cell relative lg:static" />
-                  <td className="w-full lg:w-auto p-2 text-gray-800 text-left border border-b block lg:table-cell relative lg:static" />
-                  <td className="w-full lg:w-auto p-2 text-gray-800 text-left border border-b block lg:table-cell relative lg:static" />
-                  {calendarType === 'month' ? (
-                    <>
-                      <td className="w-full lg:w-auto p-2 text-gray-800 text-left border border-b block lg:table-cell relative lg:static" />
-                      <td className="w-full lg:w-auto p-2 text-gray-800 text-left border border-b block lg:table-cell relative lg:static" />
-                      <td className="w-full lg:w-auto p-2 text-gray-800 text-left border border-b block lg:table-cell relative lg:static" />
-                      <td className="w-full lg:w-auto p-2 text-gray-800 text-left border border-b block lg:table-cell relative lg:static">
-                        <span className="lg:hidden px-2 py-1 bg-purple-100 font-bold uppercase">
-                          Налог:
-                        </span>
-                      </td>
-                      <td className="w-full lg:w-auto p-2 text-gray-800 text-left border border-b block lg:table-cell relative lg:static">
-                        <span className="lg:hidden px-2 py-1 bg-purple-100 font-bold uppercase">
-                          Сумма на карту:
-                        </span>
-                      </td>
-                    </>
-                  ) : null}
-                </>
-              ) : null}
-              {!checkIsBookkeper ? (
-                <>
-                  <td className="w-full lg:w-auto p-2 text-gray-800 text-left lg:text-center border border-b block lg:table-cell relative lg:static whitespace-no-wrap">
-                    <span className="lg:hidden px-2 py-1 bg-purple-100 font-bold uppercase">
-                      Терминал:
-                    </span>
-                    {data.total.terminal} р.
-                  </td>
-                  <td className="w-full lg:w-auto p-2 text-gray-800 text-left lg:text-center border border-b block lg:table-cell relative lg:static whitespace-no-wrap">
-                    <span className="lg:hidden px-2 py-1 bg-purple-100 font-bold uppercase">
-                      Безнал:
-                    </span>
-                    {data.total.cashless} р.
-                  </td>
-                  <td className="w-full lg:w-auto p-2 text-gray-800 text-left lg:text-center border border-b block lg:table-cell relative lg:static whitespace-no-wrap">
-                    <span className="lg:hidden px-2 py-1 bg-purple-100 font-bold uppercase">
-                      Наличка:
-                    </span>
-                    {data.total.cash} р.
-                  </td>
-                  {calendarType === 'day' ? (
-                    <td className="w-full lg:w-auto p-2 text-gray-800 text-left lg:text-center border border-b block lg:table-cell relative lg:static whitespace-no-wrap">
+                    <td className="w-full lg:w-auto p-2 text-gray-800 text-left border border-b block lg:table-cell relative lg:static" />
+                    <td className="w-full lg:w-auto p-2 text-gray-800 text-left border border-b block lg:table-cell relative lg:static" />
+                    <td className="w-full lg:w-auto p-2 text-gray-800 text-left border border-b block lg:table-cell relative lg:static">
                       <span className="lg:hidden px-2 py-1 bg-purple-100 font-bold uppercase">
-                        Сумма:
+                        Налог:
                       </span>
-                      {data.total.all} р.
                     </td>
-                  ) : null}
-                  {calendarType === 'day' ? (
-                    <td className="w-full lg:w-auto p-2 text-gray-800 text-left lg:text-center border border-b block lg:table-cell relative lg:static whitespace-no-wrap">
+                    <td className="w-full lg:w-auto p-2 text-gray-800 text-left border border-b block lg:table-cell relative lg:static">
                       <span className="lg:hidden px-2 py-1 bg-purple-100 font-bold uppercase">
-                        Акция:
+                        Сумма на карту:
                       </span>
-                      {data.total.discount} р.
                     </td>
-                  ) : null}
-                  <td className="w-full lg:w-auto p-2 text-gray-800 text-left lg:text-center border border-b block lg:table-cell relative lg:static whitespace-no-wrap">
-                    <span className="lg:hidden px-2 py-1 bg-purple-100 font-bold uppercase">
-                      Вал:
-                    </span>
-                    {data.total.all} р.
-                  </td>
-                </>
-              ) : null}
-
-              {checkIsBookkeper ? (
+                  </>
+                ) : null}
+              </>
+            ) : null}
+            {!checkIsBookkeper ? (
+              <>
                 <td className="w-full lg:w-auto p-2 text-gray-800 text-left lg:text-center border border-b block lg:table-cell relative lg:static whitespace-no-wrap">
                   <span className="lg:hidden px-2 py-1 bg-purple-100 font-bold uppercase">
-                    Остаток:
+                    Терминал:
                   </span>
+                  {data.total.terminal} р.
                 </td>
-              ) : null}
-            </tr>
-          ) : null}
+                <td className="w-full lg:w-auto p-2 text-gray-800 text-left lg:text-center border border-b block lg:table-cell relative lg:static whitespace-no-wrap">
+                  <span className="lg:hidden px-2 py-1 bg-purple-100 font-bold uppercase">
+                    Безнал:
+                  </span>
+                  {data.total.cashless} р.
+                </td>
+                <td className="w-full lg:w-auto p-2 text-gray-800 text-left lg:text-center border border-b block lg:table-cell relative lg:static whitespace-no-wrap">
+                  <span className="lg:hidden px-2 py-1 bg-purple-100 font-bold uppercase">
+                    Наличка:
+                  </span>
+                  {data.total.cash} р.
+                </td>
+                {calendarType === 'day' ? (
+                  <td className="w-full lg:w-auto p-2 text-gray-800 text-left lg:text-center border border-b block lg:table-cell relative lg:static whitespace-no-wrap">
+                    <span className="lg:hidden px-2 py-1 bg-purple-100 font-bold uppercase">
+                      Сумма:
+                    </span>
+                    {data.total.all} р.
+                  </td>
+                ) : null}
+                {calendarType === 'day' ? (
+                  <td className="w-full lg:w-auto p-2 text-gray-800 text-left lg:text-center border border-b block lg:table-cell relative lg:static whitespace-no-wrap">
+                    <span className="lg:hidden px-2 py-1 bg-purple-100 font-bold uppercase">
+                      Акция:
+                    </span>
+                    {data.total.discount} р.
+                  </td>
+                ) : null}
+                <td className="w-full lg:w-auto p-2 text-gray-800 text-left lg:text-center border border-b block lg:table-cell relative lg:static whitespace-no-wrap">
+                  <span className="lg:hidden px-2 py-1 bg-purple-100 font-bold uppercase">
+                    Вал:
+                  </span>
+                  {data.total.all} р.
+                </td>
+              </>
+            ) : null}
+
+            {checkIsBookkeper ? (
+              <td className="w-full lg:w-auto p-2 text-gray-800 text-left lg:text-center border border-b block lg:table-cell relative lg:static whitespace-no-wrap">
+                <span className="lg:hidden px-2 py-1 bg-purple-100 font-bold uppercase">
+                  Остаток:
+                </span>
+              </td>
+            ) : null}
+          </tr>
         </tbody>
       </table>
       {calendarType === 'day' || employeeId ? (
         <SalaryByDay
           orders={data?.orders || []}
-          dateArray={dateArray(employee)}
-          totalWithDiscount={totalWithDiscount}
-          totalFreeService={totalFreeService}
-          report={report}
           employee={employee}
           getLinkToWork={getLinkToWork}
           onEmployeeClick={onEmployeeClick}

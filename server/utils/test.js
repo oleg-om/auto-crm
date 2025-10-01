@@ -59,39 +59,96 @@ async function calculateTotalCostByEmployee(req, res, Model) {
   const isShinomontazh = req.path.includes('shinomontazh')
   try {
     // Получаем все заказы
-    const { month, year } = req.body
+    const {
+      month,
+      year,
+      day,
+      employee,
+      countMaterials,
+      countOnlyPaidOrders,
+      onlyRazvalSto
+    } = req.body
 
-    const day = req.body?.day
-    const employee = req.body?.employee
-    const countMaterials = req.body?.countMaterials
-    const countOnlyPaidOrders = req.body?.countOnlyPaidOrders
+    // const day = req.body?.day
+    // const employee = req.body?.employee
+    // const countMaterials = req.body?.countMaterials
+    // const countOnlyPaidOrders = req.body?.countOnlyPaidOrders
+    // const onlyRazvalSto = req.body?.onlyRazvalSto
+    const regexRazval = /(Развал схождения|Развал-схождение|Развал-схождения)/i
 
-    const orders = await Model.find({
-      $expr: {
-        $and: [
-          { $eq: [{ $year: '$dateFinish' }, Number(year)] },
-          { $eq: [{ $month: '$dateFinish' }, Number(month)] },
-          ...(day ? [{ $eq: [{ $dayOfMonth: '$dateFinish' }, Number(day)] }] : []),
-          ...(employee
-            ? [
-                {
-                  $gt: [
-                    {
-                      $size: {
-                        $filter: {
-                          input: '$employee',
-                          cond: { $eq: ['$$this.id', employee] }
-                        }
-                      }
-                    },
-                    0
-                  ]
+    // const orders = await Model.find({
+    //   $expr: {
+    //     $and: [
+    //       { $eq: [{ $year: '$dateFinish' }, Number(year)] },
+    //       { $eq: [{ $month: '$dateFinish' }, Number(month)] },
+    //       ...(day ? [{ $eq: [{ $dayOfMonth: '$dateFinish' }, Number(day)] }] : []),
+    //       ...(employee
+    //         ? [
+    //             {
+    //               $gt: [
+    //                 {
+    //                   $size: {
+    //                     $filter: {
+    //                       input: '$employee',
+    //                       cond: { $eq: ['$$this.id', employee] }
+    //                     }
+    //                   }
+    //                 },
+    //                 0
+    //               ]
+    //             }
+    //           ]
+    //         : []),
+    //       ...(onlyRazvalSto
+    //         ? [
+    //             {
+    //               $gt: [
+    //                 {
+    //                   $size: {
+    //                     $filter: {
+    //                       input: '$services',
+    //                       cond: {
+    //                         $expr: { $regexMatch: { input: '$$this.name', regex: regexRazval } }
+    //                       } // Added $expr
+    //                     }
+    //                   }
+    //                 },
+    //                 0
+    //               ]
+    //             }
+    //           ]
+    //         : [])
+    //     ]
+    //   }
+    // })
+
+    const query = {
+      $and: [
+        // Filter by year and month using $dateToParts or direct comparison
+        {
+          dateFinish: {
+            $gte: new Date(year, month - 1, day || 1),
+            $lt: day ? new Date(year, month - 1, day + 1) : new Date(year, month, 1)
+          }
+        },
+        // Filter by employee if provided
+        ...(employee ? [{ 'employee.id': employee }] : []),
+        // Filter by services with regex if onlyRazvalSto is true
+        ...(onlyRazvalSto
+          ? [
+              {
+                services: {
+                  $elemMatch: {
+                    name: { $regex: regexRazval, $options: 'i' }
+                  }
                 }
-              ]
-            : [])
-        ]
-      }
-    })
+              }
+            ]
+          : [])
+      ]
+    }
+
+    const orders = await Model.find(query)
 
     // Получаем данные о сотрудниках для процента по Сто и по Шиномонтажу
     const employees = await Employee.find()
@@ -199,6 +256,7 @@ async function calculateTotalCostByEmployee(req, res, Model) {
             // eslint-disable-next-line consistent-return
             order.services.forEach((service) => {
               const total = calculateMaterialOrService(service)
+
               groupedByEmployee[employeeId].total.all.totalServicesCost += total
 
               if (order.status === 'Комбинированный') {
