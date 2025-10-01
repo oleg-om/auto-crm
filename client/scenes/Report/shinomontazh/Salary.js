@@ -1,29 +1,28 @@
-import React, { useEffect, useRef, useState } from 'react'
+import React, {   useRef,   } from 'react'
 import { Link } from 'react-router-dom'
 import cx from 'classnames'
-import { useDispatch, useSelector } from 'react-redux'
+import {   useSelector } from 'react-redux'
 import { useReactToPrint } from 'react-to-print'
 import SalaryTableComponent from './SalaryTableComponent'
-import { filterByEmployee, filterReportByEmployee } from '../../../utils/admin/reportUtils'
-import { updateCurrentEmployeeReport } from '../../../redux/reducers/employees'
+import { filterReportByEmployee } from '../../../utils/admin/reportUtils'
 import razvalIcon from '../../../assets/images/priority-product-large.png'
 import { checkIsRazvalService } from './wrapper'
 
 const SalaryByDay = ({
-  dateArray,
-  totalWithDiscount,
-  totalFreeService,
-  report,
   employee,
   getLinkToWork,
   onEmployeeClick,
   getWorkId,
-  clearEmployee
+  clearEmployee,
+  orders
 }) => {
   const componentRef = useRef()
   const handlePrint = useReactToPrint({
     content: () => componentRef.current
   })
+
+  const totalFreeService = () => {}
+  const totalWithDiscount = () => {}
   return (
     <div className="m-5">
       <div className="flex">
@@ -81,11 +80,10 @@ const SalaryByDay = ({
       </div>
       <div ref={componentRef}>
         <h2 className="text-xl font-semibold mb-2">Разбивка по дням:</h2>
-        {dateArray.map((date) => (
+        {Object.keys(orders).map((date) => (
           <div key={date}>
             <h3 key={date} className="font-semibold">
-              {new Date(date).getDate()}.{new Date(date).getMonth() + 1}.
-              {new Date(date).getFullYear()}
+              {date}
             </h3>
             <table className="border-collapse w-full mb-2" key={date}>
               <thead>
@@ -117,82 +115,73 @@ const SalaryByDay = ({
                 </tr>
               </thead>
               <tbody>
-                {report
-                  .filter((it) => new Date(it.dateFinish).getDate() === new Date(date).getDate())
-                  .filter((it) => filterReportByEmployee(it, employee))
-                  .map((it) => (
-                    <tr key={it.id} className="bg-white hover:bg-gray-100 table-row mb-0">
-                      <td className="w-auto p-2 text-gray-800 text-left border border-b table-cell static">
-                        <div className="flex items-center">
-                          <Link
-                            to={() => getLinkToWork(it)}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="hover:underline"
+                {orders[date].map((it) => (
+                  <tr key={it.id} className="bg-white hover:bg-gray-100 table-row mb-0">
+                    <td className="w-auto p-2 text-gray-800 text-left border border-b table-cell static">
+                      <div className="flex items-center">
+                        <Link
+                          to={() => getLinkToWork(it)}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="hover:underline"
+                        >
+                          {getWorkId(it)}
+                        </Link>
+                        {it.services?.filter((s) => checkIsRazvalService(s?.name))?.length ? (
+                          <img className="w-6 ml-1" src={razvalIcon} alt="" />
+                        ) : null}
+                      </div>
+                    </td>
+                    <td className="w-auto p-2 text-gray-800 text-left border border-b table-cell static">
+                      {it.employee
+                        .reduce((acc, rec) => acc.concat(rec), [])
+                        .reduce((acc, rec) => {
+                          const x = acc.find((item) => item.id === rec.id)
+                          if (!x) {
+                            return acc.concat([rec])
+                          }
+                          return acc
+                        }, [])
+                        .map((man) => (
+                          <button
+                            type="button"
+                            key={man.id}
+                            onClick={onEmployeeClick}
+                            value={man.id}
+                            className="text-left hover:underline pr-3"
                           >
-                            {getWorkId(it)}
-                          </Link>
-                          {it.services?.filter((s) => checkIsRazvalService(s?.name))?.length ? (
-                            <img className="w-6 ml-1" src={razvalIcon} alt="" />
-                          ) : null}
-                        </div>
-                      </td>
-                      <td className="w-auto p-2 text-gray-800 text-left border border-b table-cell static">
-                        {it.employee
-                          .reduce((acc, rec) => acc.concat(rec), [])
-                          .reduce((acc, rec) => {
-                            const x = acc.find((item) => item.id === rec.id)
-                            if (!x) {
-                              return acc.concat([rec])
-                            }
-                            return acc
-                          }, [])
-                          .map((man) => (
-                            <button
-                              type="button"
-                              key={man.id}
-                              onClick={onEmployeeClick}
-                              value={man.id}
-                              className="text-left hover:underline pr-3"
-                            >
-                              {man.name} {man.surname}
-                            </button>
-                          ))}
-                      </td>
-                      <td className="w-auto p-2 text-gray-800 text-center border border-b table-cell static">
-                        <p>
-                          {new Date(it.dateFinish).getHours()}:
-                          {new Date(it.dateFinish)
-                            .getMinutes()
-                            .toString()
-                            .replace(/^(\d)$/, '0$1')}
-                        </p>
-                      </td>
-                      <td className="w-auto p-2 text-gray-800 text-center border border-b table-cell static">
-                        {it.services.reduce(
-                          (acc, rec) => acc + Number(rec.price) * rec.quantity,
-                          0
-                        )}{' '}
-                        руб.
-                      </td>
-                      <td className="w-auto p-2 text-gray-800 text-center border border-b table-cell static">
-                        {it.material.reduce(
-                          (acc, rec) => acc + Number(rec.price) * rec.quantity,
-                          0
-                        )}{' '}
-                        руб.
-                      </td>
-                      <td className="w-auto p-2 text-gray-800 text-center border border-b table-cell static">
-                        {totalFreeService(it) ? <>{totalFreeService(it)} руб.</> : null}
-                      </td>
-                      <td className="w-auto p-2 text-gray-800 text-center border border-b table-cell static">
-                        {it.discount ? `${it.discount}%` : ''}
-                      </td>
-                      <td className="w-auto p-2 text-gray-800 text-center border border-b table-cell static">
-                        {totalWithDiscount(it)}
-                      </td>
-                    </tr>
-                  ))}
+                            {man.name} {man.surname}
+                          </button>
+                        ))}
+                    </td>
+                    <td className="w-auto p-2 text-gray-800 text-center border border-b table-cell static">
+                      <p>
+                        {new Date(it.dateFinish).getHours()}:
+                        {new Date(it.dateFinish)
+                          .getMinutes()
+                          .toString()
+                          .replace(/^(\d)$/, '0$1')}
+                      </p>
+                    </td>
+                    <td className="w-auto p-2 text-gray-800 text-center border border-b table-cell static">
+                      {it.services.reduce((acc, rec) => acc + Number(rec.price) * rec.quantity, 0)}{' '}
+                      руб.
+                    </td>
+                    <td className="w-auto p-2 text-gray-800 text-center border border-b table-cell static">
+                      {it.material.reduce((acc, rec) => acc + Number(rec.price) * rec.quantity, 0)}{' '}
+                      руб.
+                    </td>
+                    <td className="w-auto p-2 text-gray-800 text-center border border-b table-cell static">
+                      {totalFreeService(it) ? <>{totalFreeService(it)} руб.</> : null}
+                    </td>
+                    <td className="w-auto p-2 text-gray-800 text-center border border-b table-cell static">
+                      {it.discount ? `${it.discount}%` : ''}
+                    </td>
+                    <td className="w-auto p-2 text-gray-800 text-center border border-b table-cell static">
+                      {totalWithDiscount(it)}
+                    </td>
+                  </tr>
+                ))}
               </tbody>
             </table>
           </div>
@@ -203,30 +192,27 @@ const SalaryByDay = ({
 }
 
 const Salary = ({
+  data,
   report,
   isMaterial,
   setIsMaterial,
   calendarType,
   active,
-  employeeList,
-  employeeArray,
   showRazval,
   onChangeShowRazval,
   showPaid,
   onChangeShowPaid,
   activeMonth,
   showReport,
-                  empSalaries
+  setEmployeeId,
+  employeeId,
 }) => {
-  const dispatch = useDispatch()
   const employee = useSelector((s) => s.employees.employee)
   const employeeListFiltered = useSelector((s) => s.employees?.report)
 
-  const employeeArrayFiltered = employeeArray.filter((data) => filterByEmployee(data, employee))
-
   const dateArray = (emp) => {
     return report
-      .filter((data) => filterReportByEmployee(data, emp))
+      .filter((d) => filterReportByEmployee(d, emp))
       .reduce((thing, current) => {
         const x = thing.find(
           (item) => new Date(item.dateFinish).getDate() === new Date(current.dateFinish).getDate()
@@ -260,279 +246,7 @@ const Salary = ({
     return Number(number) - Number(number_percent)
   }
 
-  const getSalary = (id, filterBy, CombFilterBy, discountType) => {
-    return report
-      .reduce((acc, rec) => {
-        if (rec.employee.filter((it) => (id ? it.id === id : it)).length > 0) {
-          return [...acc, rec]
-        }
-        return acc
-      }, [])
-      .reduce((acc, rec) => {
-        if (rec.employee.filter((it) => (id ? it.id === id : it)).length > 0) {
-          return [
-            ...acc,
-            {
-              ...rec,
-              employee: rec.employee.filter(
-                (it) =>
-                  !it.name.toLowerCase().includes('студент') &&
-                  !it.surname.toLowerCase().includes('студент')
-              )
-            }
-          ]
-        }
-        return acc
-      }, [])
 
-      .filter((it) => it.employee.length > 0)
-
-      .filter((it) => (filterBy ? it.status === filterBy || it.status === CombFilterBy : it))
-      .reduce((acc, rec) => {
-        if (calendarType === 'day' && discountType === 'summa') {
-          return [
-            ...acc,
-            {
-              ...rec,
-              services: rec.services.reduce((bat, cur) => {
-                if (cur.free === 'yes') {
-                  return [...bat, { ...cur, price: 0 }]
-                }
-                if (cur.free !== 'yes') {
-                  return [...bat, cur]
-                }
-                return bat
-              }, [])
-            }
-          ]
-        }
-        if (calendarType === 'day' && discountType === 'discountonly') {
-          return [
-            ...acc,
-            {
-              ...rec,
-              material: [],
-              services: rec.services.reduce((bat, cur) => {
-                if (cur.free === 'yes') {
-                  return [...bat, { ...cur }]
-                }
-                if (cur.free !== 'yes') {
-                  return [...bat]
-                }
-                return bat
-              }, [])
-            }
-          ]
-        }
-
-        return [...acc, rec]
-      }, [])
-
-      .reduce((acc, rec) => {
-        if (isMaterial !== 'yes' && rec.status !== CombFilterBy) {
-          return [
-            ...acc,
-            rec.services.reduce(
-              (bat, cur) =>
-                bat + commonDiscount(Number(cur.price) * cur.quantity, rec) / rec.employee.length,
-              0
-            )
-          ]
-        }
-        if (isMaterial !== 'yes' && rec.status === CombFilterBy && filterBy === 'Оплачено') {
-          return [
-            ...acc,
-            Number(rec.combCash) / rec.employee.length -
-              rec.material.reduce(
-                (bat, cur) => bat + (Number(cur.price) * cur.quantity) / rec.employee.length,
-                0
-              ) /
-                2
-          ]
-        }
-        if (isMaterial !== 'yes' && rec.status === CombFilterBy && filterBy === 'Терминал') {
-          return [
-            ...acc,
-            Number(rec.combTerm) / rec.employee.length -
-              rec.material.reduce(
-                (bat, cur) => bat + (Number(cur.price) * cur.quantity) / rec.employee.length,
-                0
-              ) /
-                2
-          ]
-        }
-        if (isMaterial === 'yes' && rec.status !== CombFilterBy) {
-          return [
-            ...acc,
-            rec.services.reduce(
-              (bat, cur) =>
-                bat + commonDiscount(Number(cur.price) * cur.quantity, rec) / rec.employee.length,
-              0
-            ) +
-              rec.material.reduce(
-                (bat, cur) => bat + (Number(cur.price) * cur.quantity) / rec.employee.length,
-                0
-              )
-          ]
-        }
-        if (isMaterial === 'yes' && rec.status === CombFilterBy && filterBy === 'Оплачено') {
-          return [...acc, Number(rec.combCash) / rec.employee.length]
-        }
-        if (isMaterial === 'yes' && rec.status === CombFilterBy && filterBy === 'Терминал') {
-          return [...acc, Number(rec.combTerm) / rec.employee.length]
-        }
-        return acc
-      }, [])
-      .reduce((acc, rec) => acc + rec, 0)
-  }
-
-  const getSalaryfull = (id, filterBy, CombFilterBy, discountType) => {
-    return report
-      .reduce((acc, rec) => {
-        if (rec.employee.filter((it) => (id ? it.id === id : it)).length > 0) {
-          return [...acc, rec]
-        }
-        return acc
-      }, [])
-      .reduce((acc, rec) => {
-        if (rec.employee.filter((it) => (id ? it.id === id : it)).length > 0) {
-          return [
-            ...acc,
-            {
-              ...rec,
-              employee: rec.employee.filter(
-                (it) =>
-                  !it.name.toLowerCase().includes('студент') &&
-                  !it.surname.toLowerCase().includes('студент')
-              )
-            }
-          ]
-        }
-        return acc
-      }, [])
-      .filter((it) => it.employee.length > 0)
-      .filter((it) => (filterBy ? it.status === filterBy || it.status === CombFilterBy : it))
-
-      .reduce((acc, rec) => {
-        if (calendarType === 'day' && discountType === 'summa') {
-          return [
-            ...acc,
-            {
-              ...rec,
-              services: rec.services.reduce((bat, cur) => {
-                if (cur.free === 'yes') {
-                  return [...bat, { ...cur, price: 0 }]
-                }
-                if (cur.free !== 'yes') {
-                  return [...bat, cur]
-                }
-                return bat
-              }, [])
-            }
-          ]
-        }
-        if (calendarType === 'day' && discountType === 'discountonly') {
-          return [
-            ...acc,
-            {
-              ...rec,
-              material: [],
-              services: rec.services.reduce((bat, cur) => {
-                if (cur.free === 'yes') {
-                  return [...bat, { ...cur }]
-                }
-                if (cur.free !== 'yes') {
-                  return [...bat]
-                }
-                return bat
-              }, [])
-            }
-          ]
-        }
-
-        return [...acc, rec]
-      }, [])
-      .reduce((acc, rec) => {
-        if (isMaterial !== 'yes' && rec.status !== CombFilterBy) {
-          return [
-            ...acc,
-            rec.services.reduce(
-              (bat, cur) => bat + commonDiscount(Number(cur.price) * cur.quantity, rec),
-              0
-            )
-          ]
-        }
-        if (isMaterial !== 'yes' && rec.status === CombFilterBy && filterBy === 'Оплачено') {
-          return [
-            ...acc,
-            Number(rec.combCash) -
-              rec.material.reduce((bat, cur) => bat + Number(cur.price) * cur.quantity, 0) / 2
-          ]
-        }
-        if (isMaterial !== 'yes' && rec.status === CombFilterBy && filterBy === 'Терминал') {
-          return [
-            ...acc,
-            Number(rec.combTerm) -
-              rec.material.reduce((bat, cur) => bat + Number(cur.price) * cur.quantity, 0) / 2
-          ]
-        }
-
-        if (isMaterial === 'yes' && rec.status !== CombFilterBy) {
-          return [
-            ...acc,
-            rec.services.reduce(
-              (bat, cur) => bat + commonDiscount(Number(cur.price) * cur.quantity, rec),
-              0
-            ) + rec.material.reduce((bat, cur) => bat + Number(cur.price) * cur.quantity, 0)
-          ]
-        }
-        if (isMaterial === 'yes' && rec.status === CombFilterBy && filterBy === 'Оплачено') {
-          return [...acc, Number(rec.combCash)]
-        }
-        if (isMaterial === 'yes' && rec.status === CombFilterBy && filterBy === 'Терминал') {
-          return [...acc, Number(rec.combTerm)]
-        }
-        return acc
-      }, [])
-
-      .reduce((acc, rec) => acc + rec, 0)
-  }
-
-  const [userPercent, setUserPercent] = useState({})
-  const [userOformlen, setUserOformlen] = useState({})
-  const [userNalog, setUserNalog] = useState({})
-  const [userCardSum, setUserCardSum] = useState({})
-
-  const onChangePercent = (e) => {
-    const { name, value } = e.target
-    setUserPercent((prevState) => ({
-      ...prevState,
-      [name]: value
-    }))
-  }
-  const onChangeOformlen = (e) => {
-    const { name, value } = e.target
-    setUserOformlen((prevState) => ({
-      ...prevState,
-      [name]: value
-    }))
-  }
-
-  const onChangeNalog = (e) => {
-    const { name, value } = e.target
-    setUserNalog((prevState) => ({
-      ...prevState,
-      [name]: value
-    }))
-  }
-
-  const onChangeCardSum = (e) => {
-    const { name, value } = e.target
-    setUserCardSum((prevState) => ({
-      ...prevState,
-      [name]: value
-    }))
-  }
 
   const totalFreeService = (item) =>
     item.services
@@ -602,99 +316,21 @@ const Salary = ({
     return null
   }
 
-  useEffect(() => {
-    // процент
-    const emplPercnentList =
-      employeeList && employeeList.length
-        ? employeeList
-            .filter((emp) => (checkIsShinomontazh ? emp?.shinomontazhPercent : emp?.stoPercent))
-            ?.reduce((acc, rec) => {
-              return {
-                ...acc,
-                [rec.id]: checkIsShinomontazh
-                  ? rec?.shinomontazhPercent.toString()
-                  : rec?.stoPercent.toString()
-              }
-            }, {})
-        : {}
-
-    setUserPercent((prevState) => ({
-      ...prevState,
-      ...emplPercnentList
-    }))
-
-    // оформление
-
-    const emplOformlenList =
-      employeeList && employeeList.length
-        ? employeeList
-            .filter((emp) => emp?.oformlen)
-            ?.reduce((acc, rec) => {
-              return {
-                ...acc,
-                [rec.id]: rec?.oformlen
-              }
-
-              // { [rec.id]: checkIsShinomontazh ? rec?.shinomontazhPercent : rec?.stoPercent }
-            }, {})
-        : {}
-
-    setUserOformlen((prevState) => ({
-      ...prevState,
-      ...emplOformlenList
-    }))
-
-    // сумма на карту
-
-    const emplCardSumList =
-      employeeList && employeeList.length
-        ? employeeList
-            .filter((emp) => emp?.cardSum)
-            ?.reduce((acc, rec) => {
-              return {
-                ...acc,
-                [rec.id]: rec?.cardSum
-              }
-            }, {})
-        : {}
-
-    setUserCardSum((prevState) => ({
-      ...prevState,
-      ...emplCardSumList
-    }))
-
-    // налог
-
-    const emplNalogList =
-      employeeList && employeeList.length
-        ? employeeList
-            .filter((emp) => emp?.oformlenNalog)
-            ?.reduce((acc, rec) => {
-              return {
-                ...acc,
-                [rec.id]: rec?.oformlenNalog
-              }
-            }, {})
-        : {}
-
-    setUserNalog((prevState) => ({
-      ...prevState,
-      ...emplNalogList
-    }))
-  }, [employeeList])
 
   const onEmployeeClick = (e) => {
     const { value } = e.target
-    dispatch(updateCurrentEmployeeReport(value))
+    console.log('value 1', value)
+    setEmployeeId(value)
   }
 
   const clearEmployee = () => {
-    dispatch(updateCurrentEmployeeReport(''))
+    setEmployeeId(null)
   }
 
   const onChangeEmployee = (e) => {
     const { value } = e.target
-    dispatch(updateCurrentEmployeeReport(value))
+    console.log('value2', value)
+    setEmployeeId(value)
   }
 
   return (
@@ -708,16 +344,16 @@ const Salary = ({
           <select
             className={cx(
               'appearance-none block bg-grey-lighter text-sm text-grey-darker border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-1 px-4',
-              { 'border-red-600 focus:border-red-600 border-2': isMaterial === 'no' }
+              { 'border-red-600 focus:border-red-600 border-2': isMaterial === 'false' }
             )}
             value={isMaterial}
             onChange={onChangeMat}
           >
-            <option value="yes" className="text-gray-800">
+            <option value="true" className="text-gray-800">
               Да
             </option>
 
-            <option value="no">Нет</option>
+            <option value="false">Нет</option>
           </select>
         </div>
         {checkIsSto ? (
@@ -728,10 +364,10 @@ const Salary = ({
               value={showRazval}
               onChange={onChangeShowRazval}
             >
-              <option value="yes" className="text-gray-800">
+              <option value="true" className="text-gray-800">
                 Да
               </option>
-              <option value="no">Нет</option>
+              <option value="false">Нет</option>
             </select>
           </div>
         ) : null}
@@ -740,15 +376,15 @@ const Salary = ({
           <select
             className={cx(
               'appearance-none block bg-grey-lighter text-sm text-grey-darker border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-1 px-4',
-              { 'border-red-600 focus:border-red-600 border-2': showPaid === 'no' }
+              { 'border-red-600 focus:border-red-600 border-2': showPaid === 'false' }
             )}
             value={showPaid}
             onChange={onChangeShowPaid}
           >
-            <option value="yes" className="text-gray-800">
+            <option value="true" className="text-gray-800">
               Да
             </option>
-            <option value="no">Нет</option>
+            <option value="false">Нет</option>
           </select>
         </div>
 
@@ -859,29 +495,18 @@ const Salary = ({
           </tr>
         </thead>
         <tbody>
-          {employeeArrayFiltered.map((it) => (
+          {data?.data?.map((person) => (
             <SalaryTableComponent
-              key={it.id}
-              it={it}
-              userPercent={userPercent}
-              getSalary={getSalary}
+              key={person.employeeId}
+              person={person}
               checkIsBookkeper={checkIsBookkeper}
-              onChangePercent={onChangePercent}
               calendarType={calendarType}
               checkIsShinomontazh={checkIsShinomontazh}
-              userOformlen={userOformlen}
-              onChangeOformlen={onChangeOformlen}
-              onChangeNalog={onChangeNalog}
-              onChangeCardSum={onChangeCardSum}
-              userNalog={userNalog}
-              userCardSum={userCardSum}
               onEmployeeClick={onEmployeeClick}
               activeMonth={activeMonth}
-              dateArray={dateArray}
-              empSalaries={empSalaries}
             />
           ))}
-          {!employee ? (
+          {!employeeId ? (
             <tr className="bg-purple-100 font-bold lg:hover:bg-gray-100 flex lg:table-row flex-row lg:flex-row flex-wrap lg:flex-no-wrap mb-5 lg:mb-0">
               <td className="w-full lg:w-auto p-2 text-gray-800 text-left border border-b block lg:table-cell relative lg:static">
                 <span className="lg:hidden px-2 py-1 bg-purple-100 font-bold uppercase">
@@ -898,7 +523,7 @@ const Salary = ({
                     <span className="lg:hidden px-2 py-1 bg-purple-100 font-bold uppercase">
                       Вал:
                     </span>
-                    {Math.round(getSalaryfull(''), '')} руб.
+                    {data.total.all} р.
                   </td>
 
                   <td className="w-full lg:w-auto p-2 text-gray-800 text-left border border-b block lg:table-cell relative lg:static" />
@@ -929,26 +554,26 @@ const Salary = ({
                     <span className="lg:hidden px-2 py-1 bg-purple-100 font-bold uppercase">
                       Терминал:
                     </span>
-                    {Math.round(getSalaryfull('', 'Терминал', 'Комбинированный', 'summa'), '')} руб.
+                    {data.total.terminal} р.
                   </td>
                   <td className="w-full lg:w-auto p-2 text-gray-800 text-left lg:text-center border border-b block lg:table-cell relative lg:static whitespace-no-wrap">
                     <span className="lg:hidden px-2 py-1 bg-purple-100 font-bold uppercase">
                       Безнал:
                     </span>
-                    {Math.round(getSalaryfull('', 'Безнал', '', 'summa'), '')} руб.
+                    {data.total.cashless} р.
                   </td>
                   <td className="w-full lg:w-auto p-2 text-gray-800 text-left lg:text-center border border-b block lg:table-cell relative lg:static whitespace-no-wrap">
                     <span className="lg:hidden px-2 py-1 bg-purple-100 font-bold uppercase">
                       Наличка:
                     </span>
-                    {Math.round(getSalaryfull('', 'Оплачено', 'Комбинированный', 'summa'), '')} руб.
+                    {data.total.cash} р.
                   </td>
                   {calendarType === 'day' ? (
                     <td className="w-full lg:w-auto p-2 text-gray-800 text-left lg:text-center border border-b block lg:table-cell relative lg:static whitespace-no-wrap">
                       <span className="lg:hidden px-2 py-1 bg-purple-100 font-bold uppercase">
                         Сумма:
                       </span>
-                      {Math.round(getSalaryfull('', '', '', 'summa'), '')} руб.
+                      {data.total.all} р.
                     </td>
                   ) : null}
                   {calendarType === 'day' ? (
@@ -956,14 +581,14 @@ const Salary = ({
                       <span className="lg:hidden px-2 py-1 bg-purple-100 font-bold uppercase">
                         Акция:
                       </span>
-                      {Math.round(getSalaryfull('', '', '', 'discountonly'), '')} руб.
+                      {data.total.discount} р.
                     </td>
                   ) : null}
                   <td className="w-full lg:w-auto p-2 text-gray-800 text-left lg:text-center border border-b block lg:table-cell relative lg:static whitespace-no-wrap">
                     <span className="lg:hidden px-2 py-1 bg-purple-100 font-bold uppercase">
                       Вал:
                     </span>
-                    {Math.round(getSalaryfull(''), '')} руб.
+                    {data.total.all} р.
                   </td>
                 </>
               ) : null}
@@ -979,8 +604,9 @@ const Salary = ({
           ) : null}
         </tbody>
       </table>
-      {calendarType === 'day' || employee ? (
+      {calendarType === 'day' || employeeId ? (
         <SalaryByDay
+          orders={data?.orders || []}
           dateArray={dateArray(employee)}
           totalWithDiscount={totalWithDiscount}
           totalFreeService={totalFreeService}

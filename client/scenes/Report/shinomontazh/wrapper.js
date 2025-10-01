@@ -6,7 +6,6 @@ import Salary from './Salary'
 import Material from './Material'
 import { filterByStatus, getEmployeeArray } from '../../../utils/admin/reportUtils'
 import { updateEmployeeReport } from '../../../redux/reducers/employees'
-import { splitGroupedObjects } from '../../../hooks/useGroup'
 
 export const checkIsRazvalService = (s) =>
   s?.includes('Развал схождения') ||
@@ -25,12 +24,14 @@ const Shinomontazh = ({
   range,
   showReport
 }) => {
-  const [shinList, setShinList] = useState([])
-  const [isLoaded, setIsLoaded] = useState(false)
-  const [empSalaries, setEmpSalaries] = useState([])
+  const [isLoading, setIsLoading] = useState(false)
+  const [data, setData] = useState({ data: [], total: {}, orders: [] })
 
-  const employee = useSelector((s) => s.employees.employee)
-  const dispatch = useDispatch()
+  const [bossPercent, setBossPercent] = useState(30)
+  const [isMaterial, setIsMaterial] = useState('false')
+  const [showRazval, setShowRazval] = useState('false')
+  const [showPaid, setShowPaid] = useState('true')
+  const [employeeId, setEmployeeId] = useState(null)
 
   useEffect(() => {
     const getType = () => {
@@ -52,81 +53,128 @@ const Shinomontazh = ({
       return 'washmonth'
     }
 
-    const getRangeType = (firstDt, secDt) => {
-      const getTp = () => {
-        if (active.startsWith('sh-') || active === 'material') {
-          return 'shinomontazhrange'
-        }
-        if (active.includes('sto-')) {
-          return 'storange'
-        }
-        if (active.includes('wash-')) {
-          return 'washrange'
-        }
-        if (active.includes('cond-')) {
-          return 'condrange'
-        }
-        if (active.includes('window-')) {
-          return 'windowrange'
-        }
-        return 'washrange'
-      }
+    setIsLoading(true)
 
-      return `api/v1/${getTp()}?month=${
-        firstDt.getMonth() + 1
-      }&year=${firstDt.getFullYear()}&secMonth=${
-        secDt.getMonth() + 1
-      }&secYear=${secDt.getFullYear()}`
-    }
 
-    if (activeMonth && calendarType === 'month') {
-      setIsLoaded(false)
-      fetch(
-        `api/v1/${getType()}?month=${activeMonth.getMonth() + 1}&year=${activeMonth.getFullYear()}`
-      )
-        .then((res) => res.json())
-        .then((it) => {
-          setShinList(splitGroupedObjects(it.data))
-          setEmpSalaries(it?.employees)
-          setIsLoaded(true)
+    fetch(`api/v1/${getType()}`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        month: activeMonth.getMonth() + 1,
+        year: activeMonth.getFullYear(),
+        countMaterials: isMaterial === 'true',
+        countOnlyPaidOrders: showPaid === 'true',
+        employee: employeeId
+      })
+    })
+      .then((res) => res.json())
+      .then((it) => {
+        setData(it)
+        setIsLoading(false)
+      })
+      .catch((err) => {
+        console.error('Ошибка при запросе:', err)
+        setIsLoading(false)
+      })
+  }, [activeDay, activeMonth, active, isMaterial, employeeId, showPaid])
 
-        })
-    }
-    if (activeDay && calendarType === 'day') {
-      setIsLoaded(false)
-      fetch(`api/v1/${getType()}?month=${activeDay.getMonth() + 1}&year=${activeDay.getFullYear()}`)
-        .then((res) => res.json())
-        .then((it) => {
-          setShinList(splitGroupedObjects(it.data))
-          setIsLoaded(true)
-        })
-    }
-    if (activeDay && calendarType === 'diapason') {
-      const getDtWithTime = (today, hr, tm, sec) =>
-        new Date(today.getFullYear(), today.getMonth(), today.getDate(), hr, tm, sec)
-      const firstDt = getDtWithTime(range[0], 0, 0, 0)
-      const secDt = getDtWithTime(range[1], 23, 59, 0)
+  const [shinList] = useState([])
+  const [isLoaded] = useState(false)
+  const [empSalaries] = useState([])
 
-      const getFilteredByRange = (cont) =>
-        cont.filter((arr) => new Date(arr.dateFinish) > firstDt && new Date(arr.dateFinish) < secDt)
-      setIsLoaded(false)
-      fetch(getRangeType(firstDt, secDt))
-        .then((res) => res.json())
-        .then((it) => {
-          setShinList(splitGroupedObjects(getFilteredByRange(it.data)))
-          setIsLoaded(true)
-        })
-    }
-    return () => {}
-  }, [activeMonth.getMonth(), activeDay.getMonth(), range, calendarType, active])
+  const employee = useSelector((s) => s.employees.employee)
+  const dispatch = useDispatch()
+
+  // useEffect(() => {
+  //   const getType = () => {
+  //     if (active.startsWith('sh-') || active === 'material') {
+  //       return 'shinomontazhmonth'
+  //     }
+  //     if (active.includes('sto-')) {
+  //       return 'stomonth'
+  //     }
+  //     if (active.includes('wash-')) {
+  //       return 'washmonth'
+  //     }
+  //     if (active.includes('cond-')) {
+  //       return 'condmonth'
+  //     }
+  //     if (active.includes('window-')) {
+  //       return 'windowmonth'
+  //     }
+  //     return 'washmonth'
+  //   }
+  //
+  //   const getRangeType = (firstDt, secDt) => {
+  //     const getTp = () => {
+  //       if (active.startsWith('sh-') || active === 'material') {
+  //         return 'shinomontazhrange'
+  //       }
+  //       if (active.includes('sto-')) {
+  //         return 'storange'
+  //       }
+  //       if (active.includes('wash-')) {
+  //         return 'washrange'
+  //       }
+  //       if (active.includes('cond-')) {
+  //         return 'condrange'
+  //       }
+  //       if (active.includes('window-')) {
+  //         return 'windowrange'
+  //       }
+  //       return 'washrange'
+  //     }
+  //
+  //     return `api/v1/${getTp()}?month=${
+  //       firstDt.getMonth() + 1
+  //     }&year=${firstDt.getFullYear()}&secMonth=${
+  //       secDt.getMonth() + 1
+  //     }&secYear=${secDt.getFullYear()}`
+  //   }
+  //
+  //   if (activeMonth && calendarType === 'month') {
+  //     setIsLoaded(false)
+  //     fetch(
+  //       `api/v1/${getType()}?month=${activeMonth.getMonth() + 1}&year=${activeMonth.getFullYear()}`
+  //     )
+  //       .then((res) => res.json())
+  //       .then((it) => {
+  //         setShinList(splitGroupedObjects(it.data))
+  //         setEmpSalaries(it?.employees)
+  //         setIsLoaded(true)
+  //       })
+  //   }
+  //   if (activeDay && calendarType === 'day') {
+  //     setIsLoaded(false)
+  //     fetch(`api/v1/${getType()}?month=${activeDay.getMonth() + 1}&year=${activeDay.getFullYear()}`)
+  //       .then((res) => res.json())
+  //       .then((it) => {
+  //         setShinList(splitGroupedObjects(it.data))
+  //         setIsLoaded(true)
+  //       })
+  //   }
+  //   if (activeDay && calendarType === 'diapason') {
+  //     const getDtWithTime = (today, hr, tm, sec) =>
+  //       new Date(today.getFullYear(), today.getMonth(), today.getDate(), hr, tm, sec)
+  //     const firstDt = getDtWithTime(range[0], 0, 0, 0)
+  //     const secDt = getDtWithTime(range[1], 23, 59, 0)
+  //
+  //     const getFilteredByRange = (cont) =>
+  //       cont.filter((arr) => new Date(arr.dateFinish) > firstDt && new Date(arr.dateFinish) < secDt)
+  //     setIsLoaded(false)
+  //     fetch(getRangeType(firstDt, secDt))
+  //       .then((res) => res.json())
+  //       .then((it) => {
+  //         setShinList(splitGroupedObjects(getFilteredByRange(it.data)))
+  //         setIsLoaded(true)
+  //       })
+  //   }
+  //   return () => {}
+  // }, [activeMonth.getMonth(), activeDay.getMonth(), range, calendarType, active])
 
   const [report, setReport] = useState([])
-
-  const [bossPercent, setBossPercent] = useState(30)
-  const [isMaterial, setIsMaterial] = useState('no')
-
-  const [showRazval, setShowRazval] = useState('no')
-  const [showPaid, setShowPaid] = useState('yes')
 
   useEffect(() => {
     if (calendarType === 'month') {
@@ -315,9 +363,12 @@ const Shinomontazh = ({
       active === 'cond-buh' ||
       active === 'cond-kassa' ? (
         <div className={cx('block', {})}>
-          {isLoaded ? null : loading()}
-          {report && isLoaded ? (
+          {!isLoading ? null : loading()}
+          {data && !isLoading ? (
             <Salary
+              data={data}
+              employeeId={employeeId}
+              setEmployeeId={setEmployeeId}
               employeeList={employeeList}
               report={report}
               taskStatuses={taskStatuses}
@@ -342,7 +393,7 @@ const Shinomontazh = ({
               empSalaries={empSalaries}
             />
           ) : null}
-          {isLoaded && report.length <= 0 ? (
+          {!isLoading && data?.length <= 0 ? (
             <div>
               {active.includes('sto-') ? (
                 <div>
@@ -372,11 +423,11 @@ const Shinomontazh = ({
           })}
         >
           {' '}
-          {isLoaded ? null : loading()}
+          {!isLoading ? null : loading()}
           {report.length > 0 && isLoaded ? (
-            <Material report={report} isLoaded={shinList.isLoaded} />
+            <Material report={report} isLoaded={!isLoading} />
           ) : null}
-          {isLoaded && report.length <= 0 ? <p className="my-3">Записей нет</p> : null}
+          {isLoaded && data?.data?.length <= 0 ? <p className="my-3">Записей нет</p> : null}
         </div>
       ) : null}
     </>

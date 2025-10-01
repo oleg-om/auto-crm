@@ -1,5 +1,7 @@
+const dayjs = require('dayjs')
 const Employee = require('../model/employee')
 const EmployeeReport = require('../model/EmployeeReport')
+// const statuses = require('../../common/enums/shinomontazh-statuses')
 
 // Вспомогательная функция для получения всех уникальных дней в диапазоне дат
 function getUniqueDaysInRange(startDate, endDate) {
@@ -39,15 +41,30 @@ function roundObject(obj) {
   })
 }
 
+function groupOrdersByDate(orders) {
+  return orders
+    .sort((a, b) => new Date(b.dateFinish) - new Date(a.dateFinish)) // от новых к старым
+    .reduce((acc, order) => {
+      const key = dayjs(order.dateFinish).format('DD.MM.YYYY')
+
+      if (!acc[key]) acc[key] = []
+      acc[key].push(order)
+
+      return acc
+    }, {})
+}
+
 // Контроллер для группировки стоимости по сотрудникам
 async function calculateTotalCostByEmployee(req, res, Model) {
   const isShinomontazh = req.path.includes('shinomontazh')
   try {
     // Получаем все заказы
-    const { month, year } = req.query
+    const { month, year } = req.body
 
-    const day = req.query?.day
-    const employee = req.query?.employee
+    const day = req.body?.day
+    const employee = req.body?.employee
+    const countMaterials = req.body?.countMaterials
+    const countOnlyPaidOrders = req.body?.countOnlyPaidOrders
 
     const orders = await Model.find({
       $expr: {
@@ -91,7 +108,7 @@ async function calculateTotalCostByEmployee(req, res, Model) {
 
     // Получаем данные из EmployeeReport для подсчета val
     const employeeReports = await EmployeeReport.find({
-      month: `${month.padStart(2, '0')}.${year}`
+      month: `${month}.${year}`
     })
     const employeeSalaries = employeeReports.reduce((acc, report) => {
       const { employeeId } = report
@@ -129,7 +146,8 @@ async function calculateTotalCostByEmployee(req, res, Model) {
                 all: { totalServicesCost: 0, totalMaterialCost: 0, totalCost: 0 },
                 cash: { totalServicesCost: 0, totalMaterialCost: 0, totalCost: 0 },
                 terminal: { totalServicesCost: 0, totalMaterialCost: 0, totalCost: 0 },
-                cashless: { totalServicesCost: 0, totalMaterialCost: 0, totalCost: 0 }
+                cashless: { totalServicesCost: 0, totalMaterialCost: 0, totalCost: 0 },
+                discount: { totalServicesCost: 0, totalMaterialCost: 0, totalCost: 0 }
               },
               percent: 0,
               oformlen: employeeData[employeeId]?.oformlen || false,
@@ -154,10 +172,6 @@ async function calculateTotalCostByEmployee(req, res, Model) {
           function calculateMaterialOrService(item) {
             const price = parseFloat(item.price) || 0
 
-            // if (item.free === 'yes') {
-            //   price = 0
-            // }
-
             const quantity = Number(item.quantity) || 0
 
             let total = price * quantity
@@ -169,11 +183,20 @@ async function calculateTotalCostByEmployee(req, res, Model) {
               total = numberPercent
             }
 
-            return total / order.employee.length
+            if (countOnlyPaidOrders) {
+              if (order?.payment !== 'cancel' && order?.payment !== 'no') {
+                return total / order.employee.length
+              }
+            } else if (order?.payment === 'cancel' || order?.payment === 'no') {
+              return total / order.employee.length
+            }
+
+            return 0
           }
 
           // Подсчет стоимости услуг (services)
           if (order.services && Array.isArray(order.services)) {
+            // eslint-disable-next-line consistent-return
             order.services.forEach((service) => {
               const total = calculateMaterialOrService(service)
               groupedByEmployee[employeeId].total.all.totalServicesCost += total
@@ -190,6 +213,10 @@ async function calculateTotalCostByEmployee(req, res, Model) {
                     order.combCash || 0
                   )
                 }
+              }
+
+              if (service.free === 'yes') {
+                groupedByEmployee[employeeId].total.discount.totalServicesCost += total
               }
 
               if (order.status === 'Безнал') {
@@ -211,6 +238,10 @@ async function calculateTotalCostByEmployee(req, res, Model) {
             order.material.forEach((mat) => {
               const total = calculateMaterialOrService(mat)
               groupedByEmployee[employeeId].total.all.totalMaterialCost += total
+
+              if (mat.free === 'yes') {
+                groupedByEmployee[employeeId].total.discount.totalMaterialCost += total
+              }
 
               if (order.status === 'Безнал') {
                 groupedByEmployee[employeeId].total.cashless.totalMaterialCost += total
@@ -235,7 +266,11 @@ async function calculateTotalCostByEmployee(req, res, Model) {
           Object.keys(totals).forEach((key) => {
             const item = totals[key]
 
-            item.totalCost = item.totalServicesCost + item.totalMaterialCost
+            if (countMaterials) {
+              item.totalCost = item.totalServicesCost + item.totalMaterialCost
+            } else {
+              item.totalCost = item.totalServicesCost
+            }
           })
 
           // Подсчет зарплаты
@@ -258,7 +293,8 @@ async function calculateTotalCostByEmployee(req, res, Model) {
       all: 0,
       cashless: 0,
       terminal: 0,
-      cash: 0
+      cash: 0,
+      discount: 0
     }
 
     // Преобразуем объект в массив для ответа
@@ -267,6 +303,7 @@ async function calculateTotalCostByEmployee(req, res, Model) {
       total.cashless += groupedByEmployee[employeeId].total.cashless.totalCost
       total.terminal += groupedByEmployee[employeeId].total.terminal.totalCost
       total.cash += groupedByEmployee[employeeId].total.cash.totalCost
+      total.discount += groupedByEmployee[employeeId].total.discount.totalCost
 
       // Округление total
       roundObject(total)
@@ -290,7 +327,8 @@ async function calculateTotalCostByEmployee(req, res, Model) {
     res.status(200).json({
       success: true,
       data: result.sort((a, b) => a.employeeName.localeCompare(b.employeeName)),
-      total
+      total,
+      orders: day || employee ? groupOrdersByDate(orders) : []
     })
   } catch (error) {
     console.error('Error calculating total cost by employee:', error)
