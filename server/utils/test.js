@@ -26,19 +26,33 @@ function getUniqueDaysInRange(startDate, endDate) {
   return days
 }
 
+function roundObject(obj) {
+  Object.keys(obj).forEach((key) => {
+    const value = obj[key]
+
+    if (typeof value === 'number') {
+      // eslint-disable-next-line no-param-reassign
+      obj[key] = Math.round(value)
+    } else if (value && typeof value === 'object' && !Array.isArray(value)) {
+      roundObject(value) // рекурсия
+    }
+  })
+}
+
 // Контроллер для группировки стоимости по сотрудникам
 async function calculateTotalCostByEmployee(req, res, Model) {
-  console.log('req', req.path)
   const isShinomontazh = req.path.includes('shinomontazh')
   try {
     // Получаем все заказы
-    const { month, year } = req.query
+    const { month, year, day } = req.query
 
     const orders = await Model.find({
       $expr: {
         $and: [
           { $eq: [{ $year: '$dateFinish' }, Number(year)] },
-          { $eq: [{ $month: '$dateFinish' }, Number(month)] }
+          { $eq: [{ $month: '$dateFinish' }, Number(month)] }(
+            ...(day && { $eq: [{ $day: '$dateFinish' }, Number(day)] })
+          )
         ]
       }
     })
@@ -92,9 +106,12 @@ async function calculateTotalCostByEmployee(req, res, Model) {
           if (!groupedByEmployee[employeeId]) {
             groupedByEmployee[employeeId] = {
               employeeName: `${emp.name || ''} ${emp.surname || ''}`.trim(),
-              totalServicesCost: 0,
-              totalMaterialCost: 0,
-              totalCost: 0,
+              total: {
+                all: { totalServicesCost: 0, totalMaterialCost: 0, totalCost: 0 },
+                cash: { totalServicesCost: 0, totalMaterialCost: 0, totalCost: 0 },
+                terminal: { totalServicesCost: 0, totalMaterialCost: 0, totalCost: 0 },
+                cashless: { totalServicesCost: 0, totalMaterialCost: 0, totalCost: 0 }
+              },
               percent: 0,
               oformlen: employeeData[employeeId]?.oformlen || false,
               oformlenNalog: employeeData[employeeId]?.oformlenNalog || 0,
@@ -114,67 +131,147 @@ async function calculateTotalCostByEmployee(req, res, Model) {
             groupedByEmployee[employeeId].percent = employeeData[employeeId]?.stoPercent || 0
           }
 
+          // функция для подсчета услуг или материалов
+          function calculateMaterialOrService(item) {
+            const price = parseFloat(item.price) || 0
+
+            // if (item.free === 'yes') {
+            //   price = 0
+            // }
+
+            const quantity = Number(item.quantity) || 0
+
+            let total = price * quantity
+
+            const discount = parseFloat(order?.discount) || 0
+            const numberPercent = (total / 100) * discount
+
+            if (discount) {
+              total = numberPercent
+            }
+
+            return total / order.employee.length
+          }
+
           // Подсчет стоимости услуг (services)
           if (order.services && Array.isArray(order.services)) {
             order.services.forEach((service) => {
-              const price = parseFloat(service.price) || 0
-              const quantity = Number(service.quantity) || 0
-              groupedByEmployee[employeeId].totalServicesCost += price * quantity
+              const total = calculateMaterialOrService(service)
+              groupedByEmployee[employeeId].total.all.totalServicesCost += total
+
+              if (order.status === 'Комбинированный') {
+                if (order?.combTerm) {
+                  groupedByEmployee[employeeId].total.terminal.totalServicesCost += parseFloat(
+                    order.combTerm || 0
+                  )
+                }
+
+                if (order?.combCash) {
+                  groupedByEmployee[employeeId].total.cash.totalServicesCost += parseFloat(
+                    order.combCash || 0
+                  )
+                }
+              }
+
+              if (order.status === 'Безнал') {
+                groupedByEmployee[employeeId].total.cashless.totalServicesCost += total
+              }
+
+              if (order.status === 'Терминал') {
+                groupedByEmployee[employeeId].total.terminal.totalServicesCost += total
+              }
+
+              if (order.status === 'Оплачено') {
+                groupedByEmployee[employeeId].total.cash.totalServicesCost += total
+              }
             })
           }
 
           // Подсчет стоимости материалов (material)
           if (order.material && Array.isArray(order.material)) {
             order.material.forEach((mat) => {
-              const price = parseFloat(mat.price) || 0
-              const quantity = Number(mat.quantity) || 0
-              groupedByEmployee[employeeId].totalMaterialCost += price * quantity
+              const total = calculateMaterialOrService(mat)
+              groupedByEmployee[employeeId].total.all.totalMaterialCost += total
+
+              if (order.status === 'Безнал') {
+                groupedByEmployee[employeeId].total.cashless.totalMaterialCost += total
+              }
+
+              if (order.status === 'Терминал') {
+                groupedByEmployee[employeeId].total.terminal.totalMaterialCost += total
+              }
+
+              if (order.status === 'Оплачено') {
+                groupedByEmployee[employeeId].total.cash.totalServicesCost += total
+              }
             })
           }
 
+          // Округление всех сумм услуг и материалов
+          roundObject(groupedByEmployee[employeeId].total)
+
           // считаем сумму услуг и материалов
-          groupedByEmployee[employeeId].totalCost =
-            groupedByEmployee[employeeId].totalServicesCost +
-            groupedByEmployee[employeeId].totalMaterialCost
+          const totals = groupedByEmployee[employeeId].total
+
+          Object.keys(totals).forEach((key) => {
+            const item = totals[key]
+
+            item.totalCost = item.totalServicesCost + item.totalMaterialCost
+          })
 
           // Подсчет зарплаты
-          const { percent, totalCost, cardSum, advances } = groupedByEmployee[employeeId]
+          const { percent, total, cardSum, advances } = groupedByEmployee[employeeId]
 
-          groupedByEmployee[employeeId].salary = Math.round((totalCost * percent) / 100)
+          groupedByEmployee[employeeId].salary = Math.round((total.all.totalCost * percent) / 100)
           groupedByEmployee[employeeId].rest = Math.round(
             groupedByEmployee[employeeId].salary - (cardSum + advances)
           )
 
           // Получаем уникальные дни из диапазона dateStart и dateFinish
           const uniqueDays = getUniqueDaysInRange(order.dateStart, order.dateFinish)
-          uniqueDays.forEach((day) => groupedByEmployee[employeeId].uniqueWorkDays.add(day))
+          uniqueDays.forEach((d) => groupedByEmployee[employeeId].uniqueWorkDays.add(d))
         })
       }
     })
 
+    // Считаем total
+    const total = {
+      all: 0,
+      cashless: 0,
+      terminal: 0,
+      cash: 0
+    }
+
     // Преобразуем объект в массив для ответа
-    const result = Object.keys(groupedByEmployee).map((employeeId) => ({
-      employeeId,
-      employeeName: groupedByEmployee[employeeId].employeeName,
-      totalServicesCost: groupedByEmployee[employeeId].totalServicesCost,
-      totalMaterialCost: groupedByEmployee[employeeId].totalMaterialCost,
-      totalCost:
-        groupedByEmployee[employeeId].totalServicesCost +
-        groupedByEmployee[employeeId].totalMaterialCost,
-      percent: groupedByEmployee[employeeId].percent,
-      oformlen: groupedByEmployee[employeeId]?.oformlen,
-      oformlenNalog: groupedByEmployee[employeeId]?.oformlenNalog,
-      cardSum: groupedByEmployee[employeeId]?.cardSum,
-      uniqueWorkDaysCount: groupedByEmployee[employeeId].uniqueWorkDays.size,
-      advances: groupedByEmployee[employeeId].advances,
-      salary: groupedByEmployee[employeeId].salary,
-      rest: groupedByEmployee[employeeId].rest
-    }))
+    const result = Object.keys(groupedByEmployee).map((employeeId) => {
+      total.all += groupedByEmployee[employeeId].total.all.totalCost
+      total.cashless += groupedByEmployee[employeeId].total.cashless.totalCost
+      total.terminal += groupedByEmployee[employeeId].total.terminal.totalCost
+      total.cash += groupedByEmployee[employeeId].total.cash.totalCost
+
+      // Округление total
+      roundObject(total)
+
+      return {
+        employeeId,
+        employeeName: groupedByEmployee[employeeId].employeeName,
+        total: groupedByEmployee[employeeId].total,
+        percent: groupedByEmployee[employeeId].percent,
+        oformlen: groupedByEmployee[employeeId]?.oformlen,
+        oformlenNalog: groupedByEmployee[employeeId]?.oformlenNalog,
+        cardSum: groupedByEmployee[employeeId]?.cardSum,
+        uniqueWorkDaysCount: groupedByEmployee[employeeId].uniqueWorkDays.size,
+        advances: groupedByEmployee[employeeId].advances,
+        salary: groupedByEmployee[employeeId].salary,
+        rest: groupedByEmployee[employeeId].rest
+      }
+    })
 
     // Возвращаем результат
     res.status(200).json({
       success: true,
-      data: result
+      data: result.sort((a, b) => a.employeeName.localeCompare(b.employeeName)),
+      total
     })
   } catch (error) {
     console.error('Error calculating total cost by employee:', error)
