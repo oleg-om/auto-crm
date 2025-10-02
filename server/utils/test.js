@@ -3,6 +3,8 @@ const Employee = require('../model/employee')
 const EmployeeReport = require('../model/EmployeeReport')
 // const statuses = require('../../common/enums/shinomontazh-statuses')
 
+const regexRazval = /(Развал схождения|Развал-схождение|Развал-схождения)/i
+
 // Вспомогательная функция для получения всех уникальных дней в диапазоне дат
 function getUniqueDaysInRange(startDate, endDate) {
   const days = new Set()
@@ -69,83 +71,15 @@ async function calculateTotalCostByEmployee(req, res, Model) {
       onlyRazvalSto
     } = req.body
 
-    // const day = req.body?.day
-    // const employee = req.body?.employee
-    // const countMaterials = req.body?.countMaterials
-    // const countOnlyPaidOrders = req.body?.countOnlyPaidOrders
-    // const onlyRazvalSto = req.body?.onlyRazvalSto
-    const regexRazval = /(Развал схождения|Развал-схождение|Развал-схождения)/i
-
-    // const orders = await Model.find({
-    //   $expr: {
-    //     $and: [
-    //       { $eq: [{ $year: '$dateFinish' }, Number(year)] },
-    //       { $eq: [{ $month: '$dateFinish' }, Number(month)] },
-    //       ...(day ? [{ $eq: [{ $dayOfMonth: '$dateFinish' }, Number(day)] }] : []),
-    //       ...(employee
-    //         ? [
-    //             {
-    //               $gt: [
-    //                 {
-    //                   $size: {
-    //                     $filter: {
-    //                       input: '$employee',
-    //                       cond: { $eq: ['$$this.id', employee] }
-    //                     }
-    //                   }
-    //                 },
-    //                 0
-    //               ]
-    //             }
-    //           ]
-    //         : []),
-    //       ...(onlyRazvalSto
-    //         ? [
-    //             {
-    //               $gt: [
-    //                 {
-    //                   $size: {
-    //                     $filter: {
-    //                       input: '$services',
-    //                       cond: {
-    //                         $expr: { $regexMatch: { input: '$$this.name', regex: regexRazval } }
-    //                       } // Added $expr
-    //                     }
-    //                   }
-    //                 },
-    //                 0
-    //               ]
-    //             }
-    //           ]
-    //         : [])
-    //     ]
-    //   }
-    // })
-
     const query = {
-      $and: [
-        // Filter by year and month using $dateToParts or direct comparison
-        {
-          dateFinish: {
-            $gte: new Date(year, month - 1, day || 1),
-            $lt: day ? new Date(year, month - 1, day + 1) : new Date(year, month, 1)
-          }
-        },
-        // Filter by employee if provided
-        ...(employee ? [{ 'employee.id': employee }] : []),
-        // Filter by services with regex if onlyRazvalSto is true
-        ...(onlyRazvalSto
-          ? [
-              {
-                services: {
-                  $elemMatch: {
-                    name: { $regex: regexRazval, $options: 'i' }
-                  }
-                }
-              }
-            ]
-          : [])
-      ]
+      dateFinish: {
+        $gte: new Date(Number(year), Number(month) - 1, day ? Number(day) : 1),
+        $lt: day
+          ? new Date(Number(year), Number(month) - 1, Number(day) + 1)
+          : new Date(Number(year), Number(month), 1)
+      },
+      ...(employee ? { 'employee.id': employee } : {}),
+      ...(onlyRazvalSto ? { 'services.name': { $regex: regexRazval, $options: 'i' } } : {})
     }
 
     const orders = await Model.find(query)

@@ -7,6 +7,93 @@ import SalaryTableComponent from './SalaryTableComponent'
 import razvalIcon from '../../../assets/images/priority-product-large.png'
 import { checkIsRazvalService } from './wrapper'
 
+const SalaryByDayItem = ({ it, getLinkToWork, getWorkId, onEmployeeClick }) => {
+  const totalServices = Math.round(
+    it.services.reduce((acc, rec) => acc + Number(rec.price) * rec.quantity, 0)
+  )
+  const totalFreeServices = Math.round(
+    it.services
+      .filter((s) => s.free === 'yes')
+      .reduce((acc, rec) => acc + Number(rec.price) * rec.quantity, 0)
+  )
+  const totalMaterials = Math.round(
+    it.material.reduce((acc, rec) => acc + Number(rec.price) * rec.quantity, 0)
+  )
+
+  const total = totalServices + totalMaterials
+  let result = 0
+
+  if (it?.discount) {
+    result = (total * parseFloat(it.discount)) / 100
+  }
+
+  return (
+    <tr key={it.id} className="bg-white hover:bg-gray-100 table-row mb-0">
+      <td className="w-auto p-2 text-gray-800 text-left border border-b table-cell static">
+        <div className="flex items-center">
+          <Link
+            to={() => getLinkToWork(it)}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="hover:underline"
+          >
+            {getWorkId(it)}
+          </Link>
+          {it.services?.filter((s) => checkIsRazvalService(s?.name))?.length ? (
+            <img className="w-6 ml-1" src={razvalIcon} alt="" />
+          ) : null}
+        </div>
+      </td>
+      <td className="w-auto p-2 text-gray-800 text-left border border-b table-cell static">
+        {it.employee
+          .reduce((acc, rec) => acc.concat(rec), [])
+          .reduce((acc, rec) => {
+            const x = acc.find((item) => item.id === rec.id)
+            if (!x) {
+              return acc.concat([rec])
+            }
+            return acc
+          }, [])
+          .map((man) => (
+            <button
+              type="button"
+              key={man.id}
+              onClick={onEmployeeClick}
+              value={man.id}
+              className="text-left hover:underline pr-3"
+            >
+              {man.name} {man.surname}
+            </button>
+          ))}
+      </td>
+      <td className="w-auto p-2 text-gray-800 text-center border border-b table-cell static">
+        <p>
+          {new Date(it.dateFinish).getHours()}:
+          {new Date(it.dateFinish)
+            .getMinutes()
+            .toString()
+            .replace(/^(\d)$/, '0$1')}
+        </p>
+      </td>
+      <td className="w-auto p-2 text-gray-800 text-center border border-b table-cell static">
+        {totalServices} р.
+      </td>
+      <td className="w-auto p-2 text-gray-800 text-center border border-b table-cell static">
+        {totalMaterials} р.
+      </td>
+      <td className="w-auto p-2 text-gray-800 text-center border border-b table-cell static">
+        {totalFreeServices} р.
+      </td>
+      <td className="w-auto p-2 text-gray-800 text-center border border-b table-cell static">
+        {it.discount ? `${it.discount}%` : ''}
+      </td>
+      <td className="w-auto p-2 text-gray-800 text-center border border-b table-cell static">
+        {result} р.
+      </td>
+    </tr>
+  )
+}
+
 const SalaryByDay = ({
   employee,
   getLinkToWork,
@@ -20,8 +107,6 @@ const SalaryByDay = ({
     content: () => componentRef.current
   })
 
-  const totalFreeService = () => {}
-  const totalWithDiscount = () => {}
   return (
     <div className="m-5">
       <div className="flex">
@@ -115,71 +200,13 @@ const SalaryByDay = ({
               </thead>
               <tbody>
                 {orders[date].map((it) => (
-                  <tr key={it.id} className="bg-white hover:bg-gray-100 table-row mb-0">
-                    <td className="w-auto p-2 text-gray-800 text-left border border-b table-cell static">
-                      <div className="flex items-center">
-                        <Link
-                          to={() => getLinkToWork(it)}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="hover:underline"
-                        >
-                          {getWorkId(it)}
-                        </Link>
-                        {it.services?.filter((s) => checkIsRazvalService(s?.name))?.length ? (
-                          <img className="w-6 ml-1" src={razvalIcon} alt="" />
-                        ) : null}
-                      </div>
-                    </td>
-                    <td className="w-auto p-2 text-gray-800 text-left border border-b table-cell static">
-                      {it.employee
-                        .reduce((acc, rec) => acc.concat(rec), [])
-                        .reduce((acc, rec) => {
-                          const x = acc.find((item) => item.id === rec.id)
-                          if (!x) {
-                            return acc.concat([rec])
-                          }
-                          return acc
-                        }, [])
-                        .map((man) => (
-                          <button
-                            type="button"
-                            key={man.id}
-                            onClick={onEmployeeClick}
-                            value={man.id}
-                            className="text-left hover:underline pr-3"
-                          >
-                            {man.name} {man.surname}
-                          </button>
-                        ))}
-                    </td>
-                    <td className="w-auto p-2 text-gray-800 text-center border border-b table-cell static">
-                      <p>
-                        {new Date(it.dateFinish).getHours()}:
-                        {new Date(it.dateFinish)
-                          .getMinutes()
-                          .toString()
-                          .replace(/^(\d)$/, '0$1')}
-                      </p>
-                    </td>
-                    <td className="w-auto p-2 text-gray-800 text-center border border-b table-cell static">
-                      {it.services.reduce((acc, rec) => acc + Number(rec.price) * rec.quantity, 0)}{' '}
-                      руб.
-                    </td>
-                    <td className="w-auto p-2 text-gray-800 text-center border border-b table-cell static">
-                      {it.material.reduce((acc, rec) => acc + Number(rec.price) * rec.quantity, 0)}{' '}
-                      руб.
-                    </td>
-                    <td className="w-auto p-2 text-gray-800 text-center border border-b table-cell static">
-                      {totalFreeService(it) ? <>{totalFreeService(it)} руб.</> : null}
-                    </td>
-                    <td className="w-auto p-2 text-gray-800 text-center border border-b table-cell static">
-                      {it.discount ? `${it.discount}%` : ''}
-                    </td>
-                    <td className="w-auto p-2 text-gray-800 text-center border border-b table-cell static">
-                      {totalWithDiscount(it)}
-                    </td>
-                  </tr>
+                  <SalaryByDayItem
+                    key={it.id}
+                    it={it}
+                    getLinkToWork={getLinkToWork}
+                    getWorkId={getWorkId}
+                    onEmployeeClick={onEmployeeClick}
+                  />
                 ))}
               </tbody>
             </table>

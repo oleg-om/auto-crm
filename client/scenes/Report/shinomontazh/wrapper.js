@@ -5,10 +5,8 @@ import taskStatuses from '../../../lists/task-statuses'
 import Salary from './Salary'
 import Material from './Material'
 
-export const checkIsRazvalService = (s) =>
-  s?.includes('Развал схождения') ||
-  s?.includes('Развал-схождение') ||
-  s?.includes('Развал-схождения')
+const regexRazval = /(Развал схождения|Развал-схождение|Развал-схождения)/i
+export const checkIsRazvalService = (s) => regexRazval?.test(s)
 
 const Shinomontazh = ({
   calendarType,
@@ -80,7 +78,6 @@ const Shinomontazh = ({
   const [shinList] = useState([])
   const [isLoaded] = useState(false)
   const [empSalaries] = useState([])
-
 
   const employee = useSelector((s) => s.employees.employee)
 
