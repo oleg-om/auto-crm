@@ -75,7 +75,7 @@ exports.getByPage = async (req, res) => {
   }
 }
 exports.getFiltered = async (req, res) => {
-  const { page, number, place, reg } = req.query
+  const { page, number, place, reg, employee } = req.query
 
   try {
     const LIMIT = 14
@@ -85,12 +85,14 @@ exports.getFiltered = async (req, res) => {
       id_shinomontazhs: req.query.number ? `${number.toString()}` : { $exists: true },
       place: req.query.place ? `${place.toString()}` : { $exists: true },
       regnumber: req.query.reg ? { $regex: `${reg.toString()}`, $options: 'i' } : { $exists: true },
+      'employee.id': req.query?.employee ? `${employee.toString()}` : { $exists: true },
       dateStart: { $exists: true }
     })
     const posts = await Shinomontazh.find({
       id_shinomontazhs: req.query.number ? `${number.toString()}` : { $exists: true },
       place: req.query.place ? `${place.toString()}` : { $exists: true },
       regnumber: req.query.reg ? { $regex: `${reg.toString()}`, $options: 'i' } : { $exists: true },
+      'employee.id': req.query?.employee ? `${employee.toString()}` : { $exists: true },
       dateStart: { $exists: true }
     })
       // .sort({ id_shinomontazhs: -1 })

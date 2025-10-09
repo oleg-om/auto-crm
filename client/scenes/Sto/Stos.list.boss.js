@@ -68,7 +68,7 @@ const StosListBoss = () => {
     )
   }
 
-  const filters = ['number', 'place', 'regnumber']
+  const filters = ['number', 'place', 'regnumber', 'employee']
 
   return (
     <div>
