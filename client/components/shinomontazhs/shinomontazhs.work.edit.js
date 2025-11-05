@@ -372,20 +372,30 @@ const ShinomontazhsEdit = (props) => {
       }
       return item
     }
-    const actualDiametr = 'R'.concat(helpToGetDiametr(state.diametr))
+    const actualDiametr = (diametr) => 'R'.concat(helpToGetDiametr(diametr || state.diametr))
     const percent = currentPlace ? currentPlace.shinostavka : ''
     const definition = currentPlace ? currentPlace.shinomeaning : ''
     const getPrice = (item) => {
+      if (item.type === 'legk' && currentPlace?.boostShinomontazhPrices) {
+        const maxDiametr = 24
+        const diametrNumber = parseInt(state.diametr, 10)
+        let nextDiametr = state.diametr
+
+        if (diametrNumber < maxDiametr) {
+          nextDiametr = diametrNumber + 1
+        }
+        return item[actualDiametr(nextDiametr.toString())]
+      }
       if (!percent) {
-        return item[actualDiametr]
+        return item[actualDiametr()]
       }
       if (percent && definition === 'negative') {
-        return roundTo5(applyDiscount(item[actualDiametr], percent))
+        return roundTo5(applyDiscount(item[actualDiametr()], percent))
       }
       if (percent && definition === 'positive') {
-        return roundTo5(applyDiscountPlus(item[actualDiametr], percent))
+        return roundTo5(applyDiscountPlus(item[actualDiametr()], percent))
       }
-      return item[actualDiametr]
+      return item[actualDiametr()]
     }
     if (
       state.diametr &&

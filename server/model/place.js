@@ -111,6 +111,10 @@ const Place = new mongoose.Schema({
     type: String,
     required: false,
     default: () => 'classic'
+  },
+  boostShinomontazhPrices: {
+    type: Boolean,
+    required: false
   }
 })
 
