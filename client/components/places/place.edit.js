@@ -30,7 +30,8 @@ const PlaceUpdate = (props) => {
     shinomontazhType: props?.shinomontazhType || null,
     workTime: props?.workTime || 10,
     sto: props?.sto,
-    stoType: props?.stoType || null
+    stoType: props?.stoType || null,
+    boostShinomontazhPrices: props?.boostShinomontazhPrices || 'false'
   })
   const history = useHistory()
   toast.configure()
@@ -590,6 +591,35 @@ const PlaceUpdate = (props) => {
                 </svg>
               </div>
             </div>
+          </div>
+          <div className="md:w-1/3 px-3 mb-6 md:mb-0 flex flex-col">
+            <label
+              htmlFor="boostShinomontazhPrices"
+              className="block mb-1 text-gray-700 flex items-center gap-2"
+              title="Повышает цены на шиномонтаж. Цены становятся + 1 диаметр. С этой опцией мы получаем цены на 14 диаметр = 15, для 15 диаметра = 16"
+            >
+              Повысить цены шиномонтажа
+              {/* Иконка с тултипом */}
+              <svg
+                className="w-4 h-4 text-gray-500 cursor-pointer"
+                fill="currentColor"
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 20 20"
+              >
+                <path d="M9 2a7 7 0 110 14A7 7 0 019 2zm0 3a1 1 0 100 2 1 1 0 000-2zm1 8V9H8v2h2v2h2v-2h-2z" />
+              </svg>
+            </label>
+
+            <select
+              className="appearance-none block w-full bg-grey-lighter text-grey-darker border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-3 px-4 mb-3"
+              value={state.boostShinomontazhPrices}
+              name="boostShinomontazhPrices"
+              id="boostShinomontazhPrices"
+              onChange={onChange}
+            >
+              <option value="false">Нет</option>
+              <option value="true">Да</option>
+            </select>
           </div>
         </div>
       </div>
