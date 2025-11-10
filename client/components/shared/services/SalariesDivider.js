@@ -3,15 +3,15 @@ import React, { useEffect, useState } from 'react'
 export const checkSalariesIsNotValid = (employees) => {
   const everyHasPercent = employees.every((e) => e?.salaryPercent)
 
-  if (!everyHasPercent) {
-    return true
-  }
-
   const total = employees.reduce((s, e) => s + Number(e?.salaryPercent || 0), 0)
   const notValid = total !== 100
 
   if (!total) {
     return false
+  }
+
+  if (!everyHasPercent) {
+    return true
   }
 
   return notValid
