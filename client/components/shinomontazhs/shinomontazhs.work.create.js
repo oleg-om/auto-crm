@@ -15,7 +15,7 @@ import { useMaterials } from '../../hooks/handleMaterials'
 import { useServices } from '../../hooks/handleServices'
 import SubmitButtons from '../shared/buttons/OrderSubmitButtons'
 import { GroupSwitch, useGroup } from '../../hooks/useGroup'
-import { checkSalariesIsValid } from '../shared/services/SalariesDivider'
+import { checkSalariesIsNotValid } from '../shared/services/SalariesDivider'
 
 const ShinomontazhsCreate = (props) => {
   toast.configure()
@@ -534,8 +534,8 @@ const ShinomontazhsCreate = (props) => {
     if (active === 'employee') {
       if (employees.length < 1) {
         notify('Сначала выберите сотрудников')
-      } else if (checkSalariesIsValid(employees)) {
-        notify('Перераспределите проценты между сотрудниками, сейчас общий процент больше 100%')
+      } else if (checkSalariesIsNotValid(employees)) {
+        notify('Перераспределите проценты между сотрудниками')
       } else {
         setActive('car')
       }
@@ -573,8 +573,8 @@ const ShinomontazhsCreate = (props) => {
     if (wanted === 'car') {
       if (employees.length < 1) {
         notify('Сначала выберите сотрудников')
-      } else if (checkSalariesIsValid(employees)) {
-        notify('Перераспределите проценты между сотрудниками, сейчас общий процент больше 100%')
+      } else if (checkSalariesIsNotValid(employees)) {
+        notify('Перераспределите проценты между сотрудниками')
       } else {
         setActive('car')
       }
