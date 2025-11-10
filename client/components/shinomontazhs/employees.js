@@ -1,11 +1,13 @@
 import React from 'react'
 import cx from 'classnames'
 import { employeeFilteredByGroup } from '../../hooks/useGroup'
+import SalaryPercentModal from '../shared/services/SalariesDivider'
 
 const Employee = ({
   employeeList,
   auth,
   employees,
+  setEmployees,
   checkboxEmployeeChange,
   checkBoxEmpRoleChange,
   dateEnd,
@@ -51,6 +53,8 @@ const Employee = ({
           </div>
         ) : null}
       </div>
+
+      <SalaryPercentModal employees={employees} setEmployees={setEmployees} />
       <div className="px-3 mb-6 md:mb-0 w-full">
         <label
           className="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2"
@@ -114,14 +118,17 @@ const Employee = ({
                         {employees.find((it) => it.id.includes(item.id) && it?.group === group) ? (
                           <button
                             type="button"
-                            className={cx('py-1 px-4 rounded-lg my-1 mr-3 border', {
-                              'border-yellow-400 bg-yellow-400':
-                                employees.find((it) => it.id.includes(item.id)).role === 'main',
-                              'border-green-400 bg-green-400':
-                                employees.find((it) => it.id.includes(item.id)).role === 'second',
-                              'border-red-400 bg-red-400':
-                                employees.find((it) => it.id.includes(item.id)).role === 'student'
-                            })}
+                            className={cx(
+                              'py-1 px-4 rounded-lg my-1 mr-3 border whitespace-no-wrap',
+                              {
+                                'border-yellow-400 bg-yellow-400':
+                                  employees.find((it) => it.id.includes(item.id)).role === 'main',
+                                'border-green-400 bg-green-400':
+                                  employees.find((it) => it.id.includes(item.id)).role === 'second',
+                                'border-red-400 bg-red-400':
+                                  employees.find((it) => it.id.includes(item.id)).role === 'student'
+                              }
+                            )}
                             id={item.id}
                             onClick={checkBoxEmpRoleChange}
                           >
@@ -133,6 +140,11 @@ const Employee = ({
                               : ''}
                             {employees.find((it) => it.id.includes(item.id)).role === 'student'
                               ? 'Студент'
+                              : ''}
+                            {employees.find((it) => it.id.includes(item.id))?.salaryPercent
+                              ? ` (${
+                                  employees.find((it) => it.id.includes(item.id))?.salaryPercent
+                                }%)`
                               : ''}
                           </button>
                         ) : null}
@@ -157,7 +169,7 @@ const Employee = ({
                     <td>
                       <button
                         type="button"
-                        className={cx('py-1 px-4 rounded-lg my-1 mr-3 border', {
+                        className={cx('py-1 px-4 rounded-lg my-1 mr-3 border whitespace-no-wrap', {
                           'border-yellow-400 bg-yellow-400': item.role === 'main',
                           'border-green-400 bg-green-400': item.role === 'second',
                           'border-red-400 bg-red-400': item.role === 'student'
@@ -168,6 +180,7 @@ const Employee = ({
                         {item.role === 'main' ? 'Старший' : ''}
                         {item.role === 'second' ? 'Исполнитель' : ''}
                         {item.role === 'student' ? 'Студент' : ''}
+                        {item?.salaryPercent ? ` (${item?.salaryPercent}%)` : ''}
                       </button>
                     </td>
                   </tr>
