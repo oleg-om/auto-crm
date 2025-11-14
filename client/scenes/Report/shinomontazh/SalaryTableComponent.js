@@ -13,37 +13,18 @@ const ImageSave = () => (
 )
 
 const SalaryTableComponent = ({
-  it,
-  userPercent,
-  getSalary,
   checkIsBookkeper,
   onChangePercent,
   calendarType,
   checkIsShinomontazh,
-  userOformlen,
   onChangeOformlen,
   onChangeNalog,
   onChangeCardSum,
-  userNalog,
-  userCardSum,
   onEmployeeClick,
   activeMonth,
-  dateArray
+  person
 }) => {
   const dispatch = useDispatch()
-
-  const applyDiscount = (number, percentOfUser, userId) => {
-    const disc = percentOfUser
-    const number_percent = (number / 100) * disc
-
-    const nalog = Number(userNalog[userId]) || 0
-    const card = Number(userCardSum[userId]) || 0
-
-    const getMinus = (num) => (calendarType === 'month' ? num - nalog - card : num)
-
-    return getMinus(Number(number) - (Number(number) - Number(number_percent)))
-  }
-
   const [saved, setSaved] = useState(false)
   const [savedOformlen, setSavedOformlen] = useState(false)
   const [savedNalog, setSavedNalog] = useState(false)
@@ -51,7 +32,6 @@ const SalaryTableComponent = ({
   const [totalAdvance, setTotalAdvance] = useState(0)
   const [totalExpenses, setTotalExpenses] = useState(0)
   const [totalFines, setTotalFines] = useState(0)
-  //   const [error, setError] = useState(true)
 
   toast.configure()
   const notify = (arg) => {
@@ -99,41 +79,19 @@ const SalaryTableComponent = ({
     }
   }
 
-  function getUniqueWorkingDays() {
-    const dates = dateArray(it.id) || []
-    if (!Array.isArray(dates) || !(activeMonth instanceof Date)) {
-      return 0
-    }
-
-    // Получаем год и месяц из activeMonth (месяцы 0-11)
-    const targetYear = activeMonth.getFullYear()
-    const targetMonth = activeMonth.getMonth()
-
-    const uniqueDays = new Set()
-
-    dates.forEach((dateStr) => {
-      const date = new Date(dateStr)
-
-      // Проверяем совпадение года и месяца
-      if (date.getFullYear() === targetYear && date.getMonth() === targetMonth) {
-        // Формируем ключ дня без времени
-        const dayKey = date.toISOString().split('T')[0] // "YYYY-MM-DD"
-        uniqueDays.add(dayKey)
-      }
-    })
-
-    return uniqueDays.size
-  }
-
   const [showPercentOverlay, setShowPercentOverlay] = useState(false)
   const [overlayIsShown, setOverlayIsShown] = useState(false)
 
   useEffect(() => {
-    if (!overlayIsShown && (userPercent[it.id] || userPercent[it.id]?.length)) {
+    if (!overlayIsShown && person.percent) {
       setShowPercentOverlay(true)
       setOverlayIsShown(true)
     }
-  }, [userPercent[it.id]])
+  }, [person.percent])
+
+  if (!person) {
+    return null
+  }
 
   return (
     <tr className="bg-white lg:hover:bg-gray-100 flex lg:table-row flex-row lg:flex-row flex-wrap lg:flex-no-wrap mb-5 lg:mb-0">
@@ -141,12 +99,11 @@ const SalaryTableComponent = ({
         <span className="lg:hidden px-2 py-1 text-xs font-bold uppercase">Имя:</span>
         <button
           type="button"
-          key={it.id}
+          value={person.employeeId}
           onClick={onEmployeeClick}
-          value={it.id}
           className="text-left hover:underline"
         >
-          {it.name} {it.surname}
+          {person.employeeName}
         </button>
       </td>
 
@@ -157,16 +114,17 @@ const SalaryTableComponent = ({
               <button
                 type="button"
                 onClick={onEmployeeClick}
+                value={person.employeeId}
                 className="lg:hidden px-2 py-1 text-xs font-bold uppercase"
               >
                 Рабочие дни:
               </button>
-              <WorkingDaysCell value={getUniqueWorkingDays()} />
+              <WorkingDaysCell value={person.uniqueWorkDaysCount} />
             </td>
           ) : null}
           <td className="w-full lg:w-auto p-2 text-gray-800 text-left lg:text-center border border-b block lg:table-cell relative lg:static whitespace-no-wrap">
             <span className="lg:hidden px-2 py-1 text-xs font-bold uppercase">Вал:</span>
-            {Math.round(getSalary(it.id), userPercent[it.id])} р.
+            {person.total.all.totalCost} р.
           </td>
           <td
             id="procent"
@@ -183,16 +141,16 @@ const SalaryTableComponent = ({
               <input
                 className="w-full border-solid border-4 border-light-main-500"
                 type="number"
-                value={userPercent[it.id]}
+                value={person.percent}
                 onChange={(e) => {
                   onChangePercent(e)
                   setOverlayIsShown(true)
                 }}
-                name={it.id}
+                name={person.employeeId}
               />
               <button
                 type="button"
-                onClick={() => savePercent('percent', it.id, userPercent[it.id])}
+                onClick={() => savePercent('percent', person.employeeId, person.percent)}
                 className="img__save-wrap ml-2 text-sm py-1 px-4 bg-gray-200 text-gray-700 hover:text-gray-600 hover:bg-gray-400 rounded-lg"
               >
                 {saved ? '✓' : <ImageSave />}
@@ -203,37 +161,29 @@ const SalaryTableComponent = ({
             id="oformlen"
             className="w-auto table-cell lg:w-auto p-2 text-gray-800 text-left border border-b relative lg:static"
           >
-            {' '}
             <span className="flex">
               <select
                 className="w-full border-solid border-4 border-light-main-500"
-                // type="number"
-                value={userOformlen[it.id]}
+                value={person.oformlen}
                 defaultValue="false"
                 onChange={onChangeOformlen}
-                name={it.id}
+                name={person.employeeId}
               >
                 <option value="true">Да</option>
                 <option value="false">Нет</option>
               </select>
               <button
                 type="button"
-                onClick={() => savePercent('oformlen', it.id, userOformlen[it.id])}
+                onClick={() => savePercent('oformlen', person.employeeId, person.oformlen)}
                 className="img__save-wrap ml-2 text-sm p-1 px-2 bg-gray-200 text-gray-700 hover:text-gray-600 hover:bg-gray-400 rounded-lg"
               >
                 {savedOformlen ? '✓' : <ImageSave />}
-              </button>{' '}
+              </button>
             </span>
           </td>
           <td className="w-full lg:w-auto p-2 text-gray-800 text-left lg:text-center border border-b block lg:table-cell relative lg:static whitespace-no-wrap">
             <span className="lg:hidden px-2 py-1 text-xs font-bold uppercase">Зарплата:</span>
-            {userPercent[it.id]
-              ? Math.round(
-                  applyDiscount(getSalary(it.id), userPercent[it.id], it.id) +
-                    (Number(userCardSum[it.id]) || 0)
-                )
-              : 0}{' '}
-            р.
+            {person.salary} р.
           </td>
           {calendarType === 'month' ? (
             <>
@@ -245,13 +195,15 @@ const SalaryTableComponent = ({
                   <input
                     className="w-full border-solid border-4 border-light-main-500"
                     type="number"
-                    value={userNalog[it.id]}
+                    value={person.oformlenNalog}
                     onChange={onChangeNalog}
-                    name={it.id}
+                    name={person.employeeId}
                   />
                   <button
                     type="button"
-                    onClick={() => savePercent('oformlenNalog', it.id, userNalog[it.id])}
+                    onClick={() =>
+                      savePercent('oformlenNalog', person.employeeId, person.oformlenNalog)
+                    }
                     className="img__save-wrap ml-2 text-sm py-1 px-4 bg-gray-200 text-gray-700 hover:text-gray-600 hover:bg-gray-400 rounded-lg"
                   >
                     {savedNalog ? '✓' : <ImageSave />}
@@ -266,13 +218,13 @@ const SalaryTableComponent = ({
                   <input
                     className="w-full border-solid border-4 border-light-main-500"
                     type="number"
-                    value={userCardSum[it.id]}
+                    value={person.cardSum}
                     onChange={onChangeCardSum}
-                    name={it.id}
+                    name={person.employeeId}
                   />
                   <button
                     type="button"
-                    onClick={() => savePercent('cardSum', it.id, userCardSum[it.id])}
+                    onClick={() => savePercent('cardSum', person.employeeId, person.cardSum)}
                     className="img__save-wrap ml-2 text-sm py-1 px-4 bg-gray-200 text-gray-700 hover:text-gray-600 hover:bg-gray-400 rounded-lg"
                   >
                     {savedCardSum ? '✓' : <ImageSave />}
@@ -285,10 +237,10 @@ const SalaryTableComponent = ({
               >
                 <SalaryCell
                   currentDate={activeMonth}
-                  employeeId={it.id}
+                  employeeId={person.employeeId}
                   totalAdvance={totalAdvance}
                   setTotalAdvance={setTotalAdvance}
-                  payments={it?.data || []}
+                  payments={[]}
                 />
               </td>
               <td
@@ -297,10 +249,10 @@ const SalaryTableComponent = ({
               >
                 <SalaryCell
                   currentDate={activeMonth}
-                  employeeId={it.id}
+                  employeeId={person.employeeId}
                   totalAdvance={totalExpenses}
                   setTotalAdvance={setTotalExpenses}
-                  payments={it?.data || []}
+                  payments={[]}
                   data={{
                     name: 'Расходы',
                     singleName: 'расход',
@@ -314,10 +266,10 @@ const SalaryTableComponent = ({
               >
                 <SalaryCell
                   currentDate={activeMonth}
-                  employeeId={it.id}
+                  employeeId={person.employeeId}
                   totalAdvance={totalFines}
                   setTotalAdvance={setTotalFines}
-                  payments={it?.data || []}
+                  payments={[]}
                   data={{
                     name: 'Штрафы',
                     singleName: 'штраф',
@@ -333,39 +285,31 @@ const SalaryTableComponent = ({
         <>
           <td className="w-full lg:w-auto p-2 text-gray-800 text-left lg:text-center border border-b block lg:table-cell relative lg:static">
             <span className="lg:hidden px-2 py-1 text-xs font-bold uppercase">Терминал:</span>
-            {Math.round(
-              getSalary(it.id, 'Терминал', 'Комбинированный', 'summa'),
-              userPercent[it.id]
-            )}{' '}
-            руб.
+            {person.total.terminal.totalCost} р.
           </td>
           <td className="w-full lg:w-auto p-2 text-gray-800 text-left lg:text-center border border-b block lg:table-cell relative lg:static">
             <span className="lg:hidden px-2 py-1 text-xs font-bold uppercase">Безнал:</span>
-            {Math.round(getSalary(it.id, 'Безнал', '', 'summa'), userPercent[it.id])} руб.
+            {person.total.cashless.totalCost} р.
           </td>
           <td className="w-full lg:w-auto p-2 text-gray-800 text-left lg:text-center border border-b block lg:table-cell relative lg:static">
             <span className="lg:hidden px-2 py-1 text-xs font-bold uppercase">Наличка:</span>
-            {Math.round(
-              getSalary(it.id, 'Оплачено', 'Комбинированный', 'summa'),
-              userPercent[it.id]
-            )}{' '}
-            руб.
+            {person.total.cash.totalCost} р.
           </td>
           {calendarType === 'day' ? (
             <td className="w-full lg:w-auto p-2 text-gray-800 text-left lg:text-center border border-b block lg:table-cell relative lg:static">
               <span className="lg:hidden px-2 py-1 text-xs font-bold uppercase">Сумма:</span>
-              {Math.round(getSalary(it.id, '', '', 'summa'), userPercent[it.id])} руб.
+              {person.total.all.totalCost} р.
             </td>
           ) : null}
           {calendarType === 'day' ? (
             <td className="w-full lg:w-auto p-2 text-gray-800 text-left lg:text-center border border-b block lg:table-cell relative lg:static">
               <span className="lg:hidden px-2 py-1 text-xs font-bold uppercase">Акция:</span>
-              {Math.round(getSalary(it.id, '', '', 'discountonly'), userPercent[it.id])} руб.
+              {person.total.discount.totalCost} р.
             </td>
           ) : null}
           <td className="w-full lg:w-auto p-2 text-gray-800 text-left lg:text-center border border-b block lg:table-cell relative lg:static">
             <span className="lg:hidden px-2 py-1 text-xs font-bold uppercase">Вал:</span>
-            {Math.round(getSalary(it.id), userPercent[it.id])} руб.
+            {person.total.all.totalCost} р.
           </td>
         </>
       ) : null}
@@ -373,15 +317,7 @@ const SalaryTableComponent = ({
       {checkIsBookkeper ? (
         <td className="w-full lg:w-auto p-2 text-gray-800 text-left lg:text-center border border-b block lg:table-cell relative lg:static">
           <span className="lg:hidden px-2 py-1 text-xs font-bold uppercase">Остаток:</span>
-          <BalanceCell
-            data={it?.data || []}
-            prevMonthData={[]}
-            value={
-              userPercent[it.id]
-                ? Math.round(applyDiscount(getSalary(it.id), userPercent[it.id], it.id))
-                : 0
-            }
-          />
+          <BalanceCell value={person.rest} />
         </td>
       ) : null}
     </tr>

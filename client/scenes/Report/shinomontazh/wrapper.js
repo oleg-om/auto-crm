@@ -1,17 +1,12 @@
 import React, { useEffect, useState } from 'react'
 import cx from 'classnames'
-import { useDispatch, useSelector } from 'react-redux'
+import { useSelector } from 'react-redux'
 import taskStatuses from '../../../lists/task-statuses'
 import Salary from './Salary'
 import Material from './Material'
-import { filterByStatus, getEmployeeArray } from '../../../utils/admin/reportUtils'
-import { updateEmployeeReport } from '../../../redux/reducers/employees'
-import { splitGroupedObjects } from '../../../hooks/useGroup'
 
-export const checkIsRazvalService = (s) =>
-  s?.includes('Развал схождения') ||
-  s?.includes('Развал-схождение') ||
-  s?.includes('Развал-схождения')
+const regexRazval = /(Развал схождения|Развал-схождение|Развал-схождения)/i
+export const checkIsRazvalService = (s) => regexRazval?.test(s)
 
 const Shinomontazh = ({
   calendarType,
@@ -22,14 +17,16 @@ const Shinomontazh = ({
   timeStart,
   active,
   employeeList,
-  range,
   showReport
 }) => {
-  const [shinList, setShinList] = useState([])
-  const [isLoaded, setIsLoaded] = useState(false)
+  const [isLoading, setIsLoading] = useState(false)
+  const [data, setData] = useState({ data: [], total: {}, orders: [] })
 
-  const employee = useSelector((s) => s.employees.employee)
-  const dispatch = useDispatch()
+  const [bossPercent, setBossPercent] = useState(30)
+  const [isMaterial, setIsMaterial] = useState('false')
+  const [showRazval, setShowRazval] = useState('false')
+  const [showPaid, setShowPaid] = useState('true')
+  const [employeeId, setEmployeeId] = useState(null)
 
   useEffect(() => {
     const getType = () => {
@@ -51,226 +48,38 @@ const Shinomontazh = ({
       return 'washmonth'
     }
 
-    const getRangeType = (firstDt, secDt) => {
-      const getTp = () => {
-        if (active.startsWith('sh-') || active === 'material') {
-          return 'shinomontazhrange'
-        }
-        if (active.includes('sto-')) {
-          return 'storange'
-        }
-        if (active.includes('wash-')) {
-          return 'washrange'
-        }
-        if (active.includes('cond-')) {
-          return 'condrange'
-        }
-        if (active.includes('window-')) {
-          return 'windowrange'
-        }
-        return 'washrange'
-      }
+    setIsLoading(true)
 
-      return `api/v1/${getTp()}?month=${
-        firstDt.getMonth() + 1
-      }&year=${firstDt.getFullYear()}&secMonth=${
-        secDt.getMonth() + 1
-      }&secYear=${secDt.getFullYear()}`
-    }
+    fetch(`api/v1/${getType()}`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        month: activeMonth.getMonth() + 1,
+        year: activeMonth.getFullYear(),
+        countMaterials: isMaterial === 'true',
+        countOnlyPaidOrders: showPaid === 'true',
+        onlyRazvalSto: showRazval === 'true',
+        employee: employeeId
+      })
+    })
+      .then((res) => res.json())
+      .then((it) => {
+        setData(it)
+        setIsLoading(false)
+      })
+      .catch((err) => {
+        console.error('Ошибка при запросе:', err)
+        setIsLoading(false)
+      })
+  }, [activeDay, activeMonth, active, isMaterial, employeeId, showPaid, showRazval])
 
-    if (activeMonth && calendarType === 'month') {
-      setIsLoaded(false)
-      fetch(
-        `api/v1/${getType()}?month=${activeMonth.getMonth() + 1}&year=${activeMonth.getFullYear()}`
-      )
-        .then((res) => res.json())
-        .then((it) => {
-          setShinList(splitGroupedObjects(it.data))
-          setIsLoaded(true)
-        })
-    }
-    if (activeDay && calendarType === 'day') {
-      setIsLoaded(false)
-      fetch(`api/v1/${getType()}?month=${activeDay.getMonth() + 1}&year=${activeDay.getFullYear()}`)
-        .then((res) => res.json())
-        .then((it) => {
-          setShinList(splitGroupedObjects(it.data))
-          setIsLoaded(true)
-        })
-    }
-    if (activeDay && calendarType === 'diapason') {
-      const getDtWithTime = (today, hr, tm, sec) =>
-        new Date(today.getFullYear(), today.getMonth(), today.getDate(), hr, tm, sec)
-      const firstDt = getDtWithTime(range[0], 0, 0, 0)
-      const secDt = getDtWithTime(range[1], 23, 59, 0)
+  const [shinList] = useState([])
+  const [isLoaded] = useState(false)
+  const [empSalaries] = useState([])
 
-      const getFilteredByRange = (cont) =>
-        cont.filter((arr) => new Date(arr.dateFinish) > firstDt && new Date(arr.dateFinish) < secDt)
-      setIsLoaded(false)
-      fetch(getRangeType(firstDt, secDt))
-        .then((res) => res.json())
-        .then((it) => {
-          setShinList(splitGroupedObjects(getFilteredByRange(it.data)))
-          setIsLoaded(true)
-        })
-    }
-    return () => {}
-  }, [activeMonth.getMonth(), activeDay.getMonth(), range, calendarType, active])
-
-  const [report, setReport] = useState([])
-
-  const [bossPercent, setBossPercent] = useState(30)
-  const [isMaterial, setIsMaterial] = useState('no')
-
-  const [showRazval, setShowRazval] = useState('no')
-  const [showPaid, setShowPaid] = useState('yes')
-
-  useEffect(() => {
-    if (calendarType === 'month') {
-      setReport(
-        shinList
-          .filter((it) => (place ? place === it.place : it))
-
-          .filter((it) => filterByStatus(it, showPaid))
-          .filter((it) => it.payment && it.payment !== 'cancel')
-          .filter(
-            (item) =>
-              new Date(item.dateFinish).getFullYear() === activeMonth.getFullYear() &&
-              new Date(item.dateFinish).getMonth() + 1 === activeMonth.getMonth() + 1
-          )
-      )
-    }
-    if (calendarType === 'day') {
-      setReport(
-        shinList
-          .filter((it) => (place ? place === it.place : it))
-
-          .filter((it) => filterByStatus(it, showPaid))
-          .filter(
-            (item) =>
-              new Date(item.dateFinish).getFullYear() === activeDay.getFullYear() &&
-              new Date(item.dateFinish).getMonth() + 1 === activeDay.getMonth() + 1 &&
-              new Date(item.dateFinish).getDate() === activeDay.getDate()
-          )
-      )
-    }
-
-    if (calendarType === 'diapason') {
-      setReport(
-        shinList
-          .filter((it) => (place ? place === it.place : it))
-          .filter((it) => filterByStatus(it, showPaid))
-      )
-    }
-
-    setShowRazval('no')
-
-    return () => {}
-  }, [shinList, activeMonth, activeDay, place, employee])
-
-  useEffect(() => {
-    if (calendarType === 'month') {
-      setReport(
-        shinList
-
-          .filter((it) => filterByStatus(it, showPaid))
-
-          .filter((it) => (place ? place === it.place : it))
-          .filter(
-            (item) =>
-              new Date(item.dateFinish).getFullYear() === activeMonth.getFullYear() &&
-              new Date(item.dateFinish).getMonth() + 1 === activeMonth.getMonth() + 1
-          )
-      )
-    }
-    if (calendarType === 'day' && !timeStart && !timeFinish) {
-      setReport(
-        shinList
-
-          .filter((it) => filterByStatus(it, showPaid))
-
-          .filter((it) => (place ? place === it.place : it))
-          .filter(
-            (item) =>
-              new Date(item.dateFinish).getFullYear() === activeDay.getFullYear() &&
-              new Date(item.dateFinish).getMonth() + 1 === activeDay.getMonth() + 1 &&
-              new Date(item.dateFinish).getDate() === activeDay.getDate()
-          )
-      )
-    }
-    if (calendarType === 'day' && timeStart && timeFinish) {
-      setReport(
-        shinList
-
-          .filter((it) => filterByStatus(it, showPaid))
-
-          .filter((it) => (place ? place === it.place : it))
-          .filter(
-            (item) =>
-              new Date(item.dateFinish).getFullYear() === activeDay.getFullYear() &&
-              new Date(item.dateFinish).getMonth() + 1 === activeDay.getMonth() + 1 &&
-              new Date(item.dateFinish).getDate() === activeDay.getDate() &&
-              new Date(item.dateFinish).getHours() >=
-                new Date(
-                  `${activeDay.getFullYear()}.${
-                    activeDay.getMonth() + 1
-                  }.${activeDay.getDate()} ${timeStart}`
-                ).getHours() &&
-              (timeFinish !== '24:00'
-                ? new Date(item.dateFinish).getHours() <=
-                  new Date(
-                    `${activeDay.getFullYear()}.${
-                      activeDay.getMonth() + 1
-                    }.${activeDay.getDate()} ${timeFinish}`
-                  ).getHours()
-                : 24)
-          )
-      )
-    }
-    if (activeDay && calendarType === 'diapason') {
-      const getDtWithTime = (today, hr, tm, sec) =>
-        new Date(today.getFullYear(), today.getMonth(), today.getDate(), hr, tm, sec)
-      const firstDt = getDtWithTime(range[0], 0, 0, 0)
-      const secDt = getDtWithTime(range[1], 23, 59, 0)
-
-      const getFilteredByRange = (cont) =>
-        cont
-          .filter((it) => filterByStatus(it, showPaid))
-          .filter((arr) => new Date(arr.dateFinish) > firstDt && new Date(arr.dateFinish) < secDt)
-          .filter((it) => (place ? place === it.place : it))
-      setReport(getFilteredByRange(shinList))
-    }
-
-    if (active.includes('sto-') && showRazval === 'yes') {
-      setReport(
-        shinList
-          .filter((it) => filterByStatus(it, showPaid))
-          .map((s) => {
-            return { ...s, services: s.services.filter((i) => checkIsRazvalService(i?.name || '')) }
-          })
-          .filter((i) => !!i?.services?.length)
-      )
-    }
-
-    return () => {}
-  }, [
-    shinList,
-    activeMonth,
-    activeDay,
-    place,
-    timeStart,
-    timeFinish,
-    employee,
-    showRazval,
-    showPaid
-  ])
-
-  const employeeArray = getEmployeeArray(report)
-  useEffect(() => {
-    dispatch(updateEmployeeReport(employeeArray))
-
-    return () => {}
-  }, [report])
+  const employee = useSelector((s) => s.employees.employee)
 
   const onChangeShowRazval = (e) => {
     const { value } = e.target
@@ -312,11 +121,13 @@ const Shinomontazh = ({
       active === 'cond-buh' ||
       active === 'cond-kassa' ? (
         <div className={cx('block', {})}>
-          {isLoaded ? null : loading()}
-          {report && isLoaded ? (
+          {!isLoading ? null : loading()}
+          {data && !isLoading ? (
             <Salary
+              data={data}
+              employeeId={employeeId}
+              setEmployeeId={setEmployeeId}
               employeeList={employeeList}
-              report={report}
               taskStatuses={taskStatuses}
               shinList={shinList}
               place={place}
@@ -329,16 +140,16 @@ const Shinomontazh = ({
               calendarType={calendarType}
               active={active}
               employee={employee}
-              employeeArray={employeeArray}
               showRazval={showRazval}
               onChangeShowRazval={onChangeShowRazval}
               showPaid={showPaid}
               onChangeShowPaid={onChangeShowPaid}
               activeMonth={activeMonth}
               showReport={showReport}
+              empSalaries={empSalaries}
             />
           ) : null}
-          {isLoaded && report.length <= 0 ? (
+          {!isLoading && data?.length <= 0 ? (
             <div>
               {active.includes('sto-') ? (
                 <div>
@@ -368,11 +179,11 @@ const Shinomontazh = ({
           })}
         >
           {' '}
-          {isLoaded ? null : loading()}
-          {report.length > 0 && isLoaded ? (
-            <Material report={report} isLoaded={shinList.isLoaded} />
+          {!isLoading ? null : loading()}
+          {data.data.length > 0 && isLoaded ? (
+            <Material report={data.data} isLoaded={!isLoading} />
           ) : null}
-          {isLoaded && report.length <= 0 ? <p className="my-3">Записей нет</p> : null}
+          {isLoaded && data?.data?.length <= 0 ? <p className="my-3">Записей нет</p> : null}
         </div>
       ) : null}
     </>

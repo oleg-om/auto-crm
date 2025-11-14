@@ -1,16 +1,9 @@
 import React, { useState } from 'react'
 import { REPORT_SALARY_TYPES } from './SalaryCell'
 
-const BalanceCell = ({ data, value, prevMonthData }) => {
+const BalanceCell = ({ value }) => {
   const [visible, setVisible] = useState(false)
 
-  const countAdvance = (number) => {
-    const total = data?.reduce((sum, item) => sum + item.val, 0) || 0
-    return Math.round(number - total)
-  }
-
-  const total = (type) =>
-    prevMonthData?.filter((it) => it?.type === type)?.reduce((sum, item) => sum + item.val, 0) || 0
 
   return (
     <div
@@ -18,7 +11,7 @@ const BalanceCell = ({ data, value, prevMonthData }) => {
       onMouseEnter={() => setVisible(false)}
       onMouseLeave={() => setVisible(false)}
     >
-      <span className="whitespace-no-wrap">{countAdvance(value)} р.</span>
+      <span className="whitespace-no-wrap">{value} р.</span>
 
       {visible && (
         <div
@@ -27,9 +20,7 @@ const BalanceCell = ({ data, value, prevMonthData }) => {
         >
           <h3 className="font-semibold">В предыдущем месяце:</h3>
           <ul>
-            <li>Авансы: {total(REPORT_SALARY_TYPES.salary)} р.</li>
-            <li>Штрафы: {total(REPORT_SALARY_TYPES.fine)} р.</li>
-            <li>Расходы: {total(REPORT_SALARY_TYPES.expenses)} р.</li>
+            <li>Авансы: {REPORT_SALARY_TYPES.salary} р.</li>
           </ul>
         </div>
       )}

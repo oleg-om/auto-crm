@@ -1,5 +1,5 @@
 const Sto = require('../model/sto')
-const { getBasicMonth } = require('../utils/controller')
+const { calculateTotalCostByEmployee } = require('../utils/test')
 
 exports.getAll = async (req, res) => {
   const list = await Sto.find({})
@@ -103,7 +103,11 @@ exports.getFiltered = async (req, res) => {
   }
 }
 exports.getMonth = async (req, res) => {
-  return getBasicMonth(req, res, Sto)
+  return calculateTotalCostByEmployee(req, res, Sto)
+}
+
+exports.getTest = async (req, res) => {
+  return calculateTotalCostByEmployee(req, res, Sto)
 }
 
 exports.getMonthForPreentry = async (req, res) => {

@@ -1,5 +1,5 @@
 const Shinomontazh = require('../model/shinomontazh')
-const { getBasicMonth } = require('../utils/controller')
+const { calculateTotalCostByEmployee } = require('../utils/test')
 
 exports.getAll = async (req, res) => {
   const list = await Shinomontazh.find({ dateStart: { $exists: true } })
@@ -113,7 +113,7 @@ exports.getFiltered = async (req, res) => {
 }
 
 exports.getMonth = async (req, res) => {
-  return getBasicMonth(req, res, Shinomontazh)
+  return calculateTotalCostByEmployee(req, res, Shinomontazh)
 }
 
 exports.getMonthForPreentry = async (req, res) => {
