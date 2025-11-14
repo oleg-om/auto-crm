@@ -328,12 +328,23 @@ const Salary = ({
       }, [])
 
       .reduce((acc, rec) => {
+        const countEmployeePart = (num) => {
+          const x = rec.employee.find((e) => e.id === id)?.salaryPercent
+
+          if (x) {
+            return (num * x) / 100
+          }
+
+          return num / rec.employee.length
+        }
+
         if (isMaterial !== 'yes' && rec.status !== CombFilterBy) {
           return [
             ...acc,
+
             rec.services.reduce(
               (bat, cur) =>
-                bat + commonDiscount(Number(cur.price) * cur.quantity, rec) / rec.employee.length,
+                bat + countEmployeePart(commonDiscount(Number(cur.price) * cur.quantity, rec)),
               0
             )
           ]
@@ -341,9 +352,9 @@ const Salary = ({
         if (isMaterial !== 'yes' && rec.status === CombFilterBy && filterBy === 'Оплачено') {
           return [
             ...acc,
-            Number(rec.combCash) / rec.employee.length -
+            countEmployeePart(Number(rec.combCash)) -
               rec.material.reduce(
-                (bat, cur) => bat + (Number(cur.price) * cur.quantity) / rec.employee.length,
+                (bat, cur) => bat + countEmployeePart(Number(cur.price) * cur.quantity),
                 0
               ) /
                 2
@@ -352,9 +363,9 @@ const Salary = ({
         if (isMaterial !== 'yes' && rec.status === CombFilterBy && filterBy === 'Терминал') {
           return [
             ...acc,
-            Number(rec.combTerm) / rec.employee.length -
+            countEmployeePart(Number(rec.combTerm)) -
               rec.material.reduce(
-                (bat, cur) => bat + (Number(cur.price) * cur.quantity) / rec.employee.length,
+                (bat, cur) => bat + countEmployeePart(Number(cur.price) * cur.quantity),
                 0
               ) /
                 2
@@ -365,20 +376,20 @@ const Salary = ({
             ...acc,
             rec.services.reduce(
               (bat, cur) =>
-                bat + commonDiscount(Number(cur.price) * cur.quantity, rec) / rec.employee.length,
+                bat + countEmployeePart(commonDiscount(Number(cur.price) * cur.quantity, rec)),
               0
             ) +
               rec.material.reduce(
-                (bat, cur) => bat + (Number(cur.price) * cur.quantity) / rec.employee.length,
+                (bat, cur) => bat + countEmployeePart(Number(cur.price) * cur.quantity),
                 0
               )
           ]
         }
         if (isMaterial === 'yes' && rec.status === CombFilterBy && filterBy === 'Оплачено') {
-          return [...acc, Number(rec.combCash) / rec.employee.length]
+          return [...acc, countEmployeePart(Number(rec.combCash))]
         }
         if (isMaterial === 'yes' && rec.status === CombFilterBy && filterBy === 'Терминал') {
-          return [...acc, Number(rec.combTerm) / rec.employee.length]
+          return [...acc, countEmployeePart(Number(rec.combTerm))]
         }
         return acc
       }, [])

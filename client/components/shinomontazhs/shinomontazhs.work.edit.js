@@ -863,6 +863,7 @@ const ShinomontazhsEdit = (props) => {
             employeeList={employeeList}
             auth={auth}
             employees={employees}
+            setEmployees={setEmployees}
             checkboxEmployeeChange={checkboxEmployeeChange}
             checkBoxEmpRoleChange={checkBoxEmpRoleChange}
             dateEnd={props.dateFinish}
