@@ -530,6 +530,8 @@ const ShinomontazhsCreate = (props) => {
     }
   }
 
+  const plateRegex = /^[АВЕКМНОРСТУХ][0-9]{3}[АВЕКМНОРСТУХ]{2}\s?[0-9]{2,3}$/i
+
   const nextStep = () => {
     if (active === 'employee') {
       if (employees.length < 1) {
@@ -542,6 +544,8 @@ const ShinomontazhsCreate = (props) => {
     } else if (active === 'car') {
       if (!state.regnumber) {
         notify('Заполните гос. номер')
+      } else if (!plateRegex.test(state.regnumber)) {
+        notify('Гос номер некорректный')
       } else if (!state.mark) {
         notify('Заполните поле Марка авто')
       } else if (!state.model) {
@@ -583,6 +587,8 @@ const ShinomontazhsCreate = (props) => {
         notify('Сначала выберите сотрудников')
       } else if (!state.regnumber) {
         notify('Заполните гос. номер')
+      } else if (!plateRegex.test(state.regnumber)) {
+        notify('Гос номер некорректный')
       } else if (!state.mark) {
         notify('Заполните поле Марка авто')
       } else if (!state.model) {
@@ -599,6 +605,8 @@ const ShinomontazhsCreate = (props) => {
         notify('Сначала выберите сотрудников')
       } else if (!state.regnumber) {
         notify('Заполните гос. номер')
+      } else if (!plateRegex.test(state.regnumber)) {
+        notify('Гос номер некорректный')
       } else if (!state.mark) {
         notify('Заполните поле Марка авто')
       } else if (!state.model) {
@@ -613,6 +621,8 @@ const ShinomontazhsCreate = (props) => {
         notify('Сначала выберите сотрудников')
       } else if (!state.regnumber) {
         notify('Заполните гос. номер')
+      } else if (!plateRegex.test(state.regnumber)) {
+        notify('Гос номер некорректный')
       } else if (!state.mark) {
         notify('Заполните поле Марка авто')
       } else if (!state.model) {
