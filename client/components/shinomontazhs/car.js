@@ -734,7 +734,6 @@ const Car = ({
                   <option value="" hidden>
                     Выберите бренд
                   </option>
-                  <option value="н" label="н" key="н" />
                   {options.mark
                     .sort(function sortMarks(a, b) {
                       if (a.name > b.name) {
