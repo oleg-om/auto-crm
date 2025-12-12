@@ -1,6 +1,6 @@
 import React from 'react'
 
-const Modal = ({ open, onClose, onSubmit }) => {
+const Modal = ({ open, onClose, onSubmit, title, message }) => {
   if (!open) return null
   return (
     <div className="fixed z-10 inset-0 overflow-y-auto">
@@ -36,11 +36,11 @@ const Modal = ({ open, onClose, onSubmit }) => {
               </div>
               <div className="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left">
                 <h3 className="text-lg leading-6 font-medium text-gray-900" id="modal-headline">
-                  Вы уверены?
+                  {title || 'Вы уверены?'}
                 </h3>
                 <div className="mt-2">
                   <p className="text-sm leading-5 text-gray-500">
-                    Удалив запись вы не сможете ее восстановить.
+                    {message || 'Удалив запись вы не сможете ее восстановить.'}
                   </p>
                 </div>
               </div>

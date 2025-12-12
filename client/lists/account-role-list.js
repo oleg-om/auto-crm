@@ -16,5 +16,6 @@ module.exports = [
   { name: 'Работник автомойки', value: 'wash' },
   { name: 'Замена лобовых стекол', value: 'window' },
   { name: 'Кондиционеры', value: 'cond' },
-  { name: 'Доступ к странице отчет', value: 'report' }
+  { name: 'Доступ к странице отчет', value: 'report' },
+  { name: 'Электронный журнал', value: 'journal' }
 ]

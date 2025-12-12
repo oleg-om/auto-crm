@@ -49,6 +49,7 @@ const condRoutes = require('./routes/api/cond.routes')
 const condPriceRoutes = require('./routes/api/cond.price.routes')
 const employeeReportRoutes = require('./routes/api/employeeReport.routes')
 const positionRoutes = require('./routes/api/position.routes')
+const journalEntryRoutes = require('./routes/api/journalEntry.routes')
 
 const Root = () => ''
 
@@ -194,6 +195,7 @@ server.use('/api/v1', condRoutes)
 server.use('/api/v1', condPriceRoutes)
 server.use('/api/v1', employeeReportRoutes)
 server.use('/api/v1', positionRoutes)
+server.use('/api/v1', journalEntryRoutes)
 
 server.get('/api/v1/auth', async (req, res) => {
   try {
