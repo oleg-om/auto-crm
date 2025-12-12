@@ -14,6 +14,7 @@ const PositionTab = ({ position }) => {
   const dispatch = useDispatch()
   const [newDutyName, setNewDutyName] = useState('')
   const [newDutyIsQuantitative, setNewDutyIsQuantitative] = useState(false)
+  const [newDutyCompletionTimeMinutes, setNewDutyCompletionTimeMinutes] = useState('')
   const [showAddForm, setShowAddForm] = useState(false)
   const [editingDutyId, setEditingDutyId] = useState(null)
 
@@ -31,11 +32,13 @@ const PositionTab = ({ position }) => {
     dispatch(
       addDuty(position.id, {
         name: newDutyName.trim(),
-        isQuantitative: newDutyIsQuantitative
+        isQuantitative: newDutyIsQuantitative,
+        completionTimeMinutes: newDutyCompletionTimeMinutes ? Number(newDutyCompletionTimeMinutes) : null
       })
     ).then(() => {
       setNewDutyName('')
       setNewDutyIsQuantitative(false)
+      setNewDutyCompletionTimeMinutes('')
       setShowAddForm(false)
       notify('Обязанность добавлена')
     })
@@ -139,6 +142,23 @@ const PositionTab = ({ position }) => {
               Количественная обязанность
             </label>
           </div>
+          <div>
+            <label htmlFor="completionTimeMinutes" className="block text-sm text-gray-700 mb-1">
+              Норма выполнения (минуты)
+              {newDutyIsQuantitative && (
+                <span className="text-gray-500 font-normal"> - для количественных обязанностей время указывается для 1 шт</span>
+              )}
+            </label>
+            <input
+              type="number"
+              id="completionTimeMinutes"
+              min="0"
+              value={newDutyCompletionTimeMinutes}
+              onChange={(e) => setNewDutyCompletionTimeMinutes(e.target.value)}
+              placeholder="Необязательно"
+              className="w-full px-3 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-main-600"
+            />
+          </div>
           <div className="flex gap-2">
             <button
               type="button"
@@ -153,6 +173,7 @@ const PositionTab = ({ position }) => {
                 setShowAddForm(false)
                 setNewDutyName('')
                 setNewDutyIsQuantitative(false)
+                setNewDutyCompletionTimeMinutes('')
               }}
               className="flex-1 px-4 py-2 bg-gray-300 text-gray-700 rounded hover:bg-gray-400"
             >

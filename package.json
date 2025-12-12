@@ -110,6 +110,7 @@
         "react-dom": "^16.13.1",
         "react-helmet": "^6.1.0",
         "react-hot-loader": "^4.12.21",
+        "react-icons": "^5.5.0",
         "react-number-format": "^4.4.1",
         "react-redux": "^7.2.1",
         "react-refresh": "^0.8.3",

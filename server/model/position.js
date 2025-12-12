@@ -14,6 +14,11 @@ const DutySchema = new mongoose.Schema({
     required: false,
     default: false
   },
+  completionTimeMinutes: {
+    type: Number,
+    required: false,
+    default: null
+  },
   order: {
     type: Number,
     required: false,

@@ -55,6 +55,7 @@ exports.addDuty = async (req, res) => {
   const newDuty = {
     name: req.body.name,
     isQuantitative: req.body.isQuantitative || false,
+    completionTimeMinutes: req.body.completionTimeMinutes || null,
     order: maxOrder + 1
   }
 
@@ -82,6 +83,9 @@ exports.updateDuty = async (req, res) => {
   }
   if (req.body.isQuantitative !== undefined) {
     position.duties[dutyIndex].isQuantitative = req.body.isQuantitative
+  }
+  if (req.body.completionTimeMinutes !== undefined) {
+    position.duties[dutyIndex].completionTimeMinutes = req.body.completionTimeMinutes || null
   }
   if (req.body.order !== undefined) {
     position.duties[dutyIndex].order = req.body.order
