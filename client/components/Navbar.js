@@ -405,6 +405,15 @@ const Navbar = () => {
                 Электронный журнал
               </NavLink>
             ) : null}
+            {auth.roles.includes('boss') ? (
+              <NavLink
+                to="/boss-journal"
+                className="block mt-4 lg:inline-block lg:mt-0 text-gray-800 hover:text-main-700 mr-4"
+                activeClassName="text-main-600 underline font-semibold"
+              >
+                Электронный журнал (босс)
+              </NavLink>
+            ) : null}
             {auth.roles.includes('kassa') ||
             auth.roles.includes('bookkeeper') ||
             auth.roles.includes('boss') ||

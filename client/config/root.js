@@ -35,6 +35,7 @@ import CustomerEdit from '../scenes/Customers/Customers.edit'
 import Access from '../scenes/Access'
 import Dashboard from '../scenes/Dashboard'
 import Boss from '../scenes/Boss/Boss'
+import BossJournal from '../components/journal/BossJournal'
 import RazvalList from '../scenes/Razval/Razval.list'
 import SettingEdit from '../scenes/Settings/Settings'
 import MaterialList from '../scenes/Materials/Materials.list'
@@ -218,6 +219,7 @@ const RootComponent = (props) => {
             <PrivateRoute exact path="/place/edit/:id" component={PlaceEdit} />
             <AdminRoute exact path="/electronic-journal" component={ElectronicJournal} />
             <PrivateRoute exact path="/employee-journal" component={EmployeeJournal} />
+            <BossRoute exact path="/boss-journal" component={BossJournal} />
             <AdminRoute exact path="/employee/list" component={EmployeeList} />
             <PrivateRoute exact path="/employee/create" component={EmployeeNew} />
             <PrivateRoute exact path="/employee/edit/:id" component={EmployeeEdit} />
