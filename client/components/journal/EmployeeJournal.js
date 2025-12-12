@@ -30,6 +30,7 @@ const EmployeeJournal = () => {
   const [showStandardDutiesModal, setShowStandardDutiesModal] = useState(false)
   const [showDeleteModal, setShowDeleteModal] = useState(false)
   const [dutyToDelete, setDutyToDelete] = useState(null)
+  const [showCompletedDuties, setShowCompletedDuties] = useState(false)
 
   // Найти сотрудника по userName из auth (userName в аккаунте содержит id сотрудника)
   const currentEmployee = employees.find((emp) => emp.id === auth.user?.userName)
@@ -313,7 +314,7 @@ const EmployeeJournal = () => {
 
   // Получаем все обязанности, которые были добавлены (с учетом повторений)
   // Создаем массив объектов с уникальными ключами для каждой добавленной обязанности
-  const addedDuties = addedDutyIds
+  const allAddedDuties = addedDutyIds
     .map((entryId, index) => {
       // Находим запись по ID из БД
       const entry = entries[entryId]
@@ -324,6 +325,20 @@ const EmployeeJournal = () => {
       return duty ? { ...duty, uniqueKey: entryId, index } : null
     })
     .filter(Boolean)
+
+  // Разделяем на выполненные и невыполненные
+  const completedDuties = allAddedDuties.filter((duty) => {
+    const entry = entries[duty.uniqueKey]
+    return entry?.endTime
+  })
+
+  const activeDuties = allAddedDuties.filter((duty) => {
+    const entry = entries[duty.uniqueKey]
+    return !entry?.endTime
+  })
+
+  // Если рабочий день не завершен, показываем только активные обязанности (или все, если нажата кнопка)
+  const addedDuties = !workDayEnded && !showCompletedDuties ? activeDuties : allAddedDuties
 
   // Все обязанности доступны для добавления (можно добавлять повторно)
   const availableDuties = sortedDuties
@@ -579,6 +594,20 @@ const EmployeeJournal = () => {
               </div>
             ) : (
               <div className="space-y-4 pb-24">
+                {!workDayEnded && completedDuties.length > 0 && (
+                  <div className="flex items-center justify-between bg-gray-50 p-3 rounded-lg">
+                    <button
+                      type="button"
+                      onClick={() => setShowCompletedDuties(!showCompletedDuties)}
+                      className="px-4 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700 font-semibold flex items-center gap-2"
+                    >
+                      {showCompletedDuties ? 'Скрыть выполненные' : 'Показать выполненные'}
+                      <span className="bg-white text-gray-600 px-2 py-1 rounded text-sm">
+                        {completedDuties.length}
+                      </span>
+                    </button>
+                  </div>
+                )}
                 {addedDuties.length === 0 ? (
                   <div className="bg-gray-100 p-4 rounded-lg text-center text-gray-500">
                     Нет добавленных обязанностей. Нажмите Добавить обязанность чтобы начать.
