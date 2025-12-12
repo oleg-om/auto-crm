@@ -925,26 +925,7 @@ const DutyEntryForm = ({ duty, entry, onSave, onComplete, onRemove, uniqueKey })
                 </button>
               </div>
             </div>
-          ) : (
-            <div>
-              <label
-                htmlFor={`duty-checkbox-${duty._id}`}
-                className="block text-sm font-medium text-gray-700 mb-1"
-              >
-                Выполнено
-              </label>
-              <div className="flex items-center">
-                <input
-                  id={`duty-checkbox-${duty._id}`}
-                  type="checkbox"
-                  checked={value === true || value === 'true'}
-                  onChange={(e) => setValue(e.target.checked)}
-                  className="mr-2"
-                />
-                <span>Выполнено</span>
-              </div>
-            </div>
-          )}
+          ) : null}
           <div>
             <label
               htmlFor={`duty-comment-${duty._id}`}
@@ -982,13 +963,24 @@ const DutyEntryForm = ({ duty, entry, onSave, onComplete, onRemove, uniqueKey })
         <div className="text-gray-600">
           {entry ? (
             <div>
-              {duty.isQuantitative && (
+              {duty.isQuantitative ? (
                 <div className="flex items-center gap-2">
                   <p>
                     <strong>Количество:</strong>{' '}
                     <span className="text-lg font-semibold">{entry.value || '0'}</span>
                   </p>
                 </div>
+              ) : (
+                <p>
+                  <strong>Статус:</strong>{' '}
+                  {entry.endTime ? (
+                    <span className="text-green-600 font-semibold">Выполнено</span>
+                  ) : entry.startTime ? (
+                    <span className="text-blue-600 font-semibold">В работе</span>
+                  ) : (
+                    <span className="text-gray-400">Не начато</span>
+                  )}
+                </p>
               )}
               {entry.comment && (
                 <p className="mt-2">

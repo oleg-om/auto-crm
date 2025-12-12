@@ -16,6 +16,7 @@ const BossJournal = () => {
   const [selectedDate, setSelectedDate] = useState(new Date().toISOString().split('T')[0])
   const [selectedEmployeeId, setSelectedEmployeeId] = useState('')
   const [entries, setEntries] = useState([])
+  const [workDayData, setWorkDayData] = useState(null)
   const [loading, setLoading] = useState(false)
 
   useEffect(() => {
@@ -26,19 +27,26 @@ const BossJournal = () => {
   const loadEntries = useCallback(async () => {
     if (!selectedEmployeeId || !selectedDate) {
       setEntries([])
+      setWorkDayData(null)
       return
     }
 
     setLoading(true)
     try {
-      const response = await fetch(
-        `/api/v1/journalEntry/employee/${selectedEmployeeId}/date/${selectedDate}`
-      )
-      const { data } = await response.json()
-      setEntries(data || [])
+      const [entriesResponse, workDayResponse] = await Promise.all([
+        fetch(`/api/v1/journalEntry/employee/${selectedEmployeeId}/date/${selectedDate}`),
+        fetch(`/api/v1/workDayStart/employee/${selectedEmployeeId}/date/${selectedDate}`)
+      ])
+
+      const entriesData = await entriesResponse.json()
+      const workDayDataResult = await workDayResponse.json()
+
+      setEntries(entriesData.data || [])
+      setWorkDayData(workDayDataResult.data || null)
     } catch (error) {
       toast.info('Ошибка при загрузке данных', { position: toast.POSITION.BOTTOM_RIGHT })
       setEntries([])
+      setWorkDayData(null)
     } finally {
       setLoading(false)
     }
@@ -55,6 +63,14 @@ const BossJournal = () => {
   const selectedEmployee = employees.find((emp) => emp.id === selectedEmployeeId)
   const { positionId } = selectedEmployee || {}
   const selectedPosition = positionId ? positions.find((p) => p.id === positionId) : null
+
+  // Функция для извлечения времени из строки формата "12.12.2025 16:52"
+  const extractTime = (timeString) => {
+    if (!timeString) return '-'
+    // Если строка содержит пробел, берем часть после пробела (время)
+    const parts = timeString.split(' ')
+    return parts.length > 1 ? parts[parts.length - 1] : timeString
+  }
 
   // Группируем записи по обязанностям
   const groupedEntries = entries.reduce((acc, entry) => {
@@ -130,7 +146,7 @@ const BossJournal = () => {
           </div>
         ) : selectedEmployeeId && selectedDate ? (
           <div className="bg-white rounded-lg shadow overflow-hidden">
-            {entriesWithDutyInfo.length === 0 ? (
+            {entriesWithDutyInfo.length === 0 && !workDayData ? (
               <div className="p-8 text-center text-gray-500">
                 Нет записей за выбранный день
               </div>
@@ -157,6 +173,19 @@ const BossJournal = () => {
                     </tr>
                   </thead>
                   <tbody className="bg-white divide-y divide-gray-200">
+                    {workDayData && workDayData.startTime && (
+                      <tr className="bg-blue-50 font-semibold">
+                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                          Начало рабочего дня
+                        </td>
+                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                          {extractTime(workDayData.startTime)}
+                        </td>
+                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500" colSpan="3">
+                          -
+                        </td>
+                      </tr>
+                    )}
                     {entriesWithDutyInfo.map(({ duty, entries: dutyEntries }) =>
                       dutyEntries.map((entry, index) => (
                         <tr key={entry.id} className={index % 2 === 0 ? 'bg-white' : 'bg-gray-50'}>
@@ -179,9 +208,13 @@ const BossJournal = () => {
                               <span className="font-semibold">{entry.value || '0'}</span>
                             ) : (
                               <span>
-                                {entry.value === true || entry.value === 'true'
-                                  ? 'Выполнено'
-                                  : 'Не выполнено'}
+                                {entry.endTime ? (
+                                  <span className="text-green-600 font-semibold">Выполнено</span>
+                                ) : entry.startTime ? (
+                                  <span className="text-blue-600 font-semibold">В работе</span>
+                                ) : (
+                                  <span className="text-gray-400">Не начато</span>
+                                )}
                               </span>
                             )}
                           </td>
@@ -190,6 +223,22 @@ const BossJournal = () => {
                           </td>
                         </tr>
                       ))
+                    )}
+                    {workDayData && workDayData.endTime && (
+                      <tr className="bg-blue-50 font-semibold">
+                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                          Завершение рабочего дня
+                        </td>
+                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                          -
+                        </td>
+                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                          {extractTime(workDayData.endTime)}
+                        </td>
+                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500" colSpan="2">
+                          -
+                        </td>
+                      </tr>
                     )}
                   </tbody>
                 </table>
