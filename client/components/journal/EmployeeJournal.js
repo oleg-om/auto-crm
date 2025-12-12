@@ -578,44 +578,48 @@ const EmployeeJournal = () => {
                 <div className="animate-spin rounded-full h-8 w-8 border-b-4 border-main-600 mx-auto" />
               </div>
             ) : (
-              <div className="space-y-4">
+              <div className="space-y-4 pb-24">
                 {addedDuties.length === 0 ? (
                   <div className="bg-gray-100 p-4 rounded-lg text-center text-gray-500">
                     Нет добавленных обязанностей. Нажмите Добавить обязанность чтобы начать.
                   </div>
                 ) : (
-                  addedDuties.map((duty) => {
-                    const entry = entries[duty.uniqueKey]
-                    return (
-                      <DutyEntryForm
-                        key={duty.uniqueKey}
-                        duty={duty}
-                        entry={entry}
-                        onSave={handleSaveEntry}
-                        onComplete={() => handleCompleteDuty(duty._id, duty.uniqueKey, duty)}
-                        onRemove={() => handleRemoveDutyClick(duty.uniqueKey)}
-                        uniqueKey={duty.uniqueKey}
-                      />
-                    )
-                  })
+                   addedDuties.map((duty) => {
+                     const entry = entries[duty.uniqueKey]
+                     return (
+                       <DutyEntryForm
+                         key={duty.uniqueKey}
+                         duty={duty}
+                         entry={entry}
+                         onSave={handleSaveEntry}
+                         onComplete={() => handleCompleteDuty(duty._id, duty.uniqueKey, duty)}
+                         onRemove={() => handleRemoveDutyClick(duty.uniqueKey)}
+                         uniqueKey={duty.uniqueKey}
+                       />
+                     )
+                   })
                 )}
 
                 {availableDuties.length > 0 && !workDayEnded && (
-                  <div className="fixed bottom-0 left-0 right-0 bg-white border-t p-4 shadow-lg flex gap-2 z-40">
-                    <button
-                      type="button"
-                      onClick={() => setShowAddDutyModal(true)}
-                      className="flex-1 px-4 py-3 bg-main-600 text-white rounded-lg hover:bg-main-700 font-semibold"
-                    >
-                      + Добавить обязанность
-                    </button>
-                    <button
-                      type="button"
-                      onClick={() => setShowStandardDutiesModal(true)}
-                      className="px-4 py-3 bg-gray-600 text-white rounded-lg hover:bg-gray-700 font-semibold whitespace-nowrap"
-                    >
-                      + Добавить другое
-                    </button>
+                  <div className="fixed bottom-0 left-0 right-0 bg-white border-t shadow-lg z-40">
+                    <div className="mx-auto px-4" style={{ maxWidth: '800px' }}>
+                      <div className="p-4 flex gap-2">
+                        <button
+                          type="button"
+                          onClick={() => setShowAddDutyModal(true)}
+                          className="flex-1 px-4 py-3 bg-main-600 text-white rounded-lg hover:bg-main-700 font-semibold"
+                        >
+                          + Добавить обязанность
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => setShowStandardDutiesModal(true)}
+                          className="px-4 py-3 bg-gray-600 text-white rounded-lg hover:bg-gray-700 font-semibold whitespace-nowrap"
+                        >
+                          + Добавить другое
+                        </button>
+                      </div>
+                    </div>
                   </div>
                 )}
                 {workDayEnded && (
@@ -825,7 +829,7 @@ const DutyEntryForm = ({ duty, entry, onSave, onComplete, onRemove, uniqueKey })
 
   return (
     <div className="bg-white border rounded-lg p-4 shadow-sm">
-      <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-3 mb-3">
+      <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-3">
         <div className="flex items-center gap-2 flex-1 min-w-0">
           {getStatusIcon()}
           <div className="flex-1 min-w-0">
