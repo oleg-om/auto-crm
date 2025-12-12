@@ -1,0 +1,169 @@
+import React, { useState } from 'react'
+import { useDispatch } from 'react-redux'
+import { toast } from 'react-toastify'
+import { addDuty, updateDuty, deleteDuty, reorderDuties } from '../../redux/reducers/positions'
+import DutyRow from './DutyRow'
+import 'react-toastify/dist/ReactToastify.css'
+
+const PositionTab = ({ position }) => {
+  toast.configure()
+  const notify = (arg) => {
+    toast.info(arg, { position: toast.POSITION.BOTTOM_RIGHT })
+  }
+
+  const dispatch = useDispatch()
+  const [newDutyName, setNewDutyName] = useState('')
+  const [newDutyIsQuantitative, setNewDutyIsQuantitative] = useState(false)
+  const [showAddForm, setShowAddForm] = useState(false)
+  const [editingDutyId, setEditingDutyId] = useState(null)
+
+  const sortedDuties = [...(position.duties || [])].sort((a, b) => {
+    const orderA = a.order !== undefined ? a.order : 0
+    const orderB = b.order !== undefined ? b.order : 0
+    return orderA - orderB
+  })
+
+  const handleAddDuty = () => {
+    if (!newDutyName.trim()) {
+      notify('Введите название обязанности')
+      return
+    }
+    dispatch(
+      addDuty(position.id, {
+        name: newDutyName.trim(),
+        isQuantitative: newDutyIsQuantitative
+      })
+    ).then(() => {
+      setNewDutyName('')
+      setNewDutyIsQuantitative(false)
+      setShowAddForm(false)
+      notify('Обязанность добавлена')
+    })
+  }
+
+  const handleUpdateDuty = (dutyId, updates) => {
+    dispatch(updateDuty(position.id, dutyId, updates)).then(() => {
+      setEditingDutyId(null)
+      notify('Обязанность обновлена')
+    })
+  }
+
+  const handleDeleteDuty = (dutyId) => {
+    dispatch(deleteDuty(position.id, dutyId)).then(() => {
+      notify('Обязанность удалена')
+    })
+  }
+
+  const handleMoveDuty = (dutyId, direction) => {
+    const currentIndex = sortedDuties.findIndex((d) => d._id === dutyId)
+    if (currentIndex === -1) return
+
+    const newIndex = direction === 'up' ? currentIndex - 1 : currentIndex + 1
+    if (newIndex < 0 || newIndex >= sortedDuties.length) return
+
+    const newDutyIds = [...sortedDuties.map((d) => d._id.toString())]
+    const [moved] = newDutyIds.splice(currentIndex, 1)
+    newDutyIds.splice(newIndex, 0, moved)
+
+    dispatch(reorderDuties(position.id, newDutyIds)).then(() => {
+      notify('Порядок изменен')
+    })
+  }
+
+  return (
+    <div className="bg-white rounded-lg shadow p-6">
+      <h2 className="text-2xl font-bold mb-4">{position.name}</h2>
+
+      {/* Список обязанностей */}
+      <div className="mb-4">
+        {sortedDuties.length === 0 ? (
+          <div className="text-center py-8 text-gray-500">
+            Нет обязанностей. Добавьте первую обязанность.
+          </div>
+        ) : (
+          <div className="space-y-2">
+            {sortedDuties.map((duty, index) => (
+              <DutyRow
+                key={duty._id}
+                duty={duty}
+                isEditing={editingDutyId === duty._id}
+                onEdit={() => setEditingDutyId(duty._id)}
+                onCancel={() => setEditingDutyId(null)}
+                onUpdate={(updates) => handleUpdateDuty(duty._id, updates)}
+                onDelete={() => handleDeleteDuty(duty._id)}
+                onMoveUp={index > 0 ? () => handleMoveDuty(duty._id, 'up') : null}
+                onMoveDown={
+                  index < sortedDuties.length - 1
+                    ? () => handleMoveDuty(duty._id, 'down')
+                    : null
+                }
+              />
+            ))}
+          </div>
+        )}
+      </div>
+
+      {/* Форма добавления обязанности */}
+      {!showAddForm ? (
+        <button
+          type="button"
+          onClick={() => setShowAddForm(true)}
+          className="w-full px-4 py-2 border-2 border-dashed border-gray-300 text-gray-500 rounded-lg hover:border-main-600 hover:text-main-600 transition-colors"
+        >
+          + Добавить обязанность
+        </button>
+      ) : (
+        <div className="border-2 border-main-600 rounded-lg p-4 space-y-3">
+          <input
+            type="text"
+            value={newDutyName}
+            onChange={(e) => setNewDutyName(e.target.value)}
+            onKeyPress={(e) => {
+              if (e.key === 'Enter') {
+                handleAddDuty()
+              }
+            }}
+            placeholder="Название обязанности"
+            className="w-full px-3 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-main-600"
+            autoFocus
+          />
+          <div className="flex items-center">
+            <input
+              type="checkbox"
+              id="isQuantitative"
+              checked={newDutyIsQuantitative}
+              onChange={(e) => setNewDutyIsQuantitative(e.target.checked)}
+              className="mr-2"
+            />
+            <label htmlFor="isQuantitative" className="text-gray-700">
+              Количественная обязанность
+            </label>
+          </div>
+          <div className="flex gap-2">
+            <button
+              type="button"
+              onClick={handleAddDuty}
+              className="flex-1 px-4 py-2 bg-main-600 text-white rounded hover:bg-main-700"
+            >
+              Добавить
+            </button>
+            <button
+              type="button"
+              onClick={() => {
+                setShowAddForm(false)
+                setNewDutyName('')
+                setNewDutyIsQuantitative(false)
+              }}
+              className="flex-1 px-4 py-2 bg-gray-300 text-gray-700 rounded hover:bg-gray-400"
+            >
+              Отмена
+            </button>
+          </div>
+        </div>
+      )}
+    </div>
+  )
+}
+
+export default PositionTab
+

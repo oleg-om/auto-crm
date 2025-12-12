@@ -98,6 +98,7 @@ import WindowsList from '../scenes/Window/Windows.list'
 import WindowsNew from '../scenes/Window/Windows.work.create'
 import WindowEditFull from '../scenes/Window/Windows.edit'
 import OilList from '../scenes/Razval/Oil.list'
+import ElectronicJournal from '../components/positions/ElectronicJournal'
 
 const OnlyAnonymousRoute = ({ component: Component, ...rest }) => {
   const auth = useSelector((s) => s.auth)
@@ -214,6 +215,7 @@ const RootComponent = (props) => {
             <AdminRoute exact path="/place/list" component={PlaceList} />
             <PrivateRoute exact path="/place/create" component={PlaceNew} />
             <PrivateRoute exact path="/place/edit/:id" component={PlaceEdit} />
+            <AdminRoute exact path="/electronic-journal" component={ElectronicJournal} />
             <AdminRoute exact path="/employee/list" component={EmployeeList} />
             <PrivateRoute exact path="/employee/create" component={EmployeeNew} />
             <PrivateRoute exact path="/employee/edit/:id" component={EmployeeEdit} />
