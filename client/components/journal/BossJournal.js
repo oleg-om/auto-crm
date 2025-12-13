@@ -532,12 +532,13 @@ const DutyTimelineChart = ({ entries, entriesWithDutyInfo, workDayData, selected
   const workDayStartMinutes = workDayData?.startTime
     ? getTimeInMinutes(workDayData.startTime)
     : 7 * 60 // По умолчанию 7:00
-  const workDayEndMinutes = workDayData?.endTime ? getTimeInMinutes(workDayData.endTime) : 22 * 60 // По умолчанию 22:00
+  const workDayEndMinutes = workDayData?.endTime ? getTimeInMinutes(workDayData.endTime) : null
 
   // Если есть обязанности, расширяем диапазон
   let minTime = workDayStartMinutes
-  let maxTime = workDayEndMinutes
+  let maxTime = workDayEndMinutes || 0
 
+  // Находим максимальное время из обязанностей
   entries.forEach((entry) => {
     const startMins = getTimeInMinutes(entry.startTime)
     const endMins = getTimeInMinutes(entry.endTime)
@@ -545,6 +546,14 @@ const DutyTimelineChart = ({ entries, entriesWithDutyInfo, workDayData, selected
     if (endMins !== null && endMins > maxTime) maxTime = endMins
     if (startMins !== null && endMins === null && startMins > maxTime) maxTime = startMins
   })
+
+  // Максимальное время: конец рабочего дня, последняя обязанность или минимум 19:00
+  const minRequiredTime = 19 * 60 // 19:00
+  if (workDayEndMinutes !== null) {
+    maxTime = Math.max(maxTime, workDayEndMinutes, minRequiredTime)
+  } else {
+    maxTime = Math.max(maxTime, minRequiredTime)
+  }
 
   // Добавляем небольшой отступ (30 минут) с каждой стороны
   minTime = Math.max(0, minTime - 30)
