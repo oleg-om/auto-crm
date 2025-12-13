@@ -2,29 +2,22 @@ const mongoose = require('mongoose')
 const uuid = require('uuid')
 const AutoIncrement = require('mongoose-sequence')(mongoose)
 
-const dateNow = new Date()
 const WorkDayStart = new mongoose.Schema({
   employeeId: {
     type: String,
     required: true
   },
   date: {
-    type: String,
+    type: Date,
     required: true
   },
   startTime: {
-    type: String,
+    type: Date,
     required: true,
-    default: () =>
-      `${dateNow.getDate()}.${
-        dateNow.getMonth() + 1
-      }.${dateNow.getFullYear()} ${dateNow.getHours()}:${dateNow
-        .getMinutes()
-        .toString()
-        .replace(/^(\d)$/, '0$1')}`
+    default: Date.now
   },
   endTime: {
-    type: String,
+    type: Date,
     required: false
   },
   id: {

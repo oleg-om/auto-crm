@@ -65,12 +65,23 @@ const BossJournal = () => {
   const { positionId } = selectedEmployee || {}
   const selectedPosition = positionId ? positions.find((p) => p.id === positionId) : null
 
-  // Функция для извлечения времени из строки формата "12.12.2025 16:52"
-  const extractTime = (timeString) => {
-    if (!timeString) return '-'
-    // Если строка содержит пробел, берем часть после пробела (время)
-    const parts = timeString.split(' ')
-    return parts.length > 1 ? parts[parts.length - 1] : timeString
+  // Функция для извлечения времени из Date или строки
+  const extractTime = (timeValue) => {
+    if (!timeValue) return '-'
+    // Если это Date объект или строка ISO
+    const date = typeof timeValue === 'string' ? new Date(timeValue) : timeValue
+    if (date instanceof Date && !Number.isNaN(date.getTime())) {
+      // Форматируем Date в "HH:MM"
+      const hours = date.getHours().toString().padStart(2, '0')
+      const minutes = date.getMinutes().toString().padStart(2, '0')
+      return `${hours}:${minutes}`
+    }
+    // Если это старая строка формата "DD.MM.YYYY HH:MM" или "HH:MM"
+    if (typeof timeValue === 'string') {
+      const parts = timeValue.split(' ')
+      return parts.length > 1 ? parts[parts.length - 1] : timeValue
+    }
+    return timeValue
   }
 
   // Группируем записи по обязанностям
@@ -240,10 +251,10 @@ const BossJournal = () => {
                               )}
                             </td>
                             <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                              {entry.startTime || '-'}
+                              {extractTime(entry.startTime)}
                             </td>
                             <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                              {entry.endTime || '-'}
+                              {extractTime(entry.endTime)}
                             </td>
                             <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                               {duty?.isQuantitative ? (
@@ -306,22 +317,49 @@ const BossJournal = () => {
 }
 
 const DutyTimelineChart = ({ entries, entriesWithDutyInfo, workDayData }) => {
+  // Функция для извлечения времени из Date или строки
+  const extractTime = (timeValue) => {
+    if (!timeValue) return '-'
+    // Если это Date объект или строка ISO
+    const date = typeof timeValue === 'string' ? new Date(timeValue) : timeValue
+    if (date instanceof Date && !Number.isNaN(date.getTime())) {
+      // Форматируем Date в "HH:MM"
+      const hours = date.getHours().toString().padStart(2, '0')
+      const minutes = date.getMinutes().toString().padStart(2, '0')
+      return `${hours}:${minutes}`
+    }
+    // Если это старая строка формата "DD.MM.YYYY HH:MM" или "HH:MM"
+    if (typeof timeValue === 'string') {
+      const parts = timeValue.split(' ')
+      return parts.length > 1 ? parts[parts.length - 1] : timeValue
+    }
+    return timeValue
+  }
+
   // Определяем диапазон времени для шкалы
-  const getTimeInMinutes = (timeStr) => {
-    if (!timeStr) return null
-    // Извлекаем время из строки (может быть "HH:MM" или "DD.MM.YYYY HH:MM")
-    const timePart = timeStr.includes(' ') ? timeStr.split(' ')[1] : timeStr
-    const [hours, minutes] = timePart.split(':').map(Number)
-    return hours * 60 + minutes
+  const getTimeInMinutes = (timeValue) => {
+    if (!timeValue) return null
+    // Если это Date объект или строка ISO
+    const date = typeof timeValue === 'string' ? new Date(timeValue) : timeValue
+    if (date instanceof Date && !Number.isNaN(date.getTime())) {
+      return date.getHours() * 60 + date.getMinutes()
+    }
+    // Если это старая строка формата "HH:MM" или "DD.MM.YYYY HH:MM"
+    if (typeof timeValue === 'string') {
+      const timePart = timeValue.includes(' ') ? timeValue.split(' ')[1] : timeValue
+      const [hours, minutes] = timePart.split(':').map(Number)
+      if (!Number.isNaN(hours) && !Number.isNaN(minutes)) {
+        return hours * 60 + minutes
+      }
+    }
+    return null
   }
 
   // Определяем начало и конец рабочего дня
   const workDayStartMinutes = workDayData?.startTime
     ? getTimeInMinutes(workDayData.startTime)
     : 7 * 60 // По умолчанию 7:00
-  const workDayEndMinutes = workDayData?.endTime
-    ? getTimeInMinutes(workDayData.endTime)
-    : 22 * 60 // По умолчанию 22:00
+  const workDayEndMinutes = workDayData?.endTime ? getTimeInMinutes(workDayData.endTime) : 22 * 60 // По умолчанию 22:00
 
   // Если есть обязанности, расширяем диапазон
   let minTime = workDayStartMinutes
@@ -408,13 +446,8 @@ const DutyTimelineChart = ({ entries, entriesWithDutyInfo, workDayData }) => {
                 <div className="relative h-12 bg-gray-50 rounded border-2 border-blue-500">
                   <div className="absolute inset-0 flex items-center px-4">
                     <span className="text-sm font-medium text-blue-700">
-                      {workDayData.startTime && timeToMinutes(workDayData.startTime) !== null
-                        ? `${workDayData.startTime.split(' ').pop()}`
-                        : ''}
-                      {workDayData.endTime && ' - '}
-                      {workDayData.endTime && timeToMinutes(workDayData.endTime) !== null
-                        ? `${workDayData.endTime.split(' ').pop()}`
-                        : ''}
+                      {workDayData.startTime && extractTime(workDayData.startTime)}
+                      {workDayData.endTime && ` - ${extractTime(workDayData.endTime)}`}
                     </span>
                   </div>
                 </div>
@@ -422,31 +455,36 @@ const DutyTimelineChart = ({ entries, entriesWithDutyInfo, workDayData }) => {
             )}
 
             {/* Обязанности */}
-            {entriesWithDutyInfo.map(({ duty, entries: dutyEntries }) =>
-              dutyEntries.map((entry) => {
-                const startMinutes = timeToMinutes(entry.startTime)
-                const endMinutes = timeToMinutes(entry.endTime)
-                const leftPercent = startMinutes !== null ? getPositionPercent(startMinutes) : 0
-                const widthPercent =
-                  startMinutes !== null && endMinutes !== null
-                    ? getWidthPercent(startMinutes, endMinutes)
-                    : startMinutes !== null
-                    ? 2
-                    : 0
+            {entriesWithDutyInfo.map(({ duty, entries: dutyEntries }) => {
+              // Суммируем количество для количественных обязанностей
+              const totalQuantity = duty?.isQuantitative
+                ? dutyEntries.reduce((sum, entry) => sum + (Number(entry.value) || 0), 0)
+                : null
 
-                return (
-                  <div key={entry.id} className="mb-4">
-                    <div className="text-sm font-semibold text-gray-700 mb-2">
-                      {duty?.name || 'Неизвестная обязанность'}
-                      {duty?.isQuantitative && (
-                        <span className="ml-2 text-xs text-blue-600">
-                          (Кол-во: {entry.value || '0'})
-                        </span>
-                      )}
-                    </div>
-                    <div className="relative h-12 bg-gray-50 rounded border">
-                      {startMinutes !== null && (
+              return (
+                <div key={duty?._id || 'unknown'} className="mb-4">
+                  <div className="text-sm font-semibold text-gray-700 mb-2">
+                    {duty?.name || 'Неизвестная обязанность'}
+                    {duty?.isQuantitative && totalQuantity !== null && (
+                      <span className="ml-2 text-xs text-blue-600">(Кол-во: {totalQuantity})</span>
+                    )}
+                  </div>
+                  <div className="relative h-12 bg-gray-50 rounded border">
+                    {dutyEntries.map((entry) => {
+                      const startMinutes = timeToMinutes(entry.startTime)
+                      const endMinutes = timeToMinutes(entry.endTime)
+                      const leftPercent =
+                        startMinutes !== null ? getPositionPercent(startMinutes) : 0
+                      const widthPercent =
+                        startMinutes !== null && endMinutes !== null
+                          ? getWidthPercent(startMinutes, endMinutes)
+                          : startMinutes !== null
+                          ? 2
+                          : 0
+
+                      return (
                         <div
+                          key={entry.id}
                           className={`absolute top-0 bottom-0 rounded flex items-center px-2 ${
                             endMinutes !== null
                               ? 'bg-green-500 text-white'
@@ -459,16 +497,16 @@ const DutyTimelineChart = ({ entries, entriesWithDutyInfo, workDayData }) => {
                           }}
                         >
                           <div className="text-xs font-medium whitespace-nowrap">
-                            {entry.startTime?.split(' ').pop() || ''}
-                            {endMinutes !== null && ` - ${entry.endTime?.split(' ').pop() || ''}`}
+                            {extractTime(entry.startTime)}
+                            {endMinutes !== null && ` - ${extractTime(entry.endTime)}`}
                           </div>
                         </div>
-                      )}
-                    </div>
+                      )
+                    })}
                   </div>
-                )
-              })
-            )}
+                </div>
+              )
+            })}
           </div>
         </div>
       )}

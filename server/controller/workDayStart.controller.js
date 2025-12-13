@@ -2,22 +2,29 @@ const WorkDayStart = require('../model/workDayStart')
 
 exports.getByEmployeeAndDate = async (req, res) => {
   const { employeeId, date } = req.params
-  const workDayStart = await WorkDayStart.findOne({ employeeId, date })
+  // Преобразуем строку даты в Date объект (начало дня)
+  const dateObj = new Date(date)
+  dateObj.setHours(0, 0, 0, 0)
+  const workDayStart = await WorkDayStart.findOne({ employeeId, date: dateObj })
   return res.json({ status: 'ok', data: workDayStart })
 }
 
 exports.startWorkDay = async (req, res) => {
   const { employeeId, date } = req.body
 
+  // Преобразуем строку даты в Date объект (начало дня)
+  const dateObj = typeof date === 'string' ? new Date(date) : date
+  dateObj.setHours(0, 0, 0, 0)
+
   // Проверяем, не начат ли уже рабочий день
-  const existing = await WorkDayStart.findOne({ employeeId, date })
+  const existing = await WorkDayStart.findOne({ employeeId, date: dateObj })
   if (existing) {
     return res.json({ status: 'ok', data: existing })
   }
 
   const workDayStart = new WorkDayStart({
     employeeId,
-    date
+    date: dateObj
   })
   await workDayStart.save()
   return res.json({ status: 'ok', data: workDayStart })
@@ -26,7 +33,11 @@ exports.startWorkDay = async (req, res) => {
 exports.endWorkDay = async (req, res) => {
   const { employeeId, date } = req.body
 
-  const workDayStart = await WorkDayStart.findOne({ employeeId, date })
+  // Преобразуем строку даты в Date объект (начало дня)
+  const dateObj = typeof date === 'string' ? new Date(date) : date
+  dateObj.setHours(0, 0, 0, 0)
+
+  const workDayStart = await WorkDayStart.findOne({ employeeId, date: dateObj })
   if (!workDayStart) {
     return res.json({ status: 'error', message: 'Work day not started' })
   }
@@ -35,15 +46,7 @@ exports.endWorkDay = async (req, res) => {
     return res.json({ status: 'ok', data: workDayStart })
   }
 
-  const dateNow = new Date()
-  const endTime = `${dateNow.getDate()}.${
-    dateNow.getMonth() + 1
-  }.${dateNow.getFullYear()} ${dateNow.getHours()}:${dateNow
-    .getMinutes()
-    .toString()
-    .replace(/^(\d)$/, '0$1')}`
-
-  workDayStart.endTime = endTime
+  workDayStart.endTime = new Date()
   await workDayStart.save()
   return res.json({ status: 'ok', data: workDayStart })
 }

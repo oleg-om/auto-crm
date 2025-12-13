@@ -157,6 +157,25 @@ const EmployeeJournal = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedDate, currentEmployee?.id, currentEmployee?.positionId])
 
+  const formatDateTime = (dateTime) => {
+    if (!dateTime) return null
+    const date = typeof dateTime === 'string' ? new Date(dateTime) : dateTime
+    if (!(date instanceof Date) || Number.isNaN(date.getTime())) {
+      // Если это старая строка формата "DD.MM.YYYY HH:MM"
+      if (typeof dateTime === 'string') {
+        return dateTime
+      }
+      return dateTime
+    }
+    // Форматируем Date в "DD.MM.YYYY HH:MM"
+    const day = date.getDate().toString().padStart(2, '0')
+    const month = (date.getMonth() + 1).toString().padStart(2, '0')
+    const year = date.getFullYear()
+    const hours = date.getHours().toString().padStart(2, '0')
+    const minutes = date.getMinutes().toString().padStart(2, '0')
+    return `${day}.${month}.${year} ${hours}:${minutes}`
+  }
+
   const handleSaveEntry = async (dutyId, value, comment, uniqueKey) => {
     if (!currentEmployee || !currentEmployee.positionId) {
       notify('Должность не назначена')
@@ -240,8 +259,7 @@ const EmployeeJournal = () => {
     }
 
     // Записываем время окончания
-    const now = new Date()
-    const endTime = `${now.getHours()}:${now.getMinutes().toString().padStart(2, '0')}`
+    const endTime = new Date().toISOString()
 
     try {
       const response = await fetch('/api/v1/journalEntry/upsert', {
@@ -352,8 +370,7 @@ const EmployeeJournal = () => {
     const dutyIdStr = String(dutyId)
 
     // Записываем время начала при добавлении обязанности
-    const now = new Date()
-    const startTime = `${now.getHours()}:${now.getMinutes().toString().padStart(2, '0')}`
+    const startTime = new Date().toISOString()
 
     try {
       // Сразу создаем запись в БД с временем начала
@@ -439,8 +456,7 @@ const EmployeeJournal = () => {
       }
 
       // Добавляем обязанность в журнал
-      const now = new Date()
-      const startTime = `${now.getHours()}:${now.getMinutes().toString().padStart(2, '0')}`
+      const startTime = new Date().toISOString()
 
       const response = await fetch('/api/v1/journalEntry/upsert', {
         method: 'POST',
@@ -567,12 +583,12 @@ const EmployeeJournal = () => {
                   <div>
                     <p className="text-sm text-gray-600">
                       Начало рабочего дня:{' '}
-                      <span className="font-medium">{workDayData.startTime}</span>
+                      <span className="font-medium">{formatDateTime(workDayData.startTime)}</span>
                     </p>
                     {workDayData.endTime && (
                       <p className="text-sm text-gray-600 mt-1">
                         Окончание рабочего дня:{' '}
-                        <span className="font-medium">{workDayData.endTime}</span>
+                        <span className="font-medium">{formatDateTime(workDayData.endTime)}</span>
                       </p>
                     )}
                   </div>
@@ -833,7 +849,20 @@ const DutyEntryForm = ({ duty, entry, onSave, onComplete, onRemove, uniqueKey })
 
   const formatTime = (time) => {
     if (!time) return null
-    return time
+    // Если это Date объект или строка ISO
+    const date = typeof time === 'string' ? new Date(time) : time
+    if (!(date instanceof Date) || Number.isNaN(date.getTime())) {
+      // Если это старая строка формата "HH:MM" или "DD.MM.YYYY HH:MM"
+      if (typeof time === 'string') {
+        const parts = time.split(' ')
+        return parts.length > 1 ? parts[parts.length - 1] : time
+      }
+      return time
+    }
+    // Форматируем Date в "HH:MM"
+    const hours = date.getHours().toString().padStart(2, '0')
+    const minutes = date.getMinutes().toString().padStart(2, '0')
+    return `${hours}:${minutes}`
   }
 
   const getStatusIcon = () => {

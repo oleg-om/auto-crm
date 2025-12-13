@@ -17,7 +17,7 @@ const JournalEntry = new mongoose.Schema({
     required: true
   },
   date: {
-    type: String,
+    type: Date,
     required: true
   },
   value: {
@@ -29,11 +29,11 @@ const JournalEntry = new mongoose.Schema({
     required: false
   },
   startTime: {
-    type: String,
+    type: Date,
     required: false
   },
   endTime: {
-    type: String,
+    type: Date,
     required: false
   },
   id: {
