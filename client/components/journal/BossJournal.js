@@ -317,6 +317,8 @@ const BossJournal = () => {
 }
 
 const DutyTimelineChart = ({ entries, entriesWithDutyInfo, workDayData }) => {
+  const [tooltip, setTooltip] = useState({ entryId: null, text: '', x: 0, y: 0 })
+
   // Функция для извлечения времени из Date или строки
   const extractTime = (timeValue) => {
     if (!timeValue) return '-'
@@ -416,7 +418,7 @@ const DutyTimelineChart = ({ entries, entriesWithDutyInfo, workDayData }) => {
         <div className="p-6">
           {/* Временная шкала */}
           <div className="relative mb-8">
-            <div className="flex justify-between text-xs text-gray-500 mb-2">
+            <div className="flex justify-between text-[10px] leading-tight text-gray-500 mb-2">
               {hours.map((hour) => (
                 <span key={hour}>{hour}:00</span>
               ))}
@@ -482,10 +484,18 @@ const DutyTimelineChart = ({ entries, entriesWithDutyInfo, workDayData }) => {
                           ? 2
                           : 0
 
+                      const startTimeStr = extractTime(entry.startTime)
+                      const endTimeStr = extractTime(entry.endTime)
+                      const tooltipText = endTimeStr !== '-'
+                        ? `${startTimeStr} - ${endTimeStr}`
+                        : `Начало: ${startTimeStr}`
+
+                      const isTooltipVisible = tooltip.entryId === entry.id
+
                       return (
                         <div
                           key={entry.id}
-                          className={`absolute top-0 bottom-0 rounded flex items-center px-2 ${
+                          className={`absolute top-0 bottom-0 rounded flex items-center px-2 cursor-pointer ${
                             endMinutes !== null
                               ? 'bg-green-500 text-white'
                               : 'bg-blue-500 text-white'
@@ -493,13 +503,34 @@ const DutyTimelineChart = ({ entries, entriesWithDutyInfo, workDayData }) => {
                           style={{
                             left: `${leftPercent}%`,
                             width: `${Math.max(widthPercent, 2)}%`,
-                            minWidth: '40px'
+                            minWidth: '48px'
                           }}
+                          onMouseEnter={() => {
+                            setTooltip({
+                              entryId: entry.id,
+                              text: tooltipText
+                            })
+                          }}
+                          onMouseLeave={() => setTooltip({ entryId: null, text: '' })}
                         >
-                          <div className="text-xs font-medium whitespace-nowrap">
-                            {extractTime(entry.startTime)}
-                            {endMinutes !== null && ` - ${extractTime(entry.endTime)}`}
+                          <div
+                            className="text-xs font-medium whitespace-nowrap"
+                            style={{ lineHeight: '12px', textAlign: 'center' }}
+                          >
+                            {startTimeStr}
+                            {endMinutes !== null && ` - ${endTimeStr}`}
                           </div>
+                          {isTooltipVisible && (
+                            <div
+                              className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 z-50 bg-gray-900 text-white text-xs rounded px-2 py-1 pointer-events-none whitespace-nowrap shadow-lg"
+                              style={{ textAlign: 'center' }}
+                            >
+                              {tooltip.text}
+                              <div
+                                className="absolute top-full left-1/2 transform -translate-x-1/2 w-0 h-0 border-l-4 border-r-4 border-t-4 border-transparent border-t-gray-900"
+                              />
+                            </div>
+                          )}
                         </div>
                       )
                     })}

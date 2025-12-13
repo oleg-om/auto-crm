@@ -624,26 +624,26 @@ const EmployeeJournal = () => {
                     </button>
                   </div>
                 )}
-                {addedDuties.length === 0 ? (
+                {addedDuties.length === 0 && (workDayEnded || completedDuties.length === 0) ? (
                   <div className="bg-gray-100 p-4 rounded-lg text-center text-gray-500">
                     Нет добавленных обязанностей. Нажмите Добавить обязанность чтобы начать.
                   </div>
-                ) : (
-                   addedDuties.map((duty) => {
-                     const entry = entries[duty.uniqueKey]
-                     return (
-                       <DutyEntryForm
-                         key={duty.uniqueKey}
-                         duty={duty}
-                         entry={entry}
-                         onSave={handleSaveEntry}
-                         onComplete={() => handleCompleteDuty(duty._id, duty.uniqueKey, duty)}
-                         onRemove={() => handleRemoveDutyClick(duty.uniqueKey)}
-                         uniqueKey={duty.uniqueKey}
-                       />
-                     )
-                   })
-                )}
+                ) : addedDuties.length > 0 ? (
+                  addedDuties.map((duty) => {
+                    const entry = entries[duty.uniqueKey]
+                    return (
+                      <DutyEntryForm
+                        key={duty.uniqueKey}
+                        duty={duty}
+                        entry={entry}
+                        onSave={handleSaveEntry}
+                        onComplete={() => handleCompleteDuty(duty._id, duty.uniqueKey, duty)}
+                        onRemove={() => handleRemoveDutyClick(duty.uniqueKey)}
+                        uniqueKey={duty.uniqueKey}
+                      />
+                    )
+                  })
+                ) : null}
 
                 {availableDuties.length > 0 && !workDayEnded && (
                   <div className="fixed bottom-0 left-0 right-0 bg-white border-t shadow-lg z-40">
