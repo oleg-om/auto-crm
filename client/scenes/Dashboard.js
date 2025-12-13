@@ -2,6 +2,7 @@ import React from 'react'
 import { useSelector } from 'react-redux'
 import { Link } from 'react-router-dom'
 import { toast } from 'react-toastify'
+import { FaClipboardList } from 'react-icons/fa'
 import Navbar from '../components/Navbar'
 import 'react-toastify/dist/ReactToastify.css'
 import autoparts from '../assets/images/Dashboard/autoparts.png'
@@ -486,10 +487,8 @@ const DashBoardJournal = ({ auth }) => {
                 </button>
               </div>
               <div className="w-1/2">
-                <div className="object-contain h-48 w-full flex items-center justify-center text-white text-6xl">
-                  <span role="img" aria-label="Электронный журнал">
-                    📋
-                  </span>
+                <div className="object-contain h-48 w-full flex items-center justify-center text-white">
+                  <FaClipboardList size={120} />
                 </div>
               </div>
             </div>
