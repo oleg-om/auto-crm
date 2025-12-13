@@ -1,7 +1,7 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { useDispatch } from 'react-redux'
 import { toast } from 'react-toastify'
-import { addDuty, updateDuty, deleteDuty, reorderDuties } from '../../redux/reducers/positions'
+import { addDuty, updateDuty, deleteDuty, reorderDuties, updatePosition } from '../../redux/reducers/positions'
 import DutyRow from './DutyRow'
 import 'react-toastify/dist/ReactToastify.css'
 
@@ -17,6 +17,26 @@ const PositionTab = ({ position }) => {
   const [newDutyCompletionTimeMinutes, setNewDutyCompletionTimeMinutes] = useState('')
   const [showAddForm, setShowAddForm] = useState(false)
   const [editingDutyId, setEditingDutyId] = useState(null)
+  const [workDayStartTime, setWorkDayStartTime] = useState(position.workDayStartTime || '')
+  const [workDayEndTime, setWorkDayEndTime] = useState(position.workDayEndTime || '')
+  const [isEditingWorkTime, setIsEditingWorkTime] = useState(false)
+
+  useEffect(() => {
+    setWorkDayStartTime(position.workDayStartTime || '')
+    setWorkDayEndTime(position.workDayEndTime || '')
+  }, [position.workDayStartTime, position.workDayEndTime])
+
+  const handleSaveWorkTime = () => {
+    dispatch(
+      updatePosition(position.id, {
+        workDayStartTime: workDayStartTime || null,
+        workDayEndTime: workDayEndTime || null
+      })
+    ).then(() => {
+      setIsEditingWorkTime(false)
+      notify('Время работы обновлено')
+    })
+  }
 
   const sortedDuties = [...(position.duties || [])].sort((a, b) => {
     const orderA = a.order !== undefined ? a.order : 0
@@ -76,6 +96,84 @@ const PositionTab = ({ position }) => {
   return (
     <div className="bg-white rounded-lg shadow p-6">
       <h2 className="text-2xl font-bold mb-4">{position.name}</h2>
+
+      {/* Время работы */}
+      <div className="mb-6 p-4 bg-gray-50 rounded-lg">
+        <div className="flex items-center justify-between mb-2">
+          <h3 className="text-lg font-semibold text-gray-700">Время работы</h3>
+          {!isEditingWorkTime && (
+            <button
+              type="button"
+              onClick={() => setIsEditingWorkTime(true)}
+              className="text-sm text-main-600 hover:text-main-700"
+            >
+              Редактировать
+            </button>
+          )}
+        </div>
+        {isEditingWorkTime ? (
+          <div className="space-y-3">
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <label htmlFor="workDayStartTime" className="block text-sm text-gray-700 mb-1">
+                  Начало рабочего дня
+                </label>
+                <input
+                  type="time"
+                  id="workDayStartTime"
+                  value={workDayStartTime}
+                  onChange={(e) => setWorkDayStartTime(e.target.value)}
+                  className="w-full px-3 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-main-600"
+                />
+              </div>
+              <div>
+                <label htmlFor="workDayEndTime" className="block text-sm text-gray-700 mb-1">
+                  Конец рабочего дня
+                </label>
+                <input
+                  type="time"
+                  id="workDayEndTime"
+                  value={workDayEndTime}
+                  onChange={(e) => setWorkDayEndTime(e.target.value)}
+                  className="w-full px-3 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-main-600"
+                />
+              </div>
+            </div>
+            <div className="flex gap-2">
+              <button
+                type="button"
+                onClick={handleSaveWorkTime}
+                className="px-4 py-2 bg-main-600 text-white rounded hover:bg-main-700"
+              >
+                Сохранить
+              </button>
+              <button
+                type="button"
+                onClick={() => {
+                  setIsEditingWorkTime(false)
+                  setWorkDayStartTime(position.workDayStartTime || '')
+                  setWorkDayEndTime(position.workDayEndTime || '')
+                }}
+                className="px-4 py-2 bg-gray-300 text-gray-700 rounded hover:bg-gray-400"
+              >
+                Отмена
+              </button>
+            </div>
+          </div>
+        ) : (
+          <div className="text-sm text-gray-600">
+            {workDayStartTime || workDayEndTime ? (
+              <div>
+                {workDayStartTime && <span>Начало: {workDayStartTime}</span>}
+                {workDayStartTime && workDayEndTime && <span className="mx-2">•</span>}
+                {workDayEndTime && <span>Конец: {workDayEndTime}</span>}
+              </div>
+            ) : (
+              <span className="text-gray-400">Время работы не установлено</span>
+            )}
+          </div>
+        )}
+      </div>
 
       {/* Список обязанностей */}
       <div className="mb-4">

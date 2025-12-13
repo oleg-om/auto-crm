@@ -82,7 +82,7 @@ export function createPosition(name) {
 
 export function updatePosition(id, data) {
   return (dispatch) => {
-    fetch(`/api/v1/position/${id}`, {
+    return fetch(`/api/v1/position/${id}`, {
       method: 'PATCH',
       headers: {
         'Content-Type': 'application/json'
@@ -92,6 +92,7 @@ export function updatePosition(id, data) {
       .then((r) => r.json())
       .then(({ data: position }) => {
         dispatch({ type: UPDATE_POSITION, position })
+        return { data: position }
       })
   }
 }

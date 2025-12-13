@@ -41,6 +41,16 @@ const Position = new mongoose.Schema({
     required: false,
     default: []
   },
+  workDayStartTime: {
+    type: String,
+    required: false,
+    default: null
+  },
+  workDayEndTime: {
+    type: String,
+    required: false,
+    default: null
+  },
   date: {
     type: String,
     default: () =>

@@ -84,6 +84,25 @@ const BossJournal = () => {
     return timeValue
   }
 
+  // Функция для преобразования времени в минуты (HH:MM -> минуты от начала дня)
+  const timeStringToMinutes = (timeStr) => {
+    if (!timeStr) return null
+    const [hours, minutes] = timeStr.split(':').map(Number)
+    if (Number.isNaN(hours) || Number.isNaN(minutes)) return null
+    return hours * 60 + minutes
+  }
+
+  // Функция для проверки, превышает ли фактическое время норму
+  const checkWorkTimeViolation = (actualTime, normTime, isStart) => {
+    if (!actualTime || !normTime) return false
+    const actualMinutes = timeStringToMinutes(extractTime(actualTime))
+    const normMinutes = timeStringToMinutes(normTime)
+    if (actualMinutes === null || normMinutes === null) return false
+    // Для начала: фактическое > нормы (начал позже)
+    // Для конца: фактическое < нормы (закончил раньше)
+    return isStart ? actualMinutes > normMinutes : actualMinutes < normMinutes
+  }
+
   // Группируем записи по обязанностям
   const groupedEntries = entries.reduce((acc, entry) => {
     const { dutyId } = entry
@@ -215,22 +234,52 @@ const BossJournal = () => {
                           Количество/Статус
                         </th>
                         <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                          Норма/Факт
+                        </th>
+                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                           Комментарий
                         </th>
                       </tr>
                     </thead>
                     <tbody className="bg-white divide-y divide-gray-200">
                       {workDayData && workDayData.startTime && (
-                        <tr className="bg-blue-50 font-semibold">
+                        <tr
+                          className={`font-semibold ${
+                            selectedPosition?.workDayStartTime &&
+                            checkWorkTimeViolation(
+                              workDayData.startTime,
+                              selectedPosition.workDayStartTime,
+                              true
+                            )
+                              ? 'bg-red-50'
+                              : 'bg-blue-50'
+                          }`}
+                        >
                           <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                             Начало рабочего дня
+                            {selectedPosition?.workDayStartTime && (
+                              <div className="text-xs font-normal text-gray-500 mt-1">
+                                Норма: {selectedPosition.workDayStartTime}
+                              </div>
+                            )}
                           </td>
-                          <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                          <td
+                            className={`px-6 py-4 whitespace-nowrap text-sm ${
+                              selectedPosition?.workDayStartTime &&
+                              checkWorkTimeViolation(
+                                workDayData.startTime,
+                                selectedPosition.workDayStartTime,
+                                true
+                              )
+                                ? 'text-red-600 font-bold'
+                                : 'text-gray-900'
+                            }`}
+                          >
                             {extractTime(workDayData.startTime)}
                           </td>
                           <td
                             className="px-6 py-4 whitespace-nowrap text-sm text-gray-500"
-                            colSpan="3"
+                            colSpan="4"
                           >
                             -
                           </td>
@@ -271,6 +320,81 @@ const BossJournal = () => {
                                 </span>
                               )}
                             </td>
+                            <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                              {(() => {
+                                // Вычисляем фактическое время выполнения
+                                let actualTimeMinutes = null
+                                if (entry.startTime && entry.endTime) {
+                                  const startDate =
+                                    typeof entry.startTime === 'string'
+                                      ? new Date(entry.startTime)
+                                      : entry.startTime
+                                  const endDate =
+                                    typeof entry.endTime === 'string'
+                                      ? new Date(entry.endTime)
+                                      : entry.endTime
+
+                                  if (
+                                    startDate instanceof Date &&
+                                    !Number.isNaN(startDate.getTime()) &&
+                                    endDate instanceof Date &&
+                                    !Number.isNaN(endDate.getTime())
+                                  ) {
+                                    actualTimeMinutes =
+                                      (endDate.getTime() - startDate.getTime()) / (1000 * 60)
+                                  }
+                                }
+
+                                // Для количественных обязанностей делим время на количество
+                                let timePerUnit = actualTimeMinutes
+                                if (
+                                  duty?.isQuantitative &&
+                                  actualTimeMinutes !== null &&
+                                  entry.value
+                                ) {
+                                  const quantity = Number(entry.value) || 1
+                                  if (quantity > 0) {
+                                    timePerUnit = actualTimeMinutes / quantity
+                                  }
+                                }
+
+                                // Формируем текст
+                                if (!duty?.completionTimeMinutes && !actualTimeMinutes) {
+                                  return '-'
+                                }
+
+                                const normText = duty?.completionTimeMinutes
+                                  ? `${duty.completionTimeMinutes} мин`
+                                  : '-'
+                                const factText =
+                                  timePerUnit !== null ? `${Math.round(timePerUnit)} мин` : '-'
+
+                                const exceedsNorm =
+                                  duty?.completionTimeMinutes &&
+                                  timePerUnit !== null &&
+                                  timePerUnit > duty.completionTimeMinutes
+
+                                return (
+                                  <span>
+                                    {normText !== '-' && (
+                                      <span
+                                        className={exceedsNorm ? 'text-red-600 font-semibold' : ''}
+                                      >
+                                        {normText}
+                                      </span>
+                                    )}
+                                    {normText !== '-' && factText !== '-' && ' / '}
+                                    {factText !== '-' && (
+                                      <span
+                                        className={exceedsNorm ? 'text-red-600 font-semibold' : ''}
+                                      >
+                                        {factText}
+                                      </span>
+                                    )}
+                                  </span>
+                                )
+                              })()}
+                            </td>
                             <td className="px-6 py-4 text-sm text-gray-500">
                               {entry.comment || '-'}
                             </td>
@@ -278,17 +402,44 @@ const BossJournal = () => {
                         ))
                       )}
                       {workDayData && workDayData.endTime && (
-                        <tr className="bg-blue-50 font-semibold">
+                        <tr
+                          className={`font-semibold ${
+                            selectedPosition?.workDayEndTime &&
+                            checkWorkTimeViolation(
+                              workDayData.endTime,
+                              selectedPosition.workDayEndTime,
+                              false
+                            )
+                              ? 'bg-red-50'
+                              : 'bg-blue-50'
+                          }`}
+                        >
                           <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                             Завершение рабочего дня
+                            {selectedPosition?.workDayEndTime && (
+                              <div className="text-xs font-normal text-gray-500 mt-1">
+                                Норма: {selectedPosition.workDayEndTime}
+                              </div>
+                            )}
                           </td>
                           <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">-</td>
-                          <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                          <td
+                            className={`px-6 py-4 whitespace-nowrap text-sm ${
+                              selectedPosition?.workDayEndTime &&
+                              checkWorkTimeViolation(
+                                workDayData.endTime,
+                                selectedPosition.workDayEndTime,
+                                false
+                              )
+                                ? 'text-red-600 font-bold'
+                                : 'text-gray-900'
+                            }`}
+                          >
                             {extractTime(workDayData.endTime)}
                           </td>
                           <td
                             className="px-6 py-4 whitespace-nowrap text-sm text-gray-500"
-                            colSpan="2"
+                            colSpan="3"
                           >
                             -
                           </td>
@@ -304,6 +455,7 @@ const BossJournal = () => {
               entries={entries}
               entriesWithDutyInfo={entriesWithDutyInfo}
               workDayData={workDayData}
+              selectedPosition={selectedPosition}
             />
           )
         ) : (
@@ -316,7 +468,7 @@ const BossJournal = () => {
   )
 }
 
-const DutyTimelineChart = ({ entries, entriesWithDutyInfo, workDayData }) => {
+const DutyTimelineChart = ({ entries, entriesWithDutyInfo, workDayData, selectedPosition }) => {
   const [tooltip, setTooltip] = useState({ entryId: null, text: '', x: 0, y: 0 })
 
   // Функция для извлечения времени из Date или строки
@@ -336,6 +488,25 @@ const DutyTimelineChart = ({ entries, entriesWithDutyInfo, workDayData }) => {
       return parts.length > 1 ? parts[parts.length - 1] : timeValue
     }
     return timeValue
+  }
+
+  // Функция для преобразования времени в минуты (HH:MM -> минуты от начала дня)
+  const timeStringToMinutes = (timeStr) => {
+    if (!timeStr) return null
+    const [hours, minutes] = timeStr.split(':').map(Number)
+    if (Number.isNaN(hours) || Number.isNaN(minutes)) return null
+    return hours * 60 + minutes
+  }
+
+  // Функция для проверки, превышает ли фактическое время норму
+  const checkWorkTimeViolation = (actualTime, normTime, isStart) => {
+    if (!actualTime || !normTime) return false
+    const actualMinutes = timeStringToMinutes(extractTime(actualTime))
+    const normMinutes = timeStringToMinutes(normTime)
+    if (actualMinutes === null || normMinutes === null) return false
+    // Для начала: фактическое > нормы (начал позже)
+    // Для конца: фактическое < нормы (закончил раньше)
+    return isStart ? actualMinutes > normMinutes : actualMinutes < normMinutes
   }
 
   // Определяем диапазон времени для шкалы
@@ -445,9 +616,45 @@ const DutyTimelineChart = ({ entries, entriesWithDutyInfo, workDayData }) => {
             {workDayData && workDayData.startTime && (
               <div className="mb-6">
                 <div className="text-sm font-semibold text-gray-700 mb-2">Рабочий день</div>
-                <div className="relative h-12 bg-gray-50 rounded border-2 border-blue-500">
+                <div
+                  className={`relative h-12 bg-gray-50 rounded border-2 ${
+                    (selectedPosition?.workDayStartTime &&
+                      checkWorkTimeViolation(
+                        workDayData.startTime,
+                        selectedPosition.workDayStartTime,
+                        true
+                      )) ||
+                    (selectedPosition?.workDayEndTime &&
+                      workDayData.endTime &&
+                      checkWorkTimeViolation(
+                        workDayData.endTime,
+                        selectedPosition.workDayEndTime,
+                        false
+                      ))
+                      ? 'border-red-500'
+                      : 'border-blue-500'
+                  }`}
+                >
                   <div className="absolute inset-0 flex items-center px-4">
-                    <span className="text-sm font-medium text-blue-700">
+                    <span
+                      className={`text-sm font-medium ${
+                        (selectedPosition?.workDayStartTime &&
+                          checkWorkTimeViolation(
+                            workDayData.startTime,
+                            selectedPosition.workDayStartTime,
+                            true
+                          )) ||
+                        (selectedPosition?.workDayEndTime &&
+                          workDayData.endTime &&
+                          checkWorkTimeViolation(
+                            workDayData.endTime,
+                            selectedPosition.workDayEndTime,
+                            false
+                          ))
+                          ? 'text-red-700'
+                          : 'text-blue-700'
+                      }`}
+                    >
                       {workDayData.startTime && extractTime(workDayData.startTime)}
                       {workDayData.endTime && ` - ${extractTime(workDayData.endTime)}`}
                     </span>
@@ -486,20 +693,65 @@ const DutyTimelineChart = ({ entries, entriesWithDutyInfo, workDayData }) => {
 
                       const startTimeStr = extractTime(entry.startTime)
                       const endTimeStr = extractTime(entry.endTime)
-                      const tooltipText = endTimeStr !== '-'
+
+                      // Вычисляем фактическое время выполнения в минутах
+                      let actualTimeMinutes = null
+                      if (entry.startTime && entry.endTime) {
+                        const startDate =
+                          typeof entry.startTime === 'string'
+                            ? new Date(entry.startTime)
+                            : entry.startTime
+                        const endDate =
+                          typeof entry.endTime === 'string'
+                            ? new Date(entry.endTime)
+                            : entry.endTime
+
+                        if (
+                          startDate instanceof Date &&
+                          !Number.isNaN(startDate.getTime()) &&
+                          endDate instanceof Date &&
+                          !Number.isNaN(endDate.getTime())
+                        ) {
+                          // Вычисляем разницу в миллисекундах и переводим в минуты
+                          actualTimeMinutes = (endDate.getTime() - startDate.getTime()) / (1000 * 60)
+                        }
+                      }
+
+                      // Для количественных обязанностей делим время на количество
+                      let timePerUnit = actualTimeMinutes
+                      if (duty?.isQuantitative && actualTimeMinutes !== null && entry.value) {
+                        const quantity = Number(entry.value) || 1
+                        if (quantity > 0) {
+                          timePerUnit = actualTimeMinutes / quantity
+                        }
+                      }
+
+                      // Проверяем, превышает ли время норму выполнения
+                      const exceedsNorm =
+                        duty?.completionTimeMinutes &&
+                        timePerUnit !== null &&
+                        timePerUnit > duty.completionTimeMinutes
+
+                      // Формируем текст тултипа
+                      let tooltipText = endTimeStr !== '-'
                         ? `${startTimeStr} - ${endTimeStr}`
                         : `Начало: ${startTimeStr}`
+                      if (duty?.isQuantitative && entry.value) {
+                        tooltipText += ` (Кол-во: ${entry.value})`
+                      }
 
                       const isTooltipVisible = tooltip.entryId === entry.id
+
+                      // Определяем цвет блока
+                      let bgColor = 'bg-blue-500'
+                      if (endMinutes !== null) {
+                        bgColor = exceedsNorm ? 'bg-red-500' : 'bg-green-500'
+                      }
 
                       return (
                         <div
                           key={entry.id}
-                          className={`absolute top-0 bottom-0 rounded flex items-center px-2 cursor-pointer ${
-                            endMinutes !== null
-                              ? 'bg-green-500 text-white'
-                              : 'bg-blue-500 text-white'
-                          }`}
+                          className={`absolute top-0 bottom-0 rounded flex items-center px-2 cursor-pointer ${bgColor} text-white`}
                           style={{
                             left: `${leftPercent}%`,
                             width: `${Math.max(widthPercent, 2)}%`,
