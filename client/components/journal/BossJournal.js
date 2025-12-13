@@ -345,34 +345,34 @@ const BossJournal = () => {
                                   }
                                 }
 
-                                // Для количественных обязанностей делим время на количество
-                                let timePerUnit = actualTimeMinutes
-                                if (
-                                  duty?.isQuantitative &&
-                                  actualTimeMinutes !== null &&
-                                  entry.value
-                                ) {
+                                // Для количественных обязанностей используем полное время
+                                const totalTime = actualTimeMinutes
+                                let totalNorm = duty?.completionTimeMinutes
+
+                                if (duty?.isQuantitative && entry.value) {
                                   const quantity = Number(entry.value) || 1
-                                  if (quantity > 0) {
-                                    timePerUnit = actualTimeMinutes / quantity
+                                  // Для нормы: норма на единицу * количество
+                                  if (totalNorm !== null && totalNorm !== undefined) {
+                                    totalNorm *= quantity
                                   }
+                                  // Для факта: полное время (не делим на количество)
                                 }
 
                                 // Формируем текст
-                                if (!duty?.completionTimeMinutes && !actualTimeMinutes) {
+                                if (!totalNorm && !totalTime) {
                                   return '-'
                                 }
 
-                                const normText = duty?.completionTimeMinutes
-                                  ? `${duty.completionTimeMinutes} мин`
+                                const normText = totalNorm
+                                  ? `${Math.round(totalNorm)} мин`
                                   : '-'
-                                const factText =
-                                  timePerUnit !== null ? `${Math.round(timePerUnit)} мин` : '-'
+                                const factText = totalTime !== null ? `${Math.round(totalTime)} мин` : '-'
 
                                 const exceedsNorm =
-                                  duty?.completionTimeMinutes &&
-                                  timePerUnit !== null &&
-                                  timePerUnit > duty.completionTimeMinutes
+                                  totalNorm !== null &&
+                                  totalNorm !== undefined &&
+                                  totalTime !== null &&
+                                  totalTime > totalNorm
 
                                 return (
                                   <span>
