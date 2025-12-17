@@ -92,6 +92,13 @@ const Sidebar = () => {
           >
             Категории
           </NavLink>
+          <NavLink
+            to="/electronic-journal"
+            className="text-gray-100 w-full p-3 pl-5"
+            activeClassName="bg-gray-700 text-gray-100 border-r-4 border-gray-100 w-full p-3 pl-5"
+          >
+            Электронный журнал
+          </NavLink>
         </>
       )}
     </nav>

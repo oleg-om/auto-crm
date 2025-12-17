@@ -2,6 +2,7 @@ import React from 'react'
 import { useSelector } from 'react-redux'
 import { Link } from 'react-router-dom'
 import { toast } from 'react-toastify'
+import { FaClipboardList } from 'react-icons/fa'
 import Navbar from '../components/Navbar'
 import 'react-toastify/dist/ReactToastify.css'
 import autoparts from '../assets/images/Dashboard/autoparts.png'
@@ -415,6 +416,7 @@ const Dashboard = () => {
                   </Link>
                 </div>
               ) : null}
+              <DashBoardJournal auth={auth} />
             </div>
           ) : (
             <div className="-mx-3 md:flex flex-wrap mb-6">
@@ -453,6 +455,41 @@ const DashBoardAdmin = ({ auth }) => {
               </div>
               <div className="w-1/2">
                 <img src={admin} alt="" className="object-contain h-48 w-full" />
+              </div>
+            </div>
+          </Link>
+        </div>
+      ) : null}
+    </>
+  )
+}
+
+const DashBoardJournal = ({ auth }) => {
+  return (
+    <>
+      {auth.roles.includes('journal') ? (
+        <div className="md:w-1/2 px-3 mb-6 flex flex-col">
+          <Link
+            to="/employee-journal"
+            className="rounded-lg shadow-lg bg-gradient-to-r from-purple-500 to-purple-300 h-full"
+          >
+            <div className="m-2 p-2 flex flex-row">
+              <div className="w-1/2 px-3">
+                <h2 className="text-3xl text-white font-bold">Электронный журнал</h2>
+                <p className="my-2 text-white">
+                  Заполнение обязанностей в течение рабочего дня
+                </p>
+                <button
+                  type="button"
+                  className="bottom-0 py-2 px-4 bg-main-600 text-white hover:bg-main-700 hover:text-white rounded-lg lg:my-3 my-0"
+                >
+                  Перейти
+                </button>
+              </div>
+              <div className="w-1/2">
+                <div className="object-contain h-48 w-full flex items-center justify-center text-white">
+                  <FaClipboardList size={120} />
+                </div>
               </div>
             </div>
           </Link>

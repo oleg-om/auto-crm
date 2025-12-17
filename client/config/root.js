@@ -35,6 +35,7 @@ import CustomerEdit from '../scenes/Customers/Customers.edit'
 import Access from '../scenes/Access'
 import Dashboard from '../scenes/Dashboard'
 import Boss from '../scenes/Boss/Boss'
+import BossJournal from '../components/journal/BossJournal'
 import RazvalList from '../scenes/Razval/Razval.list'
 import SettingEdit from '../scenes/Settings/Settings'
 import MaterialList from '../scenes/Materials/Materials.list'
@@ -98,6 +99,8 @@ import WindowsList from '../scenes/Window/Windows.list'
 import WindowsNew from '../scenes/Window/Windows.work.create'
 import WindowEditFull from '../scenes/Window/Windows.edit'
 import OilList from '../scenes/Razval/Oil.list'
+import ElectronicJournal from '../components/positions/ElectronicJournal'
+import EmployeeJournal from '../components/journal/EmployeeJournal'
 
 const OnlyAnonymousRoute = ({ component: Component, ...rest }) => {
   const auth = useSelector((s) => s.auth)
@@ -214,6 +217,9 @@ const RootComponent = (props) => {
             <AdminRoute exact path="/place/list" component={PlaceList} />
             <PrivateRoute exact path="/place/create" component={PlaceNew} />
             <PrivateRoute exact path="/place/edit/:id" component={PlaceEdit} />
+            <AdminRoute exact path="/electronic-journal" component={ElectronicJournal} />
+            <PrivateRoute exact path="/employee-journal" component={EmployeeJournal} />
+            <BossRoute exact path="/boss-journal" component={BossJournal} />
             <AdminRoute exact path="/employee/list" component={EmployeeList} />
             <PrivateRoute exact path="/employee/create" component={EmployeeNew} />
             <PrivateRoute exact path="/employee/edit/:id" component={EmployeeEdit} />

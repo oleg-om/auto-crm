@@ -58,6 +58,10 @@ const Employee = new mongoose.Schema({
     type: Number,
     required: false
   },
+  positionId: {
+    type: String,
+    required: false
+  },
   date: {
     type: String,
     default: () =>
