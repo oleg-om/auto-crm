@@ -1,4 +1,4 @@
-import { useEffect } from 'react'
+import { useEffect, useRef, useCallback } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { socket } from '../../redux/sockets/socketReceivers'
 import { getByMonth, setPreentryLoading } from '../../redux/reducers/shinomontazhs'
@@ -21,6 +21,14 @@ const OnLoad = (dt, preentryType) => {
   const isShinomontazh = preentryType === 'shinomontazh'
   const isSto = preentryType === 'sto'
   const isOil = preentryType === 'oil'
+
+  // Используем useRef для хранения актуальной даты
+  const currentDateRef = useRef(dt)
+
+  // Обновляем ref при изменении даты
+  useEffect(() => {
+    currentDateRef.current = dt
+  }, [dt])
 
   const preentryDate = () => {
     if (isShinomontazh) {
@@ -45,47 +53,63 @@ const OnLoad = (dt, preentryType) => {
         localStorage.setItem(LOCAL_STORAGE_STO_KEY, `${year}-${month}-${day}`)
       }
     }
-  }, [dispatch, dt, preentryType])
+  }, [dispatch, dt, preentryType, year, month, day, isShinomontazh, isSto, isOil])
 
-  const updateShinomontazhWithSocket = () => {
-    const localDate = localStorage.getItem(LOCAL_STORAGE_SHINOMONTAZH_KEY)?.split('-')
-    const localDateYear = localDate[0]
-    const localDateMonth = localDate[1]
-    const localDateDay = localDate[2]
+  const updateShinomontazhWithSocket = useCallback(() => {
+    // Используем текущую выбранную дату вместо localStorage
+    const currentDt = currentDateRef.current
+    const currentYear = currentDt.getFullYear()
+    const currentMonth = `0${currentDt.getMonth() + 1}`.slice(-2)
+    const currentDay = currentDt.getDate()
 
-    if (localDateYear) {
-      dispatch(getByMonth(localDateYear, localDateMonth, localDateDay))
-    }
-  }
+    dispatch(getByMonth(currentYear, currentMonth, currentDay))
+  }, [dispatch])
 
-  const updateStoWithSocket = () => {
-    const localDate = localStorage.getItem(LOCAL_STORAGE_STO_KEY)?.split('-')
-    const localDateYear = localDate[0]
-    const localDateMonth = localDate[1]
-    const localDateDay = localDate[2]
+  const updateStoWithSocket = useCallback(() => {
+    // Используем текущую выбранную дату вместо localStorage
+    const currentDt = currentDateRef.current
+    const currentYear = currentDt.getFullYear()
+    const currentMonth = `0${currentDt.getMonth() + 1}`.slice(-2)
+    const currentDay = currentDt.getDate()
 
-    if (localDateYear) {
-      dispatch(getStoByMonth(localDateYear, localDateMonth, localDateDay, isOil))
-    }
-  }
+    dispatch(getStoByMonth(currentYear, currentMonth, currentDay, isOil))
+  }, [dispatch, isOil])
 
   useEffect(() => {
     if (isShinomontazh) {
-      socket.on('update shinomontazh', () => updateShinomontazhWithSocket())
+      socket.on('update shinomontazh', updateShinomontazhWithSocket)
     }
     if (isSto || isOil) {
-      socket.on('update sto', () => updateStoWithSocket())
+      socket.on('update sto', updateStoWithSocket)
     }
-  }, [])
+
+    return () => {
+      if (isShinomontazh) {
+        socket.off('update shinomontazh', updateShinomontazhWithSocket)
+      }
+      if (isSto || isOil) {
+        socket.off('update sto', updateStoWithSocket)
+      }
+    }
+  }, [isShinomontazh, isSto, isOil, updateShinomontazhWithSocket, updateStoWithSocket])
 
   useEffect(() => {
     if (isShinomontazh) {
-      socket.on('update edited shinomontazh', () => updateShinomontazhWithSocket())
+      socket.on('update edited shinomontazh', updateShinomontazhWithSocket)
     }
     if (isSto || isOil) {
-      socket.on('update edited sto', () => updateStoWithSocket())
+      socket.on('update edited sto', updateStoWithSocket)
     }
-  }, [])
+
+    return () => {
+      if (isShinomontazh) {
+        socket.off('update edited shinomontazh', updateShinomontazhWithSocket)
+      }
+      if (isSto || isOil) {
+        socket.off('update edited sto', updateStoWithSocket)
+      }
+    }
+  }, [isShinomontazh, isSto, isOil, updateShinomontazhWithSocket, updateStoWithSocket])
 }
 
 export default OnLoad
