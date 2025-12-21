@@ -64,10 +64,7 @@ const TyresAnalysisModal = ({ open, onClose }) => {
   }
 
   const formatTyreSize = (item) => {
-    const size = formatSize(item)
-    const spike = formatSpike(item.stud)
-    const season = formatSeason(item.season)
-    return `${size} ${spike} ${season}`.trim()
+    return formatSize(item)
   }
 
   if (!open) return null
@@ -202,6 +199,8 @@ const TyresAnalysisModal = ({ open, onClose }) => {
                       <thead>
                         <tr className="bg-gray-100">
                           <th className="border border-gray-300 px-4 py-2 text-left">Типоразмер</th>
+                          <th className="border border-gray-300 px-4 py-2 text-left">Шип/не шип</th>
+                          <th className="border border-gray-300 px-4 py-2 text-left">Сезон</th>
                           <th className="border border-gray-300 px-4 py-2 text-left">Количество заказов</th>
                         </tr>
                       </thead>
@@ -210,6 +209,12 @@ const TyresAnalysisModal = ({ open, onClose }) => {
                           <tr key={index} className="hover:bg-gray-50">
                             <td className="border border-gray-300 px-4 py-2">
                               {formatTyreSize(item)}
+                            </td>
+                            <td className="border border-gray-300 px-4 py-2">
+                              {formatSpike(item.stud)}
+                            </td>
+                            <td className="border border-gray-300 px-4 py-2">
+                              {formatSeason(item.season)}
                             </td>
                             <td className="border border-gray-300 px-4 py-2 text-center">
                               {item.count}
