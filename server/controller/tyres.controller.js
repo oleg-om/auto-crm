@@ -49,7 +49,7 @@ exports.delete = async (req, res) => {
 }
 
 exports.getFiltered = async (req, res) => {
-  const { page, number, place, status, vin, phone, sizeone, sizetwo, sizethree } = req.query
+  const { page, number, place, status, vin, phone, sizeone, sizetwo, sizethree, season } = req.query
 
   try {
     const LIMIT = 14
@@ -86,6 +86,30 @@ exports.getFiltered = async (req, res) => {
       return {}
     }
 
+    const findTyresBySeason = () => {
+      if (season) {
+        return {
+          $or: [
+            {
+              order: {
+                $elemMatch: {
+                  season: season.toString()
+                }
+              }
+            },
+            {
+              preorder: {
+                $elemMatch: {
+                  season: season.toString()
+                }
+              }
+            }
+          ]
+        }
+      }
+      return {}
+    }
+
     const idFind = req.query.number ? { id_tyres: `${number.toString()}` } : {}
     const placeFind = req.query.place ? { place: `${place.toString()}` } : {}
     const statusFind = req.query.status
@@ -96,14 +120,17 @@ exports.getFiltered = async (req, res) => {
       ? { phone: { $regex: `${phone.toString()}`, $options: 'i' } }
       : {}
 
+    const sizeFilter = findTyresBySize()
+    const seasonFilter = findTyresBySeason()
+
     const total = await Tyre.countDocuments({
       ...idFind,
       ...placeFind,
       ...statusFind,
       ...vinFind,
       ...phoneFind,
-      // ...findTyresBySize('order'),
-      ...findTyresBySize('preorder')
+      ...sizeFilter,
+      ...seasonFilter
     })
 
     const posts = await Tyre.find({
@@ -112,8 +139,8 @@ exports.getFiltered = async (req, res) => {
       ...statusFind,
       ...vinFind,
       ...phoneFind,
-      // ...findTyresBySize('order'),
-      ...findTyresBySize('preorder')
+      ...sizeFilter,
+      ...seasonFilter
     })
       .sort({ id_tyres: -1 })
       .limit(LIMIT)
@@ -158,4 +185,96 @@ exports.getMonth = async (req, res) => {
   })
 
   return res.json({ status: 'ok', data: list })
+}
+
+exports.getAnalysis = async (req, res) => {
+  try {
+    const { year, sizeFilter, season } = req.query
+
+    // Фильтр по году
+    const yearStart = new Date(`${year}-01-01`)
+    const yearEnd = new Date(`${year}-12-31T23:59:59`)
+
+    // Получаем все заказы за указанный год
+    const tyres = await Tyre.find({
+      date: {
+        $gte: yearStart,
+        $lte: yearEnd
+      }
+    })
+
+    // Собираем все шины из order и preorder
+    const allTyres = []
+    tyres.forEach((tyre) => {
+      if (tyre.order && Array.isArray(tyre.order)) {
+        tyre.order.forEach((item) => {
+          if (item.type === '1' && item.mode === 'full') {
+            allTyres.push(item)
+          }
+        })
+      }
+      if (tyre.preorder && Array.isArray(tyre.preorder)) {
+        tyre.preorder.forEach((item) => {
+          if (item.type === '1' && item.mode === 'full') {
+            allTyres.push(item)
+          }
+        })
+      }
+    })
+
+    // Фильтруем по размеру (диаметру), если указан
+    let filteredTyres = allTyres
+    if (sizeFilter) {
+      filteredTyres = filteredTyres.filter((item) => {
+        const itemSize = item.sizethree ? String(item.sizethree).trim() : ''
+        return itemSize === sizeFilter.toString()
+      })
+    }
+
+    // Фильтруем по сезону, если указан
+    if (season) {
+      filteredTyres = filteredTyres.filter((item) => item.season === season)
+    }
+
+    // Группируем по типоразмеру, сезону и шипам
+    const grouped = {}
+    filteredTyres.forEach((item) => {
+      // Нормализуем значения
+      const sizeone = item.sizeone ? String(item.sizeone).trim() : ''
+      const sizetwo = item.sizetwo ? String(item.sizetwo).trim() : ''
+      const sizethree = item.sizethree ? String(item.sizethree).trim() : ''
+      const itemSeason = item.season ? String(item.season).trim() : ''
+      const stud = item.stud ? String(item.stud) : '0'
+
+      // Пропускаем записи без размера
+      if (!sizeone && !sizetwo && !sizethree) {
+        return
+      }
+
+      const key = `${sizeone}_${sizetwo}_${sizethree}_${itemSeason}_${stud}`
+      if (!grouped[key]) {
+        grouped[key] = {
+          sizeone,
+          sizetwo,
+          sizethree,
+          season: itemSeason,
+          stud,
+          count: 0
+        }
+      }
+      grouped[key].count += 1
+    })
+
+    // Преобразуем в массив и сортируем по количеству
+    const result = Object.values(grouped)
+      .sort((a, b) => b.count - a.count)
+      .slice(0, 40)
+
+    res.json({
+      status: 'ok',
+      data: result
+    })
+  } catch (error) {
+    res.status(500).json({ message: error.message })
+  }
 }

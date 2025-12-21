@@ -10,6 +10,7 @@ import PhoneFilter from './filters/PhoneFilter'
 import TyresSizeFilter from './filters/TyresSizeFilter'
 import ProcessFilter from './filters/ProcessFilter'
 import StatusFilter from './filters/StatusFilter'
+import SeasonFilter from './filters/SeasonFilter'
 import useSaveFilter from '../../hooks/saveFilterParams'
 import EmployeeFilter from './filters/EmployeeFilter'
 
@@ -24,7 +25,8 @@ export const defaultSearchState = {
   sizeone: '',
   sizetwo: '',
   sizethree: '',
-  employee: ''
+  employee: '',
+  season: ''
 }
 
 function useFilter(num, loadItems) {
@@ -160,6 +162,7 @@ export const ServiceFilter = ({
   const isProcess = filters.includes('process')
   const isTyresSize = filters.includes('tyresSize')
   const isEmployee = filters.includes('employee')
+  const isSeason = filters.includes('season')
 
   return (
     <>
@@ -198,6 +201,14 @@ export const ServiceFilter = ({
                 search={search}
                 showSearch={showSearch}
                 onEnterPress={onEnterPress}
+                activeFilter={activeFilter}
+                onChange={onChange}
+              />
+            )}
+            {isSeason && (
+              <SeasonFilter
+                search={search}
+                showSearch={showSearch}
                 activeFilter={activeFilter}
                 onChange={onChange}
               />
