@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import { Link, useParams } from 'react-router-dom'
 import { toast } from 'react-toastify'
@@ -11,6 +11,7 @@ import Pagination from '../Pagination'
 import onLoad from './Onload'
 import useFilter, { ServiceFilter } from '../../components/shared/filter'
 import useSaveFilter from '../../hooks/saveFilterParams'
+import TyresAnalysisModal from '../../components/tyres/TyresAnalysisModal'
 
 const TyresList = () => {
   const { num } = useParams(1)
@@ -29,6 +30,7 @@ const TyresList = () => {
   const placesList = useSelector((s) => s.places.list)
   const employeeList = useSelector((s) => s.employees.list)
   const role = useSelector((s) => s.auth.roles)
+  const [showAnalysisModal, setShowAnalysisModal] = useState(false)
   socket.connect()
   // useEffect(() => {
   //   socket.on('update tyre', function () {
@@ -82,13 +84,30 @@ const TyresList = () => {
       <Navbar />
       <div>
         <ServiceFilter
-          filters={['number', 'phone', 'tyresSize', 'status', 'place']}
+          filters={['number', 'phone', 'tyresSize', 'season', 'status', 'place']}
           search={search}
           setSearch={setSearch}
           showSearch={showSearch}
           setShowSearch={setShowSearch}
           path="tyres/order"
           applyFilter={applyFilter}
+        />
+        {role.includes('boss') && (
+          <div className="mx-auto px-4">
+            <div className="py-3 px-4 my-3 rounded-lg shadow bg-white">
+              <button
+                type="button"
+                className="text-sm py-1 px-4 bg-green-600 text-white hover:bg-green-700 rounded-lg"
+                onClick={() => setShowAnalysisModal(true)}
+              >
+                Анализ продажи шин
+              </button>
+            </div>
+          </div>
+        )}
+        <TyresAnalysisModal
+          open={showAnalysisModal}
+          onClose={() => setShowAnalysisModal(false)}
         />
         <div className="mx-auto px-4">
           <table className="border-collapse w-full rounded-lg shadow">
