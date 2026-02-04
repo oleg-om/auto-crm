@@ -778,11 +778,23 @@ const DutyTimelineChart = ({ entries, entriesWithDutyInfo, workDayData, selected
                         timePerUnit > duty.completionTimeMinutes
 
                       // Формируем текст тултипа
-                      let tooltipText = endTimeStr !== '-'
-                        ? `${startTimeStr} - ${endTimeStr}`
-                        : `Начало: ${startTimeStr}`
+                      let tooltipText =
+                        endTimeStr !== '-' ? `${startTimeStr} - ${endTimeStr}` : `Начало: ${startTimeStr}`
+
+                      // Добавляем время выполнения
+                      if (actualTimeMinutes !== null && endTimeStr !== '-') {
+                        const durationHours = Math.floor(actualTimeMinutes / 60)
+                        const durationMinutes = Math.round(actualTimeMinutes % 60)
+                        if (durationHours > 0) {
+                          tooltipText += ` (${durationHours}ч ${durationMinutes}м)`
+                        } else {
+                          tooltipText += ` (${durationMinutes}м)`
+                        }
+                      }
+
+                      // Добавляем количество для количественных обязанностей
                       if (duty?.isQuantitative && entry.value) {
-                        tooltipText += ` (Кол-во: ${entry.value})`
+                        tooltipText += ` | Кол-во: ${entry.value}`
                       }
 
                       const isTooltipVisible = tooltip.entryId === entry.id
