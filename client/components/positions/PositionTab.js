@@ -14,6 +14,7 @@ const PositionTab = ({ position }) => {
   const dispatch = useDispatch()
   const [newDutyName, setNewDutyName] = useState('')
   const [newDutyIsQuantitative, setNewDutyIsQuantitative] = useState(false)
+  const [newDutyHasChecklist, setNewDutyHasChecklist] = useState(false)
   const [newDutyCompletionTimeMinutes, setNewDutyCompletionTimeMinutes] = useState('')
   const [showAddForm, setShowAddForm] = useState(false)
   const [editingDutyId, setEditingDutyId] = useState(null)
@@ -53,11 +54,14 @@ const PositionTab = ({ position }) => {
       addDuty(position.id, {
         name: newDutyName.trim(),
         isQuantitative: newDutyIsQuantitative,
+        hasChecklist: newDutyHasChecklist,
+        checklistItems: [],
         completionTimeMinutes: newDutyCompletionTimeMinutes ? Number(newDutyCompletionTimeMinutes) : null
       })
     ).then(() => {
       setNewDutyName('')
       setNewDutyIsQuantitative(false)
+      setNewDutyHasChecklist(false)
       setNewDutyCompletionTimeMinutes('')
       setShowAddForm(false)
       notify('Обязанность добавлена')
@@ -228,17 +232,31 @@ const PositionTab = ({ position }) => {
             className="w-full px-3 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-main-600"
             autoFocus
           />
-          <div className="flex items-center">
-            <input
-              type="checkbox"
-              id="isQuantitative"
-              checked={newDutyIsQuantitative}
-              onChange={(e) => setNewDutyIsQuantitative(e.target.checked)}
-              className="mr-2"
-            />
-            <label htmlFor="isQuantitative" className="text-gray-700">
-              Количественная обязанность
-            </label>
+          <div className="flex items-center gap-4">
+            <div className="flex items-center">
+              <input
+                type="checkbox"
+                id="isQuantitative"
+                checked={newDutyIsQuantitative}
+                onChange={(e) => setNewDutyIsQuantitative(e.target.checked)}
+                className="mr-2"
+              />
+              <label htmlFor="isQuantitative" className="text-gray-700">
+                Количественная обязанность
+              </label>
+            </div>
+            <div className="flex items-center">
+              <input
+                type="checkbox"
+                id="hasChecklist"
+                checked={newDutyHasChecklist}
+                onChange={(e) => setNewDutyHasChecklist(e.target.checked)}
+                className="mr-2"
+              />
+              <label htmlFor="hasChecklist" className="text-gray-700">
+                Чек-лист
+              </label>
+            </div>
           </div>
           <div>
             <label htmlFor="completionTimeMinutes" className="block text-sm text-gray-700 mb-1">
@@ -271,6 +289,7 @@ const PositionTab = ({ position }) => {
                 setShowAddForm(false)
                 setNewDutyName('')
                 setNewDutyIsQuantitative(false)
+                setNewDutyHasChecklist(false)
                 setNewDutyCompletionTimeMinutes('')
               }}
               className="flex-1 px-4 py-2 bg-gray-300 text-gray-700 rounded hover:bg-gray-400"

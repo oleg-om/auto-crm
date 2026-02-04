@@ -62,6 +62,7 @@ exports.upsert = async (req, res) => {
     date,
     value,
     comment,
+    checklistProgress,
     startTime,
     endTime
   } = req.body
@@ -72,6 +73,7 @@ exports.upsert = async (req, res) => {
     if (existingEntry) {
       if (value !== undefined) existingEntry.value = value
       if (comment !== undefined) existingEntry.comment = comment
+      if (checklistProgress !== undefined) existingEntry.checklistProgress = checklistProgress
       if (startTime !== undefined) {
         // Преобразуем startTime в Date, если это строка
         if (typeof startTime === 'string') {
@@ -169,6 +171,7 @@ exports.upsert = async (req, res) => {
     date: dateObj,
     value,
     comment,
+    checklistProgress: checklistProgress || {},
     startTime: startTimeDate,
     endTime: endTimeDate
   })
