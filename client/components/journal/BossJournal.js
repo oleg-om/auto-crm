@@ -998,8 +998,10 @@ const KPIView = ({ entriesWithDutyInfo, workDayData, selectedPosition }) => {
     const timeEfficiencyPercentage =
       totalWorkDayMinutes > 0 ? (usefulMinutes / totalWorkDayMinutes) * 100 : 0
 
-    // Общий КПД = среднее от эффективности времени, выполнения чек-листов и соответствия рабочих часов
-    const overallKPI = (timeEfficiencyPercentage + checklistPercentage + workHoursPercentage) / 3
+    // Общий КПД = взвешенное среднее с большим весом для эффективности времени
+    // Эффективность времени: 50%, Чек-листы: 25%, Рабочие часы: 25%
+    const overallKPI =
+      (timeEfficiencyPercentage * 0.5 + checklistPercentage * 0.25 + workHoursPercentage * 0.25)
 
     return {
       totalWorkDayMinutes,
@@ -1280,8 +1282,9 @@ const KPIView = ({ entriesWithDutyInfo, workDayData, selectedPosition }) => {
               Если норма не задана, этот показатель считается как 100%
             </li>
             <li>
-              <strong>Общий КПД</strong> = среднее арифметическое трех показателей (эффективность
-              времени + выполнение чек-листов + рабочие часы) / 3
+              <strong>Общий КПД</strong> = взвешенное среднее: эффективность времени × 50% +
+              выполнение чек-листов × 25% + рабочие часы × 25%. Распределение времени имеет
+              наибольший вес в итоговой оценке
             </li>
           </ul>
         </div>
