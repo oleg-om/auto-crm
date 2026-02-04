@@ -488,7 +488,11 @@ const BossJournal = () => {
               selectedPosition={selectedPosition}
             />
           ) : (
-            <KPIView entriesWithDutyInfo={entriesWithDutyInfo} workDayData={workDayData} />
+            <KPIView
+              entriesWithDutyInfo={entriesWithDutyInfo}
+              workDayData={workDayData}
+              selectedPosition={selectedPosition}
+            />
           )
         ) : (
           <div className="bg-white rounded-lg shadow p-8 text-center text-gray-500">
@@ -836,7 +840,7 @@ const DutyTimelineChart = ({ entries, entriesWithDutyInfo, workDayData, selected
   )
 }
 
-const KPIView = ({ entriesWithDutyInfo, workDayData }) => {
+const KPIView = ({ entriesWithDutyInfo, workDayData, selectedPosition }) => {
   // Вычисляем полезное и бесполезное время
   const calculateKPI = () => {
     if (!workDayData || !workDayData.startTime) {
@@ -932,6 +936,59 @@ const KPIView = ({ entriesWithDutyInfo, workDayData }) => {
     // Бесполезное время = общее время - полезное время
     const wastedMinutes = Math.max(0, totalWorkDayMinutes - usefulMinutes)
 
+    // Расчет выполнения чек-листов
+    let totalChecklistItems = 0
+    let completedChecklistItems = 0
+
+    entriesWithDutyInfo.forEach(({ duty, entries: dutyEntries }) => {
+      if (duty?.hasChecklist && duty?.checklistItems?.length > 0) {
+        dutyEntries.forEach((entry) => {
+          if (entry.startTime) {
+            // Считаем чек-лист только для начатых обязанностей
+            totalChecklistItems += duty.checklistItems.length
+            const checklistProgress = entry.checklistProgress || {}
+            completedChecklistItems += duty.checklistItems.filter(
+              (item) => checklistProgress[item._id]
+            ).length
+          }
+        })
+      }
+    })
+
+    const checklistPercentage =
+      totalChecklistItems > 0 ? (completedChecklistItems / totalChecklistItems) * 100 : 100
+
+    // Расчет соответствия рабочих часов норме
+    let workHoursPercentage = 100
+    let expectedWorkMinutes = null
+    let workHoursDeficit = 0
+
+    if (selectedPosition?.workDayStartTime && selectedPosition?.workDayEndTime) {
+      // Парсим время начала и конца рабочего дня из формата "HH:MM"
+      const parseTime = (timeStr) => {
+        const [hours, minutes] = timeStr.split(':').map(Number)
+        return hours * 60 + minutes
+      }
+
+      const expectedStartMinutes = parseTime(selectedPosition.workDayStartTime)
+      const expectedEndMinutes = parseTime(selectedPosition.workDayEndTime)
+      expectedWorkMinutes = expectedEndMinutes - expectedStartMinutes
+
+      if (expectedWorkMinutes > 0) {
+        if (totalWorkDayMinutes < expectedWorkMinutes) {
+          workHoursDeficit = expectedWorkMinutes - totalWorkDayMinutes
+          workHoursPercentage = (totalWorkDayMinutes / expectedWorkMinutes) * 100
+        }
+      }
+    }
+
+    // Итоговый КПД с учетом всех факторов
+    const timeEfficiencyPercentage =
+      totalWorkDayMinutes > 0 ? (usefulMinutes / totalWorkDayMinutes) * 100 : 0
+
+    // Общий КПД = среднее от эффективности времени, выполнения чек-листов и соответствия рабочих часов
+    const overallKPI = (timeEfficiencyPercentage + checklistPercentage + workHoursPercentage) / 3
+
     return {
       totalWorkDayMinutes,
       usefulMinutes,
@@ -945,7 +1002,14 @@ const KPIView = ({ entriesWithDutyInfo, workDayData }) => {
       wastedMinutesRemainder: Math.round(wastedMinutes % 60),
       totalHours: Math.floor(totalWorkDayMinutes / 60),
       totalMinutesRemainder: Math.round(totalWorkDayMinutes % 60),
-      kpiPercentage: totalWorkDayMinutes > 0 ? (usefulMinutes / totalWorkDayMinutes) * 100 : 0
+      timeEfficiencyPercentage,
+      checklistPercentage,
+      totalChecklistItems,
+      completedChecklistItems,
+      workHoursPercentage,
+      expectedWorkMinutes,
+      workHoursDeficit,
+      overallKPI
     }
   }
 
@@ -964,17 +1028,129 @@ const KPIView = ({ entriesWithDutyInfo, workDayData }) => {
       <div className="p-6">
         <h2 className="text-2xl font-bold mb-6 text-gray-900">Анализ эффективности работы</h2>
 
-        {/* КПД процент */}
+        {/* Общий КПД */}
         <div className="mb-8 p-6 bg-gradient-to-r from-main-50 to-main-100 rounded-lg">
           <div className="text-center">
             <div className="text-5xl font-bold text-main-600 mb-2">
-              {kpiData.kpiPercentage.toFixed(1)}%
+              {kpiData.overallKPI.toFixed(1)}%
             </div>
-            <div className="text-lg text-gray-700">КПД (Коэффициент полезного действия)</div>
+            <div className="text-lg text-gray-700">Общий КПД</div>
+            <div className="text-sm text-gray-600 mt-2">
+              Учитывает эффективность времени, выполнение чек-листов и соответствие рабочим часам
+            </div>
           </div>
         </div>
 
-        {/* Статистика */}
+        {/* Показатели КПД */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+          {/* Эффективность времени */}
+          <div className="p-4 bg-blue-50 rounded-lg border border-blue-200">
+            <div className="text-sm text-blue-700 mb-1">Эффективность времени</div>
+            <div className="text-3xl font-bold text-blue-600">
+              {kpiData.timeEfficiencyPercentage.toFixed(1)}%
+            </div>
+            <div className="text-xs text-blue-600 mt-1">Полезное время / Рабочий день</div>
+          </div>
+
+          {/* Выполнение чек-листов */}
+          <div
+            className={`p-4 rounded-lg border ${
+              kpiData.totalChecklistItems > 0
+                ? 'bg-purple-50 border-purple-200'
+                : 'bg-gray-50 border-gray-200'
+            }`}
+          >
+            <div
+              className={`text-sm mb-1 ${
+                kpiData.totalChecklistItems > 0 ? 'text-purple-700' : 'text-gray-600'
+              }`}
+            >
+              Выполнение чек-листов
+            </div>
+            <div
+              className={`text-3xl font-bold ${
+                kpiData.totalChecklistItems > 0 ? 'text-purple-600' : 'text-gray-500'
+              }`}
+            >
+              {kpiData.totalChecklistItems > 0 ? (
+                <>{kpiData.checklistPercentage.toFixed(1)}%</>
+              ) : (
+                'Н/Д'
+              )}
+            </div>
+            <div
+              className={`text-xs mt-1 ${
+                kpiData.totalChecklistItems > 0 ? 'text-purple-600' : 'text-gray-500'
+              }`}
+            >
+              {kpiData.totalChecklistItems > 0
+                ? `${kpiData.completedChecklistItems} из ${kpiData.totalChecklistItems} пунктов`
+                : 'Нет чек-листов'}
+            </div>
+          </div>
+
+          {/* Соответствие рабочим часам */}
+          <div
+            className={`p-4 rounded-lg border ${
+              kpiData.expectedWorkMinutes !== null
+                ? kpiData.workHoursPercentage >= 100
+                  ? 'bg-green-50 border-green-200'
+                  : 'bg-orange-50 border-orange-200'
+                : 'bg-gray-50 border-gray-200'
+            }`}
+          >
+            <div
+              className={`text-sm mb-1 ${
+                kpiData.expectedWorkMinutes !== null
+                  ? kpiData.workHoursPercentage >= 100
+                    ? 'text-green-700'
+                    : 'text-orange-700'
+                  : 'text-gray-600'
+              }`}
+            >
+              Рабочие часы
+            </div>
+            <div
+              className={`text-3xl font-bold ${
+                kpiData.expectedWorkMinutes !== null
+                  ? kpiData.workHoursPercentage >= 100
+                    ? 'text-green-600'
+                    : 'text-orange-600'
+                  : 'text-gray-500'
+              }`}
+            >
+              {kpiData.expectedWorkMinutes !== null ? (
+                <>{kpiData.workHoursPercentage.toFixed(1)}%</>
+              ) : (
+                'Н/Д'
+              )}
+            </div>
+            <div
+              className={`text-xs mt-1 ${
+                kpiData.expectedWorkMinutes !== null
+                  ? kpiData.workHoursPercentage >= 100
+                    ? 'text-green-600'
+                    : 'text-orange-600'
+                  : 'text-gray-500'
+              }`}
+            >
+              {kpiData.expectedWorkMinutes !== null ? (
+                kpiData.workHoursDeficit > 0 ? (
+                  <>
+                    Недостаток: {Math.floor(kpiData.workHoursDeficit / 60)}ч{' '}
+                    {Math.round(kpiData.workHoursDeficit % 60)}м
+                  </>
+                ) : (
+                  'Норма выполнена'
+                )
+              ) : (
+                'Норма не задана'
+              )}
+            </div>
+          </div>
+        </div>
+
+        {/* Статистика времени */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
           {/* Общее время */}
           <div className="p-4 bg-gray-50 rounded-lg border border-gray-200">
@@ -1021,7 +1197,7 @@ const KPIView = ({ entriesWithDutyInfo, workDayData }) => {
           </div>
         </div>
 
-        {/* Визуализация */}
+        {/* Визуализация распределения времени */}
         <div className="mb-6">
           <div className="text-sm font-medium text-gray-700 mb-2">Распределение времени</div>
           <div className="flex h-8 rounded-lg overflow-hidden">
@@ -1076,21 +1252,24 @@ const KPIView = ({ entriesWithDutyInfo, workDayData }) => {
         {/* Пояснения */}
         <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
           <h3 className="text-sm font-semibold text-blue-900 mb-2">Как рассчитывается КПД:</h3>
-          <ul className="text-sm text-blue-800 space-y-1">
+          <ul className="text-sm text-blue-800 space-y-2">
             <li>
-              <strong>Полезное время</strong> — время выполнения рабочих обязанностей (без
-              перекуров, обеда, отдыха)
+              <strong>Эффективность времени</strong> — отношение полезного времени (выполнение
+              рабочих обязанностей) к общему времени рабочего дня
             </li>
             <li>
-              <strong>Перекуры/Обед</strong> — время, отмеченное как &quot;перекур&quot;,
-              &quot;обед&quot;, &quot;отдых&quot; или &quot;другое&quot;
+              <strong>Выполнение чек-листов</strong> — процент выполненных пунктов чек-листов от
+              общего количества. Учитываются только начатые обязанности с чек-листами. Если
+              чек-листов нет, этот показатель считается как 100%
             </li>
             <li>
-              <strong>Простой</strong> — время в течение рабочего дня, когда сотрудник ничего не
-              делал
+              <strong>Рабочие часы</strong> — соответствие фактического времени работы нормативному
+              времени, установленному для должности. Если работал меньше нормы — процент снижается.
+              Если норма не задана, этот показатель считается как 100%
             </li>
             <li>
-              <strong>КПД</strong> = (Полезное время / Общее время рабочего дня) × 100%
+              <strong>Общий КПД</strong> = среднее арифметическое трех показателей (эффективность
+              времени + выполнение чек-листов + рабочие часы) / 3
             </li>
           </ul>
         </div>
