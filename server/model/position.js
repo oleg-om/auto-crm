@@ -4,6 +4,21 @@ const AutoIncrement = require('mongoose-sequence')(mongoose)
 
 const dateNow = new Date()
 
+const ChecklistItemSchema = new mongoose.Schema(
+  {
+    text: {
+      type: String,
+      required: true
+    },
+    order: {
+      type: Number,
+      required: false,
+      default: 0
+    }
+  },
+  { _id: true }
+)
+
 const DutySchema = new mongoose.Schema({
   name: {
     type: String,
@@ -13,6 +28,16 @@ const DutySchema = new mongoose.Schema({
     type: Boolean,
     required: false,
     default: false
+  },
+  hasChecklist: {
+    type: Boolean,
+    required: false,
+    default: false
+  },
+  checklistItems: {
+    type: [ChecklistItemSchema],
+    required: false,
+    default: []
   },
   completionTimeMinutes: {
     type: Number,

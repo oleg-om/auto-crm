@@ -36,6 +36,11 @@ const JournalEntry = new mongoose.Schema({
     type: Date,
     required: false
   },
+  checklistProgress: {
+    type: mongoose.Schema.Types.Mixed,
+    required: false,
+    default: {}
+  },
   id: {
     type: String,
     unique: true,

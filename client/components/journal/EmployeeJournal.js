@@ -5,6 +5,7 @@ import { FaCheckCircle, FaClock, FaCircle } from 'react-icons/fa'
 import Navbar from '../Navbar'
 import Modal from '../Modal.delete'
 import { getPositions } from '../../redux/reducers/positions'
+import { getEmployees } from '../../redux/reducers/employees'
 import standardDutiesList from '../../lists/standard-duties-list'
 import 'react-toastify/dist/ReactToastify.css'
 
@@ -35,16 +36,47 @@ const EmployeeJournal = () => {
   // Найти сотрудника по userName из auth (userName в аккаунте содержит id сотрудника)
   const currentEmployee = employees.find((emp) => emp.id === auth.user?.userName)
 
+  // Получаем ID выбранного сотрудника из localStorage или используем текущего
+  const getStoredEmployeeId = () => {
+    const stored = localStorage.getItem('selectedEmployeeForJournal')
+    return stored || currentEmployee?.id || ''
+  }
+
+  const [selectedEmployeeId, setSelectedEmployeeId] = useState(getStoredEmployeeId())
+
+  // Обновляем selectedEmployeeId когда currentEmployee загружается
+  useEffect(() => {
+    if (currentEmployee && !selectedEmployeeId) {
+      setSelectedEmployeeId(currentEmployee.id)
+    }
+  }, [currentEmployee, selectedEmployeeId])
+
+  // Получаем выбранного сотрудника
+  const selectedEmployee = employees.find((emp) => emp.id === selectedEmployeeId) || currentEmployee
+
+  // Получаем список сотрудников с той же должностью
+  const employeesWithSamePosition =
+    currentEmployee && currentEmployee.positionId
+      ? employees.filter((emp) => emp.positionId === currentEmployee.positionId)
+      : []
+
   useEffect(() => {
     dispatch(getPositions())
+    dispatch(getEmployees())
   }, [dispatch])
 
+  // Сохраняем выбранного сотрудника в localStorage
+  const handleEmployeeChange = (employeeId) => {
+    setSelectedEmployeeId(employeeId)
+    localStorage.setItem('selectedEmployeeForJournal', employeeId)
+  }
+
   const loadWorkDayStart = async () => {
-    if (!currentEmployee) return
+    if (!selectedEmployee) return
 
     try {
       const response = await fetch(
-        `/api/v1/workDayStart/employee/${currentEmployee.id}/date/${selectedDate}`
+        `/api/v1/workDayStart/employee/${selectedEmployee.id}/date/${selectedDate}`
       )
       const { data } = await response.json()
       setWorkDayData(data)
@@ -58,7 +90,7 @@ const EmployeeJournal = () => {
   }
 
   const loadEntries = async () => {
-    if (!currentEmployee || !currentEmployee.positionId) {
+    if (!selectedEmployee || !selectedEmployee.positionId) {
       notify('Должность не назначена. Обратитесь к администратору.')
       return
     }
@@ -66,7 +98,7 @@ const EmployeeJournal = () => {
     setLoading(true)
     try {
       const response = await fetch(
-        `/api/v1/journalEntry/employee/${currentEmployee.id}/date/${selectedDate}`
+        `/api/v1/journalEntry/employee/${selectedEmployee.id}/date/${selectedDate}`
       )
       const { data } = await response.json()
       const entriesMap = {}
@@ -101,7 +133,7 @@ const EmployeeJournal = () => {
           'Content-Type': 'application/json'
         },
         body: JSON.stringify({
-          employeeId: currentEmployee.id,
+          employeeId: selectedEmployee.id,
           date: selectedDate
         })
       })
@@ -131,7 +163,7 @@ const EmployeeJournal = () => {
           'Content-Type': 'application/json'
         },
         body: JSON.stringify({
-          employeeId: currentEmployee.id,
+          employeeId: selectedEmployee.id,
           date: selectedDate
         })
       })
@@ -148,14 +180,14 @@ const EmployeeJournal = () => {
   }
 
   useEffect(() => {
-    if (currentEmployee) {
+    if (selectedEmployee) {
       loadWorkDayStart()
-      if (currentEmployee.positionId) {
+      if (selectedEmployee.positionId) {
         loadEntries()
       }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [selectedDate, currentEmployee?.id, currentEmployee?.positionId])
+  }, [selectedDate, selectedEmployeeId, selectedEmployee?.positionId])
 
   const formatDateTime = (dateTime) => {
     if (!dateTime) return null
@@ -176,7 +208,7 @@ const EmployeeJournal = () => {
     return `${day}.${month}.${year} ${hours}:${minutes}`
   }
 
-  const handleSaveEntry = async (dutyId, value, comment, uniqueKey) => {
+  const handleSaveEntry = async (dutyId, value, comment, uniqueKey, checklistProgress) => {
     if (!currentEmployee || !currentEmployee.positionId) {
       notify('Должность не назначена')
       return
@@ -200,12 +232,13 @@ const EmployeeJournal = () => {
         },
         body: JSON.stringify({
           entryId: entryKey, // Используем ID записи из БД
-          employeeId: currentEmployee.id,
-          positionId: currentEmployee.positionId,
+          employeeId: selectedEmployee.id,
+          positionId: selectedEmployee.positionId,
           dutyId: dutyIdStr,
           date: selectedDate,
           value,
           comment,
+          checklistProgress,
           startTime: currentEntry?.startTime,
           endTime: currentEntry?.endTime
         })
@@ -269,8 +302,8 @@ const EmployeeJournal = () => {
         },
         body: JSON.stringify({
           entryId: entryKey, // Используем ID записи из БД
-          employeeId: currentEmployee.id,
-          positionId: currentEmployee.positionId,
+          employeeId: selectedEmployee.id,
+          positionId: selectedEmployee.positionId,
           dutyId: dutyIdStr,
           date: selectedDate,
           value: currentEntry?.value,
@@ -305,9 +338,10 @@ const EmployeeJournal = () => {
     )
   }
 
-  const currentPosition = positions.find((p) => p.id === currentEmployee.positionId)
+  // Получаем должность выбранного сотрудника
+  const employeePosition = positions.find((p) => p.id === selectedEmployee?.positionId)
 
-  if (!currentPosition) {
+  if (!employeePosition) {
     return (
       <div>
         <Navbar />
@@ -321,7 +355,7 @@ const EmployeeJournal = () => {
     )
   }
 
-  const sortedDuties = [...(currentPosition.duties || [])].sort((a, b) => {
+  const sortedDuties = [...(employeePosition.duties || [])].sort((a, b) => {
     const orderA = a.order !== undefined ? a.order : 0
     const orderB = b.order !== undefined ? b.order : 0
     return orderA - orderB
@@ -380,8 +414,8 @@ const EmployeeJournal = () => {
           'Content-Type': 'application/json'
         },
         body: JSON.stringify({
-          employeeId: currentEmployee.id,
-          positionId: currentEmployee.positionId,
+          employeeId: selectedEmployee.id,
+          positionId: selectedEmployee.positionId,
           dutyId: dutyIdStr,
           date: selectedDate,
           startTime,
@@ -464,8 +498,8 @@ const EmployeeJournal = () => {
           'Content-Type': 'application/json'
         },
         body: JSON.stringify({
-          employeeId: currentEmployee.id,
-          positionId: currentEmployee.positionId,
+          employeeId: selectedEmployee.id,
+          positionId: selectedEmployee.positionId,
           dutyId,
           date: selectedDate,
           startTime,
@@ -548,12 +582,27 @@ const EmployeeJournal = () => {
                 className="px-3 py-1 border rounded-lg focus:outline-none focus:ring-2 focus:ring-main-600 text-sm"
               />
             </div>
-            <div className="text-sm text-gray-600">
-              <span className="font-semibold">{currentPosition.name}</span>
-              {' - '}
-              <span>
-                {currentEmployee.name} {currentEmployee.surname}
-              </span>
+            <div className="text-sm text-gray-600 flex items-center gap-2">
+              <span className="font-semibold">{employeePosition?.name || 'Должность не назначена'}</span>
+              <span>-</span>
+              {employeesWithSamePosition.length > 1 ? (
+                <select
+                  value={selectedEmployeeId}
+                  onChange={(e) => handleEmployeeChange(e.target.value)}
+                  className="px-3 py-1 border border-gray-300 rounded-lg focus:ring-2 focus:ring-main-600 focus:border-transparent bg-white text-sm"
+                >
+                  {employeesWithSamePosition.map((emp) => (
+                    <option key={emp.id} value={emp.id}>
+                      {emp.name} {emp.surname}
+                      {emp.id === currentEmployee?.id ? ' (Вы)' : ''}
+                    </option>
+                  ))}
+                </select>
+              ) : (
+                <span>
+                  {selectedEmployee?.name} {selectedEmployee?.surname}
+                </span>
+              )}
             </div>
           </div>
         </div>
@@ -718,7 +767,7 @@ const AddDutyModal = ({ availableDuties, onSelect, onClose }) => {
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
       <div className="bg-white rounded-lg p-6 max-w-md w-full mx-4">
         <h3 className="text-xl font-bold mb-4">Выберите обязанность</h3>
-        <div className="space-y-2 overflow-y-auto" style={{ maxHeight: '78vh' }}>
+        <div className="space-y-2 max-h-96 overflow-y-auto">
           {availableDuties.length === 0 ? (
             <p className="text-gray-500">Нет доступных обязанностей</p>
           ) : (
@@ -770,9 +819,9 @@ const StandardDutiesModal = ({ standardDuties, onSelect, onClose }) => {
           </button>
         </div>
         <div className="space-y-2">
-          {standardDuties.map((standardDuty, index) => (
+          {standardDuties.map((standardDuty) => (
             <div
-              key={index}
+              key={standardDuty.id || standardDuty.name}
               className="flex items-center justify-between p-3 border rounded-lg hover:bg-gray-50"
             >
               <div className="flex-1">
@@ -817,22 +866,25 @@ const StandardDutiesModal = ({ standardDuties, onSelect, onClose }) => {
 const DutyEntryForm = ({ duty, entry, onSave, onComplete, onRemove, uniqueKey }) => {
   const [value, setValue] = useState(entry?.value || '')
   const [comment, setComment] = useState(entry?.comment || '')
+  const [checklistProgress, setChecklistProgress] = useState(entry?.checklistProgress || {})
   const [isEditing, setIsEditing] = useState(false)
 
   useEffect(() => {
     if (entry) {
       setValue(entry.value || '')
       setComment(entry.comment || '')
+      setChecklistProgress(entry.checklistProgress || {})
     } else {
       setValue('')
       setComment('')
+      setChecklistProgress({})
     }
     setIsEditing(false)
   }, [entry])
 
   const handleSave = () => {
     // Преобразуем ID в строку для консистентности и передаем uniqueKey
-    onSave(String(duty._id), value, comment, uniqueKey)
+    onSave(String(duty._id), value, comment, uniqueKey, checklistProgress)
     setIsEditing(false)
   }
 
@@ -840,11 +892,25 @@ const DutyEntryForm = ({ duty, entry, onSave, onComplete, onRemove, uniqueKey })
     if (entry) {
       setValue(entry.value || '')
       setComment(entry.comment || '')
+      setChecklistProgress(entry.checklistProgress || {})
     } else {
       setValue('')
       setComment('')
+      setChecklistProgress({})
     }
     setIsEditing(false)
+  }
+
+  // Сортируем пункты чек-листа по order
+  const sortedChecklistItems =
+    duty.hasChecklist && duty.checklistItems
+      ? [...duty.checklistItems].sort((a, b) => (a.order || 0) - (b.order || 0))
+      : []
+
+  const getChecklistCompletionCount = () => {
+    if (!duty.hasChecklist || !duty.checklistItems) return null
+    const completed = sortedChecklistItems.filter((item) => checklistProgress[item._id]).length
+    return { completed, total: sortedChecklistItems.length }
   }
 
   const formatTime = (time) => {
@@ -885,6 +951,8 @@ const DutyEntryForm = ({ duty, entry, onSave, onComplete, onRemove, uniqueKey })
     return null
   }
 
+  const checklistCompletion = getChecklistCompletionCount()
+
   return (
     <div className="bg-white border rounded-lg p-4 shadow-sm">
       <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-3">
@@ -896,6 +964,11 @@ const DutyEntryForm = ({ duty, entry, onSave, onComplete, onRemove, uniqueKey })
               {duty.isQuantitative && (
                 <span className="px-2 py-1 text-xs bg-blue-100 text-blue-700 rounded">
                   Количественная
+                </span>
+              )}
+              {duty.hasChecklist && checklistCompletion && (
+                <span className="px-2 py-1 text-xs bg-purple-100 text-purple-700 rounded">
+                  Чек-лист: {checklistCompletion.completed}/{checklistCompletion.total}
                 </span>
               )}
               {getTimeDisplay() && (
@@ -936,8 +1009,48 @@ const DutyEntryForm = ({ duty, entry, onSave, onComplete, onRemove, uniqueKey })
         </div>
       </div>
 
+      {/* Чек-лист под статусом */}
+      {duty.hasChecklist &&
+        sortedChecklistItems.length > 0 &&
+        entry?.startTime &&
+        !entry?.endTime && (
+          <div className="mt-4 p-3 bg-purple-50 rounded-lg border border-purple-200">
+            <h4 className="text-sm font-semibold text-purple-900 mb-2">Чек-лист</h4>
+            <div className="space-y-2">
+              {sortedChecklistItems.map((item) => (
+                <label
+                  key={item._id}
+                  htmlFor={`checklist-${item._id}`}
+                  className="flex items-center gap-2 cursor-pointer hover:bg-purple-100 p-2 rounded transition-colors"
+                >
+                  <input
+                    type="checkbox"
+                    id={`checklist-${item._id}`}
+                    checked={!!checklistProgress[item._id]}
+                    onChange={() => {
+                      const newProgress = {
+                        ...checklistProgress,
+                        [item._id]: !checklistProgress[item._id]
+                      }
+                      setChecklistProgress(newProgress)
+                      // Автоматически сохраняем при изменении чек-листа
+                      onSave(String(duty._id), value, comment, uniqueKey, newProgress)
+                    }}
+                    className="w-4 h-4 text-purple-600 rounded focus:ring-purple-500"
+                  />
+                  <span
+                    className={`text-sm ${checklistProgress[item._id] ? 'line-through text-gray-500' : 'text-gray-700'}`}
+                  >
+                    {item.text}
+                  </span>
+                </label>
+              ))}
+            </div>
+          </div>
+        )}
+
       {isEditing ? (
-        <div className="space-y-3">
+        <div className="space-y-3 mt-4">
           {duty.isQuantitative ? (
             <div>
               <label

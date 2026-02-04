@@ -12,14 +12,55 @@ const DutyRow = ({
 }) => {
   const [name, setName] = useState(duty.name)
   const [isQuantitative, setIsQuantitative] = useState(duty.isQuantitative || false)
+  const [hasChecklist, setHasChecklist] = useState(duty.hasChecklist || false)
+  const [checklistItems, setChecklistItems] = useState(duty.checklistItems || [])
+  const [newChecklistItem, setNewChecklistItem] = useState('')
   const [completionTimeMinutes, setCompletionTimeMinutes] = useState(
     duty.completionTimeMinutes ? String(duty.completionTimeMinutes) : ''
   )
+
+  const handleAddChecklistItem = () => {
+    if (!newChecklistItem.trim()) return
+    const newItem = {
+      text: newChecklistItem.trim(),
+      order: checklistItems.length
+    }
+    setChecklistItems([...checklistItems, newItem])
+    setNewChecklistItem('')
+  }
+
+  const handleDeleteChecklistItem = (itemIndex) => {
+    const newItems = checklistItems.filter((_, index) => index !== itemIndex)
+    // Обновляем order после удаления
+    const updatedItems = newItems.map((item, index) => ({
+      ...item,
+      order: index
+    }))
+    setChecklistItems(updatedItems)
+  }
+
+  const handleMoveChecklistItem = (itemIndex, direction) => {
+    const newIndex = direction === 'up' ? itemIndex - 1 : itemIndex + 1
+    if (newIndex < 0 || newIndex >= checklistItems.length) return
+
+    const newItems = [...checklistItems]
+    const [moved] = newItems.splice(itemIndex, 1)
+    newItems.splice(newIndex, 0, moved)
+
+    // Обновляем order
+    const updatedItems = newItems.map((item, index) => ({
+      ...item,
+      order: index
+    }))
+    setChecklistItems(updatedItems)
+  }
 
   const handleSave = () => {
     onUpdate({
       name: name.trim(),
       isQuantitative,
+      hasChecklist,
+      checklistItems: hasChecklist ? checklistItems : [],
       completionTimeMinutes: completionTimeMinutes ? Number(completionTimeMinutes) : null
     })
   }
@@ -27,6 +68,9 @@ const DutyRow = ({
   const handleCancel = () => {
     setName(duty.name)
     setIsQuantitative(duty.isQuantitative || false)
+    setHasChecklist(duty.hasChecklist || false)
+    setChecklistItems(duty.checklistItems || [])
+    setNewChecklistItem('')
     setCompletionTimeMinutes(duty.completionTimeMinutes ? String(duty.completionTimeMinutes) : '')
     onCancel()
   }
@@ -44,17 +88,96 @@ const DutyRow = ({
               autoFocus
             />
           </div>
-          <div className="flex items-center">
-            <input
-              type="checkbox"
-              checked={isQuantitative}
-              onChange={(e) => setIsQuantitative(e.target.checked)}
-              className="mr-2"
-            />
-            {/* eslint-disable-next-line jsx-a11y/label-has-associated-control,jsx-a11y/label-has-for */}
-            <label className="text-sm text-gray-700">Количественная</label>
+          <div className="flex items-center gap-4">
+            <div className="flex items-center">
+              <input
+                type="checkbox"
+                checked={isQuantitative}
+                onChange={(e) => setIsQuantitative(e.target.checked)}
+                className="mr-2"
+              />
+              {/* eslint-disable-next-line jsx-a11y/label-has-associated-control,jsx-a11y/label-has-for */}
+              <label className="text-sm text-gray-700">Количественная</label>
+            </div>
+            <div className="flex items-center">
+              <input
+                type="checkbox"
+                checked={hasChecklist}
+                onChange={(e) => setHasChecklist(e.target.checked)}
+                className="mr-2"
+              />
+              {/* eslint-disable-next-line jsx-a11y/label-has-associated-control,jsx-a11y/label-has-for */}
+              <label className="text-sm text-gray-700">Чек-лист</label>
+            </div>
           </div>
         </div>
+
+        {/* Чек-лист */}
+        {hasChecklist && (
+          <div className="border rounded-lg p-3 bg-white">
+            <h4 className="text-sm font-semibold text-gray-700 mb-2">Чек-лист</h4>
+            {checklistItems.length > 0 && (
+              <div className="space-y-1 mb-2">
+                {checklistItems.map((item, index) => (
+                  <div key={index} className="flex items-center gap-2 p-2 bg-gray-50 rounded">
+                    <div className="flex flex-col gap-1">
+                      {index > 0 && (
+                        <button
+                          type="button"
+                          onClick={() => handleMoveChecklistItem(index, 'up')}
+                          className="px-1 py-0 text-xs bg-gray-200 text-gray-700 rounded hover:bg-gray-300"
+                          title="Вверх"
+                        >
+                          ↑
+                        </button>
+                      )}
+                      {index < checklistItems.length - 1 && (
+                        <button
+                          type="button"
+                          onClick={() => handleMoveChecklistItem(index, 'down')}
+                          className="px-1 py-0 text-xs bg-gray-200 text-gray-700 rounded hover:bg-gray-300"
+                          title="Вниз"
+                        >
+                          ↓
+                        </button>
+                      )}
+                    </div>
+                    <span className="flex-1 text-sm">{item.text}</span>
+                    <button
+                      type="button"
+                      onClick={() => handleDeleteChecklistItem(index)}
+                      className="px-2 py-1 text-xs bg-red-500 text-white rounded hover:bg-red-600"
+                    >
+                      ✕
+                    </button>
+                  </div>
+                ))}
+              </div>
+            )}
+            <div className="flex gap-2">
+              <input
+                type="text"
+                value={newChecklistItem}
+                onChange={(e) => setNewChecklistItem(e.target.value)}
+                onKeyPress={(e) => {
+                  if (e.key === 'Enter') {
+                    handleAddChecklistItem()
+                  }
+                }}
+                placeholder="Добавить пункт"
+                className="flex-1 px-2 py-1 text-sm border rounded focus:outline-none focus:ring-2 focus:ring-main-600"
+              />
+              <button
+                type="button"
+                onClick={handleAddChecklistItem}
+                className="px-3 py-1 text-sm bg-main-600 text-white rounded hover:bg-main-700"
+              >
+                +
+              </button>
+            </div>
+          </div>
+        )}
+
         <div>
           <label htmlFor={`completionTime-${duty._id}`} className="block text-sm text-gray-700 mb-1">
             Норма выполнения (минуты)
@@ -125,6 +248,11 @@ const DutyRow = ({
           {duty.isQuantitative && (
             <span className="px-2 py-1 text-xs bg-blue-100 text-blue-700 rounded">
               Количественная
+            </span>
+          )}
+          {duty.hasChecklist && (
+            <span className="px-2 py-1 text-xs bg-purple-100 text-purple-700 rounded">
+              Чек-лист ({duty.checklistItems?.length || 0})
             </span>
           )}
           {duty.completionTimeMinutes && (
