@@ -583,7 +583,9 @@ const EmployeeJournal = () => {
               />
             </div>
             <div className="text-sm text-gray-600 flex items-center gap-2">
-              <span className="font-semibold">{employeePosition?.name || 'Должность не назначена'}</span>
+              <span className="font-semibold">
+                {employeePosition?.name || 'Должность не назначена'}
+              </span>
               <span>-</span>
               {employeesWithSamePosition.length > 1 ? (
                 <select
@@ -767,7 +769,7 @@ const AddDutyModal = ({ availableDuties, onSelect, onClose }) => {
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
       <div className="bg-white rounded-lg p-6 max-w-md w-full mx-4">
         <h3 className="text-xl font-bold mb-4">Выберите обязанность</h3>
-        <div className="space-y-2 max-h-96 overflow-y-auto">
+        <div className="space-y-2 overflow-y-auto" style={{ maxHeight: '65vh' }}>
           {availableDuties.length === 0 ? (
             <p className="text-gray-500">Нет доступных обязанностей</p>
           ) : (
@@ -1010,44 +1012,43 @@ const DutyEntryForm = ({ duty, entry, onSave, onComplete, onRemove, uniqueKey })
       </div>
 
       {/* Чек-лист под статусом */}
-      {duty.hasChecklist &&
-        sortedChecklistItems.length > 0 &&
-        entry?.startTime &&
-        !entry?.endTime && (
-          <div className="mt-4 p-3 bg-purple-50 rounded-lg border border-purple-200">
-            <h4 className="text-sm font-semibold text-purple-900 mb-2">Чек-лист</h4>
-            <div className="space-y-2">
-              {sortedChecklistItems.map((item) => (
-                <label
-                  key={item._id}
-                  htmlFor={`checklist-${item._id}`}
-                  className="flex items-center gap-2 cursor-pointer hover:bg-purple-100 p-2 rounded transition-colors"
+      {duty.hasChecklist && sortedChecklistItems.length > 0 && entry?.startTime && !entry?.endTime && (
+        <div className="mt-4 p-3 bg-purple-50 rounded-lg border border-purple-200">
+          <h4 className="text-sm font-semibold text-purple-900 mb-2">Чек-лист</h4>
+          <div className="space-y-2">
+            {sortedChecklistItems.map((item) => (
+              <label
+                key={item._id}
+                htmlFor={`checklist-${item._id}`}
+                className="flex items-center gap-2 cursor-pointer hover:bg-purple-100 p-2 rounded transition-colors"
+              >
+                <input
+                  type="checkbox"
+                  id={`checklist-${item._id}`}
+                  checked={!!checklistProgress[item._id]}
+                  onChange={() => {
+                    const newProgress = {
+                      ...checklistProgress,
+                      [item._id]: !checklistProgress[item._id]
+                    }
+                    setChecklistProgress(newProgress)
+                    // Автоматически сохраняем при изменении чек-листа
+                    onSave(String(duty._id), value, comment, uniqueKey, newProgress)
+                  }}
+                  className="w-4 h-4 text-purple-600 rounded focus:ring-purple-500"
+                />
+                <span
+                  className={`text-sm ${
+                    checklistProgress[item._id] ? 'line-through text-gray-500' : 'text-gray-700'
+                  }`}
                 >
-                  <input
-                    type="checkbox"
-                    id={`checklist-${item._id}`}
-                    checked={!!checklistProgress[item._id]}
-                    onChange={() => {
-                      const newProgress = {
-                        ...checklistProgress,
-                        [item._id]: !checklistProgress[item._id]
-                      }
-                      setChecklistProgress(newProgress)
-                      // Автоматически сохраняем при изменении чек-листа
-                      onSave(String(duty._id), value, comment, uniqueKey, newProgress)
-                    }}
-                    className="w-4 h-4 text-purple-600 rounded focus:ring-purple-500"
-                  />
-                  <span
-                    className={`text-sm ${checklistProgress[item._id] ? 'line-through text-gray-500' : 'text-gray-700'}`}
-                  >
-                    {item.text}
-                  </span>
-                </label>
-              ))}
-            </div>
+                  {item.text}
+                </span>
+              </label>
+            ))}
           </div>
-        )}
+        </div>
+      )}
 
       {isEditing ? (
         <div className="space-y-3 mt-4">
