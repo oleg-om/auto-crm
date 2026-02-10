@@ -71,7 +71,37 @@ const AutopartUpdate = (props) => {
   })
 
   const { navigateWithQueryParams, searchParamsToUrl } = useSaveFilter()
+
+  const [inputFields, setInputFields] = useState(
+    state.order.map((it) => ({
+      autopartItem: it.autopartItem ? it.autopartItem : '',
+      quantity: it.quantity ? it.quantity : '',
+      price: it.price ? it.price : '',
+      stat: it.stat ? it.stat : '',
+      vendor: it.vendor ? it.vendor : '',
+      come: it.come ? it.come : '',
+      zakup: it.zakup ? it.zakup : ''
+    }))
+  )
+
   const changeAutopart = () => {
+    // Проверяем наличие закупочной цены для определенных статусов
+    const statusesRequiringPrice = ['Товар в пути', 'Товар прибыл', 'Выдан, оплачено']
+    if (statusesRequiringPrice.includes(state.status)) {
+      const hasMissingPrice = inputFields.some((item) => {
+        // Проверяем только заполненные строки (где есть название товара)
+        if (item.autopartItem && item.autopartItem.trim() !== '') {
+          return !item.zakup || item.zakup === '' || item.zakup === '0'
+        }
+        return false
+      })
+
+      if (hasMissingPrice) {
+        notify('Сначала укажите закупочную цену для всех товаров')
+        return
+      }
+    }
+
     if (!state.process) notify('Поле Обработал заказ пустое')
     else if (state.status === taskStatuses[6] && !state.cancelReason)
       notify('Выберите причину отказа')
@@ -113,25 +143,30 @@ const AutopartUpdate = (props) => {
     }))
   }
 
-  const [inputFields, setInputFields] = useState(
-    state.order.map((it) => ({
-      autopartItem: it.autopartItem ? it.autopartItem : '',
-      quantity: it.quantity ? it.quantity : '',
-      price: it.price ? it.price : '',
-      stat: it.stat ? it.stat : '',
-      vendor: it.vendor ? it.vendor : '',
-      come: it.come ? it.come : '',
-      zakup: it.zakup ? it.zakup : ''
-    }))
-  )
-
   const handleChangeInput = (index, event) => {
+    const { name, value } = event.target
+
+    // Проверяем изменение статуса на требующий закупочную цену
+    if (name === 'stat') {
+      const statusesRequiringPrice = ['Товар в пути', 'Получен на складе']
+      if (statusesRequiringPrice.includes(value)) {
+        const currentItem = inputFields[index]
+        // Проверяем только если товар заполнен
+        if (currentItem.autopartItem && currentItem.autopartItem.trim() !== '') {
+          if (!currentItem.zakup || currentItem.zakup === '' || currentItem.zakup === '0') {
+            notify('Сначала укажите закупочную цену')
+            return
+          }
+        }
+      }
+    }
+
     const values = [...inputFields]
-    values[index][event.target.name] = event.target.value
+    values[index][name] = value
     setInputFields(values)
     setState((prevState) => ({
       ...prevState,
-      order: inputFields
+      order: values
     }))
   }
 
