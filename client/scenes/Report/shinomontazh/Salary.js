@@ -3,6 +3,25 @@ import { Link } from 'react-router-dom'
 import cx from 'classnames'
 import { useDispatch, useSelector } from 'react-redux'
 import { useReactToPrint } from 'react-to-print'
+import {
+  FaUser,
+  FaCalendarAlt,
+  FaMoneyBillWave,
+  FaShoppingCart,
+  FaPercent,
+  FaWallet,
+  FaCheckCircle,
+  FaFileInvoiceDollar,
+  FaCreditCard,
+  FaHandHoldingUsd,
+  FaReceipt,
+  FaExclamationTriangle,
+  FaBalanceScale,
+  FaUniversity,
+  FaMoneyBill,
+  FaCalculator,
+  FaTags
+} from 'react-icons/fa'
 import SalaryTableComponent from './SalaryTableComponent'
 import { filterByEmployee, filterReportByEmployee } from '../../../utils/admin/reportUtils'
 import { updateCurrentEmployeeReport } from '../../../redux/reducers/employees'
@@ -790,49 +809,85 @@ const Salary = ({
         <thead className="sticky top-0 z-10">
           <tr>
             <th className="p-3 font-bold bg-gray-100 text-gray-600 border border-gray-300 hidden lg:table-cell">
-              Имя
+              <div className="flex flex-col items-center">
+                <FaUser className="mb-1" />
+                <span>Имя</span>
+              </div>
             </th>
 
             {checkIsBookkeper ? (
               <>
                 {calendarType === 'month' ? (
                   <th className="p-3 font-bold bg-gray-100 text-gray-600 border border-gray-300 hidden lg:table-cell">
-                    Раб.дни
+                    <div className="flex flex-col items-center">
+                      <FaCalendarAlt className="mb-1" />
+                      <span>Раб.дни</span>
+                    </div>
                   </th>
                 ) : null}
                 <th className="p-3 font-bold bg-gray-100 text-gray-600 border border-gray-300 hidden lg:table-cell">
-                  Вал
+                  <div className="flex flex-col items-center">
+                    <FaMoneyBillWave className="mb-1" />
+                    <span>Вал</span>
+                  </div>
                 </th>
                 {calendarType === 'month' ? (
                   <th className="p-3 font-bold bg-gray-100 text-gray-600 border border-gray-300 hidden lg:table-cell">
-                    Расходы
+                    <div className="flex flex-col items-center">
+                      <FaShoppingCart className="mb-1" />
+                      <span>Расходы</span>
+                    </div>
                   </th>
                 ) : null}
                 <th className="p-3 font-bold bg-gray-100 text-gray-600 border border-gray-300 hidden lg:table-cell">
-                  Процент
+                  <div className="flex flex-col items-center">
+                    <FaPercent className="mb-1" />
+                    <span>Процент</span>
+                  </div>
                 </th>
                 <th className="p-3 font-bold bg-gray-100 text-gray-600 border border-gray-300 hidden lg:table-cell">
-                  Зарплата
+                  <div className="flex flex-col items-center">
+                    <FaWallet className="mb-1" />
+                    <span>Зарплата</span>
+                  </div>
                 </th>
                 <th className="p-3 font-bold bg-gray-100 text-gray-600 border border-gray-300 hidden lg:table-cell">
-                  Оформлен
+                  <div className="flex flex-col items-center">
+                    <FaCheckCircle className="mb-1" />
+                    <span>Оформлен</span>
+                  </div>
                 </th>
                 {calendarType === 'month' ? (
                   <>
                     <th className="p-3 font-bold bg-gray-100 text-gray-600 border border-gray-300 hidden lg:table-cell">
-                      Налог, руб
+                      <div className="flex flex-col items-center">
+                        <FaFileInvoiceDollar className="mb-1" />
+                        <span>Налог, руб</span>
+                      </div>
                     </th>
                     <th className="p-3 font-bold bg-gray-100 text-gray-600 border border-gray-300 hidden lg:table-cell">
-                      Сумма на карту
+                      <div className="flex flex-col items-center">
+                        <FaCreditCard className="mb-1" />
+                        <span>Сумма на карту</span>
+                      </div>
                     </th>
                     <th className="p-3 font-bold bg-gray-100 text-gray-600 border border-gray-300 hidden lg:table-cell">
-                      Аванс
+                      <div className="flex flex-col items-center">
+                        <FaHandHoldingUsd className="mb-1" />
+                        <span>Аванс</span>
+                      </div>
                     </th>
                     <th className="p-3 font-bold bg-gray-100 text-gray-600 border border-gray-300 hidden lg:table-cell">
-                      Личные расходы
+                      <div className="flex flex-col items-center">
+                        <FaReceipt className="mb-1" />
+                        <span>Личные расходы</span>
+                      </div>
                     </th>
                     <th className="p-3 font-bold bg-gray-100 text-gray-600 border border-gray-300 hidden lg:table-cell">
-                      Штрафы
+                      <div className="flex flex-col items-center">
+                        <FaExclamationTriangle className="mb-1" />
+                        <span>Штрафы</span>
+                      </div>
                     </th>
                   </>
                 ) : null}
@@ -841,34 +896,55 @@ const Salary = ({
             {!checkIsBookkeper ? (
               <>
                 <th className="p-3 font-bold bg-gray-100 text-gray-600 border border-gray-300 hidden lg:table-cell">
-                  Терминал
+                  <div className="flex flex-col items-center">
+                    <FaCreditCard className="mb-1" />
+                    <span>Терминал</span>
+                  </div>
                 </th>
                 <th className="p-3 font-bold bg-gray-100 text-gray-600 border border-gray-300 hidden lg:table-cell">
-                  Безнал
+                  <div className="flex flex-col items-center">
+                    <FaUniversity className="mb-1" />
+                    <span>Безнал</span>
+                  </div>
                 </th>
                 <th className="p-3 font-bold bg-gray-100 text-gray-600 border border-gray-300 hidden lg:table-cell">
-                  Наличка
+                  <div className="flex flex-col items-center">
+                    <FaMoneyBill className="mb-1" />
+                    <span>Наличка</span>
+                  </div>
                 </th>
 
                 {calendarType === 'day' ? (
                   <th className="p-3 font-bold bg-gray-100 text-gray-600 border border-gray-300 hidden lg:table-cell">
-                    Сумма
+                    <div className="flex flex-col items-center">
+                      <FaCalculator className="mb-1" />
+                      <span>Сумма</span>
+                    </div>
                   </th>
                 ) : null}
                 {calendarType === 'day' ? (
                   <th className="p-3 font-bold bg-gray-100 text-gray-600 border border-gray-300 hidden lg:table-cell">
-                    Акция
+                    <div className="flex flex-col items-center">
+                      <FaTags className="mb-1" />
+                      <span>Акция</span>
+                    </div>
                   </th>
                 ) : null}
                 <th className="p-3 font-bold bg-gray-100 text-gray-600 border border-gray-300 hidden lg:table-cell">
-                  Вал
+                  <div className="flex flex-col items-center">
+                    <FaMoneyBillWave className="mb-1" />
+                    <span>Вал</span>
+                  </div>
                 </th>
               </>
             ) : null}
 
             {checkIsBookkeper ? (
               <th className="p-3 font-bold bg-gray-100 text-gray-600 border border-gray-300 hidden lg:table-cell">
-                Остаток
+                <div className="flex flex-col items-center">
+                  <FaBalanceScale className="mb-1" />
+                  <span>Остаток</span>
+                </div>
               </th>
             ) : null}
           </tr>
@@ -914,15 +990,14 @@ const Salary = ({
                     </span>
                     {Math.round(getSalaryfull(''), '')} руб.
                   </td>
-
+                  {calendarType === 'month' ? (
+                    <td className="w-full lg:w-auto p-2 text-gray-800 text-left border border-b block lg:table-cell relative lg:static" />
+                  ) : null}
                   <td className="w-full lg:w-auto p-2 text-gray-800 text-left border border-b block lg:table-cell relative lg:static" />
                   <td className="w-full lg:w-auto p-2 text-gray-800 text-left border border-b block lg:table-cell relative lg:static" />
                   <td className="w-full lg:w-auto p-2 text-gray-800 text-left border border-b block lg:table-cell relative lg:static" />
                   {calendarType === 'month' ? (
                     <>
-                      <td className="w-full lg:w-auto p-2 text-gray-800 text-left border border-b block lg:table-cell relative lg:static" />
-                      <td className="w-full lg:w-auto p-2 text-gray-800 text-left border border-b block lg:table-cell relative lg:static" />
-                      <td className="w-full lg:w-auto p-2 text-gray-800 text-left border border-b block lg:table-cell relative lg:static" />
                       <td className="w-full lg:w-auto p-2 text-gray-800 text-left border border-b block lg:table-cell relative lg:static">
                         <span className="lg:hidden px-2 py-1 bg-purple-100 font-bold uppercase">
                           Налог:
