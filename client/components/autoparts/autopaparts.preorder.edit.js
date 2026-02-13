@@ -117,7 +117,7 @@ const AutopartUpdate = (props) => {
     }
 
     if (!state.process) notify('Поле Обработал заказ пустое')
-    else if (state.status === taskStatuses[6] && !state.cancelReason)
+    else if (state.status === taskStatuses[7] && !state.cancelReason)
       notify('Выберите причину отказа')
     else if (props.status !== state.status) {
       props.updateAutopart(props.id, {
@@ -129,7 +129,7 @@ const AutopartUpdate = (props) => {
         searchParamsToUrl
       )
       notify('Данные о заказе обновлены, заказ в работе')
-    } else if (props.status !== state.status && state.status === taskStatuses[6]) {
+    } else if (props.status !== state.status && state.status === taskStatuses[7]) {
       props.updateAutopart(props.id, {
         ...state,
         statusDates: [...props.statusDates, { status: state.status, date: dateNew }],
