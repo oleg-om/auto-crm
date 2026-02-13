@@ -85,21 +85,28 @@ const AutopartUpdate = (props) => {
   )
 
   const changeAutopart = () => {
-    // Проверяем наличие закупочной цены для определенных статусов
-    const statusesRequiringPrice = ['Товар в пути', 'Товар прибыл', 'Выдан, оплачено']
-    if (statusesRequiringPrice.includes(state.status)) {
-      const hasMissingPrice = inputFields.some((item) => {
-        // Проверяем только заполненные строки (где есть название товара)
-        if (item.autopartItem && item.autopartItem.trim() !== '') {
-          return !item.zakup || item.zakup === '' || item.zakup === '0'
+    // Проверяем наличие закупочной цены для товаров с определенными статусами
+    const statusesRequiringPrice = ['Товар в пути', 'Товар прибыл', 'Получен на складе', 'Выдан, оплачено']
+    
+    // Проверяем общий статус заказа или статусы отдельных товаров
+    const needsValidation = statusesRequiringPrice.includes(state.status)
+    
+    // Используем актуальные данные из inputFields (они синхронизированы с state.order)
+    const hasMissingPrice = inputFields.some((item) => {
+      // Проверяем только заполненные строки (где есть название товара)
+      if (item.autopartItem && item.autopartItem.trim() !== '') {
+        // Проверяем если общий статус требует валидации ИЛИ статус конкретного товара требует валидации
+        if (needsValidation || statusesRequiringPrice.includes(item.stat)) {
+          const zakupValue = item.zakup
+          return !zakupValue || zakupValue === '' || zakupValue === '0' || Number(zakupValue) === 0
         }
-        return false
-      })
-
-      if (hasMissingPrice) {
-        notify('Сначала укажите закупочную цену для всех товаров')
-        return
       }
+      return false
+    })
+
+    if (hasMissingPrice) {
+      notify('Сначала укажите закупочную цену для всех товаров')
+      return
     }
 
     if (!state.process) notify('Поле Обработал заказ пустое')
@@ -153,7 +160,8 @@ const AutopartUpdate = (props) => {
         const currentItem = inputFields[index]
         // Проверяем только если товар заполнен
         if (currentItem.autopartItem && currentItem.autopartItem.trim() !== '') {
-          if (!currentItem.zakup || currentItem.zakup === '' || currentItem.zakup === '0') {
+          const zakupValue = currentItem.zakup
+          if (!zakupValue || zakupValue === '' || zakupValue === '0' || Number(zakupValue) === 0) {
             notify('Сначала укажите закупочную цену')
             return
           }
