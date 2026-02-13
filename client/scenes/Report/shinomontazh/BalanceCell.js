@@ -1,12 +1,20 @@
 import React, { useState } from 'react'
 import { REPORT_SALARY_TYPES } from './SalaryCell'
 
-const BalanceCell = ({ data, value, prevMonthData }) => {
+const BalanceCell = ({
+  value,
+  prevMonthData,
+  totalAdvance = 0,
+  totalExpenses = 0,
+  totalPersonalExpenses = 0,
+  totalFines = 0
+}) => {
   const [visible, setVisible] = useState(false)
 
   const countAdvance = (number) => {
-    const total = data?.reduce((sum, item) => sum + item.val, 0) || 0
-    return Math.round(number - total)
+    // Вычитаем все расходы из зарплаты
+    const allDeductions = totalAdvance + totalExpenses + totalPersonalExpenses + totalFines
+    return Math.round(number - allDeductions)
   }
 
   const total = (type) =>

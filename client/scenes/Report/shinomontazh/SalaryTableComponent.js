@@ -50,6 +50,7 @@ const SalaryTableComponent = ({
   const [savedCardSum, setSavedCardSum] = useState(false)
   const [totalAdvance, setTotalAdvance] = useState(0)
   const [totalExpenses, setTotalExpenses] = useState(0)
+  const [totalPersonalExpenses, setTotalPersonalExpenses] = useState(0)
   const [totalFines, setTotalFines] = useState(0)
   //   const [error, setError] = useState(true)
 
@@ -168,6 +169,25 @@ const SalaryTableComponent = ({
             <span className="lg:hidden px-2 py-1 text-xs font-bold uppercase">Вал:</span>
             {Math.round(getSalary(it.id), userPercent[it.id])} р.
           </td>
+          {calendarType === 'month' ? (
+            <td
+              id="nalog"
+              className="w-auto table-cell lg:w-auto p-2 text-gray-800 text-left border border-b relative lg:static"
+            >
+              <SalaryCell
+                currentDate={activeMonth}
+                employeeId={it.id}
+                totalAdvance={totalExpenses}
+                setTotalAdvance={setTotalExpenses}
+                payments={it?.data || []}
+                data={{
+                  name: 'Расходы',
+                  singleName: 'расход',
+                  type: REPORT_SALARY_TYPES.expenses
+                }}
+              />
+            </td>
+          ) : null}
           <td
             id="procent"
             className="w-auto table-cell lg:w-auto p-2 text-gray-800 text-left border border-b relative lg:static"
@@ -199,6 +219,16 @@ const SalaryTableComponent = ({
               </button>
             </span>
           </td>
+          <td className="w-full lg:w-auto p-2 text-gray-800 text-left lg:text-center border border-b block lg:table-cell relative lg:static whitespace-no-wrap">
+            <span className="lg:hidden px-2 py-1 text-xs font-bold uppercase">Зарплата:</span>
+            {userPercent[it.id]
+              ? Math.round(
+                  applyDiscount(getSalary(it.id), userPercent[it.id], it.id) +
+                    (Number(userCardSum[it.id]) || 0)
+                )
+              : 0}{' '}
+            р.
+          </td>
           <td
             id="oformlen"
             className="w-auto table-cell lg:w-auto p-2 text-gray-800 text-left border border-b relative lg:static"
@@ -224,16 +254,6 @@ const SalaryTableComponent = ({
                 {savedOformlen ? '✓' : <ImageSave />}
               </button>{' '}
             </span>
-          </td>
-          <td className="w-full lg:w-auto p-2 text-gray-800 text-left lg:text-center border border-b block lg:table-cell relative lg:static whitespace-no-wrap">
-            <span className="lg:hidden px-2 py-1 text-xs font-bold uppercase">Зарплата:</span>
-            {userPercent[it.id]
-              ? Math.round(
-                  applyDiscount(getSalary(it.id), userPercent[it.id], it.id) +
-                    (Number(userCardSum[it.id]) || 0)
-                )
-              : 0}{' '}
-            р.
           </td>
           {calendarType === 'month' ? (
             <>
@@ -298,13 +318,13 @@ const SalaryTableComponent = ({
                 <SalaryCell
                   currentDate={activeMonth}
                   employeeId={it.id}
-                  totalAdvance={totalExpenses}
-                  setTotalAdvance={setTotalExpenses}
+                  totalAdvance={totalPersonalExpenses}
+                  setTotalAdvance={setTotalPersonalExpenses}
                   payments={it?.data || []}
                   data={{
-                    name: 'Расходы',
-                    singleName: 'расход',
-                    type: REPORT_SALARY_TYPES.expenses
+                    name: 'Личные расходы',
+                    singleName: 'личный расход',
+                    type: REPORT_SALARY_TYPES.personalExpenses
                   }}
                 />
               </td>
@@ -381,6 +401,10 @@ const SalaryTableComponent = ({
                 ? Math.round(applyDiscount(getSalary(it.id), userPercent[it.id], it.id))
                 : 0
             }
+            totalAdvance={totalAdvance}
+            totalExpenses={totalExpenses}
+            totalPersonalExpenses={totalPersonalExpenses}
+            totalFines={totalFines}
           />
         </td>
       ) : null}

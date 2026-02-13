@@ -803,14 +803,19 @@ const Salary = ({
                 <th className="p-3 font-bold bg-gray-100 text-gray-600 border border-gray-300 hidden lg:table-cell">
                   Вал
                 </th>
+                {calendarType === 'month' ? (
+                  <th className="p-3 font-bold bg-gray-100 text-gray-600 border border-gray-300 hidden lg:table-cell">
+                    Расходы
+                  </th>
+                ) : null}
                 <th className="p-3 font-bold bg-gray-100 text-gray-600 border border-gray-300 hidden lg:table-cell">
                   Процент
                 </th>
                 <th className="p-3 font-bold bg-gray-100 text-gray-600 border border-gray-300 hidden lg:table-cell">
-                  Оформлен
+                  Зарплата
                 </th>
                 <th className="p-3 font-bold bg-gray-100 text-gray-600 border border-gray-300 hidden lg:table-cell">
-                  Зарплата
+                  Оформлен
                 </th>
                 {calendarType === 'month' ? (
                   <>
@@ -824,7 +829,7 @@ const Salary = ({
                       Аванс
                     </th>
                     <th className="p-3 font-bold bg-gray-100 text-gray-600 border border-gray-300 hidden lg:table-cell">
-                      Расходы
+                      Личные расходы
                     </th>
                     <th className="p-3 font-bold bg-gray-100 text-gray-600 border border-gray-300 hidden lg:table-cell">
                       Штрафы
@@ -926,6 +931,21 @@ const Salary = ({
                       <td className="w-full lg:w-auto p-2 text-gray-800 text-left border border-b block lg:table-cell relative lg:static">
                         <span className="lg:hidden px-2 py-1 bg-purple-100 font-bold uppercase">
                           Сумма на карту:
+                        </span>
+                      </td>
+                      <td className="w-full lg:w-auto p-2 text-gray-800 text-left border border-b block lg:table-cell relative lg:static">
+                        <span className="lg:hidden px-2 py-1 bg-purple-100 font-bold uppercase">
+                          Аванс:
+                        </span>
+                      </td>
+                      <td className="w-full lg:w-auto p-2 text-gray-800 text-left border border-b block lg:table-cell relative lg:static">
+                        <span className="lg:hidden px-2 py-1 bg-purple-100 font-bold uppercase">
+                          Личные расходы:
+                        </span>
+                      </td>
+                      <td className="w-full lg:w-auto p-2 text-gray-800 text-left border border-b block lg:table-cell relative lg:static">
+                        <span className="lg:hidden px-2 py-1 bg-purple-100 font-bold uppercase">
+                          Штрафы:
                         </span>
                       </td>
                     </>
