@@ -1,4 +1,4 @@
-import { useEffect } from 'react'
+import { useEffect, useCallback } from 'react'
 import { useDispatch } from 'react-redux'
 import { useLocation } from 'react-router-dom'
 import { socket } from '../../redux/sockets/socketReceivers'
@@ -16,27 +16,29 @@ const OnLoad = (page, showSearch) => {
     if (checkQueryParamsAre(showSearch, search)) {
       dispatch(getAutopartsByPage(page))
     }
-  }, [dispatch, page, showSearch])
+  }, [dispatch, page, showSearch, search])
 
   useEffect(() => {
     dispatch(getVendors())
   }, [dispatch])
 
-  useEffect(() => {
-    socket.on('update autopart', function () {
-      if (socketCondition(showSearch, page)) {
-        dispatch(getAutopartsByPage(page))
-      }
-    })
-  }, [])
+  // Мемоизируем обработчик сокета
+  const handleSocketUpdate = useCallback(() => {
+    if (socketCondition(showSearch, page)) {
+      dispatch(getAutopartsByPage(page))
+    }
+  }, [dispatch, page, showSearch])
 
   useEffect(() => {
-    socket.on('update edited autopart', function () {
-      if (socketCondition(showSearch, page)) {
-        dispatch(getAutopartsByPage(page))
-      }
-    })
-  }, [])
+    socket.on('update autopart', handleSocketUpdate)
+    socket.on('update edited autopart', handleSocketUpdate)
+
+    // Cleanup функция для удаления слушателей
+    return () => {
+      socket.off('update autopart', handleSocketUpdate)
+      socket.off('update edited autopart', handleSocketUpdate)
+    }
+  }, [handleSocketUpdate])
 }
 
 export default OnLoad

@@ -56,6 +56,7 @@ const AutopartsEdit = (props) => {
   )
 
   useEffect(() => {
+    console.log(222)
     fetch('/api/v1/carmark')
       .then((res) => res.json())
       .then((it) => {

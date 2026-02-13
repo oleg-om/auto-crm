@@ -10,7 +10,8 @@ export const salaryFormattedDate = (date) =>
 export const REPORT_SALARY_TYPES = {
   salary: 'salary',
   fine: 'fine',
-  expenses: 'expenses'
+  expenses: 'expenses',
+  personalExpenses: 'personalExpenses'
 }
 
 const STATUSES = {
