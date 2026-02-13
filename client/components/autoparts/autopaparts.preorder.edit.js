@@ -70,6 +70,8 @@ const AutopartUpdate = (props) => {
     phoneSecond: props?.phoneSecond || ''
   })
 
+  const [showInterestedModal, setShowInterestedModal] = useState(false)
+
   const { navigateWithQueryParams, searchParamsToUrl } = useSaveFilter()
 
   const [inputFields, setInputFields] = useState(
@@ -86,11 +88,16 @@ const AutopartUpdate = (props) => {
 
   const changeAutopart = () => {
     // Проверяем наличие закупочной цены для товаров с определенными статусами
-    const statusesRequiringPrice = ['Товар в пути', 'Товар прибыл', 'Получен на складе', 'Выдан, оплачено']
-    
+    const statusesRequiringPrice = [
+      'Товар в пути',
+      'Товар прибыл',
+      'Получен на складе',
+      'Выдан, оплачено'
+    ]
+
     // Проверяем общий статус заказа или статусы отдельных товаров
     const needsValidation = statusesRequiringPrice.includes(state.status)
-    
+
     // Используем актуальные данные из inputFields (они синхронизированы с state.order)
     const hasMissingPrice = inputFields.some((item) => {
       // Проверяем только заполненные строки (где есть название товара)
@@ -144,10 +151,45 @@ const AutopartUpdate = (props) => {
   }
   const onChange = (e) => {
     const { name, value } = e.target
+
+    // Если меняется статус на "Интересовался", показываем модальное окно
+    if (name === 'status' && value === 'Интересовался') {
+      setShowInterestedModal(true)
+      return
+    }
+
     setState((prevState) => ({
       ...prevState,
       [name]: value
     }))
+  }
+
+  const handleInterestedConfirm = () => {
+    // Закрываем модальное окно
+    setShowInterestedModal(false)
+
+    // Обновляем статус с двумя записями в истории
+    props.updateAutopart(props.id, {
+      ...state,
+      status: 'Интересовался',
+      statusDates: [
+        ...props.statusDates,
+        { status: 'Проинформировал клиента', date: dateNew },
+        { status: 'Интересовался', date: dateNew }
+      ]
+    })
+
+    setState((prevState) => ({
+      ...prevState,
+      status: 'Интересовался'
+    }))
+
+    notify('Клиент проинформирован, статус изменен на "Интересовался"')
+  }
+
+  const handleInterestedCancel = () => {
+    // Просто закрываем модальное окно, статус не меняется
+    setShowInterestedModal(false)
   }
 
   const handleChangeInput = (index, event) => {
@@ -873,6 +915,66 @@ const AutopartUpdate = (props) => {
         <div className="-mx-3 md:flex flex-wrap mt-3" />
       </div>
       <SubmitButtons sendData={changeAutopart} />
+
+      {/* Модальное окно для статуса "Интересовался" */}
+      {showInterestedModal && (
+        <div
+          className="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50 flex items-center justify-center"
+          onClick={handleInterestedCancel}
+          onKeyDown={(e) => {
+            if (e.key === 'Escape') handleInterestedCancel()
+          }}
+          role="button"
+          tabIndex={0}
+        >
+          <button
+            type="button"
+            className="relative bg-white rounded-lg shadow-xl max-w-md w-full mx-4 text-left"
+            onClick={(e) => e.stopPropagation()}
+            tabIndex={-1}
+          >
+            <div className="p-6">
+              <h3 className="text-lg font-medium text-gray-900 mb-4">
+                Подтверждение информирования клиента
+              </h3>
+              
+              <div className="mb-4">
+                <div className="mb-2">
+                  <span className="font-semibold">Имя клиента:</span>{' '}
+                  <span>{props.name || 'Не указано'}</span>
+                </div>
+                <div className="mb-2">
+                  <span className="font-semibold">Телефон:</span>{' '}
+                  <span>{props.phone || 'Не указан'}</span>
+                </div>
+                {props.phoneSecond && (
+                  <div className="mb-2">
+                    <span className="font-semibold">Доп. телефон:</span>{' '}
+                    <span>{props.phoneSecond}</span>
+                  </div>
+                )}
+              </div>
+
+              <div className="flex justify-end space-x-3 mt-6">
+                <button
+                  type="button"
+                  onClick={handleInterestedCancel}
+                  className="px-4 py-2 bg-gray-300 text-gray-700 rounded hover:bg-gray-400 transition-colors"
+                >
+                  Отмена
+                </button>
+                <button
+                  type="button"
+                  onClick={handleInterestedConfirm}
+                  className="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600 transition-colors"
+                >
+                  Проинформировал клиента
+                </button>
+              </div>
+            </div>
+          </button>
+        </div>
+      )}
     </div>
   )
 }
