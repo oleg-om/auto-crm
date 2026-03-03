@@ -7,14 +7,27 @@ mongoose.connection.on('connected', () => {
 
 mongoose.connection.on('error', (err) => {
   console.log(`can not connected to db ${err}`)
-  process.exit(1)
+})
+
+mongoose.connection.on('disconnected', () => {
+  console.log('MongoDB disconnected. Attempting to reconnect...')
+})
+
+mongoose.connection.on('reconnected', () => {
+  console.log('MongoDB reconnected')
 })
 
 const connect = async (mongoURL = config.mongoURL) => {
   await mongoose.connect(mongoURL, {
     useUnifiedTopology: true,
     useNewUrlParser: true,
-    poolSize: 40
+    maxPoolSize: 20, // Уменьшаем пул соединений (было 40)
+    minPoolSize: 5,
+    serverSelectionTimeoutMS: 5000,
+    socketTimeoutMS: 45000,
+    family: 4, // Использовать IPv4, избегая проблем с IPv6
+    retryWrites: true,
+    retryReads: true
   })
   return mongoose.connection
 }

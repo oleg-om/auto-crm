@@ -81,24 +81,28 @@ exports.getFiltered = async (req, res) => {
     const LIMIT = 14
     const startIndex = (Number(page) - 1) * LIMIT // get the starting index of every page
 
-    const total = await Shinomontazh.countDocuments({
-      id_shinomontazhs: req.query.number ? `${number.toString()}` : { $exists: true },
-      place: req.query.place ? `${place.toString()}` : { $exists: true },
-      regnumber: req.query.reg ? { $regex: `${reg.toString()}`, $options: 'i' } : { $exists: true },
-      'employee.id': req.query?.employee ? `${employee.toString()}` : { $exists: true },
-      dateStart: { $exists: true }
-    })
-    const posts = await Shinomontazh.find({
-      id_shinomontazhs: req.query.number ? `${number.toString()}` : { $exists: true },
-      place: req.query.place ? `${place.toString()}` : { $exists: true },
-      regnumber: req.query.reg ? { $regex: `${reg.toString()}`, $options: 'i' } : { $exists: true },
-      'employee.id': req.query?.employee ? `${employee.toString()}` : { $exists: true },
-      dateStart: { $exists: true }
-    })
-      // .sort({ id_shinomontazhs: -1 })
+    // Строим query объект динамически, добавляя только заданные фильтры
+    const query = { dateStart: { $exists: true } }
+
+    if (req.query.number) {
+      query.id_shinomontazhs = number.toString()
+    }
+    if (req.query.place) {
+      query.place = place.toString()
+    }
+    if (req.query.reg) {
+      query.regnumber = { $regex: reg.toString(), $options: 'i' }
+    }
+    if (req.query.employee) {
+      query['employee.id'] = employee.toString()
+    }
+
+    const total = await Shinomontazh.countDocuments(query)
+    const posts = await Shinomontazh.find(query)
       .sort({ dateStart: -1 })
       .limit(LIMIT)
       .skip(startIndex)
+      .lean() // Оптимизация: возвращает plain JS объекты вместо Mongoose документов
 
     res.json({
       status: 'ok',

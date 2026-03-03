@@ -133,4 +133,19 @@ const Shinomontazh = new mongoose.Schema({
 
 Shinomontazh.plugin(AutoIncrement, { inc_field: 'id_shinomontazhs' })
 
+// Составной индекс для оптимизации запросов getFiltered
+Shinomontazh.index({
+  place: 1,
+  id_shinomontazhs: 1,
+  regnumber: 1,
+  'employee.id': 1,
+  dateStart: -1
+})
+
+// Индекс для быстрого поиска по dateStart
+Shinomontazh.index({ dateStart: -1 })
+
+// Индекс для поиска по месту
+Shinomontazh.index({ place: 1, dateStart: -1 })
+
 module.exports = mongoose.model('shinomontazhs', Shinomontazh)
