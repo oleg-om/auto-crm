@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { useHistory } from 'react-router-dom'
 import { useSelector, useDispatch } from 'react-redux'
-import NumberFormat from 'react-number-format'
+import { PatternFormat as NumberFormat } from 'react-number-format'
 import { toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
 import timeList from '../../lists/time-list'
@@ -13,7 +13,6 @@ const RazvalCreate = (props) => {
   const list = useSelector((s) => s.places.list)
   const employeeList = useSelector((s) => s.employees.list)
   const auth = useSelector((s) => s.auth)
-  toast.configure()
   const notify = (arg) => {
     toast.info(arg, { position: toast.POSITION.BOTTOM_RIGHT })
   }

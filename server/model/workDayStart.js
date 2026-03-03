@@ -31,4 +31,3 @@ WorkDayStart.index({ employeeId: 1, date: 1 }, { unique: true })
 WorkDayStart.plugin(AutoIncrement, { inc_field: 'id_work_day_start' })
 
 module.exports = mongoose.model('workDayStarts', WorkDayStart)
-

@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { useHistory } from 'react-router-dom'
 import { toast } from 'react-toastify'
-import NumberFormat from 'react-number-format'
+import { PatternFormat as NumberFormat } from 'react-number-format'
 import Modal from '../Modal.delete'
 import 'react-toastify/dist/ReactToastify.css'
 import discounts from '../../lists/discounts.full'
@@ -34,7 +34,6 @@ const PlaceUpdate = (props) => {
     boostShinomontazhPrices: props?.boostShinomontazhPrices || 'false'
   })
   const history = useHistory()
-  toast.configure()
   const notify = (arg) => {
     toast.info(arg, { position: toast.POSITION.BOTTOM_RIGHT })
   }

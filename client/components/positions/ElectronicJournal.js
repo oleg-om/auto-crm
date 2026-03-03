@@ -10,7 +10,6 @@ import PositionTab from './PositionTab'
 import 'react-toastify/dist/ReactToastify.css'
 
 const ElectronicJournal = () => {
-  toast.configure()
   const notify = (arg) => {
     toast.info(arg, { position: toast.POSITION.BOTTOM_RIGHT })
   }

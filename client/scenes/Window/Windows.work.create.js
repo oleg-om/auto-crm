@@ -35,7 +35,6 @@ const WindowsNew = () => {
   const history = useHistory()
   const checkLink = () => history.location.pathname.includes('boss')
 
-  toast.configure()
   const notify = (arg) => {
     toast.info(arg, { position: toast.POSITION.BOTTOM_RIGHT })
   }

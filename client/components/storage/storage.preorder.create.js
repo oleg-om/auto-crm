@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { useHistory } from 'react-router-dom'
 import { useSelector } from 'react-redux'
 import { toast } from 'react-toastify'
-import NumberFormat from 'react-number-format'
+import { PatternFormat as NumberFormat } from 'react-number-format'
 import cx from 'classnames'
 import 'react-toastify/dist/ReactToastify.css'
 // import tyresList from '../../lists/tyres/tyres'
@@ -15,7 +15,6 @@ import Statuses from '../../lists/storages-statuses'
 import SubmitButtons from '../shared/buttons/OrderSubmitButtons'
 
 const StoragesCreate = (props) => {
-  toast.configure()
   const notify = (arg) => {
     toast.info(arg, { position: toast.POSITION.BOTTOM_RIGHT })
   }

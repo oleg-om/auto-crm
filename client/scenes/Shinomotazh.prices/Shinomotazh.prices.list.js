@@ -14,7 +14,6 @@ import ShinomontazhTypeList from '../../lists/shinomontazhtype-list'
 import ShinomontazhCategoryList from '../../lists/shinomontazhprice-list'
 
 const ShinomontazhpriceList = () => {
-  toast.configure()
   const notify = (arg) => {
     toast.info(arg, { position: toast.POSITION.BOTTOM_RIGHT })
   }

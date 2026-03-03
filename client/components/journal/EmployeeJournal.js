@@ -10,7 +10,6 @@ import standardDutiesList from '../../lists/standard-duties-list'
 import 'react-toastify/dist/ReactToastify.css'
 
 const EmployeeJournal = () => {
-  toast.configure()
   const notify = (arg) => {
     toast.info(arg, { position: toast.POSITION.BOTTOM_RIGHT })
   }

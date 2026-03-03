@@ -28,7 +28,6 @@ export const categoryList = [{ name: 'Цена', id: 'price', class: 'price' }]
 // ]
 
 const WindowpriceCreate = (props) => {
-  toast.configure()
   const notify = (arg) => {
     toast.info(arg, { position: toast.POSITION.BOTTOM_RIGHT })
   }

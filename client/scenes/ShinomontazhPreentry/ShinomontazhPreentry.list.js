@@ -94,7 +94,6 @@ const PreentryList = () => {
 
   const [activeDay, setActiveDay] = useState(new Date())
   onLoad(activeDay, preentryType)
-  toast.configure()
   const notify = (arg) => {
     toast.info(arg, { position: toast.POSITION.BOTTOM_RIGHT })
   }

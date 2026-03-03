@@ -1,30 +1,33 @@
 import React from 'react'
-import ReactDOM from 'react-dom'
-import { AppContainer } from 'react-hot-loader'
+import { createRoot, hydrateRoot } from 'react-dom/client'
 import Root from './config/root'
 
 import './assets/scss/main.scss'
 
 const target = document.getElementById('root')
+const isStudy = process.env.MODE === 'study'
 
-const render = (Component) => {
-  const isStudy = process.env.MODE === 'study'
+const AppWrapper = () => (
+  <div className={isStudy ? 'study-crm' : 'main-crm'}>
+    <Root />
+  </div>
+)
 
-  ;(module.hot ? ReactDOM.render : ReactDOM.hydrate)(
-    <AppContainer>
-      <div className={isStudy ? 'study-crm' : 'main-crm'}>
-        <Component />
-      </div>
-    </AppContainer>,
-    target
-  )
-}
-
-render(Root)
-
+// React 18 rendering
 if (module.hot) {
+  // Development mode - use createRoot
+  const root = createRoot(target)
+  root.render(<AppWrapper />)
+
   module.hot.accept('./config/root', () => {
-    const newApp = require('./config/root').default
-    render(newApp)
+    root.render(<AppWrapper />)
   })
+} else {
+  // Production mode - use hydrateRoot for SSR or createRoot
+  if (target.hasChildNodes()) {
+    hydrateRoot(target, <AppWrapper />)
+  } else {
+    const root = createRoot(target)
+    root.render(<AppWrapper />)
+  }
 }

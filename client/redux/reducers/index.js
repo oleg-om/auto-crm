@@ -1,5 +1,4 @@
 import { combineReducers } from 'redux'
-import { connectRouter } from 'connected-react-router'
 import auth from './auth'
 import messages from './messages'
 import socketInfoUsers from './adminInformation'
@@ -31,9 +30,9 @@ import conds from './conds'
 import condprices from './cond.prices'
 import positions from './positions'
 
-const createRootReducer = (history) =>
+const createRootReducer = (routerReducer) =>
   combineReducers({
-    router: connectRouter(history),
+    router: routerReducer,
     auth,
     messages,
     socketInfoUsers,

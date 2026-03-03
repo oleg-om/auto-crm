@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react'
 import { useDispatch } from 'react-redux'
-import NumberFormat from 'react-number-format'
+import { PatternFormat as NumberFormat } from 'react-number-format'
 import { useReactToPrint } from 'react-to-print'
 import { toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
@@ -21,7 +21,6 @@ const ModalNew = ({
   createIsOpen,
   activePost
 }) => {
-  toast.configure()
   const notify = (arg) => {
     toast.info(arg, { position: toast.POSITION.BOTTOM_RIGHT })
   }

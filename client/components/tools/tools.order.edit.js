@@ -2,13 +2,12 @@ import React, { useState } from 'react'
 import { useHistory } from 'react-router-dom'
 import { useSelector } from 'react-redux'
 import { toast } from 'react-toastify'
-import NumberFormat from 'react-number-format'
+import { PatternFormat as NumberFormat } from 'react-number-format'
 import 'react-toastify/dist/ReactToastify.css'
 import toolsList from '../../lists/autoparts-list'
 import SubmitButtons from '../shared/buttons/OrderSubmitButtons'
 
 const ToolsEdit = (props) => {
-  toast.configure()
   const notify = (arg) => {
     toast.info(arg, { position: toast.POSITION.BOTTOM_RIGHT })
   }

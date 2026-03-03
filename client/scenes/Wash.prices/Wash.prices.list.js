@@ -20,7 +20,6 @@ const WashTypeList = [
 const WashpriceList = () => {
   OnLoad()
   OnLoadWash()
-  toast.configure()
   const notify = (arg) => {
     toast.info(arg, { position: toast.POSITION.BOTTOM_RIGHT })
   }

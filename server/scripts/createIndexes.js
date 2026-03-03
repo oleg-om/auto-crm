@@ -8,10 +8,7 @@ const config = require('../config')
 const createIndexes = async () => {
   try {
     console.log('Подключение к MongoDB...')
-    await mongoose.connect(config.default.mongoURL, {
-      useUnifiedTopology: true,
-      useNewUrlParser: true
-    })
+    await mongoose.connect(config.default.mongoURL)
 
     console.log('Подключено к MongoDB')
 

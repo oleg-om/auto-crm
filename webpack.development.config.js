@@ -1,24 +1,21 @@
 /* eslint-disable import/no-extraneous-dependencies */
 const { resolve } = require('path')
-const fs = require('fs')
 const webpack = require('webpack')
 const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 const CopyWebpackPlugin = require('copy-webpack-plugin')
-// const HardSourceWebpackPlugin = require('hard-source-webpack-plugin')
+const ESLintPlugin = require('eslint-webpack-plugin')
 const ReactRefreshWebpackPlugin = require('@pmmmwh/react-refresh-webpack-plugin')
 
-const eslintCacheIdentifier = JSON.stringify(fs.statSync('.eslintrc').mtimeMs)
 require('dotenv').config()
 
 const version = 'development'
 const config = {
-  devtool: 'cheap-module-eval-source-map',
+  devtool: 'eval-cheap-module-source-map',
 
   entry: ['./main.js'],
   resolve: {
     alias: {
-      d3: 'd3/index.js',
-      'react-dom': '@hot-loader/react-dom'
+      d3: 'd3/index.js'
     }
   },
   output: {
@@ -31,48 +28,47 @@ const config = {
   context: resolve(__dirname, 'client'),
   devServer: {
     hot: false,
-    contentBase: resolve(__dirname, 'dist/assets'),
-    watchContentBase: true,
+    static: {
+      directory: resolve(__dirname, 'dist/assets'),
+      watch: true
+    },
     host: 'localhost',
     port: 8087,
-    disableHostCheck: true,
+    allowedHosts: 'all',
     open: true,
     historyApiFallback: true,
-    overlay: {
-      warnings: false,
-      errors: true
+    client: {
+      overlay: {
+        warnings: false,
+        errors: true
+      }
     },
     proxy: [
       {
-        context: ['/api', '/auth', '/ws'],
+        context: ['/api', '/auth'],
         target: `http://localhost:${process.env.PORT || 8090}`,
         secure: false,
         changeOrigin: true,
-        ws: process.env.ENABLE_SOCKETS || false
+        logLevel: 'warn'
+      },
+      {
+        context: ['/ws'],
+        target: `http://localhost:${process.env.PORT || 8090}`,
+        secure: false,
+        changeOrigin: true,
+        ws: true,
+        logLevel: 'silent',
+        onError: () => {
+          // Silently ignore WebSocket errors when backend is not ready
+        }
       }
     ]
   },
   module: {
     rules: [
       {
-        enforce: 'pre',
         test: /\.js$/,
-        exclude: /node_modules/,
-        include: [/client/, /server/],
-        loader: [
-          {
-            loader: 'eslint-loader',
-            options: {
-              cache: false,
-
-              cacheIdentifer: eslintCacheIdentifier
-            }
-          }
-        ]
-      },
-      {
-        test: /\.js$/,
-        loaders: ['babel-loader'],
+        use: ['babel-loader'],
         include: [/client/, /stories/],
         exclude: /node_modules/
       },
@@ -82,8 +78,7 @@ const config = {
           {
             loader: MiniCssExtractPlugin.loader,
             options: {
-              publicPath: '../',
-              hmr: process.env.NODE_ENV === 'development'
+              publicPath: '../'
             }
           },
           { loader: 'css-loader', options: { sourceMap: true } },
@@ -103,18 +98,16 @@ const config = {
           {
             loader: MiniCssExtractPlugin.loader,
             options: {
-              publicPath: '../',
-              hmr: process.env.NODE_ENV === 'development'
+              publicPath: '../'
             }
           },
-
           { loader: 'css-loader', options: { sourceMap: true } },
           {
             loader: 'postcss-loader'
           },
           {
             loader: 'sass-loader',
-            query: {
+            options: {
               sourceMap: false
             }
           }
@@ -127,35 +120,19 @@ const config = {
       },
       {
         test: /\.(png|jpg|gif|webp)$/,
-        use: [
-          {
-            loader: 'file-loader'
-          }
-        ]
+        type: 'asset/resource'
       },
       {
         test: /\.eot$/,
-        use: [
-          {
-            loader: 'file-loader'
-          }
-        ]
+        type: 'asset/resource'
       },
       {
-        test: /\.woff(2)$/,
-        use: [
-          {
-            loader: 'file-loader'
-          }
-        ]
+        test: /\.woff(2)?$/,
+        type: 'asset/resource'
       },
       {
         test: /\.[ot]tf$/,
-        use: [
-          {
-            loader: 'file-loader'
-          }
-        ]
+        type: 'asset/resource'
       },
       {
         test: /\.svg$/,
@@ -174,47 +151,50 @@ const config = {
 
   plugins: [
     new webpack.optimize.ModuleConcatenationPlugin(),
+    new ESLintPlugin({
+      extensions: ['js'],
+      exclude: 'node_modules',
+      context: resolve(__dirname, 'client'),
+      cache: false,
+      failOnError: false,
+      failOnWarning: false
+    }),
     new MiniCssExtractPlugin({
       filename: 'css/main.css',
       chunkFilename: 'css/[id].css',
       ignoreOrder: false
     }),
-    new CopyWebpackPlugin(
-      {
-        patterns: [
-          { from: `${__dirname}/client/assets/images`, to: 'images' },
-          { from: `${__dirname}/client/assets/fonts`, to: 'fonts' },
-
-          { from: `${__dirname}/client/assets/sitemap.xml`, to: 'sitemap.xml' },
-          { from: `${__dirname}/client/assets/manifest.json`, to: 'manifest.json' },
-          { from: `${__dirname}/client/index.html`, to: 'index.html' },
-
-          {
-            from: `${__dirname}/client/install-sw.js`,
-            to: 'js/install-sw.js',
-            transform: (content) => {
-              return content.toString().replace(/APP_VERSION/g, version)
-            }
-          },
-          { from: `${__dirname}/client/assets/robots.txt`, to: 'robots.txt' },
-          {
-            from: `${__dirname}/client/html.js`,
-            to: 'html.js',
-            transform: (content) => {
-              return content.toString().replace(/COMMITHASH/g, version)
-            }
-          },
-          {
-            from: `${__dirname}/client/sw.js`,
-            to: 'sw.js',
-            transform: (content) => {
-              return content.toString().replace(/APP_VERSION/g, version)
-            }
+    new CopyWebpackPlugin({
+      patterns: [
+        { from: `${__dirname}/client/assets/images`, to: 'images' },
+        { from: `${__dirname}/client/assets/fonts`, to: 'fonts' },
+        { from: `${__dirname}/client/assets/sitemap.xml`, to: 'sitemap.xml' },
+        { from: `${__dirname}/client/assets/manifest.json`, to: 'manifest.json' },
+        { from: `${__dirname}/client/index.html`, to: 'index.html' },
+        {
+          from: `${__dirname}/client/install-sw.js`,
+          to: 'js/install-sw.js',
+          transform: (content) => {
+            return content.toString().replace(/APP_VERSION/g, version)
           }
-        ]
-      },
-      { parallel: 100 }
-    ),
+        },
+        { from: `${__dirname}/client/assets/robots.txt`, to: 'robots.txt' },
+        {
+          from: `${__dirname}/client/html.js`,
+          to: 'html.js',
+          transform: (content) => {
+            return content.toString().replace(/COMMITHASH/g, version)
+          }
+        },
+        {
+          from: `${__dirname}/client/sw.js`,
+          to: 'sw.js',
+          transform: (content) => {
+            return content.toString().replace(/APP_VERSION/g, version)
+          }
+        }
+      ]
+    }),
 
     new ReactRefreshWebpackPlugin(),
     new webpack.DefinePlugin(

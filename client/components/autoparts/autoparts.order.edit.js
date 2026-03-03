@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
 import { toast } from 'react-toastify'
-import NumberFormat from 'react-number-format'
+import { PatternFormat as NumberFormat } from 'react-number-format'
 import cx from 'classnames'
 import 'react-toastify/dist/ReactToastify.css'
 import autopartsList from '../../lists/autoparts-list'
@@ -9,7 +9,6 @@ import SubmitButtons from '../shared/buttons/OrderSubmitButtons'
 import useSaveFilter from '../../hooks/saveFilterParams'
 
 const AutopartsEdit = (props) => {
-  toast.configure()
   const notify = (arg) => {
     toast.info(arg, { position: toast.POSITION.BOTTOM_RIGHT })
   }

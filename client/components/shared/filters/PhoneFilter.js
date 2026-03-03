@@ -1,4 +1,4 @@
-import NumberFormat from 'react-number-format'
+import { PatternFormat } from 'react-number-format'
 import cx from 'classnames'
 import React from 'react'
 
@@ -12,7 +12,7 @@ const PhoneFilter = ({ search, onChange, showSearch, onEnterPress, activeFilter 
         Телефон
       </label>
       <div className="flex-shrink w-full inline-block relative">
-        <NumberFormat
+        <PatternFormat
           className={cx(
             'block appearance-none w-full bg-grey-lighter border border-gray-300 focus:border-gray-500 focus:outline-none py-1 px-4 pr-8 rounded',
             {

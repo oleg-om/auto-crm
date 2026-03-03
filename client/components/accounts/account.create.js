@@ -9,7 +9,6 @@ import RequestPassword from './containers/requestPassword'
 import PostsField from './containers/postsField'
 
 const AccountCreate = (props) => {
-  toast.configure()
   const notify = (arg) => {
     toast.info(arg, { position: toast.POSITION.BOTTOM_RIGHT })
   }

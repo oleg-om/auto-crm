@@ -79,13 +79,13 @@ exports.getFiltered = async (req, res) => {
       id_stos: req.query.number ? `${number.toString()}` : { $exists: true },
       place: req.query.place ? `${place.toString()}` : { $exists: true },
       regnumber: req.query.reg ? { $regex: `${reg.toString()}`, $options: 'i' } : { $exists: true },
-      'employee.id': req.query?.employee ? `${employee.toString()}` : { $exists: true },
+      'employee.id': req.query?.employee ? `${employee.toString()}` : { $exists: true }
     })
     const posts = await Sto.find({
       id_stos: req.query.number ? `${number.toString()}` : { $exists: true },
       place: req.query.place ? `${place.toString()}` : { $exists: true },
       regnumber: req.query.reg ? { $regex: `${reg.toString()}`, $options: 'i' } : { $exists: true },
-      'employee.id': req.query?.employee ? `${employee.toString()}` : { $exists: true },
+      'employee.id': req.query?.employee ? `${employee.toString()}` : { $exists: true }
     })
       .sort({ dateStart: -1 })
       .limit(LIMIT)

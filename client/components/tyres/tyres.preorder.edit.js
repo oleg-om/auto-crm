@@ -24,7 +24,6 @@ const TyreUpdate = (props) => {
     content: () => componentRef.current
   })
 
-  toast.configure()
   const notify = (arg) => {
     toast.info(arg, { position: toast.POSITION.BOTTOM_RIGHT })
   }

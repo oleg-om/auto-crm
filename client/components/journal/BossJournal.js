@@ -7,7 +7,6 @@ import { getEmployees } from '../../redux/reducers/employees'
 import 'react-toastify/dist/ReactToastify.css'
 
 const BossJournal = () => {
-  toast.configure()
 
   const dispatch = useDispatch()
   const employees = useSelector((s) => s.employees.list)

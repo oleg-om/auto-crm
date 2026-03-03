@@ -21,7 +21,6 @@ const AutopartUpdate = (props) => {
     content: () => componentRef.current
   })
 
-  toast.configure()
   const notify = (arg) => {
     toast.info(arg, { position: toast.POSITION.BOTTOM_RIGHT })
   }
@@ -120,26 +119,27 @@ const AutopartUpdate = (props) => {
     else if (state.status === taskStatuses[7] && !state.cancelReason)
       notify('Выберите причину отказа')
     else if (props.status !== state.status) {
-      props.updateAutopart(props.id, {
+      const updateData = {
         ...state,
         statusDates: [...props.statusDates, { status: state.status, date: dateNew }]
-      })
+      }
+      
+      // Добавляем cancelReason если статус "Отказ"
+      if (state.status === taskStatuses[7]) {
+        updateData.cancelReason = state.cancelReason
+      }
+      
+      props.updateAutopart(props.id, updateData)
       navigateWithQueryParams(
         `/autoparts/order/list/${props.num ? props.num : ''}`,
         searchParamsToUrl
       )
-      notify('Данные о заказе обновлены, заказ в работе')
-    } else if (props.status !== state.status && state.status === taskStatuses[7]) {
-      props.updateAutopart(props.id, {
-        ...state,
-        statusDates: [...props.statusDates, { status: state.status, date: dateNew }],
-        cancelReason: state.cancelReason
-      })
-      navigateWithQueryParams(
-        `/autoparts/order/list/${props.num ? props.num : ''}`,
-        searchParamsToUrl
-      )
-      notify('Данные о заказе обновлены, клиент отказался от заказа')
+      
+      if (state.status === taskStatuses[7]) {
+        notify('Данные о заказе обновлены, клиент отказался от заказа')
+      } else {
+        notify('Данные о заказе обновлены, заказ в работе')
+      }
     } else {
       props.updateAutopart(props.id, state)
       navigateWithQueryParams(

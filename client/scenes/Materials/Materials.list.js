@@ -11,7 +11,6 @@ import 'react-toastify/dist/ReactToastify.css'
 import materialList from '../../lists/material-list'
 
 const MaterialList = () => {
-  toast.configure()
   const notify = (arg) => {
     toast.info(arg, { position: toast.POSITION.BOTTOM_RIGHT })
   }

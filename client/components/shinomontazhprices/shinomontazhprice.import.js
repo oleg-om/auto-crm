@@ -8,7 +8,6 @@ import Modal from '../Modal.delete'
 import SubmitButtons from '../shared/buttons/OrderSubmitButtons'
 
 const ShinomontazhpriceImport = (props) => {
-  toast.configure()
   const notify = (arg) => {
     toast.info(arg, { position: toast.POSITION.BOTTOM_RIGHT })
   }

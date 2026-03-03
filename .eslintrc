@@ -1,17 +1,21 @@
 {
-  "parser": "babel-eslint",
+  "parser": "@babel/eslint-parser",
   "root": true,
   "extends": [
     "airbnb",
+    "airbnb/hooks",
     "prettier",
-    "prettier/babel",
-    "prettier/react",
     "plugin:react/recommended"
   ],
   "parserOptions": {
-    "ecmaVersion": 6,
+    "requireConfigFile": false,
+    "ecmaVersion": 2022,
+    "sourceType": "module",
     "ecmaFeatures": {
       "jsx": true
+    },
+    "babelOptions": {
+      "presets": ["@babel/preset-react"]
     }
   },
   "plugins": [
@@ -33,7 +37,28 @@
     "globalThis": true,
     "ENABLE_SOCKETS": true
   },
+  "settings": {
+    "import/resolver": {
+      "node": {
+        "paths": ["node_modules"],
+        "extensions": [".js", ".jsx", ".json"]
+      }
+    }
+  },
   "rules": {
+    "react/react-in-jsx-scope": "off",
+    "react/function-component-definition": "off",
+    "react/jsx-no-useless-fragment": "warn",
+    "react/no-unstable-nested-components": "warn",
+    "react/no-unknown-property": "warn",
+    "no-unsafe-optional-chaining": "warn",
+    "default-param-last": "warn",
+    "no-lonely-if": "warn",
+    "no-dupe-else-if": "warn",
+    "import/no-import-module-exports": "warn",
+    "import/no-unresolved": ["error", { "ignore": ["^react-to-print$"] }],
+    "react/no-deprecated": "warn",
+    "prefer-arrow-callback": "off",
     "prettier/prettier": ["warn"],
     "space-before-function-paren": "off",
     "react/prefer-stateless-function": "warn",

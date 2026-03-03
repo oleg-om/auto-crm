@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom'
 import { useSelector } from 'react-redux'
 import { toast } from 'react-toastify'
 import { useReactToPrint } from 'react-to-print'
-import NumberFormat from 'react-number-format'
+import { PatternFormat as NumberFormat } from 'react-number-format'
 import cx from 'classnames'
 import ComponentToPrint from './dogovor.print'
 import PeredachaToPrint from './peredacha.print'
@@ -36,7 +36,6 @@ export const dateNew = `${dateNow
   .replace(/^(\d)$/, '0$1')}`
 
 const StoragesUpdate = (props) => {
-  toast.configure()
   const notify = (arg) => {
     toast.info(arg, { position: toast.POSITION.BOTTOM_RIGHT })
   }

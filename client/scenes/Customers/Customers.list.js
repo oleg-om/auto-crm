@@ -25,7 +25,6 @@ const CustomerList = () => {
   const totalPages = useSelector((s) => s.customers.numberOfPages)
   const isLoaded = useSelector((s) => s.customers.isLoaded)
 
-  toast.configure()
   const notify = (arg) => {
     toast.info(arg, { position: toast.POSITION.BOTTOM_RIGHT })
   }

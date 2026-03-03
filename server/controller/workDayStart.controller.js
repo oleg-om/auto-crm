@@ -50,4 +50,3 @@ exports.endWorkDay = async (req, res) => {
   await workDayStart.save()
   return res.json({ status: 'ok', data: workDayStart })
 }
-

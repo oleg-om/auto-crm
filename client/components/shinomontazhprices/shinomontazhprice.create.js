@@ -7,7 +7,6 @@ import ShinomontazhCategoryList from '../../lists/shinomontazhprice-list'
 import SubmitButtons from '../shared/buttons/OrderSubmitButtons'
 
 const ShinomontazhpriceCreate = (props) => {
-  toast.configure()
   const notify = (arg) => {
     toast.info(arg, { position: toast.POSITION.BOTTOM_RIGHT })
   }

@@ -2,8 +2,9 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import { Provider, useSelector } from 'react-redux'
-import { ConnectedRouter } from 'connected-react-router'
-import { Switch, Route, Redirect, StaticRouter } from 'react-router-dom'
+import { Router, Switch, Route, Redirect, StaticRouter } from 'react-router-dom'
+import { ToastContainer } from 'react-toastify'
+import 'react-toastify/dist/ReactToastify.css'
 
 import store, { history } from '../redux'
 
@@ -185,11 +186,22 @@ PrivateRoute.defaultProps = defaults
 OnlyAnonymousRoute.defaultProps = defaults
 
 const RouterSelector = (props) =>
-  typeof window !== 'undefined' ? <ConnectedRouter {...props} /> : <StaticRouter {...props} />
+  typeof window !== 'undefined' ? <Router {...props} /> : <StaticRouter {...props} />
 
 const RootComponent = (props) => {
   return (
     <Provider store={store}>
+      <ToastContainer
+        position="top-right"
+        autoClose={3000}
+        hideProgressBar={false}
+        newestOnTop
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+      />
       <RouterSelector history={history} location={props.location} context={props.context}>
         <Startup>
           <ScrollToTop />

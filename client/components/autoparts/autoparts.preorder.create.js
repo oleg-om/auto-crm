@@ -2,14 +2,13 @@ import React, { useEffect, useRef, useState } from 'react'
 import { Link, useHistory } from 'react-router-dom'
 import { useSelector } from 'react-redux'
 import { toast } from 'react-toastify'
-import NumberFormat from 'react-number-format'
+import { PatternFormat as NumberFormat } from 'react-number-format'
 import 'react-toastify/dist/ReactToastify.css'
 import autopartsList from '../../lists/autoparts-list'
 import SubmitButtons from '../shared/buttons/OrderSubmitButtons'
 // import useDebounce from '../useDebounce'
 
 const AutopartsCreate = (props) => {
-  toast.configure()
   const notify = (arg) => {
     toast.info(arg, { position: toast.POSITION.BOTTOM_RIGHT })
   }

@@ -6,7 +6,6 @@ import categoryList from '../../lists/category-list'
 import SubmitButtons from '../shared/buttons/OrderSubmitButtons'
 
 const CategoryCreate = (props) => {
-  toast.configure()
   const notify = (arg) => {
     toast.info(arg, { position: toast.POSITION.BOTTOM_RIGHT })
   }

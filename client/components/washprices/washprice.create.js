@@ -25,7 +25,6 @@ import SubmitButtons from '../shared/buttons/OrderSubmitButtons'
 // ]
 
 const WashpriceCreate = (props) => {
-  toast.configure()
   const notify = (arg) => {
     toast.info(arg, { position: toast.POSITION.BOTTOM_RIGHT })
   }

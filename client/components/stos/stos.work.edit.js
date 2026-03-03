@@ -19,7 +19,6 @@ import { ServiceSubmitButtons } from '../shared/buttons/OrderSubmitButtons'
 import EmployeeTab from '../common/employeeTab'
 
 const StosEdit = (props) => {
-  toast.configure()
   const notify = (arg) => {
     toast.info(arg, { position: toast.POSITION.BOTTOM_RIGHT })
   }

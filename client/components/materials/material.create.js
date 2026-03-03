@@ -6,7 +6,6 @@ import materialList from '../../lists/material-list'
 import SubmitButtons from '../shared/buttons/OrderSubmitButtons'
 
 const MaterialCreate = (props) => {
-  toast.configure()
   const notify = (arg) => {
     toast.info(arg, { position: toast.POSITION.BOTTOM_RIGHT })
   }

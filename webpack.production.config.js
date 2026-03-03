@@ -5,45 +5,27 @@ require('dotenv').config()
 const webpack = require('webpack')
 const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 const CopyWebpackPlugin = require('copy-webpack-plugin')
-const GitRevisionPlugin = require('git-revision-webpack-plugin')
-const StringReplacePlugin = require('string-replace-webpack-plugin')
-const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin')
+const { GitRevisionPlugin } = require('git-revision-webpack-plugin')
+const ESLintPlugin = require('eslint-webpack-plugin')
 const TerserJSPlugin = require('terser-webpack-plugin')
 const { v4: uuidv4 } = require('uuid')
 
 const gitRevisionPlugin = new GitRevisionPlugin()
-const version = uuidv4().substr(0, 7)
+const version = uuidv4().substring(0, 7)
 
 const config = {
   optimization: {
     minimize: true,
     minimizer: [
-      new TerserJSPlugin(
-        {
-          parallel: true,
-          // compress: {
-          //   drop_console: true
-          // }
-          terserOptions: {
-            compress: {
-              drop_console: true
-            }
-          }
-        },
-        {
-          terserOptions: {
-            compress: {
-              drop_console: true
-            }
+      new TerserJSPlugin({
+        parallel: true,
+        terserOptions: {
+          compress: {
+            drop_console: true
           }
         }
-      ),
-      new OptimizeCSSAssetsPlugin({
-        cssProcessor: require('cssnano'),
-        cssProcessorPluginOptions: {
-          preset: ['default', { discardComments: { removeAll: true } }]
-        }
-      })
+      }),
+      '...'
     ]
   },
   entry: {
@@ -71,34 +53,8 @@ const config = {
   module: {
     rules: [
       {
-        test: /.html$/,
-        loader: StringReplacePlugin.replace({
-          replacements: [
-            {
-              pattern: /COMMITHASH/gi,
-              replacement() {
-                return gitRevisionPlugin.commithash()
-              }
-            }
-          ]
-        })
-      },
-      {
-        enforce: 'pre',
         test: /\.js$/,
-        exclude: /node_modules/,
-        loader: [
-          {
-            loader: 'eslint-loader',
-            options: {
-              cache: true
-            }
-          }
-        ]
-      },
-      {
-        test: /\.js$/,
-        loaders: ['babel-loader'],
+        use: ['babel-loader'],
         exclude: /node_modules/
       },
       {
@@ -107,8 +63,7 @@ const config = {
           {
             loader: MiniCssExtractPlugin.loader,
             options: {
-              publicPath: '../',
-              hmr: process.env.NODE_ENV === 'development'
+              publicPath: '../'
             }
           },
           { loader: 'css-loader', options: { sourceMap: false } },
@@ -119,7 +74,7 @@ const config = {
       },
       {
         test: /\.txt$/i,
-        use: 'raw-loader'
+        type: 'asset/source'
       },
       {
         test: /\.scss$/,
@@ -128,18 +83,16 @@ const config = {
           {
             loader: MiniCssExtractPlugin.loader,
             options: {
-              publicPath: '../',
-              hmr: process.env.NODE_ENV === 'development'
+              publicPath: '../'
             }
           },
-
           { loader: 'css-loader', options: { sourceMap: false } },
           {
             loader: 'postcss-loader'
           },
           {
             loader: 'sass-loader',
-            query: {
+            options: {
               sourceMap: false
             }
           }
@@ -152,43 +105,28 @@ const config = {
       },
       {
         test: /\.(jpg|png|gif|webp)$/,
-        use: [
-          {
-            loader: 'file-loader'
-          }
-        ]
+        type: 'asset/resource'
       },
       {
         test: /\.eot$/,
-        use: [
-          {
-            loader: 'file-loader'
-          }
-        ]
+        type: 'asset/resource',
+        generator: {
+          filename: 'fonts/[name][ext]'
+        }
       },
       {
-        test: /\.woff(2)$/,
-        use: [
-          {
-            loader: 'file-loader',
-            options: {
-              name: '[name].[ext]',
-              outputPath: 'fonts/'
-            }
-          }
-        ]
+        test: /\.woff(2)?$/,
+        type: 'asset/resource',
+        generator: {
+          filename: 'fonts/[name][ext]'
+        }
       },
       {
         test: /\.[ot]tf$/,
-        use: [
-          {
-            loader: 'file-loader',
-            options: {
-              name: '[name].[ext]',
-              outputPath: 'fonts/'
-            }
-          }
-        ]
+        type: 'asset/resource',
+        generator: {
+          filename: 'fonts/[name][ext]'
+        }
       },
       {
         test: /\.svg$/,
@@ -206,42 +144,45 @@ const config = {
   },
 
   plugins: [
-    new StringReplacePlugin(),
-    new CopyWebpackPlugin(
-      {
-        patterns: [
-          { from: 'assets/images', to: 'images' },
-          { from: 'assets/fonts', to: 'fonts' },
-
-          { from: 'assets/sitemap.xml', to: 'sitemap.xml' },
-          { from: 'assets/manifest.json', to: 'manifest.json' },
-          {
-            from: 'install-sw.js',
-            to: 'js/install-sw.js',
-            transform: (content) => {
-              return content.toString().replace(/APP_VERSION/g, version)
-            }
-          },
-          { from: 'assets/robots.txt', to: 'robots.txt' },
-          { from: 'vendors', to: 'vendors' },
-          {
-            from: 'html.js',
-            to: 'html.js',
-            transform: (content) => {
-              return content.toString().replace(/COMMITHASH/g, version)
-            }
-          },
-          {
-            from: 'sw.js',
-            to: 'sw.js',
-            transform: (content) => {
-              return content.toString().replace(/APP_VERSION/g, version)
-            }
+    new ESLintPlugin({
+      extensions: ['js'],
+      exclude: 'node_modules',
+      context: resolve(__dirname, 'client'),
+      cache: true,
+      failOnError: false,
+      failOnWarning: false
+    }),
+    new CopyWebpackPlugin({
+      patterns: [
+        { from: 'assets/images', to: 'images' },
+        { from: 'assets/fonts', to: 'fonts' },
+        { from: 'assets/sitemap.xml', to: 'sitemap.xml' },
+        { from: 'assets/manifest.json', to: 'manifest.json' },
+        {
+          from: 'install-sw.js',
+          to: 'js/install-sw.js',
+          transform: (content) => {
+            return content.toString().replace(/APP_VERSION/g, version)
           }
-        ]
-      },
-      { parallel: 100 }
-    ),
+        },
+        { from: 'assets/robots.txt', to: 'robots.txt' },
+        { from: 'vendors', to: 'vendors' },
+        {
+          from: 'html.js',
+          to: 'html.js',
+          transform: (content) => {
+            return content.toString().replace(/COMMITHASH/g, version)
+          }
+        },
+        {
+          from: 'sw.js',
+          to: 'sw.js',
+          transform: (content) => {
+            return content.toString().replace(/APP_VERSION/g, version)
+          }
+        }
+      ]
+    }),
     new MiniCssExtractPlugin({
       filename: 'css/main.css',
       chunkFilename: 'css/[id].css',
@@ -251,7 +192,7 @@ const config = {
       Object.keys(process.env).reduce(
         (res, key) => ({ ...res, [key]: JSON.stringify(process.env[key]) }),
         {
-          APP_VERSION: uuidv4().substr(0, 7),
+          APP_VERSION: uuidv4().substring(0, 7),
           ENABLE_SOCKETS: process.env.ENABLE_SOCKETS || false,
           process: {
             env: {

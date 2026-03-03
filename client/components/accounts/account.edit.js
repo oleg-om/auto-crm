@@ -12,7 +12,6 @@ import PostsField from './containers/postsField'
 const AccountUpdate = (props) => {
   const history = useHistory()
 
-  toast.configure()
   const notify = (arg) => {
     toast.info(arg, { position: toast.POSITION.BOTTOM_RIGHT })
   }

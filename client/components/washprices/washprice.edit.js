@@ -10,7 +10,6 @@ const WashpriceUpdate = (props) => {
   const [isOpen, SetIsOpen] = useState(false)
   const history = useHistory()
 
-  toast.configure()
   const notify = (arg) => {
     toast.info(arg, { position: toast.POSITION.BOTTOM_RIGHT })
   }

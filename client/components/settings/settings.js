@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { toast } from 'react-toastify'
-import NumberFormat from 'react-number-format'
+import { PatternFormat as NumberFormat } from 'react-number-format'
 import 'react-toastify/dist/ReactToastify.css'
 
 const SettingUpdate = (props) => {
@@ -8,7 +8,6 @@ const SettingUpdate = (props) => {
     helpphone: props.helpphone,
     lastKerchshina: props.lastKerchshina
   })
-  toast.configure()
   const notify = (arg) => {
     toast.info(arg, { position: toast.POSITION.BOTTOM_RIGHT })
   }

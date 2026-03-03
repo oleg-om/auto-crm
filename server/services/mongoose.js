@@ -19,8 +19,6 @@ mongoose.connection.on('reconnected', () => {
 
 const connect = async (mongoURL = config.mongoURL) => {
   await mongoose.connect(mongoURL, {
-    useUnifiedTopology: true,
-    useNewUrlParser: true,
     maxPoolSize: 20, // Уменьшаем пул соединений (было 40)
     minPoolSize: 5,
     serverSelectionTimeoutMS: 5000,

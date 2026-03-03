@@ -13,7 +13,6 @@ import OnLoad from './Onload'
 
 const VendorList = () => {
   OnLoad()
-  toast.configure()
   const notify = (arg) => {
     toast.info(arg, { position: toast.POSITION.BOTTOM_RIGHT })
   }

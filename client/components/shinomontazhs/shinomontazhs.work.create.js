@@ -18,7 +18,6 @@ import { GroupSwitch, useGroup } from '../../hooks/useGroup'
 import { checkSalariesIsNotValid } from '../shared/services/SalariesDivider'
 
 const ShinomontazhsCreate = (props) => {
-  toast.configure()
   const notify = (arg) => {
     toast.info(arg, { position: toast.POSITION.BOTTOM_RIGHT })
   }

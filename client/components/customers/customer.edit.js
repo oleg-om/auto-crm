@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { useHistory } from 'react-router-dom'
 import { toast } from 'react-toastify'
-import NumberFormat from 'react-number-format'
+import { PatternFormat as NumberFormat } from 'react-number-format'
 import Modal from '../Modal.delete'
 import sizeThreeList from '../../lists/shinomontazhdiametr'
 import sizeGruz from '../../lists/tyres/sizegruz'
@@ -30,7 +30,6 @@ const CustomerUpdate = (props) => {
   const [isOpen, SetIsOpen] = useState(false)
   const history = useHistory()
 
-  toast.configure()
   const notify = (arg) => {
     toast.info(arg, { position: toast.POSITION.BOTTOM_RIGHT })
   }

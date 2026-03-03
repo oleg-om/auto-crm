@@ -21,7 +21,6 @@ const ToolUpdate = (props) => {
     content: () => componentRef.current
   })
 
-  toast.configure()
   const notify = (arg) => {
     toast.info(arg, { position: toast.POSITION.BOTTOM_RIGHT })
   }
@@ -73,20 +72,24 @@ const ToolUpdate = (props) => {
     else if (state.status === taskStatuses[6] && !state.cancelReason)
       notify('Выберите причину отказа')
     else if (props.status !== state.status) {
-      props.updateTool(props.id, {
+      const updateData = {
         ...state,
         statusDates: [...props.statusDates, { status: state.status, date: dateNew }]
-      })
+      }
+      
+      // Добавляем cancelReason если статус "Отказ"
+      if (state.status === taskStatuses[6]) {
+        updateData.cancelReason = state.cancelReason
+      }
+      
+      props.updateTool(props.id, updateData)
       history.push(`/tools/order/list/${props.num ? props.num : ''}`)
-      notify('Данные о заказе обновлены, заказ в работе')
-    } else if (props.status !== state.status && state.status === taskStatuses[6]) {
-      props.updateTool(props.id, {
-        ...state,
-        statusDates: [...props.statusDates, { status: state.status, date: dateNew }],
-        cancelReason: state.cancelReason
-      })
-      history.push(`/tools/order/list/${props.num ? props.num : ''}`)
-      notify('Данные о заказе обновлены, клиент отказался от заказа')
+      
+      if (state.status === taskStatuses[6]) {
+        notify('Данные о заказе обновлены, клиент отказался от заказа')
+      } else {
+        notify('Данные о заказе обновлены, заказ в работе')
+      }
     } else {
       props.updateTool(props.id, state)
       history.push(`/tools/order/list/${props.num ? props.num : ''}`)

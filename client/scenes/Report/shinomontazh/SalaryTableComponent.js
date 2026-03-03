@@ -54,7 +54,6 @@ const SalaryTableComponent = ({
   const [totalFines, setTotalFines] = useState(0)
   //   const [error, setError] = useState(true)
 
-  toast.configure()
   const notify = (arg) => {
     toast.info(arg, { position: toast.POSITION.BOTTOM_RIGHT })
   }

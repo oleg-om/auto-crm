@@ -11,7 +11,6 @@ import 'react-toastify/dist/ReactToastify.css'
 import roleList from '../../lists/account-role-list'
 
 const AccountList = () => {
-  toast.configure()
   const notify = (arg) => {
     toast.info(arg, { position: toast.POSITION.BOTTOM_RIGHT })
   }

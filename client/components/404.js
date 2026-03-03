@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react'
-import { push } from 'connected-react-router'
+import { push } from 'redux-first-history'
 import { useDispatch } from 'react-redux'
 
 const NotFound = () => {

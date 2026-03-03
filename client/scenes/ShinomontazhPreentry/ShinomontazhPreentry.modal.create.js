@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { useDispatch } from 'react-redux'
-import NumberFormat from 'react-number-format'
+import { PatternFormat as NumberFormat } from 'react-number-format'
 import { toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
 import { createRazval } from '../../redux/reducers/razvals'
@@ -110,7 +110,6 @@ const ModalNew = ({
     return () => {}
   }, [stateId.mark])
   if (!open) return null
-  toast.configure()
   const notify = (arg) => {
     toast.info(arg, { position: toast.POSITION.BOTTOM_RIGHT })
   }

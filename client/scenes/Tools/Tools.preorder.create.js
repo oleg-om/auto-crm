@@ -19,7 +19,6 @@ const ToolsNew = () => {
   }
   const { num } = useParams(1)
   const history = useHistory()
-  toast.configure()
   const notify = (arg) => {
     toast.info(arg, { position: toast.POSITION.BOTTOM_RIGHT })
   }

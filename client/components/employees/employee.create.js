@@ -8,7 +8,6 @@ import SubmitButtons from '../shared/buttons/OrderSubmitButtons'
 
 const EmployeeCreate = (props) => {
   const list = useSelector((s) => s.places.list)
-  toast.configure()
   const notify = (arg) => {
     toast.info(arg, { position: toast.POSITION.BOTTOM_RIGHT })
   }

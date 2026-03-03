@@ -61,4 +61,3 @@ const JournalEntry = new mongoose.Schema({
 JournalEntry.plugin(AutoIncrement, { inc_field: 'id_journal_entry' })
 
 module.exports = mongoose.model('journalEntries', JournalEntry)
-

@@ -7,7 +7,6 @@ import roleList from '../../lists/account-role-list'
 import SubmitButtons from '../shared/buttons/OrderSubmitButtons'
 
 const Register = (props) => {
-  toast.configure()
   const notify = (arg) => {
     toast.info(arg, { position: toast.POSITION.BOTTOM_RIGHT })
   }

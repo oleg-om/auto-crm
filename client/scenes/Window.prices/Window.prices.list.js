@@ -45,7 +45,6 @@ const removeFunc = (id, location) => {
 const WindowpriceList = () => {
   OnLoad()
   OnLoadWindow()
-  toast.configure()
   const notify = (arg) => {
     toast.info(arg, { position: toast.POSITION.BOTTOM_RIGHT })
   }

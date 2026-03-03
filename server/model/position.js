@@ -91,4 +91,3 @@ const Position = new mongoose.Schema({
 Position.plugin(AutoIncrement, { inc_field: 'id_position' })
 
 module.exports = mongoose.model('positions', Position)
-

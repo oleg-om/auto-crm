@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { Link, useHistory } from 'react-router-dom'
 import { useSelector } from 'react-redux'
 import { toast } from 'react-toastify'
-import NumberFormat from 'react-number-format'
+import { PatternFormat as NumberFormat } from 'react-number-format'
 import 'react-toastify/dist/ReactToastify.css'
 import FirstColumn from './moduls/firstcolumn'
 import TyreColumn from './moduls/tyrecolumn'
@@ -11,7 +11,6 @@ import WheelColumn from './moduls/wheelcolumn'
 import SubmitButtons from '../shared/buttons/OrderSubmitButtons'
 
 const TyresCreate = (props) => {
-  toast.configure()
   const notify = (arg) => {
     toast.info(arg, { position: toast.POSITION.BOTTOM_RIGHT })
   }

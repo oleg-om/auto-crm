@@ -1,13 +1,12 @@
 import React, { useState } from 'react'
 import { useHistory } from 'react-router-dom'
-import NumberFormat from 'react-number-format'
+import { PatternFormat as NumberFormat } from 'react-number-format'
 import { toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
 import vendorList from '../../lists/vendor-list'
 import SubmitButtons from '../shared/buttons/OrderSubmitButtons'
 
 const VendorCreate = (props) => {
-  toast.configure()
   const notify = (arg) => {
     toast.info(arg, { position: toast.POSITION.BOTTOM_RIGHT })
   }
