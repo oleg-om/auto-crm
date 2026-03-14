@@ -113,17 +113,6 @@ const Navbar = () => {
             auth.roles.includes('boss') ||
             auth.roles.includes('admin') ? (
               <NavLink
-                to="/oil/list"
-                className="block mt-4 lg:inline-block lg:mt-0 text-gray-800 hover:text-main-700 mr-4"
-                activeClassName="text-main-600 underline font-semibold"
-              >
-                Масло (старый)
-              </NavLink>
-            ) : null}
-            {auth.roles.includes('razval') ||
-            auth.roles.includes('boss') ||
-            auth.roles.includes('admin') ? (
-              <NavLink
                 to="/preentry/oil"
                 className="block mt-4 lg:inline-block lg:mt-0 text-gray-800 hover:text-main-700 mr-4"
                 activeClassName="text-main-600 underline font-semibold"
