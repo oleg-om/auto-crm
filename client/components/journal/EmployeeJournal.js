@@ -42,7 +42,15 @@ const EmployeeJournal = () => {
     return stored || currentEmployee?.id || ''
   }
 
+  const getStoredPositionId = () => {
+    return localStorage.getItem('selectedPositionForJournal') || ''
+  }
+
   const [selectedEmployeeId, setSelectedEmployeeId] = useState(getStoredEmployeeId())
+  const [selectedPositionId, setSelectedPositionId] = useState(getStoredPositionId())
+
+  // Активная должность для фильтра: выбранная или из текущего сотрудника
+  const activePositionId = selectedPositionId || currentEmployee?.positionId
 
   // Обновляем selectedEmployeeId когда currentEmployee загружается
   useEffect(() => {
@@ -51,14 +59,22 @@ const EmployeeJournal = () => {
     }
   }, [currentEmployee, selectedEmployeeId])
 
+  // Синхронизируем выбранную должность с сотрудником при первой загрузке
+  useEffect(() => {
+    const employee = employees.find((emp) => emp.id === selectedEmployeeId)
+    if (employee?.positionId && !selectedPositionId) {
+      setSelectedPositionId(employee.positionId)
+      localStorage.setItem('selectedPositionForJournal', employee.positionId)
+    }
+  }, [employees, selectedEmployeeId, selectedPositionId])
+
   // Получаем выбранного сотрудника
   const selectedEmployee = employees.find((emp) => emp.id === selectedEmployeeId) || currentEmployee
 
-  // Получаем список сотрудников с той же должностью
-  const employeesWithSamePosition =
-    currentEmployee && currentEmployee.positionId
-      ? employees.filter((emp) => emp.positionId === currentEmployee.positionId)
-      : []
+  // Список сотрудников с выбранной должностью (или должностью текущего пользователя)
+  const employeesWithSamePosition = activePositionId
+    ? employees.filter((emp) => emp.positionId === activePositionId)
+    : []
 
   useEffect(() => {
     dispatch(getPositions())
@@ -69,6 +85,23 @@ const EmployeeJournal = () => {
   const handleEmployeeChange = (employeeId) => {
     setSelectedEmployeeId(employeeId)
     localStorage.setItem('selectedEmployeeForJournal', employeeId)
+  }
+
+  // Смена должности: сохраняем и подставляем первого сотрудника с этой должностью при необходимости
+  const handlePositionChange = (positionId) => {
+    setSelectedPositionId(positionId)
+    localStorage.setItem('selectedPositionForJournal', positionId)
+    const withNewPosition = positionId
+      ? employees.filter((emp) => emp.positionId === positionId)
+      : []
+    const currentStillValid = withNewPosition.some((emp) => emp.id === selectedEmployeeId)
+    if (!currentStillValid && withNewPosition.length > 0) {
+      setSelectedEmployeeId(withNewPosition[0].id)
+      localStorage.setItem('selectedEmployeeForJournal', withNewPosition[0].id)
+    } else if (!currentStillValid) {
+      setSelectedEmployeeId('')
+      localStorage.setItem('selectedEmployeeForJournal', '')
+    }
   }
 
   const loadWorkDayStart = async () => {
@@ -338,24 +371,11 @@ const EmployeeJournal = () => {
     )
   }
 
-  // Получаем должность выбранного сотрудника
-  const employeePosition = positions.find((p) => p.id === selectedEmployee?.positionId)
+  // Должность: по выбранной роли или по выбранному сотруднику
+  const employeePosition = positions.find((p) => p.id === activePositionId) ||
+    positions.find((p) => p.id === selectedEmployee?.positionId)
 
-  if (!employeePosition) {
-    return (
-      <div>
-        <Navbar />
-        <div className="container mx-auto px-4 mb-4">
-          <h1 className="text-3xl py-4 border-b mb-6">Электронный журнал</h1>
-          <div className="bg-yellow-100 border-l-4 border-yellow-500 text-yellow-700 p-4">
-            <p>Должность не назначена. Обратитесь к администратору.</p>
-          </div>
-        </div>
-      </div>
-    )
-  }
-
-  const sortedDuties = [...(employeePosition.duties || [])].sort((a, b) => {
+  const sortedDuties = [...(employeePosition?.duties || [])].sort((a, b) => {
     const orderA = a.order !== undefined ? a.order : 0
     const orderB = b.order !== undefined ? b.order : 0
     return orderA - orderB
@@ -583,9 +603,22 @@ const EmployeeJournal = () => {
               />
             </div>
             <div className="text-sm text-gray-600 flex items-center gap-2">
-              <span className="font-semibold">
-                {employeePosition?.name || 'Должность не назначена'}
-              </span>
+              <label htmlFor="journal-position" className="font-semibold whitespace-nowrap">
+                Должность:
+              </label>
+              <select
+                id="journal-position"
+                value={activePositionId}
+                onChange={(e) => handlePositionChange(e.target.value)}
+                className="px-3 py-1 border border-gray-300 rounded-lg focus:ring-2 focus:ring-main-600 focus:border-transparent bg-white text-sm font-semibold"
+              >
+                <option value="">Должность не назначена</option>
+                {positions.map((pos) => (
+                  <option key={pos.id} value={pos.id}>
+                    {pos.name}
+                  </option>
+                ))}
+              </select>
               <span>-</span>
               {employeesWithSamePosition.length > 1 ? (
                 <select
@@ -600,6 +633,12 @@ const EmployeeJournal = () => {
                     </option>
                   ))}
                 </select>
+              ) : employeesWithSamePosition.length === 1 ? (
+                <span>
+                  {employeesWithSamePosition[0].name} {employeesWithSamePosition[0].surname}
+                </span>
+              ) : employeesWithSamePosition.length === 0 && activePositionId ? (
+                <span className="text-amber-600">Нет сотрудников с этой должностью</span>
               ) : (
                 <span>
                   {selectedEmployee?.name} {selectedEmployee?.surname}
