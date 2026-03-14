@@ -62,6 +62,10 @@ const Employee = new mongoose.Schema({
     type: String,
     required: false
   },
+  positionIdAdditional: {
+    type: String,
+    required: false
+  },
   date: {
     type: String,
     default: () =>

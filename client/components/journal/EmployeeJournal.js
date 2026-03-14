@@ -49,8 +49,20 @@ const EmployeeJournal = () => {
   const [selectedEmployeeId, setSelectedEmployeeId] = useState(getStoredEmployeeId())
   const [selectedPositionId, setSelectedPositionId] = useState(getStoredPositionId())
 
+  // Список должностей сотрудника: основная и при наличии — дополнительная
+  const getEmployeePositionIds = (emp) => {
+    if (!emp) return []
+    const ids = []
+    if (emp.positionId) ids.push(emp.positionId)
+    if (emp.positionIdAdditional && emp.positionIdAdditional !== emp.positionId) ids.push(emp.positionIdAdditional)
+    return ids
+  }
+
   // Активная должность для фильтра: выбранная или из текущего сотрудника
-  const activePositionId = selectedPositionId || currentEmployee?.positionId
+  const activePositionId =
+    selectedPositionId ||
+    currentEmployee?.positionId ||
+    currentEmployee?.positionIdAdditional
 
   // Обновляем selectedEmployeeId когда currentEmployee загружается
   useEffect(() => {
@@ -62,18 +74,21 @@ const EmployeeJournal = () => {
   // Синхронизируем выбранную должность с сотрудником при первой загрузке
   useEffect(() => {
     const employee = employees.find((emp) => emp.id === selectedEmployeeId)
-    if (employee?.positionId && !selectedPositionId) {
-      setSelectedPositionId(employee.positionId)
-      localStorage.setItem('selectedPositionForJournal', employee.positionId)
+    const firstPosId = getEmployeePositionIds(employee)[0]
+    if (firstPosId && !selectedPositionId) {
+      setSelectedPositionId(firstPosId)
+      localStorage.setItem('selectedPositionForJournal', firstPosId)
     }
   }, [employees, selectedEmployeeId, selectedPositionId])
 
   // Получаем выбранного сотрудника
   const selectedEmployee = employees.find((emp) => emp.id === selectedEmployeeId) || currentEmployee
 
-  // Список сотрудников с выбранной должностью (или должностью текущего пользователя)
+  // Список сотрудников с выбранной должностью (основной или дополнительной)
   const employeesWithSamePosition = activePositionId
-    ? employees.filter((emp) => emp.positionId === activePositionId)
+    ? employees.filter(
+        (emp) => emp.positionId === activePositionId || emp.positionIdAdditional === activePositionId
+      )
     : []
 
   useEffect(() => {
@@ -92,7 +107,9 @@ const EmployeeJournal = () => {
     setSelectedPositionId(positionId)
     localStorage.setItem('selectedPositionForJournal', positionId)
     const withNewPosition = positionId
-      ? employees.filter((emp) => emp.positionId === positionId)
+      ? employees.filter(
+          (emp) => emp.positionId === positionId || emp.positionIdAdditional === positionId
+        )
       : []
     const currentStillValid = withNewPosition.some((emp) => emp.id === selectedEmployeeId)
     if (!currentStillValid && withNewPosition.length > 0) {
@@ -123,7 +140,7 @@ const EmployeeJournal = () => {
   }
 
   const loadEntries = async () => {
-    if (!selectedEmployee || !selectedEmployee.positionId) {
+    if (!selectedEmployee || getEmployeePositionIds(selectedEmployee).length === 0) {
       notify('Должность не назначена. Обратитесь к администратору.')
       return
     }
@@ -215,12 +232,12 @@ const EmployeeJournal = () => {
   useEffect(() => {
     if (selectedEmployee) {
       loadWorkDayStart()
-      if (selectedEmployee.positionId) {
+      if (getEmployeePositionIds(selectedEmployee).length > 0) {
         loadEntries()
       }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [selectedDate, selectedEmployeeId, selectedEmployee?.positionId])
+  }, [selectedDate, selectedEmployeeId])
 
   const formatDateTime = (dateTime) => {
     if (!dateTime) return null
@@ -242,7 +259,7 @@ const EmployeeJournal = () => {
   }
 
   const handleSaveEntry = async (dutyId, value, comment, uniqueKey, checklistProgress) => {
-    if (!currentEmployee || !currentEmployee.positionId) {
+    if (!currentEmployee || getEmployeePositionIds(currentEmployee).length === 0) {
       notify('Должность не назначена')
       return
     }
@@ -257,6 +274,11 @@ const EmployeeJournal = () => {
       return
     }
 
+    const positionIdForEntry =
+      currentEntry?.positionId ||
+      selectedEmployee?.positionId ||
+      getEmployeePositionIds(selectedEmployee)[0]
+
     try {
       const response = await fetch('/api/v1/journalEntry/upsert', {
         method: 'POST',
@@ -266,7 +288,7 @@ const EmployeeJournal = () => {
         body: JSON.stringify({
           entryId: entryKey, // Используем ID записи из БД
           employeeId: selectedEmployee.id,
-          positionId: selectedEmployee.positionId,
+          positionId: positionIdForEntry,
           dutyId: dutyIdStr,
           date: selectedDate,
           value,
@@ -290,7 +312,7 @@ const EmployeeJournal = () => {
   }
 
   const handleCompleteDuty = async (dutyId, uniqueKey, duty) => {
-    if (!currentEmployee || !currentEmployee.positionId) {
+    if (!currentEmployee || getEmployeePositionIds(currentEmployee).length === 0) {
       notify('Должность не назначена')
       return
     }
@@ -303,6 +325,12 @@ const EmployeeJournal = () => {
       notify('Ошибка: запись не найдена')
       return
     }
+
+    const positionIdForEntry =
+      currentEntry?.positionId ||
+      duty?.dutyPositionId ||
+      selectedEmployee?.positionId ||
+      getEmployeePositionIds(selectedEmployee)[0]
 
     if (currentEntry?.endTime) {
       notify('Обязанность уже завершена')
@@ -336,7 +364,7 @@ const EmployeeJournal = () => {
         body: JSON.stringify({
           entryId: entryKey, // Используем ID записи из БД
           employeeId: selectedEmployee.id,
-          positionId: selectedEmployee.positionId,
+          positionId: positionIdForEntry,
           dutyId: dutyIdStr,
           date: selectedDate,
           value: currentEntry?.value,
@@ -371,15 +399,18 @@ const EmployeeJournal = () => {
     )
   }
 
-  // Должность: по выбранной роли или по выбранному сотруднику
-  const employeePosition = positions.find((p) => p.id === activePositionId) ||
-    positions.find((p) => p.id === selectedEmployee?.positionId)
+  // Все должности выбранного сотрудника (основная + дополнительная)
+  const selectedEmployeePositionIds = getEmployeePositionIds(selectedEmployee)
+  const employeePositions = positions.filter((p) => selectedEmployeePositionIds.includes(p.id))
 
-  const sortedDuties = [...(employeePosition?.duties || [])].sort((a, b) => {
-    const orderA = a.order !== undefined ? a.order : 0
-    const orderB = b.order !== undefined ? b.order : 0
-    return orderA - orderB
-  })
+  // Объединённый список обязанностей по обеим должностям (у каждой обязанности — dutyPositionId)
+  const sortedDuties = employeePositions
+    .flatMap((pos) => (pos.duties || []).map((d) => ({ ...d, dutyPositionId: pos.id })))
+    .sort((a, b) => {
+      const orderA = a.order !== undefined ? a.order : 0
+      const orderB = b.order !== undefined ? b.order : 0
+      return orderA - orderB
+    })
 
   // Используем sortedDuties в handleAddStandardDuty
   // Объявляем функцию после определения sortedDuties
@@ -392,8 +423,12 @@ const EmployeeJournal = () => {
       const entry = entries[entryId]
       if (!entry) return null
 
-      // Находим обязанность по dutyId из записи
-      const duty = sortedDuties.find((d) => d._id.toString() === entry.dutyId)
+      // Находим обязанность по positionId и dutyId из записи
+      const duty = sortedDuties.find(
+        (d) =>
+          d._id.toString() === entry.dutyId &&
+          (entry.positionId ? d.dutyPositionId === entry.positionId : true)
+      )
       return duty ? { ...duty, uniqueKey: entryId, index } : null
     })
     .filter(Boolean)
@@ -415,13 +450,18 @@ const EmployeeJournal = () => {
   // Все обязанности доступны для добавления (можно добавлять повторно)
   const availableDuties = sortedDuties
 
-  const handleAddDuty = async (dutyId) => {
-    if (!currentEmployee || !currentEmployee.positionId) {
+  const handleAddDuty = async (dutyOrId) => {
+    const duty = typeof dutyOrId === 'object' && dutyOrId !== null ? dutyOrId : null
+    const positionIdForDuty =
+      duty?.dutyPositionId ||
+      selectedEmployee?.positionId ||
+      getEmployeePositionIds(selectedEmployee)[0]
+    if (!currentEmployee || getEmployeePositionIds(currentEmployee).length === 0) {
       notify('Должность не назначена')
       return
     }
 
-    const dutyIdStr = String(dutyId)
+    const dutyIdStr = String(duty?._id ?? dutyOrId)
 
     // Записываем время начала при добавлении обязанности
     const startTime = new Date().toISOString()
@@ -435,7 +475,7 @@ const EmployeeJournal = () => {
         },
         body: JSON.stringify({
           employeeId: selectedEmployee.id,
-          positionId: selectedEmployee.positionId,
+          positionId: positionIdForDuty,
           dutyId: dutyIdStr,
           date: selectedDate,
           startTime,
@@ -462,7 +502,8 @@ const EmployeeJournal = () => {
   }
 
   const handleAddStandardDuty = async (standardDuty) => {
-    if (!currentEmployee || !currentEmployee.positionId) {
+    const firstPositionId = getEmployeePositionIds(currentEmployee)[0]
+    if (!currentEmployee || !firstPositionId) {
       notify('Должность не назначена')
       return
     }
@@ -474,12 +515,14 @@ const EmployeeJournal = () => {
       )
 
       let dutyId
+      let positionIdForEntry = firstPositionId
       if (existingDuty) {
         // Используем существующую обязанность
         dutyId = existingDuty._id.toString()
+        positionIdForEntry = existingDuty.dutyPositionId || firstPositionId
       } else {
         // Создаем новую обязанность в должности
-        const addDutyResponse = await fetch(`/api/v1/position/${currentEmployee.positionId}/duty`, {
+        const addDutyResponse = await fetch(`/api/v1/position/${firstPositionId}/duty`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json'
@@ -519,7 +562,7 @@ const EmployeeJournal = () => {
         },
         body: JSON.stringify({
           employeeId: selectedEmployee.id,
-          positionId: selectedEmployee.positionId,
+          positionId: positionIdForEntry,
           dutyId,
           date: selectedDate,
           startTime,
@@ -814,9 +857,9 @@ const AddDutyModal = ({ availableDuties, onSelect, onClose }) => {
           ) : (
             availableDuties.map((duty) => (
               <button
-                key={duty._id}
+                key={duty.dutyPositionId ? `${duty.dutyPositionId}-${duty._id}` : duty._id}
                 type="button"
-                onClick={() => onSelect(duty._id.toString())}
+                onClick={() => onSelect(duty)}
                 className="w-full text-left px-4 py-3 border rounded-lg hover:bg-gray-50 hover:border-main-600 transition-colors"
               >
                 <div className="flex items-center justify-between">
