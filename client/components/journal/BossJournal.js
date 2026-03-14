@@ -852,7 +852,7 @@ const DutyTimelineChart = ({ entries, entriesWithDutyInfo, workDayData, selected
   )
 }
 
-const KPIView = ({ entriesWithDutyInfo, workDayData, selectedPosition }) => {
+const KPIView = ({ entriesWithDutyInfo, workDayData, selectedPosition, hideKpiExplanation, hideTitle }) => {
   // Вычисляем полезное и бесполезное время
   const calculateKPI = () => {
     if (!workDayData || !workDayData.startTime) {
@@ -1040,7 +1040,9 @@ const KPIView = ({ entriesWithDutyInfo, workDayData, selectedPosition }) => {
   return (
     <div className="bg-white rounded-lg shadow overflow-hidden">
       <div className="p-6">
-        <h2 className="text-2xl font-bold mb-6 text-gray-900">Анализ эффективности работы</h2>
+        {!hideTitle && (
+          <h2 className="text-2xl font-bold mb-6 text-gray-900">Анализ эффективности работы</h2>
+        )}
 
         {/* Общий КПД */}
         <div className="mb-8 p-6 bg-gradient-to-r from-main-50 to-main-100 rounded-lg">
@@ -1264,33 +1266,36 @@ const KPIView = ({ entriesWithDutyInfo, workDayData, selectedPosition }) => {
         </div>
 
         {/* Пояснения */}
-        <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
-          <h3 className="text-sm font-semibold text-blue-900 mb-2">Как рассчитывается КПД:</h3>
-          <ul className="text-sm text-blue-800 space-y-2">
-            <li>
-              <strong>Эффективность времени</strong> — отношение полезного времени (выполнение
-              рабочих обязанностей) к общему времени рабочего дня
-            </li>
-            <li>
-              <strong>Выполнение чек-листов</strong> — процент выполненных пунктов чек-листов от
-              общего количества. Учитываются только начатые обязанности с чек-листами. Если
-              чек-листов нет, этот показатель считается как 100%
-            </li>
-            <li>
-              <strong>Рабочие часы</strong> — соответствие фактического времени работы нормативному
-              времени, установленному для должности. Если работал меньше нормы — процент снижается.
-              Если норма не задана, этот показатель считается как 100%
-            </li>
-            <li>
-              <strong>Общий КПД</strong> = взвешенное среднее: эффективность времени × 50% +
-              выполнение чек-листов × 25% + рабочие часы × 25%. Распределение времени имеет
-              наибольший вес в итоговой оценке
-            </li>
-          </ul>
-        </div>
+        {!hideKpiExplanation && (
+          <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+            <h3 className="text-sm font-semibold text-blue-900 mb-2">Как рассчитывается КПД:</h3>
+            <ul className="text-sm text-blue-800 space-y-2">
+              <li>
+                <strong>Эффективность времени</strong> — отношение полезного времени (выполнение
+                рабочих обязанностей) к общему времени рабочего дня
+              </li>
+              <li>
+                <strong>Выполнение чек-листов</strong> — процент выполненных пунктов чек-листов от
+                общего количества. Учитываются только начатые обязанности с чек-листами. Если
+                чек-листов нет, этот показатель считается как 100%
+              </li>
+              <li>
+                <strong>Рабочие часы</strong> — соответствие фактического времени работы нормативному
+                времени, установленному для должности. Если работал меньше нормы — процент снижается.
+                Если норма не задана, этот показатель считается как 100%
+              </li>
+              <li>
+                <strong>Общий КПД</strong> = взвешенное среднее: эффективность времени × 50% +
+                выполнение чек-листов × 25% + рабочие часы × 25%. Распределение времени имеет
+                наибольший вес в итоговой оценке
+              </li>
+            </ul>
+          </div>
+        )}
       </div>
     </div>
   )
 }
 
+export { KPIView }
 export default BossJournal

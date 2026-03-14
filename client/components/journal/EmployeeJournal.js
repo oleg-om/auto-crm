@@ -7,6 +7,7 @@ import Modal from '../Modal.delete'
 import { getPositions } from '../../redux/reducers/positions'
 import { getEmployees } from '../../redux/reducers/employees'
 import standardDutiesList from '../../lists/standard-duties-list'
+import { KPIView } from './BossJournal'
 import 'react-toastify/dist/ReactToastify.css'
 
 const EmployeeJournal = () => {
@@ -32,6 +33,7 @@ const EmployeeJournal = () => {
   const [showDeleteModal, setShowDeleteModal] = useState(false)
   const [dutyToDelete, setDutyToDelete] = useState(null)
   const [showCompletedDuties, setShowCompletedDuties] = useState(false)
+  const [showStatsModal, setShowStatsModal] = useState(false)
 
   // Найти сотрудника по userName из auth (userName в аккаунте содержит id сотрудника)
   const currentEmployee = employees.find((emp) => emp.id === auth.user?.userName)
@@ -54,15 +56,14 @@ const EmployeeJournal = () => {
     if (!emp) return []
     const ids = []
     if (emp.positionId) ids.push(emp.positionId)
-    if (emp.positionIdAdditional && emp.positionIdAdditional !== emp.positionId) ids.push(emp.positionIdAdditional)
+    if (emp.positionIdAdditional && emp.positionIdAdditional !== emp.positionId)
+      ids.push(emp.positionIdAdditional)
     return ids
   }
 
   // Активная должность для фильтра: выбранная или из текущего сотрудника
   const activePositionId =
-    selectedPositionId ||
-    currentEmployee?.positionId ||
-    currentEmployee?.positionIdAdditional
+    selectedPositionId || currentEmployee?.positionId || currentEmployee?.positionIdAdditional
 
   // Обновляем selectedEmployeeId когда currentEmployee загружается
   useEffect(() => {
@@ -87,7 +88,8 @@ const EmployeeJournal = () => {
   // Список сотрудников с выбранной должностью (основной или дополнительной)
   const employeesWithSamePosition = activePositionId
     ? employees.filter(
-        (emp) => emp.positionId === activePositionId || emp.positionIdAdditional === activePositionId
+        (emp) =>
+          emp.positionId === activePositionId || emp.positionIdAdditional === activePositionId
       )
     : []
 
@@ -411,6 +413,24 @@ const EmployeeJournal = () => {
       const orderB = b.order !== undefined ? b.order : 0
       return orderA - orderB
     })
+
+  // Для модалки «Статистика»: данные в формате, как в BossJournal (KPIView)
+  const entriesArrayForKpi = Object.values(entries)
+  const groupedEntriesForKpi = entriesArrayForKpi.reduce((acc, entry) => {
+    const key = entry.dutyId
+    if (!acc[key]) acc[key] = []
+    acc[key].push(entry)
+    return acc
+  }, {})
+  const entriesWithDutyInfo = Object.entries(groupedEntriesForKpi).map(([dutyId, dutyEntries]) => {
+    const duty = sortedDuties.find(
+      (d) =>
+        d._id.toString() === dutyId &&
+        (dutyEntries[0]?.positionId ? d.dutyPositionId === dutyEntries[0].positionId : true)
+    )
+    return { duty, dutyId, entries: dutyEntries }
+  })
+  const selectedPositionForKpi = employeePositions[0] || null
 
   // Используем sortedDuties в handleAddStandardDuty
   // Объявляем функцию после определения sortedDuties
@@ -796,6 +816,13 @@ const EmployeeJournal = () => {
                         >
                           + Добавить другое
                         </button>
+                        <button
+                          type="button"
+                          onClick={() => setShowStatsModal(true)}
+                          className="px-4 py-3 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 font-semibold whitespace-nowrap"
+                        >
+                          Статистика
+                        </button>
                       </div>
                     </div>
                   </div>
@@ -814,6 +841,35 @@ const EmployeeJournal = () => {
                     onSelect={handleAddDuty}
                     onClose={() => setShowAddDutyModal(false)}
                   />
+                )}
+
+                {showStatsModal && (
+                  <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+                    <div
+                      className="bg-white rounded-lg shadow-xl max-w-2xl w-full flex flex-col"
+                      style={{ maxHeight: '90vh' }}
+                    >
+                      <div className="flex-shrink-0 border-b px-4 py-3 flex justify-between items-center">
+                        <h3 className="text-lg font-bold">Анализ эффективности работы</h3>
+                        <button
+                          type="button"
+                          onClick={() => setShowStatsModal(false)}
+                          className="text-gray-500 hover:text-gray-700 text-2xl leading-none"
+                        >
+                          ×
+                        </button>
+                      </div>
+                      <div className="p-4 overflow-y-auto min-h-0">
+                        <KPIView
+                          entriesWithDutyInfo={entriesWithDutyInfo}
+                          workDayData={workDayData}
+                          selectedPosition={selectedPositionForKpi}
+                          hideKpiExplanation
+                          hideTitle
+                        />
+                      </div>
+                    </div>
+                  </div>
                 )}
 
                 {showStandardDutiesModal && (
