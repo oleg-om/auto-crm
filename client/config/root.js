@@ -158,6 +158,27 @@ const BossRoute = ({ component: Component, ...rest }) => {
   return <Route {...rest} render={func} />
 }
 
+const TyresOrderDeskRoute = ({ component: Component, ...rest }) => {
+  const auth = useSelector((s) => s.auth)
+  const hasAccess =
+    !!auth.user &&
+    !!auth.token &&
+    (auth.roles.includes('tyresOrder') ||
+      auth.roles.includes('boss') ||
+      auth.roles.includes('admin'))
+  const func = (props) =>
+    hasAccess ? (
+      <Component {...props} />
+    ) : (
+      <Redirect
+        to={{
+          pathname: '/access'
+        }}
+      />
+    )
+  return <Route {...rest} render={func} />
+}
+
 const types = {
   component: PropTypes.func.isRequired,
   location: PropTypes.shape({
@@ -283,6 +304,10 @@ const RootComponent = (props) => {
             <PrivateRoute exact path="/tyres/order/list" component={TyresList} />
             <PrivateRoute exact path="/tyres/order/create/:num" component={TyresNew} />
             <PrivateRoute exact path="/tyres/order/create" component={TyresNew} />
+            <TyresOrderDeskRoute exact path="/tyres/order-desk/list/:num" component={TyresList} />
+            <TyresOrderDeskRoute exact path="/tyres/order-desk/list" component={TyresList} />
+            <TyresOrderDeskRoute exact path="/tyres/order-desk/create/:num" component={TyresNew} />
+            <TyresOrderDeskRoute exact path="/tyres/order-desk/create" component={TyresNew} />
             <PrivateRoute exact path="/tyres/edit/:id/:num" component={TyreEditSimple} />
             <PrivateRoute exact path="/tyres/edit/:id" component={TyreEditSimple} />
             <PrivateRoute exact path="/tyres/editfull/:id/:num" component={TyreEditFull} />

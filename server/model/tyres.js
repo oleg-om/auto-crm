@@ -109,6 +109,10 @@ const Tyre = new mongoose.Schema({
   siteNumber: {
     type: String,
     required: false
+  },
+  fromOrderDesk: {
+    type: Boolean,
+    default: false
   }
 })
 

@@ -8,15 +8,15 @@ import { getVendors } from '../../redux/reducers/vendors'
 
 import { checkQueryParamsAre } from '../../hooks/saveFilterParams'
 
-const OnLoad = (page, showSearch) => {
+const OnLoad = (page, showSearch, fromOrderDesk = false) => {
   const dispatch = useDispatch()
 
   const { search } = useLocation()
   useEffect(() => {
     if (checkQueryParamsAre(showSearch, search)) {
-      dispatch(getItemsByPage(page))
+      dispatch(getItemsByPage(page, fromOrderDesk))
     }
-  }, [dispatch, page, showSearch])
+  }, [dispatch, page, showSearch, fromOrderDesk])
 
   useEffect(() => {
     dispatch(getVendors())
@@ -24,19 +24,19 @@ const OnLoad = (page, showSearch) => {
 
   useEffect(() => {
     socket.on('update tyre', function () {
-      dispatch(getItemsByPage(page))
+      dispatch(getItemsByPage(page, fromOrderDesk))
     })
   }, [])
 
   useEffect(() => {
     socket.on('update edited tyre', function () {
-      dispatch(getItemsByPage(page))
+      dispatch(getItemsByPage(page, fromOrderDesk))
     })
   }, [])
 
   useEffect(() => {
     socket.on('update tyre from oline shop', function () {
-      dispatch(getItemsByPage(page))
+      dispatch(getItemsByPage(page, fromOrderDesk))
     })
   }, [])
 }

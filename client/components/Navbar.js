@@ -132,6 +132,17 @@ const Navbar = () => {
                 Шины
               </NavLink>
             ) : null}
+            {auth.roles.includes('tyresOrder') ||
+            auth.roles.includes('boss') ||
+            auth.roles.includes('admin') ? (
+              <NavLink
+                to="/tyres/order-desk/list"
+                className="block mt-4 lg:inline-block lg:mt-0 text-gray-800 hover:text-main-700 mr-4"
+                activeClassName="text-main-600 underline font-semibold"
+              >
+                Шины (стол заказов)
+              </NavLink>
+            ) : null}
             {/* <NavLink
             to="/place/list"
             className="block mt-4 lg:inline-block lg:mt-0 text-gray-800 hover:text-main-700 mr-4"

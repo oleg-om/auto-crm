@@ -302,7 +302,7 @@ const TyresCreate = (props) => {
       notify('Вы заказываете диски. Укажите марку и модель авто')
     else if (state.employee && state.place && state.name && state.phone) {
       props.create(state)
-      history.push('/tyres/order/list')
+      history.push(props.listPath || '/tyres/order/list')
       notify('Заказ добавлен')
     }
   }

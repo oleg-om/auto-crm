@@ -259,6 +259,32 @@ const Dashboard = () => {
                   </Link>
                 </div>
               ) : null}
+              {auth.roles.includes('tyresOrder') ? (
+                <div className="md:w-1/2 px-3 mb-6 flex flex-col">
+                  <Link
+                    to="/tyres/order-desk/list"
+                    className="rounded-lg shadow-lg bg-gradient-to-r from-indigo-600 to-indigo-500 h-full"
+                  >
+                    <div className="m-2 p-2 flex flex-row">
+                      <div className="w-1/2 px-3">
+                        <h2 className="text-3xl text-white font-bold">Шины (стол заказов)</h2>
+                        <p className="my-2 text-white">
+                          Заказы, принятые со стола заказов
+                        </p>
+                        <button
+                          type="button"
+                          className="bottom-0 py-2 px-4 bg-main-600 text-white hover:bg-main-700 hover:text-white rounded-lg lg:my-3 my-0"
+                        >
+                          Перейти
+                        </button>
+                      </div>
+                      <div className="w-1/2">
+                        <img src={tyres} alt="" className="object-contain h-48 w-full" />
+                      </div>
+                    </div>
+                  </Link>
+                </div>
+              ) : null}
 
               <DashBoardSninomontazh auth={auth} />
 

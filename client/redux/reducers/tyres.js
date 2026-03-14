@@ -68,10 +68,10 @@ export function getTyre(id) {
   }
 }
 
-export function getItemsByPage(page) {
+export function getItemsByPage(page, fromOrderDesk = false) {
   return (dispatch) => {
-    // dispatch({ type: GET_TYRES, isLoaded: false })
-    fetch(`/api/v1/tyrebypage/${page}`)
+    const query = fromOrderDesk ? '?fromOrderDesk=true' : ''
+    fetch(`/api/v1/tyrebypage/${page}${query}`)
       .then((r) => r.json())
       .then(({ data: tyres, currentPage, numberOfPages }) => {
         dispatch({ type: GET_TYRES, tyres, currentPage, numberOfPages, isLoaded: true })

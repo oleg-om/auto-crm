@@ -38,7 +38,12 @@ exports.create = async (req, res) => {
   if (tyreFind) {
     return res.json({ status: 'is exist' })
   }
-  const tyre = new Tyre({ ...req.body, date: new Date().toISOString() })
+  const fromOrderDesk = req.body.fromOrderDesk === true
+  const tyre = new Tyre({
+    ...req.body,
+    date: new Date().toISOString(),
+    fromOrderDesk
+  })
   await tyre.save()
   return res.json({ status: 'ok', data: tyre })
 }
@@ -49,7 +54,19 @@ exports.delete = async (req, res) => {
 }
 
 exports.getFiltered = async (req, res) => {
-  const { page, number, place, status, vin, phone, sizeone, sizetwo, sizethree, season } = req.query
+  const {
+    page,
+    number,
+    place,
+    status,
+    vin,
+    phone,
+    sizeone,
+    sizetwo,
+    sizethree,
+    season,
+    fromOrderDesk
+  } = req.query
 
   try {
     const LIMIT = 14
@@ -119,6 +136,10 @@ exports.getFiltered = async (req, res) => {
     const phoneFind = req.query.phone
       ? { phone: { $regex: `${phone.toString()}`, $options: 'i' } }
       : {}
+    const fromOrderDeskFilter =
+      fromOrderDesk === 'true'
+        ? { fromOrderDesk: true }
+        : { $or: [{ fromOrderDesk: false }, { fromOrderDesk: { $exists: false } }] }
 
     const sizeFilter = findTyresBySize()
     const seasonFilter = findTyresBySeason()
@@ -129,6 +150,7 @@ exports.getFiltered = async (req, res) => {
       ...statusFind,
       ...vinFind,
       ...phoneFind,
+      ...fromOrderDeskFilter,
       ...sizeFilter,
       ...seasonFilter
     })
@@ -139,6 +161,7 @@ exports.getFiltered = async (req, res) => {
       ...statusFind,
       ...vinFind,
       ...phoneFind,
+      ...fromOrderDeskFilter,
       ...sizeFilter,
       ...seasonFilter
     })
@@ -158,13 +181,20 @@ exports.getFiltered = async (req, res) => {
 }
 exports.getByPage = async (req, res) => {
   const { page } = req.params
+  const fromOrderDesk = req.query.fromOrderDesk === 'true'
 
   try {
     const LIMIT = 14
     const startIndex = (Number(page) - 1) * LIMIT // get the starting index of every page
 
-    const total = await Tyre.countDocuments({})
-    const posts = await Tyre.find().sort({ id_tyres: -1 }).limit(LIMIT).skip(startIndex)
+    const fromOrderDeskFilter = fromOrderDesk
+      ? { fromOrderDesk: true }
+      : { $or: [{ fromOrderDesk: false }, { fromOrderDesk: { $exists: false } }] }
+    const total = await Tyre.countDocuments(fromOrderDeskFilter)
+    const posts = await Tyre.find(fromOrderDeskFilter)
+      .sort({ id_tyres: -1 })
+      .limit(LIMIT)
+      .skip(startIndex)
 
     res.json({
       status: 'ok',

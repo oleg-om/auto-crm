@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { useDispatch } from 'react-redux'
-import { useHistory, useParams } from 'react-router-dom'
+import { useHistory, useParams, useLocation } from 'react-router-dom'
 import { toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
 import { socket } from '../../redux/sockets/socketReceivers'
@@ -13,8 +13,11 @@ import UpdateModal from '../../components/tyres/updatecutomer.modal'
 const TyresNew = () => {
   socket.connect()
   const dispatch = useDispatch()
+  const location = useLocation()
+  const isOrderDesk = location.pathname.startsWith('/tyres/order-desk')
+  const listPath = isOrderDesk ? '/tyres/order-desk/list' : '/tyres/order/list'
   const create = (name) => {
-    dispatch(createTyre(name))
+    dispatch(createTyre({ ...name, fromOrderDesk: !!isOrderDesk }))
   }
   const { num } = useParams(1)
   const history = useHistory()
@@ -37,14 +40,14 @@ const TyresNew = () => {
     setModalIsOpen(false)
     notify('Данные клиента изменены')
     create(order)
-    history.push(`/tyres/order/list`)
+    history.push(listPath)
     notify('Заказ добавлен')
   }
 
   const disUpdateCust = () => {
     setModalIsOpen(false)
     create(order)
-    history.push(`/tyres/order/list`)
+    history.push(listPath)
     notify('Заказ добавлен')
   }
 
@@ -65,6 +68,7 @@ const TyresNew = () => {
           openAndUpdate={openAndUpdate}
           setModalIsOpen={setModalIsOpen}
           num={num}
+          listPath={listPath}
         />
       </div>
       <UpdateModal

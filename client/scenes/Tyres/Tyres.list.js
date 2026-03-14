@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
-import { Link, useParams } from 'react-router-dom'
+import { Link, useParams, useLocation } from 'react-router-dom'
 import { toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
 import { socket } from '../../redux/sockets/socketReceivers'
@@ -15,12 +15,22 @@ import TyresAnalysisModal from '../../components/tyres/TyresAnalysisModal'
 
 const TyresList = () => {
   const { num } = useParams(1)
+  const location = useLocation()
+  const isOrderDesk = location.pathname.startsWith('/tyres/order-desk')
+  const basePath = isOrderDesk ? 'tyres/order-desk' : 'tyres/order'
+  const loadItems = (queryParams) => {
+    const separator = queryParams && queryParams.includes('?') ? '&' : '?'
+    const withOrderDesk = isOrderDesk
+      ? `${queryParams || ''}${separator}fromOrderDesk=true`
+      : queryParams
+    return getItemsFiltered(withOrderDesk)
+  }
   const { search, setSearch, showSearch, setShowSearch, applyFilter } = useFilter(
     num,
-    getItemsFiltered
+    loadItems
   )
 
-  onLoad(num ? Number(num) : 1, showSearch)
+  onLoad(num ? Number(num) : 1, showSearch, isOrderDesk)
   const dispatch = useDispatch()
   const list = useSelector((s) => s.tyres.list)
   const curPage = useSelector((s) => s.tyres.currentPage)
@@ -48,7 +58,7 @@ const TyresList = () => {
   const { navigateWithQueryParams } = useSaveFilter(search)
 
   const paginate = (pageNumber) => {
-    navigateWithQueryParams(`/tyres/order/list/${pageNumber}`)
+    navigateWithQueryParams(`/${basePath}/list/${pageNumber}`)
   }
 
   toast.configure()
@@ -89,7 +99,7 @@ const TyresList = () => {
           setSearch={setSearch}
           showSearch={showSearch}
           setShowSearch={setShowSearch}
-          path="tyres/order"
+          path={basePath}
           applyFilter={applyFilter}
         />
         {role.includes('boss') && (
@@ -188,7 +198,7 @@ const TyresList = () => {
           />
         </div>
 
-        <Link to={`/tyres/order/create/${num ? Number(num) : ''}`}>
+        <Link to={`/${basePath}/create/${num ? Number(num) : ''}`}>
           <button
             type="button"
             className="fixed bottom-0 left-0 p-6 shadow bg-main-600 text-white opacity-75 text-l hover:opacity-100 hover:bg-main-700 hover:text-white rounded-full my-3 mx-3"

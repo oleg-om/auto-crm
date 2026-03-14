@@ -17,7 +17,7 @@ const TyresRow = (props) => {
       </td>
       <td className="w-full lg:w-auto p-2 text-gray-800 text-left text-sm lg:text-center border border-b block lg:table-cell relative lg:static">
         <span className="lg:hidden px-2 py-1 text-xs font-bold uppercase">Клиент:</span>
-        {props.name}
+        {props.name ?? ''}
       </td>
       <td className="w-full overflow-hidden lg:w-auto max-w-lg p-2 text-gray-800 text-sm text-left lg:text-center border border-b block lg:table-cell relative lg:static">
         <span className="lg:hidden px-2 py-1 text-xs font-bold uppercase">Заказ:</span>
@@ -186,7 +186,7 @@ const TyresRow = (props) => {
             Заказ с сайта №{props.siteNumber}
           </div>
         ) : (
-          props.placesList.name
+          props.placesList?.name ?? ''
         )}
       </td>
       <td className="w-full lg:w-auto p-2 text-gray-800 text-left text-sm lg:text-center border border-b block lg:table-cell relative lg:static">
