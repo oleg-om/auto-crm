@@ -239,7 +239,7 @@ const EmployeeJournal = () => {
       }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [selectedDate, selectedEmployeeId])
+  }, [selectedDate, selectedEmployeeId, selectedEmployee?.id])
 
   const formatDateTime = (dateTime) => {
     if (!dateTime) return null
