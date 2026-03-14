@@ -319,6 +319,8 @@ const RootComponent = (props) => {
             <TyresOrderDeskRoute exact path="/tyres/order-desk/list" component={TyresList} />
             <TyresOrderDeskRoute exact path="/tyres/order-desk/create/:num" component={TyresNew} />
             <TyresOrderDeskRoute exact path="/tyres/order-desk/create" component={TyresNew} />
+            <TyresOrderDeskRoute exact path="/tyres/order-desk/edit/:id/:num" component={TyreEditSimple} />
+            <TyresOrderDeskRoute exact path="/tyres/order-desk/edit/:id" component={TyreEditSimple} />
             <PrivateRoute exact path="/tyres/edit/:id/:num" component={TyreEditSimple} />
             <PrivateRoute exact path="/tyres/edit/:id" component={TyreEditSimple} />
             <PrivateRoute exact path="/tyres/editfull/:id/:num" component={TyreEditFull} />

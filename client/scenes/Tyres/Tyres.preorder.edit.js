@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
-import { useParams } from 'react-router-dom'
+import { useParams, useLocation } from 'react-router-dom'
 import { socket } from '../../redux/sockets/socketReceivers'
 import TyreUpdate from '../../components/tyres/tyres.preorder.edit'
 import Navbar from '../../components/Navbar'
@@ -10,6 +10,8 @@ import { getVendors } from '../../redux/reducers/vendors'
 const TyreEditSimple = () => {
   socket.connect()
   const { id } = useParams()
+  const location = useLocation()
+  const isOrderDesk = location.pathname.startsWith('/tyres/order-desk')
   const dispatch = useDispatch()
   const [loading, setLoading] = useState(false)
   const [list, setList] = useState([])
@@ -62,6 +64,7 @@ const TyreEditSimple = () => {
                 placesList={placesList.find((item) => item.id === it.place)}
                 settings={settings}
                 num={num}
+                isOrderDesk={isOrderDesk}
               />
             ))
           : loadingComponent()}

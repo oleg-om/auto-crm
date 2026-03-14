@@ -53,6 +53,20 @@ const TyreUpdate = (props) => {
   }
 
   const auth = useSelector((s) => s.auth)
+  const canToggleOrderDesk = auth?.roles?.includes('tyresOrder')
+
+  const handleMoveToOrderDesk = () => {
+    props.updateTyre(props.id, { fromOrderDesk: true })
+    history.push(`/tyres/order-desk/edit/${props.id_tyres}${props.num ? `/${props.num}` : ''}`)
+    notify('Заказ перенесён в стол заказов')
+  }
+
+  const handleMoveToGeneralList = () => {
+    props.updateTyre(props.id, { fromOrderDesk: false })
+    history.push(`/tyres/edit/${props.id_tyres}${props.num ? `/${props.num}` : ''}`)
+    notify('Заказ возвращён в общий список')
+  }
+
   const [state, setState] = useState({
     status: props.status,
     process: props.process ? props.process : auth.name,
@@ -224,26 +238,46 @@ const TyreUpdate = (props) => {
                     <b>Предоплата:</b> {props.prepay ? props.prepay : 'Нет'}
                   </li>
                 </ul>
-                {!props.siteNumber ? (
-                  <Link
-                    to={`/tyres/editfull/${props.id_tyres}/${props.num ? props.num : ''}`}
-                    className="py-2 px-3 bg-main-600 text-white text-sm hover:bg-main-700 hover:text-white rounded-full h-22 w-22"
-                  >
-                    Редактировать заказ
-                  </Link>
-                ) : (
-                  <button
-                    type="button"
-                    onClick={() =>
-                      notify(
-                        'Вы не можете редактировать заказ автоматически импортированный с сайта'
-                      )
-                    }
-                    className="py-2 px-3 bg-main-600 text-white text-sm hover:bg-main-700 hover:text-white rounded-full h-22 w-22"
-                  >
-                    Редактировать заказ
-                  </button>
-                )}
+                <div className="flex flex-wrap gap-2 items-center">
+                  {!props.siteNumber ? (
+                    <Link
+                      to={`/tyres/editfull/${props.id_tyres}/${props.num ? props.num : ''}`}
+                      className="py-2 px-3 bg-main-600 text-white text-sm hover:bg-main-700 hover:text-white rounded-full h-22 w-22"
+                    >
+                      Редактировать заказ
+                    </Link>
+                  ) : (
+                    <button
+                      type="button"
+                      onClick={() =>
+                        notify(
+                          'Вы не можете редактировать заказ автоматически импортированный с сайта'
+                        )
+                      }
+                      className="py-2 px-3 bg-main-600 text-white text-sm hover:bg-main-700 hover:text-white rounded-full h-22 w-22"
+                    >
+                      Редактировать заказ
+                    </button>
+                  )}
+                  {canToggleOrderDesk && !props.fromOrderDesk && (
+                    <button
+                      type="button"
+                      onClick={handleMoveToOrderDesk}
+                      className="py-2 px-3 bg-orange-600 text-white text-sm hover:bg-amber-700 rounded-full"
+                    >
+                      Забрать в стол заказов
+                    </button>
+                  )}
+                  {canToggleOrderDesk && props.fromOrderDesk && (
+                    <button
+                      type="button"
+                      onClick={handleMoveToGeneralList}
+                      className="py-2 px-3 bg-gray-600 text-white text-sm hover:bg-gray-700 rounded-full"
+                    >
+                      Вернуть в общий список заказов
+                    </button>
+                  )}
+                </div>
               </div>
             </div>
           </div>
