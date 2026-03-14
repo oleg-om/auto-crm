@@ -160,14 +160,24 @@ const BossRoute = ({ component: Component, ...rest }) => {
 
 const TyresOrderDeskRoute = ({ component: Component, ...rest }) => {
   const auth = useSelector((s) => s.auth)
+  const authLoaded = auth.token && auth.user && Object.keys(auth.user).length > 0
   const hasAccess =
-    !!auth.user &&
-    !!auth.token &&
+    authLoaded &&
     (auth.roles.includes('tyresOrder') ||
       auth.roles.includes('boss') ||
       auth.roles.includes('admin'))
-  const func = (props) =>
-    hasAccess ? (
+  const func = (props) => {
+    if (!auth.token) {
+      return <Redirect to={{ pathname: '/login' }} />
+    }
+    if (!authLoaded) {
+      return (
+        <div className="flex justify-center items-center min-h-screen">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-gray-900" />
+        </div>
+      )
+    }
+    return hasAccess ? (
       <Component {...props} />
     ) : (
       <Redirect
@@ -176,6 +186,7 @@ const TyresOrderDeskRoute = ({ component: Component, ...rest }) => {
         }}
       />
     )
+  }
   return <Route {...rest} render={func} />
 }
 

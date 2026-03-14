@@ -102,7 +102,7 @@ const TyresList = () => {
           path={basePath}
           applyFilter={applyFilter}
         />
-        {role.includes('boss') && (
+        {(role.includes('boss') || role.includes('tyresOrder')) && (
           <div className="mx-auto px-4">
             <div className="py-3 px-4 my-3 rounded-lg shadow bg-white">
               <button
