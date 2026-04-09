@@ -20,6 +20,7 @@ import { useServices } from '../../hooks/handleServices'
 import { ServiceSubmitButtons } from '../shared/buttons/OrderSubmitButtons'
 import { GroupSwitch, useGroup } from '../../hooks/useGroup'
 import EmployeeTab from '../common/employeeTab'
+import tryBlockWorkCompletionTooSoon from '../../utils/workCompletionFreeze'
 
 const ShinomontazhsEdit = (props) => {
   toast.configure()
@@ -546,6 +547,12 @@ const ShinomontazhsEdit = (props) => {
       return
     }
     if (!state.payment && !props.dateFinish) {
+      if (
+        props.status !== 'Новая запись' &&
+        tryBlockWorkCompletionTooSoon(props.dateStart || state.dateStart, service)
+      ) {
+        return
+      }
       props.updateShinomontazh(props.id, {
         place: state.place,
         regnumber: state.regnumber,

@@ -17,6 +17,7 @@ import { useMaterials } from '../../hooks/handleMaterials'
 import { useServices } from '../../hooks/handleServices'
 import { ServiceSubmitButtons } from '../shared/buttons/OrderSubmitButtons'
 import EmployeeTab from '../common/employeeTab'
+import tryBlockWorkCompletionTooSoon from '../../utils/workCompletionFreeze'
 
 const StosEdit = (props) => {
   toast.configure()
@@ -461,6 +462,12 @@ const StosEdit = (props) => {
     if (!state.model) notify('Укажите модель авто')
     if (!state.place) notify('Укажите место работы')
     if (!state.payment && !props.dateFinish) {
+      if (
+        type === 'sto' &&
+        tryBlockWorkCompletionTooSoon(props.dateStart || state.dateStart, service)
+      ) {
+        return
+      }
       props.updateSto(props.id, {
         place: state.place,
         regnumber: state.regnumber,
