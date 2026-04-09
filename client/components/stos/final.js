@@ -1,10 +1,12 @@
 import React, { useEffect } from 'react'
 import discountList from '../../lists/discounts'
+import roleList from '../../lists/account-role-list'
 
 const Final = ({
   //     materialprices,
   // stoprices,
   //   checkboxServiceChange,
+  auth,
   state,
   service,
   materials,
@@ -16,6 +18,9 @@ const Final = ({
   printOne,
   printTwo
 }) => {
+  const showPaymentDiscountSelects =
+    !!dateEnd ||
+    (auth?.roles && auth.roles.some((r) => roleList.PAYMENT_BLOCK_ROLES.includes(r)))
   // const kuzovCheck = () => {
   //   if (state.class === 'rus') return 'Отечественные'
   //   if (state.class === 'foreign') return 'Иномарки'
@@ -209,7 +214,7 @@ const Final = ({
           <p>Сумма со скидкой: {totalWithDiscount} руб.</p>
         </div>
       ) : null}
-      {dateEnd ? (
+      {showPaymentDiscountSelects ? (
         <div className="flex flex-row mt-3">
           <div className="w-1/2 pr-3 mb-6 md:mb-0">
             <label

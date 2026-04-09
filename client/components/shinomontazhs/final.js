@@ -4,11 +4,13 @@ import tyresList from '../../lists/tyres/tyres'
 import discountList from '../../lists/discounts'
 import sizeOneList from '../../lists/tyres/sizeone'
 import sizeTwoList from '../../lists/tyres/sizetwo'
+import roleList from '../../lists/account-role-list'
 
 const Final = ({
   //     materialprices,
-  // shinomontazhprices,
+    // shinomontazhprices,
   //   checkboxServiceChange,
+  auth,
   state,
   service,
   materials,
@@ -24,6 +26,9 @@ const Final = ({
   printTwo,
   groupCount
 }) => {
+  const showPaymentDiscountSelects =
+    !!dateEnd ||
+    (auth?.roles && auth.roles.some((r) => roleList.PAYMENT_BLOCK_ROLES.includes(r)))
   const kuzovCheck = () => {
     if (state.kuzov === 'sedan') return 'Седан'
     if (state.kuzov === 'sedan-shtamp') return 'Седан (штампованные диски)'
@@ -238,7 +243,7 @@ const Final = ({
           <p>Сумма со скидкой: {totalWithDiscount} руб.</p>
         </div>
       ) : null}
-      {dateEnd ? (
+      {showPaymentDiscountSelects ? (
         <div className="flex flex-row mt-3">
           <div className="w-1/2 pr-3 mb-6 md:mb-0">
             <label
