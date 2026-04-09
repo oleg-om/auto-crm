@@ -22,8 +22,14 @@ const CustomerRow = (props) => {
       </td>
       <td className="w-full lg:w-auto p-2 text-gray-800 text-center border border-b block lg:table-cell relative lg:static whitespace-no-wrap">
         <Link
+          to={`/customer/view/${props.id}`}
+          className="px-5 py-1 text-xs border-gray-400 border text-gray-700 rounded transition duration-300 hover:bg-gray-700 hover:text-white focus:outline-none"
+        >
+          Просмотр
+        </Link>
+        <Link
           to={`/customer/edit/${props.id}`}
-          className="px-5 py-1 text-xs border-main-500 border text-main-500 rounded transition duration-300 hover:bg-main-700 hover:text-white focus:outline-none"
+          className="px-5 py-1 text-xs border-main-500 border text-main-500 rounded transition duration-300 hover:bg-main-700 hover:text-white focus:outline-none ml-1"
         >
           Редактировать
         </Link>

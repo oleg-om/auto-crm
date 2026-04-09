@@ -1,4 +1,94 @@
 const Customer = require('../model/customer')
+const Sto = require('../model/sto')
+const Wash = require('../model/wash')
+const Window = require('../model/window')
+const Cond = require('../model/cond')
+const Shinomontazh = require('../model/shinomontazh')
+const Autopart = require('../model/autoparts')
+const Tyre = require('../model/tyres')
+const Tool = require('../model/tools')
+
+function escapeRegex(str) {
+  return String(str).replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
+}
+
+function legacyOrderMatchConditions(customer) {
+  const parts = []
+  const phone = customer.phone && String(customer.phone).trim()
+  const reg = customer.regnumber && String(customer.regnumber).trim()
+  const vin = customer.vinnumber && String(customer.vinnumber).trim()
+  if (phone) {
+    const re = new RegExp(escapeRegex(phone), 'i')
+    parts.push({ phone: re })
+    parts.push({ phoneSecond: re })
+  }
+  if (reg) {
+    parts.push({ regnumber: new RegExp(`^${escapeRegex(reg)}$`, 'i') })
+  }
+  if (vin) {
+    parts.push({ vinnumber: new RegExp(`^${escapeRegex(vin)}$`, 'i') })
+  }
+  return parts
+}
+
+function legacyOrderQuery(customer) {
+  const parts = legacyOrderMatchConditions(customer)
+  if (parts.length === 0) return null
+  return { $or: parts }
+}
+
+function workOrderHistoryQuery(customerId, customer) {
+  const parts = [{ customerId }, ...legacyOrderMatchConditions(customer)]
+  return { $or: parts }
+}
+
+exports.getHistory = async (req, res) => {
+  try {
+    const customer = await Customer.findOne({ id: req.params.id }).lean()
+    if (!customer) {
+      return res.status(404).json({ status: 'error', message: 'Клиент не найден' })
+    }
+
+    const cid = customer.id
+    const sortStoFamily = { date: -1, dateStart: -1, dateFinish: -1 }
+    const workQ = workOrderHistoryQuery(cid, customer)
+
+    const [stos, washs, windows, conds, shinomontazhs] = await Promise.all([
+      Sto.find(workQ).sort(sortStoFamily).limit(400).lean(),
+      Wash.find(workQ).sort(sortStoFamily).limit(400).lean(),
+      Window.find(workQ).sort(sortStoFamily).limit(400).lean(),
+      Cond.find(workQ).sort(sortStoFamily).limit(400).lean(),
+      Shinomontazh.find(workQ).sort(sortStoFamily).limit(400).lean()
+    ])
+
+    const legacyQ = legacyOrderQuery(customer)
+
+    const [autoparts, tyres, tools] = await Promise.all([
+      legacyQ ? Autopart.find(legacyQ).sort({ date: -1 }).limit(400).lean() : [],
+      legacyQ ? Tyre.find(legacyQ).sort({ date: -1 }).limit(400).lean() : [],
+      legacyQ ? Tool.find(legacyQ).sort({ date: -1 }).limit(400).lean() : []
+    ])
+
+    return res.json({
+      status: 'ok',
+      data: {
+        customer,
+        history: {
+          shinomontazh: shinomontazhs,
+          sto: stos,
+          wash: washs,
+          window: windows,
+          cond: conds,
+          autoparts,
+          tyres,
+          tools
+        }
+      }
+    })
+  } catch (error) {
+    return res.status(500).json({ status: 'error', message: error.message })
+  }
+}
 
 exports.getAll = async (req, res) => {
   const list = await Customer.find({})

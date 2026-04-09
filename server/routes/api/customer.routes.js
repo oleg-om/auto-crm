@@ -4,6 +4,7 @@ const customerController = require('../../controller/customer.controller')
 const router = express.Router()
 
 router.get('/customer/', customerController.getAll)
+router.get('/customer/:id/history', customerController.getHistory)
 router.get('/customer/:id', customerController.getOne)
 router.get('/customerfind/:regnumber/:vinnumber/:phone', customerController.getByFind)
 router.get('/customerbypage/:page', customerController.getByPage)
