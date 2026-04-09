@@ -28,6 +28,46 @@ import { updateCurrentEmployeeReport } from '../../../redux/reducers/employees'
 import razvalIcon from '../../../assets/images/priority-product-large.png'
 import { checkIsRazvalService } from './wrapper'
 
+function paymentMethodLabel(payment) {
+  if (!payment) return '—'
+  const map = {
+    yes: 'Оплачено',
+    card: 'Безнал',
+    terminal: 'Терминал',
+    termandcash: 'Терминал + наличные',
+    no: 'Не оплачено',
+    cancel: 'Отмена'
+  }
+  return map[payment] || payment
+}
+
+function PaymentMethodBadge({ payment }) {
+  const text = paymentMethodLabel(payment)
+  if (!payment) {
+    return (
+      <div className="inline-block rounded py-1 px-3 text-xs font-bold bg-gray-200 text-gray-700">
+        {text}
+      </div>
+    )
+  }
+  return (
+    <div
+      className={cx('inline-block rounded py-1 px-3 text-xs font-bold', {
+        'bg-green-400 text-gray-900': payment === 'yes',
+        'bg-blue-400 text-gray-900': payment === 'card',
+        'bg-purple-400 text-gray-900': payment === 'terminal',
+        'bg-teal-400 text-gray-900': payment === 'termandcash',
+        'bg-orange-400 text-gray-900': payment === 'no',
+        'bg-red-500 text-white': payment === 'cancel',
+        'bg-gray-300 text-gray-800':
+          !['yes', 'card', 'terminal', 'termandcash', 'no', 'cancel'].includes(payment)
+      })}
+    >
+      {text}
+    </div>
+  )
+}
+
 const SalaryByDay = ({
   dateArray,
   totalWithDiscount,
@@ -125,6 +165,9 @@ const SalaryByDay = ({
                     Материалы
                   </th>
                   <th className="p-3 font-bold bg-gray-100 text-gray-600 border border-gray-300 table-cell">
+                    Оплата
+                  </th>
+                  <th className="p-3 font-bold bg-gray-100 text-gray-600 border border-gray-300 table-cell">
                     Акция
                   </th>
                   <th className="p-3 font-bold bg-gray-100 text-gray-600 border border-gray-300 table-cell">
@@ -200,6 +243,9 @@ const SalaryByDay = ({
                           0
                         )}{' '}
                         руб.
+                      </td>
+                      <td className="w-auto p-2 text-gray-800 text-center border border-b table-cell static">
+                        <PaymentMethodBadge payment={it.payment} />
                       </td>
                       <td className="w-auto p-2 text-gray-800 text-center border border-b table-cell static">
                         {totalFreeService(it) ? <>{totalFreeService(it)} руб.</> : null}
