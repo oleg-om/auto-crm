@@ -52,7 +52,12 @@ const WashsEdit = (props) => {
     payment: props.payment,
     talon: props.id_washs,
     class: props.class,
-    category: props.category
+    category: props.category,
+    beznalPaid: props.beznalPaid
+      ? typeof props.beznalPaid === 'string'
+        ? props.beznalPaid
+        : new Date(props.beznalPaid).toISOString()
+      : null
   })
 
   const [box, setBox] = useState(props.box ? props.box : '')
@@ -277,6 +282,16 @@ const WashsEdit = (props) => {
   }
   const onChange = (e) => {
     const { name, value } = e.target
+    if (name === 'beznalPaidSelect') {
+      setState((prevState) => {
+        if (prevState.beznalPaid) return prevState
+        if (value === 'yes') {
+          return { ...prevState, beznalPaid: new Date().toISOString() }
+        }
+        return { ...prevState, beznalPaid: null }
+      })
+      return
+    }
     setState((prevState) => ({
       ...prevState,
       [name]: value
@@ -550,6 +565,7 @@ const WashsEdit = (props) => {
         diametr: state.diametr,
         discount: state.discount,
         payment: state.payment,
+        beznalPaid: state.beznalPaid || null,
         services: service,
         material: materials,
         tyre: [...tyres]
@@ -579,6 +595,7 @@ const WashsEdit = (props) => {
         diametr: state.diametr,
         discount: state.discount,
         payment: state.payment,
+        beznalPaid: state.beznalPaid || null,
         services: service,
         material: materials,
         tyre: [...tyres],
@@ -597,7 +614,8 @@ const WashsEdit = (props) => {
         discount: state.discount,
         payment: state.payment,
         comment: state.comment,
-        status: statusList[2]
+        status: statusList[2],
+        beznalPaid: state.beznalPaid || null
       })
       if (checkLink()) {
         history.push(`/washboss/list/${props.num ? props.num : ''}`)
@@ -610,7 +628,8 @@ const WashsEdit = (props) => {
         discount: state.discount,
         payment: state.payment,
         comment: state.comment,
-        status: statusList[3]
+        status: statusList[3],
+        beznalPaid: state.beznalPaid || null
       })
       if (checkLink()) {
         history.push(`/washboss/list/${props.num ? props.num : ''}`)
@@ -623,7 +642,8 @@ const WashsEdit = (props) => {
         discount: state.discount,
         payment: state.payment,
         comment: state.comment,
-        status: statusList[4]
+        status: statusList[4],
+        beznalPaid: state.beznalPaid || null
       })
       if (checkLink()) {
         history.push(`/washboss/list/${props.num ? props.num : ''}`)
@@ -638,7 +658,8 @@ const WashsEdit = (props) => {
         comment: state.comment,
         status: statusList[6],
         combTerm: termCash.terminal,
-        combCash: termCash.cash
+        combCash: termCash.cash,
+        beznalPaid: state.beznalPaid || null
       })
       if (checkLink()) {
         history.push(`/washboss/list/${props.num ? props.num : ''}`)
@@ -651,7 +672,8 @@ const WashsEdit = (props) => {
         discount: state.discount,
         payment: state.payment,
         comment: state.comment,
-        status: statusList[5]
+        status: statusList[5],
+        beznalPaid: state.beznalPaid || null
       })
       if (checkLink()) {
         history.push(`/washboss/list/${props.num ? props.num : ''}`)
@@ -668,7 +690,8 @@ const WashsEdit = (props) => {
         // employee: employees,
         discount: state.discount,
         payment: state.payment,
-        comment: state.comment
+        comment: state.comment,
+        beznalPaid: state.beznalPaid || null
       })
       if (checkLink()) {
         history.push(`/washboss/list/${props.num ? props.num : ''}`)
@@ -1076,6 +1099,7 @@ const WashsEdit = (props) => {
             printTwo={printTwo}
             id_stos={props.id_stos}
             setTermCash={setTermCash}
+            showBeznalPaid
           />
         </div>
       </div>

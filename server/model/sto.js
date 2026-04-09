@@ -133,6 +133,10 @@ const Sto = new mongoose.Schema({
   bottledOil: {
     type: Boolean,
     required: false
+  },
+  beznalPaid: {
+    type: Date,
+    required: false
   }
 })
 

@@ -128,6 +128,10 @@ const Shinomontazh = new mongoose.Schema({
   groupCount: {
     type: Number,
     required: false
+  },
+  beznalPaid: {
+    type: Date,
+    required: false
   }
 })
 

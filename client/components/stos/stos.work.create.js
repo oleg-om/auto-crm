@@ -53,7 +53,8 @@ const StosCreate = (props) => {
     dateStart: new Date(),
     class: '',
     category: SERVICES_WITHOUT_TYPE ? 'price' : '',
-    mileage: null
+    mileage: null,
+    beznalPaid: null
   })
 
   const {
@@ -186,6 +187,16 @@ const StosCreate = (props) => {
   }
   const onChange = (e) => {
     const { name, value } = e.target
+    if (name === 'beznalPaidSelect') {
+      setState((prevState) => {
+        if (prevState.beznalPaid) return prevState
+        if (value === 'yes') {
+          return { ...prevState, beznalPaid: new Date().toISOString() }
+        }
+        return { ...prevState, beznalPaid: null }
+      })
+      return
+    }
     setState((prevState) => ({
       ...prevState,
       [name]: value
@@ -735,6 +746,7 @@ const StosCreate = (props) => {
             dateEnd=""
             termCash={termCash}
             type={type}
+            showBeznalPaid={type === 'sto' || type === 'cond'}
           />
         </div>
       </div>

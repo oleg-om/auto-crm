@@ -90,6 +90,10 @@ const Wash = new mongoose.Schema({
   customerId: {
     type: String,
     required: false
+  },
+  beznalPaid: {
+    type: Date,
+    required: false
   }
 })
 

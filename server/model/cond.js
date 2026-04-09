@@ -128,6 +128,10 @@ const Cond = new mongoose.Schema({
   mileage: {
     type: Number,
     required: false
+  },
+  beznalPaid: {
+    type: Date,
+    required: false
   }
 })
 

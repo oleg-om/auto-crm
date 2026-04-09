@@ -47,7 +47,8 @@ const ShinomontazhsCreate = (props) => {
     comment: '',
     kuzov: '',
     diametr: '',
-    dateStart: new Date()
+    dateStart: new Date(),
+    beznalPaid: null
   })
 
   const {
@@ -184,6 +185,16 @@ const ShinomontazhsCreate = (props) => {
   }
   const onChange = (e) => {
     const { name, value } = e.target
+    if (name === 'beznalPaidSelect') {
+      setState((prevState) => {
+        if (prevState.beznalPaid) return prevState
+        if (value === 'yes') {
+          return { ...prevState, beznalPaid: new Date().toISOString() }
+        }
+        return { ...prevState, beznalPaid: null }
+      })
+      return
+    }
     setState((prevState) => ({
       ...prevState,
       [name]: value
@@ -832,6 +843,7 @@ const ShinomontazhsCreate = (props) => {
             dateEnd=""
             termCash={termCash}
             groupCount={groupCount}
+            showBeznalPaid
           />
         </div>
       </div>

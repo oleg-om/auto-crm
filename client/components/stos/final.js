@@ -16,7 +16,8 @@ const Final = ({
   termCash,
   dateEnd,
   printOne,
-  printTwo
+  printTwo,
+  showBeznalPaid = false
 }) => {
   const showPaymentDiscountSelects =
     !!dateEnd ||
@@ -215,77 +216,118 @@ const Final = ({
         </div>
       ) : null}
       {showPaymentDiscountSelects ? (
-        <div className="flex flex-row mt-3">
-          <div className="w-1/2 pr-3 mb-6 md:mb-0">
-            <label
-              className="block uppercase tracking-wide text-xs font-bold mb-2"
-              htmlFor="discount"
-            >
-              Выберите скидку
-            </label>
-            <div className="flex-shrink w-full inline-block relative">
-              <select
-                className="block appearance-none w-full bg-grey-lighter border border-gray-300 focus:border-gray-500 focus:outline-none py-2 px-4 pr-8 rounded"
-                name="discount"
-                id="discount"
-                value={state.discount}
-                autoComplete="off"
-                required
-                onChange={onChange}
+        <>
+          <div className="flex flex-row mt-3">
+            <div className="w-1/2 pr-3 mb-6 md:mb-0">
+              <label
+                className="block uppercase tracking-wide text-xs font-bold mb-2"
+                htmlFor="discount"
               >
-                <option value="">Без скидки</option>
-                {discountList.map((it) => (
-                  <option value={it} label={`${it}%`} key={it} />
-                ))}
-              </select>
-              <div className="pointer-events-none hidden absolute top-0 mt-3 right-0 lg:flex items-center px-2 text-gray-600">
-                <svg
-                  className="fill-current h-4 w-4"
-                  xmlns="http://www.w3.org/2000/svg"
-                  viewBox="0 0 20 20"
+                Выберите скидку
+              </label>
+              <div className="flex-shrink w-full inline-block relative">
+                <select
+                  className="block appearance-none w-full bg-grey-lighter border border-gray-300 focus:border-gray-500 focus:outline-none py-2 px-4 pr-8 rounded"
+                  name="discount"
+                  id="discount"
+                  value={state.discount}
+                  autoComplete="off"
+                  required
+                  onChange={onChange}
                 >
-                  <path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z" />
-                </svg>
+                  <option value="">Без скидки</option>
+                  {discountList.map((it) => (
+                    <option value={it} label={`${it}%`} key={it} />
+                  ))}
+                </select>
+                <div className="pointer-events-none hidden absolute top-0 mt-3 right-0 lg:flex items-center px-2 text-gray-600">
+                  <svg
+                    className="fill-current h-4 w-4"
+                    xmlns="http://www.w3.org/2000/svg"
+                    viewBox="0 0 20 20"
+                  >
+                    <path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z" />
+                  </svg>
+                </div>
+              </div>
+            </div>
+            <div className="w-1/2 pl-3 mb-6 md:mb-0">
+              <label
+                className="block uppercase tracking-wide text-xs font-bold mb-2"
+                htmlFor="discount"
+              >
+                Оплачено
+              </label>
+              <div className="flex-shrink w-full inline-block relative">
+                <select
+                  className="block appearance-none w-full bg-grey-lighter border border-gray-300 focus:border-gray-500 focus:outline-none py-2 px-4 pr-8 rounded"
+                  name="payment"
+                  id="payment"
+                  value={state.payment}
+                  autoComplete="off"
+                  required
+                  onChange={onChange}
+                >
+                  <option value="">Выберите статус оплаты</option>
+                  <option value="yes">Оплачено</option>
+                  <option value="card">Безнал</option>
+                  <option value="terminal">Терминал</option>
+                  <option value="termandcash">Терминал + наличные</option>
+                  <option value="no">Не оплачено</option>
+                  <option value="cancel">Отмена</option>
+                </select>
+                <div className="pointer-events-none hidden absolute top-0 mt-3 right-0 lg:flex items-center px-2 text-gray-600">
+                  <svg
+                    className="fill-current h-4 w-4"
+                    xmlns="http://www.w3.org/2000/svg"
+                    viewBox="0 0 20 20"
+                  >
+                    <path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z" />
+                  </svg>
+                </div>
               </div>
             </div>
           </div>
-          <div className="w-1/2 pl-3 mb-6 md:mb-0">
-            <label
-              className="block uppercase tracking-wide text-xs font-bold mb-2"
-              htmlFor="discount"
-            >
-              Оплачено
-            </label>
-            <div className="flex-shrink w-full inline-block relative">
-              <select
-                className="block appearance-none w-full bg-grey-lighter border border-gray-300 focus:border-gray-500 focus:outline-none py-2 px-4 pr-8 rounded"
-                name="payment"
-                id="payment"
-                value={state.payment}
-                autoComplete="off"
-                required
-                onChange={onChange}
-              >
-                <option value="">Выберите статус оплаты</option>
-                <option value="yes">Оплачено</option>
-                <option value="card">Безнал</option>
-                <option value="terminal">Терминал</option>
-                <option value="termandcash">Терминал + наличные</option>
-                <option value="no">Не оплачено</option>
-                <option value="cancel">Отмена</option>
-              </select>
-              <div className="pointer-events-none hidden absolute top-0 mt-3 right-0 lg:flex items-center px-2 text-gray-600">
-                <svg
-                  className="fill-current h-4 w-4"
-                  xmlns="http://www.w3.org/2000/svg"
-                  viewBox="0 0 20 20"
+          {showBeznalPaid && state.payment === 'card' ? (
+            <div className="flex flex-row mt-3">
+              <div className="w-1/2 pr-3 mb-6 md:mb-0">
+                <label
+                  className="block uppercase tracking-wide text-xs font-bold mb-2"
+                  htmlFor="beznalPaidSelect"
                 >
-                  <path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z" />
-                </svg>
+                  Оплачено по безналу
+                </label>
+                <div className="flex-shrink w-full inline-block relative">
+                  <select
+                    className="block appearance-none w-full bg-grey-lighter border border-gray-300 focus:border-gray-500 focus:outline-none py-2 px-4 pr-8 rounded"
+                    name="beznalPaidSelect"
+                    id="beznalPaidSelect"
+                    value={state.beznalPaid ? 'yes' : 'no'}
+                    disabled={!!state.beznalPaid}
+                    onChange={onChange}
+                  >
+                    <option value="no">Нет</option>
+                    <option value="yes">Да</option>
+                  </select>
+                  <div className="pointer-events-none hidden absolute top-0 mt-3 right-0 lg:flex items-center px-2 text-gray-600">
+                    <svg
+                      className="fill-current h-4 w-4"
+                      xmlns="http://www.w3.org/2000/svg"
+                      viewBox="0 0 20 20"
+                    >
+                      <path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z" />
+                    </svg>
+                  </div>
+                </div>
+                {state.beznalPaid ? (
+                  <p className="text-sm text-gray-700 mt-2">
+                    {new Date(state.beznalPaid).toLocaleString('ru-RU')}
+                  </p>
+                ) : null}
               </div>
             </div>
-          </div>
-        </div>
+          ) : null}
+        </>
       ) : null}
       {state.payment === 'termandcash' ? (
         <div className="flex flex-row">

@@ -66,7 +66,12 @@ const StosEdit = (props) => {
     talon: props[`id_${type || 'sto'}s`],
     class: props.class,
     category: props.category || (SERVICES_WITHOUT_TYPE ? 'price' : ''),
-    mileage: props?.mileage || null
+    mileage: props?.mileage || null,
+    beznalPaid: props.beznalPaid
+      ? typeof props.beznalPaid === 'string'
+        ? props.beznalPaid
+        : new Date(props.beznalPaid).toISOString()
+      : null
   })
 
   const [box, setBox] = useState(props.box ? props.box : '')
@@ -298,6 +303,16 @@ const StosEdit = (props) => {
   }
   const onChange = (e) => {
     const { name, value } = e.target
+    if (name === 'beznalPaidSelect') {
+      setState((prevState) => {
+        if (prevState.beznalPaid) return prevState
+        if (value === 'yes') {
+          return { ...prevState, beznalPaid: new Date().toISOString() }
+        }
+        return { ...prevState, beznalPaid: null }
+      })
+      return
+    }
     setState((prevState) => ({
       ...prevState,
       [name]: value
@@ -425,6 +440,7 @@ const StosEdit = (props) => {
         diametr: state.diametr,
         discount: state.discount,
         payment: state.payment,
+        beznalPaid: state.beznalPaid || null,
         services: service,
         material: materials,
         tyre: [...tyres],
@@ -455,6 +471,7 @@ const StosEdit = (props) => {
         diametr: state.diametr,
         discount: state.discount,
         payment: state.payment,
+        beznalPaid: state.beznalPaid || null,
         services: service,
         material: materials,
         tyre: [...tyres],
@@ -476,6 +493,7 @@ const StosEdit = (props) => {
         payment: state.payment,
         comment: state.comment,
         status: statusList[2],
+        beznalPaid: state.beznalPaid || null,
         customerId: activeCustomer || props.customerId || null,
         mileage: state.mileage || null
       })
@@ -491,6 +509,7 @@ const StosEdit = (props) => {
         payment: state.payment,
         comment: state.comment,
         status: statusList[3],
+        beznalPaid: state.beznalPaid || null,
         customerId: activeCustomer || props.customerId || null,
         mileage: state.mileage || null
       })
@@ -506,6 +525,7 @@ const StosEdit = (props) => {
         payment: state.payment,
         comment: state.comment,
         status: statusList[4],
+        beznalPaid: state.beznalPaid || null,
         customerId: activeCustomer || props.customerId || null,
         mileage: state.mileage || null
       })
@@ -523,6 +543,7 @@ const StosEdit = (props) => {
         status: statusList[6],
         combTerm: termCash.terminal,
         combCash: termCash.cash,
+        beznalPaid: state.beznalPaid || null,
         customerId: activeCustomer || props.customerId || null,
         mileage: state.mileage || null
       })
@@ -538,6 +559,7 @@ const StosEdit = (props) => {
         payment: state.payment,
         comment: state.comment,
         status: statusList[5],
+        beznalPaid: state.beznalPaid || null,
         customerId: activeCustomer || props.customerId || null,
         mileage: state.mileage || null
       })
@@ -557,6 +579,7 @@ const StosEdit = (props) => {
         discount: state.discount,
         payment: state.payment,
         comment: state.comment,
+        beznalPaid: state.beznalPaid || null,
         customerId: activeCustomer || props.customerId || null,
         mileage: state.mileage || null
       })
@@ -926,6 +949,7 @@ const StosEdit = (props) => {
             id_stos={props.id_stos}
             setTermCash={setTermCash}
             type={type}
+            showBeznalPaid={type === 'sto' || type === 'cond'}
           />
         </div>
       </div>

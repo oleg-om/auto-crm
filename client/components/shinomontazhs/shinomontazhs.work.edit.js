@@ -59,7 +59,12 @@ const ShinomontazhsEdit = (props) => {
     dateFinish: props.dateFinish ? props.dateFinish : new Date(),
     discount: props.discount,
     payment: props.payment,
-    talon: props.id_shinomontazhs
+    talon: props.id_shinomontazhs,
+    beznalPaid: props.beznalPaid
+      ? typeof props.beznalPaid === 'string'
+        ? props.beznalPaid
+        : new Date(props.beznalPaid).toISOString()
+      : null
   })
 
   const [box, setBox] = useState(props.box ? props.box : '')
@@ -258,6 +263,16 @@ const ShinomontazhsEdit = (props) => {
   }
   const onChange = (e) => {
     const { name, value } = e.target
+    if (name === 'beznalPaidSelect') {
+      setState((prevState) => {
+        if (prevState.beznalPaid) return prevState
+        if (value === 'yes') {
+          return { ...prevState, beznalPaid: new Date().toISOString() }
+        }
+        return { ...prevState, beznalPaid: null }
+      })
+      return
+    }
     setState((prevState) => ({
       ...prevState,
       [name]: value
@@ -497,6 +512,7 @@ const ShinomontazhsEdit = (props) => {
         diametr: state.diametr,
         discount: state.discount,
         payment: state.payment,
+        beznalPaid: state.beznalPaid || null,
         services: service,
         material: materials,
         tyre: [...tyres],
@@ -540,6 +556,7 @@ const ShinomontazhsEdit = (props) => {
         diametr: state.diametr,
         discount: state.discount,
         payment: state.payment,
+        beznalPaid: state.beznalPaid || null,
         services: service,
         material: materials,
         tyre: [...tyres],
@@ -564,6 +581,7 @@ const ShinomontazhsEdit = (props) => {
         payment: state.payment,
         comment: state.comment,
         status: statusList[2],
+        beznalPaid: state.beznalPaid || null,
         box,
         customerId: activeCustomer || props.customerId || null,
         groupCount
@@ -581,6 +599,7 @@ const ShinomontazhsEdit = (props) => {
         payment: state.payment,
         comment: state.comment,
         status: statusList[3],
+        beznalPaid: state.beznalPaid || null,
         box,
         customerId: activeCustomer || props.customerId || null,
         groupCount
@@ -598,6 +617,7 @@ const ShinomontazhsEdit = (props) => {
         payment: state.payment,
         comment: state.comment,
         status: statusList[4],
+        beznalPaid: state.beznalPaid || null,
         box,
         customerId: activeCustomer || props.customerId || null,
         groupCount
@@ -617,6 +637,7 @@ const ShinomontazhsEdit = (props) => {
         status: statusList[6],
         combTerm: termCash.terminal,
         combCash: termCash.cash,
+        beznalPaid: state.beznalPaid || null,
         box,
         customerId: activeCustomer || props.customerId || null,
         groupCount
@@ -634,6 +655,7 @@ const ShinomontazhsEdit = (props) => {
         payment: state.payment,
         comment: state.comment,
         status: statusList[5],
+        beznalPaid: state.beznalPaid || null,
         box,
         customerId: activeCustomer || props.customerId || null,
         groupCount
@@ -654,6 +676,7 @@ const ShinomontazhsEdit = (props) => {
         discount: state.discount,
         payment: state.payment,
         comment: state.comment,
+        beznalPaid: state.beznalPaid || null,
         box,
         customerId: activeCustomer || props.customerId || null
       })
@@ -977,6 +1000,7 @@ const ShinomontazhsEdit = (props) => {
             setTermCash={setTermCash}
             group={group}
             groupCount={groupCount}
+            showBeznalPaid
           />
         </div>
       </div>

@@ -45,7 +45,8 @@ const WashsCreate = (props) => {
     diametr: '',
     dateStart: new Date(),
     class: '',
-    category: ''
+    category: '',
+    beznalPaid: null
   })
   // const [service, setService] = useState([])
   // const [materials, setMaterials] = useState([])
@@ -186,6 +187,16 @@ const WashsCreate = (props) => {
   }
   const onChange = (e) => {
     const { name, value } = e.target
+    if (name === 'beznalPaidSelect') {
+      setState((prevState) => {
+        if (prevState.beznalPaid) return prevState
+        if (value === 'yes') {
+          return { ...prevState, beznalPaid: new Date().toISOString() }
+        }
+        return { ...prevState, beznalPaid: null }
+      })
+      return
+    }
     setState((prevState) => ({
       ...prevState,
       [name]: value
@@ -933,6 +944,7 @@ const WashsCreate = (props) => {
             onChange={onChange}
             dateEnd=""
             termCash={termCash}
+            showBeznalPaid
           />
         </div>
       </div>
