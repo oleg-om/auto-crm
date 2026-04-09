@@ -1,19 +1,19 @@
 import React from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import { Link, useParams, useHistory, useLocation } from 'react-router-dom'
-// import NumberFormat from 'react-number-format'
-// import cx from 'classnames'
 import { toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
 import { socket } from '../../redux/sockets/socketReceivers'
 import StosRow from '../../components/stos/stos.row'
 import { updateStatus } from '../../redux/reducers/stos'
+import { getItemsFiltered as getWindowItemsFiltered } from '../../redux/reducers/windows'
+import { getCondItemsFiltered } from '../../redux/reducers/conds'
 import Navbar from '../../components/Navbar'
 import Pagination from '../Pagination'
 import OnLoadPlace from './OnloadPyPlace'
 import OnLoad from './Onload'
-
-// import taskStatuses from '../../lists/task-statuses'
+import useFilter, { ServiceFilter } from '../../components/shared/filter'
+import useSaveFilter from '../../hooks/saveFilterParams'
 
 export const getType = (location) => {
   const path = location.pathname
@@ -26,14 +26,16 @@ export const getType = (location) => {
 const WindowsList = () => {
   const { num } = useParams(1)
 
-  const showSearch = false
+  const location = useLocation()
+  const isBoss = location.pathname.includes('boss/')
+  const isWindow = location.pathname.includes('window')
+
+  const loadFiltered = isWindow ? getWindowItemsFiltered : getCondItemsFiltered
+
+  const { search, setSearch, showSearch, setShowSearch, applyFilter } = useFilter(num, loadFiltered)
 
   const auth = useSelector((s) => s.auth)
   const role = useSelector((s) => s.auth.roles)
-
-  const location = useLocation()
-
-  const isBoss = location.pathname.includes('boss/')
 
   if (isBoss) {
     OnLoad(num ? Number(num) : 1, showSearch)
@@ -47,10 +49,7 @@ const WindowsList = () => {
 
   const history = useHistory()
   const postsPerPage = 14
-  // function secondsDiff(d1, d2) {
-  //   const secDiff = Math.floor((d2 - d1) / 1000)
-  //   return secDiff
-  // }
+
   const list = useSelector((s) => s[`${getType(location)}s`].list)
   const curPage = useSelector((s) => s[`${getType(location)}s`].currentPage)
   const totalPages = useSelector((s) => s[`${getType(location)}s`].numberOfPages)
@@ -63,15 +62,12 @@ const WindowsList = () => {
     dispatch(updateStatus(id, status))
   }
 
-  // const [loading] = useState(true)
+  const { navigateWithQueryParams } = useSaveFilter(search)
 
   const paginate = (pageNumber) => {
-    history.push(`/${getType(location)}/list/${pageNumber}`)
+    navigateWithQueryParams(`/${getType(location)}${isBoss ? 'boss' : ''}/list/${pageNumber}`)
   }
   toast.configure()
-  // const notify = (arg) => {
-  //   toast.info(arg, { position: toast.POSITION.BOTTOM_RIGHT })
-  // }
 
   const loadingComponent = () => {
     return (
@@ -95,6 +91,11 @@ const WindowsList = () => {
     setTimeout(() => history.push(`/${getType(location)}boss/list`), 1)
   }
 
+  const filterPath = `${getType(location)}${isBoss ? 'boss' : ''}`
+  const filters = isBoss
+    ? ['number', 'place', 'regnumber', 'status']
+    : ['number', 'regnumber', 'status']
+
   return (
     <div>
       <Navbar />
@@ -108,6 +109,16 @@ const WindowsList = () => {
             ➜ Перейти в режим начальника
           </button>
         ) : null}
+
+        <ServiceFilter
+          path={filterPath}
+          search={search}
+          setSearch={setSearch}
+          showSearch={showSearch}
+          setShowSearch={setShowSearch}
+          filters={filters}
+          applyFilter={applyFilter}
+        />
 
         <div className="overflow-x-auto rounded-lg overflow-y-auto relative lg:my-3 mt-1 lg:shadow lg:mx-4">
           <table className="border-collapse w-full">

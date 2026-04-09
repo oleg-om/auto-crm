@@ -66,7 +66,7 @@ exports.getByPage = async (req, res) => {
   }
 }
 exports.getFiltered = async (req, res) => {
-  const { page, number, place, reg } = req.query
+  const { page, number, place, reg, status } = req.query
 
   try {
     const LIMIT = 14
@@ -75,12 +75,14 @@ exports.getFiltered = async (req, res) => {
     const total = await Wash.countDocuments({
       id_washs: req.query.number ? `${number.toString()}` : { $exists: true },
       place: req.query.place ? `${place.toString()}` : { $exists: true },
-      regnumber: req.query.reg ? { $regex: `${reg.toString()}`, $options: 'i' } : { $exists: true }
+      regnumber: req.query.reg ? { $regex: `${reg.toString()}`, $options: 'i' } : { $exists: true },
+      status: req.query.status ? `${status.toString()}` : { $exists: true }
     })
     const posts = await Wash.find({
       id_washs: req.query.number ? `${number.toString()}` : { $exists: true },
       place: req.query.place ? `${place.toString()}` : { $exists: true },
-      regnumber: req.query.reg ? { $regex: `${reg.toString()}`, $options: 'i' } : { $exists: true }
+      regnumber: req.query.reg ? { $regex: `${reg.toString()}`, $options: 'i' } : { $exists: true },
+      status: req.query.status ? `${status.toString()}` : { $exists: true }
     })
       .sort({ id_washs: -1 })
       .limit(LIMIT)

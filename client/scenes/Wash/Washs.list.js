@@ -94,7 +94,7 @@ const WashsList = () => {
           setSearch={setSearch}
           showSearch={showSearch}
           setShowSearch={setShowSearch}
-          filters={['number']}
+          filters={['number', 'status']}
           applyFilter={applyFilter}
         />
         <div className="overflow-x-auto rounded-lg overflow-y-auto relative lg:my-3 mt-1 lg:shadow lg:mx-4">

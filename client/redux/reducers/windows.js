@@ -103,14 +103,10 @@ export function getItemsByPage(page) {
   }
 }
 
-export function getItemsFiltered(page, place, number, reg) {
+export function getItemsFiltered(queryParams) {
   return (dispatch) => {
     dispatch({ type: GET_WINDOWS, isLoaded: false })
-    fetch(
-      `/api/v1/windowfilter${page ? `?page=${page}` : ''}${place ? `&place=${place}` : ''}${
-        number ? `&number=${number}` : ''
-      }${reg ? `&reg=${reg}` : ''}`
-    )
+    fetch(`/api/v1/windowfilter${queryParams}`)
       .then((r) => r.json())
       .then(({ data: windows, currentPage, numberOfPages }) => {
         dispatch({

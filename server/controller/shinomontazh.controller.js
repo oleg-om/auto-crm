@@ -96,6 +96,9 @@ exports.getFiltered = async (req, res) => {
     if (req.query.employee) {
       query['employee.id'] = employee.toString()
     }
+    if (req.query.status) {
+      query.status = req.query.status.toString()
+    }
 
     const total = await Shinomontazh.countDocuments(query)
     const posts = await Shinomontazh.find(query)

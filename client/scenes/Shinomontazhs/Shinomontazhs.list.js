@@ -68,7 +68,7 @@ const ShinomontazhsList = () => {
   }
   toast.configure()
 
-  const filters = ['number', 'regnumber']
+  const filters = ['number', 'regnumber', 'status']
 
   return (
     <div>

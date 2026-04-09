@@ -1,12 +1,29 @@
 import cx from 'classnames'
 import React from 'react'
+import serviceOrderStatuses from '../../../../common/enums/shinomontazh-statuses'
 import storageStatuses from '../../../lists/storages-statuses'
 import taskStatuses from '../../../lists/task-statuses'
+
+const SERVICE_ORDER_FILTER_PATHS = new Set([
+  'sto',
+  'stoboss',
+  'shinomontazh',
+  'shinomontazhboss',
+  'wash',
+  'washboss',
+  'window',
+  'windowboss',
+  'cond',
+  'condboss'
+])
 
 const StatusFilter = ({ search, showSearch, path, activeFilter, onChange }) => {
   const getStatuses = () => {
     if (path.includes('storages')) {
       return storageStatuses
+    }
+    if (SERVICE_ORDER_FILTER_PATHS.has(path)) {
+      return serviceOrderStatuses
     }
     return taskStatuses
   }

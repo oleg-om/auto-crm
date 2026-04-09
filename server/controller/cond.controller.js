@@ -75,7 +75,7 @@ exports.getByPage = async (req, res) => {
   }
 }
 exports.getFiltered = async (req, res) => {
-  const { page, number, place, reg } = req.query
+  const { page, number, place, reg, status } = req.query
 
   try {
     const LIMIT = 14
@@ -85,13 +85,15 @@ exports.getFiltered = async (req, res) => {
       id_conds: req.query.number ? `${number.toString()}` : { $exists: true },
       place: req.query.place ? `${place.toString()}` : { $exists: true },
       regnumber: req.query.reg ? { $regex: `${reg.toString()}`, $options: 'i' } : { $exists: true },
-      dateStart: { $exists: true }
+      dateStart: { $exists: true },
+      status: req.query.status ? `${status.toString()}` : { $exists: true }
     })
     const posts = await Cond.find({
       id_conds: req.query.number ? `${number.toString()}` : { $exists: true },
       place: req.query.place ? `${place.toString()}` : { $exists: true },
       regnumber: req.query.reg ? { $regex: `${reg.toString()}`, $options: 'i' } : { $exists: true },
-      dateStart: { $exists: true }
+      dateStart: { $exists: true },
+      status: req.query.status ? `${status.toString()}` : { $exists: true }
     })
       // .sort({ id_conds: -1 })
       .sort({ dateStart: -1 })

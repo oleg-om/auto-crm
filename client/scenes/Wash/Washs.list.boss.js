@@ -70,7 +70,7 @@ const WashsListBoss = () => {
     )
   }
 
-  const filters = ['number', 'place', 'regnumber']
+  const filters = ['number', 'place', 'regnumber', 'status']
 
   return (
     <div>

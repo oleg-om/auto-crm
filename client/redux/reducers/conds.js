@@ -103,14 +103,10 @@ export function getCondItemsByPage(page) {
   }
 }
 
-export function getCondItemsFiltered(page, place, number, reg) {
+export function getCondItemsFiltered(queryParams) {
   return (dispatch) => {
     dispatch({ type: GET_CONDS, isLoaded: false })
-    fetch(
-      `/api/v1/condfilter${page ? `?page=${page}` : ''}${place ? `&place=${place}` : ''}${
-        number ? `&number=${number}` : ''
-      }${reg ? `&reg=${reg}` : ''}`
-    )
+    fetch(`/api/v1/condfilter${queryParams}`)
       .then((r) => r.json())
       .then(({ data: conds, currentPage, numberOfPages }) => {
         dispatch({
