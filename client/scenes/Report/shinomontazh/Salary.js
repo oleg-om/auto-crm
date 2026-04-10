@@ -27,6 +27,7 @@ import { filterByEmployee, filterReportByEmployee } from '../../../utils/admin/r
 import { updateCurrentEmployeeReport } from '../../../redux/reducers/employees'
 import razvalIcon from '../../../assets/images/priority-product-large.png'
 import { checkIsRazvalService } from './wrapper'
+import taskStatuses from '../../../../common/enums/shinomontazh-statuses'
 
 function paymentMethodLabel(payment) {
   if (!payment) return '—'
@@ -41,30 +42,35 @@ function paymentMethodLabel(payment) {
   return map[payment] || payment
 }
 
-function PaymentMethodBadge({ payment }) {
+function statusBadgeClasses(status) {
+  if (!status) return 'bg-gray-200 text-gray-700'
+  return cx({
+    'bg-orange-400': status === taskStatuses[0],
+    'bg-green-400': status === taskStatuses[1],
+    'bg-blue-400': status === taskStatuses[2],
+    'bg-yellow-400': status === taskStatuses[3],
+    'bg-purple-400': status === taskStatuses[4] || status === taskStatuses[6],
+    'bg-red-500': status === taskStatuses[5]
+  })
+}
+
+function paymentBadgeClasses(payment) {
+  return cx({
+    'bg-blue-400': payment === 'yes',
+    'bg-yellow-400': payment === 'card',
+    'bg-purple-400': payment === 'terminal' || payment === 'termandcash',
+    'bg-orange-400': payment === 'no',
+    'bg-red-500': payment === 'cancel',
+    'bg-gray-300 text-gray-800':
+      payment && !['yes', 'card', 'terminal', 'termandcash', 'no', 'cancel'].includes(payment)
+  })
+}
+
+function PaymentMethodBadge({ payment, status }) {
   const text = paymentMethodLabel(payment)
-  if (!payment) {
-    return (
-      <div className="inline-block rounded py-1 px-3 text-xs font-bold bg-gray-200 text-gray-700">
-        {text}
-      </div>
-    )
-  }
+  const colorClass = payment ? paymentBadgeClasses(payment) : statusBadgeClasses(status)
   return (
-    <div
-      className={cx('inline-block rounded py-1 px-3 text-xs font-bold', {
-        'bg-green-400 text-gray-900': payment === 'yes',
-        'bg-blue-400 text-gray-900': payment === 'card',
-        'bg-purple-400 text-gray-900': payment === 'terminal',
-        'bg-teal-400 text-gray-900': payment === 'termandcash',
-        'bg-orange-400 text-gray-900': payment === 'no',
-        'bg-red-500 text-white': payment === 'cancel',
-        'bg-gray-300 text-gray-800':
-          !['yes', 'card', 'terminal', 'termandcash', 'no', 'cancel'].includes(payment)
-      })}
-    >
-      {text}
-    </div>
+    <div className={cx('inline-block rounded py-1 px-3 text-xs font-bold', colorClass)}>{text}</div>
   )
 }
 
@@ -183,7 +189,16 @@ const SalaryByDay = ({
                   .filter((it) => new Date(it.dateFinish).getDate() === new Date(date).getDate())
                   .filter((it) => filterReportByEmployee(it, employee))
                   .map((it) => (
-                    <tr key={it.id} className="bg-white hover:bg-gray-100 table-row mb-0">
+                    <tr
+                      key={it.id}
+                      className={cx('table-row mb-0', {
+                        'bg-yellow-200 hover:bg-yellow-300':
+                          it.beznalPaid && it.status === taskStatuses[3],
+                        'bg-white hover:bg-gray-100': !(
+                          it.beznalPaid && it.status === taskStatuses[3]
+                        )
+                      })}
+                    >
                       <td className="w-auto p-2 text-gray-800 text-left border border-b table-cell static">
                         <div className="flex items-center">
                           <Link
@@ -245,7 +260,7 @@ const SalaryByDay = ({
                         руб.
                       </td>
                       <td className="w-auto p-2 text-gray-800 text-center border border-b table-cell static">
-                        <PaymentMethodBadge payment={it.payment} />
+                        <PaymentMethodBadge payment={it.payment} status={it.status} />
                       </td>
                       <td className="w-auto p-2 text-gray-800 text-center border border-b table-cell static">
                         {totalFreeService(it) ? <>{totalFreeService(it)} руб.</> : null}
