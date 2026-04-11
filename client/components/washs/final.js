@@ -20,7 +20,7 @@ const Final = ({
   showBeznalPaid = false
 }) => {
   const showPaymentDiscountSelects =
-    !!dateEnd ||
+    !!dateEnd &&
     (auth?.roles && auth.roles.some((r) => roleList.PAYMENT_BLOCK_ROLES.includes(r)))
   // const kuzovCheck = () => {
   //   if (state.class === 'rus') return 'Отечественные'
