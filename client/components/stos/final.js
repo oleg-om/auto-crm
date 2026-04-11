@@ -329,7 +329,7 @@ const Final = ({
           ) : null}
         </>
       ) : null}
-      {state.payment === 'termandcash' ? (
+      {showPaymentDiscountSelects && state.payment === 'termandcash' ? (
         <div className="flex flex-row">
           <div className="mr-2 w-1/4">
             <label
