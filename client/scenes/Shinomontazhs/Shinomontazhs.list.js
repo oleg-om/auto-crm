@@ -40,6 +40,7 @@ const ShinomontazhsList = () => {
   const dispatch = useDispatch()
   const placesList = useSelector((s) => s.places.list)
   const employeeList = useSelector((s) => s.employees.list)
+  const organizations = useSelector((s) => s.organizations.list)
 
   const role = useSelector((s) => s.auth.roles)
 
@@ -102,7 +103,7 @@ const ShinomontazhsList = () => {
                   Авто
                 </th>
                 <th className="p-1 lg:p-3 lg:font-bold lg:uppercase bg-gray-100 text-gray-600 border border-gray-300 table-cell">
-                  Гос. номер
+                  Гос. номер/Орг
                 </th>
                 <th className="p-1 lg:p-3 lg:font-bold lg:uppercase bg-gray-100 text-gray-600 border border-gray-300 table-cell">
                   Статус
@@ -134,6 +135,7 @@ const ShinomontazhsList = () => {
                       placesList={placesList.find((item) => item.id === it.place)}
                       settings={settings}
                       num={num}
+                      organization={organizations.find((item) => item.id === it.organizationId)}
                     />
                   ))
                 : null}

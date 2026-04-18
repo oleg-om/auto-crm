@@ -3,12 +3,17 @@ import { useDispatch } from 'react-redux'
 import { useLocation } from 'react-router-dom'
 // import { socket } from '../../redux/sockets/socketReceivers'
 import { getItemsFiltered } from '../../redux/reducers/shinomontazhs'
+import { getOrganizations } from '../../redux/reducers/organizations'
 import useSaveFilter, { checkQueryParamsAre } from '../../hooks/saveFilterParams'
 
 // import { socketCondition } from '../../utils/utils'
 
 const OnLoadPlace = (page, showSearch, place) => {
   const dispatch = useDispatch()
+
+  useEffect(() => {
+    dispatch(getOrganizations())
+  }, [dispatch])
 
   const filterObj = { page, place }
   const { queryParamsToApi } = useSaveFilter(filterObj)

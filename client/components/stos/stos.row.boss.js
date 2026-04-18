@@ -57,7 +57,7 @@ const StosRowBoss = (props) => {
         {props.mark} {props.model}
       </td>
       <td className="w-auto p-2 text-gray-800 text-sm text-center border border-b table-cell static">
-        {props.regnumber}
+        {props.organization ? props.organization.name : props.regnumber}
       </td>
       <td className="w-auto p-2 text-gray-800 text-sm text-center border border-b table-cell static">
         {props.employee
