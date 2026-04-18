@@ -974,6 +974,7 @@ const StosEdit = (props) => {
             type={type}
             showBeznalPaid={type === 'sto' || type === 'cond'}
             organizations={organizations}
+            customerId={activeCustomer || props.customerId || null}
           />
         </div>
       </div>

@@ -1,6 +1,7 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import discountList from '../../lists/discounts'
 import roleList from '../../lists/account-role-list'
+import OrganizationModal from '../Modal.organization'
 
 const Final = ({
   //     materialprices,
@@ -18,8 +19,63 @@ const Final = ({
   printOne,
   printTwo,
   showBeznalPaid = false,
-  organizations = []
+  organizations = [],
+  customerId = null
 }) => {
+  const [showOrgModal, setShowOrgModal] = useState(false)
+  const [customerOrganization, setCustomerOrganization] = useState(null)
+  const [orgModalDismissed, setOrgModalDismissed] = useState(false)
+  
+  // Загрузка информации о клиенте
+  useEffect(() => {
+    if (customerId) {
+      fetch(`/api/v1/customer/${customerId}`)
+        .then((r) => r.json())
+        .then(({ data: customer }) => {
+          if (customer?.organizationId) {
+            const org = organizations.find((o) => o.id === customer.organizationId)
+            setCustomerOrganization(org)
+          } else {
+            setCustomerOrganization(null)
+          }
+        })
+        .catch(() => {
+          setCustomerOrganization(null)
+        })
+    } else {
+      setCustomerOrganization(null)
+      setOrgModalDismissed(false)
+    }
+  }, [customerId, organizations])
+  
+  const handleOrganizationFocus = () => {
+    // Показываем модальное окно, если:
+    // 1. Поле организации пусто
+    // 2. У клиента есть привязанная организация
+    // 3. Пользователь еще не отклонял предложение
+    if (!state.organizationId && customerOrganization && !orgModalDismissed) {
+      setShowOrgModal(true)
+    }
+  }
+  
+  const handleConfirmOrganization = () => {
+    if (customerOrganization) {
+      // Создаем событие для onChange
+      onChange({
+        target: {
+          name: 'organizationId',
+          value: customerOrganization.id
+        }
+      })
+    }
+    setShowOrgModal(false)
+  }
+  
+  const handleCloseModal = () => {
+    setShowOrgModal(false)
+    setOrgModalDismissed(true)
+  }
+  
   const showPaymentDiscountSelects =
     !!dateEnd &&
     (auth?.roles && auth.roles.some((r) => roleList.PAYMENT_BLOCK_ROLES.includes(r)))
@@ -342,6 +398,7 @@ const Final = ({
                 id="organizationId"
                 value={state.organizationId || ''}
                 onChange={onChange}
+                onFocus={handleOrganizationFocus}
               >
                 <option value="">Выберите организацию</option>
                 {organizations.map((org) => (
@@ -532,6 +589,13 @@ const Final = ({
           После того как вы завершили работу, менять услуги и материалы невозможно
         </p>
       ) : null}
+      
+      <OrganizationModal
+        open={showOrgModal}
+        onClose={handleCloseModal}
+        onConfirm={handleConfirmOrganization}
+        organizationName={customerOrganization?.name || ''}
+      />
     </div>
   )
 }

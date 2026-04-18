@@ -853,6 +853,7 @@ const ShinomontazhsCreate = (props) => {
             groupCount={groupCount}
             showBeznalPaid
             organizations={organizations}
+            customerId={activeCustomer || props.customerId || null}
           />
         </div>
       </div>
