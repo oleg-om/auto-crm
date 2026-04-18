@@ -69,7 +69,7 @@ exports.getByPage = async (req, res) => {
   }
 }
 exports.getFiltered = async (req, res) => {
-  const { page, number, place, reg, employee, status } = req.query
+  const { page, number, place, reg, employee, status, organization } = req.query
 
   try {
     const LIMIT = 14
@@ -80,14 +80,16 @@ exports.getFiltered = async (req, res) => {
       place: req.query.place ? `${place.toString()}` : { $exists: true },
       regnumber: req.query.reg ? { $regex: `${reg.toString()}`, $options: 'i' } : { $exists: true },
       'employee.id': req.query?.employee ? `${employee.toString()}` : { $exists: true },
-      status: req.query.status ? `${status.toString()}` : { $exists: true }
+      status: req.query.status ? `${status.toString()}` : { $exists: true },
+      organizationId: req.query.organization ? `${organization.toString()}` : { $exists: true }
     })
     const posts = await Sto.find({
       id_stos: req.query.number ? `${number.toString()}` : { $exists: true },
       place: req.query.place ? `${place.toString()}` : { $exists: true },
       regnumber: req.query.reg ? { $regex: `${reg.toString()}`, $options: 'i' } : { $exists: true },
       'employee.id': req.query?.employee ? `${employee.toString()}` : { $exists: true },
-      status: req.query.status ? `${status.toString()}` : { $exists: true }
+      status: req.query.status ? `${status.toString()}` : { $exists: true },
+      organizationId: req.query.organization ? `${organization.toString()}` : { $exists: true }
     })
       .sort({ dateStart: -1 })
       .limit(LIMIT)

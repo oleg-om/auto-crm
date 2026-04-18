@@ -95,7 +95,7 @@ const StosList = () => {
           setSearch={setSearch}
           showSearch={showSearch}
           setShowSearch={setShowSearch}
-          filters={['number', 'regnumber', 'status']}
+          filters={['number', 'regnumber', 'status', 'organization']}
           applyFilter={applyFilter}
         />
         <div className="overflow-x-auto rounded-lg overflow-y-auto relative lg:my-3 mt-1 lg:shadow lg:mx-4">

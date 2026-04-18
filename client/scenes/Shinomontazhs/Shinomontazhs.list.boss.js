@@ -63,7 +63,7 @@ const ShinomontazhsListBoss = () => {
     )
   }
 
-  const filters = ['number', 'place', 'regnumber', 'employee', 'status']
+  const filters = ['number', 'place', 'regnumber', 'employee', 'status', 'organization']
 
   return (
     <div>

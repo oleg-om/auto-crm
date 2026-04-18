@@ -75,7 +75,7 @@ exports.getByPage = async (req, res) => {
   }
 }
 exports.getFiltered = async (req, res) => {
-  const { page, number, place, reg, employee } = req.query
+  const { page, number, place, reg, employee, organization } = req.query
 
   try {
     const LIMIT = 14
@@ -98,6 +98,9 @@ exports.getFiltered = async (req, res) => {
     }
     if (req.query.status) {
       query.status = req.query.status.toString()
+    }
+    if (req.query.organization) {
+      query.organizationId = organization.toString()
     }
 
     const total = await Shinomontazh.countDocuments(query)
