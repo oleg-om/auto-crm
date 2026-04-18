@@ -52,6 +52,9 @@ import ShinomontazhEditFull from '../scenes/Shinomontazhs/Shinomontazhs.edit'
 import VendorList from '../scenes/Vendors/Vendors.list'
 import VendorNew from '../scenes/Vendors/Vendors.create'
 import VendorEdit from '../scenes/Vendors/Vendors.edit'
+import OrganizationList from '../scenes/Organizations/Organizations.list'
+import OrganizationNew from '../scenes/Organizations/Organizations.create'
+import OrganizationEdit from '../scenes/Organizations/Organizations.edit'
 import TyresList from '../scenes/Tyres/Tyres.list'
 import TyresNew from '../scenes/Tyres/Tyres.preorder.create'
 import TyreEditSimple from '../scenes/Tyres/Tyres.preorder.edit'
@@ -280,6 +283,9 @@ const RootComponent = (props) => {
             <PrivateRoute exact path="/vendor/list" component={VendorList} />
             <PrivateRoute exact path="/vendor/create" component={VendorNew} />
             <PrivateRoute exact path="/vendor/edit/:id" component={VendorEdit} />
+            <PrivateRoute exact path="/organization/list" component={OrganizationList} />
+            <PrivateRoute exact path="/organization/create" component={OrganizationNew} />
+            <PrivateRoute exact path="/organization/edit/:id" component={OrganizationEdit} />
             <PrivateRoute
               exact
               path="/shinomontazhprice/:type/edit/:id"

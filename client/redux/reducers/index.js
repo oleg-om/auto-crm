@@ -30,6 +30,7 @@ import windowprices from './window.prices'
 import conds from './conds'
 import condprices from './cond.prices'
 import positions from './positions'
+import organizations from './organizations'
 
 const createRootReducer = (history) =>
   combineReducers({
@@ -62,7 +63,8 @@ const createRootReducer = (history) =>
     windowprices,
     conds,
     condprices,
-    positions
+    positions,
+    organizations
   })
 
 export default createRootReducer
