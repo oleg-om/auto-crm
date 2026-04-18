@@ -21,6 +21,7 @@ import { ServiceSubmitButtons } from '../shared/buttons/OrderSubmitButtons'
 import { GroupSwitch, useGroup } from '../../hooks/useGroup'
 import EmployeeTab from '../common/employeeTab'
 import tryBlockWorkCompletionTooSoon from '../../utils/workCompletionFreeze'
+import { getOrganizations } from '../../redux/reducers/organizations'
 
 const ShinomontazhsEdit = (props) => {
   toast.configure()
@@ -29,6 +30,7 @@ const ShinomontazhsEdit = (props) => {
   }
 
   const history = useHistory()
+  const dispatch = useDispatch()
   const checkLink = () => history.location.pathname.split('/').includes('shinomontazhboss')
 
   const isFromPreentry = history?.location?.search.includes('from=preentry')
@@ -41,6 +43,11 @@ const ShinomontazhsEdit = (props) => {
 
   const materialprices = useSelector((s) => s.materials.list)
   const placeList = useSelector((s) => s.places.list)
+  const organizations = useSelector((s) => s.organizations.list)
+
+  useEffect(() => {
+    dispatch(getOrganizations())
+  }, [dispatch])
 
   const currentPlace = placeList.find((it) => it.id === auth.place)
 
@@ -65,7 +72,8 @@ const ShinomontazhsEdit = (props) => {
       ? typeof props.beznalPaid === 'string'
         ? props.beznalPaid
         : new Date(props.beznalPaid).toISOString()
-      : null
+      : null,
+    organizationId: props.organizationId || null
   })
 
   const [box, setBox] = useState(props.box ? props.box : '')
@@ -483,8 +491,6 @@ const ShinomontazhsEdit = (props) => {
 
   const [active, setActive] = useState(isFromPreentry ? 'employee' : 'finish')
 
-  const dispatch = useDispatch()
-
   const updateStorageStat = (idOFStorage, shinomontazhId) => {
     if (idOFStorage) {
       dispatch(
@@ -514,6 +520,7 @@ const ShinomontazhsEdit = (props) => {
         discount: state.discount,
         payment: state.payment,
         beznalPaid: state.beznalPaid || null,
+        organizationId: state.organizationId || null,
         services: service,
         material: materials,
         tyre: [...tyres],
@@ -564,6 +571,7 @@ const ShinomontazhsEdit = (props) => {
         discount: state.discount,
         payment: state.payment,
         beznalPaid: state.beznalPaid || null,
+        organizationId: state.organizationId || null,
         services: service,
         material: materials,
         tyre: [...tyres],
@@ -589,6 +597,7 @@ const ShinomontazhsEdit = (props) => {
         comment: state.comment,
         status: statusList[2],
         beznalPaid: state.beznalPaid || null,
+        organizationId: state.organizationId || null,
         box,
         customerId: activeCustomer || props.customerId || null,
         groupCount
@@ -607,6 +616,7 @@ const ShinomontazhsEdit = (props) => {
         comment: state.comment,
         status: statusList[3],
         beznalPaid: state.beznalPaid || null,
+        organizationId: state.organizationId || null,
         box,
         customerId: activeCustomer || props.customerId || null,
         groupCount
@@ -625,6 +635,7 @@ const ShinomontazhsEdit = (props) => {
         comment: state.comment,
         status: statusList[4],
         beznalPaid: state.beznalPaid || null,
+        organizationId: state.organizationId || null,
         box,
         customerId: activeCustomer || props.customerId || null,
         groupCount
@@ -645,6 +656,7 @@ const ShinomontazhsEdit = (props) => {
         combTerm: termCash.terminal,
         combCash: termCash.cash,
         beznalPaid: state.beznalPaid || null,
+        organizationId: state.organizationId || null,
         box,
         customerId: activeCustomer || props.customerId || null,
         groupCount
@@ -663,6 +675,7 @@ const ShinomontazhsEdit = (props) => {
         comment: state.comment,
         status: statusList[5],
         beznalPaid: state.beznalPaid || null,
+        organizationId: state.organizationId || null,
         box,
         customerId: activeCustomer || props.customerId || null,
         groupCount
@@ -684,6 +697,7 @@ const ShinomontazhsEdit = (props) => {
         payment: state.payment,
         comment: state.comment,
         beznalPaid: state.beznalPaid || null,
+        organizationId: state.organizationId || null,
         box,
         customerId: activeCustomer || props.customerId || null
       })
@@ -1008,6 +1022,7 @@ const ShinomontazhsEdit = (props) => {
             group={group}
             groupCount={groupCount}
             showBeznalPaid
+            organizations={organizations}
           />
         </div>
       </div>

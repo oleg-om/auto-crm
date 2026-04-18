@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react'
 import { useHistory } from 'react-router-dom'
-import { useSelector } from 'react-redux'
+import { useSelector, useDispatch } from 'react-redux'
 import { toast } from 'react-toastify'
 import cx from 'classnames'
 import 'react-toastify/dist/ReactToastify.css'
@@ -16,6 +16,7 @@ import { useServices } from '../../hooks/handleServices'
 import SubmitButtons from '../shared/buttons/OrderSubmitButtons'
 import { GroupSwitch, useGroup } from '../../hooks/useGroup'
 import { checkSalariesIsNotValid } from '../shared/services/SalariesDivider'
+import { getOrganizations } from '../../redux/reducers/organizations'
 
 const ShinomontazhsCreate = (props) => {
   toast.configure()
@@ -24,12 +25,18 @@ const ShinomontazhsCreate = (props) => {
   }
 
   const history = useHistory()
+  const dispatch = useDispatch()
 
   const employeeList = useSelector((s) => s.employees.list)
   const auth = useSelector((s) => s.auth)
   const shinomontazhprices = useSelector((s) => s.shinomontazhprices.list)
   const materialprices = useSelector((s) => s.materials.list)
   const placeList = useSelector((s) => s.places.list)
+  const organizations = useSelector((s) => s.organizations.list)
+
+  useEffect(() => {
+    dispatch(getOrganizations())
+  }, [dispatch])
 
   const currentPlace = placeList.find((it) => it.id === auth.place)
 
@@ -48,7 +55,8 @@ const ShinomontazhsCreate = (props) => {
     kuzov: '',
     diametr: '',
     dateStart: new Date(),
-    beznalPaid: null
+    beznalPaid: null,
+    organizationId: null
   })
 
   const {
@@ -844,6 +852,7 @@ const ShinomontazhsCreate = (props) => {
             termCash={termCash}
             groupCount={groupCount}
             showBeznalPaid
+            organizations={organizations}
           />
         </div>
       </div>

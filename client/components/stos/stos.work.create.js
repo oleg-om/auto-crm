@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react'
 import { useHistory, useLocation } from 'react-router-dom'
-import { useSelector } from 'react-redux'
+import { useSelector, useDispatch } from 'react-redux'
 import { toast } from 'react-toastify'
 import cx from 'classnames'
 import 'react-toastify/dist/ReactToastify.css'
@@ -14,6 +14,7 @@ import { useKeyboard } from '../../hooks/keyboard'
 import { useMaterials } from '../../hooks/handleMaterials'
 import { useServices } from '../../hooks/handleServices'
 import SubmitButtons from '../shared/buttons/OrderSubmitButtons'
+import { getOrganizations } from '../../redux/reducers/organizations'
 
 const StosCreate = (props) => {
   toast.configure()
@@ -22,6 +23,7 @@ const StosCreate = (props) => {
   }
 
   const type = props?.type || 'sto'
+  const dispatch = useDispatch()
 
   const history = useHistory()
   const location = useLocation()
@@ -35,6 +37,11 @@ const StosCreate = (props) => {
 
   const materialprices = useSelector((s) => s.materials.list).filter((it) => it.type === type)
   const placeList = useSelector((s) => s.places.list)
+  const organizations = useSelector((s) => s.organizations.list)
+
+  useEffect(() => {
+    dispatch(getOrganizations())
+  }, [dispatch])
 
   const currentPlace = placeList.find((it) => it.id === auth.place)
 
@@ -54,7 +61,8 @@ const StosCreate = (props) => {
     class: '',
     category: SERVICES_WITHOUT_TYPE ? 'price' : '',
     mileage: null,
-    beznalPaid: null
+    beznalPaid: null,
+    organizationId: null
   })
 
   const {
@@ -747,6 +755,7 @@ const StosCreate = (props) => {
             termCash={termCash}
             type={type}
             showBeznalPaid={type === 'sto' || type === 'cond'}
+            organizations={organizations}
           />
         </div>
       </div>

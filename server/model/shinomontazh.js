@@ -132,6 +132,10 @@ const Shinomontazh = new mongoose.Schema({
   beznalPaid: {
     type: Date,
     required: false
+  },
+  organizationId: {
+    type: String,
+    required: false
   }
 })
 

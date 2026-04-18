@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { useHistory, useLocation } from 'react-router-dom'
-import { useSelector } from 'react-redux'
+import { useSelector, useDispatch } from 'react-redux'
 import { toast } from 'react-toastify'
 import cx from 'classnames'
 import 'react-toastify/dist/ReactToastify.css'
@@ -18,6 +18,7 @@ import { useServices } from '../../hooks/handleServices'
 import { ServiceSubmitButtons } from '../shared/buttons/OrderSubmitButtons'
 import EmployeeTab from '../common/employeeTab'
 import tryBlockWorkCompletionTooSoon from '../../utils/workCompletionFreeze'
+import { getOrganizations } from '../../redux/reducers/organizations'
 
 const StosEdit = (props) => {
   toast.configure()
@@ -26,6 +27,7 @@ const StosEdit = (props) => {
   }
 
   const type = props?.type || 'sto'
+  const dispatch = useDispatch()
 
   const history = useHistory()
   const location = useLocation()
@@ -45,6 +47,11 @@ const StosEdit = (props) => {
   const materialprices = useSelector((s) => s.materials.list).filter((it) => it.type === type)
 
   const placeList = useSelector((s) => s.places.list)
+  const organizations = useSelector((s) => s.organizations.list)
+
+  useEffect(() => {
+    dispatch(getOrganizations())
+  }, [dispatch])
   const currentPlace = placeList.find((it) => it.id === auth.place)
 
   const [regNumber, setRegNumber] = useState([])
@@ -72,7 +79,8 @@ const StosEdit = (props) => {
       ? typeof props.beznalPaid === 'string'
         ? props.beznalPaid
         : new Date(props.beznalPaid).toISOString()
-      : null
+      : null,
+    organizationId: props.organizationId || null
   })
 
   const [box, setBox] = useState(props.box ? props.box : '')
@@ -442,6 +450,7 @@ const StosEdit = (props) => {
         discount: state.discount,
         payment: state.payment,
         beznalPaid: state.beznalPaid || null,
+        organizationId: state.organizationId || null,
         services: service,
         material: materials,
         tyre: [...tyres],
@@ -479,6 +488,7 @@ const StosEdit = (props) => {
         discount: state.discount,
         payment: state.payment,
         beznalPaid: state.beznalPaid || null,
+        organizationId: state.organizationId || null,
         services: service,
         material: materials,
         tyre: [...tyres],
@@ -501,6 +511,7 @@ const StosEdit = (props) => {
         comment: state.comment,
         status: statusList[2],
         beznalPaid: state.beznalPaid || null,
+        organizationId: state.organizationId || null,
         customerId: activeCustomer || props.customerId || null,
         mileage: state.mileage || null
       })
@@ -517,6 +528,7 @@ const StosEdit = (props) => {
         comment: state.comment,
         status: statusList[3],
         beznalPaid: state.beznalPaid || null,
+        organizationId: state.organizationId || null,
         customerId: activeCustomer || props.customerId || null,
         mileage: state.mileage || null
       })
@@ -533,6 +545,7 @@ const StosEdit = (props) => {
         comment: state.comment,
         status: statusList[4],
         beznalPaid: state.beznalPaid || null,
+        organizationId: state.organizationId || null,
         customerId: activeCustomer || props.customerId || null,
         mileage: state.mileage || null
       })
@@ -551,6 +564,7 @@ const StosEdit = (props) => {
         combTerm: termCash.terminal,
         combCash: termCash.cash,
         beznalPaid: state.beznalPaid || null,
+        organizationId: state.organizationId || null,
         customerId: activeCustomer || props.customerId || null,
         mileage: state.mileage || null
       })
@@ -567,6 +581,7 @@ const StosEdit = (props) => {
         comment: state.comment,
         status: statusList[5],
         beznalPaid: state.beznalPaid || null,
+        organizationId: state.organizationId || null,
         customerId: activeCustomer || props.customerId || null,
         mileage: state.mileage || null
       })
@@ -587,6 +602,7 @@ const StosEdit = (props) => {
         payment: state.payment,
         comment: state.comment,
         beznalPaid: state.beznalPaid || null,
+        organizationId: state.organizationId || null,
         customerId: activeCustomer || props.customerId || null,
         mileage: state.mileage || null
       })
@@ -957,6 +973,7 @@ const StosEdit = (props) => {
             setTermCash={setTermCash}
             type={type}
             showBeznalPaid={type === 'sto' || type === 'cond'}
+            organizations={organizations}
           />
         </div>
       </div>
