@@ -1,4 +1,5 @@
 const Sto = require('../model/sto')
+const Customer = require('../model/customer')
 const { getBasicMonth } = require('../utils/controller')
 
 exports.getAll = async (req, res) => {
@@ -32,12 +33,32 @@ exports.update = async (req, res) => {
     { upsert: false, useFindAndModify: false }
   )
   sto = await Sto.findOne({ id: req.params.id })
+  
+  // Если указан клиент и организация, сохраняем организацию к клиенту
+  if (req.body.customerId && req.body.organizationId) {
+    await Customer.findOneAndUpdate(
+      { id: req.body.customerId },
+      { $set: { organizationId: req.body.organizationId } },
+      { upsert: false, useFindAndModify: false }
+    )
+  }
+  
   return res.json({ status: 'ok', data: sto })
 }
 
 exports.create = async (req, res) => {
   const sto = new Sto(req.body)
   await sto.save()
+  
+  // Если указан клиент и организация, сохраняем организацию к клиенту
+  if (req.body.customerId && req.body.organizationId) {
+    await Customer.findOneAndUpdate(
+      { id: req.body.customerId },
+      { $set: { organizationId: req.body.organizationId } },
+      { upsert: false, useFindAndModify: false }
+    )
+  }
+  
   return res.json({ status: 'ok', data: sto })
 }
 
