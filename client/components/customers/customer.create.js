@@ -1,11 +1,19 @@
 import React, { useState, useEffect } from 'react'
 import { useHistory } from 'react-router-dom'
+import { useSelector, useDispatch } from 'react-redux'
 import { toast } from 'react-toastify'
 import NumberFormat from 'react-number-format'
 import 'react-toastify/dist/ReactToastify.css'
 import SubmitButtons from '../shared/buttons/OrderSubmitButtons'
+import { getOrganizations } from '../../redux/reducers/organizations'
 
 const CustomerCreate = (props) => {
+  const dispatch = useDispatch()
+  const organizations = useSelector((s) => s.organizations.list)
+
+  useEffect(() => {
+    dispatch(getOrganizations())
+  }, [dispatch])
   toast.configure()
   const notify = (arg) => {
     toast.info(arg, { position: toast.POSITION.BOTTOM_RIGHT })
@@ -18,7 +26,8 @@ const CustomerCreate = (props) => {
     mark: '',
     model: '',
     gen: '',
-    mod: ''
+    mod: '',
+    organizationId: ''
   })
 
   const [options, setOptions] = useState({
@@ -196,7 +205,11 @@ const CustomerCreate = (props) => {
       state.vinnumber &&
       state.regnumber
     ) {
-      props.create(state)
+      const dataToSend = {
+        ...state,
+        organizationId: state.organizationId || null
+      }
+      props.create(dataToSend)
       history.push('/customer/list')
       notify('Авто клиента добавлено')
     }
@@ -241,6 +254,41 @@ const CustomerCreate = (props) => {
               required
               onChange={onChange}
             />
+          </div>
+        </div>
+        <div className="-mx-3 md:flex flex-wrap">
+          <div className="md:w-full px-3 mb-6 md:mb-0 flex flex-col">
+            <label
+              className="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2"
+              htmlFor="organizationId"
+            >
+              Организация
+            </label>
+            <div className="flex-shrink w-full inline-block relative">
+              <select
+                className="block appearance-none w-full bg-grey-lighter border border-gray-300 focus:border-gray-500 focus:outline-none py-3 px-4 pr-8 rounded"
+                name="organizationId"
+                id="organizationId"
+                value={state.organizationId}
+                onChange={onChange}
+              >
+                <option value="">Выберите организацию</option>
+                {(organizations || []).map((org) => (
+                  <option value={org.id} key={org.id}>
+                    {org.name}
+                  </option>
+                ))}
+              </select>
+              <div className="pointer-events-none hidden absolute top-0 mt-3 right-0 lg:flex items-center px-2 text-gray-600">
+                <svg
+                  className="fill-current h-4 w-4"
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 20 20"
+                >
+                  <path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z" />
+                </svg>
+              </div>
+            </div>
           </div>
         </div>
         <div className="-mx-3 md:flex flex-wrap">

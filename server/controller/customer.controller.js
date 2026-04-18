@@ -150,41 +150,42 @@ exports.delete = async (req, res) => {
   return res.json({ status: 'ok', id: req.params.id })
 }
 exports.getFiltered = async (req, res) => {
-  const { page, reg, vin, phone } = req.query
+  const { page, reg, vin, phone, organization } = req.query
 
   try {
     const LIMIT = 14
-    const startIndex = (Number(page) - 1) * LIMIT // get the starting index of every page
+    const startIndex = (Number(page) - 1) * LIMIT
 
-    // const total = await Customer.countDocuments({
-    //   phone: req.query.phone ? { $regex: `${phone.toString()}`, $options: 'i' } : { $regex: '' },
-    //   vinnumber: req.query.vin ? { $regex: `${vin.toString()}`, $options: 'i' } : { $regex: '' },
-    //   regnumber: req.query.reg ? { $regex: `${reg.toString()}`, $options: 'i' } : { $regex: '' }
-    // })
+    const andConditions = []
 
-    const total = await Customer.countDocuments({
-      $or: [
-        { phone: { $regex: `${phone ? phone.toString() : 'undefined'}`, $options: 'i' } },
-        { vinnumber: { $regex: `${vin ? vin.toString() : 'undefined'}`, $options: 'i' } },
-        { regnumber: { $regex: `${reg ? reg.toString() : 'undefined'}`, $options: 'i' } }
-      ]
-    })
+    // Добавляем условия поиска по phone/vin/reg только если хотя бы одно из них указано
+    const hasTextFilters = phone || vin || reg
+    if (hasTextFilters) {
+      const orConditions = []
+      if (phone) {
+        orConditions.push({ phone: { $regex: phone.toString(), $options: 'i' } })
+      }
+      if (vin) {
+        orConditions.push({ vinnumber: { $regex: vin.toString(), $options: 'i' } })
+      }
+      if (reg) {
+        orConditions.push({ regnumber: { $regex: reg.toString(), $options: 'i' } })
+      }
+      if (orConditions.length > 0) {
+        andConditions.push({ $or: orConditions })
+      }
+    }
 
-    // const posts = await Customer.find({
-    //   phone: req.query.phone ? { $regex: `${phone.toString()}`, $options: 'i' } : '',
-    //   vinnumber: req.query.vin ? { $regex: `${vin.toString()}`, $options: 'i' } : '',
-    //   regnumber: req.query.reg ? { $regex: `${reg.toString()}`, $options: 'i' } : ''
-    // })
-    const posts = await Customer.find({
-      $or: [
-        { phone: { $regex: `${phone ? phone.toString() : 'undefined'}`, $options: 'i' } },
-        { vinnumber: { $regex: `${vin ? vin.toString() : 'undefined'}`, $options: 'i' } },
-        { regnumber: { $regex: `${reg ? reg.toString() : 'undefined'}`, $options: 'i' } }
-      ]
-    })
-      .sort({ id: -1 })
-      .limit(LIMIT)
-      .skip(startIndex)
+    // Добавляем фильтр по организации
+    if (organization) {
+      andConditions.push({ organizationId: organization })
+    }
+
+    // Формируем итоговый запрос
+    const query = andConditions.length > 0 ? { $and: andConditions } : {}
+
+    const total = await Customer.countDocuments(query)
+    const posts = await Customer.find(query).sort({ id: -1 }).limit(LIMIT).skip(startIndex)
 
     res.json({
       status: 'ok',

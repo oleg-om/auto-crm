@@ -31,14 +31,15 @@ export default (state = initialState, action) => {
     case UPDATE_CUSTOMER: {
       return {
         ...state,
-        list: state.list.map((it) => {
+        list: (state.list || []).map((it) => {
           return action.customer.id === it.id ? action.customer : it
         })
       }
     }
     case DELETE_CUSTOMER: {
       return {
-        list: state.list.filter((it) => {
+        ...state,
+        list: (state.list || []).filter((it) => {
           return action.id !== it.id
         })
       }

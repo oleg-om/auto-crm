@@ -12,22 +12,23 @@ const initialState = {
 export default (state = initialState, action) => {
   switch (action.type) {
     case GET_ORGANIZATIONS: {
-      return { ...state, list: action.organizations }
+      return { ...state, list: action.organizations || [] }
     }
     case CREATE_ORGANIZATION: {
-      return { ...state, list: [...state.list, action.organization] }
+      return { ...state, list: [...(state.list || []), action.organization] }
     }
     case UPDATE_ORGANIZATION: {
       return {
         ...state,
-        list: state.list.map((it) => {
+        list: (state.list || []).map((it) => {
           return action.organization.id === it.id ? action.organization : it
         })
       }
     }
     case DELETE_ORGANIZATION: {
       return {
-        list: state.list.filter((it) => {
+        ...state,
+        list: (state.list || []).filter((it) => {
           return action.id !== it.id
         })
       }

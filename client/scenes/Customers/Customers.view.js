@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
+import { useSelector, useDispatch } from 'react-redux'
 import Navbar from '../../components/Navbar'
+import { getOrganizations } from '../../redux/reducers/organizations'
 
 function formatWhen(row) {
   const d = row.date || row.dateStart || row.dateFinish
@@ -32,10 +34,16 @@ const initialVisible = () => ({
 
 const CustomerView = () => {
   const { id } = useParams()
+  const dispatch = useDispatch()
+  const organizations = useSelector((s) => s.organizations.list)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
   const [payload, setPayload] = useState(null)
   const [visibleBySection, setVisibleBySection] = useState(initialVisible)
+
+  useEffect(() => {
+    dispatch(getOrganizations())
+  }, [dispatch])
 
   useEffect(() => {
     setVisibleBySection(initialVisible())
@@ -185,6 +193,12 @@ const CustomerView = () => {
               <p>
                 <span className="text-gray-500">VIN: </span>
                 {customer.vinnumber || '—'}
+              </p>
+              <p>
+                <span className="text-gray-500">Организация: </span>
+                {customer.organizationId
+                  ? (organizations || []).find((org) => org.id === customer.organizationId)?.name || '—'
+                  : '—'}
               </p>
               <p className="md:col-span-2">
                 <Link

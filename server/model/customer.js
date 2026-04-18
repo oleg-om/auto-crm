@@ -62,6 +62,10 @@ const Customer = new mongoose.Schema({
     type: String,
     required: false
   },
+  organizationId: {
+    type: String,
+    required: false
+  },
   id: {
     type: String,
     unique: true,

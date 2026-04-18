@@ -79,7 +79,7 @@ const CustomerList = () => {
           setSearch={setSearch}
           showSearch={showSearch}
           setShowSearch={setShowSearch}
-          filters={['phone', 'vinnumber', 'regnumber']}
+          filters={['phone', 'vinnumber', 'regnumber', 'organization']}
           applyFilter={applyFilter}
         />
 
