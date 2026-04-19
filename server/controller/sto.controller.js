@@ -94,27 +94,32 @@ exports.getFiltered = async (req, res) => {
 
   try {
     const LIMIT = 14
-    const startIndex = (Number(page) - 1) * LIMIT // get the starting index of every page
+    const startIndex = (Number(page) - 1) * LIMIT
 
-    const total = await Sto.countDocuments({
-      id_stos: req.query.number ? `${number.toString()}` : { $exists: true },
-      place: req.query.place ? `${place.toString()}` : { $exists: true },
-      regnumber: req.query.reg ? { $regex: `${reg.toString()}`, $options: 'i' } : { $exists: true },
-      'employee.id': req.query?.employee ? `${employee.toString()}` : { $exists: true },
-      status: req.query.status ? `${status.toString()}` : { $exists: true },
-      organizationId: req.query.organization ? `${organization.toString()}` : { $exists: true }
-    })
-    const posts = await Sto.find({
-      id_stos: req.query.number ? `${number.toString()}` : { $exists: true },
-      place: req.query.place ? `${place.toString()}` : { $exists: true },
-      regnumber: req.query.reg ? { $regex: `${reg.toString()}`, $options: 'i' } : { $exists: true },
-      'employee.id': req.query?.employee ? `${employee.toString()}` : { $exists: true },
-      status: req.query.status ? `${status.toString()}` : { $exists: true },
-      organizationId: req.query.organization ? `${organization.toString()}` : { $exists: true }
-    })
-      .sort({ dateStart: -1 })
-      .limit(LIMIT)
-      .skip(startIndex)
+    // Строим query объект динамически, добавляя только заданные фильтры
+    const query = { dateStart: { $exists: true } }
+
+    if (req.query.number) {
+      query.id_stos = number.toString()
+    }
+    if (req.query.place) {
+      query.place = place.toString()
+    }
+    if (req.query.reg) {
+      query.regnumber = { $regex: reg.toString(), $options: 'i' }
+    }
+    if (req.query.employee) {
+      query['employee.id'] = employee.toString()
+    }
+    if (req.query.status) {
+      query.status = status.toString()
+    }
+    if (req.query.organization) {
+      query.organizationId = organization.toString()
+    }
+
+    const total = await Sto.countDocuments(query)
+    const posts = await Sto.find(query).sort({ dateStart: -1 }).limit(LIMIT).skip(startIndex)
 
     res.json({
       status: 'ok',

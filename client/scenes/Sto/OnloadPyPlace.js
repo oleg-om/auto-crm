@@ -20,10 +20,10 @@ const OnLoadPlace = (page, showSearch, place) => {
 
   const { search } = useLocation()
   useEffect(() => {
-    if (checkQueryParamsAre(showSearch, search) && place) {
+    if (checkQueryParamsAre(showSearch, search) && place !== undefined && place !== null) {
       dispatch(getItemsFiltered(queryParamsToApi))
     }
-  }, [dispatch, page, showSearch, place])
+  }, [dispatch, page, showSearch, place, queryParamsToApi])
 
   // useEffect(() => {
   //   socket.on('update sto', function () {
