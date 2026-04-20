@@ -79,23 +79,25 @@ exports.getFiltered = async (req, res) => {
 
   try {
     const LIMIT = 14
-    const startIndex = (Number(page) - 1) * LIMIT // get the starting index of every page
+    const startIndex = (Number(page) - 1) * LIMIT
 
-    const total = await Cond.countDocuments({
-      id_conds: req.query.number ? `${number.toString()}` : { $exists: true },
-      place: req.query.place ? `${place.toString()}` : { $exists: true },
-      regnumber: req.query.reg ? { $regex: `${reg.toString()}`, $options: 'i' } : { $exists: true },
-      dateStart: { $exists: true },
-      status: req.query.status ? `${status.toString()}` : { $exists: true }
-    })
-    const posts = await Cond.find({
-      id_conds: req.query.number ? `${number.toString()}` : { $exists: true },
-      place: req.query.place ? `${place.toString()}` : { $exists: true },
-      regnumber: req.query.reg ? { $regex: `${reg.toString()}`, $options: 'i' } : { $exists: true },
-      dateStart: { $exists: true },
-      status: req.query.status ? `${status.toString()}` : { $exists: true }
-    })
-      // .sort({ id_conds: -1 })
+    const query = { dateStart: { $exists: true } }
+
+    if (req.query.number) {
+      query.id_conds = number.toString()
+    }
+    if (req.query.place && place.trim() !== '') {
+      query.place = place.toString()
+    }
+    if (req.query.reg) {
+      query.regnumber = { $regex: reg.toString(), $options: 'i' }
+    }
+    if (req.query.status) {
+      query.status = status.toString()
+    }
+
+    const total = await Cond.countDocuments(query)
+    const posts = await Cond.find(query)
       .sort({ dateStart: -1 })
       .limit(LIMIT)
       .skip(startIndex)

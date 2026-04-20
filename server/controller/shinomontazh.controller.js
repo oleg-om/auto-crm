@@ -108,7 +108,7 @@ exports.getFiltered = async (req, res) => {
     if (req.query.number) {
       query.id_shinomontazhs = number.toString()
     }
-    if (req.query.place) {
+    if (req.query.place && place.trim() !== '') {
       query.place = place.toString()
     }
     if (req.query.reg) {

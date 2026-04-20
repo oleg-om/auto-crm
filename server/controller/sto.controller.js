@@ -102,7 +102,7 @@ exports.getFiltered = async (req, res) => {
     if (req.query.number) {
       query.id_stos = number.toString()
     }
-    if (req.query.place) {
+    if (req.query.place && place.trim() !== '') {
       query.place = place.toString()
     }
     if (req.query.reg) {

@@ -70,20 +70,25 @@ exports.getFiltered = async (req, res) => {
 
   try {
     const LIMIT = 14
-    const startIndex = (Number(page) - 1) * LIMIT // get the starting index of every page
+    const startIndex = (Number(page) - 1) * LIMIT
 
-    const total = await Wash.countDocuments({
-      id_washs: req.query.number ? `${number.toString()}` : { $exists: true },
-      place: req.query.place ? `${place.toString()}` : { $exists: true },
-      regnumber: req.query.reg ? { $regex: `${reg.toString()}`, $options: 'i' } : { $exists: true },
-      status: req.query.status ? `${status.toString()}` : { $exists: true }
-    })
-    const posts = await Wash.find({
-      id_washs: req.query.number ? `${number.toString()}` : { $exists: true },
-      place: req.query.place ? `${place.toString()}` : { $exists: true },
-      regnumber: req.query.reg ? { $regex: `${reg.toString()}`, $options: 'i' } : { $exists: true },
-      status: req.query.status ? `${status.toString()}` : { $exists: true }
-    })
+    const query = {}
+
+    if (req.query.number) {
+      query.id_washs = number.toString()
+    }
+    if (req.query.place && place.trim() !== '') {
+      query.place = place.toString()
+    }
+    if (req.query.reg) {
+      query.regnumber = { $regex: reg.toString(), $options: 'i' }
+    }
+    if (req.query.status) {
+      query.status = status.toString()
+    }
+
+    const total = await Wash.countDocuments(query)
+    const posts = await Wash.find(query)
       .sort({ id_washs: -1 })
       .limit(LIMIT)
       .skip(startIndex)

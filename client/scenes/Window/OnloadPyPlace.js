@@ -32,7 +32,7 @@ const OnLoadPlace = (page, showSearch, place) => {
 
   const { search } = useLocation()
   useEffect(() => {
-    if (checkQueryParamsAre(showSearch, search) && place) {
+    if (checkQueryParamsAre(showSearch, search) && place !== undefined && place !== null && place !== '') {
       dispatch(getItemsFilteredThunk(location)(queryParamsToApi))
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps -- same deps as Sto/OnloadPyPlace

@@ -20,7 +20,7 @@ const OnLoadPlace = (page, showSearch, place) => {
 
   const { search } = useLocation()
   useEffect(() => {
-    if (checkQueryParamsAre(showSearch, search) && place !== undefined && place !== null) {
+    if (checkQueryParamsAre(showSearch, search) && place !== undefined && place !== null && place !== '') {
       dispatch(getItemsFiltered(queryParamsToApi))
     }
   }, [dispatch, page, showSearch, place, queryParamsToApi])
