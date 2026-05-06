@@ -44,7 +44,7 @@ const config = {
     },
     proxy: [
       {
-        context: ['/api', '/auth', '/ws'],
+        context: ['/api', '/auth', '/ws', '/socket.io'],
         target: `http://localhost:${process.env.PORT || 8090}`,
         secure: false,
         changeOrigin: true,

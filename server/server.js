@@ -68,9 +68,15 @@ connectDatabase()
 const port = process.env.PORT || 8090
 const server = express()
 const serve = http.createServer(server)
+const socketCorsOrigin = process.env.SOCKET_CORS_ORIGIN
+  ? process.env.SOCKET_CORS_ORIGIN.split(',').map((s) => s.trim())
+  : true
+
 const io = new SocketIOServer(serve, {
   cors: {
-    origin: process.env.SOCKET_CORS_ORIGIN || 'http://localhost:8087/',
+    // `true` = reflect request Origin when SOCKET_CORS_ORIGIN unset (Docker / prod domain).
+    // Set SOCKET_CORS_ORIGIN in .env to explicit URL(s) to lock down.
+    origin: socketCorsOrigin,
     methods: ['GET', 'POST'],
     credentials: true
   }
