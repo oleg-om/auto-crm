@@ -1,4 +1,10 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useMemo, useRef, useState } from 'react'
+import {
+  applyStoredPreferencesToEmployees,
+  employeesAlignWithStored,
+  loadExecutorPreferences,
+  saveExecutorPreferences
+} from '../../../utils/shinomontazhExecutorPreferences'
 
 export const checkSalariesIsNotValid = (employees) => {
   const everyHasPercent = employees.every((e) => e?.salaryPercent)
@@ -17,9 +23,42 @@ export const checkSalariesIsNotValid = (employees) => {
   return notValid
 }
 
-export default function SalaryPercentModal({ employees, setEmployees }) {
+export default function SalaryPercentModal({ employees, setEmployees, persistPreferences }) {
   const [open, setOpen] = useState(false)
   const [localEmployees, setLocalEmployees] = useState([])
+
+  const placeId = persistPreferences?.placeId
+  const persistGroup = persistPreferences?.group
+  const appliedSignatureRef = useRef(null)
+
+  const executorSignature = useMemo(() => {
+    if (placeId == null || persistGroup === undefined || persistGroup === null) return null
+    const ids = employees
+      .filter((e) => e.group === persistGroup)
+      .map((e) => String(e.id))
+      .sort()
+    if (ids.length < 2) return null
+    return ids.join('|')
+  }, [employees, placeId, persistGroup])
+
+  useEffect(() => {
+    if (!executorSignature) {
+      appliedSignatureRef.current = null
+      return
+    }
+    if (appliedSignatureRef.current === executorSignature) return
+
+    const ids = executorSignature.split('|')
+    const stored = loadExecutorPreferences(placeId, persistGroup, ids)
+    appliedSignatureRef.current = executorSignature
+
+    if (!stored) return
+
+    setEmployees((prev) => {
+      if (employeesAlignWithStored(prev, stored)) return prev
+      return applyStoredPreferencesToEmployees(prev, stored)
+    })
+  }, [executorSignature, placeId, persistGroup, setEmployees])
 
   // Проверяем, есть ли разные роли
   const hasDifferentRoles = (() => {
@@ -56,7 +95,6 @@ export default function SalaryPercentModal({ employees, setEmployees }) {
 
     // если модалка закрыта — распределяем заново
     setLocalEmployees(getEqualDistribution())
-    console.log('open', getEqualDistribution())
   }, [employees, open])
 
   const closeModal = () => {
@@ -107,6 +145,9 @@ export default function SalaryPercentModal({ employees, setEmployees }) {
   const handleSave = () => {
     if (!valid) return
     setEmployees(localEmployees)
+    if (placeId != null && persistGroup !== undefined && persistGroup !== null) {
+      saveExecutorPreferences(placeId, persistGroup, localEmployees)
+    }
     closeModal()
   }
 

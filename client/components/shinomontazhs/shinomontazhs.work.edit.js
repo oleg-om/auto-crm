@@ -5,6 +5,7 @@ import { toast } from 'react-toastify'
 import cx from 'classnames'
 import 'react-toastify/dist/ReactToastify.css'
 import Employee from './employees'
+import { stripSalaryPercentsForGroup } from '../../utils/shinomontazhExecutorPreferences'
 import Car from './car'
 import Service from './service'
 import Material from './material'
@@ -115,19 +116,25 @@ const ShinomontazhsEdit = (props) => {
   const checkboxEmployeeChange = (e) => {
     const { name, placeholder, checked, attributes } = e.target
     if (checked) {
-      setEmployees((prevState) => [
-        ...prevState,
-        {
-          id: name,
-          numberId: placeholder,
-          name: attributes.itemName.value,
-          surname: attributes.itemSurname.value,
-          role: 'second',
-          group
-        }
-      ])
+      setEmployees((prevState) => {
+        const next = [
+          ...prevState,
+          {
+            id: name,
+            numberId: placeholder,
+            name: attributes.itemName.value,
+            surname: attributes.itemSurname.value,
+            role: 'second',
+            group
+          }
+        ]
+        return stripSalaryPercentsForGroup(next, group)
+      })
     } else {
-      setEmployees((prevState) => prevState.filter((it) => it.id !== name))
+      setEmployees((prevState) => {
+        const next = prevState.filter((it) => it.id !== name)
+        return stripSalaryPercentsForGroup(next, group)
+      })
     }
   }
 
