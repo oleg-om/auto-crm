@@ -5,7 +5,7 @@ import path from 'path'
 import cors from 'cors'
 import bodyParser from 'body-parser'
 import http from 'http'
-import socketServer from 'socket.io'
+import { Server as SocketIOServer } from 'socket.io'
 import { renderToStaticNodeStream } from 'react-dom/server'
 import React from 'react'
 
@@ -68,7 +68,13 @@ connectDatabase()
 const port = process.env.PORT || 8090
 const server = express()
 const serve = http.createServer(server)
-const io = socketServer(serve)
+const io = new SocketIOServer(serve, {
+  cors: {
+    origin: process.env.SOCKET_CORS_ORIGIN || 'http://localhost:8087/',
+    methods: ['GET', 'POST'],
+    credentials: true
+  }
+})
 
 const middleware = [
   cors({
@@ -353,7 +359,7 @@ io.on('connection', (socket) => {
 
   socket.on('disconnect user', (id) => {
     io.to(id).emit('delete cookie')
-    io.of('/').sockets.get(id).disconnect()
+    io.of('/').sockets.get(id)?.disconnect()
     delete userNames[id]
   })
 

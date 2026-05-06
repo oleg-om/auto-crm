@@ -1,13 +1,12 @@
 /* eslint-disable import/no-extraneous-dependencies */
 const { resolve } = require('path')
-const fs = require('fs')
 const webpack = require('webpack')
 const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 const CopyWebpackPlugin = require('copy-webpack-plugin')
+const ESLintPlugin = require('eslint-webpack-plugin')
 // const HardSourceWebpackPlugin = require('hard-source-webpack-plugin')
 const ReactRefreshWebpackPlugin = require('@pmmmwh/react-refresh-webpack-plugin')
 
-const eslintCacheIdentifier = JSON.stringify(fs.statSync('.eslintrc').mtimeMs)
 require('dotenv').config()
 
 const version = 'development'
@@ -16,9 +15,9 @@ const config = {
 
   entry: ['./main.js'],
   resolve: {
+    extensions: ['.ts', '.tsx', '.js', '.jsx', '.json'],
     alias: {
-      d3: 'd3/index.js',
-      'react-dom': '@hot-loader/react-dom'
+      d3: 'd3/index.js'
     }
   },
   output: {
@@ -56,23 +55,7 @@ const config = {
   module: {
     rules: [
       {
-        enforce: 'pre',
-        test: /\.js$/,
-        exclude: /node_modules/,
-        include: [/client/, /server/],
-        loader: [
-          {
-            loader: 'eslint-loader',
-            options: {
-              cache: false,
-              configFile: resolve(__dirname, '.eslintrc'),
-              cacheIdentifer: eslintCacheIdentifier
-            }
-          }
-        ]
-      },
-      {
-        test: /\.js$/,
+        test: /\.[jt]sx?$/,
         loaders: ['babel-loader'],
         include: [/client/, /stories/],
         exclude: /node_modules/
@@ -175,6 +158,12 @@ const config = {
   },
 
   plugins: [
+    new ESLintPlugin({
+      context: resolve(__dirname),
+      extensions: ['js', 'jsx', 'ts', 'tsx'],
+      files: ['client', 'server'],
+      overrideConfigFile: resolve(__dirname, '.eslintrc')
+    }),
     new webpack.optimize.ModuleConcatenationPlugin(),
     new MiniCssExtractPlugin({
       filename: 'css/main.css',

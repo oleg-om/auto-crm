@@ -5,18 +5,15 @@ module.exports = {
       {
         targets: {
           browsers: '> 0.25%, not dead'
-        },
-        loose: true
+        }
+        // No `loose: true` — must match class-properties / private-methods / private-property-in-object.
       }
     ],
     '@babel/react',
     '@babel/typescript'
   ],
 
-  plugins: (process.env.NODE_ENV === 'development'
-    ? ['react-hot-loader/babel', 'react-refresh/babel']
-    : []
-  ).concat([
+  plugins: (process.env.NODE_ENV === 'development' ? ['react-refresh/babel'] : []).concat([
     'emotion',
     '@babel/plugin-syntax-dynamic-import',
     '@babel/plugin-proposal-export-default-from',

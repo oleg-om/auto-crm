@@ -3,6 +3,7 @@ const { resolve } = require('path')
 require('dotenv').config()
 
 const webpack = require('webpack')
+const ESLintPlugin = require('eslint-webpack-plugin')
 const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 const CopyWebpackPlugin = require('copy-webpack-plugin')
 const GitRevisionPlugin = require('git-revision-webpack-plugin')
@@ -50,6 +51,7 @@ const config = {
     main: './main.js'
   },
   resolve: {
+    extensions: ['.ts', '.tsx', '.js', '.jsx', '.json'],
     alias: {
       d3: 'd3/index.js'
     }
@@ -85,21 +87,7 @@ const config = {
         })
       },
       {
-        enforce: 'pre',
-        test: /\.js$/,
-        exclude: /node_modules/,
-        loader: [
-          {
-            loader: 'eslint-loader',
-            options: {
-              cache: true,
-              configFile: resolve(__dirname, '.eslintrc')
-            }
-          }
-        ]
-      },
-      {
-        test: /\.js$/,
+        test: /\.[jt]sx?$/,
         loaders: ['babel-loader'],
         exclude: /node_modules/
       },
@@ -209,6 +197,12 @@ const config = {
   },
 
   plugins: [
+    new ESLintPlugin({
+      context: resolve(__dirname),
+      extensions: ['js', 'jsx', 'ts', 'tsx'],
+      files: ['client', 'server'],
+      overrideConfigFile: resolve(__dirname, '.eslintrc')
+    }),
     new StringReplacePlugin(),
     new CopyWebpackPlugin(
       {

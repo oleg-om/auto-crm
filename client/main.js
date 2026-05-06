@@ -1,30 +1,29 @@
 import React from 'react'
-import ReactDOM from 'react-dom'
-import { AppContainer } from 'react-hot-loader'
+import { createRoot, hydrateRoot } from 'react-dom/client'
 import Root from './config/root'
 
 import './assets/scss/main.scss'
 
 const target = document.getElementById('root')
 
-const render = (Component) => {
-  const isStudy = process.env.MODE === 'study'
+const isStudy = process.env.MODE === 'study'
 
-  ;(module.hot ? ReactDOM.render : ReactDOM.hydrate)(
-    <AppContainer>
-      <div className={isStudy ? 'study-crm' : 'main-crm'}>
-        <Component />
-      </div>
-    </AppContainer>,
-    target
-  )
-}
-
-render(Root)
+const wrap = (RootComponent) => (
+  <div className={isStudy ? 'study-crm' : 'main-crm'}>
+    <RootComponent />
+  </div>
+)
 
 if (module.hot) {
+  const root = createRoot(target)
+  const render = (RootComponent) => {
+    root.render(wrap(RootComponent))
+  }
+  render(Root)
   module.hot.accept('./config/root', () => {
-    const newApp = require('./config/root').default
-    render(newApp)
+    const NextRoot = require('./config/root').default
+    render(NextRoot)
   })
+} else {
+  hydrateRoot(target, wrap(Root))
 }

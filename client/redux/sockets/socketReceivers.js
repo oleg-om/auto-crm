@@ -1,4 +1,4 @@
-import io from 'socket.io-client'
+import { io } from 'socket.io-client'
 import Cookies from 'universal-cookie'
 
 import { receivedNewMessage, deleteRecivedMessages } from '../reducers/messages'

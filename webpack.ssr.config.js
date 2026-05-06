@@ -4,6 +4,7 @@ const fs = require('fs')
 const CopyWebpackPlugin = require('copy-webpack-plugin')
 
 const webpack = require('webpack')
+const ESLintPlugin = require('eslint-webpack-plugin')
 const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 const GitRevisionPlugin = require('git-revision-webpack-plugin')
 const StringReplacePlugin = require('string-replace-webpack-plugin')
@@ -36,6 +37,7 @@ const config = {
     root: './config/root.js'
   },
   resolve: {
+    extensions: ['.ts', '.tsx', '.js', '.jsx', '.json'],
     alias: {
       d3: 'd3/index.js'
     }
@@ -71,21 +73,7 @@ const config = {
         })
       },
       {
-        enforce: 'pre',
-        test: /\.js$/,
-        exclude: /node_modules/,
-        loader: [
-          {
-            loader: 'eslint-loader',
-            options: {
-              cache: true,
-              configFile: resolve(__dirname, '.eslintrc')
-            }
-          }
-        ]
-      },
-      {
-        test: /\.js$/,
+        test: /\.[jt]sx?$/,
         loaders: ['babel-loader'],
         exclude: /node_modules/
       },
@@ -202,6 +190,12 @@ const config = {
   },
 
   plugins: [
+    new ESLintPlugin({
+      context: resolve(__dirname),
+      extensions: ['js', 'jsx', 'ts', 'tsx'],
+      files: ['client', 'server'],
+      overrideConfigFile: resolve(__dirname, '.eslintrc')
+    }),
     new StringReplacePlugin(),
     new MiniCssExtractPlugin({
       filename: 'css/ssr/[name].css',
