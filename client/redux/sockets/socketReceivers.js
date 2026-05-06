@@ -9,15 +9,10 @@ import store from '../index'
 const isStudy = process.env.MODE === 'study'
 
 function resolveSocketURL() {
-  if (typeof window === 'undefined') {
-    return 'http://127.0.0.1:8090'
-  }
   if (isStudy) {
     return 'http://89.110.97.155:8090'
   }
-  // Production / Docker: same origin as the SPA (Nginx :80/:443 → app :8090).
-  // Hardcoded :8090 bypasses the reverse proxy and often fails when 8090 is not exposed.
-  return window.location.origin
+  return 'http://195.2.76.23:8090'
 }
 
 export const socket = io(resolveSocketURL(), {
