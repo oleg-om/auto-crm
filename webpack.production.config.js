@@ -55,6 +55,7 @@ const config = {
     }
   },
   output: {
+    hashFunction: 'sha256',
     filename: 'js/[name].bundle.js',
     path: resolve(__dirname, 'dist/assets'),
     publicPath: '/',
@@ -139,7 +140,8 @@ const config = {
           },
           {
             loader: 'sass-loader',
-            query: {
+            options: {
+              implementation: require('sass'),
               sourceMap: false
             }
           }
