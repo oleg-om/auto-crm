@@ -78,7 +78,8 @@ const config = {
           {
             loader: 'eslint-loader',
             options: {
-              cache: true
+              cache: true,
+              configFile: resolve(__dirname, '.eslintrc')
             }
           }
         ]

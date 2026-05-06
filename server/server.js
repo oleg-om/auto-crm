@@ -201,7 +201,7 @@ server.use('/api/v1', organizationRoutes)
 
 server.get('/api/v1/auth', async (req, res) => {
   try {
-    const jwtUser = jwt.verify(req.cookies.token, config.secret)
+    const jwtUser = jwt.verify(req.cookies.token, config.secret, { algorithms: ['HS256'] })
     const user = await User.findById(jwtUser.uid)
 
     const token = createToken(user)
@@ -307,7 +307,7 @@ io.on('connection', (socket) => {
   connections.push(socket)
   socket.on('new login', async ({ token, currentRoom }) => {
     try {
-      const user = jwt.verify(token, config.secret)
+      const user = jwt.verify(token, config.secret, { algorithms: ['HS256'] })
       const { userName, role } = await User.findById(user.uid)
       userNames[socket.id] = [userName, role]
       if (role.indexOf('admin') !== -1) {
