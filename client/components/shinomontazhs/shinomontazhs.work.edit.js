@@ -6,6 +6,7 @@ import cx from 'classnames'
 import 'react-toastify/dist/ReactToastify.css'
 import Employee from './employees'
 import { stripSalaryPercentsForGroup } from '../../utils/shinomontazhExecutorPreferences'
+import { tyresToPayload } from '../../utils/tyresToPayload'
 import Car from './car'
 import Service from './service'
 import Material from './material'
@@ -530,7 +531,7 @@ const ShinomontazhsEdit = (props) => {
         organizationId: state.organizationId || null,
         services: service,
         material: materials,
-        tyre: [...tyres],
+        tyre: tyresToPayload(tyres),
         employee: employees,
         dateStart: props?.dateStart ? props.dateStart : new Date(),
         status: props.status === 'Новая запись' ? 'В работе' : props.status,
@@ -581,7 +582,7 @@ const ShinomontazhsEdit = (props) => {
         organizationId: state.organizationId || null,
         services: service,
         material: materials,
-        tyre: [...tyres],
+        tyre: tyresToPayload(tyres),
         employee: employees,
         dateStart: props.dateStart ? props.dateStart : new Date(),
         ...dateFinishObj,
@@ -698,7 +699,7 @@ const ShinomontazhsEdit = (props) => {
         // ...state,
         // services: service,
         // material: materials,
-        // tyre: [...tyres],
+        // tyre: tyresToPayload(tyres),
         // employee: employees,
         discount: state.discount,
         payment: state.payment,
@@ -813,7 +814,7 @@ const ShinomontazhsEdit = (props) => {
       ...state,
       services: service,
       material: materials,
-      tyre: [...tyres],
+      tyre: tyresToPayload(tyres),
       employee: employees,
       totalSumWithoutMaterials,
       totalMaterial,
@@ -829,7 +830,7 @@ const ShinomontazhsEdit = (props) => {
       ...state,
       services: service,
       material: materials,
-      tyre: [...tyres],
+      tyre: tyresToPayload(tyres),
       employee: employees,
       totalSumWithoutMaterials,
       totalMaterial,

@@ -18,6 +18,7 @@ import { GroupSwitch, useGroup } from '../../hooks/useGroup'
 import { checkSalariesIsNotValid } from '../shared/services/SalariesDivider'
 import { stripSalaryPercentsForGroup } from '../../utils/shinomontazhExecutorPreferences'
 import { getOrganizations } from '../../redux/reducers/organizations'
+import { tyresToPayload } from '../../utils/tyresToPayload'
 
 const ShinomontazhsCreate = (props) => {
   toast.configure()
@@ -433,7 +434,7 @@ const ShinomontazhsCreate = (props) => {
           ...state,
           services: service,
           material: materials,
-          tyre: tyres,
+          tyre: tyresToPayload(tyres),
           employee: employees,
           box,
           customerId: activeCustomer || null,
@@ -453,7 +454,7 @@ const ShinomontazhsCreate = (props) => {
             ...state,
             services: service,
             material: materials,
-            tyre: [...tyres],
+            tyre: tyresToPayload(tyres),
             employee: employees,
             box,
             customerId: activeCustomer || null,
@@ -465,7 +466,7 @@ const ShinomontazhsCreate = (props) => {
           ...state,
           services: service,
           material: materials,
-          tyre: [...tyres],
+          tyre: tyresToPayload(tyres),
           employee: employees,
           box,
           customerId: activeCustomer || null,
