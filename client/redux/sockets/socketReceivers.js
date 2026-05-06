@@ -21,7 +21,10 @@ function resolveSocketURL() {
 }
 
 export const socket = io(resolveSocketURL(), {
-  transports: ['websocket'],
+  // Polling first works reliably through nginx / corporate proxies; upgrades to websocket when possible.
+  // `['websocket']` only often fails behind reverse proxies or with strict upgrade handling.
+  transports: ['polling', 'websocket'],
+  path: '/socket.io',
   autoConnect: false
 })
 
