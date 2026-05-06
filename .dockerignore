@@ -1,7 +1,6 @@
 .git
 .gitignore
 npm-debug.log
-.env
 .start-storybook
 .gitlab-ci.yml
 stores
