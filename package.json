@@ -29,8 +29,6 @@
         "build:prod": "cross-env NODE_ENV=production NODE_OPTIONS=--openssl-legacy-provider webpack --config webpack.production.config.js --progress --profile --colors",
         "build:ssr": "cross-env NODE_ENV=production NODE_OPTIONS=--openssl-legacy-provider webpack --config webpack.ssr.config.js --progress --profile --colors",
         "heroku-postbuild": "yarn run build:prod",
-        "storybook": "start-storybook -p 6006",
-        "build-storybook": "build-storybook",
         "find-unused": "npx dead-exports --e=./client"
     },
     "author": "",
@@ -116,12 +114,6 @@
     "devDependencies": {
         "@babel/eslint-parser": "^7.26.0",
         "@pmmmwh/react-refresh-webpack-plugin": "^0.4.3",
-        "@storybook/addon-actions": "^6.0.21",
-        "@storybook/addon-info": "^5.3.21",
-        "@storybook/addon-knobs": "^6.0.21",
-        "@storybook/addon-links": "^6.0.21",
-        "@storybook/addon-viewport": "^6.0.21",
-        "@storybook/react": "^6.0.21",
         "@testing-library/react": "^14.2.1",
         "@types/node": "^22.10.5",
         "@types/react": "^18.3.18",

@@ -57,7 +57,7 @@ const config = {
       {
         test: /\.[jt]sx?$/,
         loaders: ['babel-loader'],
-        include: [/client/, /stories/],
+        include: [/client/],
         exclude: /node_modules/
       },
       {

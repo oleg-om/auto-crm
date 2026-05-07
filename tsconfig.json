@@ -17,6 +17,6 @@
     "jsx": "react",
     "baseUrl": "."
   },
-  "include": ["client/**/*", "server/**/*", "stories/**/*", "config/**/*"],
+  "include": ["client/**/*", "server/**/*", "config/**/*"],
   "exclude": ["node_modules", "dist"]
 }
