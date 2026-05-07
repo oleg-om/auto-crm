@@ -10,9 +10,9 @@ const isStudy = process.env.MODE === 'study'
 
 function resolveSocketURL() {
   if (isStudy) {
-    return 'http://89.110.97.155:8090'
+    return process.env.REACT_APP_STUDY_WEBSOCKET_URL
   }
-  return 'http://195.2.76.23:8090'
+  return process.env.REACT_APP_MAIN_WEBSOCKET_URL
 }
 
 export const socket = io(resolveSocketURL(), {

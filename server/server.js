@@ -68,15 +68,18 @@ connectDatabase()
 const port = process.env.PORT || 8090
 const server = express()
 const serve = http.createServer(server)
-const socketCorsOrigin = process.env.SOCKET_CORS_ORIGIN
-  ? process.env.SOCKET_CORS_ORIGIN.split(',').map((s) => s.trim())
-  : true
+const isStudyMode = process.env.MODE === 'study'
 
 const io = new SocketIOServer(serve, {
   cors: {
     // `true` = reflect request Origin when SOCKET_CORS_ORIGIN unset (Docker / prod domain).
     // Set SOCKET_CORS_ORIGIN in .env to explicit URL(s) to lock down.
-    origin: socketCorsOrigin,
+    origin: [
+      process.env.WORK_DOMAIN,
+      process.env.STUDY_DOMAIN,
+      process.env.REACT_APP_STUDY_WEBSOCKET_URL,
+      process.env.REACT_APP_MAIN_WEBSOCKET_URL
+    ],
     methods: ['GET', 'POST'],
     credentials: true
   }
@@ -118,8 +121,6 @@ function getFormatMessages(messages) {
   const formatedMessages = messages.map((it) => ({ [it.userName]: it.message }))
   return formatedMessages
 }
-
-const isStudyMode = process.env.MODE === 'study'
 
 // proxy if is study mode
 const placesProxy = createProxyMiddleware('/api/v1/place', {

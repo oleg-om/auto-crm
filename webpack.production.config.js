@@ -252,7 +252,9 @@ const config = {
           ENABLE_SOCKETS: process.env.ENABLE_SOCKETS || false,
           process: {
             env: {
-              MODE: JSON.stringify(process.env.MODE)
+              MODE: JSON.stringify(process.env.MODE),
+              REACT_APP_STUDY_WEBSOCKET_URL: JSON.stringify(process.env.REACT_APP_STUDY_WEBSOCKET_URL),
+              REACT_APP_MAIN_WEBSOCKET_URL: JSON.stringify(process.env.REACT_APP_MAIN_WEBSOCKET_URL)
             }
           }
         }
