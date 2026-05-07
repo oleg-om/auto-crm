@@ -54,7 +54,13 @@ const Employee = ({
         ) : null}
       </div>
 
-      <SalaryPercentModal employees={employees} setEmployees={setEmployees} />
+      <SalaryPercentModal
+        employees={employees}
+        setEmployees={setEmployees}
+        persistPreferences={
+          auth?.place != null ? { placeId: auth.place, group } : null
+        }
+      />
       <div className="px-3 mb-6 md:mb-0 w-full">
         <label
           className="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2"

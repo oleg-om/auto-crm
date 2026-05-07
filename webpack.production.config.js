@@ -3,6 +3,7 @@ const { resolve } = require('path')
 require('dotenv').config()
 
 const webpack = require('webpack')
+const ESLintPlugin = require('eslint-webpack-plugin')
 const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 const CopyWebpackPlugin = require('copy-webpack-plugin')
 const GitRevisionPlugin = require('git-revision-webpack-plugin')
@@ -50,11 +51,13 @@ const config = {
     main: './main.js'
   },
   resolve: {
+    extensions: ['.ts', '.tsx', '.js', '.jsx', '.json'],
     alias: {
       d3: 'd3/index.js'
     }
   },
   output: {
+    hashFunction: 'sha256',
     filename: 'js/[name].bundle.js',
     path: resolve(__dirname, 'dist/assets'),
     publicPath: '/',
@@ -84,20 +87,7 @@ const config = {
         })
       },
       {
-        enforce: 'pre',
-        test: /\.js$/,
-        exclude: /node_modules/,
-        loader: [
-          {
-            loader: 'eslint-loader',
-            options: {
-              cache: true
-            }
-          }
-        ]
-      },
-      {
-        test: /\.js$/,
+        test: /\.[jt]sx?$/,
         loaders: ['babel-loader'],
         exclude: /node_modules/
       },
@@ -139,7 +129,8 @@ const config = {
           },
           {
             loader: 'sass-loader',
-            query: {
+            options: {
+              implementation: require('sass'),
               sourceMap: false
             }
           }
@@ -206,6 +197,12 @@ const config = {
   },
 
   plugins: [
+    new ESLintPlugin({
+      context: resolve(__dirname),
+      extensions: ['js', 'jsx', 'ts', 'tsx'],
+      files: ['client', 'server'],
+      overrideConfigFile: resolve(__dirname, '.eslintrc')
+    }),
     new StringReplacePlugin(),
     new CopyWebpackPlugin(
       {

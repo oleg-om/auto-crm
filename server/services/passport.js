@@ -8,6 +8,7 @@ const cookieExtractor = (req) => {
 
 const jwtOptions = {
   secretOrKey: config.secret,
+  algorithms: ['HS256'],
   jwtFromRequest: passportJWT.ExtractJwt.fromExtractors([cookieExtractor])
 }
 

@@ -1,0 +1,66 @@
+services:
+  # MongoDB Database
+  mongodb:
+    image: mongo:6.0
+    container_name: auto-crm-mongodb
+    restart: always
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: admin
+      MONGO_INITDB_ROOT_PASSWORD: password123
+      MONGO_INITDB_DATABASE: chat
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongodb_data:/data/db
+      - ./docker/mongo-init.js:/docker-entrypoint-initdb.d/mongo-init.js:ro
+    networks:
+      - auto-crm-network
+
+  # Node.js Application
+  app:
+    platform: linux/amd64
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: node_server
+    container_name: auto-crm-app
+    restart: always
+    env_file:
+      - .env
+    ports:
+      - "8090:8090"
+    depends_on:
+      - mongodb
+    networks:
+      - auto-crm-network
+    volumes:
+      - ./.env:/app/.env:ro
+      - ./uploads:/app/uploads
+
+  # Nginx Reverse Proxy
+  nginx:
+    platform: linux/amd64
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: web_server
+    container_name: auto-crm-nginx
+    restart: always
+    ports:
+      - "80:80"
+      - "443:443"
+    depends_on:
+      - app
+    networks:
+      - auto-crm-network
+    volumes:
+      - ./docker/nginx/default.conf:/etc/nginx/conf.d/default.conf:ro
+      - ./docker/nginx/domain.conf:/etc/nginx/conf.d/domain.conf:ro
+
+volumes:
+  mongodb_data:
+    driver: local
+
+networks:
+  auto-crm-network:
+    driver: bridge

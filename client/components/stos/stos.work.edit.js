@@ -19,6 +19,7 @@ import { ServiceSubmitButtons } from '../shared/buttons/OrderSubmitButtons'
 import EmployeeTab from '../common/employeeTab'
 import tryBlockWorkCompletionTooSoon from '../../utils/workCompletionFreeze'
 import { getOrganizations } from '../../redux/reducers/organizations'
+import { tyresToPayload } from '../../utils/tyresToPayload'
 
 const StosEdit = (props) => {
   toast.configure()
@@ -453,7 +454,7 @@ const StosEdit = (props) => {
         organizationId: state.organizationId || null,
         services: service,
         material: materials,
-        tyre: [...tyres],
+        tyre: tyresToPayload(tyres),
         customerId: activeCustomer || props.customerId || null
       })
       if (checkLink()) {
@@ -491,7 +492,7 @@ const StosEdit = (props) => {
         organizationId: state.organizationId || null,
         services: service,
         material: materials,
-        tyre: [...tyres],
+        tyre: tyresToPayload(tyres),
         employee: employees,
         dateFinish: props.dateFinish ? props.dateFinish : new Date(),
         status: statusList[1],
@@ -596,7 +597,7 @@ const StosEdit = (props) => {
         // ...state,
         // services: service,
         // material: materials,
-        // tyre: [...tyres],
+        // tyre: tyresToPayload(tyres),
         // employee: employees,
         discount: state.discount,
         payment: state.payment,
@@ -771,7 +772,7 @@ const StosEdit = (props) => {
       ...state,
       services: service,
       material: materials,
-      tyre: [...tyres],
+      tyre: tyresToPayload(tyres),
       employee: employees,
       totalSumWithoutMaterials,
       totalMaterial,
@@ -787,7 +788,7 @@ const StosEdit = (props) => {
       ...state,
       services: service,
       material: materials,
-      tyre: [...tyres],
+      tyre: tyresToPayload(tyres),
       employee: employees,
       totalSumWithoutMaterials,
       totalMaterial,

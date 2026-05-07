@@ -5,7 +5,7 @@ import path from 'path'
 import cors from 'cors'
 import bodyParser from 'body-parser'
 import http from 'http'
-import socketServer from 'socket.io'
+import { Server as SocketIOServer } from 'socket.io'
 import { renderToStaticNodeStream } from 'react-dom/server'
 import React from 'react'
 
@@ -68,7 +68,19 @@ connectDatabase()
 const port = process.env.PORT || 8090
 const server = express()
 const serve = http.createServer(server)
-const io = socketServer(serve)
+const socketCorsOrigin = process.env.SOCKET_CORS_ORIGIN
+  ? process.env.SOCKET_CORS_ORIGIN.split(',').map((s) => s.trim())
+  : true
+
+const io = new SocketIOServer(serve, {
+  cors: {
+    // `true` = reflect request Origin when SOCKET_CORS_ORIGIN unset (Docker / prod domain).
+    // Set SOCKET_CORS_ORIGIN in .env to explicit URL(s) to lock down.
+    origin: socketCorsOrigin,
+    methods: ['GET', 'POST'],
+    credentials: true
+  }
+})
 
 const middleware = [
   cors({
@@ -201,7 +213,7 @@ server.use('/api/v1', organizationRoutes)
 
 server.get('/api/v1/auth', async (req, res) => {
   try {
-    const jwtUser = jwt.verify(req.cookies.token, config.secret)
+    const jwtUser = jwt.verify(req.cookies.token, config.secret, { algorithms: ['HS256'] })
     const user = await User.findById(jwtUser.uid)
 
     const token = createToken(user)
@@ -307,7 +319,7 @@ io.on('connection', (socket) => {
   connections.push(socket)
   socket.on('new login', async ({ token, currentRoom }) => {
     try {
-      const user = jwt.verify(token, config.secret)
+      const user = jwt.verify(token, config.secret, { algorithms: ['HS256'] })
       const { userName, role } = await User.findById(user.uid)
       userNames[socket.id] = [userName, role]
       if (role.indexOf('admin') !== -1) {
@@ -353,7 +365,7 @@ io.on('connection', (socket) => {
 
   socket.on('disconnect user', (id) => {
     io.to(id).emit('delete cookie')
-    io.of('/').sockets.get(id).disconnect()
+    io.of('/').sockets.get(id)?.disconnect()
     delete userNames[id]
   })
 

@@ -1,4 +1,4 @@
-import io from 'socket.io-client'
+import { io } from 'socket.io-client'
 import Cookies from 'universal-cookie'
 
 import { receivedNewMessage, deleteRecivedMessages } from '../reducers/messages'
@@ -8,8 +8,18 @@ import store from '../index'
 
 const isStudy = process.env.MODE === 'study'
 
-export const socket = io(isStudy ? 'http://89.110.97.155:8090' : 'http://195.2.76.23:8090', {
-  transports: ['websocket'],
+function resolveSocketURL() {
+  if (isStudy) {
+    return 'http://89.110.97.155:8090'
+  }
+  return 'http://195.2.76.23:8090'
+}
+
+export const socket = io(resolveSocketURL(), {
+  // Polling first works reliably through nginx / corporate proxies; upgrades to websocket when possible.
+  // `['websocket']` only often fails behind reverse proxies or with strict upgrade handling.
+  transports: ['polling', 'websocket'],
+  path: '/socket.io',
   autoConnect: false
 })
 

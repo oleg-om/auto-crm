@@ -1,17 +1,30 @@
 {
-  "parser": "babel-eslint",
+  "parser": "@babel/eslint-parser",
+  "parserOptions": {
+    "requireConfigFile": false,
+    "babelOptions": {
+      "presets": ["@babel/preset-react", "@babel/preset-typescript"]
+    },
+    "ecmaVersion": 2022,
+    "sourceType": "module",
+    "ecmaFeatures": {
+      "jsx": true
+    }
+  },
   "root": true,
   "extends": [
     "airbnb",
-    "prettier",
-    "prettier/babel",
-    "prettier/react",
-    "plugin:react/recommended"
+    "plugin:react/recommended",
+    "prettier"
   ],
-  "parserOptions": {
-    "ecmaVersion": 6,
-    "ecmaFeatures": {
-      "jsx": true
+  "settings": {
+    "react": {
+      "version": "detect"
+    },
+    "import/resolver": {
+      "node": {
+        "extensions": [".js", ".jsx", ".ts", ".tsx"]
+      }
     }
   },
   "plugins": [
@@ -22,7 +35,7 @@
     "browser": true,
     "node": true,
     "mocha": true,
-    "es6": true
+    "es2022": true
   },
   "globals": {
     "IS_PROD": true,
@@ -35,15 +48,26 @@
   },
   "rules": {
     "prettier/prettier": ["warn"],
+    "no-unused-vars": [
+      "error",
+      {
+        "varsIgnorePattern": "^React$",
+        "argsIgnorePattern": "^_",
+        "ignoreRestSiblings": true
+      }
+    ],
+    "react/function-component-definition": "off",
+    "prefer-arrow-callback": "off",
+    "default-param-last": "off",
+    "react/no-unstable-nested-components": "warn",
+    "react/jsx-no-useless-fragment": "warn",
+    "no-unsafe-optional-chaining": "warn",
+    "import/no-import-module-exports": "off",
+    "no-dupe-else-if": "warn",
     "space-before-function-paren": "off",
     "react/prefer-stateless-function": "warn",
-    "react/jsx-filename-extension": [1, { "extensions": [".js", ".jsx"] }],
+    "react/jsx-filename-extension": [1, { "extensions": [".js", ".jsx", ".ts", ".tsx"] }],
     "jsx-a11y/anchor-is-valid": "off",
-    "jsx-a11y/label-has-for": [ 2, {
-      "required": {
-        "every": [ "id" ]
-      }
-    }],
     "jsx-a11y/label-has-associated-control": [ 2, {
       "labelComponents": ["CustomInputLabel"],
       "labelAttributes": ["label"],
@@ -55,7 +79,8 @@
       "ignoreStrings": true,
       "code": 240
     }],
-    "react/jsx-uses-react": 1,
+    "react/jsx-uses-react": "off",
+    "react/react-in-jsx-scope": "off",
     "react/sort-comp": "off",
     "import/no-cycle": "off",
     "react/prop-types": "off",
@@ -71,8 +96,9 @@
     "react/jsx-wrap-multilines": "off",
     "react/jsx-one-expression-per-line": "off",
     "react-hooks/rules-of-hooks": "error",
-    "react-hooks/exhaustive-deps": "warn",
+    "react-hooks/exhaustive-deps": "off",
     "react/no-array-index-key": "warn",
+    "react/no-unknown-property": "off",
     "jsx-a11y/control-has-associated-label": "warn",
     "jsx-a11y/no-autofocus": "warn",
     "max-classes-per-file": "warn",

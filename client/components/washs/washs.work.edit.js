@@ -15,6 +15,7 @@ import { useMaterials } from '../../hooks/handleMaterials'
 import { useKeyboard } from '../../hooks/keyboard'
 import { useServices } from '../../hooks/handleServices'
 import { ServiceSubmitButtons } from '../shared/buttons/OrderSubmitButtons'
+import { tyresToPayload } from '../../utils/tyresToPayload'
 
 const WashsEdit = (props) => {
   toast.configure()
@@ -568,7 +569,7 @@ const WashsEdit = (props) => {
         beznalPaid: state.beznalPaid || null,
         services: service,
         material: materials,
-        tyre: [...tyres]
+        tyre: tyresToPayload(tyres)
       })
       if (checkLink()) {
         history.push(`/washboss/list/${props.num ? props.num : ''}`)
@@ -598,7 +599,7 @@ const WashsEdit = (props) => {
         beznalPaid: state.beznalPaid || null,
         services: service,
         material: materials,
-        tyre: [...tyres],
+        tyre: tyresToPayload(tyres),
         employee: employees,
         dateFinish: props.dateFinish ? props.dateFinish : new Date(),
         status: statusList[1]
@@ -686,7 +687,7 @@ const WashsEdit = (props) => {
         // ...state,
         // services: service,
         // material: materials,
-        // tyre: [...tyres],
+        // tyre: tyresToPayload(tyres),
         // employee: employees,
         discount: state.discount,
         payment: state.payment,
@@ -892,7 +893,7 @@ const WashsEdit = (props) => {
       ...state,
       services: service,
       material: materials,
-      tyre: [...tyres],
+      tyre: tyresToPayload(tyres),
       employee: employees,
       totalSumWithoutMaterials,
       totalMaterial,
@@ -908,7 +909,7 @@ const WashsEdit = (props) => {
       ...state,
       services: service,
       material: materials,
-      tyre: [...tyres],
+      tyre: tyresToPayload(tyres),
       employee: employees,
       totalSumWithoutMaterials,
       totalMaterial,
