@@ -11,7 +11,7 @@ require('dotenv').config()
 
 const version = 'development'
 const config = {
-  devtool: 'cheap-module-eval-source-map',
+  devtool: 'eval-cheap-module-source-map',
 
   entry: ['./main.js'],
   resolve: {
@@ -31,24 +31,28 @@ const config = {
   context: resolve(__dirname, 'client'),
   devServer: {
     hot: false,
-    contentBase: resolve(__dirname, 'dist/assets'),
-    watchContentBase: true,
+    static: {
+      directory: resolve(__dirname, 'dist/assets'),
+      watch: true
+    },
     host: 'localhost',
     port: 8087,
-    disableHostCheck: true,
+    allowedHosts: 'all',
     open: true,
     historyApiFallback: true,
-    overlay: {
-      warnings: false,
-      errors: true
+    client: {
+      overlay: {
+        warnings: false,
+        errors: true
+      }
     },
     proxy: [
       {
-        context: ['/api', '/auth', '/ws', '/socket.io'],
+        context: ['/api', '/auth', '/socket.io'],
         target: `http://localhost:${process.env.PORT || 8090}`,
         secure: false,
         changeOrigin: true,
-        ws: process.env.ENABLE_SOCKETS || false
+        ws: process.env.ENABLE_SOCKETS === 'true'
       }
     ]
   },
@@ -56,7 +60,7 @@ const config = {
     rules: [
       {
         test: /\.[jt]sx?$/,
-        loaders: ['babel-loader'],
+        use: ['babel-loader'],
         include: [/client/],
         exclude: /node_modules/
       },
@@ -66,8 +70,7 @@ const config = {
           {
             loader: MiniCssExtractPlugin.loader,
             options: {
-              publicPath: '../',
-              hmr: process.env.NODE_ENV === 'development'
+              publicPath: '../'
             }
           },
           { loader: 'css-loader', options: { sourceMap: true } },
@@ -87,8 +90,7 @@ const config = {
           {
             loader: MiniCssExtractPlugin.loader,
             options: {
-              publicPath: '../',
-              hmr: process.env.NODE_ENV === 'development'
+              publicPath: '../'
             }
           },
 
@@ -106,15 +108,14 @@ const config = {
         ]
       },
       {
-        test: /\.(jpg|png|gif|svg|webp)$/,
-        loader: 'image-webpack-loader',
-        enforce: 'pre'
-      },
-      {
         test: /\.(png|jpg|gif|webp)$/,
         use: [
           {
-            loader: 'file-loader'
+            loader: 'file-loader',
+            options: {
+              name: '[name].[ext]',
+              outputPath: 'images/'
+            }
           }
         ]
       },
@@ -122,7 +123,11 @@ const config = {
         test: /\.eot$/,
         use: [
           {
-            loader: 'file-loader'
+            loader: 'file-loader',
+            options: {
+              name: '[name].[ext]',
+              outputPath: 'fonts/'
+            }
           }
         ]
       },
@@ -130,7 +135,11 @@ const config = {
         test: /\.woff(2)$/,
         use: [
           {
-            loader: 'file-loader'
+            loader: 'file-loader',
+            options: {
+              name: '[name].[ext]',
+              outputPath: 'fonts/'
+            }
           }
         ]
       },
@@ -164,15 +173,13 @@ const config = {
       files: ['client', 'server'],
       overrideConfigFile: resolve(__dirname, '.eslintrc')
     }),
-    new webpack.optimize.ModuleConcatenationPlugin(),
     new MiniCssExtractPlugin({
       filename: 'css/main.css',
       chunkFilename: 'css/[id].css',
       ignoreOrder: false
     }),
-    new CopyWebpackPlugin(
-      {
-        patterns: [
+    new CopyWebpackPlugin({
+      patterns: [
           { from: `${__dirname}/client/assets/images`, to: 'images' },
           { from: `${__dirname}/client/assets/fonts`, to: 'fonts' },
 
@@ -202,10 +209,8 @@ const config = {
               return content.toString().replace(/APP_VERSION/g, version)
             }
           }
-        ]
-      },
-      { parallel: 100 }
-    ),
+      ]
+    }),
 
     new ReactRefreshWebpackPlugin(),
     new webpack.DefinePlugin(
