@@ -6,20 +6,16 @@ exports.getAll = async (req, res) => {
 }
 
 exports.getOne = async (req, res) => {
-  const tyre = await Tyre.findOne(
-    { id_tyres: req.params.id },
-    { upsert: false, useFindAndModify: false }
-  )
+  const tyre = await Tyre.findOne({ id_tyres: req.params.id })
   return res.json({ status: 'ok', data: tyre })
 }
 
 exports.update = async (req, res) => {
-  let tyre = await Tyre.findOneAndUpdate(
+  const tyre = await Tyre.findOneAndUpdate(
     { id: req.params.id },
     { $set: req.body },
-    { upsert: false, useFindAndModify: false }
+    { upsert: false, new: true }
   )
-  tyre = await Tyre.findOne({ id: req.params.id })
   return res.json({ status: 'ok', data: tyre })
 }
 
@@ -30,10 +26,7 @@ exports.create = async (req, res) => {
     return res.json({ status: 'ok', data: tyre })
   }
 
-  const tyreFind = await Tyre.findOne(
-    { siteNumber: req.body.siteNumber },
-    { upsert: false, useFindAndModify: false }
-  )
+  const tyreFind = await Tyre.findOne({ siteNumber: req.body.siteNumber })
 
   if (tyreFind) {
     return res.json({ status: 'is exist' })

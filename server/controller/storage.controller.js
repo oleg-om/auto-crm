@@ -7,20 +7,16 @@ exports.getAll = async (req, res) => {
 }
 
 exports.getOne = async (req, res) => {
-  const storage = await Storage.findOne(
-    { id_storages: req.params.id },
-    { upsert: false, useFindAndModify: false }
-  )
+  const storage = await Storage.findOne({ id_storages: req.params.id })
   return res.json({ status: 'ok', data: storage })
 }
 
 exports.update = async (req, res) => {
-  let storage = await Storage.findOneAndUpdate(
+  const storage = await Storage.findOneAndUpdate(
     { id: req.params.id },
     { $set: req.body },
-    { upsert: false, useFindAndModify: false }
+    { upsert: false, new: true }
   )
-  storage = await Storage.findOne({ id: req.params.id })
   return res.json({ status: 'ok', data: storage })
 }
 
@@ -91,13 +87,10 @@ exports.getFiltered = async (req, res) => {
 }
 
 exports.updateStatus = async (req, res) => {
-  const storage1 = await Storage.findOne(
-    {
-      id_storages: req.params.id,
-      statusDates: { $elemMatch: { status: 'Произведен шиномонтаж' } }
-    },
-    { upsert: false, useFindAndModify: false }
-  )
+  const storage1 = await Storage.findOne({
+    id_storages: req.params.id,
+    statusDates: { $elemMatch: { status: 'Произведен шиномонтаж' } }
+  })
 
   if (!storage1) {
     // const storage2 = await Storage.findOne({ id_storages: req.params.id })
@@ -109,7 +102,7 @@ exports.updateStatus = async (req, res) => {
           statusDates: req.body
         }
       },
-      { upsert: false, useFindAndModify: false }
+      { upsert: false }
     )
   }
   const storage = await Storage.findOne({ id_storages: req.params.id })

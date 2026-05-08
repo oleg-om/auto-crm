@@ -19,46 +19,42 @@ exports.getLastTwoDays = async (req, res) => {
 }
 
 exports.getOne = async (req, res) => {
-  const sto = await Sto.findOne(
-    { id_stos: req.params.id },
-    { upsert: false, useFindAndModify: false }
-  )
+  const sto = await Sto.findOne({ id_stos: req.params.id })
   return res.json({ status: 'ok', data: sto })
 }
 
 exports.update = async (req, res) => {
-  let sto = await Sto.findOneAndUpdate(
+  const sto = await Sto.findOneAndUpdate(
     { id: req.params.id },
     { $set: req.body },
-    { upsert: false, useFindAndModify: false }
+    { upsert: false, new: true }
   )
-  sto = await Sto.findOne({ id: req.params.id })
-  
+
   // Если указан клиент и организация, сохраняем организацию к клиенту
   if (req.body.customerId && req.body.organizationId) {
     await Customer.findOneAndUpdate(
       { id: req.body.customerId },
       { $set: { organizationId: req.body.organizationId } },
-      { upsert: false, useFindAndModify: false }
+      { upsert: false }
     )
   }
-  
+
   return res.json({ status: 'ok', data: sto })
 }
 
 exports.create = async (req, res) => {
   const sto = new Sto(req.body)
   await sto.save()
-  
+
   // Если указан клиент и организация, сохраняем организацию к клиенту
   if (req.body.customerId && req.body.organizationId) {
     await Customer.findOneAndUpdate(
       { id: req.body.customerId },
       { $set: { organizationId: req.body.organizationId } },
-      { upsert: false, useFindAndModify: false }
+      { upsert: false }
     )
   }
-  
+
   return res.json({ status: 'ok', data: sto })
 }
 

@@ -130,12 +130,11 @@ exports.getByFind = async (req, res) => {
 }
 
 exports.update = async (req, res) => {
-  let customer = await Customer.findOneAndUpdate(
+  const customer = await Customer.findOneAndUpdate(
     { id: req.params.id },
     { $set: req.body },
-    { upsert: false, useFindAndModify: false }
+    { upsert: false, new: true }
   )
-  customer = await Customer.findOne({ id: req.params.id })
   return res.json({ status: 'ok', data: customer })
 }
 

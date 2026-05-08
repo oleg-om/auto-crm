@@ -20,46 +20,42 @@ exports.getLastTwoDays = async (req, res) => {
 }
 
 exports.getOne = async (req, res) => {
-  const shinomontazh = await Shinomontazh.findOne(
-    { id_shinomontazhs: req.params.id },
-    { upsert: false, useFindAndModify: false }
-  )
+  const shinomontazh = await Shinomontazh.findOne({ id_shinomontazhs: req.params.id })
   return res.json({ status: 'ok', data: shinomontazh })
 }
 
 exports.update = async (req, res) => {
-  let shinomontazh = await Shinomontazh.findOneAndUpdate(
+  const shinomontazh = await Shinomontazh.findOneAndUpdate(
     { id: req.params.id },
     { $set: req.body },
-    { upsert: false, useFindAndModify: false }
+    { upsert: false, new: true }
   )
-  shinomontazh = await Shinomontazh.findOne({ id: req.params.id })
-  
+
   // Если указан клиент и организация, сохраняем организацию к клиенту
   if (req.body.customerId && req.body.organizationId) {
     await Customer.findOneAndUpdate(
       { id: req.body.customerId },
       { $set: { organizationId: req.body.organizationId } },
-      { upsert: false, useFindAndModify: false }
+      { upsert: false }
     )
   }
-  
+
   return res.json({ status: 'ok', data: shinomontazh })
 }
 
 exports.create = async (req, res) => {
   const shinomontazh = new Shinomontazh(req.body)
   await shinomontazh.save()
-  
+
   // Если указан клиент и организация, сохраняем организацию к клиенту
   if (req.body.customerId && req.body.organizationId) {
     await Customer.findOneAndUpdate(
       { id: req.body.customerId },
       { $set: { organizationId: req.body.organizationId } },
-      { upsert: false, useFindAndModify: false }
+      { upsert: false }
     )
   }
-  
+
   return res.json({ status: 'ok', data: shinomontazh })
 }
 

@@ -6,17 +6,16 @@ exports.getAll = async (req, res) => {
 }
 
 exports.getOne = async (req, res) => {
-  const task = await Task.findOne({ id: req.params.id }, { upsert: false, useFindAndModify: false })
+  const task = await Task.findOne({ id: req.params.id })
   return res.json({ status: 'ok', data: task })
 }
 
 exports.update = async (req, res) => {
-  let task = await Task.findOneAndUpdate(
+  const task = await Task.findOneAndUpdate(
     { id: req.params.id },
     { $set: req.body },
-    { upsert: false, useFindAndModify: false }
+    { upsert: false, new: true }
   )
-  task = await Task.findOne({ id: req.params.id })
   return res.json({ status: 'ok', data: task })
 }
 

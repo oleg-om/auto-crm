@@ -19,20 +19,16 @@ exports.getLastTwoDays = async (req, res) => {
 }
 
 exports.getOne = async (req, res) => {
-  const cond = await Cond.findOne(
-    { id_conds: req.params.id },
-    { upsert: false, useFindAndModify: false }
-  )
+  const cond = await Cond.findOne({ id_conds: req.params.id })
   return res.json({ status: 'ok', data: cond })
 }
 
 exports.update = async (req, res) => {
-  let cond = await Cond.findOneAndUpdate(
+  const cond = await Cond.findOneAndUpdate(
     { id: req.params.id },
     { $set: req.body },
-    { upsert: false, useFindAndModify: false }
+    { upsert: false, new: true }
   )
-  cond = await Cond.findOne({ id: req.params.id })
   return res.json({ status: 'ok', data: cond })
 }
 

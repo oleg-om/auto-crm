@@ -99,20 +99,16 @@ exports.getFiltered = async (req, res) => {
 }
 
 exports.getOne = async (req, res) => {
-  const autopart = await Autopart.findOne(
-    { id_autoparts: req.params.id },
-    { upsert: false, useFindAndModify: false }
-  )
+  const autopart = await Autopart.findOne({ id_autoparts: req.params.id })
   return res.json({ status: 'ok', data: autopart })
 }
 
 exports.update = async (req, res) => {
-  let autopart = await Autopart.findOneAndUpdate(
+  const autopart = await Autopart.findOneAndUpdate(
     { id: req.params.id },
     { $set: req.body },
-    { upsert: false, useFindAndModify: false }
+    { upsert: false, new: true }
   )
-  autopart = await Autopart.findOne({ id: req.params.id })
   return res.json({ status: 'ok', data: autopart })
 }
 

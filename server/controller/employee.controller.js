@@ -11,12 +11,11 @@ exports.getOne = async (req, res) => {
 }
 
 exports.update = async (req, res) => {
-  let employee = await Employee.findOneAndUpdate(
+  const employee = await Employee.findOneAndUpdate(
     { id: req.params.id },
     { $set: req.body },
-    { upsert: false, useFindAndModify: false }
+    { upsert: false, new: true }
   )
-  employee = await Employee.findOne({ id: req.params.id })
   return res.json({ status: 'ok', data: employee })
 }
 

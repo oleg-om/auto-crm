@@ -11,12 +11,11 @@ exports.getOne = async (req, res) => {
 }
 
 exports.update = async (req, res) => {
-  let condprice = await CondPrice.findOneAndUpdate(
+  const condprice = await CondPrice.findOneAndUpdate(
     { id: req.params.id },
     { $set: req.body },
-    { upsert: false, useFindAndModify: false }
+    { upsert: false, new: true }
   )
-  condprice = await CondPrice.findOne({ id: req.params.id })
   return res.json({ status: 'ok', data: condprice })
 }
 

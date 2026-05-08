@@ -8,10 +8,7 @@ const config = require('../config')
 const createIndexes = async () => {
   try {
     console.log('Подключение к MongoDB...')
-    await mongoose.connect(config.default.mongoURL, {
-      useUnifiedTopology: true,
-      useNewUrlParser: true
-    })
+    await mongoose.connect(config.default.mongoURL)
 
     console.log('Подключено к MongoDB')
 
@@ -51,12 +48,12 @@ const createIndexes = async () => {
       console.log(`  - ${index.name}:`, JSON.stringify(index.key))
     })
 
-    // Показать статистику коллекции
-    const stats = await shinomontazhsCollection.stats()
+    // Показать статистику коллекции (MongoDB Node driver 6+ — через collStats)
+    const stats = await db.command({ collStats: shinomontazhsCollection.collectionName })
     console.log('\nСтатистика коллекции:')
     console.log(`  Количество документов: ${stats.count}`)
     console.log(`  Размер: ${(stats.size / 1024 / 1024).toFixed(2)} MB`)
-    console.log(`  Средний размер документа: ${stats.avgObjSize} bytes`)
+    console.log(`  Средний размер документа: ${stats.avgObjSize ?? 'n/a'} bytes`)
 
     console.log('\n✓ Индексы успешно созданы!')
   } catch (error) {

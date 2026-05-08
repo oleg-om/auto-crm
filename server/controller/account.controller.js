@@ -11,13 +11,11 @@ exports.getOne = async (req, res) => {
 }
 
 exports.update = async (req, res) => {
-  let account = await userSchema.findOneAndUpdate(
+  const account = await userSchema.findOneAndUpdate(
     { _id: req.params.id },
     { $set: req.body },
-    { upsert: false, useFindAndModify: false }
+    { upsert: false, new: true }
   )
-  await account.save()
-  account = await userSchema.findOne({ _id: req.params.id })
 
   return res.json({ status: 'ok', data: account })
 }
