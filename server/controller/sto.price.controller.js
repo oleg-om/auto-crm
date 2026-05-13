@@ -11,12 +11,11 @@ exports.getOne = async (req, res) => {
 }
 
 exports.update = async (req, res) => {
-  let stoprice = await StoPrice.findOneAndUpdate(
+  const stoprice = await StoPrice.findOneAndUpdate(
     { id: req.params.id },
     { $set: req.body },
-    { upsert: false, useFindAndModify: false }
+    { upsert: false, new: true }
   )
-  stoprice = await StoPrice.findOne({ id: req.params.id })
   return res.json({ status: 'ok', data: stoprice })
 }
 

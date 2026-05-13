@@ -18,21 +18,17 @@ exports.getLastTwoDays = async (req, res) => {
 }
 
 exports.getOne = async (req, res) => {
-  const wash = await Wash.findOne(
-    { id_washs: req.params.id },
-    { upsert: false, useFindAndModify: false }
-  )
+  const wash = await Wash.findOne({ id_washs: req.params.id })
   return res.json({ status: 'ok', data: wash })
 }
 
 exports.update = async (req, res) => {
-  let wash = await Wash.findOneAndUpdate(
+  const data = await Wash.findOneAndUpdate(
     { id: req.params.id },
     { $set: req.body },
-    { upsert: false, useFindAndModify: false }
+    { upsert: false, new: true }
   )
-  wash = await Wash.findOne({ id: req.params.id })
-  return res.json({ status: 'ok', data: wash })
+  return res.json({ status: 'ok', data })
 }
 
 exports.create = async (req, res) => {
@@ -88,10 +84,7 @@ exports.getFiltered = async (req, res) => {
     }
 
     const total = await Wash.countDocuments(query)
-    const posts = await Wash.find(query)
-      .sort({ id_washs: -1 })
-      .limit(LIMIT)
-      .skip(startIndex)
+    const posts = await Wash.find(query).sort({ id_washs: -1 }).limit(LIMIT).skip(startIndex)
 
     res.json({
       status: 'ok',

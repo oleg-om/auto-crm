@@ -234,7 +234,7 @@ server.patch('/api/v1/account/:id', async (req, res) => {
   let account = await User.findOneAndUpdate(
     { _id: req.params.id },
     { $set: req.body },
-    { upsert: false, useFindAndModify: false }
+    { upsert: false }
   )
   await account.save()
   account = await User.findOne({ _id: req.params.id })

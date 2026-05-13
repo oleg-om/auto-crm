@@ -39,7 +39,7 @@ exports.create = async (req, res) => {
     let emp = await EmployeeReport.findOneAndUpdate(
       { _id: req.body?._id },
       { $set: req.body },
-      { upsert: false, useFindAndModify: false }
+      { upsert: false }
     )
     emp = await EmployeeReport.findOne({ _id: req.body?._id })
     return res.json({ status: 'ok', data: emp })

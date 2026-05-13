@@ -19,21 +19,17 @@ exports.getLastTwoDays = async (req, res) => {
 }
 
 exports.getOne = async (req, res) => {
-  const window = await Window.findOne(
-    { id_windows: req.params.id },
-    { upsert: false, useFindAndModify: false }
-  )
+  const window = await Window.findOne({ id_windows: req.params.id })
   return res.json({ status: 'ok', data: window })
 }
 
 exports.update = async (req, res) => {
-  let window = await Window.findOneAndUpdate(
+  const data = await Window.findOneAndUpdate(
     { id: req.params.id },
     { $set: req.body },
-    { upsert: false, useFindAndModify: false }
+    { upsert: false, new: true }
   )
-  window = await Window.findOne({ id: req.params.id })
-  return res.json({ status: 'ok', data: window })
+  return res.json({ status: 'ok', data })
 }
 
 exports.create = async (req, res) => {
@@ -97,10 +93,7 @@ exports.getFiltered = async (req, res) => {
     }
 
     const total = await Window.countDocuments(query)
-    const posts = await Window.find(query)
-      .sort({ dateStart: -1 })
-      .limit(LIMIT)
-      .skip(startIndex)
+    const posts = await Window.find(query).sort({ dateStart: -1 }).limit(LIMIT).skip(startIndex)
 
     res.json({
       status: 'ok',

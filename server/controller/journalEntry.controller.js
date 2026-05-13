@@ -22,12 +22,11 @@ exports.getOne = async (req, res) => {
 }
 
 exports.update = async (req, res) => {
-  let entry = await JournalEntry.findOneAndUpdate(
+  const entry = await JournalEntry.findOneAndUpdate(
     { id: req.params.id },
     { $set: req.body },
-    { upsert: false, useFindAndModify: false, new: true }
+    { upsert: false, new: true }
   )
-  entry = await JournalEntry.findOne({ id: req.params.id })
   return res.json({ status: 'ok', data: entry })
 }
 

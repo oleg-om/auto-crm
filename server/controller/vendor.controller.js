@@ -11,12 +11,11 @@ exports.getOne = async (req, res) => {
 }
 
 exports.update = async (req, res) => {
-  let vendor = await Vendor.findOneAndUpdate(
+  const vendor = await Vendor.findOneAndUpdate(
     { id: req.params.id },
     { $set: req.body },
-    { upsert: false, useFindAndModify: false }
+    { upsert: false, new: true }
   )
-  vendor = await Vendor.findOne({ id: req.params.id })
   return res.json({ status: 'ok', data: vendor })
 }
 

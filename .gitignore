@@ -72,3 +72,4 @@ client__reserve
 
 backup
 backup_db
+/.ai-trace/

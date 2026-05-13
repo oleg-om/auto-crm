@@ -11,12 +11,11 @@ exports.getOne = async (req, res) => {
 }
 
 exports.update = async (req, res) => {
-  let razval = await Razval.findOneAndUpdate(
+  const razval = await Razval.findOneAndUpdate(
     { id: req.params.id },
     { $set: req.body },
-    { upsert: false, useFindAndModify: false }
+    { upsert: false, new: true }
   )
-  razval = await Razval.findOne({ id: req.params.id })
   return res.json({ status: 'ok', data: razval })
 }
 

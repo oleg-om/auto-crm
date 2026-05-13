@@ -50,7 +50,7 @@ exports.getFiltered = async (req, res) => {
     //     { phone: { $regex: req.query.phone ? `${phone.toString()}` : 'smth', $options: 'i' } },
 
     //     { place: req.query.place ? `${place.toString()}` : 'smth' },
-    //     { upsert: false, useFindAndModify: false }
+    //     { upsert: false }
     //   ]
     // })
     const total = await Tool.countDocuments({
@@ -92,20 +92,16 @@ exports.getFiltered = async (req, res) => {
 }
 
 exports.getOne = async (req, res) => {
-  const autopart = await Tool.findOne(
-    { id_tools: req.params.id },
-    { upsert: false, useFindAndModify: false }
-  )
+  const autopart = await Tool.findOne({ id_tools: req.params.id })
   return res.json({ status: 'ok', data: autopart })
 }
 
 exports.update = async (req, res) => {
-  let autopart = await Tool.findOneAndUpdate(
+  const autopart = await Tool.findOneAndUpdate(
     { id: req.params.id },
     { $set: req.body },
-    { upsert: false, useFindAndModify: false }
+    { upsert: false, new: true }
   )
-  autopart = await Tool.findOne({ id: req.params.id })
   return res.json({ status: 'ok', data: autopart })
 }
 

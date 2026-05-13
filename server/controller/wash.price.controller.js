@@ -11,13 +11,12 @@ exports.getOne = async (req, res) => {
 }
 
 exports.update = async (req, res) => {
-  let washprice = await WashPrice.findOneAndUpdate(
+  const data = await WashPrice.findOneAndUpdate(
     { id: req.params.id },
     { $set: req.body },
-    { upsert: false, useFindAndModify: false }
+    { upsert: false, new: true }
   )
-  washprice = await WashPrice.findOne({ id: req.params.id })
-  return res.json({ status: 'ok', data: washprice })
+  return res.json({ status: 'ok', data })
 }
 
 exports.create = async (req, res) => {

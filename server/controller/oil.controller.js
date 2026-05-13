@@ -11,12 +11,11 @@ exports.getOne = async (req, res) => {
 }
 
 exports.update = async (req, res) => {
-  let oil = await Oil.findOneAndUpdate(
+  const oil = await Oil.findOneAndUpdate(
     { id: req.params.id },
     { $set: req.body },
-    { upsert: false, useFindAndModify: false }
+    { upsert: false, new: true }
   )
-  oil = await Oil.findOne({ id: req.params.id })
   return res.json({ status: 'ok', data: oil })
 }
 
