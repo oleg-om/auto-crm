@@ -62,7 +62,7 @@ const ShinomontazhsList = () => {
   }
 
   // const [loading] = useState(true)
-  const { navigateWithQueryParams } = useSaveFilter(search)
+  const { navigateWithQueryParams, searchParamsToUrl } = useSaveFilter(search)
 
   const paginate = (pageNumber) => {
     navigateWithQueryParams(`/shinomontazh/list/${pageNumber}`)
@@ -136,6 +136,7 @@ const ShinomontazhsList = () => {
                       settings={settings}
                       num={num}
                       organization={organizations.find((item) => item.id === it.organizationId)}
+                      filterSearch={searchParamsToUrl}
                     />
                   ))
                 : null}

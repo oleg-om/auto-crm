@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { useHistory } from 'react-router-dom'
+import { useHistory, useLocation } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
 import { toast } from 'react-toastify'
 import cx from 'classnames'
@@ -32,10 +32,18 @@ const ShinomontazhsEdit = (props) => {
   }
 
   const history = useHistory()
+  const location = useLocation()
   const dispatch = useDispatch()
   const checkLink = () => history.location.pathname.split('/').includes('shinomontazhboss')
 
   const isFromPreentry = history?.location?.search.includes('from=preentry')
+
+  const navigateBack = () => {
+    const pathname = checkLink()
+      ? `/shinomontazhboss/list/${props.num ? props.num : ''}`
+      : `/shinomontazh/list/${props.num ? props.num : ''}`
+    history.push({ pathname, search: location.search })
+  }
 
   const employeeList = useSelector((s) => s.employees.list)
   // const customerList = useSelector((s) => s.customers.list)
@@ -539,11 +547,7 @@ const ShinomontazhsEdit = (props) => {
         customerId: activeCustomer || props.customerId || null,
         groupCount
       })
-      if (checkLink()) {
-        history.push(`/shinomontazhboss/list/${props.num ? props.num : ''}`)
-      } else {
-        history.push(`/shinomontazh/list/${props.num ? props.num : ''}`)
-      }
+      navigateBack()
       notify('Запись изменена')
     }
   }
@@ -592,11 +596,7 @@ const ShinomontazhsEdit = (props) => {
         groupCount
       })
       updateStorageStat(props?.storage, props?.id_shinomontazhs)
-      if (checkLink()) {
-        history.push(`/shinomontazhboss/list/${props.num ? props.num : ''}`)
-      } else {
-        history.push(`/shinomontazh/list/${props.num ? props.num : ''}`)
-      }
+      navigateBack()
       notify('Запись изменена')
     } else if (state.payment === 'yes') {
       props.updateShinomontazh(props.id, {
@@ -611,11 +611,7 @@ const ShinomontazhsEdit = (props) => {
         groupCount
       })
       // updateStorageStat(state?.storage, state?.id_shinomontazhs)
-      if (checkLink()) {
-        history.push(`/shinomontazhboss/list/${props.num ? props.num : ''}`)
-      } else {
-        history.push(`/shinomontazh/list/${props.num ? props.num : ''}`)
-      }
+      navigateBack()
       notify('Работа оплачена')
     } else if (state.payment === 'card') {
       props.updateShinomontazh(props.id, {
@@ -630,11 +626,7 @@ const ShinomontazhsEdit = (props) => {
         groupCount
       })
       // updateStorageStat(state?.storage, state?.id_shinomontazhs)
-      if (checkLink()) {
-        history.push(`/shinomontazhboss/list/${props.num ? props.num : ''}`)
-      } else {
-        history.push(`/shinomontazh/list/${props.num ? props.num : ''}`)
-      }
+      navigateBack()
       notify('Работа оплачена (безнал)')
     } else if (state.payment === 'terminal') {
       props.updateShinomontazh(props.id, {
@@ -649,11 +641,7 @@ const ShinomontazhsEdit = (props) => {
         groupCount
       })
       //  updateStorageStat(state?.storage, state?.id_shinomontazhs)
-      if (checkLink()) {
-        history.push(`/shinomontazhboss/list/${props.num ? props.num : ''}`)
-      } else {
-        history.push(`/shinomontazh/list/${props.num ? props.num : ''}`)
-      }
+      navigateBack()
       notify('Работа оплачена (терминал)')
     } else if (state.payment === 'termandcash') {
       props.updateShinomontazh(props.id, {
@@ -670,11 +658,7 @@ const ShinomontazhsEdit = (props) => {
         groupCount
       })
       //  updateStorageStat(state?.storage, state?.id_shinomontazhs)
-      if (checkLink()) {
-        history.push(`/shinomontazhboss/list/${props.num ? props.num : ''}`)
-      } else {
-        history.push(`/shinomontazh/list/${props.num ? props.num : ''}`)
-      }
+      navigateBack()
       notify('Работа оплачена (терминал + наличные)')
     } else if (state.payment === 'cancel') {
       props.updateShinomontazh(props.id, {
@@ -688,11 +672,7 @@ const ShinomontazhsEdit = (props) => {
         customerId: activeCustomer || props.customerId || null,
         groupCount
       })
-      if (checkLink()) {
-        history.push(`/shinomontazhboss/list/${props.num ? props.num : ''}`)
-      } else {
-        history.push(`/shinomontazh/list/${props.num ? props.num : ''}`)
-      }
+      navigateBack()
       notify('Работа отменена')
     } else {
       props.updateShinomontazh(props.id, {
@@ -709,11 +689,7 @@ const ShinomontazhsEdit = (props) => {
         box,
         customerId: activeCustomer || props.customerId || null
       })
-      if (checkLink()) {
-        history.push(`/shinomontazhboss/list/${props.num ? props.num : ''}`)
-      } else {
-        history.push(`/shinomontazh/list/${props.num ? props.num : ''}`)
-      }
+      navigateBack()
       notify('Запись изменена')
     }
   }

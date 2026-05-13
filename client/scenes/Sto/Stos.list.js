@@ -49,7 +49,7 @@ const StosList = () => {
 
   // const [loading] = useState(true)
 
-  const { navigateWithQueryParams } = useSaveFilter(search)
+  const { navigateWithQueryParams, searchParamsToUrl } = useSaveFilter(search)
 
   const paginate = (pageNumber) => {
     navigateWithQueryParams(`/sto/list/${pageNumber}`)
@@ -142,6 +142,7 @@ const StosList = () => {
                       settings={settings}
                       num={num}
                       organization={organizations.find((item) => item.id === it.organizationId)}
+                      filterSearch={searchParamsToUrl}
                     />
                   ))
                 : null}

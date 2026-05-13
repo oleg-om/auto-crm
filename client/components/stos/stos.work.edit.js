@@ -40,6 +40,13 @@ const StosEdit = (props) => {
 
   const isFromPreentry = history?.location?.search.includes('from=preentry')
 
+  const navigateBack = () => {
+    const pathname = checkLink()
+      ? `/${type}boss/list/${props.num ? props.num : ''}`
+      : `/${type}/list/${props.num ? props.num : ''}`
+    history.push({ pathname, search: location.search })
+  }
+
   const employeeList = useSelector((s) => s.employees.list)
   // const customerList = useSelector((s) => s.customers.list)
   const auth = useSelector((s) => s.auth)
@@ -457,11 +464,7 @@ const StosEdit = (props) => {
         tyre: tyresToPayload(tyres),
         customerId: activeCustomer || props.customerId || null
       })
-      if (checkLink()) {
-        history.push(`/${type}boss/list/${props.num ? props.num : ''}`)
-      } else {
-        history.push(`/${type}/list/${props.num ? props.num : ''}`)
-      }
+      navigateBack()
       notify('Запись изменена')
     }
   }
@@ -499,11 +502,7 @@ const StosEdit = (props) => {
         customerId: activeCustomer || props.customerId || null,
         mileage: state.mileage || null
       })
-      if (checkLink()) {
-        history.push(`/${type}boss/list/${props.num ? props.num : ''}`)
-      } else {
-        history.push(`/${type}/list/${props.num ? props.num : ''}`)
-      }
+      navigateBack()
       notify('Запись изменена')
     } else if (state.payment === 'yes') {
       props.updateSto(props.id, {
@@ -516,11 +515,7 @@ const StosEdit = (props) => {
         customerId: activeCustomer || props.customerId || null,
         mileage: state.mileage || null
       })
-      if (checkLink()) {
-        history.push(`/${type}boss/list/${props.num ? props.num : ''}`)
-      } else {
-        history.push(`/${type}/list/${props.num ? props.num : ''}`)
-      }
+      navigateBack()
       notify('Работа оплачена')
     } else if (state.payment === 'card') {
       props.updateSto(props.id, {
@@ -533,11 +528,7 @@ const StosEdit = (props) => {
         customerId: activeCustomer || props.customerId || null,
         mileage: state.mileage || null
       })
-      if (checkLink()) {
-        history.push(`/${type}boss/list/${props.num ? props.num : ''}`)
-      } else {
-        history.push(`/${type}/list/${props.num ? props.num : ''}`)
-      }
+      navigateBack()
       notify('Работа оплачена (безнал)')
     } else if (state.payment === 'terminal') {
       props.updateSto(props.id, {
@@ -550,11 +541,7 @@ const StosEdit = (props) => {
         customerId: activeCustomer || props.customerId || null,
         mileage: state.mileage || null
       })
-      if (checkLink()) {
-        history.push(`/${type}boss/list/${props.num ? props.num : ''}`)
-      } else {
-        history.push(`/${type}/list/${props.num ? props.num : ''}`)
-      }
+      navigateBack()
       notify('Работа оплачена (терминал)')
     } else if (state.payment === 'termandcash') {
       props.updateSto(props.id, {
@@ -569,11 +556,7 @@ const StosEdit = (props) => {
         customerId: activeCustomer || props.customerId || null,
         mileage: state.mileage || null
       })
-      if (checkLink()) {
-        history.push(`/${type}boss/list/${props.num ? props.num : ''}`)
-      } else {
-        history.push(`/${type}/list/${props.num ? props.num : ''}`)
-      }
+      navigateBack()
       notify('Работа оплачена (терминал + наличные)')
     } else if (state.payment === 'cancel') {
       props.updateSto(props.id, {
@@ -586,11 +569,7 @@ const StosEdit = (props) => {
         customerId: activeCustomer || props.customerId || null,
         mileage: state.mileage || null
       })
-      if (checkLink()) {
-        history.push(`/${type}boss/list/${props.num ? props.num : ''}`)
-      } else {
-        history.push(`/${type}/list/${props.num ? props.num : ''}`)
-      }
+      navigateBack()
       notify('Работа отменена')
     } else {
       props.updateSto(props.id, {
@@ -607,11 +586,7 @@ const StosEdit = (props) => {
         customerId: activeCustomer || props.customerId || null,
         mileage: state.mileage || null
       })
-      if (checkLink()) {
-        history.push(`/${type}boss/list/${props.num ? props.num : ''}`)
-      } else {
-        history.push(`/${type}/list/${props.num ? props.num : ''}`)
-      }
+      navigateBack()
       notify('Запись изменена')
     }
   }

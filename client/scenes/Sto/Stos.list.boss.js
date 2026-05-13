@@ -44,7 +44,7 @@ const StosListBoss = () => {
 
   const postsPerPage = 14
 
-  const { navigateWithQueryParams } = useSaveFilter(search)
+  const { navigateWithQueryParams, searchParamsToUrl } = useSaveFilter(search)
 
   const paginate = (pageNumber) => {
     navigateWithQueryParams(`/stoboss/list/${pageNumber}`)
@@ -134,6 +134,7 @@ const StosListBoss = () => {
                       settings={settings}
                       num={num}
                       organization={organizations.find((item) => item.id === it.organizationId)}
+                      filterSearch={searchParamsToUrl}
                     />
                   ))
                 : null}

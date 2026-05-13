@@ -40,7 +40,7 @@ const ShinomontazhsListBoss = () => {
 
   const postsPerPage = 14
 
-  const { navigateWithQueryParams } = useSaveFilter(search)
+  const { navigateWithQueryParams, searchParamsToUrl } = useSaveFilter(search)
 
   const paginate = (pageNumber) => {
     navigateWithQueryParams(`/shinomontazhboss/list/${pageNumber}`)
@@ -128,6 +128,7 @@ const ShinomontazhsListBoss = () => {
                       settings={settings}
                       num={num}
                       organization={organizations.find((item) => item.id === it.organizationId)}
+                      filterSearch={searchParamsToUrl}
                     />
                   ))
                 : null}
