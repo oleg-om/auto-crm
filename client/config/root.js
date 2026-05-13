@@ -134,31 +134,41 @@ const PrivateRoute = ({ component: Component, ...rest }) => {
 
 const AdminRoute = ({ component: Component, ...rest }) => {
   const auth = useSelector((s) => s.auth)
-  const func = (props) =>
-    !!auth.user && !!auth.token && !!auth.roles.includes('admin') ? (
+  const authLoaded = auth.token && auth.user && Object.keys(auth.user).length > 0
+  const func = (props) => {
+    if (!auth.token) return <Redirect to={{ pathname: '/login' }} />
+    if (!authLoaded)
+      return (
+        <div className="flex justify-center items-center min-h-screen">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-gray-900" />
+        </div>
+      )
+    return auth.roles.includes('admin') ? (
       <Component {...props} />
     ) : (
-      <Redirect
-        to={{
-          pathname: '/access'
-        }}
-      />
+      <Redirect to={{ pathname: '/access' }} />
     )
+  }
   return <Route {...rest} render={func} />
 }
 
 const BossRoute = ({ component: Component, ...rest }) => {
   const auth = useSelector((s) => s.auth)
-  const func = (props) =>
-    !!auth.user && !!auth.token && !!auth.roles.includes('boss') ? (
+  const authLoaded = auth.token && auth.user && Object.keys(auth.user).length > 0
+  const func = (props) => {
+    if (!auth.token) return <Redirect to={{ pathname: '/login' }} />
+    if (!authLoaded)
+      return (
+        <div className="flex justify-center items-center min-h-screen">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-gray-900" />
+        </div>
+      )
+    return auth.roles.includes('boss') ? (
       <Component {...props} />
     ) : (
-      <Redirect
-        to={{
-          pathname: '/access'
-        }}
-      />
+      <Redirect to={{ pathname: '/access' }} />
     )
+  }
   return <Route {...rest} render={func} />
 }
 
