@@ -45,7 +45,7 @@ export const GroupSwitch = ({
           <button
             type="button"
             className={`px-4 py-2 text-sm font-medium focus:outline-none ${
-              group === 1 ? 'border-b-2 border-blue-500 text-blue-600' : 'text-gray-600'
+              group === 1 ? 'border-b-2 border-main-500 text-main-600' : 'text-gray-600'
             }`}
             onClick={() => onChangeGroup(1)}
           >
@@ -75,7 +75,7 @@ export const GroupSwitch = ({
           <button
             type="button"
             className={`px-4 py-2 ml-2 text-sm font-medium focus:outline-none ${
-              group === 2 ? 'border-b-2 border-blue-500 text-blue-600' : 'text-gray-600'
+              group === 2 ? 'border-b-2 border-main-500 text-main-600' : 'text-gray-600'
             }`}
             onClick={() => onChangeGroup(2)}
           >
