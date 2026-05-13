@@ -12,6 +12,7 @@ import {
 } from '../../redux/reducers/sto.prices'
 import Navbar from '../../components/Navbar'
 import OnLoad from '../Categorys/Onload'
+import StoPricesDonwload from './Sto.prices.donwload'
 
 const StopriceNew = () => {
   OnLoad()
@@ -58,6 +59,7 @@ const StopriceNew = () => {
           >
             Загрузить из Excel
           </button>
+          <StoPricesDonwload />
         </div>
         {typeOfLoad === 'single' ? (
           <div>

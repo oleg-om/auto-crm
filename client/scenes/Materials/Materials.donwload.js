@@ -1,6 +1,6 @@
 import React from 'react'
 import { useSelector } from 'react-redux'
-import XLSX from 'xlsx'
+import * as XLSX from 'xlsx'
 import cx from 'classnames'
 import { deleteKeys } from '../Shinomotazh.prices/Shinomontazh.prices.donwload'
 

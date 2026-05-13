@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { useHistory } from 'react-router-dom'
 import { toast } from 'react-toastify'
-import XLSX from 'xlsx'
+import * as XLSX from 'xlsx'
 import 'react-toastify/dist/ReactToastify.css'
 import LoadExample from './load.example'
 import Modal from '../Modal.delete'
