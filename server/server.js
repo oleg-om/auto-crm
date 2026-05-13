@@ -20,6 +20,15 @@ import User from './model/User.model'
 import Message from './model/Message.model'
 import Html from '../client/html'
 
+let appVersion = 'dev'
+try {
+  // Written by webpack at build time; not present in local dev
+  // eslint-disable-next-line import/no-unresolved
+  appVersion = require('../dist/assets/version.json').version
+} catch (e) {
+  // local dev — no version.json
+}
+
 const { createProxyMiddleware } = require('http-proxy-middleware')
 
 const taskRoutes = require('./routes/api/task.routes')
@@ -287,6 +296,7 @@ server.use('/api/', (req, res) => {
 
 const [htmlStart, htmlEnd] = Html({
   body: 'separator',
+  version: appVersion,
   title: 'Skillcrucial - Become an IT HERO'
 }).split('separator')
 
@@ -308,6 +318,7 @@ server.get('/*', (req, res) => {
   return res.send(
     Html({
       body: '',
+      version: appVersion,
       initialState
     })
   )

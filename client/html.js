@@ -1,4 +1,4 @@
-const Html = ({ body }) => {
+const Html = ({ body, version = 'dev' }) => {
   return `
   <!DOCTYPE html>
   <html>
@@ -14,7 +14,7 @@ const Html = ({ body }) => {
     </head>
     <body>
       <div id="root">${body}</div>
-      <script type="text/javascript" src="/js/main.bundle.js?v=COMMITHASH"></script>
+      <script type="text/javascript" src="/js/main.bundle.js?v=${version}"></script>
     </body>
   </html>
 `

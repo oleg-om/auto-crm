@@ -200,6 +200,20 @@ const config = {
       chunkFilename: 'css/[id].css',
       ignoreOrder: false
     }),
+    // Emit version.json so the Node server can read the actual build version at runtime
+    {
+      apply(compiler) {
+        compiler.hooks.emit.tapAsync('VersionPlugin', (compilation, callback) => {
+          const content = JSON.stringify({ version })
+          // eslint-disable-next-line no-param-reassign
+          compilation.assets['version.json'] = {
+            source: () => content,
+            size: () => content.length
+          }
+          callback()
+        })
+      }
+    },
     new webpack.DefinePlugin(
       Object.keys(process.env).reduce(
         (res, key) => ({ ...res, [key]: JSON.stringify(process.env[key]) }),
