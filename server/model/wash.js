@@ -99,4 +99,6 @@ const Wash = new mongoose.Schema({
 
 Wash.plugin(AutoIncrement, { inc_field: 'id_washs' })
 
+Wash.index({ dateFinish: -1 })
+
 module.exports = mongoose.model('washs', Wash)

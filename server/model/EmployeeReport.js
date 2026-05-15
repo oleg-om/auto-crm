@@ -28,4 +28,6 @@ const EmployeeReport = new mongoose.Schema({
   }
 })
 
+EmployeeReport.index({ employeeId: 1, month: 1 })
+
 module.exports = mongoose.model('employee_report', EmployeeReport)

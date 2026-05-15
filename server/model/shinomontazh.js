@@ -156,4 +156,7 @@ Shinomontazh.index({ dateStart: -1 })
 // Индекс для поиска по месту
 Shinomontazh.index({ place: 1, dateStart: -1 })
 
+// Индекс для запросов по месяцу (getMonth)
+Shinomontazh.index({ dateFinish: -1 })
+
 module.exports = mongoose.model('shinomontazhs', Shinomontazh)

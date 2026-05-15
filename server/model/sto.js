@@ -146,4 +146,6 @@ const Sto = new mongoose.Schema({
 
 Sto.plugin(AutoIncrement, { inc_field: 'id_stos' })
 
+Sto.index({ dateFinish: -1 })
+
 module.exports = mongoose.model('stos', Sto)

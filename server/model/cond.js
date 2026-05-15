@@ -137,4 +137,6 @@ const Cond = new mongoose.Schema({
 
 Cond.plugin(AutoIncrement, { inc_field: 'id_conds' })
 
+Cond.index({ dateFinish: -1 })
+
 module.exports = mongoose.model('conds', Cond)

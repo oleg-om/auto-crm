@@ -129,4 +129,6 @@ const Window = new mongoose.Schema({
 
 Window.plugin(AutoIncrement, { inc_field: 'id_windows' })
 
+Window.index({ dateFinish: -1 })
+
 module.exports = mongoose.model('windows', Window)

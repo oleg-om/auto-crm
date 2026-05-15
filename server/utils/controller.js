@@ -3,57 +3,53 @@ const EmployeeReport = require('../model/EmployeeReport')
 const getBasicMonth = async (req, res, Model) => {
   try {
     const { month, year } = req.query
+    const monthNum = parseInt(month, 10)
+    const yearNum = parseInt(year, 10)
+    const monthPadded = month.padStart(2, '0')
 
-    // 1. Получаем все записи Shinomontazh за указанный месяц
-    const shinomontazhList = await Model.find({
-      $expr: {
-        $and: [
-          { $eq: [{ $year: '$dateFinish' }, Number(year)] },
-          { $eq: [{ $month: '$dateFinish' }, Number(month)] }
-        ]
-      }
+    const nextMonthNum = monthNum === 12 ? 1 : monthNum + 1
+    const nextYearNum = monthNum === 12 ? yearNum + 1 : yearNum
+    const nextMonthPadded = nextMonthNum.toString().padStart(2, '0')
+
+    const startDate = new Date(`${year}-${monthPadded}-01T00:00:00.000Z`)
+    const endDate = new Date(`${nextYearNum}-${nextMonthPadded}-01T00:00:00.000Z`)
+
+    const recordList = await Model.find({
+      dateFinish: { $gte: startDate, $lt: endDate }
     })
 
-    // 2. Для каждой записи обрабатываем массив employee
-    const enhancedList = await Promise.all(
-      shinomontazhList.map(async (record) => {
-        // 3. Обрабатываем каждого сотрудника в массиве
-        const enhancedEmployees = await Promise.all(
-          record.employee.map(async (emp) => {
-            // 4. Ищем соответствующие записи в EmployeeReport
-            const reports = await EmployeeReport.find({
-              employeeId: emp.id, // или emp.employeeId, в зависимости от структуры
-              month: `${month.padStart(2, '0')}.${year}`
-            })
+    const allEmployeeIds = [
+      ...new Set(recordList.flatMap((record) => record.employee.map((emp) => emp.id).filter(Boolean)))
+    ]
 
-            // предыдущий месяц
-            const currentMonth = parseInt(month, 10)
-            const currentYear = parseInt(year, 10)
+    const prevMonthNum = monthNum === 1 ? 12 : monthNum - 1
+    const prevMonthYear = monthNum === 1 ? yearNum - 1 : yearNum
+    const currentMonthStr = `${monthPadded}.${year}`
+    const prevMonthStr = `${prevMonthNum.toString().padStart(2, '0')}.${prevMonthYear}`
 
-            const prevMonthNum = currentMonth === 1 ? 12 : currentMonth - 1
-            const prevMonthYear = currentMonth === 1 ? currentYear - 1 : currentYear
+    const [currentMonthReports, prevMonthReports] = await Promise.all([
+      EmployeeReport.find({ employeeId: { $in: allEmployeeIds }, month: currentMonthStr }),
+      EmployeeReport.find({ employeeId: { $in: allEmployeeIds }, month: prevMonthStr })
+    ])
 
-            const prevMonthReports = await EmployeeReport.find({
-              employeeId: emp.id, // или emp.employeeId, в зависимости от структуры
-              month: `${prevMonthNum.toString().padStart(2, '0')}.${prevMonthYear}`
-            })
+    const groupById = (reports) =>
+      reports.reduce((acc, r) => {
+        if (!acc[r.employeeId]) acc[r.employeeId] = []
+        acc[r.employeeId].push(r)
+        return acc
+      }, {})
 
-            // 5. Возвращаем сотрудника с дополненными данными
-            return {
-              ...(emp.toObject ? emp.toObject() : emp),
-              data: reports,
-              prevMonthData: prevMonthReports
-            }
-          })
-        )
+    const currentById = groupById(currentMonthReports)
+    const prevById = groupById(prevMonthReports)
 
-        // 6. Возвращаем запись с обновленным массивом employee
-        return {
-          ...record.toObject(),
-          employee: enhancedEmployees
-        }
-      })
-    )
+    const enhancedList = recordList.map((record) => ({
+      ...record.toObject(),
+      employee: record.employee.map((emp) => ({
+        ...(emp.toObject ? emp.toObject() : emp),
+        data: currentById[emp.id] || [],
+        prevMonthData: prevById[emp.id] || []
+      }))
+    }))
 
     return res.json({ status: 'ok', data: enhancedList })
   } catch (error) {
