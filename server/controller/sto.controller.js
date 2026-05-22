@@ -1,6 +1,7 @@
 const Sto = require('../model/sto')
 const Customer = require('../model/customer')
-const { getBasicMonth } = require('../utils/controller')
+const { getBasicMonth, getMonthForPreentry: findPreentryByCalendarDay } = require('../utils/controller')
+const { caseInsensitiveRegex } = require('../utils/regex')
 
 exports.getAll = async (req, res) => {
   const list = await Sto.find({})
@@ -102,7 +103,7 @@ exports.getFiltered = async (req, res) => {
       query.place = place.toString()
     }
     if (req.query.reg) {
-      query.regnumber = { $regex: reg.toString(), $options: 'i' }
+      query.regnumber = caseInsensitiveRegex(reg)
     }
     if (req.query.employee) {
       query['employee.id'] = employee.toString()
@@ -133,38 +134,8 @@ exports.getMonth = async (req, res) => {
 }
 
 exports.getMonthForPreentry = async (req, res) => {
-  // eslint-disable-next-line no-unused-vars
-  const { year, month, day, isOil } = req.query
-
-  const isOilFilter = isOil
-    ? {
-        isOil: true
-      }
-    : {}
-
-  const list = await Sto.find({
-    ...isOilFilter,
-    $expr: {
-      $or: [
-        {
-          $and: [
-            { $eq: [{ $year: '$dateStart' }, Number(year)] },
-            { $eq: [{ $month: '$dateStart' }, Number(month)] },
-            { $eq: [{ $dayOfMonth: '$dateStart' }, Number(day)] }
-          ]
-        },
-        {
-          $and: [
-            { $eq: [{ $year: '$datePreentry' }, Number(year)] },
-            { $eq: [{ $month: '$datePreentry' }, Number(month)] },
-            { $eq: [{ $dayOfMonth: '$datePreentry' }, Number(day)] }
-          ]
-        }
-      ]
-    }
-  })
-
-  return res.json({ status: 'ok', data: list })
+  const extraFilter = req.query.isOil ? { isOil: true } : {}
+  return findPreentryByCalendarDay(req, res, Sto, extraFilter)
 }
 
 exports.getRange = async (req, res) => {

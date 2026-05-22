@@ -1,4 +1,5 @@
 const Autopart = require('../model/autoparts')
+const { caseInsensitiveRegex } = require('../utils/regex')
 
 exports.getAll = async (req, res) => {
   const list = await Autopart.find({})
@@ -45,9 +46,7 @@ exports.getFiltered = async (req, res) => {
           }
         : {}
 
-    const processField = req.query.process
-      ? { process: { $regex: `${process.toString()}`, $options: 'i' } }
-      : {}
+    const processField = req.query.process ? { process: caseInsensitiveRegex(process) } : {}
 
     const total = await Autopart.countDocuments({
       id_autoparts: req.query.number ? number : { $exists: true },
@@ -57,8 +56,8 @@ exports.getFiltered = async (req, res) => {
           ? `${decodeURIComponent(status).toString()}`
           : { $exists: true },
       ...processField,
-      phone: req.query.phone ? { $regex: `${phone.toString()}`, $options: 'i' } : { $exists: true },
-      regnumber: req.query.reg ? { $regex: `${reg.toString()}`, $options: 'i' } : { $exists: true },
+      phone: req.query.phone ? caseInsensitiveRegex(phone) : { $exists: true },
+      regnumber: req.query.reg ? caseInsensitiveRegex(reg) : { $exists: true },
       ...orderStatField
     })
 
@@ -71,8 +70,8 @@ exports.getFiltered = async (req, res) => {
           ? `${decodeURIComponent(status).toString()}`
           : { $exists: true },
       ...processField,
-      phone: req.query.phone ? { $regex: `${phone.toString()}`, $options: 'i' } : { $exists: true },
-      regnumber: req.query.reg ? { $regex: `${reg.toString()}`, $options: 'i' } : { $exists: true },
+      phone: req.query.phone ? caseInsensitiveRegex(phone) : { $exists: true },
+      regnumber: req.query.reg ? caseInsensitiveRegex(reg) : { $exists: true },
       ...orderStatField
 
       // {
@@ -127,7 +126,7 @@ exports.getMonth = async (req, res) => {
   const { yearmonth } = req.query
 
   const list = await Autopart.find({
-    'order.come': { $regex: `${yearmonth.toString()}`, $options: 'i' }
+    'order.come': caseInsensitiveRegex(yearmonth)
   })
 
   return res.json({ status: 'ok', data: list })

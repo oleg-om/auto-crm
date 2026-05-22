@@ -1,5 +1,6 @@
 /* eslint-disable no-unused-vars */
 const Storage = require('../model/storage')
+const { caseInsensitiveRegex } = require('../utils/regex')
 
 exports.getAll = async (req, res) => {
   const list = await Storage.find({})
@@ -62,14 +63,14 @@ exports.getFiltered = async (req, res) => {
       id_storages: req.query.number ? `${number.toString()}` : { $exists: true },
       place: req.query.place ? `${place.toString()}` : { $exists: true },
       status: req.query.status ? `${status.toString()}` : { $exists: true },
-      phone: req.query.phone ? { $regex: `${phone.toString()}`, $options: 'i' } : { $exists: true }
+      phone: req.query.phone ? caseInsensitiveRegex(phone) : { $exists: true }
     })
 
     const posts = await Storage.find({
       id_storages: req.query.number ? `${number.toString()}` : { $exists: true },
       place: req.query.place ? `${place.toString()}` : { $exists: true },
       status: req.query.status ? `${status.toString()}` : { $exists: true },
-      phone: req.query.phone ? { $regex: `${phone.toString()}`, $options: 'i' } : { $exists: true }
+      phone: req.query.phone ? caseInsensitiveRegex(phone) : { $exists: true }
     })
       .sort({ id_storages: -1 })
       .limit(LIMIT)

@@ -1,4 +1,21 @@
 const EmployeeReport = require('../model/EmployeeReport')
+const { buildPreentryDateExpr } = require('./dateQuery')
+
+const getMonthForPreentry = async (req, res, Model, extraFilter = {}) => {
+  try {
+    const { year, month, day } = req.query
+    const dateExpr = buildPreentryDateExpr(year, month, day)
+    if (!dateExpr) {
+      return res.json({ status: 'ok', data: [] })
+    }
+
+    const list = await Model.find({ ...extraFilter, ...dateExpr })
+    return res.json({ status: 'ok', data: list })
+  } catch (error) {
+    console.error('Error in getMonthForPreentry:', error)
+    return res.status(500).json({ status: 'error', message: error.message })
+  }
+}
 
 const getBasicMonth = async (req, res, Model) => {
   try {
@@ -58,4 +75,4 @@ const getBasicMonth = async (req, res, Model) => {
   }
 }
 
-module.exports = { getBasicMonth }
+module.exports = { getBasicMonth, getMonthForPreentry }

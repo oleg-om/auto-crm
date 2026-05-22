@@ -1,4 +1,5 @@
 const Tyre = require('../model/tyres')
+const { caseInsensitiveRegex } = require('../utils/regex')
 
 exports.getAll = async (req, res) => {
   const list = await Tyre.find({})
@@ -126,9 +127,7 @@ exports.getFiltered = async (req, res) => {
       ? { status: `${decodeURIComponent(status).toString()}` }
       : {}
     const vinFind = req.query.vin ? { vinnumber: `${vin.toString()}` } : {}
-    const phoneFind = req.query.phone
-      ? { phone: { $regex: `${phone.toString()}`, $options: 'i' } }
-      : {}
+    const phoneFind = req.query.phone ? { phone: caseInsensitiveRegex(phone) } : {}
     const fromOrderDeskFilter =
       fromOrderDesk === 'true'
         ? { fromOrderDesk: true }
@@ -204,7 +203,7 @@ exports.getMonth = async (req, res) => {
   const { yearmonth } = req.query
 
   const list = await Tyre.find({
-    'order.come': { $regex: `${yearmonth.toString()}`, $options: 'i' }
+    'order.come': caseInsensitiveRegex(yearmonth)
   })
 
   return res.json({ status: 'ok', data: list })

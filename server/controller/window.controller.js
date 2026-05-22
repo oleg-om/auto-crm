@@ -1,5 +1,6 @@
 const Window = require('../model/window')
-const { getBasicMonth } = require('../utils/controller')
+const { getBasicMonth, getMonthForPreentry: findPreentryByCalendarDay } = require('../utils/controller')
+const { caseInsensitiveRegex } = require('../utils/regex')
 
 exports.getAll = async (req, res) => {
   const list = await Window.find({ dateStart: { $exists: true } })
@@ -86,7 +87,7 @@ exports.getFiltered = async (req, res) => {
       query.place = place.toString()
     }
     if (req.query.reg) {
-      query.regnumber = { $regex: reg.toString(), $options: 'i' }
+      query.regnumber = caseInsensitiveRegex(reg)
     }
     if (req.query.status) {
       query.status = status.toString()
@@ -111,33 +112,7 @@ exports.getMonth = async (req, res) => {
   return getBasicMonth(req, res, Window)
 }
 
-exports.getMonthForPreentry = async (req, res) => {
-  // eslint-disable-next-line no-unused-vars
-  const { year, month, day } = req.query
-
-  const list = await Window.find({
-    $expr: {
-      $or: [
-        {
-          $and: [
-            { $eq: [{ $year: '$dateStart' }, Number(year)] },
-            { $eq: [{ $month: '$dateStart' }, Number(month)] },
-            { $eq: [{ $dayOfMonth: '$dateStart' }, Number(day)] }
-          ]
-        },
-        {
-          $and: [
-            { $eq: [{ $year: '$datePreentry' }, Number(year)] },
-            { $eq: [{ $month: '$datePreentry' }, Number(month)] },
-            { $eq: [{ $dayOfMonth: '$datePreentry' }, Number(day)] }
-          ]
-        }
-      ]
-    }
-  })
-
-  return res.json({ status: 'ok', data: list })
-}
+exports.getMonthForPreentry = async (req, res) => findPreentryByCalendarDay(req, res, Window)
 
 exports.getRange = async (req, res) => {
   const { month, year, secMonth, secYear } = req.query

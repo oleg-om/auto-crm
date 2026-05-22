@@ -1,4 +1,5 @@
 const Razval = require('../model/razval')
+const { caseInsensitiveRegex } = require('../utils/regex')
 
 exports.getAll = async (req, res) => {
   const list = await Razval.find({})
@@ -33,7 +34,7 @@ exports.getMonth = async (req, res) => {
   const { yearmonth } = req.query
 
   const list = await Razval.find({
-    date: { $regex: `${yearmonth.toString()}`, $options: 'i' }
+    date: caseInsensitiveRegex(yearmonth)
   })
 
   return res.json({ status: 'ok', data: list })

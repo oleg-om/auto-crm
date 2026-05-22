@@ -1,4 +1,5 @@
 const Tool = require('../model/tools')
+const { caseInsensitiveRegex } = require('../utils/regex')
 
 exports.getAll = async (req, res) => {
   const list = await Tool.find({})
@@ -58,7 +59,7 @@ exports.getFiltered = async (req, res) => {
       place: req.query.place ? `${place.toString()}` : { $exists: true },
       status: req.query.status ? `${decodeURIComponent(status).toString()}` : { $exists: true },
       process: req.query.process ? `${process.toString()}` : { $exists: true },
-      phone: req.query.phone ? { $regex: `${phone.toString()}`, $options: 'i' } : { $exists: true }
+      phone: req.query.phone ? caseInsensitiveRegex(phone) : { $exists: true }
     })
 
     const posts = await Tool.find({
@@ -67,7 +68,7 @@ exports.getFiltered = async (req, res) => {
       place: req.query.place ? `${place.toString()}` : { $exists: true },
       status: req.query.status ? `${decodeURIComponent(status).toString()}` : { $exists: true },
       process: req.query.process ? `${process.toString()}` : { $exists: true },
-      phone: req.query.phone ? { $regex: `${phone.toString()}`, $options: 'i' } : { $exists: true }
+      phone: req.query.phone ? caseInsensitiveRegex(phone) : { $exists: true }
       // {
       //   process: req.query.process ? `${process.toString()}` : 'smth'
       // },
@@ -120,7 +121,7 @@ exports.getMonth = async (req, res) => {
   const { yearmonth } = req.query
 
   const list = await Tool.find({
-    'order.come': { $regex: `${yearmonth.toString()}`, $options: 'i' }
+    'order.come': caseInsensitiveRegex(yearmonth)
   })
 
   return res.json({ status: 'ok', data: list })

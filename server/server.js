@@ -60,6 +60,9 @@ const employeeReportRoutes = require('./routes/api/employeeReport.routes')
 const positionRoutes = require('./routes/api/position.routes')
 const journalEntryRoutes = require('./routes/api/journalEntry.routes')
 const organizationRoutes = require('./routes/api/organization.routes')
+const { errorHandler, registerProcessHandlers } = require('./middleware/errorHandler')
+
+registerProcessHandlers()
 
 const Root = () => ''
 
@@ -323,6 +326,8 @@ server.get('/*', (req, res) => {
     })
   )
 })
+
+server.use(errorHandler)
 
 serve.listen(port)
 

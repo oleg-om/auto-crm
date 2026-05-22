@@ -7,10 +7,7 @@ const Shinomontazh = require('../model/shinomontazh')
 const Autopart = require('../model/autoparts')
 const Tyre = require('../model/tyres')
 const Tool = require('../model/tools')
-
-function escapeRegex(str) {
-  return String(str).replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
-}
+const { escapeRegex, caseInsensitiveRegex } = require('../utils/regex')
 
 function legacyOrderMatchConditions(customer) {
   const parts = []
@@ -101,32 +98,28 @@ exports.getOne = async (req, res) => {
 }
 
 exports.getByFind = async (req, res) => {
-  // function fixedEncodeURIComponent(str) {
-  //   return encodeURIComponent(str).replace(/[!'()*]/g, function(c) {
-  //     return '%' + c.charCodeAt(0).toString(16);
-  //   });
-  // }
-  // const phone =
-  // .replace(/brl/g, '(')
-  // .replace(/brr/g, ')')
-  // .replace(/pl/g, '+')
-  const regString =
-    req.params.regnumber && req.params.regnumber !== 'reg'
-      ? { regnumber: { $regex: req.params.regnumber, $options: 'i' } }
-      : null
-  const vinString =
-    req.params.vinnumber && req.params.vinnumber !== 'vin'
-      ? { vinnumber: { $regex: req.params.vinnumber, $options: 'i' } }
-      : null
-  const phoneString =
-    req.params.phone && req.params.phone !== 'phone'
-      ? { phone: { $regex: req.params.phone, $options: 'i' } }
-      : null
+  try {
+    const regString =
+      req.params.regnumber && req.params.regnumber !== 'reg'
+        ? { regnumber: caseInsensitiveRegex(req.params.regnumber) }
+        : null
+    const vinString =
+      req.params.vinnumber && req.params.vinnumber !== 'vin'
+        ? { vinnumber: caseInsensitiveRegex(req.params.vinnumber) }
+        : null
+    const phoneString =
+      req.params.phone && req.params.phone !== 'phone'
+        ? { phone: caseInsensitiveRegex(req.params.phone) }
+        : null
 
-  const customer = await Customer.find({
-    $and: [regString, vinString, phoneString].filter((it) => it)
-  })
-  return res.json({ status: 'ok', data: customer })
+    const filters = [regString, vinString, phoneString].filter((it) => it)
+    const customer =
+      filters.length > 0 ? await Customer.find({ $and: filters }) : await Customer.find({}).limit(0)
+
+    return res.json({ status: 'ok', data: customer })
+  } catch (error) {
+    return res.status(500).json({ status: 'error', message: error.message })
+  }
 }
 
 exports.update = async (req, res) => {
@@ -162,13 +155,13 @@ exports.getFiltered = async (req, res) => {
     if (hasTextFilters) {
       const orConditions = []
       if (phone) {
-        orConditions.push({ phone: { $regex: phone.toString(), $options: 'i' } })
+        orConditions.push({ phone: caseInsensitiveRegex(phone) })
       }
       if (vin) {
-        orConditions.push({ vinnumber: { $regex: vin.toString(), $options: 'i' } })
+        orConditions.push({ vinnumber: caseInsensitiveRegex(vin) })
       }
       if (reg) {
-        orConditions.push({ regnumber: { $regex: reg.toString(), $options: 'i' } })
+        orConditions.push({ regnumber: caseInsensitiveRegex(reg) })
       }
       if (orConditions.length > 0) {
         andConditions.push({ $or: orConditions })

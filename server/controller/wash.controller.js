@@ -1,5 +1,6 @@
 const Wash = require('../model/wash')
 const { getBasicMonth } = require('../utils/controller')
+const { caseInsensitiveRegex } = require('../utils/regex')
 
 exports.getAll = async (req, res) => {
   const list = await Wash.find({})
@@ -77,7 +78,7 @@ exports.getFiltered = async (req, res) => {
       query.place = place.toString()
     }
     if (req.query.reg) {
-      query.regnumber = { $regex: reg.toString(), $options: 'i' }
+      query.regnumber = caseInsensitiveRegex(reg)
     }
     if (req.query.status) {
       query.status = status.toString()

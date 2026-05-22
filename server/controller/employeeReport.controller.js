@@ -1,4 +1,5 @@
 const EmployeeReport = require('../model/EmployeeReport')
+const { caseInsensitiveRegex } = require('../utils/regex')
 
 exports.getAll = async (req, res) => {
   const list = await EmployeeReport.find({})
@@ -21,7 +22,7 @@ exports.getMonth = async (req, res) => {
   const { yearmonth } = req.query
 
   const list = await EmployeeReport.find({
-    date: { $regex: `${yearmonth.toString()}`, $options: 'i' }
+    date: caseInsensitiveRegex(yearmonth)
   })
 
   return res.json({ status: 'ok', data: list })

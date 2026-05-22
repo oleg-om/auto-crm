@@ -1,12 +1,13 @@
 const express = require('express')
 const customerController = require('../../controller/customer.controller')
+const { asyncRoute } = require('../../utils/asyncRoute')
 
 const router = express.Router()
 
 router.get('/customer/', customerController.getAll)
 router.get('/customer/:id/history', customerController.getHistory)
 router.get('/customer/:id', customerController.getOne)
-router.get('/customerfind/:regnumber/:vinnumber/:phone', customerController.getByFind)
+router.get('/customerfind/:regnumber/:vinnumber/:phone', asyncRoute(customerController.getByFind))
 router.get('/customerbypage/:page', customerController.getByPage)
 router.get('/customerfilter/', customerController.getFiltered)
 router.post('/customer/', customerController.create)
