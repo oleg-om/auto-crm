@@ -63,7 +63,7 @@ const DiskpaintingsListBoss = () => {
     )
   }
 
-  const filters = ['number', 'place', 'regnumber', 'employee', 'status', 'organization']
+  const filters = ['number', 'place', 'regnumber', 'status']
 
   return (
     <div>
