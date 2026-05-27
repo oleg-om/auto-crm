@@ -653,6 +653,7 @@ const Salary = ({
   const checkIsWash = active.includes('wash-')
   const checkIsCond = active.includes('cond-')
   const checkIsWindow = active.includes('window-')
+  const checkIsDiskpainting = active.includes('diskpainting-')
 
   const getLinkToWork = (it) => {
     if (checkIsShinomontazh) {
@@ -669,6 +670,9 @@ const Salary = ({
     }
     if (checkIsWindow) {
       return `/window/edit/${it.id_windows}`
+    }
+    if (checkIsDiskpainting) {
+      return `/diskpaintingboss/edit/${it.id_diskpaintings}`
     }
     return null
   }
@@ -688,6 +692,9 @@ const Salary = ({
     }
     if (checkIsWindow) {
       return it.id_windows
+    }
+    if (checkIsDiskpainting) {
+      return it.id_diskpaintings
     }
     return null
   }

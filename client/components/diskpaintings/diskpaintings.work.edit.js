@@ -74,7 +74,8 @@ const DiskpaintingsEdit = (props) => {
         ? props.beznalPaid
         : new Date(props.beznalPaid).toISOString()
       : null,
-    organizationId: props.organizationId || null
+    organizationId: props.organizationId || null,
+    talon: props.id_diskpaintings
   })
 
   const [box, setBox] = useState(props.box ? props.box : '')
@@ -496,6 +497,7 @@ const DiskpaintingsEdit = (props) => {
             showBeznalPaid
             organizations={organizations}
             customerId={activeCustomer || props.customerId || null}
+            hideTyresCheckbox
           />
         </div>
       </div>

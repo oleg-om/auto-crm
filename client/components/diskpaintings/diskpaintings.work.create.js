@@ -658,6 +658,7 @@ const DiskpaintingsCreate = (props) => {
             showBeznalPaid
             organizations={organizations}
             customerId={activeCustomer || props.customerId || null}
+            hideTyresCheckbox
           />
         </div>
       </div>

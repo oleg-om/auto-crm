@@ -48,6 +48,9 @@ const Shinomontazh = ({
       if (active.includes('window-')) {
         return 'windowmonth'
       }
+      if (active.includes('diskpainting-')) {
+        return 'diskpaintingmonth'
+      }
       return 'washmonth'
     }
 
@@ -67,6 +70,9 @@ const Shinomontazh = ({
         }
         if (active.includes('window-')) {
           return 'windowrange'
+        }
+        if (active.includes('diskpainting-')) {
+          return 'diskpaintingrange'
         }
         return 'washrange'
       }
@@ -310,7 +316,9 @@ const Shinomontazh = ({
       active === 'window-buh' ||
       active === 'window-kassa' ||
       active === 'cond-buh' ||
-      active === 'cond-kassa' ? (
+      active === 'cond-kassa' ||
+      active === 'diskpainting-buh' ||
+      active === 'diskpainting-kassa' ? (
         <div className={cx('block', {})}>
           {isLoaded ? null : loading()}
           {report && isLoaded ? (

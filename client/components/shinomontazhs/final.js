@@ -28,7 +28,8 @@ const Final = ({
   groupCount,
   showBeznalPaid = false,
   organizations = [],
-  customerId = null
+  customerId = null,
+  hideTyresCheckbox = false
 }) => {
   const [showOrgModal, setShowOrgModal] = useState(false)
   const [customerOrganization, setCustomerOrganization] = useState(null)
@@ -483,7 +484,7 @@ const Final = ({
           </div>
         </div>
       ) : null}
-      <div className="flex flex-row mt-3">
+      <div className={hideTyresCheckbox ? 'hidden' : 'flex flex-row mt-3'}>
         <button
           className={cx('mb-3 flex flex-row rounded bg-gray-200 w-full text-lg', {
             'bg-green-200 hover:bg-green-300': tyres?.sale === 'yes',

@@ -12,7 +12,7 @@ const Autoparts = React.lazy(() => import('./Autoparts/wrapper'))
 const ReportTab = ({ active, onChangeTab, tab }) => {
   const { value, name } = tab
   return (
-    <div className="w-1/5 p-2">
+    <div className="w-1/6 p-2">
       <button
         type="button"
         className={cx('p-4 bg-gray-200 rounded w-full h-full overflow-hidden', {
@@ -33,7 +33,8 @@ let KASSA_TABS = [
   { name: 'СТО (касса)', value: 'sto-kassa' },
   { name: 'Мойка (касса)', value: 'wash-kassa' },
   { name: 'Стекла (касса)', value: 'window-kassa' },
-  { name: 'Кондиционеры (касса)', value: 'cond-kassa' }
+  { name: 'Кондиционеры (касса)', value: 'cond-kassa' },
+  { name: 'Покраска дисков (касса)', value: 'diskpainting-kassa' }
 ]
 
 let BUH_TABS = [
@@ -41,7 +42,8 @@ let BUH_TABS = [
   { name: 'СТО (бухгалтерия)', value: 'sto-buh' },
   { name: 'Мойка (бухгалтерия)', value: 'wash-buh' },
   { name: 'Стекла (бухгалтерия)', value: 'window-buh' },
-  { name: 'Кондиционеры (бухгалтерия)', value: 'cond-buh' }
+  { name: 'Кондиционеры (бухгалтерия)', value: 'cond-buh' },
+  { name: 'Покраска дисков (бухгалтерия)', value: 'diskpainting-buh' }
 ]
 
 let MATERIAL_TABS = [
@@ -49,7 +51,8 @@ let MATERIAL_TABS = [
   { name: 'СТО (материалы)', value: 'sto-material' },
   { name: 'Мойка (материалы)', value: 'wash-material' },
   { name: 'Стекла (материалы)', value: 'window-material' },
-  { name: 'Кондиционеры (материалы)', value: 'cond-material' }
+  { name: 'Кондиционеры (материалы)', value: 'cond-material' },
+  { name: 'Покраска дисков (материалы)', value: 'diskpainting-material' }
 ]
 
 let PRODUCT_TABS = [
