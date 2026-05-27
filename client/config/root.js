@@ -102,6 +102,14 @@ import WindowpriceEdit from '../scenes/Window.prices/Window.prices.edit'
 import WindowsList from '../scenes/Window/Windows.list'
 import WindowsNew from '../scenes/Window/Windows.work.create'
 import WindowEditFull from '../scenes/Window/Windows.edit'
+
+import DiskpaintingpriceList from '../scenes/Diskpainting.prices/Diskpainting.prices.list'
+import DiskpaintingpriceNew from '../scenes/Diskpainting.prices/Diskpainting.prices.create'
+import DiskpaintingpriceEdit from '../scenes/Diskpainting.prices/Diskpainting.prices.edit'
+import DiskpaintingsList from '../scenes/Diskpaintings/Diskpaintings.list'
+import DiskpaintingsListBoss from '../scenes/Diskpaintings/Diskpaintings.list.boss'
+import DiskpaintingsNew from '../scenes/Diskpaintings/Diskpaintings.work.create'
+import DiskpaintingEditFull from '../scenes/Diskpaintings/Diskpaintings.edit'
 import OilList from '../scenes/Razval/Oil.list'
 import ElectronicJournal from '../components/positions/ElectronicJournal'
 import EmployeeJournal from '../components/journal/EmployeeJournal'
@@ -443,6 +451,25 @@ const RootComponent = (props) => {
             <PrivateRoute exact path="/cond/edit/:id" component={WindowEditFull} />
             <PrivateRoute exact path="/condboss/edit/:id/:num" component={WindowEditFull} />
             <PrivateRoute exact path="/condboss/edit/:id" component={WindowEditFull} />
+
+            {/* diskpainting */}
+            <PrivateRoute exact path="/diskpaintingprice/list/" component={DiskpaintingpriceList} />
+            <PrivateRoute exact path="/diskpaintingprice/list/:type" component={DiskpaintingpriceList} />
+            <PrivateRoute exact path="/diskpaintingprice/create" component={DiskpaintingpriceNew} />
+            <PrivateRoute exact path="/diskpaintingprice/:type/edit/:id" component={DiskpaintingpriceEdit} />
+
+            <PrivateRoute exact path="/diskpainting/list/:num" component={DiskpaintingsList} />
+            <PrivateRoute exact path="/diskpainting/list" component={DiskpaintingsList} />
+            <PrivateRoute exact path="/diskpaintingboss/list/:num" component={DiskpaintingsListBoss} />
+            <PrivateRoute exact path="/diskpaintingboss/list" component={DiskpaintingsListBoss} />
+            <PrivateRoute exact path="/diskpainting/create/:num" component={DiskpaintingsNew} />
+            <PrivateRoute exact path="/diskpainting/create" component={DiskpaintingsNew} />
+            <PrivateRoute exact path="/diskpaintingboss/create/:num" component={DiskpaintingsNew} />
+            <PrivateRoute exact path="/diskpaintingboss/create" component={DiskpaintingsNew} />
+            <PrivateRoute exact path="/diskpainting/edit/:id/:num" component={DiskpaintingEditFull} />
+            <PrivateRoute exact path="/diskpainting/edit/:id" component={DiskpaintingEditFull} />
+            <PrivateRoute exact path="/diskpaintingboss/edit/:id/:num" component={DiskpaintingEditFull} />
+            <PrivateRoute exact path="/diskpaintingboss/edit/:id" component={DiskpaintingEditFull} />
 
             <Route component={() => <NotFound />} />
           </Switch>

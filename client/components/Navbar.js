@@ -263,6 +263,27 @@ const Navbar = () => {
               </NavLink>
             ) : null}
 
+            {auth.roles.includes('diskpainting') &&
+            !auth.roles.includes('boss') &&
+            !auth.roles.includes('bookkeeper') ? (
+              <NavLink
+                to="/diskpainting/list"
+                className="block mt-4 lg:inline-block lg:mt-0 text-gray-800 hover:text-main-700 mr-4"
+                activeClassName="text-main-600 underline font-semibold"
+              >
+                Покраска дисков
+              </NavLink>
+            ) : null}
+            {auth.roles.includes('boss') || auth.roles.includes('bookkeeper') ? (
+              <NavLink
+                to="/diskpaintingboss/list"
+                className="block mt-4 lg:inline-block lg:mt-0 text-gray-800 hover:text-main-700 mr-4"
+                activeClassName="text-main-600 underline font-semibold"
+              >
+                Покраска дисков (Босс)
+              </NavLink>
+            ) : null}
+
             {auth.roles.includes('kassa') ||
             auth.roles.includes('boss') ||
             auth.roles.includes('hranenie') ||

@@ -31,6 +31,8 @@ import conds from './conds'
 import condprices from './cond.prices'
 import positions from './positions'
 import organizations from './organizations'
+import diskpaintings from './diskpaintings'
+import diskpaintingprices from './diskpainting.prices'
 
 const createRootReducer = (history) =>
   combineReducers({
@@ -64,7 +66,9 @@ const createRootReducer = (history) =>
     conds,
     condprices,
     positions,
-    organizations
+    organizations,
+    diskpaintings,
+    diskpaintingprices
   })
 
 export default createRootReducer

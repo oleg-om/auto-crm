@@ -19,6 +19,7 @@ import wash from '../assets/images/Dashboard/wash.png'
 import window from '../assets/images/Dashboard/window.png'
 import cond from '../assets/images/Dashboard/cond.png'
 import tyresmountpreentry from '../assets/images/Dashboard/tyrepremount.png'
+import diskPaint from '../assets/images/Dashboard/disk-painting.png'
 
 const Dashboard = () => {
   toast.configure()
@@ -268,9 +269,7 @@ const Dashboard = () => {
                     <div className="m-2 p-2 flex flex-row">
                       <div className="w-1/2 px-3">
                         <h2 className="text-3xl text-white font-bold">Шины (стол заказов)</h2>
-                        <p className="my-2 text-white">
-                          Заказы, принятые со стола заказов
-                        </p>
+                        <p className="my-2 text-white">Заказы, принятые со стола заказов</p>
                         <button
                           type="button"
                           className="bottom-0 py-2 px-4 bg-main-600 text-white hover:bg-main-700 hover:text-white rounded-lg lg:my-3 my-0"
@@ -352,6 +351,41 @@ const Dashboard = () => {
                       </div>
                       <div className="w-1/2">
                         <img src={cond} alt="" className="object-contain h-48 w-full" />
+                      </div>
+                    </div>
+                  </Link>
+                </div>
+              ) : null}
+
+              {auth.roles.includes('diskpainting') ||
+              auth.roles.includes('boss') ||
+              auth.roles.includes('bookkeeper') ? (
+                <div className="md:w-1/2 px-3 mb-6 flex flex-col">
+                  <Link
+                    to={
+                      auth.roles.includes('diskpainting') &&
+                      !auth.roles.includes('boss') &&
+                      !auth.roles.includes('bookkeeper')
+                        ? '/diskpainting/list'
+                        : '/diskpaintingboss/list'
+                    }
+                    className="rounded-lg shadow-lg bg-gradient-to-r from-yellow-600 to-yellow-400 h-full"
+                  >
+                    <div className="m-2 p-2 flex flex-row">
+                      <div className="w-1/2 px-3">
+                        <h2 className="text-3xl text-white font-bold">Покраска дисков</h2>
+                        <p className="my-2 text-white">
+                          Оформление заказов на покраску дисков с учётом диаметра
+                        </p>
+                        <button
+                          type="button"
+                          className="bottom-0 py-2 px-4 bg-main-600 text-white hover:bg-main-700 hover:text-white rounded-lg lg:my-3 my-0"
+                        >
+                          Перейти
+                        </button>
+                      </div>
+                      <div className="w-1/2">
+                        <img src={diskPaint} alt="" className="object-contain h-48 w-full" />
                       </div>
                     </div>
                   </Link>
@@ -502,9 +536,7 @@ const DashBoardJournal = ({ auth }) => {
             <div className="m-2 p-2 flex flex-row">
               <div className="w-1/2 px-3">
                 <h2 className="text-3xl text-white font-bold">Электронный журнал</h2>
-                <p className="my-2 text-white">
-                  Заполнение обязанностей в течение рабочего дня
-                </p>
+                <p className="my-2 text-white">Заполнение обязанностей в течение рабочего дня</p>
                 <button
                   type="button"
                   className="bottom-0 py-2 px-4 bg-main-600 text-white hover:bg-main-700 hover:text-white rounded-lg lg:my-3 my-0"
