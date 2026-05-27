@@ -3,5 +3,6 @@ module.exports = [
   { name: 'Автомойка', value: 'moika' },
   { name: 'СТО', value: 'sto' },
   { name: 'Стекла', value: 'window' },
-  { name: 'Кондиционеры', value: 'cond' }
+  { name: 'Кондиционеры', value: 'cond' },
+  { name: 'Покраска дисков', value: 'diskpainting' }
 ]

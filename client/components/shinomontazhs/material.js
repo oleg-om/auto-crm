@@ -26,7 +26,7 @@ const Material = ({
     setState(value)
   }
   useEffect(() => {
-    if (state === '' && options !== undefined && options.length > 1) {
+    if (state === '' && options !== undefined && options.length >= 1) {
       setState(options.find((it) => it))
     }
     return () => {}

@@ -60,6 +60,8 @@ const employeeReportRoutes = require('./routes/api/employeeReport.routes')
 const positionRoutes = require('./routes/api/position.routes')
 const journalEntryRoutes = require('./routes/api/journalEntry.routes')
 const organizationRoutes = require('./routes/api/organization.routes')
+const diskpaintingRoutes = require('./routes/api/diskpainting.routes')
+const diskpaintingPriceRoutes = require('./routes/api/diskpainting.price.routes')
 const { errorHandler, registerProcessHandlers } = require('./middleware/errorHandler')
 
 registerProcessHandlers()
@@ -222,6 +224,8 @@ server.use('/api/v1', condPriceRoutes)
 server.use('/api/v1', employeeReportRoutes)
 server.use('/api/v1', positionRoutes)
 server.use('/api/v1', journalEntryRoutes)
+server.use('/api/v1', diskpaintingRoutes)
+server.use('/api/v1', diskpaintingPriceRoutes)
 server.use('/api/v1', organizationRoutes)
 
 server.get('/api/v1/auth', async (req, res) => {
@@ -479,6 +483,14 @@ io.on('connection', (socket) => {
 
   socket.on('edit shinomontazh', () => {
     io.emit('update edited shinomontazh')
+  })
+
+  socket.on('new diskpainting', () => {
+    io.emit('update diskpainting')
+  })
+
+  socket.on('edit diskpainting', () => {
+    io.emit('update edited diskpainting')
   })
 
   // socket.on('new storage', ({ storage }) => {

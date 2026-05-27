@@ -2,5 +2,6 @@ module.exports = [
   { name: 'СТО', value: 'sto' },
   { name: 'Мойка', value: 'wash' },
   { name: 'Лобовые стекла', value: 'window' },
-  { name: 'Кондиционеры', value: 'cond' }
+  { name: 'Кондиционеры', value: 'cond' },
+  { name: 'Покраска дисков', value: 'diskpainting' }
 ]
