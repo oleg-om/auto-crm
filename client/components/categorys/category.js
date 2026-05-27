@@ -15,7 +15,7 @@ const CategoryRow = (props) => {
 
       <td className="w-full lg:w-auto p-2 text-gray-800 text-left lg:text-center border border-b block lg:table-cell relative lg:static">
         <span className="lg:hidden px-2 py-1 text-xs font-bold uppercase">Категория:</span>
-        {props.categoryList.find((it) => it.value === props.type).name}
+        {(props.categoryList.find((it) => it.value === props.type) || {}).name || props.type}
       </td>
       <td className="w-full lg:w-auto p-2 text-gray-800 text-center border border-b block lg:table-cell relative lg:static whitespace-no-wrap">
         <Link

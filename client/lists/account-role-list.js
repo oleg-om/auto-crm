@@ -19,7 +19,7 @@ module.exports = [
   { name: 'Кондиционеры', value: 'cond' },
   { name: 'Доступ к странице отчет', value: 'report' },
   { name: 'Электронный журнал', value: 'journal' },
-  { name: 'Оплата шиномонтаж/сто/мойка/стекла', value: 'oplataStoShinoWashWindow' },
+  { name: 'Оплата шиномонтаж/сто/мойка/стекла/покраска', value: 'oplataStoShinoWashWindow' },
   { name: 'Покраска дисков', value: 'diskpainting' }
 ]
 
