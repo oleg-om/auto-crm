@@ -43,8 +43,7 @@ const ShinomontazhsRow = (props) => {
       className={cx('table-row flex-row flex-no-wrap mb-0', {
         'bg-white hover:bg-gray-100': props.status !== taskStatuses[2],
         'bg-blue-200 hover:bg-blue-300': props.status === taskStatuses[2],
-        'bg-yellow-200 hover:bg-yellow-300':
-          props.status === taskStatuses[3] && props.beznalPaid,
+        'bg-yellow-200 hover:bg-yellow-300': props.status === taskStatuses[3] && props.beznalPaid,
         'bg-purple-200 hover:bg-purple-300':
           props.status === taskStatuses[4] || props.status === taskStatuses[6],
         'bg-red-300 hover:bg-red-400': props.status === taskStatuses[5]
@@ -57,7 +56,10 @@ const ShinomontazhsRow = (props) => {
         {props.mark} {props.model}
       </td>
       <td className="w-auto p-2 text-gray-800 text-sm text-center border border-b table-cell static">
-        {props.organization ? props.organization.name : props.regnumber}
+        {props.regnumber}
+      </td>
+      <td className="w-auto p-2 text-gray-800 text-sm text-center border border-b table-cell static">
+        {props.organization?.name || '-'}
       </td>
       <td className="w-auto p-2 text-gray-800 text-sm text-center border border-b table-cell static">
         <div
@@ -151,7 +153,9 @@ const ShinomontazhsRow = (props) => {
           </button> */}
           <Link
             to={{
-              pathname: `/shinomontazh/edit/${props.id_shinomontazhs}/${props.num ? props.num : ''}`,
+              pathname: `/shinomontazh/edit/${props.id_shinomontazhs}/${
+                props.num ? props.num : ''
+              }`,
               search: props.filterSearch || ''
             }}
             className="px-5 py-1 text-xs border-main-500 border text-main-500 rounded transition duration-300 hover:bg-main-700 hover:text-white focus:outline-none"

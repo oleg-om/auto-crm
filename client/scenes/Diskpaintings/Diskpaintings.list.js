@@ -91,14 +91,33 @@ const DiskpaintingsList = () => {
           <table className="border-collapse w-full">
             <thead>
               <tr>
-                <th className="p-1 lg:p-3 lg:font-bold lg:uppercase bg-gray-100 text-gray-600 border border-gray-300 table-cell">№</th>
-                <th className="p-1 lg:p-3 lg:font-bold lg:uppercase bg-gray-100 text-gray-600 border border-gray-300 table-cell">Авто</th>
-                <th className="p-1 lg:p-3 lg:font-bold lg:uppercase bg-gray-100 text-gray-600 border border-gray-300 table-cell">Гос. номер/Орг</th>
-                <th className="p-1 lg:p-3 lg:font-bold lg:uppercase bg-gray-100 text-gray-600 border border-gray-300 table-cell">Статус</th>
-                <th className="p-1 lg:p-3 lg:font-bold lg:uppercase bg-gray-100 text-gray-600 border border-gray-300 table-cell">Начало</th>
-                <th className="p-1 lg:p-3 lg:font-bold lg:uppercase bg-gray-100 text-gray-600 border border-gray-300 table-cell">Конец</th>
-                <th className="p-1 lg:p-3 lg:font-bold lg:uppercase bg-gray-100 text-gray-600 border border-gray-300 table-cell">Сумма</th>
-                <th className="p-1 lg:p-3 lg:font-bold lg:uppercase bg-gray-100 text-gray-600 border border-gray-300 table-cell">Действия</th>
+                <th className="p-1 lg:p-3 lg:font-bold lg:uppercase bg-gray-100 text-gray-600 border border-gray-300 table-cell">
+                  №
+                </th>
+                <th className="p-1 lg:p-3 lg:font-bold lg:uppercase bg-gray-100 text-gray-600 border border-gray-300 table-cell">
+                  Авто
+                </th>
+                <th className="p-1 lg:p-3 lg:font-bold lg:uppercase bg-gray-100 text-gray-600 border border-gray-300 table-cell">
+                  Гос. номер
+                </th>
+                <th className="p-1 lg:p-3 lg:font-bold lg:uppercase bg-gray-100 text-gray-600 border border-gray-300 table-cell">
+                  Орг.
+                </th>
+                <th className="p-1 lg:p-3 lg:font-bold lg:uppercase bg-gray-100 text-gray-600 border border-gray-300 table-cell">
+                  Статус
+                </th>
+                <th className="p-1 lg:p-3 lg:font-bold lg:uppercase bg-gray-100 text-gray-600 border border-gray-300 table-cell">
+                  Начало
+                </th>
+                <th className="p-1 lg:p-3 lg:font-bold lg:uppercase bg-gray-100 text-gray-600 border border-gray-300 table-cell">
+                  Конец
+                </th>
+                <th className="p-1 lg:p-3 lg:font-bold lg:uppercase bg-gray-100 text-gray-600 border border-gray-300 table-cell">
+                  Сумма
+                </th>
+                <th className="p-1 lg:p-3 lg:font-bold lg:uppercase bg-gray-100 text-gray-600 border border-gray-300 table-cell">
+                  Действия
+                </th>
               </tr>
             </thead>
             <tbody>
@@ -129,7 +148,8 @@ const DiskpaintingsList = () => {
           {showSearch === false && list && list.length === 0 && isLoaded ? (
             <div className="w-full bg-white py-2 flex justify-center">
               <b className="text-center text-gray-700">
-                Нет ни одного заказа, попробуйте создать первый. Если заказы есть, перезагрузите страницу
+                Нет ни одного заказа, попробуйте создать первый. Если заказы есть, перезагрузите
+                страницу
               </b>
             </div>
           ) : null}
