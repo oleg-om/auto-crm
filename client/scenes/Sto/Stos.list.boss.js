@@ -95,7 +95,10 @@ const StosListBoss = () => {
                   Авто
                 </th>
                 <th className="p-3 font-bold uppercase bg-gray-100 text-gray-600 border border-gray-300 table-cell">
-                  Гос. номер/Орг
+                  Гос. номер
+                </th>
+                <th className="p-3 font-bold uppercase bg-gray-100 text-gray-600 border border-gray-300 table-cell">
+                  Орг.
                 </th>
                 <th className="p-3 font-bold uppercase bg-gray-100 text-gray-600 border border-gray-300 table-cell">
                   Исп
