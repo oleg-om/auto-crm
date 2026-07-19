@@ -1,10 +1,80 @@
-import React, { useState, useEffect, useCallback } from 'react'
+import React, { useState, useEffect, useCallback, useRef } from 'react'
+import { createPortal } from 'react-dom'
 import { useSelector, useDispatch } from 'react-redux'
 import { toast } from 'react-toastify'
 import Navbar from '../Navbar'
 import { getPositions } from '../../redux/reducers/positions'
 import { getEmployees } from '../../redux/reducers/employees'
 import 'react-toastify/dist/ReactToastify.css'
+
+const ChecklistTooltip = ({ items, progress }) => {
+  const triggerRef = useRef(null)
+  const [visible, setVisible] = useState(false)
+  const [coords, setCoords] = useState({ top: 0, left: 0 })
+
+  const sortedItems = [...(items || [])].sort((a, b) => (a.order || 0) - (b.order || 0))
+  const completed = sortedItems.filter((item) => progress?.[item._id]).length
+  const total = sortedItems.length
+
+  const show = () => {
+    if (!triggerRef.current) return
+    const rect = triggerRef.current.getBoundingClientRect()
+    setCoords({
+      top: rect.top - 8,
+      left: Math.min(rect.left, window.innerWidth - 280)
+    })
+    setVisible(true)
+  }
+
+  return (
+    <>
+      <span
+        ref={triggerRef}
+        onMouseEnter={show}
+        onMouseLeave={() => setVisible(false)}
+        className="text-purple-700 font-semibold cursor-help border-b border-dotted border-purple-400"
+      >
+        {completed}/{total}
+      </span>
+      {visible &&
+        createPortal(
+          <div
+            className="fixed w-64"
+            style={{
+              top: coords.top,
+              left: coords.left,
+              transform: 'translateY(-100%)',
+              zIndex: 9999,
+              pointerEvents: 'none'
+            }}
+          >
+            <div className="bg-gray-900 text-white text-xs rounded-lg shadow-lg p-3">
+              <div className="font-semibold mb-2 text-purple-200">
+                Чек-лист ({completed}/{total})
+              </div>
+              <ul>
+                {sortedItems.map((item) => {
+                  const done = !!progress?.[item._id]
+                  return (
+                    <li
+                      key={item._id}
+                      className={`flex items-start mb-1 ${
+                        done ? 'text-green-300' : 'text-red-300'
+                      }`}
+                    >
+                      <span className="mr-1 flex-shrink-0">{done ? '✓' : '✗'}</span>
+                      <span>{item.text}</span>
+                    </li>
+                  )
+                })}
+              </ul>
+            </div>
+          </div>,
+          document.body
+        )}
+    </>
+  )
+}
 
 const BossJournal = () => {
   toast.configure()
@@ -321,11 +391,20 @@ const BossJournal = () => {
                             </td>
                             <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                               {duty?.isQuantitative ? (
-                                <span className="font-semibold">{entry.value || '0'}</span>
+                                <span>
+                                  <span className="font-semibold">{entry.value || '0'}</span>
+                                  {entry.isPaused && !entry.endTime && (
+                                    <span className="ml-2 text-yellow-600 font-semibold">
+                                      На паузе
+                                    </span>
+                                  )}
+                                </span>
                               ) : (
                                 <span>
                                   {entry.endTime ? (
                                     <span className="text-green-600 font-semibold">Выполнено</span>
+                                  ) : entry.isPaused ? (
+                                    <span className="text-yellow-600 font-semibold">На паузе</span>
                                   ) : entry.startTime ? (
                                     <span className="text-blue-600 font-semibold">В работе</span>
                                   ) : (
@@ -335,20 +414,14 @@ const BossJournal = () => {
                               )}
                             </td>
                             <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                              {duty?.hasChecklist && duty?.checklistItems?.length > 0
-                                ? (() => {
-                                    const checklistProgress = entry.checklistProgress || {}
-                                    const completed = duty.checklistItems.filter(
-                                      (item) => checklistProgress[item._id]
-                                    ).length
-                                    const total = duty.checklistItems.length
-                                    return (
-                                      <span className="text-purple-700 font-semibold">
-                                        {completed}/{total}
-                                      </span>
-                                    )
-                                  })()
-                                : '-'}
+                              {duty?.hasChecklist && duty?.checklistItems?.length > 0 ? (
+                                <ChecklistTooltip
+                                  items={duty.checklistItems}
+                                  progress={entry.checklistProgress || {}}
+                                />
+                              ) : (
+                                '-'
+                              )}
                             </td>
                             <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                               {(() => {

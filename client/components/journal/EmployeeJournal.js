@@ -34,6 +34,8 @@ const EmployeeJournal = () => {
   const [dutyToDelete, setDutyToDelete] = useState(null)
   const [showCompletedDuties, setShowCompletedDuties] = useState(false)
   const [showStatsModal, setShowStatsModal] = useState(false)
+  const [showEndWorkDayModal, setShowEndWorkDayModal] = useState(false)
+  const [nowTick, setNowTick] = useState(Date.now())
 
   // Найти сотрудника по userName из auth (userName в аккаунте содержит id сотрудника)
   const currentEmployee = employees.find((emp) => emp.id === auth.user?.userName)
@@ -260,6 +262,33 @@ const EmployeeJournal = () => {
     return `${day}.${month}.${year} ${hours}:${minutes}`
   }
 
+  // Живой тик для счетчиков рабочего/личного времени
+  useEffect(() => {
+    if (!workDayStarted || workDayEnded) return undefined
+    const intervalId = setInterval(() => setNowTick(Date.now()), 1000)
+    return () => clearInterval(intervalId)
+  }, [workDayStarted, workDayEnded])
+
+  const formatDuration = (totalSeconds) => {
+    const safe = Math.max(0, Math.floor(totalSeconds || 0))
+    const hours = Math.floor(safe / 3600)
+    const minutes = Math.floor((safe % 3600) / 60)
+    if (hours > 0) {
+      return `${hours}ч ${minutes}м`
+    }
+    return `${minutes}м`
+  }
+
+  const isPersonalDuty = (duty) => {
+    if (!duty?.name) return false
+    const name = duty.name.toLowerCase()
+    return standardDutiesList.some((d) => name === d.name.toLowerCase()) ||
+      name.includes('перекур') ||
+      name.includes('отдых') ||
+      name.includes('обед') ||
+      name.includes('другое')
+  }
+
   const handleSaveEntry = async (dutyId, value, comment, uniqueKey, checklistProgress) => {
     if (!currentEmployee || getEmployeePositionIds(currentEmployee).length === 0) {
       notify('Должность не назначена')
@@ -356,6 +385,13 @@ const EmployeeJournal = () => {
 
     // Записываем время окончания
     const endTime = new Date().toISOString()
+    const pauseIntervals = [...(currentEntry.pauseIntervals || [])]
+    if (currentEntry.isPaused && currentEntry.pausedAt) {
+      pauseIntervals.push({
+        start: currentEntry.pausedAt,
+        end: endTime
+      })
+    }
 
     try {
       const response = await fetch('/api/v1/journalEntry/upsert', {
@@ -372,7 +408,10 @@ const EmployeeJournal = () => {
           value: currentEntry?.value,
           comment: currentEntry?.comment,
           startTime: currentEntry?.startTime,
-          endTime
+          endTime,
+          isPaused: false,
+          pausedAt: null,
+          pauseIntervals
         })
       })
 
@@ -384,6 +423,145 @@ const EmployeeJournal = () => {
       notify('Обязанность завершена')
     } catch (error) {
       notify('Ошибка при завершении обязанности')
+    }
+  }
+
+  const handlePauseDuty = async (dutyId, uniqueKey, duty) => {
+    if (!currentEmployee || getEmployeePositionIds(currentEmployee).length === 0) {
+      notify('Должность не назначена')
+      return
+    }
+
+    const dutyIdStr = String(dutyId)
+    const entryKey = uniqueKey
+    const currentEntry = entries[entryKey]
+
+    if (!entryKey || !currentEntry) {
+      notify('Ошибка: запись не найдена')
+      return
+    }
+
+    if (currentEntry?.endTime) {
+      notify('Обязанность уже завершена')
+      return
+    }
+
+    if (currentEntry?.isPaused) {
+      notify('Обязанность уже на паузе')
+      return
+    }
+
+    if (!currentEntry?.startTime) {
+      notify('Обязанность ещё не начата')
+      return
+    }
+
+    const positionIdForEntry =
+      currentEntry?.positionId ||
+      duty?.dutyPositionId ||
+      selectedEmployee?.positionId ||
+      getEmployeePositionIds(selectedEmployee)[0]
+
+    const pausedAt = new Date().toISOString()
+
+    try {
+      const response = await fetch('/api/v1/journalEntry/upsert', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          entryId: entryKey,
+          employeeId: selectedEmployee.id,
+          positionId: positionIdForEntry,
+          dutyId: dutyIdStr,
+          date: selectedDate,
+          value: currentEntry?.value,
+          comment: currentEntry?.comment,
+          startTime: currentEntry?.startTime,
+          endTime: null,
+          isPaused: true,
+          pausedAt,
+          pauseIntervals: currentEntry?.pauseIntervals || []
+        })
+      })
+
+      const { data } = await response.json()
+      setEntries((prev) => ({
+        ...prev,
+        [entryKey]: { ...data, uniqueKey: entryKey }
+      }))
+      notify('Обязанность поставлена на паузу')
+    } catch (error) {
+      notify('Ошибка при постановке на паузу')
+    }
+  }
+
+  const handleResumeDuty = async (dutyId, uniqueKey, duty) => {
+    if (!currentEmployee || getEmployeePositionIds(currentEmployee).length === 0) {
+      notify('Должность не назначена')
+      return
+    }
+
+    const dutyIdStr = String(dutyId)
+    const entryKey = uniqueKey
+    const currentEntry = entries[entryKey]
+
+    if (!entryKey || !currentEntry) {
+      notify('Ошибка: запись не найдена')
+      return
+    }
+
+    if (!currentEntry?.isPaused) {
+      notify('Обязанность не на паузе')
+      return
+    }
+
+    const positionIdForEntry =
+      currentEntry?.positionId ||
+      duty?.dutyPositionId ||
+      selectedEmployee?.positionId ||
+      getEmployeePositionIds(selectedEmployee)[0]
+
+    const resumeAt = new Date().toISOString()
+    const pauseIntervals = [...(currentEntry.pauseIntervals || [])]
+    if (currentEntry.pausedAt) {
+      pauseIntervals.push({
+        start: currentEntry.pausedAt,
+        end: resumeAt
+      })
+    }
+
+    try {
+      const response = await fetch('/api/v1/journalEntry/upsert', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          entryId: entryKey,
+          employeeId: selectedEmployee.id,
+          positionId: positionIdForEntry,
+          dutyId: dutyIdStr,
+          date: selectedDate,
+          value: currentEntry?.value,
+          comment: currentEntry?.comment,
+          startTime: currentEntry?.startTime,
+          endTime: null,
+          isPaused: false,
+          pausedAt: null,
+          pauseIntervals
+        })
+      })
+
+      const { data } = await response.json()
+      setEntries((prev) => ({
+        ...prev,
+        [entryKey]: { ...data, uniqueKey: entryKey }
+      }))
+      notify('Обязанность продолжена')
+    } catch (error) {
+      notify('Ошибка при продолжении обязанности')
     }
   }
 
@@ -432,6 +610,95 @@ const EmployeeJournal = () => {
   })
   const selectedPositionForKpi = employeePositions[0] || null
 
+  // Счетчики: рабочее время и личное время
+  const timeCounters = (() => {
+    if (!workDayData?.startTime) return null
+
+    const workDayStart = new Date(workDayData.startTime).getTime()
+    if (Number.isNaN(workDayStart)) return null
+
+    const workDayEnd = workDayData.endTime
+      ? new Date(workDayData.endTime).getTime()
+      : nowTick
+    if (Number.isNaN(workDayEnd) || workDayEnd <= workDayStart) {
+      return { workSeconds: 0, personalSeconds: 0 }
+    }
+
+    const totalSeconds = (workDayEnd - workDayStart) / 1000
+
+    const workIntervals = []
+    entriesWithDutyInfo.forEach(({ duty, entries: dutyEntries }) => {
+      if (isPersonalDuty(duty)) return
+      dutyEntries.forEach((entry) => {
+        if (!entry.startTime) return
+        const start = new Date(entry.startTime).getTime()
+        if (Number.isNaN(start)) return
+
+        let rangeEnd
+        if (entry.endTime) {
+          rangeEnd = new Date(entry.endTime).getTime()
+        } else if (entry.isPaused && entry.pausedAt) {
+          rangeEnd = new Date(entry.pausedAt).getTime()
+        } else {
+          rangeEnd = nowTick
+        }
+        if (Number.isNaN(rangeEnd) || rangeEnd <= start) return
+
+        const pauses = (entry.pauseIntervals || [])
+          .filter((p) => p.start && p.end)
+          .map((p) => ({
+            start: new Date(p.start).getTime(),
+            end: new Date(p.end).getTime()
+          }))
+          .filter((p) => !Number.isNaN(p.start) && !Number.isNaN(p.end) && p.end > p.start)
+          .sort((a, b) => a.start - b.start)
+
+        let cursor = start
+        const pushClamped = (segStart, segEnd) => {
+          const clampedStart = Math.max(segStart, workDayStart)
+          const clampedEnd = Math.min(segEnd, workDayEnd)
+          if (clampedEnd > clampedStart) {
+            workIntervals.push({ start: clampedStart, end: clampedEnd })
+          }
+        }
+
+        pauses.forEach((pause) => {
+          if (pause.start > cursor) {
+            pushClamped(cursor, Math.min(pause.start, rangeEnd))
+          }
+          cursor = Math.max(cursor, pause.end)
+        })
+        if (cursor < rangeEnd) {
+          pushClamped(cursor, rangeEnd)
+        }
+      })
+    })
+
+    const mergeIntervals = (intervals) => {
+      if (intervals.length === 0) return []
+      const sorted = [...intervals].sort((a, b) => a.start - b.start)
+      const merged = [{ ...sorted[0] }]
+      for (let i = 1; i < sorted.length; i += 1) {
+        const current = sorted[i]
+        const last = merged[merged.length - 1]
+        if (current.start <= last.end) {
+          last.end = Math.max(last.end, current.end)
+        } else {
+          merged.push({ ...current })
+        }
+      }
+      return merged
+    }
+
+    const workSeconds = mergeIntervals(workIntervals).reduce(
+      (sum, interval) => sum + (interval.end - interval.start) / 1000,
+      0
+    )
+    const personalSeconds = Math.max(0, totalSeconds - workSeconds)
+
+    return { workSeconds, personalSeconds }
+  })()
+
   // Используем sortedDuties в handleAddStandardDuty
   // Объявляем функцию после определения sortedDuties
 
@@ -467,8 +734,17 @@ const EmployeeJournal = () => {
   // Если рабочий день не завершен, показываем только активные обязанности (или все, если нажата кнопка)
   const addedDuties = !workDayEnded && !showCompletedDuties ? activeDuties : allAddedDuties
 
-  // Все обязанности доступны для добавления (можно добавлять повторно)
-  const availableDuties = sortedDuties
+  // Обязанности, доступные для добавления
+  // Если стоит «только 1 раз» и уже добавлена сегодня — скрываем
+  const addedDutyIdsToday = new Set(
+    Object.values(entries)
+      .map((entry) => String(entry.dutyId))
+      .filter(Boolean)
+  )
+  const availableDuties = sortedDuties.filter((duty) => {
+    if (!duty.addOnlyOnce) return true
+    return !addedDutyIdsToday.has(String(duty._id))
+  })
 
   const handleAddDuty = async (dutyOrId) => {
     const duty = typeof dutyOrId === 'object' && dutyOrId !== null ? dutyOrId : null
@@ -482,6 +758,11 @@ const EmployeeJournal = () => {
     }
 
     const dutyIdStr = String(duty?._id ?? dutyOrId)
+
+    if (duty?.addOnlyOnce && addedDutyIdsToday.has(dutyIdStr)) {
+      notify('Эту обязанность можно добавить только один раз за рабочий день')
+      return
+    }
 
     // Записываем время начала при добавлении обязанности
     const startTime = new Date().toISOString()
@@ -732,23 +1013,41 @@ const EmployeeJournal = () => {
           <>
             {workDayData && (
               <div className="mb-4 bg-gray-50 border border-gray-200 rounded-lg p-4">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <p className="text-sm text-gray-600">
-                      Начало рабочего дня:{' '}
-                      <span className="font-medium">{formatDateTime(workDayData.startTime)}</span>
-                    </p>
-                    {workDayData.endTime && (
-                      <p className="text-sm text-gray-600 mt-1">
-                        Окончание рабочего дня:{' '}
-                        <span className="font-medium">{formatDateTime(workDayData.endTime)}</span>
+                <div className="flex items-center justify-between flex-wrap gap-3">
+                  <div className="flex items-center flex-wrap gap-x-6 gap-y-2">
+                    <div>
+                      <p className="text-sm text-gray-600">
+                        Начало рабочего дня:{' '}
+                        <span className="font-medium">{formatDateTime(workDayData.startTime)}</span>
                       </p>
+                      {workDayData.endTime && (
+                        <p className="text-sm text-gray-600 mt-1">
+                          Окончание рабочего дня:{' '}
+                          <span className="font-medium">{formatDateTime(workDayData.endTime)}</span>
+                        </p>
+                      )}
+                    </div>
+                    {timeCounters && (
+                      <div className="flex items-center gap-4">
+                        <div className="bg-green-50 border border-green-200 rounded-lg px-3 py-2">
+                          <div className="text-xs text-green-700 mb-0.5">Рабочее время</div>
+                          <div className="text-base font-semibold text-green-700 tabular-nums">
+                            {formatDuration(timeCounters.workSeconds)}
+                          </div>
+                        </div>
+                        <div className="bg-amber-50 border border-amber-200 rounded-lg px-3 py-2">
+                          <div className="text-xs text-amber-700 mb-0.5">Личное время</div>
+                          <div className="text-base font-semibold text-amber-700 tabular-nums">
+                            {formatDuration(timeCounters.personalSeconds)}
+                          </div>
+                        </div>
+                      </div>
                     )}
                   </div>
                   {!workDayEnded && (
                     <button
                       type="button"
-                      onClick={handleEndWorkDay}
+                      onClick={() => setShowEndWorkDayModal(true)}
                       className="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 font-semibold"
                     >
                       Завершить рабочий день
@@ -791,6 +1090,8 @@ const EmployeeJournal = () => {
                         entry={entry}
                         onSave={handleSaveEntry}
                         onComplete={() => handleCompleteDuty(duty._id, duty.uniqueKey, duty)}
+                        onPause={() => handlePauseDuty(duty._id, duty.uniqueKey, duty)}
+                        onResume={() => handleResumeDuty(duty._id, duty.uniqueKey, duty)}
                         onRemove={() => handleRemoveDutyClick(duty.uniqueKey)}
                         uniqueKey={duty.uniqueKey}
                       />
@@ -898,6 +1199,46 @@ const EmployeeJournal = () => {
             : 'Вы уверены, что хотите удалить обязанность из списка?'
         }
       />
+      {showEndWorkDayModal && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+          <div className="bg-white rounded-lg shadow-xl max-w-md w-full relative">
+            <button
+              type="button"
+              onClick={() => setShowEndWorkDayModal(false)}
+              className="absolute text-gray-400 hover:text-gray-600 text-2xl leading-none"
+              style={{ top: '12px', right: '12px' }}
+              title="Закрыть"
+            >
+              ×
+            </button>
+            <div className="p-6 pr-10">
+              <h3 className="text-lg font-bold text-gray-900 mb-2">Вы уверены?</h3>
+              <p className="text-sm text-gray-600 mb-6">
+                После завершения рабочего дня добавление обязанностей будет недоступно.
+              </p>
+              <div className="flex gap-3 justify-end">
+                <button
+                  type="button"
+                  onClick={() => setShowEndWorkDayModal(false)}
+                  className="px-4 py-2 bg-gray-200 text-gray-700 rounded hover:bg-gray-300 font-semibold"
+                >
+                  Отмена
+                </button>
+                <button
+                  type="button"
+                  onClick={() => {
+                    setShowEndWorkDayModal(false)
+                    handleEndWorkDay()
+                  }}
+                  className="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700 font-semibold"
+                >
+                  Завершить
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   )
 }
@@ -1003,11 +1344,12 @@ const StandardDutiesModal = ({ standardDuties, onSelect, onClose }) => {
   )
 }
 
-const DutyEntryForm = ({ duty, entry, onSave, onComplete, onRemove, uniqueKey }) => {
+const DutyEntryForm = ({ duty, entry, onSave, onComplete, onPause, onResume, onRemove, uniqueKey }) => {
   const [value, setValue] = useState(entry?.value || '')
   const [comment, setComment] = useState(entry?.comment || '')
   const [checklistProgress, setChecklistProgress] = useState(entry?.checklistProgress || {})
   const [isEditing, setIsEditing] = useState(false)
+  const [showIncompleteChecklistModal, setShowIncompleteChecklistModal] = useState(false)
 
   useEffect(() => {
     if (entry) {
@@ -1075,6 +1417,9 @@ const DutyEntryForm = ({ duty, entry, onSave, onComplete, onRemove, uniqueKey })
     if (entry?.endTime) {
       return <FaCheckCircle className="text-green-500" size={20} title="Завершено" />
     }
+    if (entry?.isPaused) {
+      return <FaClock className="text-yellow-500" size={20} title="На паузе" />
+    }
     if (entry?.startTime) {
       return <FaClock className="text-blue-500" size={20} title="В процессе" />
     }
@@ -1085,6 +1430,9 @@ const DutyEntryForm = ({ duty, entry, onSave, onComplete, onRemove, uniqueKey })
     if (entry?.startTime && entry?.endTime) {
       return `${formatTime(entry.startTime)} - ${formatTime(entry.endTime)}`
     }
+    if (entry?.isPaused && entry?.pausedAt) {
+      return `Пауза с ${formatTime(entry.pausedAt)}`
+    }
     if (entry?.startTime) {
       return `Начало: ${formatTime(entry.startTime)}`
     }
@@ -1092,6 +1440,29 @@ const DutyEntryForm = ({ duty, entry, onSave, onComplete, onRemove, uniqueKey })
   }
 
   const checklistCompletion = getChecklistCompletionCount()
+
+  const handleCompleteClick = () => {
+    if (
+      duty.hasChecklist &&
+      checklistCompletion &&
+      checklistCompletion.total > 0 &&
+      checklistCompletion.completed < checklistCompletion.total
+    ) {
+      setShowIncompleteChecklistModal(true)
+      return
+    }
+    if (onComplete) onComplete()
+  }
+
+  const handleConfirmComplete = () => {
+    setShowIncompleteChecklistModal(false)
+    if (onComplete) onComplete()
+  }
+
+  const handlePauseFromModal = () => {
+    setShowIncompleteChecklistModal(false)
+    if (onPause) onPause()
+  }
 
   return (
     <div className="bg-white border rounded-lg p-4 shadow-sm">
@@ -1111,6 +1482,11 @@ const DutyEntryForm = ({ duty, entry, onSave, onComplete, onRemove, uniqueKey })
                   Чек-лист: {checklistCompletion.completed}/{checklistCompletion.total}
                 </span>
               )}
+              {entry?.isPaused && !entry?.endTime && (
+                <span className="px-2 py-1 text-xs bg-yellow-100 text-yellow-700 rounded font-semibold">
+                  На паузе
+                </span>
+              )}
               {getTimeDisplay() && (
                 <span className="text-sm text-gray-500 whitespace-nowrap">{getTimeDisplay()}</span>
               )}
@@ -1118,16 +1494,34 @@ const DutyEntryForm = ({ duty, entry, onSave, onComplete, onRemove, uniqueKey })
           </div>
         </div>
         <div className="flex gap-2 flex-shrink-0">
-          {!isEditing && !entry?.endTime && onComplete && (
+          {!isEditing && !entry?.endTime && entry?.startTime && entry?.isPaused && onResume && (
             <button
               type="button"
-              onClick={onComplete}
+              onClick={onResume}
+              className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
+            >
+              Продолжить
+            </button>
+          )}
+          {!isEditing && !entry?.endTime && entry?.startTime && !entry?.isPaused && onPause && (
+            <button
+              type="button"
+              onClick={onPause}
+              className="px-4 py-2 bg-yellow-500 text-white rounded hover:bg-yellow-600"
+            >
+              На паузу
+            </button>
+          )}
+          {!isEditing && !entry?.endTime && !entry?.isPaused && onComplete && (
+            <button
+              type="button"
+              onClick={handleCompleteClick}
               className="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700"
             >
               Завершить
             </button>
           )}
-          {!isEditing && (
+          {!isEditing && !entry?.isPaused && (
             <button
               type="button"
               onClick={() => setIsEditing(true)}
@@ -1136,7 +1530,7 @@ const DutyEntryForm = ({ duty, entry, onSave, onComplete, onRemove, uniqueKey })
               {entry ? 'Редактировать' : 'Заполнить'}
             </button>
           )}
-          {onRemove && (
+          {onRemove && !entry?.isPaused && (
             <button
               type="button"
               onClick={onRemove}
@@ -1149,8 +1543,58 @@ const DutyEntryForm = ({ duty, entry, onSave, onComplete, onRemove, uniqueKey })
         </div>
       </div>
 
+      {showIncompleteChecklistModal && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+          <div className="bg-white rounded-lg shadow-xl max-w-md w-full relative">
+            <button
+              type="button"
+              onClick={() => setShowIncompleteChecklistModal(false)}
+              className="absolute text-gray-400 hover:text-gray-600 text-2xl leading-none"
+              style={{ top: '12px', right: '12px' }}
+              title="Закрыть"
+            >
+              ×
+            </button>
+            <div className="p-6 pr-10">
+              <h3 className="text-lg font-bold text-gray-900 mb-2">
+                Вы уверены что хотите завершить?
+              </h3>
+              <p className="text-sm text-gray-600 mb-6">
+                Обязанность можно перевести в паузу.
+                {checklistCompletion && (
+                  <span className="block mt-2 text-purple-700">
+                    Чек-лист заполнен: {checklistCompletion.completed} из{' '}
+                    {checklistCompletion.total}
+                  </span>
+                )}
+              </p>
+              <div className="flex gap-3 justify-end">
+                <button
+                  type="button"
+                  onClick={handlePauseFromModal}
+                  className="px-4 py-2 bg-yellow-500 text-white rounded hover:bg-yellow-600 font-semibold"
+                >
+                  На паузу
+                </button>
+                <button
+                  type="button"
+                  onClick={handleConfirmComplete}
+                  className="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700 font-semibold"
+                >
+                  Хочу завершить
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* Чек-лист под статусом */}
-      {duty.hasChecklist && sortedChecklistItems.length > 0 && entry?.startTime && !entry?.endTime && (
+      {duty.hasChecklist &&
+        sortedChecklistItems.length > 0 &&
+        entry?.startTime &&
+        !entry?.endTime &&
+        !entry?.isPaused && (
         <div className="mt-4 p-3 bg-purple-50 rounded-lg border border-purple-200">
           <h4 className="text-sm font-semibold text-purple-900 mb-2">Чек-лист</h4>
           <div className="space-y-2">
@@ -1274,17 +1718,25 @@ const DutyEntryForm = ({ duty, entry, onSave, onComplete, onRemove, uniqueKey })
           {entry ? (
             <div>
               {duty.isQuantitative ? (
-                <div className="flex items-center gap-2">
+                <div className="flex items-center gap-2 flex-wrap">
                   <p>
                     <strong>Количество:</strong>{' '}
                     <span className="text-lg font-semibold">{entry.value || '0'}</span>
                   </p>
+                  {entry.isPaused && !entry.endTime && (
+                    <p>
+                      <strong>Статус:</strong>{' '}
+                      <span className="text-yellow-600 font-semibold">На паузе</span>
+                    </p>
+                  )}
                 </div>
               ) : (
                 <p>
                   <strong>Статус:</strong>{' '}
                   {entry.endTime ? (
                     <span className="text-green-600 font-semibold">Выполнено</span>
+                  ) : entry.isPaused ? (
+                    <span className="text-yellow-600 font-semibold">На паузе</span>
                   ) : entry.startTime ? (
                     <span className="text-blue-600 font-semibold">В работе</span>
                   ) : (

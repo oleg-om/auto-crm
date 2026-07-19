@@ -41,6 +41,25 @@ const JournalEntry = new mongoose.Schema({
     required: false,
     default: {}
   },
+  isPaused: {
+    type: Boolean,
+    required: false,
+    default: false
+  },
+  pausedAt: {
+    type: Date,
+    required: false
+  },
+  pauseIntervals: {
+    type: [
+      {
+        start: { type: Date, required: false },
+        end: { type: Date, required: false }
+      }
+    ],
+    required: false,
+    default: []
+  },
   id: {
     type: String,
     unique: true,
