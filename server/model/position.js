@@ -34,6 +34,11 @@ const DutySchema = new mongoose.Schema({
     required: false,
     default: false
   },
+  addOnlyOnce: {
+    type: Boolean,
+    required: false,
+    default: false
+  },
   checklistItems: {
     type: [ChecklistItemSchema],
     required: false,

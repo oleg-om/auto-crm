@@ -13,6 +13,7 @@ const DutyRow = ({
   const [name, setName] = useState(duty.name)
   const [isQuantitative, setIsQuantitative] = useState(duty.isQuantitative || false)
   const [hasChecklist, setHasChecklist] = useState(duty.hasChecklist || false)
+  const [addOnlyOnce, setAddOnlyOnce] = useState(duty.addOnlyOnce || false)
   const [checklistItems, setChecklistItems] = useState(duty.checklistItems || [])
   const [newChecklistItem, setNewChecklistItem] = useState('')
   const [completionTimeMinutes, setCompletionTimeMinutes] = useState(
@@ -60,6 +61,7 @@ const DutyRow = ({
       name: name.trim(),
       isQuantitative,
       hasChecklist,
+      addOnlyOnce,
       checklistItems: hasChecklist ? checklistItems : [],
       completionTimeMinutes: completionTimeMinutes ? Number(completionTimeMinutes) : null
     })
@@ -69,6 +71,7 @@ const DutyRow = ({
     setName(duty.name)
     setIsQuantitative(duty.isQuantitative || false)
     setHasChecklist(duty.hasChecklist || false)
+    setAddOnlyOnce(duty.addOnlyOnce || false)
     setChecklistItems(duty.checklistItems || [])
     setNewChecklistItem('')
     setCompletionTimeMinutes(duty.completionTimeMinutes ? String(duty.completionTimeMinutes) : '')
@@ -108,6 +111,16 @@ const DutyRow = ({
               />
               {/* eslint-disable-next-line jsx-a11y/label-has-associated-control,jsx-a11y/label-has-for */}
               <label className="text-sm text-gray-700">Чек-лист</label>
+            </div>
+            <div className="flex items-center">
+              <input
+                type="checkbox"
+                checked={addOnlyOnce}
+                onChange={(e) => setAddOnlyOnce(e.target.checked)}
+                className="mr-2"
+              />
+              {/* eslint-disable-next-line jsx-a11y/label-has-associated-control,jsx-a11y/label-has-for */}
+              <label className="text-sm text-gray-700">Можно добавить только 1 раз</label>
             </div>
           </div>
         </div>
@@ -253,6 +266,11 @@ const DutyRow = ({
           {duty.hasChecklist && (
             <span className="px-2 py-1 text-xs bg-purple-100 text-purple-700 rounded">
               Чек-лист ({duty.checklistItems?.length || 0})
+            </span>
+          )}
+          {duty.addOnlyOnce && (
+            <span className="px-2 py-1 text-xs bg-orange-100 text-orange-700 rounded">
+              Только 1 раз
             </span>
           )}
           {duty.completionTimeMinutes && (

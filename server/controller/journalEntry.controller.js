@@ -63,7 +63,10 @@ exports.upsert = async (req, res) => {
     comment,
     checklistProgress,
     startTime,
-    endTime
+    endTime,
+    isPaused,
+    pausedAt,
+    pauseIntervals
   } = req.body
 
   // Если передан entryId, обновляем конкретную запись
@@ -73,6 +76,9 @@ exports.upsert = async (req, res) => {
       if (value !== undefined) existingEntry.value = value
       if (comment !== undefined) existingEntry.comment = comment
       if (checklistProgress !== undefined) existingEntry.checklistProgress = checklistProgress
+      if (isPaused !== undefined) existingEntry.isPaused = isPaused
+      if (pausedAt !== undefined) existingEntry.pausedAt = pausedAt
+      if (pauseIntervals !== undefined) existingEntry.pauseIntervals = pauseIntervals
       if (startTime !== undefined) {
         // Преобразуем startTime в Date, если это строка
         if (typeof startTime === 'string') {

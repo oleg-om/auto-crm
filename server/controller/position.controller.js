@@ -55,6 +55,7 @@ exports.addDuty = async (req, res) => {
     name: req.body.name,
     isQuantitative: req.body.isQuantitative || false,
     hasChecklist: req.body.hasChecklist || false,
+    addOnlyOnce: req.body.addOnlyOnce || false,
     checklistItems: req.body.checklistItems || [],
     completionTimeMinutes: req.body.completionTimeMinutes || null,
     order: maxOrder + 1
@@ -87,6 +88,9 @@ exports.updateDuty = async (req, res) => {
   }
   if (req.body.hasChecklist !== undefined) {
     position.duties[dutyIndex].hasChecklist = req.body.hasChecklist
+  }
+  if (req.body.addOnlyOnce !== undefined) {
+    position.duties[dutyIndex].addOnlyOnce = req.body.addOnlyOnce
   }
   if (req.body.checklistItems !== undefined) {
     position.duties[dutyIndex].checklistItems = req.body.checklistItems

@@ -15,6 +15,7 @@ const PositionTab = ({ position }) => {
   const [newDutyName, setNewDutyName] = useState('')
   const [newDutyIsQuantitative, setNewDutyIsQuantitative] = useState(false)
   const [newDutyHasChecklist, setNewDutyHasChecklist] = useState(false)
+  const [newDutyAddOnlyOnce, setNewDutyAddOnlyOnce] = useState(false)
   const [newDutyCompletionTimeMinutes, setNewDutyCompletionTimeMinutes] = useState('')
   const [showAddForm, setShowAddForm] = useState(false)
   const [editingDutyId, setEditingDutyId] = useState(null)
@@ -55,6 +56,7 @@ const PositionTab = ({ position }) => {
         name: newDutyName.trim(),
         isQuantitative: newDutyIsQuantitative,
         hasChecklist: newDutyHasChecklist,
+        addOnlyOnce: newDutyAddOnlyOnce,
         checklistItems: [],
         completionTimeMinutes: newDutyCompletionTimeMinutes ? Number(newDutyCompletionTimeMinutes) : null
       })
@@ -62,6 +64,7 @@ const PositionTab = ({ position }) => {
       setNewDutyName('')
       setNewDutyIsQuantitative(false)
       setNewDutyHasChecklist(false)
+      setNewDutyAddOnlyOnce(false)
       setNewDutyCompletionTimeMinutes('')
       setShowAddForm(false)
       notify('Обязанность добавлена')
@@ -255,6 +258,18 @@ const PositionTab = ({ position }) => {
               />
               <label htmlFor="hasChecklist" className="text-gray-700">
                 Чек-лист
+              </label>
+            </div>
+            <div className="flex items-center">
+              <input
+                type="checkbox"
+                id="addOnlyOnce"
+                checked={newDutyAddOnlyOnce}
+                onChange={(e) => setNewDutyAddOnlyOnce(e.target.checked)}
+                className="mr-2"
+              />
+              <label htmlFor="addOnlyOnce" className="text-gray-700">
+                Можно добавить только 1 раз
               </label>
             </div>
           </div>
