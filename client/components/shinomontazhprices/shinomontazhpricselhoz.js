@@ -24,6 +24,8 @@ const ShinomontazhpriceSelhozRow = (props) => {
           ? props.ShinomontazhCategoryList.find((it) => it.value === props.category).name
           : null}
         {props.category === 'common' ? 'Общее' : null}
+        {props.category === 'musorki_kar' ? 'Мусорки (КЭР)' : null}
+        {props.category === 'free' ? 'Акция' : null}
       </td>
       <td className="w-full lg:w-auto p-2 text-gray-800 text-left lg:text-center border border-b block lg:table-cell relative lg:static">
         <span className="lg:hidden px-2 py-1 text-xs font-bold uppercase">R8:</span>
