@@ -12,6 +12,14 @@ import Service from './service'
 import Material from './material'
 import Final from './final'
 import sizeThreeList from '../../lists/shinomontazhdiametr'
+import {
+  getShinomontazhPriceFromItem,
+  getShinomontazhPriceKey,
+  hasShinomontazhPrice,
+  isMusorkiKarDiametr,
+  isShinomontazhPromo,
+  normalizeShinomontazhFree
+} from '../../utils/shinomontazhPriceKey'
 import statusList from '../../../common/enums/shinomontazh-statuses'
 import { updateStorageStatus } from '../../redux/reducers/storage'
 import { dateNew } from '../storage/storage.preorder.edit'
@@ -400,19 +408,7 @@ const ShinomontazhsEdit = (props) => {
     service && service?.length && service.find((serviceItem) => serviceItem?.serviceName === itId)
 
   useEffect(() => {
-    const helpToGetDiametr = (item) => {
-      if (item) {
-        if (item === 'R16С (скорая)') {
-          return '16Camb'
-        }
-        if (item === '22.5 (спец шина)') {
-          return '23'
-        }
-        return item.replace(/[^C\d]/g, '')
-      }
-      return item
-    }
-    const actualDiametr = (diametr) => 'R'.concat(helpToGetDiametr(diametr || state.diametr))
+    const actualDiametr = (diametr) => getShinomontazhPriceKey(diametr || state.diametr)
     const percent = currentPlace ? currentPlace.shinostavka : ''
     const definition = currentPlace ? currentPlace.shinomeaning : ''
     const getPrice = (item) => {
@@ -426,17 +422,30 @@ const ShinomontazhsEdit = (props) => {
         }
         return item[actualDiametr(nextDiametr.toString())]
       }
+      const rawPrice = getShinomontazhPriceFromItem(item, state.diametr)
+      if (!hasShinomontazhPrice(rawPrice)) {
+        return undefined
+      }
       if (!percent) {
-        return item[actualDiametr()]
+        return rawPrice
       }
       if (percent && definition === 'negative') {
-        return roundTo5(applyDiscount(item[actualDiametr()], percent))
+        return roundTo5(applyDiscount(rawPrice, percent))
       }
       if (percent && definition === 'positive') {
-        return roundTo5(applyDiscountPlus(item[actualDiametr()], percent))
+        return roundTo5(applyDiscountPlus(rawPrice, percent))
       }
-      return item[actualDiametr()]
+      return rawPrice
     }
+    const mapServiceItem = (item) => ({
+      name: item.name,
+      id: item.id,
+      type: item.type,
+      category: item.category,
+      number: item.number,
+      actualprice: getPrice(item),
+      free: normalizeShinomontazhFree(item.free)
+    })
     if (
       state.diametr &&
       (state.kuzov === 'sedan' || state.kuzov === 'crossover' || state.kuzov === 'runflat')
@@ -451,18 +460,9 @@ const ShinomontazhsEdit = (props) => {
                   it.category === 'free')) ||
               serviceItemIsInActualService(it.id)
           )
-          .map((item) => ({
-            name: item.name,
-            id: item.id,
-            type: item.type,
-            category: item.category,
-            number: item.number,
-            actualprice: getPrice(item),
-            free: item.free
-          }))
+          .map(mapServiceItem)
       )
-    }
-    if (state.diametr && state.kuzov === 'gruz') {
+    } else if (state.diametr && state.kuzov === 'gruz') {
       setActualService(
         shinomontazhprices
           .filter(
@@ -471,18 +471,9 @@ const ShinomontazhsEdit = (props) => {
                 (it.category === 'common' || it.category === 'other' || it.category === 'free')) ||
               serviceItemIsInActualService(it.id)
           )
-          .map((item) => ({
-            name: item.name,
-            id: item.id,
-            type: item.type,
-            category: item.category,
-            number: item.number,
-            actualprice: getPrice(item),
-            free: item.free
-          }))
+          .map(mapServiceItem)
       )
-    }
-    if (state.diametr && state.kuzov === 'selhoz') {
+    } else if (state.diametr && state.kuzov === 'selhoz') {
       setActualService(
         shinomontazhprices
           .filter(
@@ -491,38 +482,27 @@ const ShinomontazhsEdit = (props) => {
                 (it.category === 'common' || it.category === 'other' || it.category === 'free')) ||
               serviceItemIsInActualService(it.id)
           )
-          .map((item) => ({
-            name: item.name,
-            id: item.id,
-            type: item.type,
-            category: item.category,
-            number: item.number,
-            actualprice: getPrice(item),
-            free: item.free
-          }))
+          .map(mapServiceItem)
       )
-    }
-    if (state.diametr && state.kuzov === 'musorki_kar') {
+    } else if (state.diametr && state.kuzov === 'musorki_kar' && isMusorkiKarDiametr(state.diametr)) {
       setActualService(
         shinomontazhprices
           .filter(
-            (it) =>
-              ((it.type === 'selhoz' || it.type === 'gruz') && it.category === 'musorki_kar') ||
-              serviceItemIsInActualService(it.id)
+            (it) => it.category === 'musorki_kar' || serviceItemIsInActualService(it.id)
           )
-          .map((item) => ({
-            name: item.name,
-            id: item.id,
-            type: item.type,
-            category: item.category,
-            number: item.number,
-            actualprice: getPrice(item),
-            free: item.free
-          }))
+          .map(mapServiceItem)
+          .filter(
+            (item) =>
+              isShinomontazhPromo(item.free) ||
+              serviceItemIsInActualService(item.id) ||
+              hasShinomontazhPrice(item.actualprice)
+          )
       )
+    } else {
+      setActualService([])
     }
     return () => {}
-  }, [state.diametr, state.kuzov, shinomontazhprices])
+  }, [state.diametr, state.kuzov, shinomontazhprices, currentPlace])
 
   const [active, setActive] = useState(isFromPreentry ? 'employee' : 'finish')
 
