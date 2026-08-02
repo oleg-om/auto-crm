@@ -359,6 +359,7 @@ const Final = ({
                   <option value="card">Безнал</option>
                   <option value="terminal">Терминал</option>
                   <option value="termandcash">Терминал + наличные</option>
+                  <option value="deposit">Задаток</option>
                   <option value="no">Не оплачено</option>
                   <option value="cancel">Отмена</option>
                 </select>

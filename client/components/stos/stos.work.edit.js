@@ -558,6 +558,19 @@ const StosEdit = (props) => {
       })
       navigateBack()
       notify('Работа оплачена (терминал + наличные)')
+    } else if (state.payment === 'deposit') {
+      props.updateSto(props.id, {
+        discount: state.discount,
+        payment: state.payment,
+        comment: state.comment,
+        status: statusList[7],
+        beznalPaid: state.beznalPaid || null,
+        organizationId: state.organizationId || null,
+        customerId: activeCustomer || props.customerId || null,
+        mileage: state.mileage || null
+      })
+      navigateBack()
+      notify('Внесён задаток')
     } else if (state.payment === 'cancel') {
       props.updateSto(props.id, {
         discount: state.discount,

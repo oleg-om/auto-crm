@@ -36,6 +36,7 @@ function paymentMethodLabel(payment) {
     card: 'Безнал',
     terminal: 'Терминал',
     termandcash: 'Терминал + наличные',
+    deposit: 'Задаток',
     no: 'Не оплачено',
     cancel: 'Отмена'
   }
@@ -50,7 +51,8 @@ function statusBadgeClasses(status) {
     'bg-blue-400': status === taskStatuses[2],
     'bg-yellow-400': status === taskStatuses[3],
     'bg-purple-400': status === taskStatuses[4] || status === taskStatuses[6],
-    'bg-red-500': status === taskStatuses[5]
+    'bg-red-500': status === taskStatuses[5],
+    'bg-green-500': status === taskStatuses[7]
   })
 }
 
@@ -59,10 +61,12 @@ function paymentBadgeClasses(payment) {
     'bg-blue-400': payment === 'yes',
     'bg-yellow-400': payment === 'card',
     'bg-purple-400': payment === 'terminal' || payment === 'termandcash',
+    'bg-green-500': payment === 'deposit',
     'bg-orange-400': payment === 'no',
     'bg-red-500': payment === 'cancel',
     'bg-gray-300 text-gray-800':
-      payment && !['yes', 'card', 'terminal', 'termandcash', 'no', 'cancel'].includes(payment)
+      payment &&
+      !['yes', 'card', 'terminal', 'termandcash', 'deposit', 'no', 'cancel'].includes(payment)
   })
 }
 
@@ -981,6 +985,12 @@ const Salary = ({
                     <span>Наличка</span>
                   </div>
                 </th>
+                <th className="p-3 font-bold bg-gray-100 text-gray-600 border border-gray-300 hidden lg:table-cell">
+                  <div className="flex flex-col items-center">
+                    <FaHandHoldingUsd className="mb-1" />
+                    <span>Задаток</span>
+                  </div>
+                </th>
 
                 {calendarType === 'day' ? (
                   <th className="p-3 font-bold bg-gray-100 text-gray-600 border border-gray-300 hidden lg:table-cell">
@@ -1114,6 +1124,12 @@ const Salary = ({
                       Наличка:
                     </span>
                     {Math.round(getSalaryfull('', 'Оплачено', 'Комбинированный', 'summa'), '')} руб.
+                  </td>
+                  <td className="w-full lg:w-auto p-2 text-gray-800 text-left lg:text-center border border-b block lg:table-cell relative lg:static whitespace-no-wrap">
+                    <span className="lg:hidden px-2 py-1 bg-purple-100 font-bold uppercase">
+                      Задаток:
+                    </span>
+                    {Math.round(getSalaryfull('', 'Задаток', '', 'summa'), '')} руб.
                   </td>
                   {calendarType === 'day' ? (
                     <td className="w-full lg:w-auto p-2 text-gray-800 text-left lg:text-center border border-b block lg:table-cell relative lg:static whitespace-no-wrap">
