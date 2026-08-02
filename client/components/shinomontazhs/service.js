@@ -1,6 +1,65 @@
 import React from 'react'
 import cx from 'classnames'
 import { ChosenServices } from '../../hooks/useGroup'
+import { hasShinomontazhPrice, isShinomontazhPromo } from '../../utils/shinomontazhPriceKey'
+
+const ServicePriceCell = ({ item, checkboxServiceChange, servicePriceChange }) => {
+  if (hasShinomontazhPrice(item.actualprice) && !isShinomontazhPromo(item.free)) {
+    return (
+      <td>
+        <button
+          className="w-full h-full mr-3"
+          key={item.id}
+          type="button"
+          name={item.id}
+          onClick={checkboxServiceChange}
+        >
+          <label
+            htmlFor={item.id}
+            somename={item.name}
+            somefree={item.free}
+            className="w-full h-full p-2 text-left inline-block"
+          >
+            {item.actualprice}
+          </label>
+        </button>
+      </td>
+    )
+  }
+
+  if (isShinomontazhPromo(item.free)) {
+    return (
+      <td>
+        <label
+          htmlFor={item.id}
+          somename={item.name}
+          somefree={item.free}
+          className="w-full h-full p-2 text-left inline-block"
+        >
+          <div className="py-1 px-4 bg-yellow-400 rounded-lg my-1 mr-3 border-yellow-400 border lg:w-32">
+            Акция
+          </div>
+        </label>
+      </td>
+    )
+  }
+
+  return (
+    <td>
+      <input
+        className="py-1 px-4 bg-white rounded-lg my-1 mr-3 border-green-500 border w-32"
+        placeholder="Цена"
+        type="number"
+        key={item.id}
+        name={item.id}
+        id={item.id}
+        somename={item.name}
+        somefree={item.free}
+        onChange={servicePriceChange}
+      />
+    </td>
+  )
+}
 
 const Service = ({
   actualService,
@@ -93,53 +152,11 @@ const Service = ({
                           </label>
                         </button>
                       </td>
-                      {item.actualprice && item.free === 'no' ? (
-                        <td>
-                          <button
-                            className="w-full h-full mr-3"
-                            key={item.id}
-                            type="button"
-                            name={item.id}
-                            onClick={checkboxServiceChange}
-                          >
-                            <label
-                              htmlFor={item.id}
-                              somename={item.name}
-                              somefree={item.free}
-                              className="w-full h-full p-2 text-left inline-block"
-                            >
-                              {item.actualprice}
-                            </label>
-                          </button>
-                        </td>
-                      ) : (
-                        <td>
-                          {item.free === 'no' ? (
-                            <input
-                              className="py-1 px-4 bg-white rounded-lg my-1 mr-3 border-green-500 border w-32"
-                              placeholder="Цена"
-                              type="number"
-                              key={item.id}
-                              name={item.id}
-                              id={item.id}
-                              somename={item.name}
-                              somefree={item.free}
-                              onChange={servicePriceChange}
-                            />
-                          ) : (
-                            <label
-                              htmlFor={item.id}
-                              somename={item.name}
-                              somefree={item.free}
-                              className="w-full h-full p-2 text-left inline-block"
-                            >
-                              <div className="py-1 px-4 bg-yellow-400 rounded-lg my-1 mr-3 border-yellow-400 border lg:w-32">
-                                Акция
-                              </div>
-                            </label>
-                          )}
-                        </td>
-                      )}
+                      <ServicePriceCell
+                        item={item}
+                        checkboxServiceChange={checkboxServiceChange}
+                        servicePriceChange={servicePriceChange}
+                      />
                       <td className="flex flex-row">
                         {service.find((it) => it.serviceName.includes(item.id)) ? (
                           <button
@@ -218,7 +235,7 @@ const Service = ({
                         </label>
                       </button>
                     </td>
-                    {item.price && item.free === 'no' ? (
+                    {hasShinomontazhPrice(item.price) && !isShinomontazhPromo(item.free) ? (
                       <td>
                         <button className="w-full h-full mr-3" key={item.id} type="button">
                           <label
@@ -231,14 +248,7 @@ const Service = ({
                       </td>
                     ) : (
                       <td>
-                        {item.free === 'no' ? (
-                          <input
-                            className="py-1 px-4 bg-white rounded-lg my-1 mr-3 border-green-500 border w-32"
-                            placeholder="Цена"
-                            type="number"
-                            key={item.id}
-                          />
-                        ) : (
+                        {isShinomontazhPromo(item.free) ? (
                           <label
                             htmlFor={item.id}
                             className="w-full h-full p-2 text-left inline-block"
@@ -247,6 +257,13 @@ const Service = ({
                               Акция
                             </div>
                           </label>
+                        ) : (
+                          <input
+                            className="py-1 px-4 bg-white rounded-lg my-1 mr-3 border-green-500 border w-32"
+                            placeholder="Цена"
+                            type="number"
+                            key={item.id}
+                          />
                         )}
                       </td>
                     )}

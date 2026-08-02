@@ -176,6 +176,7 @@ const ShinomontazhpriceCreate = (props) => {
 
                   <option value="common">Основное</option>
                   <option value="other">Другое</option>
+                  <option value="musorki_kar">Мусорки (КЭР)</option>
                   <option value="free">Акция</option>
                 </select>
               )}
