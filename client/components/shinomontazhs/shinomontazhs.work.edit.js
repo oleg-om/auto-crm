@@ -502,6 +502,25 @@ const ShinomontazhsEdit = (props) => {
           }))
       )
     }
+    if (state.diametr && state.kuzov === 'musorki_kar') {
+      setActualService(
+        shinomontazhprices
+          .filter(
+            (it) =>
+              ((it.type === 'selhoz' || it.type === 'gruz') && it.category === 'musorki_kar') ||
+              serviceItemIsInActualService(it.id)
+          )
+          .map((item) => ({
+            name: item.name,
+            id: item.id,
+            type: item.type,
+            category: item.category,
+            number: item.number,
+            actualprice: getPrice(item),
+            free: item.free
+          }))
+      )
+    }
     return () => {}
   }, [state.diametr, state.kuzov, shinomontazhprices])
 

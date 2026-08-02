@@ -181,6 +181,7 @@ const ShinomontazhpriceUpdate = (props) => {
 
                   <option value="common">Основное</option>
                   <option value="other">Другое</option>
+                  <option value="musorki_kar">Мусорки (КЭР)</option>
                 </select>
               )}
               <div className="pointer-events-none absolute top-0 mt-4  right-0 flex items-center px-2 text-gray-600">

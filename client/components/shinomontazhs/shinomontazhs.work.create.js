@@ -403,6 +403,23 @@ const ShinomontazhsCreate = (props) => {
           }))
       )
     }
+    if (state.diametr && state.kuzov === 'musorki_kar') {
+      setActualService(
+        shinomontazhprices
+          .filter(
+            (it) => (it.type === 'selhoz' || it.type === 'gruz') && it.category === 'musorki_kar'
+          )
+          .map((item) => ({
+            name: item.name,
+            id: item.id,
+            type: item.type,
+            category: item.category,
+            number: item.number,
+            actualprice: getPrice(item),
+            free: item.free
+          }))
+      )
+    }
     return () => {}
   }, [state.diametr, state.kuzov, shinomontazhprices])
 
@@ -558,7 +575,8 @@ const ShinomontazhsCreate = (props) => {
   }
 
   // const plateRegex = /^[АВЕКМНОРСТУХ][0-9]{3}[АВЕКМНОРСТУХ]{2}\s?[0-9]{2,3}$/i
-  const plateRegex = /^(?:[АВЕКМНОРСТУХ]\d{3}[АВЕКМНОРСТУХ]{2}\s?\d{2,3}|[АВЕКМНОРСТУХ]\d{4}\s?\d{2,3}|\d{4}[АВЕКМНОРСТУХ]{2}|\d{4}[АВЕКМНОРСТУХ]{2}\s?\d{2,3})$/i
+  const plateRegex =
+    /^(?:[АВЕКМНОРСТУХ]\d{3}[АВЕКМНОРСТУХ]{2}\s?\d{2,3}|[АВЕКМНОРСТУХ]\d{4}\s?\d{2,3}|\d{4}[АВЕКМНОРСТУХ]{2}|\d{4}[АВЕКМНОРСТУХ]{2}\s?\d{2,3})$/i
 
   const nextStep = () => {
     if (active === 'employee') {

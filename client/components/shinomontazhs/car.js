@@ -649,6 +649,12 @@ const Car = ({
                   {state.kuzov === 'selhoz'
                     ? sizeSelhoz.map((it) => <option value={it} label={it} key={it} />)
                     : null}
+                  {state.kuzov === 'musorki_kar'
+                    ? sizeSelhoz
+                        .concat(sizeGruz)
+                        .sort((a, b) => a - b)
+                        .map((it) => <option value={it} label={it} key={it} />)
+                    : null}
                 </select>
                 <div className="pointer-events-none hidden absolute top-0 mt-3 right-0 lg:flex items-center px-2 text-gray-600">
                   <svg
@@ -687,6 +693,7 @@ const Car = ({
                   <option value="runflat">RUN FLAT</option>
                   <option value="gruz">Грузовой</option>
                   <option value="selhoz">Сельхоз</option>
+                  <option value="musorki_kar">Мусорки (КЭР)</option>
                 </select>
                 <div className="pointer-events-none hidden absolute top-0 mt-3 right-0 lg:flex items-center px-2 text-gray-600">
                   <svg
