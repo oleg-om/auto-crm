@@ -668,6 +668,20 @@ const WashsEdit = (props) => {
         history.push(`/wash/list/${props.num ? props.num : ''}`)
       }
       notify('Работа оплачена (терминал + наличные)')
+    } else if (state.payment === 'deposit') {
+      props.updateWash(props.id, {
+        discount: state.discount,
+        payment: state.payment,
+        comment: state.comment,
+        status: statusList[7],
+        beznalPaid: state.beznalPaid || null
+      })
+      if (checkLink()) {
+        history.push(`/washboss/list/${props.num ? props.num : ''}`)
+      } else {
+        history.push(`/wash/list/${props.num ? props.num : ''}`)
+      }
+      notify('Внесён задаток')
     } else if (state.payment === 'cancel') {
       props.updateWash(props.id, {
         discount: state.discount,

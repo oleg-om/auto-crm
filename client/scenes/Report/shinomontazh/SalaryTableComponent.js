@@ -371,6 +371,10 @@ const SalaryTableComponent = ({
             )}{' '}
             руб.
           </td>
+          <td className="w-full lg:w-auto p-2 text-gray-800 text-left lg:text-center border border-b block lg:table-cell relative lg:static">
+            <span className="lg:hidden px-2 py-1 text-xs font-bold uppercase">Задаток:</span>
+            {Math.round(getSalary(it.id, 'Задаток', '', 'summa'), userPercent[it.id])} руб.
+          </td>
           {calendarType === 'day' ? (
             <td className="w-full lg:w-auto p-2 text-gray-800 text-left lg:text-center border border-b block lg:table-cell relative lg:static">
               <span className="lg:hidden px-2 py-1 text-xs font-bold uppercase">Сумма:</span>

@@ -88,7 +88,8 @@ const ShinomontazhsRowBoss = (props) => {
             'bg-blue-400': props.status === taskStatuses[2],
             'bg-yellow-400': props.status === taskStatuses[3],
             'bg-purple-400': props.status === taskStatuses[4] || props.status === taskStatuses[6],
-            'bg-red-500': props.status === taskStatuses[5]
+            'bg-red-500': props.status === taskStatuses[5],
+            'bg-green-500': props.status === taskStatuses[7]
           })}
         >
           {props.status}

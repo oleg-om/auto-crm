@@ -39,7 +39,8 @@ export const filterByStatus = (it, showPaid) => {
     ((showPaid === 'yes' && it.status === statuses[2]) ||
       it.status === statuses[3] ||
       it.status === statuses[4] ||
-      it.status === statuses[6]) &&
+      it.status === statuses[6] ||
+      it.status === statuses[7]) &&
     it?.payment &&
     it.payment !== 'cancel'
   ) {

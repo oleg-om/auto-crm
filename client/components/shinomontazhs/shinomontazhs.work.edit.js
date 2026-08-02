@@ -659,6 +659,20 @@ const ShinomontazhsEdit = (props) => {
       //  updateStorageStat(state?.storage, state?.id_shinomontazhs)
       navigateBack()
       notify('Работа оплачена (терминал + наличные)')
+    } else if (state.payment === 'deposit') {
+      props.updateShinomontazh(props.id, {
+        discount: state.discount,
+        payment: state.payment,
+        comment: state.comment,
+        status: statusList[7],
+        beznalPaid: state.beznalPaid || null,
+        organizationId: state.organizationId || null,
+        box,
+        customerId: activeCustomer || props.customerId || null,
+        groupCount
+      })
+      navigateBack()
+      notify('Внесён задаток')
     } else if (state.payment === 'cancel') {
       props.updateShinomontazh(props.id, {
         discount: state.discount,
