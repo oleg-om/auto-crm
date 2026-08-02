@@ -47,7 +47,8 @@ const WashsRowBoss = (props) => {
           props.status === taskStatuses[3] && props.beznalPaid,
         'bg-purple-200 hover:bg-purple-300':
           props.status === taskStatuses[4] || props.status === taskStatuses[6],
-        'bg-red-300 hover:bg-red-400': props.status === taskStatuses[5]
+        'bg-red-300 hover:bg-red-400': props.status === taskStatuses[5],
+        'bg-green-200 hover:bg-green-300': props.status === taskStatuses[7]
       })}
     >
       <td className="w-auto p-2 text-gray-800 text-sm text-center border border-b table-cell static">
