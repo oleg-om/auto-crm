@@ -15,7 +15,6 @@ import {
   getShinomontazhPriceKey,
   hasShinomontazhPrice,
   isMusorkiKarDiametr,
-  isShinomontazhPromo,
   normalizeShinomontazhFree
 } from '../../utils/shinomontazhPriceKey'
 import { useKeyboard } from '../../hooks/keyboard'
@@ -390,12 +389,7 @@ const ShinomontazhsCreate = (props) => {
       )
     } else if (state.diametr && state.kuzov === 'musorki_kar' && isMusorkiKarDiametr(state.diametr)) {
       setActualService(
-        shinomontazhprices
-          .filter((it) => it.category === 'musorki_kar')
-          .map(mapServiceItem)
-          .filter(
-            (item) => isShinomontazhPromo(item.free) || hasShinomontazhPrice(item.actualprice)
-          )
+        shinomontazhprices.filter((it) => it.category === 'musorki_kar').map(mapServiceItem)
       )
     } else {
       setActualService([])

@@ -17,7 +17,6 @@ import {
   getShinomontazhPriceKey,
   hasShinomontazhPrice,
   isMusorkiKarDiametr,
-  isShinomontazhPromo,
   normalizeShinomontazhFree
 } from '../../utils/shinomontazhPriceKey'
 import statusList from '../../../common/enums/shinomontazh-statuses'
@@ -487,16 +486,8 @@ const ShinomontazhsEdit = (props) => {
     } else if (state.diametr && state.kuzov === 'musorki_kar' && isMusorkiKarDiametr(state.diametr)) {
       setActualService(
         shinomontazhprices
-          .filter(
-            (it) => it.category === 'musorki_kar' || serviceItemIsInActualService(it.id)
-          )
+          .filter((it) => it.category === 'musorki_kar' || serviceItemIsInActualService(it.id))
           .map(mapServiceItem)
-          .filter(
-            (item) =>
-              isShinomontazhPromo(item.free) ||
-              serviceItemIsInActualService(item.id) ||
-              hasShinomontazhPrice(item.actualprice)
-          )
       )
     } else {
       setActualService([])
