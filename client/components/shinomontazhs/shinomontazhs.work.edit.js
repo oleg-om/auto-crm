@@ -596,6 +596,7 @@ const ShinomontazhsEdit = (props) => {
         status: statusList[2],
         beznalPaid: state.beznalPaid || null,
         organizationId: state.organizationId || null,
+        tyre: tyresToPayload(tyres),
         box,
         customerId: activeCustomer || props.customerId || null,
         groupCount
@@ -611,6 +612,7 @@ const ShinomontazhsEdit = (props) => {
         status: statusList[3],
         beznalPaid: state.beznalPaid || null,
         organizationId: state.organizationId || null,
+        tyre: tyresToPayload(tyres),
         box,
         customerId: activeCustomer || props.customerId || null,
         groupCount
@@ -626,6 +628,7 @@ const ShinomontazhsEdit = (props) => {
         status: statusList[4],
         beznalPaid: state.beznalPaid || null,
         organizationId: state.organizationId || null,
+        tyre: tyresToPayload(tyres),
         box,
         customerId: activeCustomer || props.customerId || null,
         groupCount
@@ -643,6 +646,7 @@ const ShinomontazhsEdit = (props) => {
         combCash: termCash.cash,
         beznalPaid: state.beznalPaid || null,
         organizationId: state.organizationId || null,
+        tyre: tyresToPayload(tyres),
         box,
         customerId: activeCustomer || props.customerId || null,
         groupCount
@@ -658,6 +662,7 @@ const ShinomontazhsEdit = (props) => {
         status: statusList[7],
         beznalPaid: state.beznalPaid || null,
         organizationId: state.organizationId || null,
+        tyre: tyresToPayload(tyres),
         box,
         customerId: activeCustomer || props.customerId || null,
         groupCount
@@ -672,6 +677,7 @@ const ShinomontazhsEdit = (props) => {
         status: statusList[5],
         beznalPaid: state.beznalPaid || null,
         organizationId: state.organizationId || null,
+        tyre: tyresToPayload(tyres),
         box,
         customerId: activeCustomer || props.customerId || null,
         groupCount
@@ -680,16 +686,12 @@ const ShinomontazhsEdit = (props) => {
       notify('Работа отменена')
     } else {
       props.updateShinomontazh(props.id, {
-        // ...state,
-        // services: service,
-        // material: materials,
-        // tyre: tyresToPayload(tyres),
-        // employee: employees,
         discount: state.discount,
         payment: state.payment,
         comment: state.comment,
         beznalPaid: state.beznalPaid || null,
         organizationId: state.organizationId || null,
+        tyre: tyresToPayload(tyres),
         box,
         customerId: activeCustomer || props.customerId || null
       })
