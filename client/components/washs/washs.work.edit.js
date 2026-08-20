@@ -706,7 +706,8 @@ const WashsEdit = (props) => {
         discount: state.discount,
         payment: state.payment,
         comment: state.comment,
-        beznalPaid: state.beznalPaid || null
+        beznalPaid: state.beznalPaid || null,
+        ...(!state.payment ? { status: statusList[1] } : {})
       })
       if (checkLink()) {
         history.push(`/washboss/list/${props.num ? props.num : ''}`)

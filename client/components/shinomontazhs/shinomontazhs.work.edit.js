@@ -693,7 +693,8 @@ const ShinomontazhsEdit = (props) => {
         organizationId: state.organizationId || null,
         tyre: tyresToPayload(tyres),
         box,
-        customerId: activeCustomer || props.customerId || null
+        customerId: activeCustomer || props.customerId || null,
+        ...(!state.payment ? { status: statusList[1] } : {})
       })
       navigateBack()
       notify('Запись изменена')

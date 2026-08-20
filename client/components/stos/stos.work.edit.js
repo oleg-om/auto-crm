@@ -597,7 +597,8 @@ const StosEdit = (props) => {
         beznalPaid: state.beznalPaid || null,
         organizationId: state.organizationId || null,
         customerId: activeCustomer || props.customerId || null,
-        mileage: state.mileage || null
+        mileage: state.mileage || null,
+        ...(!state.payment ? { status: statusList[1] } : {})
       })
       navigateBack()
       notify('Запись изменена')
