@@ -9,20 +9,26 @@ const initialState = {
   list: []
 }
 
+function sortByName(list) {
+  return [...list].sort((a, b) => (a.name || '').localeCompare(b.name || '', 'ru'))
+}
+
 export default (state = initialState, action) => {
   switch (action.type) {
     case GET_ORGANIZATIONS: {
-      return { ...state, list: action.organizations || [] }
+      return { ...state, list: sortByName(action.organizations || []) }
     }
     case CREATE_ORGANIZATION: {
-      return { ...state, list: [...(state.list || []), action.organization] }
+      return { ...state, list: sortByName([...(state.list || []), action.organization]) }
     }
     case UPDATE_ORGANIZATION: {
       return {
         ...state,
-        list: (state.list || []).map((it) => {
-          return action.organization.id === it.id ? action.organization : it
-        })
+        list: sortByName(
+          (state.list || []).map((it) => {
+            return action.organization.id === it.id ? action.organization : it
+          })
+        )
       }
     }
     case DELETE_ORGANIZATION: {
