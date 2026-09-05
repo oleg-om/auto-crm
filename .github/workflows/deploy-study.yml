@@ -4,6 +4,10 @@ on:
   push:
     branches: [ "master" ] # Триггер на пуш в ветку master
 
+concurrency:
+  group: deploy-study
+  cancel-in-progress: false
+
 jobs:
   deploy:
     runs-on: ubuntu-latest
