@@ -1,9 +1,12 @@
 import React from 'react'
 import { ChevronLeft, ChevronRight, MoreHorizontal } from 'lucide-react'
+import { type VariantProps } from 'class-variance-authority'
 import { cn } from '../../lib/utils'
 import { buttonVariants } from './button'
 
-const Pagination = ({ className, ...props }) => (
+type IPaginationProps = React.ComponentProps<'nav'>
+
+const Pagination = ({ className, ...props }: IPaginationProps) => (
   <nav
     role="navigation"
     aria-label="pagination"
@@ -13,17 +16,29 @@ const Pagination = ({ className, ...props }) => (
 )
 Pagination.displayName = 'Pagination'
 
-const PaginationContent = React.forwardRef(({ className, ...props }, ref) => (
-  <ul ref={ref} className={cn('flex flex-row items-center gap-1', className)} {...props} />
-))
+const PaginationContent = React.forwardRef<HTMLUListElement, React.ComponentProps<'ul'>>(
+  ({ className, ...props }, ref) => (
+    <ul ref={ref} className={cn('flex flex-row items-center gap-1', className)} {...props} />
+  )
+)
 PaginationContent.displayName = 'PaginationContent'
 
-const PaginationItem = React.forwardRef(({ className, ...props }, ref) => (
-  <li ref={ref} className={cn('', className)} {...props} />
-))
+const PaginationItem = React.forwardRef<HTMLLIElement, React.ComponentProps<'li'>>(
+  ({ className, ...props }, ref) => <li ref={ref} className={cn('', className)} {...props} />
+)
 PaginationItem.displayName = 'PaginationItem'
 
-const PaginationButton = ({ className, isActive, size = 'icon', ...props }) => (
+type IPaginationButtonProps = React.ButtonHTMLAttributes<HTMLButtonElement> &
+  VariantProps<typeof buttonVariants> & {
+    isActive?: boolean
+  }
+
+const PaginationButton = ({
+  className,
+  isActive,
+  size = 'icon',
+  ...props
+}: IPaginationButtonProps) => (
   <button
     type="button"
     aria-current={isActive ? 'page' : undefined}
@@ -39,7 +54,10 @@ const PaginationButton = ({ className, isActive, size = 'icon', ...props }) => (
 )
 PaginationButton.displayName = 'PaginationButton'
 
-const PaginationPrevious = ({ className, ...props }) => (
+const PaginationPrevious = ({
+  className,
+  ...props
+}: React.ButtonHTMLAttributes<HTMLButtonElement>) => (
   <PaginationButton
     aria-label="Предыдущая страница"
     size="default"
@@ -52,7 +70,7 @@ const PaginationPrevious = ({ className, ...props }) => (
 )
 PaginationPrevious.displayName = 'PaginationPrevious'
 
-const PaginationNext = ({ className, ...props }) => (
+const PaginationNext = ({ className, ...props }: React.ButtonHTMLAttributes<HTMLButtonElement>) => (
   <PaginationButton
     aria-label="Следующая страница"
     size="default"
@@ -65,7 +83,7 @@ const PaginationNext = ({ className, ...props }) => (
 )
 PaginationNext.displayName = 'PaginationNext'
 
-const PaginationEllipsis = ({ className, ...props }) => (
+const PaginationEllipsis = ({ className, ...props }: React.ComponentProps<'span'>) => (
   <span
     aria-hidden
     className={cn('flex h-9 w-9 items-center justify-center', className)}

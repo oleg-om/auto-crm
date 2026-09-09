@@ -101,6 +101,8 @@
         "@types/node": "^22.10.5",
         "@types/react": "^18.3.18",
         "@types/react-dom": "^18.3.5",
+        "@typescript-eslint/eslint-plugin": "^7",
+        "@typescript-eslint/parser": "^7",
         "autoprefixer": "^10.4.20",
         "copy-webpack-plugin": "^14.0.0",
         "css-loader": "4.2.2",

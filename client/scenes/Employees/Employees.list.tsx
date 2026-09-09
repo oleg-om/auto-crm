@@ -30,19 +30,21 @@ import {
   PaginationNext,
   PaginationPrevious
 } from '../../components/ui/pagination'
+import type { IEmployee } from '../../types/employee'
+import type { IPlace } from '../../types/place'
 
 const PAGE_SIZE = 20
 
-const getPageNumbers = (current, total) => {
+const getPageNumbers = (current: number, total: number): (number | string)[] => {
   const delta = 1
-  const middle = []
+  const middle: number[] = []
   for (let i = Math.max(2, current - delta); i <= Math.min(total - 1, current + delta); i++) {
     middle.push(i)
   }
   const withEdges = [1, ...middle, total].filter(
     (v, i, arr) => arr.indexOf(v) === i && v >= 1 && v <= total
   )
-  const result = []
+  const result: (number | string)[] = []
   let prev = 0
   withEdges.forEach((v) => {
     if (prev && v - prev > 1) result.push(`ellipsis-${v}`)
@@ -54,12 +56,14 @@ const getPageNumbers = (current, total) => {
 
 const EmployeeList = () => {
   toast.configure()
-  const notify = (arg) => {
+  const notify = (arg: string) => {
     toast.info(arg, { position: toast.POSITION.BOTTOM_RIGHT })
   }
-  const dispatch = useDispatch()
-  const list = useSelector((s) => s.employees.list)
-  const place = useSelector((s) => s.places.list)
+  // No app-wide typed store yet (see client/redux/reducers/index.js) - typed
+  // just for the slices this page reads, per the IEmployee/IPlace contracts.
+  const dispatch = useDispatch<any>()
+  const list = useSelector((s: { employees: { list: IEmployee[] } }) => s.employees.list)
+  const place = useSelector((s: { places: { list: IPlace[] } }) => s.places.list)
   const [isOpen, setIsOpen] = useState(false)
   const [itemId, setItemId] = useState('')
   const [searchName, setSearchName] = useState('')
@@ -81,11 +85,11 @@ const EmployeeList = () => {
   const currentPage = Math.min(page, totalPages)
   const pagedList = filteredList.slice((currentPage - 1) * PAGE_SIZE, currentPage * PAGE_SIZE)
 
-  const openAndDelete = (id) => {
+  const openAndDelete = (id: string) => {
     setIsOpen(true)
     setItemId(id)
   }
-  const deleteEmployeeLocal = (id) => {
+  const deleteEmployeeLocal = (id: string) => {
     dispatch(deleteEmployee(id))
     setIsOpen(false)
     notify('Сотрудник удален')

@@ -3,13 +3,20 @@ import { Link } from 'react-router-dom'
 import { TableRow, TableCell } from '../ui/table'
 import { Badge } from '../ui/badge'
 import { Button } from '../ui/button'
+import type { IEmployee } from '../../types/employee'
+import type { IPlace } from '../../types/place'
 
-const EmployeeRow = (props) => {
-  const removeEmployee = (e) => {
-    props.deleteEmployee(props.id, e.target.value)
+interface IEmployeeRowProps extends IEmployee {
+  place: IPlace[]
+  deleteEmployee: (id: string, value?: string) => void
+}
+
+const EmployeeRow = (props: IEmployeeRowProps) => {
+  const removeEmployee = (e: React.MouseEvent<HTMLButtonElement>) => {
+    props.deleteEmployee(props.id, (e.target as HTMLButtonElement).value)
   }
 
-  const newPlaceArray = props.address.reduce((r, e) => {
+  const newPlaceArray = props.address.reduce<string[]>((r, e) => {
     const c = props.place.find((a) => e === a.id)
     if (c) r.push(c.name)
     return r

@@ -105,6 +105,40 @@
     "react/jsx-props-no-spreading": ["off"],
     "camelcase": "off",
     "no-plusplus": [2, { "allowForLoopAfterthoughts": true }],
-    "no-nested-ternary": "off"
-  }
+    "no-nested-ternary": "off",
+    "import/extensions": [
+      "error",
+      "ignorePackages",
+      { "js": "never", "mjs": "never", "jsx": "never", "ts": "never", "tsx": "never" }
+    ]
+  },
+  "overrides": [
+    {
+      "files": ["*.ts", "*.tsx"],
+      "parser": "@typescript-eslint/parser",
+      "parserOptions": {
+        "ecmaVersion": 2022,
+        "sourceType": "module",
+        "ecmaFeatures": { "jsx": true }
+      },
+      "plugins": ["@typescript-eslint"],
+      "rules": {
+        "no-unused-vars": "off",
+        "no-undef": "off",
+        "no-shadow": "off",
+        "no-use-before-define": "off",
+        "@typescript-eslint/no-unused-vars": [
+          "error",
+          {
+            "varsIgnorePattern": "^React$",
+            "argsIgnorePattern": "^_",
+            "ignoreRestSiblings": true
+          }
+        ],
+        "@typescript-eslint/no-shadow": "error",
+        "@typescript-eslint/no-use-before-define": ["error", { "functions": false }],
+        "react/require-default-props": "off"
+      }
+    }
+  ]
 }
