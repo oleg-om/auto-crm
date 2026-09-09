@@ -10,7 +10,7 @@ const TyresRow = (props) => {
 
   const createDate = new Date(props.date)
   return (
-    <tr className="bg-white lg:hover:bg-gray-100 flex lg:table-row flex-row lg:flex-row flex-wrap lg:flex-no-wrap mb-5 lg:mb-0">
+    <tr className="bg-white lg:hover:bg-gray-100 flex lg:table-row flex-row lg:flex-row flex-wrap lg:flex-nowrap mb-5 lg:mb-0">
       <td className="w-full lg:w-auto p-2 text-gray-800 text-left text-sm lg:text-center border border-b block lg:table-cell relative lg:static">
         <span className="lg:hidden px-2 py-1 text-xs font-bold uppercase">№:</span>
         {props.id_tyres}
@@ -167,7 +167,7 @@ const TyresRow = (props) => {
           : null}
       </td>
 
-      <td className="whitespace-no-wrap w-full lg:w-auto p-2 text-gray-800 text-sm text-left lg:text-center border border-b block lg:table-cell relative lg:static">
+      <td className="whitespace-nowrap w-full lg:w-auto p-2 text-gray-800 text-sm text-left lg:text-center border border-b block lg:table-cell relative lg:static">
         <span className="lg:hidden px-2 py-1 text-xs font-bold uppercase">Телефон:</span>
         {props.phone}
       </td>
@@ -213,7 +213,7 @@ const TyresRow = (props) => {
           .toString()
           .replace(/^(\d)$/, '0$1')}`}
       </td>
-      <td className="w-full lg:w-auto p-2 text-gray-800 text-center border border-b block lg:table-cell relative lg:static whitespace-no-wrap">
+      <td className="w-full lg:w-auto p-2 text-gray-800 text-center border border-b block lg:table-cell relative lg:static whitespace-nowrap">
         <div className="flex flex-row justify-center">
           {/* <button
             type="submit"

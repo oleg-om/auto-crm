@@ -204,7 +204,7 @@ const Salary = ({ report, employeeListFull }) => {
           {employeeArray.map((it) => (
             <tr
               key={it.id}
-              className="bg-white lg:hover:bg-gray-100 flex lg:table-row flex-row lg:flex-row flex-wrap lg:flex-no-wrap mb-5 lg:mb-0"
+              className="bg-white lg:hover:bg-gray-100 flex lg:table-row flex-row lg:flex-row flex-wrap lg:flex-nowrap mb-5 lg:mb-0"
             >
               <td className="w-full lg:w-auto p-2 text-gray-800 text-left border border-b block lg:table-cell relative lg:static">
                 <span className="lg:hidden px-2 py-1 text-xs font-bold uppercase">Имя:</span>
@@ -249,7 +249,7 @@ const Salary = ({ report, employeeListFull }) => {
               </td>
             </tr>
           ))}
-          <tr className="bg-purple-100 font-bold lg:hover:bg-gray-100 flex lg:table-row flex-row lg:flex-row flex-wrap lg:flex-no-wrap mb-5 lg:mb-0">
+          <tr className="bg-purple-100 font-bold lg:hover:bg-gray-100 flex lg:table-row flex-row lg:flex-row flex-wrap lg:flex-nowrap mb-5 lg:mb-0">
             <td className="w-full lg:w-auto p-2 text-gray-800 text-left border border-b block lg:table-cell relative lg:static">
               <span className="lg:hidden px-2 py-1 bg-purple-100 font-bold uppercase">Всего:</span>
               Всего
@@ -327,7 +327,7 @@ const Salary = ({ report, employeeListFull }) => {
             .map((it) => (
               <tr
                 key={it.id}
-                className="bg-white lg:hover:bg-gray-100 flex lg:table-row flex-row lg:flex-row flex-wrap lg:flex-no-wrap mb-5 lg:mb-0"
+                className="bg-white lg:hover:bg-gray-100 flex lg:table-row flex-row lg:flex-row flex-wrap lg:flex-nowrap mb-5 lg:mb-0"
               >
                 <td className="w-full lg:w-auto p-2 text-gray-800 text-left border border-b block lg:table-cell relative lg:static">
                   <span className="lg:hidden px-2 py-1 text-xs font-bold uppercase">Номер:</span>
@@ -391,7 +391,7 @@ const Salary = ({ report, employeeListFull }) => {
                 .map((it) => (
                   <tr
                     key={it.id}
-                    className="bg-white lg:hover:bg-gray-100 flex lg:table-row flex-row lg:flex-row flex-wrap lg:flex-no-wrap mb-5 lg:mb-0"
+                    className="bg-white lg:hover:bg-gray-100 flex lg:table-row flex-row lg:flex-row flex-wrap lg:flex-nowrap mb-5 lg:mb-0"
                   >
                     <td className="w-full lg:w-auto p-2 text-gray-800 text-left border border-b block lg:table-cell relative lg:static">
                       <span className="lg:hidden px-2 py-1 text-xs font-bold uppercase">

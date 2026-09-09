@@ -53,7 +53,7 @@ const Vendors = ({ employeeList, report }) => {
             {slicedCarArray.map((it) => (
               <tr
                 key={it.car}
-                className="bg-white lg:hover:bg-gray-100 flex lg:table-row flex-row lg:flex-row flex-wrap lg:flex-no-wrap mb-5 lg:mb-0"
+                className="bg-white lg:hover:bg-gray-100 flex lg:table-row flex-row lg:flex-row flex-wrap lg:flex-nowrap mb-5 lg:mb-0"
               >
                 <td className="w-full lg:w-1/3 p-2 text-gray-800 text-left border border-b block lg:table-cell relative lg:static">
                   <span className="lg:hidden px-2 py-1 text-xs font-bold uppercase">
@@ -98,7 +98,7 @@ const Vendors = ({ employeeList, report }) => {
                   {topVendorsArray(item.id).map((it) => (
                     <tr
                       key={it.car}
-                      className="bg-white lg:hover:bg-gray-100 flex lg:table-row flex-row lg:flex-row flex-wrap lg:flex-no-wrap mb-5 lg:mb-0"
+                      className="bg-white lg:hover:bg-gray-100 flex lg:table-row flex-row lg:flex-row flex-wrap lg:flex-nowrap mb-5 lg:mb-0"
                     >
                       <td className="w-full lg:w-1/3 p-2 text-gray-800 text-left border border-b block lg:table-cell relative lg:static">
                         <span className="lg:hidden px-2 py-1 text-xs font-bold uppercase">

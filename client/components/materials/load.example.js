@@ -33,7 +33,7 @@ const LoadExample = () => {
           </tr>
         </thead>
         <tbody>
-          <tr className="bg-white lg:hover:bg-gray-100 flex lg:table-row flex-row lg:flex-row flex-wrap lg:flex-no-wrap mb-5 lg:mb-0">
+          <tr className="bg-white lg:hover:bg-gray-100 flex lg:table-row flex-row lg:flex-row flex-wrap lg:flex-nowrap mb-5 lg:mb-0">
             <td className="w-full lg:w-auto p-2 text-gray-800 text-left lg:text-center border border-b block lg:table-cell relative lg:static">
               <span className="lg:hidden px-2 py-1 text-xs font-bold uppercase">Название:</span>
               Вентиль PVR-32
@@ -53,7 +53,7 @@ const LoadExample = () => {
               <span className="lg:hidden px-2 py-1 text-xs font-bold uppercase">Категория:</span>
               Вентили для легковых автомобилей
             </td>
-            <td className="w-full lg:w-auto p-2 text-gray-800 text-center border border-b block lg:table-cell relative lg:static whitespace-no-wrap">
+            <td className="w-full lg:w-auto p-2 text-gray-800 text-center border border-b block lg:table-cell relative lg:static whitespace-nowrap">
               <span className="lg:hidden px-2 py-1 text-xs font-bold uppercase">Тип:</span>
               shinomontazh
             </td>
@@ -61,12 +61,12 @@ const LoadExample = () => {
               <span className="lg:hidden px-2 py-1 text-xs font-bold uppercase">Акцию:</span>
               no
             </td>
-            <td className="w-full lg:w-auto p-2 text-gray-800 text-center border border-b block lg:table-cell relative lg:static whitespace-no-wrap">
+            <td className="w-full lg:w-auto p-2 text-gray-800 text-center border border-b block lg:table-cell relative lg:static whitespace-nowrap">
               <span className="lg:hidden px-2 py-1 text-xs font-bold uppercase">Плюс:</span>
               no
             </td>
           </tr>
-          <tr className="bg-white lg:hover:bg-gray-100 flex lg:table-row flex-row lg:flex-row flex-wrap lg:flex-no-wrap mb-5 lg:mb-0">
+          <tr className="bg-white lg:hover:bg-gray-100 flex lg:table-row flex-row lg:flex-row flex-wrap lg:flex-nowrap mb-5 lg:mb-0">
             <td className="w-full lg:w-auto p-2 text-gray-800 text-left lg:text-center border border-b block lg:table-cell relative lg:static">
               <span className="lg:hidden px-2 py-1 text-xs font-bold uppercase">Название:</span>
               Латка унив. PU-35 (35 мм)
@@ -87,7 +87,7 @@ const LoadExample = () => {
               <span className="lg:hidden px-2 py-1 text-xs font-bold uppercase">Категория:</span>
               Латки универсальные
             </td>
-            <td className="w-full lg:w-auto p-2 text-gray-800 text-center border border-b block lg:table-cell relative lg:static whitespace-no-wrap">
+            <td className="w-full lg:w-auto p-2 text-gray-800 text-center border border-b block lg:table-cell relative lg:static whitespace-nowrap">
               <span className="lg:hidden px-2 py-1 text-xs font-bold uppercase">Тип:</span>
               shinomontazh
             </td>
@@ -95,12 +95,12 @@ const LoadExample = () => {
               <span className="lg:hidden px-2 py-1 text-xs font-bold uppercase">Акция:</span>
               yes
             </td>
-            <td className="w-full lg:w-auto p-2 text-gray-800 text-center border border-b block lg:table-cell relative lg:static whitespace-no-wrap">
+            <td className="w-full lg:w-auto p-2 text-gray-800 text-center border border-b block lg:table-cell relative lg:static whitespace-nowrap">
               <span className="lg:hidden px-2 py-1 text-xs font-bold uppercase">Плюс:</span>
               no
             </td>
           </tr>
-          <tr className="bg-white lg:hover:bg-gray-100 flex lg:table-row flex-row lg:flex-row flex-wrap lg:flex-no-wrap mb-5 lg:mb-0">
+          <tr className="bg-white lg:hover:bg-gray-100 flex lg:table-row flex-row lg:flex-row flex-wrap lg:flex-nowrap mb-5 lg:mb-0">
             <td className="w-full lg:w-auto p-2 text-gray-800 text-left lg:text-center border border-b block lg:table-cell relative lg:static">
               <span className="lg:hidden px-2 py-1 text-xs font-bold uppercase">Название:</span>
               Бутылка с пенообразователем LERATON 150мл
@@ -121,7 +121,7 @@ const LoadExample = () => {
               <span className="lg:hidden px-2 py-1 text-xs font-bold uppercase">Категория:</span>
               Химия
             </td>
-            <td className="w-full lg:w-auto p-2 text-gray-800 text-center border border-b block lg:table-cell relative lg:static whitespace-no-wrap">
+            <td className="w-full lg:w-auto p-2 text-gray-800 text-center border border-b block lg:table-cell relative lg:static whitespace-nowrap">
               <span className="lg:hidden px-2 py-1 text-xs font-bold uppercase">Тип:</span>
               moika
             </td>
@@ -129,7 +129,7 @@ const LoadExample = () => {
               <span className="lg:hidden px-2 py-1 text-xs font-bold uppercase">Акция:</span>
               no
             </td>
-            <td className="w-full lg:w-auto p-2 text-gray-800 text-center border border-b block lg:table-cell relative lg:static whitespace-no-wrap">
+            <td className="w-full lg:w-auto p-2 text-gray-800 text-center border border-b block lg:table-cell relative lg:static whitespace-nowrap">
               <span className="lg:hidden px-2 py-1 text-xs font-bold uppercase">Плюс:</span>
               yes
             </td>

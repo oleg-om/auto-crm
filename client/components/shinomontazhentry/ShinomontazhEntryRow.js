@@ -112,7 +112,7 @@ const ShinomontazhEntryRow = (props) => {
               <tr
                 key={it}
                 className={cx(
-                  'flex lg:table-row flex-row lg:flex-row flex-wrap lg:flex-no-wrap mb-5 lg:mb-0',
+                  'flex lg:table-row flex-row lg:flex-row flex-wrap lg:flex-nowrap mb-5 lg:mb-0',
                   {
                     'bg-white lg:hover:bg-gray-100': timeNumberIs10(it),
                     'bg-blue-100 lg:hover:bg-blue-200': timeNumberIs24(it)
@@ -288,7 +288,7 @@ const ShinomontazhEntryRow = (props) => {
             <tr
               key={it}
               className={cx(
-                'flex lg:table-row flex-row lg:flex-row flex-wrap lg:flex-no-wrap mb-5 lg:mb-0',
+                'flex lg:table-row flex-row lg:flex-row flex-wrap lg:flex-nowrap mb-5 lg:mb-0',
                 {
                   'bg-white lg:hover:bg-gray-100': timeNumberIs10(it),
                   'bg-blue-100 lg:hover:bg-blue-200': timeNumberIs24(it)

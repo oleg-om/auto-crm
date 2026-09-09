@@ -1,13 +1,56 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import { Link } from 'react-router-dom'
 import { toast } from 'react-toastify'
+import { X } from 'lucide-react'
 import EmployeeRow from '../../components/employees/employee'
 import { deleteEmployee } from '../../redux/reducers/employees'
 import Navbar from '../../components/Navbar'
 import Sidebar from '../../components/Sidebar'
 import Modal from '../../components/Modal.delete'
 import 'react-toastify/dist/ReactToastify.css'
+import { Card, CardContent } from '../../components/ui/card'
+import { Label } from '../../components/ui/label'
+import { Input } from '../../components/ui/input'
+import { Button } from '../../components/ui/button'
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue
+} from '../../components/ui/select'
+import { Table, TableBody, TableHead, TableHeader, TableRow } from '../../components/ui/table'
+import {
+  Pagination,
+  PaginationButton,
+  PaginationContent,
+  PaginationEllipsis,
+  PaginationItem,
+  PaginationNext,
+  PaginationPrevious
+} from '../../components/ui/pagination'
+
+const PAGE_SIZE = 20
+
+const getPageNumbers = (current, total) => {
+  const delta = 1
+  const middle = []
+  for (let i = Math.max(2, current - delta); i <= Math.min(total - 1, current + delta); i++) {
+    middle.push(i)
+  }
+  const withEdges = [1, ...middle, total].filter(
+    (v, i, arr) => arr.indexOf(v) === i && v >= 1 && v <= total
+  )
+  const result = []
+  let prev = 0
+  withEdges.forEach((v) => {
+    if (prev && v - prev > 1) result.push(`ellipsis-${v}`)
+    result.push(v)
+    prev = v
+  })
+  return result
+}
 
 const EmployeeList = () => {
   toast.configure()
@@ -21,6 +64,7 @@ const EmployeeList = () => {
   const [itemId, setItemId] = useState('')
   const [searchName, setSearchName] = useState('')
   const [searchPlace, setSearchPlace] = useState('')
+  const [page, setPage] = useState(1)
 
   const filteredList = list.filter((it) => {
     const fullName = `${it.name} ${it.surname}`.toLowerCase()
@@ -28,6 +72,14 @@ const EmployeeList = () => {
     const matchesPlace = searchPlace === '' || it.address.includes(searchPlace)
     return matchesName && matchesPlace
   })
+
+  useEffect(() => {
+    setPage(1)
+  }, [searchName, searchPlace])
+
+  const totalPages = Math.max(1, Math.ceil(filteredList.length / PAGE_SIZE))
+  const currentPage = Math.min(page, totalPages)
+  const pagedList = filteredList.slice((currentPage - 1) * PAGE_SIZE, currentPage * PAGE_SIZE)
 
   const openAndDelete = (id) => {
     setIsOpen(true)
@@ -46,105 +98,114 @@ const EmployeeList = () => {
         <Sidebar />
         <div className="container mx-auto px-4">
           <h1 className="text-3xl py-4 border-b mb-6">Список сотрудников</h1>
-          <div className="py-3 px-4 my-3 rounded-lg shadow bg-white">
-            <div className="-mx-3 md:flex md:justify-between">
-              <div className="md:w-1/2 px-3 mb-6 md:mb-0">
-                <label
-                  className="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2"
-                  htmlFor="searchName"
-                >
-                  Имя или фамилия
-                </label>
-                <div className="flex-shrink w-full inline-block relative">
-                  <input
-                    className="appearance-none block w-full bg-grey-lighter text-grey-darker border border-gray-300 focus:border-gray-500 focus:outline-none rounded py-1 px-4 pr-8"
-                    value={searchName}
-                    name="searchName"
-                    id="searchName"
-                    placeholder="Введите имя или фамилию"
-                    onChange={(e) => setSearchName(e.target.value)}
-                  />
-                  {searchName ? (
-                    <button
-                      type="button"
-                      className="absolute top-0 right-0 h-full px-2 flex items-center text-gray-500 hover:text-gray-700"
-                      onClick={() => setSearchName('')}
-                      aria-label="Очистить"
-                    >
-                      &times;
-                    </button>
-                  ) : null}
-                </div>
-              </div>
-              <div className="md:w-1/2 px-3 mb-6 md:mb-0">
-                <label
-                  className="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2"
-                  htmlFor="searchPlace"
-                >
-                  Точка
-                </label>
-                <div className="flex-shrink w-full inline-block relative">
-                  <select
-                    className="block appearance-none w-full bg-grey-lighter border border-gray-300 focus:border-gray-500 focus:outline-none py-1 px-4 pr-8 rounded"
-                    value={searchPlace}
-                    name="searchPlace"
-                    id="searchPlace"
-                    onChange={(e) => setSearchPlace(e.target.value)}
-                  >
-                    <option value="">Все</option>
-                    {place.map((it) => (
-                      <option key={it.id} value={it.id}>
-                        {it.name}
-                      </option>
-                    ))}
-                  </select>
-                  <div className="pointer-events-none absolute top-0 mt-2 right-0 flex items-center px-2 text-gray-600">
-                    <svg
-                      className="fill-current h-4 w-4"
-                      xmlns="http://www.w3.org/2000/svg"
-                      viewBox="0 0 20 20"
-                    >
-                      <path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z" />
-                    </svg>
+          <Card className="my-3">
+            <CardContent className="p-4">
+              <div className="-mx-2 md:flex md:justify-between">
+                <div className="md:w-1/2 px-2 mb-4 md:mb-0">
+                  <Label htmlFor="searchName" className="block mb-2">
+                    Имя или фамилия
+                  </Label>
+                  <div className="relative">
+                    <Input
+                      id="searchName"
+                      value={searchName}
+                      placeholder="Введите имя или фамилию"
+                      className="pr-8"
+                      onChange={(e) => setSearchName(e.target.value)}
+                    />
+                    {searchName ? (
+                      <button
+                        type="button"
+                        className="absolute inset-y-0 right-0 flex items-center px-2 text-muted-foreground hover:text-foreground"
+                        onClick={() => setSearchName('')}
+                        aria-label="Очистить"
+                      >
+                        <X className="h-4 w-4" />
+                      </button>
+                    ) : null}
                   </div>
                 </div>
-              </div>
-            </div>
-          </div>
-          <div className="overflow-x-auto rounded-lg overflow-y-auto relative lg:my-3 mt-1 lg:shadow">
-            <table className="border-collapse w-full">
-              <thead>
-                <tr>
-                  <th className="p-3 font-bold uppercase bg-gray-100 text-gray-600 border border-gray-300 hidden lg:table-cell">
-                    Имя
-                  </th>
-                  <th className="p-3 font-bold uppercase bg-gray-100 text-gray-600 border border-gray-300 hidden lg:table-cell">
+                <div className="md:w-1/2 px-2 mb-4 md:mb-0">
+                  <Label htmlFor="searchPlace" className="block mb-2">
                     Точка
-                  </th>
-                  <th className="p-3 font-bold uppercase bg-gray-100 text-gray-600 border border-gray-300 hidden lg:table-cell">
-                    Должность
-                  </th>
-                  <th className="p-3 font-bold uppercase bg-gray-100 text-gray-600 border border-gray-300 hidden lg:table-cell">
-                    Действия
-                  </th>
-                </tr>
-              </thead>
-              <tbody>
-                {filteredList.map((it) => (
+                  </Label>
+                  <Select
+                    value={searchPlace === '' ? 'all' : searchPlace}
+                    onValueChange={(value) => setSearchPlace(value === 'all' ? '' : value)}
+                  >
+                    <SelectTrigger id="searchPlace">
+                      <SelectValue placeholder="Все" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="all">Все</SelectItem>
+                      {place.map((it) => (
+                        <SelectItem key={it.id} value={it.id}>
+                          {it.name}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+          <div className="overflow-x-auto rounded-lg relative lg:my-3 mt-1 lg:shadow">
+            <Table className="min-w-[640px]">
+              <TableHeader>
+                <TableRow>
+                  <TableHead>Имя</TableHead>
+                  <TableHead>Точка</TableHead>
+                  <TableHead>Должность</TableHead>
+                  <TableHead>Действия</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {pagedList.map((it) => (
                   <EmployeeRow key={it.id} place={place} deleteEmployee={openAndDelete} {...it} />
                 ))}
-              </tbody>
-            </table>
+              </TableBody>
+            </Table>
           </div>
+          {totalPages > 1 ? (
+            <Pagination className="my-4">
+              <PaginationContent>
+                <PaginationItem>
+                  <PaginationPrevious
+                    disabled={currentPage === 1}
+                    onClick={() => setPage(Math.max(1, currentPage - 1))}
+                  />
+                </PaginationItem>
+                {getPageNumbers(currentPage, totalPages).map((it) =>
+                  typeof it === 'number' ? (
+                    <PaginationItem key={it}>
+                      <PaginationButton isActive={it === currentPage} onClick={() => setPage(it)}>
+                        {it}
+                      </PaginationButton>
+                    </PaginationItem>
+                  ) : (
+                    <PaginationItem key={it}>
+                      <PaginationEllipsis />
+                    </PaginationItem>
+                  )
+                )}
+                <PaginationItem>
+                  <PaginationNext
+                    disabled={currentPage === totalPages}
+                    onClick={() => setPage(Math.min(totalPages, currentPage + 1))}
+                  />
+                </PaginationItem>
+              </PaginationContent>
+            </Pagination>
+          ) : null}
           <Link to="/employee/create">
-            <button
+            <Button
               type="button"
-              className="fixed bottom-0 h-32 w-32 left-0 p-6 shadow bg-main-600 text-white text-l hover:bg-main-700 hover:text-white rounded-full my-3 mx-3"
+              className="fixed bottom-0 h-32 w-32 left-0 p-6 shadow rounded-full my-3 mx-3"
             >
               Новый
               <br />
               сотрудник
-            </button>
+            </Button>
           </Link>
         </div>
         <Modal

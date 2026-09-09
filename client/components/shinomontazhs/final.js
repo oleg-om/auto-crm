@@ -238,7 +238,7 @@ const Final = ({
                   {service.map((it) => (
                     <tr
                       key={it.id}
-                      className="bg-white lg:hover:bg-gray-100 table-row flex-row flex-no-wrap mb-5 lg:mb-0"
+                      className="bg-white lg:hover:bg-gray-100 table-row flex-row flex-nowrap mb-5 lg:mb-0"
                     >
                       {groupCount > 1 ? (
                         <td className="text-left w-auto p-2 text-gray-800 border border-b table-cell static">
@@ -262,7 +262,7 @@ const Final = ({
                   {materials.map((it) => (
                     <tr
                       key={it.id}
-                      className="bg-gray-200 lg:hover:bg-gray-300 table-row flex-row flex-no-wrap mb-5 lg:mb-0"
+                      className="bg-gray-200 lg:hover:bg-gray-300 table-row flex-row flex-nowrap mb-5 lg:mb-0"
                     >
                       {groupCount > 1 ? (
                         <td className="text-left w-auto p-2 text-gray-800 border border-b table-cell static">

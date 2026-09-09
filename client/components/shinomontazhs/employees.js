@@ -125,7 +125,7 @@ const Employee = ({
                           <button
                             type="button"
                             className={cx(
-                              'py-1 px-4 rounded-lg my-1 mr-3 border whitespace-no-wrap',
+                              'py-1 px-4 rounded-lg my-1 mr-3 border whitespace-nowrap',
                               {
                                 'border-yellow-400 bg-yellow-400':
                                   employees.find((it) => it.id.includes(item.id)).role === 'main',
@@ -175,7 +175,7 @@ const Employee = ({
                     <td>
                       <button
                         type="button"
-                        className={cx('py-1 px-4 rounded-lg my-1 mr-3 border whitespace-no-wrap', {
+                        className={cx('py-1 px-4 rounded-lg my-1 mr-3 border whitespace-nowrap', {
                           'border-yellow-400 bg-yellow-400': item.role === 'main',
                           'border-green-400 bg-green-400': item.role === 'second',
                           'border-red-400 bg-red-400': item.role === 'student'
