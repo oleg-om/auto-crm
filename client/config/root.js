@@ -23,8 +23,6 @@ import PlaceList from '../scenes/Places/Places.list'
 import PlaceNew from '../scenes/Places/Places.create'
 import PlaceEdit from '../scenes/Places/Places.edit'
 import EmployeeList from '../scenes/Employees/Employees.list'
-import EmployeeNew from '../scenes/Employees/Employees.create'
-import EmployeeEdit from '../scenes/Employees/Employees.edit'
 import AccountList from '../scenes/Accounts/Accounts.list'
 import AccountNew from '../scenes/Accounts/Accounts.create'
 // import RegisterCommon from '../scenes/Accounts/Register.common'
@@ -275,8 +273,8 @@ const RootComponent = (props) => {
             <PrivateRoute exact path="/employee-journal" component={EmployeeJournal} />
             <BossRoute exact path="/boss-journal" component={BossJournal} />
             <AdminRoute exact path="/employee/list" component={EmployeeList} />
-            <PrivateRoute exact path="/employee/create" component={EmployeeNew} />
-            <PrivateRoute exact path="/employee/edit/:id" component={EmployeeEdit} />
+            <AdminRoute exact path="/employee/create" component={EmployeeList} />
+            <AdminRoute exact path="/employee/edit/:id" component={EmployeeList} />
             <AdminRoute exact path="/account/list" component={AccountList} />
             <PrivateRoute exact path="/account/create" component={AccountNew} />
             {/* <Route exact path="/register" component={RegisterCommon} /> */}

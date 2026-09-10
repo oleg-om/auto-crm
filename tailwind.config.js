@@ -3,7 +3,13 @@ const dotenv = require('dotenv')
 dotenv.config()
 
 module.exports = {
-  content: ['./client/**/*.html', './client/**/*.jsx', './client/**/*.js', './client/**/*.tsx'],
+  content: [
+    './client/**/*.html',
+    './client/**/*.jsx',
+    './client/**/*.js',
+    './client/**/*.tsx',
+    './client/**/*.ts'
+  ],
   theme: {
     extend: {
       colors: {
