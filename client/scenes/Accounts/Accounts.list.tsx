@@ -133,7 +133,7 @@ const AccountList = () => {
   }
 
   const activeRole = accountRoleList.find(
-    (it: { name: string; value: string }) => it.value === roleFilter
+    (it: { name: string; value: string; color: string }) => it.value === roleFilter
   )
 
   const filteredList = list.filter((it) => {
@@ -238,7 +238,7 @@ const AccountList = () => {
                     </SelectTrigger>
                     <SelectContent>
                       <SelectItem value={ALL_ROLES}>Все</SelectItem>
-                      {accountRoleList.map((it: { name: string; value: string }) => (
+                      {accountRoleList.map((it: { name: string; value: string; color: string }) => (
                         <SelectItem key={it.value} value={it.value}>
                           {it.name}
                         </SelectItem>

@@ -265,7 +265,7 @@ const AccountForm = ({ mode, account, onSaved, onCancel }: IAccountFormProps) =>
                   Какие разделы приложения доступны этому аккаунту
                 </FieldDescription>
                 <div className="grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
-                  {accountRoleList.map((it: { name: string; value: string }) => (
+                  {accountRoleList.map((it: { name: string; value: string; color: string }) => (
                     <FieldLabel key={it.value} htmlFor={`role-${it.value}`}>
                       <Field orientation="horizontal">
                         <Checkbox
