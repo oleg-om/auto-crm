@@ -34,8 +34,6 @@ import BossJournal from '../components/journal/BossJournal'
 import RazvalList from '../scenes/Razval/Razval.list'
 import SettingEdit from '../scenes/Settings/Settings'
 import MaterialList from '../scenes/Materials/Materials.list'
-import MaterialNew from '../scenes/Materials/Materials.create'
-import MaterialEdit from '../scenes/Materials/Materials.edit'
 import ShinomontazhpriceList from '../scenes/Shinomotazh.prices/Shinomotazh.prices.list'
 import ShinomontazhpriceNew from '../scenes/Shinomotazh.prices/Shinomotazh.prices.create'
 import ShinomontazhpriceEdit from '../scenes/Shinomotazh.prices/Shinomotazh.prices.edit'
@@ -284,8 +282,8 @@ const RootComponent = (props) => {
             <PrivateRoute exact path="/oil/list" component={OilList} />
             <PrivateRoute exact path="/settings" component={SettingEdit} />
             <PrivateRoute exact path="/material/list" component={MaterialList} />
-            <PrivateRoute exact path="/material/create" component={MaterialNew} />
-            <PrivateRoute exact path="/material/edit/:id" component={MaterialEdit} />
+            <PrivateRoute exact path="/material/create" component={MaterialList} />
+            <PrivateRoute exact path="/material/edit/:id" component={MaterialList} />
             <PrivateRoute
               exact
               path="/shinomontazhprice/list/:type"
@@ -339,8 +337,16 @@ const RootComponent = (props) => {
             <TyresOrderDeskRoute exact path="/tyres/order-desk/list" component={TyresList} />
             <TyresOrderDeskRoute exact path="/tyres/order-desk/create/:num" component={TyresNew} />
             <TyresOrderDeskRoute exact path="/tyres/order-desk/create" component={TyresNew} />
-            <TyresOrderDeskRoute exact path="/tyres/order-desk/edit/:id/:num" component={TyreEditSimple} />
-            <TyresOrderDeskRoute exact path="/tyres/order-desk/edit/:id" component={TyreEditSimple} />
+            <TyresOrderDeskRoute
+              exact
+              path="/tyres/order-desk/edit/:id/:num"
+              component={TyreEditSimple}
+            />
+            <TyresOrderDeskRoute
+              exact
+              path="/tyres/order-desk/edit/:id"
+              component={TyreEditSimple}
+            />
             <PrivateRoute exact path="/tyres/edit/:id/:num" component={TyreEditSimple} />
             <PrivateRoute exact path="/tyres/edit/:id" component={TyreEditSimple} />
             <PrivateRoute exact path="/tyres/editfull/:id/:num" component={TyreEditFull} />
@@ -448,22 +454,46 @@ const RootComponent = (props) => {
 
             {/* diskpainting */}
             <PrivateRoute exact path="/diskpaintingprice/list/" component={DiskpaintingpriceList} />
-            <PrivateRoute exact path="/diskpaintingprice/list/:type" component={DiskpaintingpriceList} />
+            <PrivateRoute
+              exact
+              path="/diskpaintingprice/list/:type"
+              component={DiskpaintingpriceList}
+            />
             <PrivateRoute exact path="/diskpaintingprice/create" component={DiskpaintingpriceNew} />
-            <PrivateRoute exact path="/diskpaintingprice/:type/edit/:id" component={DiskpaintingpriceEdit} />
+            <PrivateRoute
+              exact
+              path="/diskpaintingprice/:type/edit/:id"
+              component={DiskpaintingpriceEdit}
+            />
 
             <PrivateRoute exact path="/diskpainting/list/:num" component={DiskpaintingsList} />
             <PrivateRoute exact path="/diskpainting/list" component={DiskpaintingsList} />
-            <PrivateRoute exact path="/diskpaintingboss/list/:num" component={DiskpaintingsListBoss} />
+            <PrivateRoute
+              exact
+              path="/diskpaintingboss/list/:num"
+              component={DiskpaintingsListBoss}
+            />
             <PrivateRoute exact path="/diskpaintingboss/list" component={DiskpaintingsListBoss} />
             <PrivateRoute exact path="/diskpainting/create/:num" component={DiskpaintingsNew} />
             <PrivateRoute exact path="/diskpainting/create" component={DiskpaintingsNew} />
             <PrivateRoute exact path="/diskpaintingboss/create/:num" component={DiskpaintingsNew} />
             <PrivateRoute exact path="/diskpaintingboss/create" component={DiskpaintingsNew} />
-            <PrivateRoute exact path="/diskpainting/edit/:id/:num" component={DiskpaintingEditFull} />
+            <PrivateRoute
+              exact
+              path="/diskpainting/edit/:id/:num"
+              component={DiskpaintingEditFull}
+            />
             <PrivateRoute exact path="/diskpainting/edit/:id" component={DiskpaintingEditFull} />
-            <PrivateRoute exact path="/diskpaintingboss/edit/:id/:num" component={DiskpaintingEditFull} />
-            <PrivateRoute exact path="/diskpaintingboss/edit/:id" component={DiskpaintingEditFull} />
+            <PrivateRoute
+              exact
+              path="/diskpaintingboss/edit/:id/:num"
+              component={DiskpaintingEditFull}
+            />
+            <PrivateRoute
+              exact
+              path="/diskpaintingboss/edit/:id"
+              component={DiskpaintingEditFull}
+            />
 
             <Route component={() => <NotFound />} />
           </Switch>
