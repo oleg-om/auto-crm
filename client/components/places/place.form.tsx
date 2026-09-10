@@ -3,11 +3,17 @@ import { useDispatch } from 'react-redux'
 import { toast } from 'react-toastify'
 import NumberFormat from 'react-number-format'
 import 'react-toastify/dist/ReactToastify.css'
-import { cn } from '../../lib/utils'
 import discountsFull from '../../lists/discounts.full'
 import { createPlace, updatePlace, deletePlace } from '../../redux/reducers/places'
-import CollapsibleCard from '../ui/collapsible-card'
-import { Label } from '../ui/label'
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '../ui/accordion'
+import {
+  Field,
+  FieldContent,
+  FieldDescription,
+  FieldError,
+  FieldGroup,
+  FieldLabel
+} from '../ui/field'
 import { Input } from '../ui/input'
 import { Button } from '../ui/button'
 import { Checkbox } from '../ui/checkbox'
@@ -206,347 +212,371 @@ const PlaceForm = ({ mode, place, onSaved, onCancel }: IPlaceFormProps) => {
 
   return (
     <div className="flex flex-1 flex-col overflow-hidden">
-      <div className="flex flex-1 flex-col gap-4 overflow-y-auto px-6 py-4">
-        <CollapsibleCard
-          title="Основная информация"
-          defaultOpen
-          contentClassName="grid gap-4 sm:grid-cols-2"
-        >
-          <div className="grid gap-2 sm:col-span-2">
-            <Label htmlFor="name">Название объекта</Label>
-            <Input
-              id="name"
-              name="name"
-              value={state.name}
-              placeholder="Например: ул. Мирошника 5, Автодом"
-              required
-              aria-invalid={!!errors.name}
-              className={cn(errors.name && 'border-destructive focus-visible:ring-destructive')}
-              onChange={onChange}
-            />
-            {errors.name ? <p className="text-sm text-destructive">{errors.name}</p> : null}
-          </div>
-          <div className="grid gap-2">
-            <Label htmlFor="workTime">Время работы</Label>
-            <Select
-              value={state.workTime}
-              onValueChange={(value) => setState((prev) => ({ ...prev, workTime: value }))}
-            >
-              <SelectTrigger id="workTime">
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="10">10 часов</SelectItem>
-                <SelectItem value="24">24 часа</SelectItem>
-              </SelectContent>
-            </Select>
-          </div>
-          <div className="grid gap-2">
-            <Label htmlFor="autopartsphone">Автозапчасти — телефон</Label>
-            <NumberFormat
-              id="autopartsphone"
-              format="+7 (###) ###-##-##"
-              mask="_"
-              customInput={Input}
-              value={state.autopartsphone}
-              placeholder="Автозапчасти — номер телефона"
-              onValueChange={onPhoneChange('autopartsphone')}
-            />
-          </div>
-          <Label
-            htmlFor="active"
-            className="flex items-center gap-2 rounded-md border bg-background p-2 font-normal cursor-pointer hover:bg-accent/50 sm:col-span-2"
-          >
-            <Checkbox
-              id="active"
-              checked={state.active}
-              onCheckedChange={(checked) =>
-                setState((prev) => ({ ...prev, active: checked === true }))
-              }
-            />
-            Адрес активен
-            <span className="text-sm font-normal text-muted-foreground">
-              (неактивные не отображаются в остальных частях приложения)
-            </span>
-          </Label>
-        </CollapsibleCard>
+      <div className="flex flex-1 flex-col overflow-y-auto px-6 py-4">
+        <Accordion type="multiple" defaultValue={['basic']} className="w-full">
+          <AccordionItem value="basic">
+            <AccordionTrigger>Основная информация</AccordionTrigger>
+            <AccordionContent>
+              <FieldGroup>
+                <Field data-invalid={!!errors.name}>
+                  <FieldLabel htmlFor="name">Название объекта</FieldLabel>
+                  <Input
+                    id="name"
+                    name="name"
+                    value={state.name}
+                    placeholder="Например: ул. Мирошника 5, Автодом"
+                    required
+                    aria-invalid={!!errors.name}
+                    onChange={onChange}
+                  />
+                  <FieldError>{errors.name}</FieldError>
+                </Field>
+                <div className="grid gap-4 sm:grid-cols-2">
+                  <Field>
+                    <FieldLabel htmlFor="workTime">Время работы</FieldLabel>
+                    <Select
+                      value={state.workTime}
+                      onValueChange={(value) => setState((prev) => ({ ...prev, workTime: value }))}
+                    >
+                      <SelectTrigger id="workTime">
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="10">10 часов</SelectItem>
+                        <SelectItem value="24">24 часа</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </Field>
+                  <Field>
+                    <FieldLabel htmlFor="autopartsphone">Автозапчасти — телефон</FieldLabel>
+                    <NumberFormat
+                      id="autopartsphone"
+                      format="+7 (###) ###-##-##"
+                      mask="_"
+                      customInput={Input}
+                      value={state.autopartsphone}
+                      placeholder="Автозапчасти — номер телефона"
+                      onValueChange={onPhoneChange('autopartsphone')}
+                    />
+                  </Field>
+                </div>
+                <Field orientation="horizontal">
+                  <Checkbox
+                    id="active"
+                    checked={state.active}
+                    onCheckedChange={(checked) =>
+                      setState((prev) => ({ ...prev, active: checked === true }))
+                    }
+                  />
+                  <FieldContent>
+                    <FieldLabel htmlFor="active">Адрес активен</FieldLabel>
+                    <FieldDescription>
+                      Неактивные не отображаются в остальных частях приложения
+                    </FieldDescription>
+                  </FieldContent>
+                </Field>
+              </FieldGroup>
+            </AccordionContent>
+          </AccordionItem>
 
-        <CollapsibleCard title="Развал-схождение и замена масла" contentClassName="grid gap-4">
-          <div className="grid gap-2 sm:grid-cols-2">
-            <Label
-              htmlFor="razval"
-              className="flex items-center gap-2 rounded-md border bg-background p-2 font-normal cursor-pointer hover:bg-accent/50"
-            >
-              <Checkbox
-                id="razval"
-                checked={state.razval}
-                onCheckedChange={(checked) =>
-                  setState((prev) => ({ ...prev, razval: checked === true }))
-                }
-              />
-              Есть развал-схождение
-            </Label>
-            <Label
-              htmlFor="oil"
-              className="flex items-center gap-2 rounded-md border bg-background p-2 font-normal cursor-pointer hover:bg-accent/50"
-            >
-              <Checkbox
-                id="oil"
-                checked={state.oil}
-                onCheckedChange={(checked) =>
-                  setState((prev) => ({ ...prev, oil: checked === true }))
-                }
-              />
-              Есть замена масла
-            </Label>
-          </div>
-          <div className="grid gap-4 sm:grid-cols-2">
-            <div className="grid gap-2">
-              <Label htmlFor="razvalquantity">Количество постов развала</Label>
-              <Input
-                id="razvalquantity"
-                name="razvalquantity"
-                type="number"
-                value={state.razvalquantity}
-                placeholder="Введите количество постов"
-                onChange={onChange}
-              />
-            </div>
-            <div className="grid gap-2">
-              <Label htmlFor="oilquantity">Количество постов замены масла</Label>
-              <Input
-                id="oilquantity"
-                name="oilquantity"
-                type="number"
-                value={state.oilquantity}
-                placeholder="Введите количество постов"
-                onChange={onChange}
-              />
-            </div>
-            <div className="grid gap-2">
-              <Label htmlFor="razvalphone">Развал — телефон</Label>
-              <NumberFormat
-                id="razvalphone"
-                format="+7 (###) ###-##-##"
-                mask="_"
-                customInput={Input}
-                value={state.razvalphone}
-                placeholder="Развал — номер телефона"
-                onValueChange={onPhoneChange('razvalphone')}
-              />
-            </div>
-            <div className="grid gap-2">
-              <Label htmlFor="razvalAndOilType">Способ отображения постов</Label>
-              <Select
-                value={state.razvalAndOilType}
-                onValueChange={(value) =>
-                  setState((prev) => ({ ...prev, razvalAndOilType: value }))
-                }
-              >
-                <SelectTrigger id="razvalAndOilType">
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="classic">Классический (одна ячейка)</SelectItem>
-                  <SelectItem value="column">Отдельные колонки</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
-          </div>
-        </CollapsibleCard>
+          <AccordionItem value="razval-oil">
+            <AccordionTrigger>Развал-схождение и замена масла</AccordionTrigger>
+            <AccordionContent>
+              <FieldGroup>
+                <div className="grid gap-4 sm:grid-cols-2">
+                  <Field orientation="horizontal">
+                    <Checkbox
+                      id="razval"
+                      checked={state.razval}
+                      onCheckedChange={(checked) =>
+                        setState((prev) => ({ ...prev, razval: checked === true }))
+                      }
+                    />
+                    <FieldContent>
+                      <FieldLabel htmlFor="razval">Есть развал-схождение</FieldLabel>
+                    </FieldContent>
+                  </Field>
+                  <Field orientation="horizontal">
+                    <Checkbox
+                      id="oil"
+                      checked={state.oil}
+                      onCheckedChange={(checked) =>
+                        setState((prev) => ({ ...prev, oil: checked === true }))
+                      }
+                    />
+                    <FieldContent>
+                      <FieldLabel htmlFor="oil">Есть замена масла</FieldLabel>
+                    </FieldContent>
+                  </Field>
+                </div>
+                <div className="grid gap-4 sm:grid-cols-2">
+                  <Field>
+                    <FieldLabel htmlFor="razvalquantity">Количество постов развала</FieldLabel>
+                    <Input
+                      id="razvalquantity"
+                      name="razvalquantity"
+                      type="number"
+                      value={state.razvalquantity}
+                      placeholder="Введите количество постов"
+                      onChange={onChange}
+                    />
+                  </Field>
+                  <Field>
+                    <FieldLabel htmlFor="oilquantity">Количество постов замены масла</FieldLabel>
+                    <Input
+                      id="oilquantity"
+                      name="oilquantity"
+                      type="number"
+                      value={state.oilquantity}
+                      placeholder="Введите количество постов"
+                      onChange={onChange}
+                    />
+                  </Field>
+                  <Field>
+                    <FieldLabel htmlFor="razvalphone">Развал — телефон</FieldLabel>
+                    <NumberFormat
+                      id="razvalphone"
+                      format="+7 (###) ###-##-##"
+                      mask="_"
+                      customInput={Input}
+                      value={state.razvalphone}
+                      placeholder="Развал — номер телефона"
+                      onValueChange={onPhoneChange('razvalphone')}
+                    />
+                  </Field>
+                  <Field>
+                    <FieldLabel htmlFor="razvalAndOilType">Способ отображения постов</FieldLabel>
+                    <Select
+                      value={state.razvalAndOilType}
+                      onValueChange={(value) =>
+                        setState((prev) => ({ ...prev, razvalAndOilType: value }))
+                      }
+                    >
+                      <SelectTrigger id="razvalAndOilType">
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="classic">Классический (одна ячейка)</SelectItem>
+                        <SelectItem value="column">Отдельные колонки</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </Field>
+                </div>
+              </FieldGroup>
+            </AccordionContent>
+          </AccordionItem>
 
-        <CollapsibleCard title="Шиномонтаж" contentClassName="grid gap-4">
-          <Label
-            htmlFor="shinomontazh"
-            className="flex items-center gap-2 rounded-md border bg-background p-2 font-normal cursor-pointer hover:bg-accent/50"
-          >
-            <Checkbox
-              id="shinomontazh"
-              checked={state.shinomontazh}
-              onCheckedChange={(checked) =>
-                setState((prev) => ({ ...prev, shinomontazh: checked === true }))
-              }
-            />
-            Есть шиномонтаж
-          </Label>
-          <div className="grid gap-4 sm:grid-cols-2">
-            <div className="grid gap-2">
-              <Label htmlFor="shinomontazhquantity">Количество постов</Label>
-              <Input
-                id="shinomontazhquantity"
-                name="shinomontazhquantity"
-                type="number"
-                value={state.shinomontazhquantity}
-                placeholder="Введите количество постов"
-                onChange={onChange}
-              />
-            </div>
-            <div className="grid gap-2">
-              <Label htmlFor="shinomontazhphone">Шиномонтаж — телефон</Label>
-              <NumberFormat
-                id="shinomontazhphone"
-                format="+7 (###) ###-##-##"
-                mask="_"
-                customInput={Input}
-                value={state.shinomontazhphone}
-                placeholder="Шиномонтаж — номер телефона"
-                onValueChange={onPhoneChange('shinomontazhphone')}
-              />
-            </div>
-            <div className="grid gap-2">
-              <Label htmlFor="shinomeaning">Знак процентной ставки</Label>
-              <Select
-                value={state.shinomeaning === '' ? NONE : state.shinomeaning}
-                onValueChange={(value) =>
-                  setState((prev) => ({ ...prev, shinomeaning: value === NONE ? '' : value }))
-                }
-              >
-                <SelectTrigger id="shinomeaning">
-                  <SelectValue placeholder="Нет" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value={NONE}>Нет</SelectItem>
-                  <SelectItem value="positive">+</SelectItem>
-                  <SelectItem value="negative">-</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
-            <div className="grid gap-2">
-              <Label htmlFor="shinostavka">Процентная ставка</Label>
-              <Select
-                value={state.shinostavka === '' ? NONE : state.shinostavka}
-                onValueChange={(value) =>
-                  setState((prev) => ({ ...prev, shinostavka: value === NONE ? '' : value }))
-                }
-              >
-                <SelectTrigger id="shinostavka">
-                  <SelectValue placeholder="Выберите процент" />
-                </SelectTrigger>
-                <SelectContent>
-                  {discounts.map((it) => (
-                    <SelectItem key={it.name} value={it.value === '' ? NONE : it.value}>
-                      {it.name}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
-            <div className="grid gap-2">
-              <Label htmlFor="shinomontazhType">Способ отображения постов</Label>
-              <Select
-                value={state.shinomontazhType}
-                onValueChange={(value) =>
-                  setState((prev) => ({ ...prev, shinomontazhType: value }))
-                }
-              >
-                <SelectTrigger id="shinomontazhType">
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="classic">Классический (одна ячейка)</SelectItem>
-                  <SelectItem value="column">Отдельные колонки</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
-          </div>
-          <Label
-            htmlFor="boostShinomontazhPrices"
-            className="flex items-center gap-2 rounded-md border bg-background p-2 font-normal cursor-pointer hover:bg-accent/50"
-            title="Повышает цены на шиномонтаж на +1 диаметр (например, цена для 14 диаметра становится ценой для 15)"
-          >
-            <Checkbox
-              id="boostShinomontazhPrices"
-              checked={state.boostShinomontazhPrices}
-              onCheckedChange={(checked) =>
-                setState((prev) => ({ ...prev, boostShinomontazhPrices: checked === true }))
-              }
-            />
-            Повысить цены шиномонтажа
-            <span className="text-sm font-normal text-muted-foreground">(+1 диаметр к прайсу)</span>
-          </Label>
-        </CollapsibleCard>
+          <AccordionItem value="shinomontazh">
+            <AccordionTrigger>Шиномонтаж</AccordionTrigger>
+            <AccordionContent>
+              <FieldGroup>
+                <Field orientation="horizontal">
+                  <Checkbox
+                    id="shinomontazh"
+                    checked={state.shinomontazh}
+                    onCheckedChange={(checked) =>
+                      setState((prev) => ({ ...prev, shinomontazh: checked === true }))
+                    }
+                  />
+                  <FieldContent>
+                    <FieldLabel htmlFor="shinomontazh">Есть шиномонтаж</FieldLabel>
+                  </FieldContent>
+                </Field>
+                <div className="grid gap-4 sm:grid-cols-2">
+                  <Field>
+                    <FieldLabel htmlFor="shinomontazhquantity">Количество постов</FieldLabel>
+                    <Input
+                      id="shinomontazhquantity"
+                      name="shinomontazhquantity"
+                      type="number"
+                      value={state.shinomontazhquantity}
+                      placeholder="Введите количество постов"
+                      onChange={onChange}
+                    />
+                  </Field>
+                  <Field>
+                    <FieldLabel htmlFor="shinomontazhphone">Шиномонтаж — телефон</FieldLabel>
+                    <NumberFormat
+                      id="shinomontazhphone"
+                      format="+7 (###) ###-##-##"
+                      mask="_"
+                      customInput={Input}
+                      value={state.shinomontazhphone}
+                      placeholder="Шиномонтаж — номер телефона"
+                      onValueChange={onPhoneChange('shinomontazhphone')}
+                    />
+                  </Field>
+                  <Field>
+                    <FieldLabel htmlFor="shinomeaning">Знак процентной ставки</FieldLabel>
+                    <Select
+                      value={state.shinomeaning === '' ? NONE : state.shinomeaning}
+                      onValueChange={(value) =>
+                        setState((prev) => ({ ...prev, shinomeaning: value === NONE ? '' : value }))
+                      }
+                    >
+                      <SelectTrigger id="shinomeaning">
+                        <SelectValue placeholder="Нет" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value={NONE}>Нет</SelectItem>
+                        <SelectItem value="positive">+</SelectItem>
+                        <SelectItem value="negative">-</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </Field>
+                  <Field>
+                    <FieldLabel htmlFor="shinostavka">Процентная ставка</FieldLabel>
+                    <Select
+                      value={state.shinostavka === '' ? NONE : state.shinostavka}
+                      onValueChange={(value) =>
+                        setState((prev) => ({ ...prev, shinostavka: value === NONE ? '' : value }))
+                      }
+                    >
+                      <SelectTrigger id="shinostavka">
+                        <SelectValue placeholder="Выберите процент" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {discounts.map((it) => (
+                          <SelectItem key={it.name} value={it.value === '' ? NONE : it.value}>
+                            {it.name}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </Field>
+                  <Field>
+                    <FieldLabel htmlFor="shinomontazhType">Способ отображения постов</FieldLabel>
+                    <Select
+                      value={state.shinomontazhType}
+                      onValueChange={(value) =>
+                        setState((prev) => ({ ...prev, shinomontazhType: value }))
+                      }
+                    >
+                      <SelectTrigger id="shinomontazhType">
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="classic">Классический (одна ячейка)</SelectItem>
+                        <SelectItem value="column">Отдельные колонки</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </Field>
+                </div>
+                <Field orientation="horizontal">
+                  <Checkbox
+                    id="boostShinomontazhPrices"
+                    checked={state.boostShinomontazhPrices}
+                    onCheckedChange={(checked) =>
+                      setState((prev) => ({ ...prev, boostShinomontazhPrices: checked === true }))
+                    }
+                  />
+                  <FieldContent>
+                    <FieldLabel htmlFor="boostShinomontazhPrices">
+                      Повысить цены шиномонтажа
+                    </FieldLabel>
+                    <FieldDescription>
+                      Повышает цены на шиномонтаж на +1 диаметр (например, цена для 14 диаметра
+                      становится ценой для 15)
+                    </FieldDescription>
+                  </FieldContent>
+                </Field>
+              </FieldGroup>
+            </AccordionContent>
+          </AccordionItem>
 
-        <CollapsibleCard title="СТО" contentClassName="grid gap-4">
-          <Label
-            htmlFor="sto"
-            className="flex items-center gap-2 rounded-md border bg-background p-2 font-normal cursor-pointer hover:bg-accent/50"
-          >
-            <Checkbox
-              id="sto"
-              checked={state.sto}
-              onCheckedChange={(checked) =>
-                setState((prev) => ({ ...prev, sto: checked === true }))
-              }
-            />
-            Есть СТО
-          </Label>
-          <div className="grid gap-4 sm:grid-cols-2">
-            <div className="grid gap-2">
-              <Label htmlFor="stoboxes">Количество постов СТО</Label>
-              <Input
-                id="stoboxes"
-                name="stoboxes"
-                type="number"
-                value={state.stoboxes}
-                placeholder="Введите количество постов"
-                onChange={onChange}
-              />
-            </div>
-            <div className="grid gap-2">
-              <Label htmlFor="stophone">СТО — телефон</Label>
-              <NumberFormat
-                id="stophone"
-                format="+7 (###) ###-##-##"
-                mask="_"
-                customInput={Input}
-                value={state.stophone}
-                placeholder="СТО — номер телефона"
-                onValueChange={onPhoneChange('stophone')}
-              />
-            </div>
-            <div className="grid gap-2">
-              <Label htmlFor="stoType">Способ отображения постов</Label>
-              <Select
-                value={state.stoType}
-                onValueChange={(value) => setState((prev) => ({ ...prev, stoType: value }))}
-              >
-                <SelectTrigger id="stoType">
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="classic">Классический (одна ячейка)</SelectItem>
-                  <SelectItem value="column">Отдельные колонки</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
-          </div>
-        </CollapsibleCard>
+          <AccordionItem value="sto">
+            <AccordionTrigger>СТО</AccordionTrigger>
+            <AccordionContent>
+              <FieldGroup>
+                <Field orientation="horizontal">
+                  <Checkbox
+                    id="sto"
+                    checked={state.sto}
+                    onCheckedChange={(checked) =>
+                      setState((prev) => ({ ...prev, sto: checked === true }))
+                    }
+                  />
+                  <FieldContent>
+                    <FieldLabel htmlFor="sto">Есть СТО</FieldLabel>
+                  </FieldContent>
+                </Field>
+                <div className="grid gap-4 sm:grid-cols-2">
+                  <Field>
+                    <FieldLabel htmlFor="stoboxes">Количество постов СТО</FieldLabel>
+                    <Input
+                      id="stoboxes"
+                      name="stoboxes"
+                      type="number"
+                      value={state.stoboxes}
+                      placeholder="Введите количество постов"
+                      onChange={onChange}
+                    />
+                  </Field>
+                  <Field>
+                    <FieldLabel htmlFor="stophone">СТО — телефон</FieldLabel>
+                    <NumberFormat
+                      id="stophone"
+                      format="+7 (###) ###-##-##"
+                      mask="_"
+                      customInput={Input}
+                      value={state.stophone}
+                      placeholder="СТО — номер телефона"
+                      onValueChange={onPhoneChange('stophone')}
+                    />
+                  </Field>
+                  <Field>
+                    <FieldLabel htmlFor="stoType">Способ отображения постов</FieldLabel>
+                    <Select
+                      value={state.stoType}
+                      onValueChange={(value) => setState((prev) => ({ ...prev, stoType: value }))}
+                    >
+                      <SelectTrigger id="stoType">
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="classic">Классический (одна ячейка)</SelectItem>
+                        <SelectItem value="column">Отдельные колонки</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </Field>
+                </div>
+              </FieldGroup>
+            </AccordionContent>
+          </AccordionItem>
 
-        <CollapsibleCard title="Автомойка" contentClassName="grid gap-4 sm:grid-cols-2">
-          <div className="grid gap-2">
-            <Label htmlFor="washboxes">Количество постов автомойки</Label>
-            <Input
-              id="washboxes"
-              name="washboxes"
-              type="number"
-              value={state.washboxes}
-              placeholder="Введите количество постов"
-              onChange={onChange}
-            />
-          </div>
-          <div className="grid gap-2">
-            <Label htmlFor="washphone">Автомойка — телефон</Label>
-            <NumberFormat
-              id="washphone"
-              format="+7 (###) ###-##-##"
-              mask="_"
-              customInput={Input}
-              value={state.washphone}
-              placeholder="Автомойка — номер телефона"
-              onValueChange={onPhoneChange('washphone')}
-            />
-          </div>
-        </CollapsibleCard>
+          <AccordionItem value="wash" className="border-b-0">
+            <AccordionTrigger>Автомойка</AccordionTrigger>
+            <AccordionContent>
+              <FieldGroup>
+                <div className="grid gap-4 sm:grid-cols-2">
+                  <Field>
+                    <FieldLabel htmlFor="washboxes">Количество постов автомойки</FieldLabel>
+                    <Input
+                      id="washboxes"
+                      name="washboxes"
+                      type="number"
+                      value={state.washboxes}
+                      placeholder="Введите количество постов"
+                      onChange={onChange}
+                    />
+                  </Field>
+                  <Field>
+                    <FieldLabel htmlFor="washphone">Автомойка — телефон</FieldLabel>
+                    <NumberFormat
+                      id="washphone"
+                      format="+7 (###) ###-##-##"
+                      mask="_"
+                      customInput={Input}
+                      value={state.washphone}
+                      placeholder="Автомойка — номер телефона"
+                      onValueChange={onPhoneChange('washphone')}
+                    />
+                  </Field>
+                </div>
+              </FieldGroup>
+            </AccordionContent>
+          </AccordionItem>
+        </Accordion>
       </div>
 
       <div className="flex shrink-0 justify-between border-t px-6 py-4">

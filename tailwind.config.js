@@ -89,8 +89,14 @@ module.exports = {
       animation: {
         'accordion-down': 'accordion-down 0.2s ease-out',
         'accordion-up': 'accordion-up 0.2s ease-out'
+      },
+      // `aria-invalid` isn't one of Tailwind's built-in ARIA state variants
+      // (only checked/disabled/expanded/hidden/pressed/readonly/required/
+      // selected are) - shadcn/ui form components rely on it, so register it.
+      aria: {
+        invalid: 'invalid="true"'
       }
     }
   },
-  plugins: [require('tailwindcss-animate')]
+  plugins: [require('tailwindcss-animate'), require('@tailwindcss/container-queries')]
 }

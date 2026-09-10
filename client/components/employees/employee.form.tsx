@@ -2,13 +2,19 @@ import React, { useEffect, useState } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import { toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
-import { cn } from '../../lib/utils'
 import roleList from '../../lists/role-list'
 import { ROLE_BADGE_COLORS, DEFAULT_ROLE_BADGE_COLOR } from '../../consts/role-badge-colors'
 import { getPositions } from '../../redux/reducers/positions'
 import { createEmployee, updateEmployee, deleteEmployee } from '../../redux/reducers/employees'
-import CollapsibleCard from '../ui/collapsible-card'
-import { Label } from '../ui/label'
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '../ui/accordion'
+import {
+  Field,
+  FieldContent,
+  FieldDescription,
+  FieldError,
+  FieldGroup,
+  FieldLabel
+} from '../ui/field'
 import { Input } from '../ui/input'
 import { Button } from '../ui/button'
 import { Badge } from '../ui/badge'
@@ -159,181 +165,199 @@ const EmployeeForm = ({ mode, employee, onSaved, onCancel }: IEmployeeFormProps)
 
   return (
     <div className="flex flex-1 flex-col overflow-hidden">
-      <div className="flex flex-1 flex-col gap-4 overflow-y-auto px-6 py-4">
-        <CollapsibleCard
-          title="Основная информация"
-          defaultOpen
-          contentClassName="grid gap-4 sm:grid-cols-2"
-        >
-          <div className="grid gap-2">
-            <Label htmlFor="name">Имя</Label>
-            <Input
-              id="name"
-              name="name"
-              value={state.name}
-              placeholder="Введите имя"
-              required
-              aria-invalid={!!errors.name}
-              className={cn(errors.name && 'border-destructive focus-visible:ring-destructive')}
-              onChange={onChange}
-            />
-            {errors.name ? <p className="text-sm text-destructive">{errors.name}</p> : null}
-          </div>
-          <div className="grid gap-2">
-            <Label htmlFor="surname">Фамилия</Label>
-            <Input
-              id="surname"
-              name="surname"
-              value={state.surname}
-              placeholder="Введите фамилию"
-              required
-              aria-invalid={!!errors.surname}
-              className={cn(errors.surname && 'border-destructive focus-visible:ring-destructive')}
-              onChange={onChange}
-            />
-            {errors.surname ? <p className="text-sm text-destructive">{errors.surname}</p> : null}
-          </div>
-          <Label
-            htmlFor="active"
-            className="flex items-center gap-2 rounded-md border bg-background p-2 font-normal cursor-pointer hover:bg-accent/50 sm:col-span-2"
-          >
-            <Checkbox
-              id="active"
-              checked={state.active}
-              onCheckedChange={(checked) =>
-                setState((prev) => ({ ...prev, active: checked === true }))
-              }
-            />
-            Сотрудник активен
-            <span className="text-sm font-normal text-muted-foreground">
-              (неактивные не отображаются в остальных частях приложения)
-            </span>
-          </Label>
-        </CollapsibleCard>
+      <div className="flex flex-1 flex-col overflow-y-auto px-6 py-4">
+        <Accordion type="multiple" defaultValue={['basic']} className="w-full">
+          <AccordionItem value="basic">
+            <AccordionTrigger>Основная информация</AccordionTrigger>
+            <AccordionContent>
+              <FieldGroup>
+                <div className="grid gap-4 sm:grid-cols-2">
+                  <Field data-invalid={!!errors.name}>
+                    <FieldLabel htmlFor="name">Имя</FieldLabel>
+                    <Input
+                      id="name"
+                      name="name"
+                      value={state.name}
+                      placeholder="Введите имя"
+                      required
+                      aria-invalid={!!errors.name}
+                      onChange={onChange}
+                    />
+                    <FieldError>{errors.name}</FieldError>
+                  </Field>
+                  <Field data-invalid={!!errors.surname}>
+                    <FieldLabel htmlFor="surname">Фамилия</FieldLabel>
+                    <Input
+                      id="surname"
+                      name="surname"
+                      value={state.surname}
+                      placeholder="Введите фамилию"
+                      required
+                      aria-invalid={!!errors.surname}
+                      onChange={onChange}
+                    />
+                    <FieldError>{errors.surname}</FieldError>
+                  </Field>
+                </div>
+                <Field orientation="horizontal">
+                  <Checkbox
+                    id="active"
+                    checked={state.active}
+                    onCheckedChange={(checked) =>
+                      setState((prev) => ({ ...prev, active: checked === true }))
+                    }
+                  />
+                  <FieldContent>
+                    <FieldLabel htmlFor="active">Сотрудник активен</FieldLabel>
+                    <FieldDescription>
+                      Неактивные не отображаются в остальных частях приложения
+                    </FieldDescription>
+                  </FieldContent>
+                </Field>
+              </FieldGroup>
+            </AccordionContent>
+          </AccordionItem>
 
-        <CollapsibleCard
-          title="Должности"
-          description="Сотрудник может занимать сразу несколько должностей"
-          contentClassName="flex flex-col gap-4"
-        >
-          <div className="flex flex-wrap gap-1.5 min-h-8">
-            {state.role.length > 0 ? (
-              state.role.map((it) => (
-                <Badge key={it} className={ROLE_BADGE_COLORS[it] ?? DEFAULT_ROLE_BADGE_COLOR}>
-                  {it}
-                </Badge>
-              ))
-            ) : (
-              <span className="text-sm text-muted-foreground">Должности не выбраны</span>
-            )}
-          </div>
-          <div className="grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
-            {roleList.map((it: string) => (
-              <Label
-                key={it}
-                htmlFor={`role-${it}`}
-                className="flex items-center gap-2 rounded-md border bg-background p-2 font-normal cursor-pointer hover:bg-accent/50"
-              >
-                <Checkbox
-                  id={`role-${it}`}
-                  checked={state.role.includes(it)}
-                  onCheckedChange={(checked) => toggleRole(it, checked === true)}
-                />
-                {it}
-              </Label>
-            ))}
-          </div>
-        </CollapsibleCard>
+          <AccordionItem value="roles">
+            <AccordionTrigger>Должности</AccordionTrigger>
+            <AccordionContent>
+              <FieldGroup>
+                <FieldDescription>
+                  Сотрудник может занимать сразу несколько должностей
+                </FieldDescription>
+                <div className="flex min-h-8 flex-wrap gap-1.5">
+                  {state.role.length > 0 ? (
+                    state.role.map((it) => (
+                      <Badge key={it} className={ROLE_BADGE_COLORS[it] ?? DEFAULT_ROLE_BADGE_COLOR}>
+                        {it}
+                      </Badge>
+                    ))
+                  ) : (
+                    <span className="text-sm text-muted-foreground">Должности не выбраны</span>
+                  )}
+                </div>
+                <div className="grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
+                  {roleList.map((it: string) => (
+                    <Field key={it} orientation="horizontal">
+                      <Checkbox
+                        id={`role-${it}`}
+                        checked={state.role.includes(it)}
+                        onCheckedChange={(checked) => toggleRole(it, checked === true)}
+                      />
+                      <FieldLabel htmlFor={`role-${it}`}>{it}</FieldLabel>
+                    </Field>
+                  ))}
+                </div>
+              </FieldGroup>
+            </AccordionContent>
+          </AccordionItem>
 
-        <CollapsibleCard
-          title="Должность для электронного журнала"
-          contentClassName="grid gap-4 sm:grid-cols-2"
-        >
-          <div className="grid gap-2">
-            <Label htmlFor="positionId">Основная должность</Label>
-            <Combobox
-              id="positionId"
-              value={state.positionId === '' ? NO_POSITION : state.positionId}
-              onChange={(value) =>
-                setState((prev) => ({
-                  ...prev,
-                  positionId: value === NO_POSITION ? '' : value
-                }))
-              }
-              options={positionOptions}
-              placeholder="Не выбрано"
-              searchPlaceholder="Поиск должности..."
-            />
-          </div>
-          <div className="grid gap-2">
-            <Label htmlFor="positionIdAdditional">Дополнительная должность</Label>
-            <Combobox
-              id="positionIdAdditional"
-              value={state.positionIdAdditional === '' ? NO_POSITION : state.positionIdAdditional}
-              onChange={(value) =>
-                setState((prev) => ({
-                  ...prev,
-                  positionIdAdditional: value === NO_POSITION ? '' : value
-                }))
-              }
-              options={positionOptions}
-              placeholder="Не выбрано"
-              searchPlaceholder="Поиск должности..."
-            />
-          </div>
-        </CollapsibleCard>
+          <AccordionItem value="position">
+            <AccordionTrigger>Должность для электронного журнала</AccordionTrigger>
+            <AccordionContent>
+              <FieldGroup>
+                <div className="grid gap-4 sm:grid-cols-2">
+                  <Field>
+                    <FieldLabel htmlFor="positionId">Основная должность</FieldLabel>
+                    <Combobox
+                      id="positionId"
+                      value={state.positionId === '' ? NO_POSITION : state.positionId}
+                      onChange={(value) =>
+                        setState((prev) => ({
+                          ...prev,
+                          positionId: value === NO_POSITION ? '' : value
+                        }))
+                      }
+                      options={positionOptions}
+                      placeholder="Не выбрано"
+                      searchPlaceholder="Поиск должности..."
+                    />
+                  </Field>
+                  <Field>
+                    <FieldLabel htmlFor="positionIdAdditional">Дополнительная должность</FieldLabel>
+                    <Combobox
+                      id="positionIdAdditional"
+                      value={
+                        state.positionIdAdditional === '' ? NO_POSITION : state.positionIdAdditional
+                      }
+                      onChange={(value) =>
+                        setState((prev) => ({
+                          ...prev,
+                          positionIdAdditional: value === NO_POSITION ? '' : value
+                        }))
+                      }
+                      options={positionOptions}
+                      placeholder="Не выбрано"
+                      searchPlaceholder="Поиск должности..."
+                    />
+                  </Field>
+                </div>
+              </FieldGroup>
+            </AccordionContent>
+          </AccordionItem>
 
-        <CollapsibleCard title="Точки работы">
-          <div className="grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
-            {places.map((it) => (
-              <Label
-                key={it.id}
-                htmlFor={`place-${it.id}`}
-                className="flex items-center gap-2 rounded-md border bg-background p-2 font-normal cursor-pointer hover:bg-accent/50"
-              >
-                <Checkbox
-                  id={`place-${it.id}`}
-                  checked={state.address.includes(it.id as string)}
-                  onCheckedChange={(checked) => togglePlace(it.id as string, checked === true)}
-                />
-                {it.name}
-              </Label>
-            ))}
-          </div>
-        </CollapsibleCard>
+          <AccordionItem value="places">
+            <AccordionTrigger>Точки работы</AccordionTrigger>
+            <AccordionContent>
+              <FieldGroup>
+                <div className="grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
+                  {places.map((it) => (
+                    <Field key={it.id} orientation="horizontal">
+                      <Checkbox
+                        id={`place-${it.id}`}
+                        checked={state.address.includes(it.id as string)}
+                        onCheckedChange={(checked) =>
+                          togglePlace(it.id as string, checked === true)
+                        }
+                      />
+                      <FieldLabel htmlFor={`place-${it.id}`}>{it.name}</FieldLabel>
+                    </Field>
+                  ))}
+                </div>
+              </FieldGroup>
+            </AccordionContent>
+          </AccordionItem>
 
-        <CollapsibleCard title="Шиномонтаж" contentClassName="grid gap-4 sm:grid-cols-2">
-          <div className="grid gap-2">
-            <Label htmlFor="numberId">Номер сотрудника</Label>
-            <Input
-              id="numberId"
-              name="numberId"
-              type="number"
-              value={state.numberId}
-              placeholder="Введите номер"
-              onChange={onChange}
-            />
-          </div>
-          <div className="grid gap-2">
-            <Label htmlFor="class">Класс</Label>
-            <Select
-              value={state.class === '' ? NO_POSITION : state.class}
-              onValueChange={(value) =>
-                setState((prev) => ({ ...prev, class: value === NO_POSITION ? '' : value }))
-              }
-            >
-              <SelectTrigger id="class">
-                <SelectValue placeholder="Выберите класс" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value={NO_POSITION}>Не выбрано</SelectItem>
-                <SelectItem value="1">1 (старший)</SelectItem>
-                <SelectItem value="2">2 (средний)</SelectItem>
-                <SelectItem value="3">3 (студент)</SelectItem>
-              </SelectContent>
-            </Select>
-          </div>
-        </CollapsibleCard>
+          <AccordionItem value="shinomontazh" className="border-b-0">
+            <AccordionTrigger>Шиномонтаж</AccordionTrigger>
+            <AccordionContent>
+              <FieldGroup>
+                <div className="grid gap-4 sm:grid-cols-2">
+                  <Field>
+                    <FieldLabel htmlFor="numberId">Номер сотрудника</FieldLabel>
+                    <Input
+                      id="numberId"
+                      name="numberId"
+                      type="number"
+                      value={state.numberId}
+                      placeholder="Введите номер"
+                      onChange={onChange}
+                    />
+                  </Field>
+                  <Field>
+                    <FieldLabel htmlFor="class">Класс</FieldLabel>
+                    <Select
+                      value={state.class === '' ? NO_POSITION : state.class}
+                      onValueChange={(value) =>
+                        setState((prev) => ({ ...prev, class: value === NO_POSITION ? '' : value }))
+                      }
+                    >
+                      <SelectTrigger id="class">
+                        <SelectValue placeholder="Выберите класс" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value={NO_POSITION}>Не выбрано</SelectItem>
+                        <SelectItem value="1">1 (старший)</SelectItem>
+                        <SelectItem value="2">2 (средний)</SelectItem>
+                        <SelectItem value="3">3 (студент)</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </Field>
+                </div>
+              </FieldGroup>
+            </AccordionContent>
+          </AccordionItem>
+        </Accordion>
       </div>
 
       <div className="flex shrink-0 justify-between border-t px-6 py-4">
