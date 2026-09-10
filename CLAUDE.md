@@ -14,3 +14,10 @@ New or redesigned screens MUST be built with **shadcn/ui** components, not raw H
 - Reference implementations of this pattern: `client/scenes/Employees/Employees.list.tsx` (list screen: search + sortable table + pagination + create/edit in a `Dialog`) and `client/components/places/place.form.tsx` / `client/components/employees/employee.form.tsx` / `client/components/accounts/account.form.tsx` (complex forms: `Accordion` sections, each containing `FieldGroup`/`Field`, checkbox cards, and `BadgeList` previews). New list screens should follow the Employees/Places/Accounts list structure; new complex forms should follow the same form structure.
 
 This project has no `components.json` / shadcn CLI setup - primitives were added by hand under `client/components/ui/`. Keep new ones consistent with the existing ones instead of running the CLI.
+
+## Dates: use moment
+
+For new date handling (parsing, formatting, comparing, arithmetic), use **`moment`** - it's a direct dependency (see `package.json`).
+
+- `dayjs` is also present but only used in one legacy file (`client/scenes/Report/shinomontazh/SalaryCell.js`) - don't add new `dayjs` usages, prefer `moment` for anything new.
+- `client/lib/legacy-date.ts` (`parseLegacyDate`/`formatLegacyDate`) is a special case, not a general-purpose date util: it exists specifically to correctly parse the non-ISO `DD.MM.YYYY HH:mm` strings several Mongoose schemas store in a `date` field (see the comment at the top of that file for why `new Date(raw)` is unsafe there). Keep using it for those pre-existing `date` fields; reach for `moment` for everything else.
