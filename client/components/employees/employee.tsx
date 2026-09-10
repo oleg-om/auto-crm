@@ -57,7 +57,10 @@ const EmployeeRow = (props: IEmployeeRowProps) => {
       <TableCell className="truncate text-gray-800">{formatLegacyDate(props.date)}</TableCell>
       <TableCell className="whitespace-nowrap px-1 text-center">
         <Button asChild variant="outline" size="icon" title="Редактировать">
-          <Link to={`/employee/edit/${props.id}`} aria-label="Редактировать">
+          <Link
+            to={{ pathname: `/employee/edit/${props.id}`, state: { preserveScroll: true } }}
+            aria-label="Редактировать"
+          >
             <Pencil className="h-4 w-4" />
           </Link>
         </Button>

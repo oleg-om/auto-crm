@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import { Link, useHistory, useRouteMatch } from 'react-router-dom'
 import { toast } from 'react-toastify'
-import { ArrowDown, ArrowUp, ArrowUpDown, Check, ChevronsUpDown, X } from 'lucide-react'
+import { ArrowDown, ArrowUp, ArrowUpDown, Check, ChevronsUpDown, Plus, X } from 'lucide-react'
 import EmployeeRow from '../../components/employees/employee'
 import EmployeeForm from '../../components/employees/employee.form'
 import { deleteEmployee } from '../../redux/reducers/employees'
@@ -124,7 +124,8 @@ const EmployeeList = () => {
   const editingEmployee = formMatch?.params.id
     ? list.find((it) => it.id === formMatch.params.id)
     : undefined
-  const closeForm = () => history.push('/employee/list')
+  const closeForm = () =>
+    history.push({ pathname: '/employee/list', state: { preserveScroll: true } })
   const [isOpen, setIsOpen] = useState(false)
   const [itemId, setItemId] = useState('')
   const [searchName, setSearchName] = useState('')
@@ -199,7 +200,15 @@ const EmployeeList = () => {
       <div className="flex flex-row">
         <Sidebar />
         <div className="container mx-auto min-w-0 px-4">
-          <h1 className="text-3xl py-4 border-b mb-6">Список сотрудников</h1>
+          <div className="mb-6 flex items-center justify-between border-b py-4">
+            <h1 className="text-3xl">Список сотрудников</h1>
+            <Link to={{ pathname: '/employee/create', state: { preserveScroll: true } }}>
+              <Button type="button">
+                <Plus className="mr-2 h-4 w-4" />
+                Новый сотрудник
+              </Button>
+            </Link>
+          </div>
           <Card className="my-3">
             <CardContent className="p-4">
               <div className="-mx-2 md:flex md:justify-between">
@@ -406,16 +415,6 @@ const EmployeeList = () => {
               </PaginationContent>
             </Pagination>
           ) : null}
-          <Link to="/employee/create">
-            <Button
-              type="button"
-              className="fixed bottom-0 h-32 w-32 left-0 p-6 shadow rounded-full my-3 mx-3"
-            >
-              Новый
-              <br />
-              сотрудник
-            </Button>
-          </Link>
         </div>
         <AlertDialog open={isOpen} onOpenChange={setIsOpen}>
           <AlertDialogContent>
