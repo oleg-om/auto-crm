@@ -1,7 +1,18 @@
-import { GET_PLACES, CREATE_PLACE, UPDATE_PLACE, DELETE_PLACE } from '../actions/places'
+import {
+  GET_PLACES,
+  GET_PLACES_ALL,
+  CREATE_PLACE,
+  UPDATE_PLACE,
+  DELETE_PLACE
+} from '../actions/places'
 
 const initialState = {
-  list: []
+  list: [],
+  // Full roster including inactive places - populated only for the Places
+  // admin page (see getAllPlaces below); `list` stays active-only since
+  // ~50 other pages across the app read it directly for place pickers and
+  // must never see inactive places.
+  allList: []
 }
 
 export default (state = initialState, action) => {
@@ -9,20 +20,40 @@ export default (state = initialState, action) => {
     case GET_PLACES: {
       return { ...state, list: action.places }
     }
-    case CREATE_PLACE: {
-      return { ...state, list: [...state.list, action.place] }
+    case GET_PLACES_ALL: {
+      return { ...state, allList: action.places }
     }
-    case UPDATE_PLACE: {
+    case CREATE_PLACE: {
       return {
         ...state,
-        list: state.list.map((it) => {
-          return action.place.id === it.id ? action.place : it
-        })
+        list: action.place.active === false ? state.list : [...state.list, action.place],
+        allList: [...state.allList, action.place]
+      }
+    }
+    case UPDATE_PLACE: {
+      const isActive = action.place.active !== false
+      const existsInList = state.list.some((it) => it.id === action.place.id)
+      let nextList = state.list
+      if (isActive) {
+        nextList = existsInList
+          ? state.list.map((it) => (it.id === action.place.id ? action.place : it))
+          : [...state.list, action.place]
+      } else if (existsInList) {
+        nextList = state.list.filter((it) => it.id !== action.place.id)
+      }
+      return {
+        ...state,
+        list: nextList,
+        allList: state.allList.map((it) => (it.id === action.place.id ? action.place : it))
       }
     }
     case DELETE_PLACE: {
       return {
+        ...state,
         list: state.list.filter((it) => {
+          return action.id !== it.id
+        }),
+        allList: state.allList.filter((it) => {
           return action.id !== it.id
         })
       }
@@ -38,6 +69,18 @@ export function getPlaces() {
       .then((r) => r.json())
       .then(({ data: places }) => {
         dispatch({ type: GET_PLACES, places })
+      })
+  }
+}
+
+// Used only by the Places admin page, which needs to see inactive places
+// too (to be able to review and reactivate them).
+export function getAllPlaces() {
+  return (dispatch) => {
+    fetch('/api/v1/place?includeInactive=true')
+      .then((r) => r.json())
+      .then(({ data: places }) => {
+        dispatch({ type: GET_PLACES_ALL, places })
       })
   }
 }

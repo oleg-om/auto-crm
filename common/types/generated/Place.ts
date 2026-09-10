@@ -27,6 +27,7 @@ export interface IPlace {
   stoType?: string
   oilType?: string
   boostShinomontazhPrices?: boolean
+  active?: boolean
   _id?: string
   id_place?: number
   __v?: number

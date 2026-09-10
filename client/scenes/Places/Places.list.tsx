@@ -1,11 +1,11 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import { Link, useHistory, useRouteMatch } from 'react-router-dom'
 import { toast } from 'react-toastify'
 import { ArrowDown, ArrowUp, ArrowUpDown, Plus, X } from 'lucide-react'
 import PlaceRow from '../../components/places/place'
 import PlaceForm from '../../components/places/place.form'
-import { deletePlace } from '../../redux/reducers/places'
+import { deletePlace, getAllPlaces } from '../../redux/reducers/places'
 import Navbar from '../../components/Navbar'
 import Sidebar from '../../components/Sidebar'
 import { parseLegacyDate } from '../../lib/legacy-date'
@@ -119,7 +119,11 @@ const PlaceList = () => {
   }
   const dispatch = useDispatch<any>()
   const history = useHistory()
-  const list = useSelector((s: { places: { list: IPlace[] } }) => s.places.list)
+  const list = useSelector((s: { places: { allList: IPlace[] } }) => s.places.allList)
+
+  useEffect(() => {
+    dispatch(getAllPlaces())
+  }, [dispatch])
 
   const formMatch = useRouteMatch<{ id?: string }>({
     path: ['/place/create', '/place/edit/:id'],
@@ -135,6 +139,7 @@ const PlaceList = () => {
   const [itemId, setItemId] = useState('')
   const [searchName, setSearchName] = useState('')
   const [serviceFilter, setServiceFilter] = useState('')
+  const [activityFilter, setActivityFilter] = useState<'all' | 'active' | 'inactive'>('all')
   const [page, setPage] = useState(1)
   const [sortField, setSortField] = useState<'name' | 'date' | null>(null)
   const [sortDirection, setSortDirection] = useState<'asc' | 'desc'>('asc')
@@ -157,7 +162,10 @@ const PlaceList = () => {
   const filteredList = list.filter((it) => {
     const matchesName = it.name.toLowerCase().includes(searchName.trim().toLowerCase())
     const matchesService = !activeService || activeService.test(it)
-    return matchesName && matchesService
+    const matchesActivity =
+      activityFilter === 'all' ||
+      (activityFilter === 'active' ? it.active !== false : it.active === false)
+    return matchesName && matchesService && matchesActivity
   })
 
   const sortedList = [...filteredList].sort((a, b) => {
@@ -175,15 +183,17 @@ const PlaceList = () => {
 
   const isSearchNameActive = searchName.trim() !== ''
   const isServiceFilterActive = serviceFilter !== ''
-  const hasActiveFilters = isSearchNameActive || isServiceFilterActive
+  const isActivityFilterActive = activityFilter !== 'all'
+  const hasActiveFilters = isSearchNameActive || isServiceFilterActive || isActivityFilterActive
   const resetFilters = () => {
     setSearchName('')
     setServiceFilter('')
+    setActivityFilter('all')
   }
 
-  React.useEffect(() => {
+  useEffect(() => {
     setPage(1)
-  }, [searchName, serviceFilter])
+  }, [searchName, serviceFilter, activityFilter])
 
   const totalPages = Math.max(1, Math.ceil(sortedList.length / PAGE_SIZE))
   const currentPage = Math.min(page, totalPages)
@@ -217,7 +227,7 @@ const PlaceList = () => {
           <Card className="my-3">
             <CardContent className="p-4">
               <div className="-mx-2 md:flex md:justify-between">
-                <div className="md:w-1/2 px-2 mb-4 md:mb-0">
+                <div className="md:w-1/3 px-2 mb-4 md:mb-0">
                   <Label htmlFor="searchName" className="block mb-2">
                     Название
                   </Label>
@@ -244,7 +254,7 @@ const PlaceList = () => {
                     ) : null}
                   </div>
                 </div>
-                <div className="md:w-1/2 px-2 mb-4 md:mb-0">
+                <div className="md:w-1/3 px-2 mb-4 md:mb-0">
                   <Label htmlFor="serviceFilter" className="block mb-2">
                     Услуга
                   </Label>
@@ -265,6 +275,29 @@ const PlaceList = () => {
                           {it.label}
                         </SelectItem>
                       ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+                <div className="md:w-1/3 px-2 mb-4 md:mb-0">
+                  <Label htmlFor="activityFilter" className="block mb-2">
+                    Активность
+                  </Label>
+                  <Select
+                    value={activityFilter}
+                    onValueChange={(value) =>
+                      setActivityFilter(value as 'all' | 'active' | 'inactive')
+                    }
+                  >
+                    <SelectTrigger
+                      id="activityFilter"
+                      className={cn(isActivityFilterActive && 'border-primary text-primary')}
+                    >
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="all">Все</SelectItem>
+                      <SelectItem value="active">Активные</SelectItem>
+                      <SelectItem value="inactive">Неактивные</SelectItem>
                     </SelectContent>
                   </Select>
                 </div>
@@ -295,6 +328,19 @@ const PlaceList = () => {
                         className="ml-0.5 rounded-full p-0.5 hover:bg-foreground/10"
                         onClick={() => setServiceFilter('')}
                         aria-label="Сбросить фильтр по услуге"
+                      >
+                        <X className="h-3 w-3" />
+                      </button>
+                    </Badge>
+                  ) : null}
+                  {isActivityFilterActive ? (
+                    <Badge variant="secondary" className="gap-1 pr-1 font-normal">
+                      {activityFilter === 'active' ? 'Только активные' : 'Только неактивные'}
+                      <button
+                        type="button"
+                        className="ml-0.5 rounded-full p-0.5 hover:bg-foreground/10"
+                        onClick={() => setActivityFilter('all')}
+                        aria-label="Сбросить фильтр по активности"
                       >
                         <X className="h-3 w-3" />
                       </button>

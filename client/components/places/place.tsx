@@ -24,8 +24,10 @@ const PlaceRow = (props: IPlaceRowProps) => {
     Number(props.washboxes) > 0 ? 'Автомойка' : null
   ].filter((it): it is string => it !== null)
 
+  const isInactive = props.active === false
+
   return (
-    <TableRow className="bg-white">
+    <TableRow className={isInactive ? 'bg-slate-100 text-muted-foreground' : 'bg-white'}>
       <TableCell className="truncate">{props.name}</TableCell>
       <TableCell className="text-gray-800">
         <div className="flex flex-wrap gap-1">

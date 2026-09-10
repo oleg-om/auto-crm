@@ -36,6 +36,7 @@ const discounts = discountsFull as IDiscount[]
 
 interface IFormState {
   name: string
+  active: boolean
   razval: boolean
   razvalquantity: string
   oil: boolean
@@ -61,6 +62,7 @@ interface IFormState {
 
 const emptyState: IFormState = {
   name: '',
+  active: true,
   razval: false,
   razvalquantity: '',
   oil: false,
@@ -88,6 +90,7 @@ const toFormState = (place?: IPlace): IFormState =>
   place
     ? {
         name: place.name,
+        active: place.active ?? true,
         razval: place.razval === 'true',
         razvalquantity: place.razvalquantity ?? '',
         oil: place.oil === 'true',
@@ -114,6 +117,7 @@ const toFormState = (place?: IPlace): IFormState =>
 
 const toPayload = (state: IFormState) => ({
   name: state.name,
+  active: state.active,
   razval: String(state.razval),
   razvalquantity: state.razvalquantity,
   oil: String(state.oil),
@@ -249,13 +253,29 @@ const PlaceForm = ({ mode, place, onSaved, onCancel }: IPlaceFormProps) => {
               onValueChange={onPhoneChange('autopartsphone')}
             />
           </div>
+          <Label
+            htmlFor="active"
+            className="flex items-center gap-2 rounded-md border bg-background p-2 font-normal cursor-pointer hover:bg-accent/50 sm:col-span-2"
+          >
+            <Checkbox
+              id="active"
+              checked={state.active}
+              onCheckedChange={(checked) =>
+                setState((prev) => ({ ...prev, active: checked === true }))
+              }
+            />
+            Адрес активен
+            <span className="text-sm font-normal text-muted-foreground">
+              (неактивные не отображаются в остальных частях приложения)
+            </span>
+          </Label>
         </CollapsibleCard>
 
         <CollapsibleCard title="Развал-схождение и замена масла" contentClassName="grid gap-4">
           <div className="grid gap-2 sm:grid-cols-2">
             <Label
               htmlFor="razval"
-              className="flex items-center gap-2 rounded-md border p-2 font-normal cursor-pointer hover:bg-accent/50"
+              className="flex items-center gap-2 rounded-md border bg-background p-2 font-normal cursor-pointer hover:bg-accent/50"
             >
               <Checkbox
                 id="razval"
@@ -268,7 +288,7 @@ const PlaceForm = ({ mode, place, onSaved, onCancel }: IPlaceFormProps) => {
             </Label>
             <Label
               htmlFor="oil"
-              className="flex items-center gap-2 rounded-md border p-2 font-normal cursor-pointer hover:bg-accent/50"
+              className="flex items-center gap-2 rounded-md border bg-background p-2 font-normal cursor-pointer hover:bg-accent/50"
             >
               <Checkbox
                 id="oil"
@@ -338,7 +358,7 @@ const PlaceForm = ({ mode, place, onSaved, onCancel }: IPlaceFormProps) => {
         <CollapsibleCard title="Шиномонтаж" contentClassName="grid gap-4">
           <Label
             htmlFor="shinomontazh"
-            className="flex items-center gap-2 rounded-md border p-2 font-normal cursor-pointer hover:bg-accent/50"
+            className="flex items-center gap-2 rounded-md border bg-background p-2 font-normal cursor-pointer hover:bg-accent/50"
           >
             <Checkbox
               id="shinomontazh"
@@ -431,7 +451,7 @@ const PlaceForm = ({ mode, place, onSaved, onCancel }: IPlaceFormProps) => {
           </div>
           <Label
             htmlFor="boostShinomontazhPrices"
-            className="flex items-center gap-2 rounded-md border p-2 font-normal cursor-pointer hover:bg-accent/50"
+            className="flex items-center gap-2 rounded-md border bg-background p-2 font-normal cursor-pointer hover:bg-accent/50"
             title="Повышает цены на шиномонтаж на +1 диаметр (например, цена для 14 диаметра становится ценой для 15)"
           >
             <Checkbox
@@ -449,7 +469,7 @@ const PlaceForm = ({ mode, place, onSaved, onCancel }: IPlaceFormProps) => {
         <CollapsibleCard title="СТО" contentClassName="grid gap-4">
           <Label
             htmlFor="sto"
-            className="flex items-center gap-2 rounded-md border p-2 font-normal cursor-pointer hover:bg-accent/50"
+            className="flex items-center gap-2 rounded-md border bg-background p-2 font-normal cursor-pointer hover:bg-accent/50"
           >
             <Checkbox
               id="sto"

@@ -1,7 +1,8 @@
 const Place = require('../model/place')
 
 exports.getAll = async (req, res) => {
-  const list = await Place.find({})
+  const filter = req.query.includeInactive === 'true' ? {} : { active: { $ne: false } }
+  const list = await Place.find(filter)
   return res.json({ status: 'ok', data: list })
 }
 
