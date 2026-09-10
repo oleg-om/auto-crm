@@ -3,8 +3,8 @@ import { Link } from 'react-router-dom'
 import { TableRow, TableCell } from '../ui/table'
 import { Badge } from '../ui/badge'
 import { Button } from '../ui/button'
-import type { IEmployee } from '../../types/employee'
-import type { IPlace } from '../../types/place'
+import type { IEmployee } from '../../../common/types/generated/Employee'
+import type { IPlace } from '../../../common/types/generated/Place'
 
 interface IEmployeeRowProps extends IEmployee {
   place: IPlace[]

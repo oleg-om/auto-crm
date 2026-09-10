@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import { Link } from 'react-router-dom'
 import { toast } from 'react-toastify'
-import { X } from 'lucide-react'
+import { Check, ChevronsUpDown, X } from 'lucide-react'
 import EmployeeRow from '../../components/employees/employee'
 import { deleteEmployee } from '../../redux/reducers/employees'
 import Navbar from '../../components/Navbar'
@@ -13,13 +13,16 @@ import { Card, CardContent } from '../../components/ui/card'
 import { Label } from '../../components/ui/label'
 import { Input } from '../../components/ui/input'
 import { Button } from '../../components/ui/button'
+import { cn } from '../../lib/utils'
 import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue
-} from '../../components/ui/select'
+  Command,
+  CommandEmpty,
+  CommandGroup,
+  CommandInput,
+  CommandItem,
+  CommandList
+} from '../../components/ui/command'
+import { Popover, PopoverContent, PopoverTrigger } from '../../components/ui/popover'
 import { Table, TableBody, TableHead, TableHeader, TableRow } from '../../components/ui/table'
 import {
   Pagination,
@@ -30,8 +33,8 @@ import {
   PaginationNext,
   PaginationPrevious
 } from '../../components/ui/pagination'
-import type { IEmployee } from '../../types/employee'
-import type { IPlace } from '../../types/place'
+import type { IEmployee } from '../../../common/types/generated/Employee'
+import type { IPlace } from '../../../common/types/generated/Place'
 
 const PAGE_SIZE = 20
 
@@ -68,6 +71,7 @@ const EmployeeList = () => {
   const [itemId, setItemId] = useState('')
   const [searchName, setSearchName] = useState('')
   const [searchPlace, setSearchPlace] = useState('')
+  const [isPlacePickerOpen, setIsPlacePickerOpen] = useState(false)
   const [page, setPage] = useState(1)
 
   const filteredList = list.filter((it) => {
