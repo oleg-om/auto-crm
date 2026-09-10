@@ -4,11 +4,19 @@ import { Pencil, Trash2 } from 'lucide-react'
 import { TableRow, TableCell } from '../ui/table'
 import { Badge } from '../ui/badge'
 import { Button } from '../ui/button'
-import { ROLE_BADGE_COLORS, DEFAULT_ROLE_BADGE_COLOR } from '../../consts/role-badge-colors'
+import BadgeList from '../ui/badge-list'
+import roleList from '../../lists/role-list'
 import { formatLegacyDate } from '../../lib/legacy-date'
-import { cn } from '../../lib/utils'
 import type { IEmployee } from '../../../common/types/generated/Employee'
 import type { IPlace } from '../../../common/types/generated/Place'
+
+const ROLE_NAMES: Record<string, string> = Object.fromEntries(
+  roleList.map((it: { name: string; value: string; color: string }) => [it.value, it.name])
+)
+
+const ROLE_COLORS: Record<string, string> = Object.fromEntries(
+  roleList.map((it: { name: string; value: string; color: string }) => [it.value, it.color])
+)
 
 interface IEmployeeRowProps extends IEmployee {
   place: IPlace[]
@@ -42,19 +50,7 @@ const EmployeeRow = (props: IEmployeeRowProps) => {
         </div>
       </TableCell>
       <TableCell className="text-gray-800">
-        <div className="flex flex-wrap gap-1">
-          {props.role.map((it) => (
-            <Badge
-              key={it}
-              className={cn(
-                'max-w-full truncate',
-                ROLE_BADGE_COLORS[it] ?? DEFAULT_ROLE_BADGE_COLOR
-              )}
-            >
-              {it}
-            </Badge>
-          ))}
-        </div>
+        <BadgeList values={props.role} labels={ROLE_NAMES} colors={ROLE_COLORS} />
       </TableCell>
       <TableCell className="truncate">{formatLegacyDate(props.date)}</TableCell>
       <TableCell className="whitespace-nowrap px-1 text-center">

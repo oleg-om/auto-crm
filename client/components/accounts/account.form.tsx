@@ -16,6 +16,7 @@ import {
 } from '../ui/field'
 import { Input } from '../ui/input'
 import { Button } from '../ui/button'
+import BadgeList from '../ui/badge-list'
 import { Checkbox } from '../ui/checkbox'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../ui/select'
 import Combobox, { type IComboboxOption } from '../ui/combobox'
@@ -35,6 +36,14 @@ import type { IPlace } from '../../../common/types/generated/Place'
 
 const NONE = 'none'
 const POSTS = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10']
+
+const ROLE_NAMES: Record<string, string> = Object.fromEntries(
+  accountRoleList.map((it: { name: string; value: string; color: string }) => [it.value, it.name])
+)
+
+const ROLE_COLORS: Record<string, string> = Object.fromEntries(
+  accountRoleList.map((it: { name: string; value: string; color: string }) => [it.value, it.color])
+)
 
 interface IFormState {
   login: string
@@ -264,6 +273,15 @@ const AccountForm = ({ mode, account, onSaved, onCancel }: IAccountFormProps) =>
                 <FieldDescription>
                   Какие разделы приложения доступны этому аккаунту
                 </FieldDescription>
+                <div className="min-h-8">
+                  <BadgeList
+                    values={state.role}
+                    labels={ROLE_NAMES}
+                    colors={ROLE_COLORS}
+                    limit={Infinity}
+                    emptyText="Доступы не выбраны"
+                  />
+                </div>
                 <div className="grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
                   {accountRoleList.map((it: { name: string; value: string; color: string }) => (
                     <FieldLabel key={it.value} htmlFor={`role-${it.value}`}>

@@ -3,7 +3,6 @@ import { useSelector, useDispatch } from 'react-redux'
 import { toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
 import roleList from '../../lists/role-list'
-import { ROLE_BADGE_COLORS, DEFAULT_ROLE_BADGE_COLOR } from '../../consts/role-badge-colors'
 import { getPositions } from '../../redux/reducers/positions'
 import { createEmployee, updateEmployee, deleteEmployee } from '../../redux/reducers/employees'
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '../ui/accordion'
@@ -18,7 +17,7 @@ import {
 } from '../ui/field'
 import { Input } from '../ui/input'
 import { Button } from '../ui/button'
-import { Badge } from '../ui/badge'
+import BadgeList from '../ui/badge-list'
 import { Checkbox } from '../ui/checkbox'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../ui/select'
 import Combobox, { type IComboboxOption } from '../ui/combobox'
@@ -37,6 +36,14 @@ import type { IPlace } from '../../../common/types/generated/Place'
 import type { IPosition } from '../../../common/types/generated/Position'
 
 const NO_POSITION = 'none'
+
+const ROLE_NAMES: Record<string, string> = Object.fromEntries(
+  roleList.map((it: { name: string; value: string; color: string }) => [it.value, it.name])
+)
+
+const ROLE_COLORS: Record<string, string> = Object.fromEntries(
+  roleList.map((it: { name: string; value: string; color: string }) => [it.value, it.color])
+)
 
 interface IFormState {
   name: string
@@ -228,28 +235,26 @@ const EmployeeForm = ({ mode, employee, onSaved, onCancel }: IEmployeeFormProps)
                 <FieldDescription>
                   Сотрудник может занимать сразу несколько должностей
                 </FieldDescription>
-                <div className="flex min-h-8 flex-wrap gap-1.5">
-                  {state.role.length > 0 ? (
-                    state.role.map((it) => (
-                      <Badge key={it} className={ROLE_BADGE_COLORS[it] ?? DEFAULT_ROLE_BADGE_COLOR}>
-                        {it}
-                      </Badge>
-                    ))
-                  ) : (
-                    <span className="text-sm text-muted-foreground">Должности не выбраны</span>
-                  )}
+                <div className="min-h-8">
+                  <BadgeList
+                    values={state.role}
+                    labels={ROLE_NAMES}
+                    colors={ROLE_COLORS}
+                    limit={Infinity}
+                    emptyText="Должности не выбраны"
+                  />
                 </div>
                 <div className="grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
-                  {roleList.map((it: string) => (
-                    <FieldLabel key={it} htmlFor={`role-${it}`}>
+                  {roleList.map((it: { name: string; value: string; color: string }) => (
+                    <FieldLabel key={it.value} htmlFor={`role-${it.value}`}>
                       <Field orientation="horizontal">
                         <Checkbox
-                          id={`role-${it}`}
-                          checked={state.role.includes(it)}
-                          onCheckedChange={(checked) => toggleRole(it, checked === true)}
+                          id={`role-${it.value}`}
+                          checked={state.role.includes(it.value)}
+                          onCheckedChange={(checked) => toggleRole(it.value, checked === true)}
                         />
                         <FieldContent>
-                          <FieldTitle>{it}</FieldTitle>
+                          <FieldTitle>{it.name}</FieldTitle>
                         </FieldContent>
                       </Field>
                     </FieldLabel>
