@@ -55,36 +55,105 @@ const SelectScrollDownButton = React.forwardRef<
 ))
 SelectScrollDownButton.displayName = SelectPrimitive.ScrollDownButton.displayName
 
+// When SelectContent is portaled while a Dialog has scroll-locked the page, react-remove-scroll (the
+// lock Radix Dialog uses) installs its own wheel/touchmove listener on `document` that intercepts and
+// blocks scrolling anywhere it doesn't recognize as "inside" the Dialog - which includes the Select's
+// own portal, since that's a sibling portal under <body>, not a DOM descendant of the Dialog content.
+// A React onWheel/onTouchMove prop on SelectContent runs too late to help: React delegates those from
+// the app's root container, a descendant of `document`, so react-remove-scroll's own document-level
+// listener already ran (and can stop the event) before it gets there. Fixed by installing a single
+// window-level CAPTURE-phase listener here, at module load - capture runs window -> document -> ...,
+// so ours always fires before react-remove-scroll's (added later, on mount, on document) gets a look,
+// letting us scroll the viewport ourselves and swallow the event before the lock ever sees it.
+// See https://github.com/radix-ui/primitives/issues/1128
+const SELECT_LISTBOX_SELECTOR = '[role="listbox"]'
+const SELECT_VIEWPORT_SELECTOR = '[data-radix-select-viewport]'
+
+const findOpenSelectViewport = (target: EventTarget | null): HTMLElement | null => {
+  const el = target instanceof Element ? target : null
+  return (
+    el?.closest(SELECT_LISTBOX_SELECTOR)?.querySelector<HTMLElement>(SELECT_VIEWPORT_SELECTOR) ??
+    null
+  )
+}
+
+declare global {
+  interface Window {
+    selectScrollFixInstalled?: boolean
+  }
+}
+
+if (typeof window !== 'undefined' && !window.selectScrollFixInstalled) {
+  window.selectScrollFixInstalled = true
+  let touchStartY: number | null = null
+
+  window.addEventListener(
+    'wheel',
+    (event) => {
+      const viewport = findOpenSelectViewport(event.target)
+      if (!viewport) return
+      viewport.scrollBy({ top: event.deltaY })
+      event.preventDefault()
+      event.stopPropagation()
+    },
+    { capture: true, passive: false }
+  )
+
+  window.addEventListener(
+    'touchstart',
+    (event) => {
+      touchStartY = findOpenSelectViewport(event.target) ? event.touches[0]?.clientY ?? null : null
+    },
+    { capture: true, passive: true }
+  )
+
+  window.addEventListener(
+    'touchmove',
+    (event) => {
+      const viewport = findOpenSelectViewport(event.target)
+      const currentY = event.touches[0]?.clientY
+      if (!viewport || touchStartY == null || currentY == null) return
+      viewport.scrollBy({ top: touchStartY - currentY })
+      touchStartY = currentY
+      event.preventDefault()
+      event.stopPropagation()
+    },
+    { capture: true, passive: false }
+  )
+}
+
 const SelectContent = React.forwardRef<
   React.ElementRef<typeof SelectPrimitive.Content>,
   React.ComponentPropsWithoutRef<typeof SelectPrimitive.Content>
->(({ className, children, position = 'popper', ...props }, ref) => (
-  <SelectPrimitive.Portal>
-    <SelectPrimitive.Content
-      ref={ref}
-      className={cn(
-        'relative z-50 max-h-[var(--radix-select-content-available-height)] min-w-[8rem] overflow-hidden rounded-md border bg-popover text-popover-foreground shadow-md data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2',
-        position === 'popper' &&
-          'data-[side=bottom]:translate-y-1 data-[side=left]:-translate-x-1 data-[side=right]:translate-x-1 data-[side=top]:-translate-y-1',
-        className
-      )}
-      position={position}
-      {...props}
-    >
-      <SelectScrollUpButton />
-      <SelectPrimitive.Viewport
+>(({ className, children, position = 'popper', ...props }, ref) => {
+  return (
+    <SelectPrimitive.Portal>
+      <SelectPrimitive.Content
+        ref={ref}
         className={cn(
-          'p-1',
+          'relative z-50 max-h-[var(--radix-select-content-available-height)] min-w-[8rem] overflow-hidden rounded-md border bg-popover text-popover-foreground shadow-md data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2',
           position === 'popper' &&
-            'h-[var(--radix-select-trigger-height)] w-full min-w-[var(--radix-select-trigger-width)]'
+            'data-[side=bottom]:translate-y-1 data-[side=left]:-translate-x-1 data-[side=right]:translate-x-1 data-[side=top]:-translate-y-1',
+          className
         )}
+        position={position}
+        {...props}
       >
-        {children}
-      </SelectPrimitive.Viewport>
-      <SelectScrollDownButton />
-    </SelectPrimitive.Content>
-  </SelectPrimitive.Portal>
-))
+        <SelectScrollUpButton />
+        <SelectPrimitive.Viewport
+          className={cn(
+            'p-1',
+            position === 'popper' &&
+              'h-[var(--radix-select-trigger-height)] w-full min-w-[var(--radix-select-trigger-width)]'
+          )}
+        >
+          {children}
+        </SelectPrimitive.Viewport>
+        <SelectScrollDownButton />
+      </SelectPrimitive.Content>
+    </SelectPrimitive.Portal>
+  )
+})
 SelectContent.displayName = SelectPrimitive.Content.displayName
 
 const SelectLabel = React.forwardRef<

@@ -16,6 +16,12 @@ New or redesigned screens MUST be built with **shadcn/ui** components, not raw H
 
 This project has no `components.json` / shadcn CLI setup - primitives were added by hand under `client/components/ui/`. Keep new ones consistent with the existing ones instead of running the CLI.
 
+## Roles, typed constants, and access control
+
+- **Typed constants over bare strings.** For a fixed set of values (roles, statuses, types) prefer a typed TypeScript source of truth - a `const ... as const` object/array with a derived union type, or a TS `enum` - instead of untyped string literals passed around and compared ad hoc. This lets `tsc` catch typos and rename mistakes that a plain `.includes('admin')` scattered across dozens of files can't. When a value is also a stored DB string (e.g. `role-list.js`/`account-role-list.js` entries, where `value` must match existing persisted data), keep the constant's value identical to what's already stored - the goal is compile-time typing on top of the existing values, not a data migration.
+- **Give roles readable helper methods.** Don't repeat raw role-string checks (`auth.roles.includes('bookkeeper')`, `role.indexOf('admin') !== -1`, etc.) inline at every call site - the codebase currently has 200+ of these. Add small named helpers (e.g. `isAdmin(roles)`, `isBookkeeper(roles)`, `hasRole(roles, Role.Admin)`) in one shared place instead, so intent is readable at the call site and the set of valid roles/logic has a single source of truth to update.
+- **Enforce roles on the server, not just the frontend.** Hiding a button, a `Sidebar` link, or a page behind a frontend role check (`!auth.roles.includes(...)`) is UX only - it does not stop a direct API call. Every protected `server/controller/*.js` handler / `server/routes/api/*.js` route that performs a privileged read or write must independently check the authenticated user's role (via the existing JWT/passport auth in `server/server.js`, which already decodes `role` off the `User`/account record) before proceeding, not rely on the client to have hidden the option.
+
 ## Dates: use moment
 
 For new date handling (parsing, formatting, comparing, arithmetic), use **`moment`** - it's a direct dependency (see `package.json`).

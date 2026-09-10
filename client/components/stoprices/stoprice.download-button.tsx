@@ -1,24 +1,19 @@
 import React from 'react'
 import { useSelector } from 'react-redux'
 import * as XLSX from 'xlsx'
-import cx from 'classnames'
+import { Download } from 'lucide-react'
+import { Button } from '../ui/button'
+import { deleteKeys } from '../../scenes/Shinomotazh.prices/Shinomontazh.prices.donwload'
+import type { IStoPrice } from '../../../common/types/generated/StoPrice'
 
-export function deleteKeys(myObj, array) {
-  for (let index = 0; index < array.length; index += 1) {
-    // eslint-disable-next-line no-param-reassign
-    delete myObj[array[index]]
-  }
-  return myObj
-}
-
-const StoPricesDonwload = () => {
-  const data = useSelector((s) => s.stoprices.list)
+const StopriceDownloadButton = () => {
+  const data = useSelector((s: { stoprices: { list: IStoPrice[] } }) => s.stoprices.list)
 
   const download = () => {
-    const array = []
+    const array: Partial<IStoPrice>[] = []
 
     if (data?.length) {
-      data
+      ;[...data]
         .sort((a, b) => {
           const byType = (a.type || '').localeCompare(b.type || '')
           if (byType !== 0) return byType
@@ -39,16 +34,11 @@ const StoPricesDonwload = () => {
   }
 
   return (
-    <button
-      className={cx(
-        'my-1 py-1 mr-2 px-3 text-white hover:text-white rounded-lg bg-orange-500 text-base hover:bg-orange-700'
-      )}
-      onClick={download}
-      type="button"
-    >
+    <Button type="button" variant="outline" onClick={download}>
+      <Download className="mr-2 h-4 w-4" />
       Скачать прайс
-    </button>
+    </Button>
   )
 }
 
-export default StoPricesDonwload
+export default StopriceDownloadButton
