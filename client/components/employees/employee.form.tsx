@@ -13,7 +13,8 @@ import {
   FieldDescription,
   FieldError,
   FieldGroup,
-  FieldLabel
+  FieldLabel,
+  FieldTitle
 } from '../ui/field'
 import { Input } from '../ui/input'
 import { Button } from '../ui/button'
@@ -199,21 +200,23 @@ const EmployeeForm = ({ mode, employee, onSaved, onCancel }: IEmployeeFormProps)
                     <FieldError>{errors.surname}</FieldError>
                   </Field>
                 </div>
-                <Field orientation="horizontal">
-                  <Checkbox
-                    id="active"
-                    checked={state.active}
-                    onCheckedChange={(checked) =>
-                      setState((prev) => ({ ...prev, active: checked === true }))
-                    }
-                  />
-                  <FieldContent>
-                    <FieldLabel htmlFor="active">Сотрудник активен</FieldLabel>
-                    <FieldDescription>
-                      Неактивные не отображаются в остальных частях приложения
-                    </FieldDescription>
-                  </FieldContent>
-                </Field>
+                <FieldLabel htmlFor="active">
+                  <Field orientation="horizontal">
+                    <Checkbox
+                      id="active"
+                      checked={state.active}
+                      onCheckedChange={(checked) =>
+                        setState((prev) => ({ ...prev, active: checked === true }))
+                      }
+                    />
+                    <FieldContent>
+                      <FieldTitle>Сотрудник активен</FieldTitle>
+                      <FieldDescription>
+                        Неактивные не отображаются в остальных частях приложения
+                      </FieldDescription>
+                    </FieldContent>
+                  </Field>
+                </FieldLabel>
               </FieldGroup>
             </AccordionContent>
           </AccordionItem>
@@ -238,14 +241,18 @@ const EmployeeForm = ({ mode, employee, onSaved, onCancel }: IEmployeeFormProps)
                 </div>
                 <div className="grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
                   {roleList.map((it: string) => (
-                    <Field key={it} orientation="horizontal">
-                      <Checkbox
-                        id={`role-${it}`}
-                        checked={state.role.includes(it)}
-                        onCheckedChange={(checked) => toggleRole(it, checked === true)}
-                      />
-                      <FieldLabel htmlFor={`role-${it}`}>{it}</FieldLabel>
-                    </Field>
+                    <FieldLabel key={it} htmlFor={`role-${it}`}>
+                      <Field orientation="horizontal">
+                        <Checkbox
+                          id={`role-${it}`}
+                          checked={state.role.includes(it)}
+                          onCheckedChange={(checked) => toggleRole(it, checked === true)}
+                        />
+                        <FieldContent>
+                          <FieldTitle>{it}</FieldTitle>
+                        </FieldContent>
+                      </Field>
+                    </FieldLabel>
                   ))}
                 </div>
               </FieldGroup>
@@ -302,16 +309,20 @@ const EmployeeForm = ({ mode, employee, onSaved, onCancel }: IEmployeeFormProps)
               <FieldGroup>
                 <div className="grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
                   {places.map((it) => (
-                    <Field key={it.id} orientation="horizontal">
-                      <Checkbox
-                        id={`place-${it.id}`}
-                        checked={state.address.includes(it.id as string)}
-                        onCheckedChange={(checked) =>
-                          togglePlace(it.id as string, checked === true)
-                        }
-                      />
-                      <FieldLabel htmlFor={`place-${it.id}`}>{it.name}</FieldLabel>
-                    </Field>
+                    <FieldLabel key={it.id} htmlFor={`place-${it.id}`}>
+                      <Field orientation="horizontal">
+                        <Checkbox
+                          id={`place-${it.id}`}
+                          checked={state.address.includes(it.id as string)}
+                          onCheckedChange={(checked) =>
+                            togglePlace(it.id as string, checked === true)
+                          }
+                        />
+                        <FieldContent>
+                          <FieldTitle>{it.name}</FieldTitle>
+                        </FieldContent>
+                      </Field>
+                    </FieldLabel>
                   ))}
                 </div>
               </FieldGroup>

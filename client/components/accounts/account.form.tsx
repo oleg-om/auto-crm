@@ -11,7 +11,8 @@ import {
   FieldDescription,
   FieldError,
   FieldGroup,
-  FieldLabel
+  FieldLabel,
+  FieldTitle
 } from '../ui/field'
 import { Input } from '../ui/input'
 import { Button } from '../ui/button'
@@ -265,14 +266,18 @@ const AccountForm = ({ mode, account, onSaved, onCancel }: IAccountFormProps) =>
                 </FieldDescription>
                 <div className="grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
                   {accountRoleList.map((it: { name: string; value: string }) => (
-                    <Field key={it.value} orientation="horizontal">
-                      <Checkbox
-                        id={`role-${it.value}`}
-                        checked={state.role.includes(it.value)}
-                        onCheckedChange={(checked) => toggleRole(it.value, checked === true)}
-                      />
-                      <FieldLabel htmlFor={`role-${it.value}`}>{it.name}</FieldLabel>
-                    </Field>
+                    <FieldLabel key={it.value} htmlFor={`role-${it.value}`}>
+                      <Field orientation="horizontal">
+                        <Checkbox
+                          id={`role-${it.value}`}
+                          checked={state.role.includes(it.value)}
+                          onCheckedChange={(checked) => toggleRole(it.value, checked === true)}
+                        />
+                        <FieldContent>
+                          <FieldTitle>{it.name}</FieldTitle>
+                        </FieldContent>
+                      </Field>
+                    </FieldLabel>
                   ))}
                 </div>
                 <FieldError>{errors.role}</FieldError>
@@ -284,20 +289,23 @@ const AccountForm = ({ mode, account, onSaved, onCancel }: IAccountFormProps) =>
             <AccordionTrigger>Дополнительно</AccordionTrigger>
             <AccordionContent>
               <FieldGroup>
-                <Field orientation="horizontal">
-                  <Checkbox
-                    id="requestPasswordForReport"
-                    checked={state.requestPasswordForReport}
-                    onCheckedChange={(checked) =>
-                      setState((prev) => ({ ...prev, requestPasswordForReport: checked === true }))
-                    }
-                  />
-                  <FieldContent>
-                    <FieldLabel htmlFor="requestPasswordForReport">
-                      Запрашивать пароль на странице «Отчёт»
-                    </FieldLabel>
-                  </FieldContent>
-                </Field>
+                <FieldLabel htmlFor="requestPasswordForReport">
+                  <Field orientation="horizontal">
+                    <Checkbox
+                      id="requestPasswordForReport"
+                      checked={state.requestPasswordForReport}
+                      onCheckedChange={(checked) =>
+                        setState((prev) => ({
+                          ...prev,
+                          requestPasswordForReport: checked === true
+                        }))
+                      }
+                    />
+                    <FieldContent>
+                      <FieldTitle>Запрашивать пароль на странице «Отчёт»</FieldTitle>
+                    </FieldContent>
+                  </Field>
+                </FieldLabel>
                 <Field>
                   <FieldLabel htmlFor="post">
                     Пост № (для печати талонов на одной точке на разных ПК)

@@ -12,7 +12,8 @@ import {
   FieldDescription,
   FieldError,
   FieldGroup,
-  FieldLabel
+  FieldLabel,
+  FieldTitle
 } from '../ui/field'
 import { Input } from '../ui/input'
 import { Button } from '../ui/button'
@@ -260,21 +261,23 @@ const PlaceForm = ({ mode, place, onSaved, onCancel }: IPlaceFormProps) => {
                     />
                   </Field>
                 </div>
-                <Field orientation="horizontal">
-                  <Checkbox
-                    id="active"
-                    checked={state.active}
-                    onCheckedChange={(checked) =>
-                      setState((prev) => ({ ...prev, active: checked === true }))
-                    }
-                  />
-                  <FieldContent>
-                    <FieldLabel htmlFor="active">Адрес активен</FieldLabel>
-                    <FieldDescription>
-                      Неактивные не отображаются в остальных частях приложения
-                    </FieldDescription>
-                  </FieldContent>
-                </Field>
+                <FieldLabel htmlFor="active">
+                  <Field orientation="horizontal">
+                    <Checkbox
+                      id="active"
+                      checked={state.active}
+                      onCheckedChange={(checked) =>
+                        setState((prev) => ({ ...prev, active: checked === true }))
+                      }
+                    />
+                    <FieldContent>
+                      <FieldTitle>Адрес активен</FieldTitle>
+                      <FieldDescription>
+                        Неактивные не отображаются в остальных частях приложения
+                      </FieldDescription>
+                    </FieldContent>
+                  </Field>
+                </FieldLabel>
               </FieldGroup>
             </AccordionContent>
           </AccordionItem>
@@ -284,30 +287,34 @@ const PlaceForm = ({ mode, place, onSaved, onCancel }: IPlaceFormProps) => {
             <AccordionContent>
               <FieldGroup>
                 <div className="grid gap-4 sm:grid-cols-2">
-                  <Field orientation="horizontal">
-                    <Checkbox
-                      id="razval"
-                      checked={state.razval}
-                      onCheckedChange={(checked) =>
-                        setState((prev) => ({ ...prev, razval: checked === true }))
-                      }
-                    />
-                    <FieldContent>
-                      <FieldLabel htmlFor="razval">Есть развал-схождение</FieldLabel>
-                    </FieldContent>
-                  </Field>
-                  <Field orientation="horizontal">
-                    <Checkbox
-                      id="oil"
-                      checked={state.oil}
-                      onCheckedChange={(checked) =>
-                        setState((prev) => ({ ...prev, oil: checked === true }))
-                      }
-                    />
-                    <FieldContent>
-                      <FieldLabel htmlFor="oil">Есть замена масла</FieldLabel>
-                    </FieldContent>
-                  </Field>
+                  <FieldLabel htmlFor="razval">
+                    <Field orientation="horizontal">
+                      <Checkbox
+                        id="razval"
+                        checked={state.razval}
+                        onCheckedChange={(checked) =>
+                          setState((prev) => ({ ...prev, razval: checked === true }))
+                        }
+                      />
+                      <FieldContent>
+                        <FieldTitle>Есть развал-схождение</FieldTitle>
+                      </FieldContent>
+                    </Field>
+                  </FieldLabel>
+                  <FieldLabel htmlFor="oil">
+                    <Field orientation="horizontal">
+                      <Checkbox
+                        id="oil"
+                        checked={state.oil}
+                        onCheckedChange={(checked) =>
+                          setState((prev) => ({ ...prev, oil: checked === true }))
+                        }
+                      />
+                      <FieldContent>
+                        <FieldTitle>Есть замена масла</FieldTitle>
+                      </FieldContent>
+                    </Field>
+                  </FieldLabel>
                 </div>
                 <div className="grid gap-4 sm:grid-cols-2">
                   <Field>
@@ -370,18 +377,20 @@ const PlaceForm = ({ mode, place, onSaved, onCancel }: IPlaceFormProps) => {
             <AccordionTrigger>Шиномонтаж</AccordionTrigger>
             <AccordionContent>
               <FieldGroup>
-                <Field orientation="horizontal">
-                  <Checkbox
-                    id="shinomontazh"
-                    checked={state.shinomontazh}
-                    onCheckedChange={(checked) =>
-                      setState((prev) => ({ ...prev, shinomontazh: checked === true }))
-                    }
-                  />
-                  <FieldContent>
-                    <FieldLabel htmlFor="shinomontazh">Есть шиномонтаж</FieldLabel>
-                  </FieldContent>
-                </Field>
+                <FieldLabel htmlFor="shinomontazh">
+                  <Field orientation="horizontal">
+                    <Checkbox
+                      id="shinomontazh"
+                      checked={state.shinomontazh}
+                      onCheckedChange={(checked) =>
+                        setState((prev) => ({ ...prev, shinomontazh: checked === true }))
+                      }
+                    />
+                    <FieldContent>
+                      <FieldTitle>Есть шиномонтаж</FieldTitle>
+                    </FieldContent>
+                  </Field>
+                </FieldLabel>
                 <div className="grid gap-4 sm:grid-cols-2">
                   <Field>
                     <FieldLabel htmlFor="shinomontazhquantity">Количество постов</FieldLabel>
@@ -462,24 +471,27 @@ const PlaceForm = ({ mode, place, onSaved, onCancel }: IPlaceFormProps) => {
                     </Select>
                   </Field>
                 </div>
-                <Field orientation="horizontal">
-                  <Checkbox
-                    id="boostShinomontazhPrices"
-                    checked={state.boostShinomontazhPrices}
-                    onCheckedChange={(checked) =>
-                      setState((prev) => ({ ...prev, boostShinomontazhPrices: checked === true }))
-                    }
-                  />
-                  <FieldContent>
-                    <FieldLabel htmlFor="boostShinomontazhPrices">
-                      Повысить цены шиномонтажа
-                    </FieldLabel>
-                    <FieldDescription>
-                      Повышает цены на шиномонтаж на +1 диаметр (например, цена для 14 диаметра
-                      становится ценой для 15)
-                    </FieldDescription>
-                  </FieldContent>
-                </Field>
+                <FieldLabel htmlFor="boostShinomontazhPrices">
+                  <Field orientation="horizontal">
+                    <Checkbox
+                      id="boostShinomontazhPrices"
+                      checked={state.boostShinomontazhPrices}
+                      onCheckedChange={(checked) =>
+                        setState((prev) => ({
+                          ...prev,
+                          boostShinomontazhPrices: checked === true
+                        }))
+                      }
+                    />
+                    <FieldContent>
+                      <FieldTitle>Повысить цены шиномонтажа</FieldTitle>
+                      <FieldDescription>
+                        Повышает цены на шиномонтаж на +1 диаметр (например, цена для 14 диаметра
+                        становится ценой для 15)
+                      </FieldDescription>
+                    </FieldContent>
+                  </Field>
+                </FieldLabel>
               </FieldGroup>
             </AccordionContent>
           </AccordionItem>
@@ -488,18 +500,20 @@ const PlaceForm = ({ mode, place, onSaved, onCancel }: IPlaceFormProps) => {
             <AccordionTrigger>СТО</AccordionTrigger>
             <AccordionContent>
               <FieldGroup>
-                <Field orientation="horizontal">
-                  <Checkbox
-                    id="sto"
-                    checked={state.sto}
-                    onCheckedChange={(checked) =>
-                      setState((prev) => ({ ...prev, sto: checked === true }))
-                    }
-                  />
-                  <FieldContent>
-                    <FieldLabel htmlFor="sto">Есть СТО</FieldLabel>
-                  </FieldContent>
-                </Field>
+                <FieldLabel htmlFor="sto">
+                  <Field orientation="horizontal">
+                    <Checkbox
+                      id="sto"
+                      checked={state.sto}
+                      onCheckedChange={(checked) =>
+                        setState((prev) => ({ ...prev, sto: checked === true }))
+                      }
+                    />
+                    <FieldContent>
+                      <FieldTitle>Есть СТО</FieldTitle>
+                    </FieldContent>
+                  </Field>
+                </FieldLabel>
                 <div className="grid gap-4 sm:grid-cols-2">
                   <Field>
                     <FieldLabel htmlFor="stoboxes">Количество постов СТО</FieldLabel>
