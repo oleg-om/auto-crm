@@ -1,5 +1,6 @@
 import {
   GET_EMPLOYEES,
+  GET_EMPLOYEES_ALL,
   CREATE_EMPLOYEE,
   UPDATE_EMPLOYEE,
   DELETE_EMPLOYEE,
@@ -15,6 +16,11 @@ import {
 
 const initialState = {
   list: [],
+  // Full roster including inactive employees - populated only for the
+  // Employees admin page (see getAllEmployees below); `list` stays
+  // active-only since ~60 other pages across the app read it directly for
+  // employee pickers and must never see inactive employees.
+  allList: [],
   report: [],
   employee: null,
   data: []
@@ -25,20 +31,40 @@ export default (state = initialState, action) => {
     case GET_EMPLOYEES: {
       return { ...state, list: action.employees }
     }
-    case CREATE_EMPLOYEE: {
-      return { ...state, list: [...state.list, action.employee] }
+    case GET_EMPLOYEES_ALL: {
+      return { ...state, allList: action.employees }
     }
-    case UPDATE_EMPLOYEE: {
+    case CREATE_EMPLOYEE: {
       return {
         ...state,
-        list: state.list.map((it) => {
-          return action.employee.id === it.id ? action.employee : it
-        })
+        list: action.employee.active === false ? state.list : [...state.list, action.employee],
+        allList: [...state.allList, action.employee]
+      }
+    }
+    case UPDATE_EMPLOYEE: {
+      const isActive = action.employee.active !== false
+      const existsInList = state.list.some((it) => it.id === action.employee.id)
+      let nextList = state.list
+      if (isActive) {
+        nextList = existsInList
+          ? state.list.map((it) => (it.id === action.employee.id ? action.employee : it))
+          : [...state.list, action.employee]
+      } else if (existsInList) {
+        nextList = state.list.filter((it) => it.id !== action.employee.id)
+      }
+      return {
+        ...state,
+        list: nextList,
+        allList: state.allList.map((it) => (it.id === action.employee.id ? action.employee : it))
       }
     }
     case DELETE_EMPLOYEE: {
       return {
+        ...state,
         list: state.list.filter((it) => {
+          return action.id !== it.id
+        }),
+        allList: state.allList.filter((it) => {
           return action.id !== it.id
         })
       }
@@ -71,6 +97,18 @@ export function getEmployees() {
       .then((r) => r.json())
       .then(({ data: employees }) => {
         dispatch({ type: GET_EMPLOYEES, employees })
+      })
+  }
+}
+
+// Used only by the Employees admin page, which needs to see inactive
+// employees too (to be able to review and reactivate them).
+export function getAllEmployees() {
+  return (dispatch) => {
+    fetch('/api/v1/employee?includeInactive=true')
+      .then((r) => r.json())
+      .then(({ data: employees }) => {
+        dispatch({ type: GET_EMPLOYEES_ALL, employees })
       })
   }
 }

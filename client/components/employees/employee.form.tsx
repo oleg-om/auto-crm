@@ -40,6 +40,7 @@ interface IFormState {
   class: string
   positionId: string
   positionIdAdditional: string
+  active: boolean
 }
 
 const emptyState: IFormState = {
@@ -50,7 +51,8 @@ const emptyState: IFormState = {
   numberId: '',
   class: '',
   positionId: '',
-  positionIdAdditional: ''
+  positionIdAdditional: '',
+  active: true
 }
 
 const toFormState = (employee?: IEmployee): IFormState =>
@@ -63,7 +65,8 @@ const toFormState = (employee?: IEmployee): IFormState =>
         numberId: employee.numberId ?? '',
         class: employee.class ?? '',
         positionId: employee.positionId ?? '',
-        positionIdAdditional: employee.positionIdAdditional ?? ''
+        positionIdAdditional: employee.positionIdAdditional ?? '',
+        active: employee.active ?? true
       }
     : emptyState
 
@@ -192,6 +195,22 @@ const EmployeeForm = ({ mode, employee, onSaved, onCancel }: IEmployeeFormProps)
               />
               {errors.surname ? <p className="text-sm text-destructive">{errors.surname}</p> : null}
             </div>
+            <Label
+              htmlFor="active"
+              className="flex items-center gap-2 rounded-md border p-2 font-normal cursor-pointer hover:bg-accent/50 sm:col-span-2"
+            >
+              <Checkbox
+                id="active"
+                checked={state.active}
+                onCheckedChange={(checked) =>
+                  setState((prev) => ({ ...prev, active: checked === true }))
+                }
+              />
+              Сотрудник активен
+              <span className="text-sm font-normal text-muted-foreground">
+                (неактивные не отображаются в остальных частях приложения)
+              </span>
+            </Label>
           </CardContent>
         </Card>
 

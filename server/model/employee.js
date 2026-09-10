@@ -66,6 +66,11 @@ const Employee = new mongoose.Schema({
     type: String,
     required: false
   },
+  active: {
+    type: Boolean,
+    required: false,
+    default: true
+  },
   date: {
     type: String,
     default: () =>

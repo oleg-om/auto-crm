@@ -1,7 +1,8 @@
 const Employee = require('../model/employee')
 
 exports.getAll = async (req, res) => {
-  const list = await Employee.find({})
+  const filter = req.query.includeInactive === 'true' ? {} : { active: { $ne: false } }
+  const list = await Employee.find(filter)
   return res.json({ status: 'ok', data: list })
 }
 

@@ -5,7 +5,7 @@ import { toast } from 'react-toastify'
 import { ArrowDown, ArrowUp, ArrowUpDown, Check, ChevronsUpDown, Plus, X } from 'lucide-react'
 import EmployeeRow from '../../components/employees/employee'
 import EmployeeForm from '../../components/employees/employee.form'
-import { deleteEmployee } from '../../redux/reducers/employees'
+import { deleteEmployee, getAllEmployees } from '../../redux/reducers/employees'
 import Navbar from '../../components/Navbar'
 import Sidebar from '../../components/Sidebar'
 import { parseLegacyDate } from '../../lib/legacy-date'
@@ -36,6 +36,13 @@ import {
   CommandList
 } from '../../components/ui/command'
 import { Popover, PopoverContent, PopoverTrigger } from '../../components/ui/popover'
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue
+} from '../../components/ui/select'
 import { Table, TableBody, TableHead, TableHeader, TableRow } from '../../components/ui/table'
 import {
   Pagination,
@@ -114,8 +121,12 @@ const EmployeeList = () => {
   // just for the slices this page reads, per the IEmployee/IPlace contracts.
   const dispatch = useDispatch<any>()
   const history = useHistory()
-  const list = useSelector((s: { employees: { list: IEmployee[] } }) => s.employees.list)
+  const list = useSelector((s: { employees: { allList: IEmployee[] } }) => s.employees.allList)
   const place = useSelector((s: { places: { list: IPlace[] } }) => s.places.list)
+
+  useEffect(() => {
+    dispatch(getAllEmployees())
+  }, [dispatch])
   const formMatch = useRouteMatch<{ id?: string }>({
     path: ['/employee/create', '/employee/edit/:id'],
     exact: true
@@ -130,6 +141,7 @@ const EmployeeList = () => {
   const [itemId, setItemId] = useState('')
   const [searchName, setSearchName] = useState('')
   const [searchPlace, setSearchPlace] = useState('')
+  const [activityFilter, setActivityFilter] = useState<'all' | 'active' | 'inactive'>('all')
   const [isPlacePickerOpen, setIsPlacePickerOpen] = useState(false)
   const [page, setPage] = useState(1)
   const [sortField, setSortField] = useState<'name' | 'date' | null>(null)
@@ -152,7 +164,10 @@ const EmployeeList = () => {
     const fullName = `${it.name} ${it.surname}`.toLowerCase()
     const matchesName = fullName.includes(searchName.trim().toLowerCase())
     const matchesPlace = searchPlace === '' || it.address.includes(searchPlace)
-    return matchesName && matchesPlace
+    const matchesActivity =
+      activityFilter === 'all' ||
+      (activityFilter === 'active' ? it.active !== false : it.active === false)
+    return matchesName && matchesPlace && matchesActivity
   })
 
   const sortedList = [...filteredList].sort((a, b) => {
@@ -170,15 +185,17 @@ const EmployeeList = () => {
 
   const isSearchNameActive = searchName.trim() !== ''
   const isSearchPlaceActive = searchPlace !== ''
-  const hasActiveFilters = isSearchNameActive || isSearchPlaceActive
+  const isActivityFilterActive = activityFilter !== 'all'
+  const hasActiveFilters = isSearchNameActive || isSearchPlaceActive || isActivityFilterActive
   const resetFilters = () => {
     setSearchName('')
     setSearchPlace('')
+    setActivityFilter('all')
   }
 
   useEffect(() => {
     setPage(1)
-  }, [searchName, searchPlace])
+  }, [searchName, searchPlace, activityFilter])
 
   const totalPages = Math.max(1, Math.ceil(sortedList.length / PAGE_SIZE))
   const currentPage = Math.min(page, totalPages)
@@ -212,7 +229,7 @@ const EmployeeList = () => {
           <Card className="my-3">
             <CardContent className="p-4">
               <div className="-mx-2 md:flex md:justify-between">
-                <div className="md:w-1/2 px-2 mb-4 md:mb-0">
+                <div className="md:w-1/3 px-2 mb-4 md:mb-0">
                   <Label htmlFor="searchName" className="block mb-2">
                     Имя или фамилия
                   </Label>
@@ -239,7 +256,7 @@ const EmployeeList = () => {
                     ) : null}
                   </div>
                 </div>
-                <div className="md:w-1/2 px-2 mb-4 md:mb-0">
+                <div className="md:w-1/3 px-2 mb-4 md:mb-0">
                   <Label htmlFor="searchPlace" className="block mb-2">
                     Точка
                   </Label>
@@ -307,6 +324,29 @@ const EmployeeList = () => {
                     </PopoverContent>
                   </Popover>
                 </div>
+                <div className="md:w-1/3 px-2 mb-4 md:mb-0">
+                  <Label htmlFor="activityFilter" className="block mb-2">
+                    Активность
+                  </Label>
+                  <Select
+                    value={activityFilter}
+                    onValueChange={(value) =>
+                      setActivityFilter(value as 'all' | 'active' | 'inactive')
+                    }
+                  >
+                    <SelectTrigger
+                      id="activityFilter"
+                      className={cn(isActivityFilterActive && 'border-primary text-primary')}
+                    >
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="all">Все</SelectItem>
+                      <SelectItem value="active">Активные</SelectItem>
+                      <SelectItem value="inactive">Неактивные</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
               </div>
               {hasActiveFilters ? (
                 <div className="flex flex-wrap items-center gap-2 -mx-2 px-2 pt-3 mt-3 border-t">
@@ -334,6 +374,19 @@ const EmployeeList = () => {
                         className="ml-0.5 rounded-full p-0.5 hover:bg-foreground/10"
                         onClick={() => setSearchPlace('')}
                         aria-label="Сбросить фильтр по точке"
+                      >
+                        <X className="h-3 w-3" />
+                      </button>
+                    </Badge>
+                  ) : null}
+                  {isActivityFilterActive ? (
+                    <Badge variant="secondary" className="gap-1 pr-1 font-normal">
+                      {activityFilter === 'active' ? 'Только активные' : 'Только неактивные'}
+                      <button
+                        type="button"
+                        className="ml-0.5 rounded-full p-0.5 hover:bg-foreground/10"
+                        onClick={() => setActivityFilter('all')}
+                        aria-label="Сбросить фильтр по активности"
                       >
                         <X className="h-3 w-3" />
                       </button>

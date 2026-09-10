@@ -20,14 +20,16 @@ const EmployeeRow = (props: IEmployeeRowProps) => {
     props.deleteEmployee(props.id, e.currentTarget.value)
   }
 
+  const isInactive = props.active === false
+
   const newPlaceArray = props.address.reduce<string[]>((r, e) => {
     const c = props.place.find((a) => e === a.id)
     if (c) r.push(c.name)
     return r
   }, [])
   return (
-    <TableRow className="bg-white">
-      <TableCell className="truncate text-gray-800">
+    <TableRow className={isInactive ? 'bg-slate-100 text-muted-foreground' : 'bg-white'}>
+      <TableCell className="truncate">
         {props.name} {props.surname}
       </TableCell>
       <TableCell className="text-gray-800">
@@ -54,7 +56,7 @@ const EmployeeRow = (props: IEmployeeRowProps) => {
           ))}
         </div>
       </TableCell>
-      <TableCell className="truncate text-gray-800">{formatLegacyDate(props.date)}</TableCell>
+      <TableCell className="truncate">{formatLegacyDate(props.date)}</TableCell>
       <TableCell className="whitespace-nowrap px-1 text-center">
         <Button asChild variant="outline" size="icon" title="Редактировать">
           <Link

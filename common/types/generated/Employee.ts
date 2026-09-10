@@ -16,6 +16,7 @@ export interface IEmployee {
   cardSum?: number
   positionId?: string
   positionIdAdditional?: string
+  active?: boolean
   date?: string
   _id?: string
   id_employee?: number
