@@ -22,9 +22,7 @@ import AutopartView from '../scenes/Autoparts/Autoparts.preorder.view'
 import PlaceList from '../scenes/Places/Places.list'
 import EmployeeList from '../scenes/Employees/Employees.list'
 import AccountList from '../scenes/Accounts/Accounts.list'
-import AccountNew from '../scenes/Accounts/Accounts.create'
 // import RegisterCommon from '../scenes/Accounts/Register.common'
-import AccountEdit from '../scenes/Accounts/Accounts.edit'
 import CustomerList from '../scenes/Customers/Customers.list'
 import CustomerNew from '../scenes/Customers/Customers.create'
 import CustomerEdit from '../scenes/Customers/Customers.edit'
@@ -274,9 +272,9 @@ const RootComponent = (props) => {
             <AdminRoute exact path="/employee/create" component={EmployeeList} />
             <AdminRoute exact path="/employee/edit/:id" component={EmployeeList} />
             <AdminRoute exact path="/account/list" component={AccountList} />
-            <PrivateRoute exact path="/account/create" component={AccountNew} />
+            <AdminRoute exact path="/account/create" component={AccountList} />
             {/* <Route exact path="/register" component={RegisterCommon} /> */}
-            <PrivateRoute exact path="/account/edit/:id" component={AccountEdit} />
+            <AdminRoute exact path="/account/edit/:id" component={AccountList} />
             <PrivateRoute exact path="/customer/list" component={CustomerList} />
             <PrivateRoute exact path="/customer/list/:num" component={CustomerList} />
             <PrivateRoute exact path="/customer/create" component={CustomerNew} />

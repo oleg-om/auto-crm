@@ -247,13 +247,12 @@ server.get('/api/v1/account', async (req, res) => {
 })
 
 server.patch('/api/v1/account/:id', async (req, res) => {
-  let account = await User.findOneAndUpdate(
-    { _id: req.params.id },
-    { $set: req.body },
-    { upsert: false }
-  )
+  const account = await User.findById(req.params.id)
+  // Go through .save() (not findOneAndUpdate's $set) so the password gets
+  // re-hashed by the pre('save') hook whenever it's part of the update -
+  // findOneAndUpdate would otherwise write it to MongoDB in plain text.
+  Object.assign(account, req.body)
   await account.save()
-  account = await User.findOne({ _id: req.params.id })
 
   return res.json({ status: 'ok', data: account })
 })
