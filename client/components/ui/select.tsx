@@ -2,6 +2,9 @@ import React from 'react'
 import * as SelectPrimitive from '@radix-ui/react-select'
 import { Check, ChevronDown, ChevronUp } from 'lucide-react'
 import { cn } from '../../lib/utils'
+import installPortalScrollFix from '../../lib/portal-scroll-fix'
+
+installPortalScrollFix()
 
 const Select = SelectPrimitive.Root
 const SelectGroup = SelectPrimitive.Group
@@ -54,73 +57,6 @@ const SelectScrollDownButton = React.forwardRef<
   </SelectPrimitive.ScrollDownButton>
 ))
 SelectScrollDownButton.displayName = SelectPrimitive.ScrollDownButton.displayName
-
-// When SelectContent is portaled while a Dialog has scroll-locked the page, react-remove-scroll (the
-// lock Radix Dialog uses) installs its own wheel/touchmove listener on `document` that intercepts and
-// blocks scrolling anywhere it doesn't recognize as "inside" the Dialog - which includes the Select's
-// own portal, since that's a sibling portal under <body>, not a DOM descendant of the Dialog content.
-// A React onWheel/onTouchMove prop on SelectContent runs too late to help: React delegates those from
-// the app's root container, a descendant of `document`, so react-remove-scroll's own document-level
-// listener already ran (and can stop the event) before it gets there. Fixed by installing a single
-// window-level CAPTURE-phase listener here, at module load - capture runs window -> document -> ...,
-// so ours always fires before react-remove-scroll's (added later, on mount, on document) gets a look,
-// letting us scroll the viewport ourselves and swallow the event before the lock ever sees it.
-// See https://github.com/radix-ui/primitives/issues/1128
-const SELECT_LISTBOX_SELECTOR = '[role="listbox"]'
-const SELECT_VIEWPORT_SELECTOR = '[data-radix-select-viewport]'
-
-const findOpenSelectViewport = (target: EventTarget | null): HTMLElement | null => {
-  const el = target instanceof Element ? target : null
-  return (
-    el?.closest(SELECT_LISTBOX_SELECTOR)?.querySelector<HTMLElement>(SELECT_VIEWPORT_SELECTOR) ??
-    null
-  )
-}
-
-declare global {
-  interface Window {
-    selectScrollFixInstalled?: boolean
-  }
-}
-
-if (typeof window !== 'undefined' && !window.selectScrollFixInstalled) {
-  window.selectScrollFixInstalled = true
-  let touchStartY: number | null = null
-
-  window.addEventListener(
-    'wheel',
-    (event) => {
-      const viewport = findOpenSelectViewport(event.target)
-      if (!viewport) return
-      viewport.scrollBy({ top: event.deltaY })
-      event.preventDefault()
-      event.stopPropagation()
-    },
-    { capture: true, passive: false }
-  )
-
-  window.addEventListener(
-    'touchstart',
-    (event) => {
-      touchStartY = findOpenSelectViewport(event.target) ? event.touches[0]?.clientY ?? null : null
-    },
-    { capture: true, passive: true }
-  )
-
-  window.addEventListener(
-    'touchmove',
-    (event) => {
-      const viewport = findOpenSelectViewport(event.target)
-      const currentY = event.touches[0]?.clientY
-      if (!viewport || touchStartY == null || currentY == null) return
-      viewport.scrollBy({ top: touchStartY - currentY })
-      touchStartY = currentY
-      event.preventDefault()
-      event.stopPropagation()
-    },
-    { capture: true, passive: false }
-  )
-}
 
 const SelectContent = React.forwardRef<
   React.ElementRef<typeof SelectPrimitive.Content>,
