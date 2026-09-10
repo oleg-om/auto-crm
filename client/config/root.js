@@ -20,8 +20,6 @@ import AutopartEditSimple from '../scenes/Autoparts/Autopaparts.preorder.edit'
 import AutopartEditFull from '../scenes/Autoparts/Autoparts.edit'
 import AutopartView from '../scenes/Autoparts/Autoparts.preorder.view'
 import PlaceList from '../scenes/Places/Places.list'
-import PlaceNew from '../scenes/Places/Places.create'
-import PlaceEdit from '../scenes/Places/Places.edit'
 import EmployeeList from '../scenes/Employees/Employees.list'
 import AccountList from '../scenes/Accounts/Accounts.list'
 import AccountNew from '../scenes/Accounts/Accounts.create'
@@ -267,8 +265,8 @@ const RootComponent = (props) => {
             <PrivateRoute exact path="/autoparts/view/:id/:num" component={AutopartView} />
             <PrivateRoute exact path="/autoparts/view/:id" component={AutopartView} />
             <AdminRoute exact path="/place/list" component={PlaceList} />
-            <PrivateRoute exact path="/place/create" component={PlaceNew} />
-            <PrivateRoute exact path="/place/edit/:id" component={PlaceEdit} />
+            <AdminRoute exact path="/place/create" component={PlaceList} />
+            <AdminRoute exact path="/place/edit/:id" component={PlaceList} />
             <AdminRoute exact path="/electronic-journal" component={ElectronicJournal} />
             <PrivateRoute exact path="/employee-journal" component={EmployeeJournal} />
             <BossRoute exact path="/boss-journal" component={BossJournal} />

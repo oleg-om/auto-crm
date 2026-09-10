@@ -42,14 +42,14 @@ export function getPlaces() {
   }
 }
 
-export function createPlace(name) {
+export function createPlace(data) {
   return (dispatch) => {
     fetch('/api/v1/place', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
       },
-      body: JSON.stringify({ name })
+      body: JSON.stringify(data)
     })
       .then((r) => r.json())
       .then(({ data: place }) => {
@@ -58,14 +58,14 @@ export function createPlace(name) {
   }
 }
 
-export function updatePlace(id, name) {
+export function updatePlace(id, data) {
   return (dispatch) => {
     fetch(`/api/v1/place/${id}`, {
       method: 'PATCH',
       headers: {
         'Content-Type': 'application/json'
       },
-      body: JSON.stringify(name)
+      body: JSON.stringify(data)
     })
       .then((r) => r.json())
       .then(({ data: place }) => {
