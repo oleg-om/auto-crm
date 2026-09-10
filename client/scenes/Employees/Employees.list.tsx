@@ -2,12 +2,13 @@ import React, { useEffect, useState } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import { Link, useHistory, useRouteMatch } from 'react-router-dom'
 import { toast } from 'react-toastify'
-import { Check, ChevronsUpDown, X } from 'lucide-react'
+import { ArrowDown, ArrowUp, ArrowUpDown, Check, ChevronsUpDown, X } from 'lucide-react'
 import EmployeeRow from '../../components/employees/employee'
 import EmployeeForm from '../../components/employees/employee.form'
 import { deleteEmployee } from '../../redux/reducers/employees'
 import Navbar from '../../components/Navbar'
 import Sidebar from '../../components/Sidebar'
+import { parseLegacyDate } from '../../lib/legacy-date'
 import 'react-toastify/dist/ReactToastify.css'
 import { Card, CardContent } from '../../components/ui/card'
 import { Label } from '../../components/ui/label'
@@ -69,6 +70,41 @@ const getPageNumbers = (current: number, total: number): (number | string)[] => 
   return result
 }
 
+type ISortField = 'name' | 'date'
+
+interface ISortableTableHeadProps {
+  field: ISortField
+  label: string
+  sortField: ISortField | null
+  sortDirection: 'asc' | 'desc'
+  onSort: (field: ISortField) => void
+  className?: string
+}
+
+const SortableTableHead = ({
+  field,
+  label,
+  sortField,
+  sortDirection,
+  onSort,
+  className
+}: ISortableTableHeadProps) => {
+  const isActive = sortField === field
+  const Icon = isActive ? (sortDirection === 'asc' ? ArrowUp : ArrowDown) : ArrowUpDown
+  return (
+    <TableHead className={className}>
+      <button
+        type="button"
+        className="flex items-center gap-1 hover:text-foreground"
+        onClick={() => onSort(field)}
+      >
+        {label}
+        <Icon className={cn('h-3.5 w-3.5', isActive ? 'opacity-100' : 'opacity-40')} />
+      </button>
+    </TableHead>
+  )
+}
+
 const EmployeeList = () => {
   toast.configure()
   const notify = (arg: string) => {
@@ -95,12 +131,40 @@ const EmployeeList = () => {
   const [searchPlace, setSearchPlace] = useState('')
   const [isPlacePickerOpen, setIsPlacePickerOpen] = useState(false)
   const [page, setPage] = useState(1)
+  const [sortField, setSortField] = useState<'name' | 'date' | null>(null)
+  const [sortDirection, setSortDirection] = useState<'asc' | 'desc'>('asc')
+
+  const toggleSort = (field: 'name' | 'date') => {
+    if (sortField !== field) {
+      setSortField(field)
+      setSortDirection('asc')
+      return
+    }
+    if (sortDirection === 'asc') {
+      setSortDirection('desc')
+      return
+    }
+    setSortField(null)
+  }
 
   const filteredList = list.filter((it) => {
     const fullName = `${it.name} ${it.surname}`.toLowerCase()
     const matchesName = fullName.includes(searchName.trim().toLowerCase())
     const matchesPlace = searchPlace === '' || it.address.includes(searchPlace)
     return matchesName && matchesPlace
+  })
+
+  const sortedList = [...filteredList].sort((a, b) => {
+    if (!sortField) return 0
+    let comparison = 0
+    if (sortField === 'name') {
+      comparison = `${a.name} ${a.surname}`.localeCompare(`${b.name} ${b.surname}`, 'ru')
+    } else {
+      const aTime = parseLegacyDate(a.date)?.getTime() ?? 0
+      const bTime = parseLegacyDate(b.date)?.getTime() ?? 0
+      comparison = aTime - bTime
+    }
+    return sortDirection === 'asc' ? comparison : -comparison
   })
 
   const isSearchNameActive = searchName.trim() !== ''
@@ -115,9 +179,9 @@ const EmployeeList = () => {
     setPage(1)
   }, [searchName, searchPlace])
 
-  const totalPages = Math.max(1, Math.ceil(filteredList.length / PAGE_SIZE))
+  const totalPages = Math.max(1, Math.ceil(sortedList.length / PAGE_SIZE))
   const currentPage = Math.min(page, totalPages)
-  const pagedList = filteredList.slice((currentPage - 1) * PAGE_SIZE, currentPage * PAGE_SIZE)
+  const pagedList = sortedList.slice((currentPage - 1) * PAGE_SIZE, currentPage * PAGE_SIZE)
 
   const openAndDelete = (id: string) => {
     setIsOpen(true)
@@ -134,7 +198,7 @@ const EmployeeList = () => {
       <Navbar />
       <div className="flex flex-row">
         <Sidebar />
-        <div className="container mx-auto px-4">
+        <div className="container mx-auto min-w-0 px-4">
           <h1 className="text-3xl py-4 border-b mb-6">Список сотрудников</h1>
           <Card className="my-3">
             <CardContent className="p-4">
@@ -280,13 +344,28 @@ const EmployeeList = () => {
             </CardContent>
           </Card>
           <div className="overflow-x-auto rounded-lg relative lg:my-3 mt-1 lg:shadow">
-            <Table className="min-w-[640px]">
+            <Table className="min-w-[896px] table-fixed">
               <TableHeader>
                 <TableRow className="hover:bg-transparent">
-                  <TableHead>Имя</TableHead>
-                  <TableHead>Точка</TableHead>
-                  <TableHead>Должность</TableHead>
-                  <TableHead>Действия</TableHead>
+                  <SortableTableHead
+                    field="name"
+                    label="Имя"
+                    sortField={sortField}
+                    sortDirection={sortDirection}
+                    onSort={toggleSort}
+                    className="w-[180px]"
+                  />
+                  <TableHead className="w-[220px]">Точка</TableHead>
+                  <TableHead className="w-[260px]">Должность</TableHead>
+                  <SortableTableHead
+                    field="date"
+                    label="Дата создания"
+                    sortField={sortField}
+                    sortDirection={sortDirection}
+                    onSort={toggleSort}
+                    className="w-[140px]"
+                  />
+                  <TableHead className="w-[96px]">Действия</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>

@@ -1,111 +1,58 @@
 import React from 'react'
 import { NavLink } from 'react-router-dom'
+import {
+  AppWindow,
+  BookOpen,
+  Disc,
+  Droplets,
+  MapPin,
+  Package,
+  Palette,
+  Settings,
+  Tags,
+  Truck,
+  UserCircle,
+  Users,
+  Wind,
+  Wrench
+} from 'lucide-react'
+
+const SidebarLink = ({ to, icon: Icon, label }) => (
+  <NavLink
+    to={to}
+    className="mx-2 flex items-center justify-center gap-3 truncate rounded-md border-l-2 border-transparent px-3 py-2.5 text-sm font-medium text-slate-400 transition-colors hover:bg-slate-800 hover:text-white md:justify-start"
+    activeClassName="border-primary bg-slate-800 text-white"
+  >
+    <Icon className="h-5 w-5 shrink-0" />
+    <span className="hidden truncate md:inline">{label}</span>
+  </NavLink>
+)
 
 const Sidebar = () => {
   const isStudy = process.env.MODE === 'study'
 
   return (
-    <nav className="left-0 top-0 bg-gray-800 font-semibold w-40 text-white flex flex-col pt-3 sidebar">
-      <NavLink
-        to="/account/list"
-        className="text-gray-100 w-full p-3 pl-5"
-        activeClassName="bg-gray-700 text-gray-100 border-r-4 border-gray-100 w-full p-3 pl-5"
-      >
-        Аккаунты
-      </NavLink>
-      <NavLink
-        to="/employee/list"
-        className="text-gray-100 w-full p-3 pl-5"
-        activeClassName="bg-gray-700 text-gray-100 border-r-4 border-gray-100 w-full p-3 pl-5"
-      >
-        Сотрудники
-      </NavLink>
+    <nav className="sidebar sticky top-0 flex h-screen w-16 shrink-0 flex-col gap-1 overflow-y-auto bg-slate-900 py-3 font-semibold md:w-40">
+      <SidebarLink to="/account/list" icon={UserCircle} label="Аккаунты" />
+      <SidebarLink to="/employee/list" icon={Users} label="Сотрудники" />
       {isStudy ? null : (
         <>
-          <NavLink
-            to="/place/list"
-            className="text-gray-100 w-full p-3 pl-5"
-            activeClassName="bg-gray-700 text-gray-100 border-r-4 border-gray-100 w-full p-3 pl-5"
-          >
-            Адреса
-          </NavLink>
-          <NavLink
-            to="/settings"
-            className="text-gray-100 w-full p-3 pl-5"
-            activeClassName="bg-gray-700 text-gray-100 border-r-4 border-gray-100 w-full p-3 pl-5"
-          >
-            Настройки
-          </NavLink>
-          <NavLink
-            to="/material/list"
-            className="text-gray-100 w-full p-3 pl-5"
-            activeClassName="bg-gray-700 text-gray-100 border-r-4 border-gray-100 w-full p-3 pl-5"
-          >
-            Материалы
-          </NavLink>
-          <NavLink
-            to="/shinomontazhprice/list/legk"
-            className="text-gray-100 w-full p-3 pl-5"
-            activeClassName="bg-gray-700 text-gray-100 border-r-4 border-gray-100 w-full p-3 pl-5"
-          >
-            Шиномонтаж - цены
-          </NavLink>
-          <NavLink
-            to="/stoprice/list/rus"
-            className="text-gray-100 w-full p-3 pl-5"
-            activeClassName="bg-gray-700 text-gray-100 border-r-4 border-gray-100 w-full p-3 pl-5"
-          >
-            СТО - цены
-          </NavLink>
-          <NavLink
-            to="/washprice/list/"
-            className="text-gray-100 w-full p-3 pl-5"
-            activeClassName="bg-gray-700 text-gray-100 border-r-4 border-gray-100 w-full p-3 pl-5"
-          >
-            Мойка - цены
-          </NavLink>
-          <NavLink
-            to="/windowprice/list/"
-            className="text-gray-100 w-full p-3 pl-5"
-            activeClassName="bg-gray-700 text-gray-100 border-r-4 border-gray-100 w-full p-3 pl-5"
-          >
-            Лобовые стекла - цены
-          </NavLink>
-          <NavLink
-            to="/condprice/list/"
-            className="text-gray-100 w-full p-3 pl-5"
-            activeClassName="bg-gray-700 text-gray-100 border-r-4 border-gray-100 w-full p-3 pl-5"
-          >
-            Кондиционеры - цены
-          </NavLink>
-          <NavLink
+          <SidebarLink to="/place/list" icon={MapPin} label="Адреса" />
+          <SidebarLink to="/settings" icon={Settings} label="Настройки" />
+          <SidebarLink to="/material/list" icon={Package} label="Материалы" />
+          <SidebarLink to="/shinomontazhprice/list/legk" icon={Disc} label="Шиномонтаж - цены" />
+          <SidebarLink to="/stoprice/list/rus" icon={Wrench} label="СТО - цены" />
+          <SidebarLink to="/washprice/list/" icon={Droplets} label="Мойка - цены" />
+          <SidebarLink to="/windowprice/list/" icon={AppWindow} label="Лобовые стекла - цены" />
+          <SidebarLink to="/condprice/list/" icon={Wind} label="Кондиционеры - цены" />
+          <SidebarLink
             to="/diskpaintingprice/list/legk"
-            className="text-gray-100 w-full p-3 pl-5"
-            activeClassName="bg-gray-700 text-gray-100 border-r-4 border-gray-100 w-full p-3 pl-5"
-          >
-            Покраска дисков - цены
-          </NavLink>
-          <NavLink
-            to="/vendor/list"
-            className="text-gray-100 w-full p-3 pl-5"
-            activeClassName="bg-gray-700 text-gray-100 border-r-4 border-gray-100 w-full p-3 pl-5"
-          >
-            Поставщики
-          </NavLink>
-          <NavLink
-            to="/category/list"
-            className="text-gray-100 w-full p-3 pl-5"
-            activeClassName="bg-gray-700 text-gray-100 border-r-4 border-gray-100 w-full p-3 pl-5"
-          >
-            Категории
-          </NavLink>
-          <NavLink
-            to="/electronic-journal"
-            className="text-gray-100 w-full p-3 pl-5"
-            activeClassName="bg-gray-700 text-gray-100 border-r-4 border-gray-100 w-full p-3 pl-5"
-          >
-            Электронный журнал
-          </NavLink>
+            icon={Palette}
+            label="Покраска дисков - цены"
+          />
+          <SidebarLink to="/vendor/list" icon={Truck} label="Поставщики" />
+          <SidebarLink to="/category/list" icon={Tags} label="Категории" />
+          <SidebarLink to="/electronic-journal" icon={BookOpen} label="Электронный журнал" />
         </>
       )}
     </nav>
