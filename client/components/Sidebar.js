@@ -3,6 +3,7 @@ import { NavLink, useLocation } from 'react-router-dom'
 import {
   AppWindow,
   BookOpen,
+  Building2,
   Disc,
   Droplets,
   MapPin,
@@ -125,6 +126,13 @@ const Sidebar = () => {
             to="/vendor/list"
             icon={Truck}
             label="Поставщики"
+            expanded={expanded}
+            onNavigate={onNavigate}
+          />
+          <SidebarLink
+            to="/organization/list"
+            icon={Building2}
+            label="Организации"
             expanded={expanded}
             onNavigate={onNavigate}
           />

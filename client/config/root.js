@@ -41,8 +41,6 @@ import ShinomontazhsNew from '../scenes/Shinomontazhs/Shinomontazhs.work.create'
 import ShinomontazhEditFull from '../scenes/Shinomontazhs/Shinomontazhs.edit'
 import VendorList from '../scenes/Vendors/Vendors.list'
 import OrganizationList from '../scenes/Organizations/Organizations.list'
-import OrganizationNew from '../scenes/Organizations/Organizations.create'
-import OrganizationEdit from '../scenes/Organizations/Organizations.edit'
 import TyresList from '../scenes/Tyres/Tyres.list'
 import TyresNew from '../scenes/Tyres/Tyres.preorder.create'
 import TyreEditSimple from '../scenes/Tyres/Tyres.preorder.edit'
@@ -94,12 +92,19 @@ import EmployeeJournal from '../components/journal/EmployeeJournal'
 
 const OnlyAnonymousRoute = ({ component: Component, ...rest }) => {
   const auth = useSelector((s) => s.auth)
-  const func = (props) =>
-    !!auth.user && !!auth.token ? (
-      <Redirect to={{ pathname: '/login' }} />
+  const func = (props) => {
+    if (!auth.authChecked)
+      return (
+        <div className="flex justify-center items-center min-h-screen">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-gray-900" />
+        </div>
+      )
+    return !!auth.user && !!auth.token ? (
+      <Redirect to={{ pathname: '/' }} />
     ) : (
       <Component {...props} />
     )
+  }
   return <Route {...rest} render={func} />
 }
 
@@ -255,7 +260,7 @@ const RootComponent = (props) => {
             {/* <Route exact path="/" component={() => <Registration />} /> */}
             <PrivateRoute exact path="/" component={() => <Dashboard />} />
             <Route exact path="/registration" component={() => <Registration />} />
-            <Route exact path="/login" component={() => <LoginForm />} />
+            <OnlyAnonymousRoute exact path="/login" component={() => <LoginForm />} />
             <PrivateRoute exact path="/admin" component={() => <AdminPannel />} />
             <PrivateRoute exact path="/room" component={() => <Room />} />
             <PrivateRoute exact path="/chat" component={() => <ChatView />} />
@@ -306,8 +311,8 @@ const RootComponent = (props) => {
             <PrivateRoute exact path="/vendor/create" component={VendorList} />
             <PrivateRoute exact path="/vendor/edit/:id" component={VendorList} />
             <PrivateRoute exact path="/organization/list" component={OrganizationList} />
-            <PrivateRoute exact path="/organization/create" component={OrganizationNew} />
-            <PrivateRoute exact path="/organization/edit/:id" component={OrganizationEdit} />
+            <PrivateRoute exact path="/organization/create" component={OrganizationList} />
+            <PrivateRoute exact path="/organization/edit/:id" component={OrganizationList} />
             <PrivateRoute
               exact
               path="/shinomontazhprice/edit/:id"
