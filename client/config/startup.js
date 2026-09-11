@@ -6,7 +6,6 @@ import { trySignIn } from '../redux/reducers/auth'
 // import { getAutoparts } from '../redux/reducers/autoparts'
 import { getPlaces } from '../redux/reducers/places'
 import { getEmployees } from '../redux/reducers/employees'
-import { getAccounts } from '../redux/reducers/accounts'
 // import { getRazvals } from '../redux/reducers/razvals'
 // import { getOils } from '../redux/reducers/oils'
 import { getSettings } from '../redux/reducers/settings'
@@ -39,10 +38,6 @@ const Startup = (props) => {
 
   useEffect(() => {
     dispatch(getEmployees())
-  }, [dispatch])
-
-  useEffect(() => {
-    dispatch(getAccounts())
   }, [dispatch])
 
   useEffect(() => {

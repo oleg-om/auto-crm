@@ -128,8 +128,15 @@ async function getTokenAndUser(data) {
   return { token, user }
 }
 
+const COOKIE_OPTIONS = {
+  path: '/',
+  httpOnly: true,
+  sameSite: 'lax',
+  secure: config.env === 'production'
+}
+
 function createCookie(token, res) {
-  return res.cookie('token', token, { maxAge: 1000 * 60 * 60 * 8760 })
+  return res.cookie('token', token, { ...COOKIE_OPTIONS, maxAge: 1000 * 60 * 60 * 8760 })
 }
 
 // Public - no valid session required yet, this is how one is obtained.
@@ -164,21 +171,12 @@ server.post('/api/v1/auth', async (req, res) => {
   }
 })
 
-server.post('/api/v1/registration', async (req, res) => {
-  const { login, password, userName } = req.body
-  try {
-    const newUser = new User({
-      login,
-      password,
-      userName
-    })
-    await newUser.save()
-    const { token, user } = await getTokenAndUser(req.body)
-    createCookie(token, res)
-    res.json({ status: 'ok', token, user })
-  } catch (err) {
-    res.json({ status: 'error', message: `registrate error ${err}` })
-  }
+// The token cookie is httpOnly - the client can't clear it itself on sign out,
+// so it needs this endpoint. Public so it still works with an already-expired
+// or invalid cookie.
+server.post('/api/v1/logout', (req, res) => {
+  res.clearCookie('token', COOKIE_OPTIONS)
+  res.json({ status: 'ok' })
 })
 
 // The external site posts tyre orders here without a CRM login - accept it
@@ -307,12 +305,24 @@ server.use('/api/v1', diskpaintingRoutes)
 server.use('/api/v1', diskpaintingPriceRoutes)
 server.use('/api/v1', organizationRoutes)
 
-server.get('/api/v1/account', async (req, res) => {
-  const list = await User.find({})
+// Account management (list/create/edit/delete/role changes) is admin-only -
+// without this, any authenticated user (including a self-registered one)
+// could edit their own account's `role` field and grant themselves admin.
+async function requireAdmin(req, res, next) {
+  const user = await User.findById(req.jwtUser.uid)
+  if (!user || !isAdmin(user.role)) {
+    res.status(403).json({ status: 'error', message: 'Forbidden' })
+    return
+  }
+  next()
+}
+
+server.get('/api/v1/account', requireAdmin, async (req, res) => {
+  const list = await User.find({}).select('-password')
   return res.json({ status: 'ok', data: list })
 })
 
-server.patch('/api/v1/account/:id', async (req, res) => {
+server.patch('/api/v1/account/:id', requireAdmin, async (req, res) => {
   const account = await User.findById(req.params.id)
   // Go through .save() (not findOneAndUpdate's $set) so the password gets
   // re-hashed by the pre('save') hook whenever it's part of the update -
@@ -320,27 +330,44 @@ server.patch('/api/v1/account/:id', async (req, res) => {
   Object.assign(account, req.body)
   await account.save()
 
-  return res.json({ status: 'ok', data: account })
+  const data = account.toObject()
+  delete data.password
+  return res.json({ status: 'ok', data })
 })
 
-server.delete('/api/v1/account/:id', async (req, res) => {
+server.delete('/api/v1/account/:id', requireAdmin, async (req, res) => {
   await User.deleteOne({ _id: req.params.id })
   return res.json({ status: 'ok', _id: req.params.id })
 })
 
-server.post('/api/v1/account', async (req, res) => {
+server.post('/api/v1/account', requireAdmin, async (req, res) => {
   const account = new User(req.body)
   await account.save()
-  return res.json({ status: 'ok', data: account })
+  const data = account.toObject()
+  delete data.password
+  return res.json({ status: 'ok', data })
 })
 
-server.post('/api/v1/account/:id/impersonate', async (req, res) => {
+// Was public self-registration - closed off (admin-only, same as the rest of
+// account management) since anyone could otherwise create their own account.
+// Doesn't log the caller in as the new user - the admin creating it stays
+// signed in as themselves.
+server.post('/api/v1/registration', requireAdmin, async (req, res) => {
+  const { login, password, userName } = req.body
+  try {
+    const newUser = new User({ login, password, userName })
+    await newUser.save()
+    const data = newUser.toObject()
+    delete data.password
+    res.json({ status: 'ok', data })
+  } catch (err) {
+    res.json({ status: 'error', message: `registrate error ${err}` })
+  }
+})
+
+server.post('/api/v1/account/:id/impersonate', requireAdmin, async (req, res) => {
   try {
     const admin = await User.findById(req.jwtUser.uid)
-    if (!admin || !isAdmin(admin.role)) {
-      res.status(403).json({ status: 'error', message: 'Forbidden' })
-      return
-    }
 
     const target = await User.findById(req.params.id)
     if (!target) {

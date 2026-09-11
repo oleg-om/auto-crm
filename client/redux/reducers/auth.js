@@ -89,8 +89,11 @@ export function trySignIn() {
 
 export function signOut() {
   return (dispatch) => {
-    dispatch({ type: 'KICK_USER' })
-    history.push('/login')
+    // The token cookie is httpOnly - only the server can clear it.
+    axios.post('/api/v1/logout').finally(() => {
+      dispatch({ type: 'KICK_USER' })
+      history.push('/login')
+    })
   }
 }
 

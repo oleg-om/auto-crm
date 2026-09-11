@@ -5,7 +5,7 @@ import { toast } from 'react-toastify'
 import { ArrowDown, ArrowUp, ArrowUpDown, Plus, X } from 'lucide-react'
 import AccountRow from '../../components/accounts/account'
 import AccountForm from '../../components/accounts/account.form'
-import { deleteAccount } from '../../redux/reducers/accounts'
+import { deleteAccount, getAccounts } from '../../redux/reducers/accounts'
 import { impersonate } from '../../redux/reducers/auth'
 import Navbar from '../../components/Navbar'
 import Sidebar from '../../components/Sidebar'
@@ -80,6 +80,10 @@ const AccountList = () => {
   const auth = useSelector((s: { auth: { roles: string[]; user: IUser } }) => s.auth)
   const canImpersonate = auth.roles.includes('admin')
   const impersonateAccount = (id: string) => dispatch(impersonate(id))
+
+  useEffect(() => {
+    dispatch(getAccounts())
+  }, [dispatch])
 
   const formMatch = useRouteMatch<{ id?: string }>({
     path: ['/account/create', '/account/edit/:id'],
