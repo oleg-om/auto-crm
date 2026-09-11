@@ -132,6 +132,82 @@ function createCookie(token, res) {
   return res.cookie('token', token, { maxAge: 1000 * 60 * 60 * 8760 })
 }
 
+// Public - no valid session required yet, this is how one is obtained.
+server.get('/api/v1/auth', async (req, res) => {
+  try {
+    const jwtUser = jwt.verify(req.cookies.token, config.secret, { algorithms: ['HS256'] })
+    const user = await User.findById(jwtUser.uid)
+
+    let impersonatedBy = null
+    if (jwtUser.impersonatedBy) {
+      const admin = await User.findById(jwtUser.impersonatedBy)
+      if (admin) {
+        impersonatedBy = { id: admin.id, login: admin.login }
+      }
+    }
+
+    const token = createToken(user, impersonatedBy ? { impersonatedBy: impersonatedBy.id } : {})
+    createCookie(token, res)
+    res.json({ status: 'ok', token, user, impersonatedBy })
+  } catch (err) {
+    res.json({ status: 'error', err })
+  }
+})
+
+server.post('/api/v1/auth', async (req, res) => {
+  try {
+    const { token, user } = await getTokenAndUser(req.body)
+    createCookie(token, res)
+    res.json({ status: 'ok', token, user })
+  } catch (err) {
+    res.json({ status: 'error', message: `auth error ${err}` })
+  }
+})
+
+server.post('/api/v1/registration', async (req, res) => {
+  const { login, password, userName } = req.body
+  try {
+    const newUser = new User({
+      login,
+      password,
+      userName
+    })
+    await newUser.save()
+    const { token, user } = await getTokenAndUser(req.body)
+    createCookie(token, res)
+    res.json({ status: 'ok', token, user })
+  } catch (err) {
+    res.json({ status: 'error', message: `registrate error ${err}` })
+  }
+})
+
+// The external site posts tyre orders here without a CRM login - accept it
+// if it carries the shared secret instead of a session cookie.
+const PUBLIC_API_KEY_ROUTES = [{ method: 'POST', path: '/api/v1/tyre' }]
+
+// Everything else under /api/v1 requires a valid session from here on.
+function requireAuth(req, res, next) {
+  const requestPath = req.originalUrl.split('?')[0].replace(/\/+$/, '') || '/'
+  const publicRoute = PUBLIC_API_KEY_ROUTES.find(
+    (route) => route.method === req.method && route.path === requestPath
+  )
+  if (publicRoute) {
+    if (config.externalApiKey && req.headers['x-api-key'] === config.externalApiKey) {
+      next()
+      return
+    }
+    res.status(401).json({ status: 'error', message: 'Unauthorized' })
+    return
+  }
+
+  try {
+    req.jwtUser = jwt.verify(req.cookies.token, config.secret, { algorithms: ['HS256'] })
+    next()
+  } catch (err) {
+    res.status(401).json({ status: 'error', message: 'Unauthorized' })
+  }
+}
+
 function getFormatMessages(messages) {
   const formatedMessages = messages.map((it) => ({ [it.userName]: it.message }))
   return formatedMessages
@@ -197,6 +273,8 @@ if (isStudyMode) {
   server.use('/api/v1/category', categoryProxy)
 }
 
+server.use('/api/v1', requireAuth)
+
 server.use('/api/v1', placeRoutes)
 server.use('/api/v1', taskRoutes)
 server.use('/api/v1', employeeRoutes)
@@ -229,27 +307,6 @@ server.use('/api/v1', diskpaintingRoutes)
 server.use('/api/v1', diskpaintingPriceRoutes)
 server.use('/api/v1', organizationRoutes)
 
-server.get('/api/v1/auth', async (req, res) => {
-  try {
-    const jwtUser = jwt.verify(req.cookies.token, config.secret, { algorithms: ['HS256'] })
-    const user = await User.findById(jwtUser.uid)
-
-    let impersonatedBy = null
-    if (jwtUser.impersonatedBy) {
-      const admin = await User.findById(jwtUser.impersonatedBy)
-      if (admin) {
-        impersonatedBy = { id: admin.id, login: admin.login }
-      }
-    }
-
-    const token = createToken(user, impersonatedBy ? { impersonatedBy: impersonatedBy.id } : {})
-    createCookie(token, res)
-    res.json({ status: 'ok', token, user, impersonatedBy })
-  } catch (err) {
-    res.json({ status: 'error', err })
-  }
-})
-
 server.get('/api/v1/account', async (req, res) => {
   const list = await User.find({})
   return res.json({ status: 'ok', data: list })
@@ -279,8 +336,7 @@ server.post('/api/v1/account', async (req, res) => {
 
 server.post('/api/v1/account/:id/impersonate', async (req, res) => {
   try {
-    const jwtUser = jwt.verify(req.cookies.token, config.secret, { algorithms: ['HS256'] })
-    const admin = await User.findById(jwtUser.uid)
+    const admin = await User.findById(req.jwtUser.uid)
     if (!admin || !isAdmin(admin.role)) {
       res.status(403).json({ status: 'error', message: 'Forbidden' })
       return
@@ -307,13 +363,12 @@ server.post('/api/v1/account/:id/impersonate', async (req, res) => {
 
 server.post('/api/v1/account/return-to-self', async (req, res) => {
   try {
-    const jwtUser = jwt.verify(req.cookies.token, config.secret, { algorithms: ['HS256'] })
-    if (!jwtUser.impersonatedBy) {
+    if (!req.jwtUser.impersonatedBy) {
       res.status(400).json({ status: 'error', message: 'Not impersonating' })
       return
     }
 
-    const admin = await User.findById(jwtUser.impersonatedBy)
+    const admin = await User.findById(req.jwtUser.impersonatedBy)
     if (!admin) {
       res.status(404).json({ status: 'error', message: 'Original account not found' })
       return
@@ -324,33 +379,6 @@ server.post('/api/v1/account/return-to-self', async (req, res) => {
     res.json({ status: 'ok', token, user: admin, impersonatedBy: null })
   } catch (err) {
     res.status(500).json({ status: 'error', message: `return-to-self error ${err}` })
-  }
-})
-
-server.post('/api/v1/auth', async (req, res) => {
-  try {
-    const { token, user } = await getTokenAndUser(req.body)
-    createCookie(token, res)
-    res.json({ status: 'ok', token, user })
-  } catch (err) {
-    res.json({ status: 'error', message: `auth error ${err}` })
-  }
-})
-
-server.post('/api/v1/registration', async (req, res) => {
-  const { login, password, userName } = req.body
-  try {
-    const newUser = new User({
-      login,
-      password,
-      userName
-    })
-    await newUser.save()
-    const { token, user } = await getTokenAndUser(req.body)
-    createCookie(token, res)
-    res.json({ status: 'ok', token, user })
-  } catch (err) {
-    res.json({ status: 'error', message: `registrate error ${err}` })
   }
 })
 

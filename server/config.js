@@ -7,7 +7,8 @@ const options = {
   isSocketsEnabled: process.env.ENABLE_SOCKETS,
   mongoURL: process.env.MONGO_URL,
   // mongoURL: 'mongodb://autoDOM:pul%tOIJ0?LE@localhost:27017/chat',
-  secret: process.env.SECRET_JWT || 'secretKey'
+  secret: process.env.SECRET_JWT || 'secretKey',
+  externalApiKey: process.env.EXTERNAL_API_KEY
 }
 
 export default options
