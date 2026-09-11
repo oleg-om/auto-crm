@@ -37,7 +37,7 @@ const PRICE_LINKS = [
   { to: '/washprice/list', icon: Droplets, label: 'Мойка - цены' },
   { to: '/windowprice/list', icon: AppWindow, label: 'Лобовые стекла - цены' },
   { to: '/condprice/list', icon: Wind, label: 'Кондиционеры - цены' },
-  { to: '/diskpaintingprice/list/legk', icon: Palette, label: 'Покраска дисков - цены' }
+  { to: '/diskpaintingprice/list', icon: Palette, label: 'Покраска дисков - цены' }
 ]
 
 const SidebarPricesGroup = () => {

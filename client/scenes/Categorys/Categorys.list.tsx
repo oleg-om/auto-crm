@@ -5,7 +5,7 @@ import { toast } from 'react-toastify'
 import { ArrowDown, ArrowUp, ArrowUpDown, Plus, X } from 'lucide-react'
 import CategoryRow from '../../components/categorys/category'
 import CategoryForm from '../../components/categorys/category.form'
-import { deleteCategory } from '../../redux/reducers/categorys'
+import { deleteCategory, getCategorys } from '../../redux/reducers/categorys'
 import Navbar from '../../components/Navbar'
 import Sidebar from '../../components/Sidebar'
 import 'react-toastify/dist/ReactToastify.css'
@@ -87,6 +87,10 @@ const CategoryList = () => {
   const history = useHistory()
   const list = useSelector((s: { categorys: { list: ICategory[] } }) => s.categorys.list)
   const auth = useSelector((s: { auth: { roles: string[] } }) => s.auth)
+
+  React.useEffect(() => {
+    dispatch(getCategorys())
+  }, [dispatch])
 
   const formMatch = useRouteMatch<{ id?: string }>({
     path: ['/category/create', '/category/edit/:id'],

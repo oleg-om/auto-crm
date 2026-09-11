@@ -5,7 +5,7 @@ import { toast } from 'react-toastify'
 import { ArrowDown, ArrowUp, ArrowUpDown, Plus, X } from 'lucide-react'
 import VendorRow from '../../components/vendors/vendor'
 import VendorForm from '../../components/vendors/vendor.form'
-import { deleteVendor } from '../../redux/reducers/vendors'
+import { deleteVendor, getVendors } from '../../redux/reducers/vendors'
 import Navbar from '../../components/Navbar'
 import Sidebar from '../../components/Sidebar'
 import 'react-toastify/dist/ReactToastify.css'
@@ -99,6 +99,10 @@ const VendorList = () => {
   const history = useHistory()
   const list = useSelector((s: { vendors: { list: IVendor[] } }) => s.vendors.list)
   const auth = useSelector((s: { auth: { roles: string[] } }) => s.auth)
+
+  React.useEffect(() => {
+    dispatch(getVendors())
+  }, [dispatch])
 
   const visibleList = getVisibleVendors(list, auth.roles)
 

@@ -84,8 +84,6 @@ import WindowsNew from '../scenes/Window/Windows.work.create'
 import WindowEditFull from '../scenes/Window/Windows.edit'
 
 import DiskpaintingpriceList from '../scenes/Diskpainting.prices/Diskpainting.prices.list'
-import DiskpaintingpriceNew from '../scenes/Diskpainting.prices/Diskpainting.prices.create'
-import DiskpaintingpriceEdit from '../scenes/Diskpainting.prices/Diskpainting.prices.edit'
 import DiskpaintingsList from '../scenes/Diskpaintings/Diskpaintings.list'
 import DiskpaintingsListBoss from '../scenes/Diskpaintings/Diskpaintings.list.boss'
 import DiskpaintingsNew from '../scenes/Diskpaintings/Diskpaintings.work.create'
@@ -438,17 +436,16 @@ const RootComponent = (props) => {
             <PrivateRoute exact path="/condboss/edit/:id" component={WindowEditFull} />
 
             {/* diskpainting */}
-            <PrivateRoute exact path="/diskpaintingprice/list/" component={DiskpaintingpriceList} />
+            <PrivateRoute exact path="/diskpaintingprice/list" component={DiskpaintingpriceList} />
             <PrivateRoute
               exact
-              path="/diskpaintingprice/list/:type"
+              path="/diskpaintingprice/create"
               component={DiskpaintingpriceList}
             />
-            <PrivateRoute exact path="/diskpaintingprice/create" component={DiskpaintingpriceNew} />
             <PrivateRoute
               exact
-              path="/diskpaintingprice/:type/edit/:id"
-              component={DiskpaintingpriceEdit}
+              path="/diskpaintingprice/edit/:id"
+              component={DiskpaintingpriceList}
             />
 
             <PrivateRoute exact path="/diskpainting/list/:num" component={DiskpaintingsList} />

@@ -13,12 +13,8 @@ import { getSettings } from '../redux/reducers/settings'
 import { getMaterials } from '../redux/reducers/materials'
 import { getShinomontazhprices } from '../redux/reducers/shinomotazh.prices'
 import { getStoprices } from '../redux/reducers/sto.prices'
-import { getWashprices } from '../redux/reducers/wash.prices'
-import { getWindowprices } from '../redux/reducers/window.prices'
-import { getCondprices } from '../redux/reducers/cond.prices'
 // import { getShinomontazhs } from '../redux/reducers/shinomontazhs'
-import { getVendors } from '../redux/reducers/vendors'
-import { getCategorys } from '../redux/reducers/categorys'
+// import { getVendors } from '../redux/reducers/vendors'
 // import { getTyres } from '../redux/reducers/tyres'
 // import { getStorages } from '../redux/reducers/storage'
 
@@ -65,28 +61,12 @@ const Startup = (props) => {
     dispatch(getStoprices())
   }, [dispatch])
 
-  useEffect(() => {
-    dispatch(getWashprices())
-  }, [dispatch])
-
-  useEffect(() => {
-    dispatch(getWindowprices())
-  }, [dispatch])
-
-  useEffect(() => {
-    dispatch(getCondprices())
-  }, [dispatch])
-
-  useEffect(() => {
-    dispatch(getVendors())
-  }, [dispatch])
-
-  useEffect(() => {
-    dispatch(getCategorys())
-  }, [dispatch])
-
   // useEffect(() => {
   //   dispatch(getShinomontazhsLastTwoDays())
+  // }, [dispatch])
+
+  // useEffect(() => {
+  //   dispatch(getVendors())
   // }, [dispatch])
 
   return props.children

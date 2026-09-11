@@ -8,6 +8,7 @@ import WindowpriceForm from '../../components/windowprices/windowprice.form'
 import WindowpriceImport from '../../components/windowprices/windowprice.import'
 import WindowpriceDownloadButton from '../../components/windowprices/windowprice.download-button'
 import {
+  getWindowprices,
   createWindowprice,
   updateWindowprice,
   deleteWindowprice,
@@ -15,6 +16,7 @@ import {
   deleteWindowpriceDb
 } from '../../redux/reducers/window.prices'
 import {
+  getCondprices,
   createCondprice,
   updateCondprice,
   deleteCondprice,
@@ -68,6 +70,7 @@ const DOMAIN_CONFIG = {
     basePath: 'windowprice',
     categoryType: 'window',
     actions: {
+      get: getWindowprices,
       create: createWindowprice,
       update: updateWindowprice,
       delete: deleteWindowprice,
@@ -80,6 +83,7 @@ const DOMAIN_CONFIG = {
     basePath: 'condprice',
     categoryType: 'cond',
     actions: {
+      get: getCondprices,
       create: createCondprice,
       update: updateCondprice,
       delete: deleteCondprice,
@@ -143,6 +147,11 @@ const WindowpriceList = () => {
   const categoryOptions = useSelector(
     (s: { categorys: { list: { id: string; name: string; type?: string }[] } }) => s.categorys.list
   ).filter((it) => it.type === config.categoryType)
+
+  React.useEffect(() => {
+    dispatch(config.actions.get())
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [dispatch, domain])
   const auth = useSelector((s: { auth: { roles: string[] } }) => s.auth)
 
   const formMatch = useRouteMatch<{ id?: string }>({

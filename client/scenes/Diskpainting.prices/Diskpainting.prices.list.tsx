@@ -3,27 +3,25 @@ import { useSelector, useDispatch } from 'react-redux'
 import { Link, useHistory, useRouteMatch } from 'react-router-dom'
 import { toast } from 'react-toastify'
 import { ArrowDown, ArrowUp, ArrowUpDown, Plus, X } from 'lucide-react'
-import WashpriceRow from '../../components/washprices/washprice'
-import WashpriceForm from '../../components/washprices/washprice.form'
-import WashpriceImport from '../../components/washprices/washprice.import'
-import WashpriceDownloadButton from '../../components/washprices/washprice.download-button'
-import { deleteWashprice, getWashprices } from '../../redux/reducers/wash.prices'
+import DiskpaintingpriceRow from '../../components/diskpaintingprices/diskpaintingprice'
+import DiskpaintingpriceForm from '../../components/diskpaintingprices/diskpaintingprice.form'
+import DiskpaintingpriceDownloadButton from '../../components/diskpaintingprices/diskpaintingprice.download-button'
+import {
+  deleteDiskpaintingprice,
+  deleteDiskpaintingpriceDb,
+  getDiskpaintingprices
+} from '../../redux/reducers/diskpainting.prices'
 import Navbar from '../../components/Navbar'
 import Sidebar from '../../components/Sidebar'
 import OnLoad from '../Categorys/Onload'
 import 'react-toastify/dist/ReactToastify.css'
-import washTypeList from '../../lists/wash-type-list'
-import washPriceFieldList from '../../lists/wash-price-field-list'
-import PaginationBar from '../../components/shared/pagination-bar'
-import { usePagination } from '../../hooks/use-pagination'
-import { useShowPrices } from '../../hooks/use-show-prices'
+import diskpaintingPriceFieldList from '../../lists/diskpainting-price-field-list'
 import { Card, CardContent } from '../../components/ui/card'
 import { Label } from '../../components/ui/label'
 import { Input } from '../../components/ui/input'
 import { Button } from '../../components/ui/button'
 import { Badge } from '../../components/ui/badge'
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '../../components/ui/dialog'
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '../../components/ui/tabs'
 import {
   AlertDialog,
   AlertDialogAction,
@@ -35,20 +33,14 @@ import {
   AlertDialogTitle
 } from '../../components/ui/alert-dialog'
 import { cn } from '../../lib/utils'
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue
-} from '../../components/ui/select'
 import { Table, TableBody, TableHead, TableHeader, TableRow } from '../../components/ui/table'
 import { Switch } from '../../components/ui/switch'
-import type { IWashPrice } from '../../../common/types/generated/WashPrice'
+import PaginationBar from '../../components/shared/pagination-bar'
+import { usePagination } from '../../hooks/use-pagination'
+import { useShowPrices } from '../../hooks/use-show-prices'
+import type { IDiskpaintingPrice } from '../../../common/types/generated/DiskpaintingPrice'
 
-const ALL_TYPES = 'all'
-
-const PRICE_FIELDS_BY_TYPE = washPriceFieldList as Record<string, { key: string; label: string }[]>
+const PRICE_FIELDS = diskpaintingPriceFieldList as { key: string; label: string }[]
 
 type ISortField = 'name' | 'number'
 
@@ -87,7 +79,7 @@ const SortableTableHead = ({
   )
 }
 
-const WashpriceList = () => {
+const DiskpaintingpriceList = () => {
   OnLoad()
   toast.configure()
   const notify = (arg: string) => {
@@ -95,30 +87,34 @@ const WashpriceList = () => {
   }
   const dispatch = useDispatch<any>()
   const history = useHistory()
-  const list = useSelector((s: { washprices: { list: IWashPrice[] } }) => s.washprices.list)
+  const list = useSelector(
+    (s: { diskpaintingprices: { list: IDiskpaintingPrice[] } }) => s.diskpaintingprices.list
+  )
+  const categoryOptions = useSelector(
+    (s: { categorys: { list: { id: string; name: string; type?: string }[] } }) => s.categorys.list
+  ).filter((it) => it.type === 'diskpainting')
   const auth = useSelector((s: { auth: { roles: string[] } }) => s.auth)
 
   React.useEffect(() => {
-    dispatch(getWashprices())
+    dispatch(getDiskpaintingprices())
   }, [dispatch])
 
   const formMatch = useRouteMatch<{ id?: string }>({
-    path: ['/washprice/create', '/washprice/edit/:id'],
+    path: ['/diskpaintingprice/create', '/diskpaintingprice/edit/:id'],
     exact: true
   })
-  const isCreateMode = formMatch?.path === '/washprice/create'
+  const isCreateMode = formMatch?.path === '/diskpaintingprice/create'
   const editingItem = formMatch?.params.id
     ? list.find((it) => it.id === formMatch.params.id)
     : undefined
   const closeForm = () =>
-    history.push({ pathname: '/washprice/list', state: { preserveScroll: true } })
+    history.push({ pathname: '/diskpaintingprice/list', state: { preserveScroll: true } })
 
-  const [createTab, setCreateTab] = useState<'single' | 'import'>('single')
   const [isOpen, setIsOpen] = useState(false)
   const [itemId, setItemId] = useState('')
+  const [isDeleteAllOpen, setIsDeleteAllOpen] = useState(false)
   const [showPrices, setShowPrices] = useShowPrices()
   const [search, setSearch] = useState('')
-  const [typeFilter, setTypeFilter] = useState('')
   const [sortField, setSortField] = useState<ISortField | null>(null)
   const [sortDirection, setSortDirection] = useState<'asc' | 'desc'>('asc')
 
@@ -135,20 +131,11 @@ const WashpriceList = () => {
     setSortField(null)
   }
 
-  const activeType = washTypeList.find(
-    (it: { name: string; value: string }) => it.value === typeFilter
-  )
-
-  // See Shinomotazh.prices.list.tsx: prices break into their own columns only once a single
-  // Направление is selected, since each type has its own field set.
-  const priceColumnFields =
-    showPrices && activeType ? PRICE_FIELDS_BY_TYPE[activeType.value] ?? [] : null
+  const priceColumnFields = showPrices ? PRICE_FIELDS : null
 
   const filteredList = list.filter((it) => {
     const haystack = `${it.name} ${it.category}`.toLowerCase()
-    const matchesSearch = haystack.includes(search.trim().toLowerCase())
-    const matchesType = !activeType || it.type === activeType.value
-    return matchesSearch && matchesType
+    return haystack.includes(search.trim().toLowerCase())
   })
 
   const sortedList = [...filteredList].sort((a, b) => {
@@ -163,12 +150,6 @@ const WashpriceList = () => {
   })
 
   const isSearchActive = search.trim() !== ''
-  const isTypeFilterActive = typeFilter !== ''
-  const hasActiveFilters = isSearchActive || isTypeFilterActive
-  const resetFilters = () => {
-    setSearch('')
-    setTypeFilter('')
-  }
 
   const { page, pageSize, setPage, setPageSize, totalPages, pageStart, pageEnd } = usePagination(
     sortedList.length
@@ -177,7 +158,7 @@ const WashpriceList = () => {
   React.useEffect(() => {
     setPage(1)
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [search, typeFilter])
+  }, [search])
 
   const pagedList = sortedList.slice(pageStart, pageEnd)
 
@@ -186,9 +167,14 @@ const WashpriceList = () => {
     setItemId(id)
   }
   const deleteItemLocal = (id: string) => {
-    dispatch(deleteWashprice(id))
+    dispatch(deleteDiskpaintingprice(id))
     setIsOpen(false)
     notify('Услуга удалена')
+  }
+  const deleteAllLocal = () => {
+    dispatch(deleteDiskpaintingpriceDb())
+    setIsDeleteAllOpen(false)
+    notify('Услуги удалены')
   }
 
   return (
@@ -198,7 +184,7 @@ const WashpriceList = () => {
         {!auth.roles.includes('bookkeeper') ? <Sidebar /> : null}
         <div className="container mx-auto min-w-0 px-4">
           <div className="mb-6 flex flex-wrap items-center justify-between gap-2 border-b py-4">
-            <h1 className="text-3xl">Мойка - цены</h1>
+            <h1 className="text-3xl">Покраска дисков - цены</h1>
             <div className="flex flex-wrap items-center gap-4">
               <label
                 htmlFor="showPrices"
@@ -208,8 +194,13 @@ const WashpriceList = () => {
                 Показывать цены
               </label>
               <div className="flex gap-2">
-                <WashpriceDownloadButton />
-                <Link to={{ pathname: '/washprice/create', state: { preserveScroll: true } }}>
+                <DiskpaintingpriceDownloadButton />
+                <Button type="button" variant="outline" onClick={() => setIsDeleteAllOpen(true)}>
+                  Удалить все
+                </Button>
+                <Link
+                  to={{ pathname: '/diskpaintingprice/create', state: { preserveScroll: true } }}
+                >
                   <Button type="button">
                     <Plus className="mr-2 h-4 w-4" />
                     Новая услуга
@@ -220,99 +211,49 @@ const WashpriceList = () => {
           </div>
           <Card className="my-3">
             <CardContent className="p-4">
-              <div className="-mx-2 md:flex md:justify-between">
-                <div className="md:w-1/2 px-2 mb-4 md:mb-0">
-                  <Label htmlFor="search" className="block mb-2">
-                    Название или категория
-                  </Label>
-                  <div className="relative">
-                    <Input
-                      id="search"
-                      value={search}
-                      placeholder="Введите название или категорию"
-                      className={cn(
-                        'pr-8',
-                        isSearchActive && 'border-primary ring-1 ring-primary/30'
-                      )}
-                      onChange={(e) => setSearch(e.target.value)}
-                    />
-                    {search ? (
-                      <button
-                        type="button"
-                        className="absolute inset-y-0 right-0 flex items-center px-2 text-muted-foreground hover:text-foreground"
-                        onClick={() => setSearch('')}
-                        aria-label="Очистить"
-                      >
-                        <X className="h-4 w-4" />
-                      </button>
-                    ) : null}
-                  </div>
-                </div>
-                <div className="md:w-1/2 px-2 mb-4 md:mb-0">
-                  <Label htmlFor="typeFilter" className="block mb-2">
-                    Направление
-                  </Label>
-                  <Select
-                    value={typeFilter === '' ? ALL_TYPES : typeFilter}
-                    onValueChange={(value) => setTypeFilter(value === ALL_TYPES ? '' : value)}
-                  >
-                    <SelectTrigger
-                      id="typeFilter"
-                      className={cn(isTypeFilterActive && 'border-primary text-primary')}
+              <div className="md:w-1/2">
+                <Label htmlFor="search" className="block mb-2">
+                  Название или категория
+                </Label>
+                <div className="relative">
+                  <Input
+                    id="search"
+                    value={search}
+                    placeholder="Введите название или категорию"
+                    className={cn(
+                      'pr-8',
+                      isSearchActive && 'border-primary ring-1 ring-primary/30'
+                    )}
+                    onChange={(e) => setSearch(e.target.value)}
+                  />
+                  {search ? (
+                    <button
+                      type="button"
+                      className="absolute inset-y-0 right-0 flex items-center px-2 text-muted-foreground hover:text-foreground"
+                      onClick={() => setSearch('')}
+                      aria-label="Очистить"
                     >
-                      <SelectValue />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value={ALL_TYPES}>Все</SelectItem>
-                      {washTypeList.map((it: { name: string; value: string }) => (
-                        <SelectItem key={it.value} value={it.value}>
-                          {it.name}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
+                      <X className="h-4 w-4" />
+                    </button>
+                  ) : null}
                 </div>
               </div>
-              {hasActiveFilters ? (
-                <div className="flex flex-wrap items-center gap-2 -mx-2 px-2 pt-3 mt-3 border-t">
+              {isSearchActive ? (
+                <div className="flex flex-wrap items-center gap-2 pt-3 mt-3 border-t">
                   <span className="text-sm text-muted-foreground">
                     Найдено: {filteredList.length}
                   </span>
-                  {isSearchActive ? (
-                    <Badge variant="secondary" className="gap-1 pr-1 font-normal">
-                      Поиск: {search.trim()}
-                      <button
-                        type="button"
-                        className="ml-0.5 rounded-full p-0.5 hover:bg-foreground/10"
-                        onClick={() => setSearch('')}
-                        aria-label="Сбросить поиск"
-                      >
-                        <X className="h-3 w-3" />
-                      </button>
-                    </Badge>
-                  ) : null}
-                  {isTypeFilterActive ? (
-                    <Badge variant="secondary" className="gap-1 pr-1 font-normal">
-                      Направление: {activeType?.name}
-                      <button
-                        type="button"
-                        className="ml-0.5 rounded-full p-0.5 hover:bg-foreground/10"
-                        onClick={() => setTypeFilter('')}
-                        aria-label="Сбросить фильтр по направлению"
-                      >
-                        <X className="h-3 w-3" />
-                      </button>
-                    </Badge>
-                  ) : null}
-                  <Button
-                    type="button"
-                    variant="ghost"
-                    size="sm"
-                    className="h-6 px-2 text-xs text-muted-foreground"
-                    onClick={resetFilters}
-                  >
-                    Сбросить всё
-                  </Button>
+                  <Badge variant="secondary" className="gap-1 pr-1 font-normal">
+                    Поиск: {search.trim()}
+                    <button
+                      type="button"
+                      className="ml-0.5 rounded-full p-0.5 hover:bg-foreground/10"
+                      onClick={() => setSearch('')}
+                      aria-label="Сбросить поиск"
+                    >
+                      <X className="h-3 w-3" />
+                    </button>
+                  </Badge>
                 </div>
               ) : null}
             </CardContent>
@@ -320,13 +261,7 @@ const WashpriceList = () => {
           <div className="overflow-x-auto rounded-lg relative lg:my-3 mt-1 lg:shadow">
             <Table
               className="table-fixed"
-              style={{
-                minWidth: priceColumnFields
-                  ? 780 + priceColumnFields.length * 100
-                  : showPrices
-                  ? 960
-                  : 720
-              }}
+              style={{ minWidth: priceColumnFields ? 620 + priceColumnFields.length * 64 : 560 }}
             >
               <TableHeader>
                 <TableRow className="hover:bg-transparent">
@@ -340,12 +275,6 @@ const WashpriceList = () => {
                     rowSpan={priceColumnFields ? 2 : undefined}
                   />
                   <TableHead
-                    className={cn('w-[160px]', priceColumnFields && 'align-top')}
-                    rowSpan={priceColumnFields ? 2 : undefined}
-                  >
-                    Направление
-                  </TableHead>
-                  <TableHead
                     className={cn('w-[180px]', priceColumnFields && 'align-top')}
                     rowSpan={priceColumnFields ? 2 : undefined}
                   >
@@ -355,8 +284,6 @@ const WashpriceList = () => {
                     <TableHead colSpan={priceColumnFields.length} className="text-center">
                       Цены
                     </TableHead>
-                  ) : showPrices ? (
-                    <TableHead className="w-[240px]">Цены</TableHead>
                   ) : null}
                   <SortableTableHead
                     field="number"
@@ -385,7 +312,7 @@ const WashpriceList = () => {
                     {priceColumnFields.map((field) => (
                       <TableHead
                         key={field.key}
-                        className="w-[100px] break-words text-center text-xs"
+                        className="w-[64px] break-words text-center text-xs"
                       >
                         {field.label}
                       </TableHead>
@@ -395,11 +322,10 @@ const WashpriceList = () => {
               </TableHeader>
               <TableBody>
                 {pagedList.map((it) => (
-                  <WashpriceRow
+                  <DiskpaintingpriceRow
                     key={it.id}
-                    deleteWashprice={openAndDelete}
+                    deleteDiskpaintingprice={openAndDelete}
                     showPrices={showPrices}
-                    priceColumns={priceColumnFields}
                     {...it}
                   />
                 ))}
@@ -429,6 +355,20 @@ const WashpriceList = () => {
             </AlertDialogFooter>
           </AlertDialogContent>
         </AlertDialog>
+        <AlertDialog open={isDeleteAllOpen} onOpenChange={setIsDeleteAllOpen}>
+          <AlertDialogContent>
+            <AlertDialogHeader>
+              <AlertDialogTitle>Удалить все услуги?</AlertDialogTitle>
+              <AlertDialogDescription>
+                Удалив записи вы не сможете их восстановить.
+              </AlertDialogDescription>
+            </AlertDialogHeader>
+            <AlertDialogFooter>
+              <AlertDialogCancel>Отмена</AlertDialogCancel>
+              <AlertDialogAction onClick={deleteAllLocal}>Удалить</AlertDialogAction>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialog>
       </div>
       <Dialog open={!!formMatch} onOpenChange={(open) => (!open ? closeForm() : undefined)}>
         <DialogContent className="flex max-h-[85vh] flex-col gap-0 overflow-hidden p-0 sm:max-w-2xl">
@@ -436,32 +376,19 @@ const WashpriceList = () => {
             <DialogTitle>{isCreateMode ? 'Новая услуга' : 'Редактировать услугу'}</DialogTitle>
           </DialogHeader>
           {isCreateMode ? (
-            <Tabs
-              value={createTab}
-              onValueChange={(value) => setCreateTab(value as 'single' | 'import')}
-              className="flex flex-1 flex-col overflow-hidden"
-            >
-              <TabsList className="mx-6 mt-4 w-fit shrink-0">
-                <TabsTrigger value="single">Одна услуга</TabsTrigger>
-                <TabsTrigger value="import">Импорт из Excel</TabsTrigger>
-              </TabsList>
-              <TabsContent value="single" className="flex flex-1 flex-col overflow-hidden">
-                <WashpriceForm
-                  key="create"
-                  mode="create"
-                  onSaved={closeForm}
-                  onCancel={closeForm}
-                />
-              </TabsContent>
-              <TabsContent value="import" className="flex flex-1 flex-col overflow-hidden">
-                <WashpriceImport onSaved={closeForm} onCancel={closeForm} />
-              </TabsContent>
-            </Tabs>
+            <DiskpaintingpriceForm
+              key="create"
+              mode="create"
+              categoryOptions={categoryOptions}
+              onSaved={closeForm}
+              onCancel={closeForm}
+            />
           ) : editingItem ? (
-            <WashpriceForm
+            <DiskpaintingpriceForm
               key={editingItem.id}
               mode="edit"
               item={editingItem}
+              categoryOptions={categoryOptions}
               onSaved={closeForm}
               onCancel={closeForm}
             />
@@ -474,4 +401,4 @@ const WashpriceList = () => {
   )
 }
 
-export default WashpriceList
+export default DiskpaintingpriceList
