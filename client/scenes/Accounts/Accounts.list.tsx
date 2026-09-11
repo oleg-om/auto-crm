@@ -35,40 +35,13 @@ import {
   SelectValue
 } from '../../components/ui/select'
 import { Table, TableBody, TableHead, TableHeader, TableRow } from '../../components/ui/table'
-import {
-  Pagination,
-  PaginationButton,
-  PaginationContent,
-  PaginationEllipsis,
-  PaginationItem,
-  PaginationNext,
-  PaginationPrevious
-} from '../../components/ui/pagination'
+import PaginationBar from '../../components/shared/pagination-bar'
+import { usePagination } from '../../hooks/use-pagination'
 import type { IUser } from '../../../common/types/generated/User'
 import type { IEmployee } from '../../../common/types/generated/Employee'
 import type { IPlace } from '../../../common/types/generated/Place'
 
-const PAGE_SIZE = 20
 const ALL_ROLES = 'all'
-
-const getPageNumbers = (current: number, total: number): (number | string)[] => {
-  const delta = 1
-  const middle: number[] = []
-  for (let i = Math.max(2, current - delta); i <= Math.min(total - 1, current + delta); i++) {
-    middle.push(i)
-  }
-  const withEdges = [1, ...middle, total].filter(
-    (v, i, arr) => arr.indexOf(v) === i && v >= 1 && v <= total
-  )
-  const result: (number | string)[] = []
-  let prev = 0
-  withEdges.forEach((v) => {
-    if (prev && v - prev > 1) result.push(`ellipsis-${v}`)
-    result.push(v)
-    prev = v
-  })
-  return result
-}
 
 interface ISortableTableHeadProps {
   sortDirection: 'asc' | 'desc' | null
@@ -119,7 +92,6 @@ const AccountList = () => {
   const [itemId, setItemId] = useState('')
   const [search, setSearch] = useState('')
   const [roleFilter, setRoleFilter] = useState('')
-  const [page, setPage] = useState(1)
   const [sortDirection, setSortDirection] = useState<'asc' | 'desc' | null>(null)
 
   const toggleSort = () => {
@@ -159,13 +131,16 @@ const AccountList = () => {
     setRoleFilter('')
   }
 
+  const { page, pageSize, setPage, setPageSize, totalPages, pageStart, pageEnd } = usePagination(
+    sortedList.length
+  )
+
   useEffect(() => {
     setPage(1)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [search, roleFilter])
 
-  const totalPages = Math.max(1, Math.ceil(sortedList.length / PAGE_SIZE))
-  const currentPage = Math.min(page, totalPages)
-  const pagedList = sortedList.slice((currentPage - 1) * PAGE_SIZE, currentPage * PAGE_SIZE)
+  const pagedList = sortedList.slice(pageStart, pageEnd)
 
   const openAndDelete = (id: string) => {
     setIsOpen(true)
@@ -319,37 +294,14 @@ const AccountList = () => {
               </TableBody>
             </Table>
           </div>
-          {totalPages > 1 ? (
-            <Pagination className="my-4">
-              <PaginationContent>
-                <PaginationItem>
-                  <PaginationPrevious
-                    disabled={currentPage === 1}
-                    onClick={() => setPage(Math.max(1, currentPage - 1))}
-                  />
-                </PaginationItem>
-                {getPageNumbers(currentPage, totalPages).map((it) =>
-                  typeof it === 'number' ? (
-                    <PaginationItem key={it}>
-                      <PaginationButton isActive={it === currentPage} onClick={() => setPage(it)}>
-                        {it}
-                      </PaginationButton>
-                    </PaginationItem>
-                  ) : (
-                    <PaginationItem key={it}>
-                      <PaginationEllipsis />
-                    </PaginationItem>
-                  )
-                )}
-                <PaginationItem>
-                  <PaginationNext
-                    disabled={currentPage === totalPages}
-                    onClick={() => setPage(Math.min(totalPages, currentPage + 1))}
-                  />
-                </PaginationItem>
-              </PaginationContent>
-            </Pagination>
-          ) : null}
+          <PaginationBar
+            page={page}
+            totalPages={totalPages}
+            onPageChange={setPage}
+            pageSize={pageSize}
+            onPageSizeChange={setPageSize}
+            totalItems={sortedList.length}
+          />
         </div>
         <AlertDialog open={isOpen} onOpenChange={setIsOpen}>
           <AlertDialogContent>

@@ -51,6 +51,12 @@ const PaginationButton = ({
         variant: isActive ? 'outline' : 'ghost',
         size
       }),
+      // Pagination sits directly on the page body (#EDF2F7 in main.scss), not on a white
+      // Card like most other ghost buttons - that color is a near-exact match for the
+      // shadcn --accent token the ghost variant hovers to, making the default hover
+      // invisible here. Use a visibly darker hover instead (same family as the Table's
+      // own row/header hover colors).
+      !isActive && 'hover:bg-slate-200',
       className
     )}
     {...props}

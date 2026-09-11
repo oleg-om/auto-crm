@@ -31,6 +31,16 @@ Build markup mobile-first, not desktop-first-with-a-mobile-patch.
 - Tables that don't fit narrow screens get `overflow-x-auto` on their wrapper rather than being hidden or redesigned per-breakpoint - see the same list screens' table wrappers.
 - Keep tap targets and spacing usable at phone width when adding new interactive elements (buttons, table row actions, dropdown items) - don't rely on hover-only affordances.
 
+## Architecture direction: Feature-Based
+
+The current codebase is organized **by technical layer**, not by feature - top-level `client/scenes/`, `client/components/`, `client/redux/reducers/`, `client/redux/actions/`, `client/lists/` each hold files for every domain side by side (an employee's scene, component, reducer, and list all live in different top-level folders). That's the existing structure; it is **not** being described as feature-based here.
+
+Going forward, **new features should move toward Feature-Based organization**: colocate a feature's scene/screen, its components, its state (reducer/actions), and its supporting lists/types under one feature-scoped location, instead of adding another file to each of the parallel `scenes/`/`components/`/`redux/` trees. Concretely:
+
+- When starting a genuinely new feature (not a redesign of an existing screen in place), prefer grouping its files together rather than splitting them across the legacy top-level folders.
+- When redesigning an existing screen (the current, most common kind of task here - see the shadcn/ui rules above), it's fine to keep following the established location convention (`client/scenes/<Feature>/<Feature>.list.tsx`, `client/components/<feature>/*`, `client/redux/reducers/<feature>.js`) rather than migrating it - don't do a drive-by restructuring of a screen's file locations as part of an unrelated redesign or bugfix.
+- This is a direction to move in, not a claim about the current layout - don't describe the existing `scenes/components/redux` split as already feature-based in comments, docs, or explanations.
+
 ## Dates: use moment
 
 For new date handling (parsing, formatting, comparing, arithmetic), use **`moment`** - it's a direct dependency (see `package.json`).
