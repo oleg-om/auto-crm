@@ -69,7 +69,7 @@ const PaginationBar = ({
     <div className="flex items-center gap-1.5 sm:justify-self-end">
       <Label
         htmlFor="pageSize"
-        className="whitespace-nowrap text-xs text-muted-foreground sm:text-sm"
+        className="hidden whitespace-nowrap text-muted-foreground lg:inline-block lg:text-sm"
       >
         Показывать по
       </Label>
