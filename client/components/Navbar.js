@@ -2,9 +2,9 @@ import React, { useState } from 'react'
 import { Link, NavLink } from 'react-router-dom'
 import cx from 'classnames'
 import { useSelector, useDispatch } from 'react-redux'
-import { LogOut, User } from 'lucide-react'
+import { LogOut, Undo2, User, VenetianMask } from 'lucide-react'
 // import dotenv from 'dotenv'
-import { signOut } from '../redux/reducers/auth'
+import { signOut, returnToSelf } from '../redux/reducers/auth'
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -12,6 +12,7 @@ import {
   DropdownMenuTrigger
 } from './ui/dropdown-menu'
 import { Button } from './ui/button'
+import { Badge } from './ui/badge'
 
 import { socket } from '../redux/sockets/socketReceivers'
 
@@ -504,15 +505,31 @@ const Navbar = () => {
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button variant="secondary" className="mt-4 gap-2 font-normal md:mt-0">
-              <User className="h-4 w-4" />
+              {auth.impersonatedBy ? (
+                <VenetianMask className="h-4 w-4" />
+              ) : (
+                <User className="h-4 w-4" />
+              )}
               {auth.user.login}
+              {auth.impersonatedBy ? (
+                <Badge className="border-transparent bg-amber-100 text-amber-800 hover:bg-amber-100">
+                  Имперсонация
+                </Badge>
+              ) : null}
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
-            <DropdownMenuItem onClick={() => dispatch(signOut())}>
-              <LogOut className="h-4 w-4" />
-              Выйти
-            </DropdownMenuItem>
+            {auth.impersonatedBy ? (
+              <DropdownMenuItem onClick={() => dispatch(returnToSelf())}>
+                <Undo2 className="h-4 w-4" />
+                Вернуться к основному аккаунту
+              </DropdownMenuItem>
+            ) : (
+              <DropdownMenuItem onClick={() => dispatch(signOut())}>
+                <LogOut className="h-4 w-4" />
+                Выйти
+              </DropdownMenuItem>
+            )}
           </DropdownMenuContent>
         </DropdownMenu>
       </div>

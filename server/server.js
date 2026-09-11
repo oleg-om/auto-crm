@@ -19,6 +19,7 @@ import passportJWT from './services/passport'
 import User from './model/User.model'
 import Message from './model/Message.model'
 import Html from '../client/html'
+import { isAdmin } from './utils/roles'
 
 let appVersion = 'dev'
 try {
@@ -114,8 +115,8 @@ middleware.forEach((it) => server.use(it))
 
 passport.use('jwt', passportJWT)
 
-function createToken(user) {
-  const payload = { uid: user.id }
+function createToken(user, extraPayload = {}) {
+  const payload = { uid: user.id, ...extraPayload }
   const token = jwt.sign(payload, config.secret, { expiresIn: '8760h' })
   delete user.password
   return token
@@ -233,9 +234,17 @@ server.get('/api/v1/auth', async (req, res) => {
     const jwtUser = jwt.verify(req.cookies.token, config.secret, { algorithms: ['HS256'] })
     const user = await User.findById(jwtUser.uid)
 
-    const token = createToken(user)
+    let impersonatedBy = null
+    if (jwtUser.impersonatedBy) {
+      const admin = await User.findById(jwtUser.impersonatedBy)
+      if (admin) {
+        impersonatedBy = { id: admin.id, login: admin.login }
+      }
+    }
+
+    const token = createToken(user, impersonatedBy ? { impersonatedBy: impersonatedBy.id } : {})
     createCookie(token, res)
-    res.json({ status: 'ok', token, user })
+    res.json({ status: 'ok', token, user, impersonatedBy })
   } catch (err) {
     res.json({ status: 'error', err })
   }
@@ -266,6 +275,56 @@ server.post('/api/v1/account', async (req, res) => {
   const account = new User(req.body)
   await account.save()
   return res.json({ status: 'ok', data: account })
+})
+
+server.post('/api/v1/account/:id/impersonate', async (req, res) => {
+  try {
+    const jwtUser = jwt.verify(req.cookies.token, config.secret, { algorithms: ['HS256'] })
+    const admin = await User.findById(jwtUser.uid)
+    if (!admin || !isAdmin(admin.role)) {
+      res.status(403).json({ status: 'error', message: 'Forbidden' })
+      return
+    }
+
+    const target = await User.findById(req.params.id)
+    if (!target) {
+      res.status(404).json({ status: 'error', message: 'Account not found' })
+      return
+    }
+
+    const token = createToken(target, { impersonatedBy: admin.id })
+    createCookie(token, res)
+    res.json({
+      status: 'ok',
+      token,
+      user: target,
+      impersonatedBy: { id: admin.id, login: admin.login }
+    })
+  } catch (err) {
+    res.status(500).json({ status: 'error', message: `impersonate error ${err}` })
+  }
+})
+
+server.post('/api/v1/account/return-to-self', async (req, res) => {
+  try {
+    const jwtUser = jwt.verify(req.cookies.token, config.secret, { algorithms: ['HS256'] })
+    if (!jwtUser.impersonatedBy) {
+      res.status(400).json({ status: 'error', message: 'Not impersonating' })
+      return
+    }
+
+    const admin = await User.findById(jwtUser.impersonatedBy)
+    if (!admin) {
+      res.status(404).json({ status: 'error', message: 'Original account not found' })
+      return
+    }
+
+    const token = createToken(admin)
+    createCookie(token, res)
+    res.json({ status: 'ok', token, user: admin, impersonatedBy: null })
+  } catch (err) {
+    res.status(500).json({ status: 'error', message: `return-to-self error ${err}` })
+  }
 })
 
 server.post('/api/v1/auth', async (req, res) => {

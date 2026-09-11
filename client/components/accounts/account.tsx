@@ -1,6 +1,6 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
-import { Pencil, Trash2 } from 'lucide-react'
+import { Pencil, Trash2, VenetianMask } from 'lucide-react'
 import { TableRow, TableCell } from '../ui/table'
 import { Button } from '../ui/button'
 import BadgeList from '../ui/badge-list'
@@ -21,11 +21,17 @@ interface IAccountRowProps extends IUser {
   employees: IEmployee[]
   places: IPlace[]
   deleteAccount: (id: string, value?: string) => void
+  impersonateAccount?: (id: string) => void
+  canImpersonate?: boolean
 }
 
 const AccountRow = (props: IAccountRowProps) => {
   const removeAccount = (e: React.MouseEvent<HTMLButtonElement>) => {
     props.deleteAccount(props._id as string, e.currentTarget.value)
+  }
+
+  const impersonateThisAccount = () => {
+    props.impersonateAccount?.(props._id as string)
   }
 
   const employee = props.employees.find((it) => it.id === props.userName)
@@ -53,6 +59,18 @@ const AccountRow = (props: IAccountRowProps) => {
             <Pencil className="h-3.5 w-3.5" />
           </Link>
         </Button>
+        {props.canImpersonate ? (
+          <Button
+            variant="outline"
+            size="icon-sm"
+            className="ml-1"
+            title="Войти под этим аккаунтом"
+            aria-label="Войти под этим аккаунтом"
+            onClick={impersonateThisAccount}
+          >
+            <VenetianMask className="h-3.5 w-3.5" />
+          </Button>
+        ) : null}
         <Button
           variant="destructive"
           size="icon-sm"

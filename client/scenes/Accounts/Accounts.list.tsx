@@ -6,6 +6,7 @@ import { ArrowDown, ArrowUp, ArrowUpDown, Plus, X } from 'lucide-react'
 import AccountRow from '../../components/accounts/account'
 import AccountForm from '../../components/accounts/account.form'
 import { deleteAccount } from '../../redux/reducers/accounts'
+import { impersonate } from '../../redux/reducers/auth'
 import Navbar from '../../components/Navbar'
 import Sidebar from '../../components/Sidebar'
 import 'react-toastify/dist/ReactToastify.css'
@@ -76,6 +77,9 @@ const AccountList = () => {
   const list = useSelector((s: { accounts: { list: IUser[] } }) => s.accounts.list)
   const employees = useSelector((s: { employees: { list: IEmployee[] } }) => s.employees.list)
   const places = useSelector((s: { places: { list: IPlace[] } }) => s.places.list)
+  const auth = useSelector((s: { auth: { roles: string[]; user: IUser } }) => s.auth)
+  const canImpersonate = auth.roles.includes('admin')
+  const impersonateAccount = (id: string) => dispatch(impersonate(id))
 
   const formMatch = useRouteMatch<{ id?: string }>({
     path: ['/account/create', '/account/edit/:id'],
@@ -278,7 +282,7 @@ const AccountList = () => {
                   <TableHead className="hidden sm:table-cell w-[200px]">Сотрудник</TableHead>
                   <TableHead className="hidden sm:table-cell w-[180px]">Точка</TableHead>
                   <TableHead className="hidden sm:table-cell w-[280px]">Доступы</TableHead>
-                  <TableHead className="w-[96px]">Действия</TableHead>
+                  <TableHead className="w-[136px]">Действия</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
@@ -288,6 +292,8 @@ const AccountList = () => {
                     employees={employees}
                     places={places}
                     deleteAccount={openAndDelete}
+                    impersonateAccount={impersonateAccount}
+                    canImpersonate={canImpersonate && it._id !== auth.user._id}
                     {...it}
                   />
                 ))}
