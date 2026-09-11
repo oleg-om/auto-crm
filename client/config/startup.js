@@ -18,6 +18,7 @@ import { getWindowprices } from '../redux/reducers/window.prices'
 import { getCondprices } from '../redux/reducers/cond.prices'
 // import { getShinomontazhs } from '../redux/reducers/shinomontazhs'
 import { getVendors } from '../redux/reducers/vendors'
+import { getCategorys } from '../redux/reducers/categorys'
 // import { getTyres } from '../redux/reducers/tyres'
 // import { getStorages } from '../redux/reducers/storage'
 
@@ -80,12 +81,12 @@ const Startup = (props) => {
     dispatch(getVendors())
   }, [dispatch])
 
-  // useEffect(() => {
-  //   dispatch(getShinomontazhsLastTwoDays())
-  // }, [dispatch])
+  useEffect(() => {
+    dispatch(getCategorys())
+  }, [dispatch])
 
   // useEffect(() => {
-  //   dispatch(getVendors())
+  //   dispatch(getShinomontazhsLastTwoDays())
   // }, [dispatch])
 
   return props.children

@@ -70,8 +70,6 @@ import StosNew from '../scenes/Sto/Stos.work.create'
 import StoEditFull from '../scenes/Sto/Stos.edit'
 
 import CategoryList from '../scenes/Categorys/Categorys.list'
-import CategoryNew from '../scenes/Categorys/Categorys.create'
-import CategoryEdit from '../scenes/Categorys/Categorys.edit'
 
 import WashpriceList from '../scenes/Wash.prices/Wash.prices.list'
 import WashsList from '../scenes/Wash/Washs.list'
@@ -382,8 +380,8 @@ const RootComponent = (props) => {
             <PrivateRoute exact path="/stoboss/edit/:id" component={StoEditFull} />
 
             <PrivateRoute exact path="/category/list" component={CategoryList} />
-            <PrivateRoute exact path="/category/create" component={CategoryNew} />
-            <PrivateRoute exact path="/category/edit/:id" component={CategoryEdit} />
+            <PrivateRoute exact path="/category/create" component={CategoryList} />
+            <PrivateRoute exact path="/category/edit/:id" component={CategoryList} />
             {/* wash */}
             <PrivateRoute exact path="/washprice/list" component={WashpriceList} />
             <PrivateRoute exact path="/washprice/create" component={WashpriceList} />
