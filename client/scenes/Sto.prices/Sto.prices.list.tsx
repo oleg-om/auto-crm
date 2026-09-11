@@ -351,7 +351,7 @@ const StopriceList = () => {
                     Категория
                   </TableHead>
                   {priceColumnFields ? (
-                    <TableHead colSpan={priceColumnFields.length} className="text-center">
+                    <TableHead colSpan={priceColumnFields.length} className="text-center align-top">
                       Цены
                     </TableHead>
                   ) : showPrices ? (
