@@ -41,7 +41,7 @@ const StosRow = (props) => {
 
   return (
     <tr
-      className={cx('table-row flex-row flex-no-wrap mb-0', {
+      className={cx('table-row flex-row flex-nowrap mb-0', {
         'bg-white hover:bg-gray-100': props.status !== taskStatuses[2],
         'bg-blue-200 hover:bg-blue-300': props.status === taskStatuses[2],
         'bg-yellow-200 hover:bg-yellow-300': props.status === taskStatuses[3] && props.beznalPaid,

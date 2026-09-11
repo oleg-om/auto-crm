@@ -58,7 +58,7 @@ const StoragesRow = (props) => {
   const createDate = new Date(props.dateStart)
   const finishDate = new Date(props.dateFinish)
   return (
-    <tr className="bg-white lg:hover:bg-gray-100 table-row flex-no-wrap mb-5 lg:mb-0">
+    <tr className="bg-white lg:hover:bg-gray-100 table-row flex-nowrap mb-5 lg:mb-0">
       <td className="w-auto p-2 text-gray-800 text-sm text-center border border-b  table-cell static">
         {props.id_storages}
       </td>
@@ -131,7 +131,7 @@ const StoragesRow = (props) => {
               ))
           : null}
       </td>
-      <td className="whitespace-no-wrap w-auto p-2 text-gray-800 text-sm text-center border border-b table-cell static">
+      <td className="whitespace-nowrap w-auto p-2 text-gray-800 text-sm text-center border border-b table-cell static">
         {props.phone}
       </td>
       <td className="w-auto p-2 text-gray-800 text-sm text-center border border-b table-cell static">
@@ -140,7 +140,7 @@ const StoragesRow = (props) => {
       <td className="w-auto p-2 text-gray-800 text-sm text-center border border-b table-cell static">
         {props.placesList ? props.placesList.name : ''}
       </td>
-      <td className="w-auto p-2 text-gray-800 text-sm text-center border border-b table-cell static whitespace-no-wrap">
+      <td className="w-auto p-2 text-gray-800 text-sm text-center border border-b table-cell static whitespace-nowrap">
         <div
           className={cx('rounded py-1 px-3 text-xs font-bold justify-center flex', {
             'bg-yellow-400': props.status === taskStatuses[0] || props.status === taskStatuses[1],
@@ -214,7 +214,7 @@ const StoragesRow = (props) => {
               .replace(/^(\d)$/, '0$1')}.${finishDate.getFullYear()}`
           : ''}
       </td>
-      <td className="w-auto p-2 text-gray-800 text-center border border-b table-cell static whitespace-no-wrap">
+      <td className="w-auto p-2 text-gray-800 text-center border border-b table-cell static whitespace-nowrap">
         <div className="flex flex-row justify-center">
           {/* <div
             title="Печать предчека"

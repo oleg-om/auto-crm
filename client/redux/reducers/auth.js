@@ -14,7 +14,8 @@ const initialState = {
   place: '',
   name: '',
   id: '',
-  requestPasswordForReport: false
+  requestPasswordForReport: false,
+  impersonatedBy: null
 }
 
 export function updateLogin(login) {
@@ -76,15 +77,43 @@ export function registration() {
 export function trySignIn() {
   return (dispatch) => {
     axios('/api/v1/auth').then(({ data }) =>
-      dispatch({ type: 'LOGIN', token: data.token, user: data.user })
+      dispatch({
+        type: 'LOGIN',
+        token: data.token,
+        user: data.user,
+        impersonatedBy: data.impersonatedBy
+      })
     )
   }
 }
 
 export function signOut() {
   return (dispatch) => {
-    dispatch({ type: 'KICK_USER' })
-    history.push('/login')
+    // The token cookie is httpOnly - only the server can clear it.
+    axios.post('/api/v1/logout').finally(() => {
+      dispatch({ type: 'KICK_USER' })
+      history.push('/login')
+    })
+  }
+}
+
+export function impersonate(accountId) {
+  return () => {
+    axios.post(`/api/v1/account/${accountId}/impersonate`).then(({ data }) => {
+      if (data.status === 'ok') {
+        window.location.href = '/'
+      }
+    })
+  }
+}
+
+export function returnToSelf() {
+  return () => {
+    axios.post('/api/v1/account/return-to-self').then(({ data }) => {
+      if (data.status === 'ok') {
+        window.location.href = '/'
+      }
+    })
   }
 }
 
@@ -117,7 +146,8 @@ export default function auth(state = initialState, action) {
         roles: action.user ? action.user.role : [],
         place: action.user ? action.user.place : '',
         name: action.user ? action.user.userName : '',
-        requestPasswordForReport: action.user?.requestPasswordForReport || false
+        requestPasswordForReport: action.user?.requestPasswordForReport || false,
+        impersonatedBy: action.impersonatedBy || null
       }
     }
     case 'UPDATE_USERNAME': {

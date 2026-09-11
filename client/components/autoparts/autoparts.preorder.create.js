@@ -656,7 +656,7 @@ const AutopartsCreate = (props) => {
                 </tr>
               </thead>
               <tbody>
-                <tr className="bg-white lg:hover:bg-gray-100 flex table-row flex-row lg:flex-row flex-wrap flex-no-wrap mb-10 lg:mb-0">
+                <tr className="bg-white lg:hover:bg-gray-100 flex table-row flex-row lg:flex-row flex-wrap flex-nowrap mb-10 lg:mb-0">
                   <td className="w-full lg:w-auto p-2 lg:py-5 text-xs text-gray-800 text-center border border-b block table-cell relative static">
                     Введите полностью гос. номер, VIN либо номер телефона чтобы найти клиента. Если
                     клиент отстствует, заполните данные самостоятельно. Тогда в базе данных клиентов
@@ -668,7 +668,7 @@ const AutopartsCreate = (props) => {
                   </td>
                   <td className="w-full lg:w-auto p-2 text-gray-800 text-center border border-b text-center block table-cell relative static" />
                 </tr>
-                <tr className="bg-white lg:hover:bg-gray-100 flex table-row flex-row lg:flex-row flex-wrap flex-no-wrap mb-10 lg:mb-0">
+                <tr className="bg-white lg:hover:bg-gray-100 flex table-row flex-row lg:flex-row flex-wrap flex-nowrap mb-10 lg:mb-0">
                   <td className="w-full lg:w-auto p-2 text-xs text-gray-800 text-center border border-b block table-cell relative static">
                     <div className="flex-shrink w-full inline-block relative">
                       <select
@@ -927,7 +927,7 @@ const AutopartsCreate = (props) => {
                   <th className="p-3 font-bold uppercase bg-gray-100 text-gray-600 border border-gray-300 table-cell w-full">
                     Запчасти
                   </th>
-                  <th className="p-3 font-bold uppercase bg-gray-100 text-sm text-gray-600 border border-gray-300 table-cell whitespace-no-wrap">
+                  <th className="p-3 font-bold uppercase bg-gray-100 text-sm text-gray-600 border border-gray-300 table-cell whitespace-nowrap">
                     Кол-во
                   </th>
                   <th className="p-3 font-bold uppercase bg-gray-100 text-gray-600 border border-gray-300 table-cell">
@@ -939,7 +939,7 @@ const AutopartsCreate = (props) => {
                 {inputFields.map((inputField, index) => (
                   <tr
                     key={index}
-                    className="bg-white lg:hover:bg-gray-100 flex table-row flex-row lg:flex-row flex-wrap flex-no-wrap mb-10 lg:mb-0"
+                    className="bg-white lg:hover:bg-gray-100 flex table-row flex-row lg:flex-row flex-wrap flex-nowrap mb-10 lg:mb-0"
                   >
                     <td className="w-full lg:w-auto p-2 text-gray-800 text-center border border-b block table-cell relative static">
                       <input

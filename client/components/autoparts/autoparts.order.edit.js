@@ -428,7 +428,7 @@ const AutopartsEdit = (props) => {
                 </tr>
               </thead>
               <tbody>
-                <tr className="bg-white lg:hover:bg-gray-100 flex table-row flex-row lg:flex-row flex-wrap flex-no-wrap mb-10 lg:mb-0">
+                <tr className="bg-white lg:hover:bg-gray-100 flex table-row flex-row lg:flex-row flex-wrap flex-nowrap mb-10 lg:mb-0">
                   <td className="w-full lg:w-auto p-2 text-xs text-gray-800 text-center border border-b block table-cell relative static">
                     Введите полностью гос. номер, VIN либо номер телефона чтобы найти клиента. Если
                     клиент отстствует, заполните данные самостоятельно. Новый клиент не будет
@@ -436,7 +436,7 @@ const AutopartsEdit = (props) => {
                   </td>
                   <td className="w-full lg:w-auto p-2 text-gray-800 text-center border border-b text-center block table-cell relative static" />
                 </tr>
-                <tr className="bg-white lg:hover:bg-gray-100 flex table-row flex-row lg:flex-row flex-wrap flex-no-wrap mb-10 lg:mb-0">
+                <tr className="bg-white lg:hover:bg-gray-100 flex table-row flex-row lg:flex-row flex-wrap flex-nowrap mb-10 lg:mb-0">
                   <td className="w-full lg:w-auto p-2 text-xs text-gray-800 text-center border border-b block table-cell relative static">
                     <div className="flex-shrink w-full inline-block relative">
                       <select
@@ -675,7 +675,7 @@ const AutopartsEdit = (props) => {
                 {inputFields.map((inputField, index) => (
                   <tr
                     key={index}
-                    className="bg-white lg:hover:bg-gray-100 flex table-row flex-row lg:flex-row flex-wrap flex-no-wrap mb-10 lg:mb-0"
+                    className="bg-white lg:hover:bg-gray-100 flex table-row flex-row lg:flex-row flex-wrap flex-nowrap mb-10 lg:mb-0"
                   >
                     <td className="w-full lg:w-auto p-2 text-gray-800 text-center border border-b block table-cell relative static">
                       <input

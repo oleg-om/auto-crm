@@ -20,15 +20,9 @@ import AutopartEditSimple from '../scenes/Autoparts/Autopaparts.preorder.edit'
 import AutopartEditFull from '../scenes/Autoparts/Autoparts.edit'
 import AutopartView from '../scenes/Autoparts/Autoparts.preorder.view'
 import PlaceList from '../scenes/Places/Places.list'
-import PlaceNew from '../scenes/Places/Places.create'
-import PlaceEdit from '../scenes/Places/Places.edit'
 import EmployeeList from '../scenes/Employees/Employees.list'
-import EmployeeNew from '../scenes/Employees/Employees.create'
-import EmployeeEdit from '../scenes/Employees/Employees.edit'
 import AccountList from '../scenes/Accounts/Accounts.list'
-import AccountNew from '../scenes/Accounts/Accounts.create'
 // import RegisterCommon from '../scenes/Accounts/Register.common'
-import AccountEdit from '../scenes/Accounts/Accounts.edit'
 import CustomerList from '../scenes/Customers/Customers.list'
 import CustomerNew from '../scenes/Customers/Customers.create'
 import CustomerEdit from '../scenes/Customers/Customers.edit'
@@ -40,18 +34,12 @@ import BossJournal from '../components/journal/BossJournal'
 import RazvalList from '../scenes/Razval/Razval.list'
 import SettingEdit from '../scenes/Settings/Settings'
 import MaterialList from '../scenes/Materials/Materials.list'
-import MaterialNew from '../scenes/Materials/Materials.create'
-import MaterialEdit from '../scenes/Materials/Materials.edit'
 import ShinomontazhpriceList from '../scenes/Shinomotazh.prices/Shinomotazh.prices.list'
-import ShinomontazhpriceNew from '../scenes/Shinomotazh.prices/Shinomotazh.prices.create'
-import ShinomontazhpriceEdit from '../scenes/Shinomotazh.prices/Shinomotazh.prices.edit'
 import ShinomontazhsList from '../scenes/Shinomontazhs/Shinomontazhs.list'
 import ShinomontazhsListBoss from '../scenes/Shinomontazhs/Shinomontazhs.list.boss'
 import ShinomontazhsNew from '../scenes/Shinomontazhs/Shinomontazhs.work.create'
 import ShinomontazhEditFull from '../scenes/Shinomontazhs/Shinomontazhs.edit'
 import VendorList from '../scenes/Vendors/Vendors.list'
-import VendorNew from '../scenes/Vendors/Vendors.create'
-import VendorEdit from '../scenes/Vendors/Vendors.edit'
 import OrganizationList from '../scenes/Organizations/Organizations.list'
 import OrganizationNew from '../scenes/Organizations/Organizations.create'
 import OrganizationEdit from '../scenes/Organizations/Organizations.edit'
@@ -76,20 +64,14 @@ import ToolEditFull from '../scenes/Tools/Tools.edit'
 import ToolView from '../scenes/Tools/Tools.preorder.view'
 
 import StopriceList from '../scenes/Sto.prices/Sto.prices.list'
-import StopriceNew from '../scenes/Sto.prices/Sto.prices.create'
-import StopriceEdit from '../scenes/Sto.prices/Sto.prices.edit'
 import StosList from '../scenes/Sto/Stos.list'
 import StosListBoss from '../scenes/Sto/Stos.list.boss'
 import StosNew from '../scenes/Sto/Stos.work.create'
 import StoEditFull from '../scenes/Sto/Stos.edit'
 
 import CategoryList from '../scenes/Categorys/Categorys.list'
-import CategoryNew from '../scenes/Categorys/Categorys.create'
-import CategoryEdit from '../scenes/Categorys/Categorys.edit'
 
 import WashpriceList from '../scenes/Wash.prices/Wash.prices.list'
-import WashpriceNew from '../scenes/Wash.prices/Wash.prices.create'
-import WashpriceEdit from '../scenes/Wash.prices/Wash.prices.edit'
 import WashsList from '../scenes/Wash/Washs.list'
 import WashsListBoss from '../scenes/Wash/Washs.list.boss'
 import WashsNew from '../scenes/Wash/Washs.work.create'
@@ -97,15 +79,11 @@ import WashEditFull from '../scenes/Wash/Washs.edit'
 import PreentryList from '../scenes/ShinomontazhPreentry/ShinomontazhPreentry.list'
 
 import WindowpriceList from '../scenes/Window.prices/Window.prices.list'
-import WindowpriceNew from '../scenes/Window.prices/Window.prices.create'
-import WindowpriceEdit from '../scenes/Window.prices/Window.prices.edit'
 import WindowsList from '../scenes/Window/Windows.list'
 import WindowsNew from '../scenes/Window/Windows.work.create'
 import WindowEditFull from '../scenes/Window/Windows.edit'
 
 import DiskpaintingpriceList from '../scenes/Diskpainting.prices/Diskpainting.prices.list'
-import DiskpaintingpriceNew from '../scenes/Diskpainting.prices/Diskpainting.prices.create'
-import DiskpaintingpriceEdit from '../scenes/Diskpainting.prices/Diskpainting.prices.edit'
 import DiskpaintingsList from '../scenes/Diskpaintings/Diskpaintings.list'
 import DiskpaintingsListBoss from '../scenes/Diskpaintings/Diskpaintings.list.boss'
 import DiskpaintingsNew from '../scenes/Diskpaintings/Diskpaintings.work.create'
@@ -269,18 +247,18 @@ const RootComponent = (props) => {
             <PrivateRoute exact path="/autoparts/view/:id/:num" component={AutopartView} />
             <PrivateRoute exact path="/autoparts/view/:id" component={AutopartView} />
             <AdminRoute exact path="/place/list" component={PlaceList} />
-            <PrivateRoute exact path="/place/create" component={PlaceNew} />
-            <PrivateRoute exact path="/place/edit/:id" component={PlaceEdit} />
+            <AdminRoute exact path="/place/create" component={PlaceList} />
+            <AdminRoute exact path="/place/edit/:id" component={PlaceList} />
             <AdminRoute exact path="/electronic-journal" component={ElectronicJournal} />
             <PrivateRoute exact path="/employee-journal" component={EmployeeJournal} />
             <BossRoute exact path="/boss-journal" component={BossJournal} />
             <AdminRoute exact path="/employee/list" component={EmployeeList} />
-            <PrivateRoute exact path="/employee/create" component={EmployeeNew} />
-            <PrivateRoute exact path="/employee/edit/:id" component={EmployeeEdit} />
+            <AdminRoute exact path="/employee/create" component={EmployeeList} />
+            <AdminRoute exact path="/employee/edit/:id" component={EmployeeList} />
             <AdminRoute exact path="/account/list" component={AccountList} />
-            <PrivateRoute exact path="/account/create" component={AccountNew} />
+            <AdminRoute exact path="/account/create" component={AccountList} />
             {/* <Route exact path="/register" component={RegisterCommon} /> */}
-            <PrivateRoute exact path="/account/edit/:id" component={AccountEdit} />
+            <AdminRoute exact path="/account/edit/:id" component={AccountList} />
             <PrivateRoute exact path="/customer/list" component={CustomerList} />
             <PrivateRoute exact path="/customer/list/:num" component={CustomerList} />
             <PrivateRoute exact path="/customer/create" component={CustomerNew} />
@@ -290,24 +268,24 @@ const RootComponent = (props) => {
             <PrivateRoute exact path="/oil/list" component={OilList} />
             <PrivateRoute exact path="/settings" component={SettingEdit} />
             <PrivateRoute exact path="/material/list" component={MaterialList} />
-            <PrivateRoute exact path="/material/create" component={MaterialNew} />
-            <PrivateRoute exact path="/material/edit/:id" component={MaterialEdit} />
+            <PrivateRoute exact path="/material/create" component={MaterialList} />
+            <PrivateRoute exact path="/material/edit/:id" component={MaterialList} />
+            <PrivateRoute exact path="/shinomontazhprice/list" component={ShinomontazhpriceList} />
             <PrivateRoute
               exact
-              path="/shinomontazhprice/list/:type"
+              path="/shinomontazhprice/create"
               component={ShinomontazhpriceList}
             />
-            <PrivateRoute exact path="/shinomontazhprice/create" component={ShinomontazhpriceNew} />
             <PrivateRoute exact path="/vendor/list" component={VendorList} />
-            <PrivateRoute exact path="/vendor/create" component={VendorNew} />
-            <PrivateRoute exact path="/vendor/edit/:id" component={VendorEdit} />
+            <PrivateRoute exact path="/vendor/create" component={VendorList} />
+            <PrivateRoute exact path="/vendor/edit/:id" component={VendorList} />
             <PrivateRoute exact path="/organization/list" component={OrganizationList} />
             <PrivateRoute exact path="/organization/create" component={OrganizationNew} />
             <PrivateRoute exact path="/organization/edit/:id" component={OrganizationEdit} />
             <PrivateRoute
               exact
-              path="/shinomontazhprice/:type/edit/:id"
-              component={ShinomontazhpriceEdit}
+              path="/shinomontazhprice/edit/:id"
+              component={ShinomontazhpriceList}
             />
             <PrivateRoute exact path="/shinomontazh/list/:num" component={ShinomontazhsList} />
             <PrivateRoute exact path="/shinomontazh/list" component={ShinomontazhsList} />
@@ -345,8 +323,16 @@ const RootComponent = (props) => {
             <TyresOrderDeskRoute exact path="/tyres/order-desk/list" component={TyresList} />
             <TyresOrderDeskRoute exact path="/tyres/order-desk/create/:num" component={TyresNew} />
             <TyresOrderDeskRoute exact path="/tyres/order-desk/create" component={TyresNew} />
-            <TyresOrderDeskRoute exact path="/tyres/order-desk/edit/:id/:num" component={TyreEditSimple} />
-            <TyresOrderDeskRoute exact path="/tyres/order-desk/edit/:id" component={TyreEditSimple} />
+            <TyresOrderDeskRoute
+              exact
+              path="/tyres/order-desk/edit/:id/:num"
+              component={TyreEditSimple}
+            />
+            <TyresOrderDeskRoute
+              exact
+              path="/tyres/order-desk/edit/:id"
+              component={TyreEditSimple}
+            />
             <PrivateRoute exact path="/tyres/edit/:id/:num" component={TyreEditSimple} />
             <PrivateRoute exact path="/tyres/edit/:id" component={TyreEditSimple} />
             <PrivateRoute exact path="/tyres/editfull/:id/:num" component={TyreEditFull} />
@@ -375,9 +361,9 @@ const RootComponent = (props) => {
             <PrivateRoute exact path="/tools/view/:id/:num" component={ToolView} />
             <PrivateRoute exact path="/tools/view/:id" component={ToolView} />
 
-            <PrivateRoute exact path="/stoprice/list/:type" component={StopriceList} />
-            <PrivateRoute exact path="/stoprice/create" component={StopriceNew} />
-            <PrivateRoute exact path="/stoprice/:type/edit/:id" component={StopriceEdit} />
+            <PrivateRoute exact path="/stoprice/list" component={StopriceList} />
+            <PrivateRoute exact path="/stoprice/create" component={StopriceList} />
+            <PrivateRoute exact path="/stoprice/edit/:id" component={StopriceList} />
             <PrivateRoute exact path="/sto/list/:num" component={StosList} />
             <PrivateRoute exact path="/sto/list" component={StosList} />
             <PrivateRoute exact path="/stoboss/list/:num" component={StosListBoss} />
@@ -392,13 +378,12 @@ const RootComponent = (props) => {
             <PrivateRoute exact path="/stoboss/edit/:id" component={StoEditFull} />
 
             <PrivateRoute exact path="/category/list" component={CategoryList} />
-            <PrivateRoute exact path="/category/create" component={CategoryNew} />
-            <PrivateRoute exact path="/category/edit/:id" component={CategoryEdit} />
+            <PrivateRoute exact path="/category/create" component={CategoryList} />
+            <PrivateRoute exact path="/category/edit/:id" component={CategoryList} />
             {/* wash */}
-            <PrivateRoute exact path="/washprice/list/" component={WashpriceList} />
-            <PrivateRoute exact path="/washprice/list/:type" component={WashpriceList} />
-            <PrivateRoute exact path="/washprice/create" component={WashpriceNew} />
-            <PrivateRoute exact path="/washprice/:type/edit/:id" component={WashpriceEdit} />
+            <PrivateRoute exact path="/washprice/list" component={WashpriceList} />
+            <PrivateRoute exact path="/washprice/create" component={WashpriceList} />
+            <PrivateRoute exact path="/washprice/edit/:id" component={WashpriceList} />
             <PrivateRoute exact path="/wash/list/:num" component={WashsList} />
             <PrivateRoute exact path="/wash/list" component={WashsList} />
             <PrivateRoute exact path="/washboss/list/:num" component={WashsListBoss} />
@@ -416,10 +401,9 @@ const RootComponent = (props) => {
             <PrivateRoute exact path="/preentry/sto" component={PreentryList} />
             <PrivateRoute exact path="/preentry/oil" component={PreentryList} />
             {/* window */}
-            <PrivateRoute exact path="/windowprice/list/" component={WindowpriceList} />
-            <PrivateRoute exact path="/windowprice/list/:type" component={WindowpriceList} />
-            <PrivateRoute exact path="/windowprice/create" component={WindowpriceNew} />
-            <PrivateRoute exact path="/windowprice/:type/edit/:id" component={WindowpriceEdit} />
+            <PrivateRoute exact path="/windowprice/list" component={WindowpriceList} />
+            <PrivateRoute exact path="/windowprice/create" component={WindowpriceList} />
+            <PrivateRoute exact path="/windowprice/edit/:id" component={WindowpriceList} />
 
             <PrivateRoute exact path="/window/list/:num" component={WindowsList} />
             <PrivateRoute exact path="/window/list" component={WindowsList} />
@@ -434,10 +418,9 @@ const RootComponent = (props) => {
             <PrivateRoute exact path="/windowboss/edit/:id/:num" component={WindowEditFull} />
             <PrivateRoute exact path="/windowboss/edit/:id" component={WindowEditFull} />
             {/* cond */}
-            <PrivateRoute exact path="/condprice/list/" component={WindowpriceList} />
-            <PrivateRoute exact path="/condprice/list/:type" component={WindowpriceList} />
-            <PrivateRoute exact path="/condprice/create" component={WindowpriceNew} />
-            <PrivateRoute exact path="/condprice/:type/edit/:id" component={WindowpriceEdit} />
+            <PrivateRoute exact path="/condprice/list" component={WindowpriceList} />
+            <PrivateRoute exact path="/condprice/create" component={WindowpriceList} />
+            <PrivateRoute exact path="/condprice/edit/:id" component={WindowpriceList} />
 
             <PrivateRoute exact path="/cond/list/:num" component={WindowsList} />
             <PrivateRoute exact path="/cond/list" component={WindowsList} />
@@ -453,23 +436,46 @@ const RootComponent = (props) => {
             <PrivateRoute exact path="/condboss/edit/:id" component={WindowEditFull} />
 
             {/* diskpainting */}
-            <PrivateRoute exact path="/diskpaintingprice/list/" component={DiskpaintingpriceList} />
-            <PrivateRoute exact path="/diskpaintingprice/list/:type" component={DiskpaintingpriceList} />
-            <PrivateRoute exact path="/diskpaintingprice/create" component={DiskpaintingpriceNew} />
-            <PrivateRoute exact path="/diskpaintingprice/:type/edit/:id" component={DiskpaintingpriceEdit} />
+            <PrivateRoute exact path="/diskpaintingprice/list" component={DiskpaintingpriceList} />
+            <PrivateRoute
+              exact
+              path="/diskpaintingprice/create"
+              component={DiskpaintingpriceList}
+            />
+            <PrivateRoute
+              exact
+              path="/diskpaintingprice/edit/:id"
+              component={DiskpaintingpriceList}
+            />
 
             <PrivateRoute exact path="/diskpainting/list/:num" component={DiskpaintingsList} />
             <PrivateRoute exact path="/diskpainting/list" component={DiskpaintingsList} />
-            <PrivateRoute exact path="/diskpaintingboss/list/:num" component={DiskpaintingsListBoss} />
+            <PrivateRoute
+              exact
+              path="/diskpaintingboss/list/:num"
+              component={DiskpaintingsListBoss}
+            />
             <PrivateRoute exact path="/diskpaintingboss/list" component={DiskpaintingsListBoss} />
             <PrivateRoute exact path="/diskpainting/create/:num" component={DiskpaintingsNew} />
             <PrivateRoute exact path="/diskpainting/create" component={DiskpaintingsNew} />
             <PrivateRoute exact path="/diskpaintingboss/create/:num" component={DiskpaintingsNew} />
             <PrivateRoute exact path="/diskpaintingboss/create" component={DiskpaintingsNew} />
-            <PrivateRoute exact path="/diskpainting/edit/:id/:num" component={DiskpaintingEditFull} />
+            <PrivateRoute
+              exact
+              path="/diskpainting/edit/:id/:num"
+              component={DiskpaintingEditFull}
+            />
             <PrivateRoute exact path="/diskpainting/edit/:id" component={DiskpaintingEditFull} />
-            <PrivateRoute exact path="/diskpaintingboss/edit/:id/:num" component={DiskpaintingEditFull} />
-            <PrivateRoute exact path="/diskpaintingboss/edit/:id" component={DiskpaintingEditFull} />
+            <PrivateRoute
+              exact
+              path="/diskpaintingboss/edit/:id/:num"
+              component={DiskpaintingEditFull}
+            />
+            <PrivateRoute
+              exact
+              path="/diskpaintingboss/edit/:id"
+              component={DiskpaintingEditFull}
+            />
 
             <Route component={() => <NotFound />} />
           </Switch>

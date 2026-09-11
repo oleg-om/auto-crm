@@ -1,6 +1,6 @@
 import React from 'react'
 
-const Modal = ({ open, onClose, onSubmit, title, message }) => {
+const Modal = ({ open, onClose, onSubmit, title = '', message = '' }) => {
   if (!open) return null
   return (
     <div className="fixed z-10 inset-0 overflow-y-auto">

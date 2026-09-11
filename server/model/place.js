@@ -115,6 +115,11 @@ const Place = new mongoose.Schema({
   boostShinomontazhPrices: {
     type: Boolean,
     required: false
+  },
+  active: {
+    type: Boolean,
+    required: false,
+    default: true
   }
 })
 

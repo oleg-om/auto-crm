@@ -983,7 +983,7 @@ const StoragesUpdate = (props) => {
                   <th className="p-3 font-bold uppercase bg-green-300 text-gray-800 border border-gray-300 table-cell w-full">
                     Наименование
                   </th>
-                  <th className="p-3 font-bold uppercase bg-green-300 text-sm text-gray-800 border border-gray-300 table-cell whitespace-no-wrap">
+                  <th className="p-3 font-bold uppercase bg-green-300 text-sm text-gray-800 border border-gray-300 table-cell whitespace-nowrap">
                     Кол-во
                   </th>
 
@@ -996,7 +996,7 @@ const StoragesUpdate = (props) => {
                 {inputFields.map((inputField, index) => (
                   <tr
                     key={index}
-                    className="bg-white lg:hover:bg-gray-100 flex table-row flex-row lg:flex-row flex-wrap flex-no-wrap mb-10 lg:mb-0"
+                    className="bg-white lg:hover:bg-gray-100 flex table-row flex-row lg:flex-row flex-wrap flex-nowrap mb-10 lg:mb-0"
                   >
                     <FirstColumn
                       inputField={inputField}

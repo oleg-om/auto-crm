@@ -841,7 +841,7 @@ const Car = ({
               </tr>
             </thead>
             <tbody>
-              <tr className="bg-white lg:hover:bg-gray-100 flex table-row flex-row lg:flex-row flex-wrap flex-no-wrap mb-10 lg:mb-0">
+              <tr className="bg-white lg:hover:bg-gray-100 flex table-row flex-row lg:flex-row flex-wrap flex-nowrap mb-10 lg:mb-0">
                 <td className="w-full lg:w-auto p-2 lg:py-5 text-xs text-gray-800 text-center border border-b block table-cell relative static">
                   Введите полностью гос. номер чтобы найти клиента. Если клиент отстствует,
                   заполните данные самостоятельно. Тогда в базе данных клиентов появится новый
@@ -850,7 +850,7 @@ const Car = ({
                 </td>
                 <td className="w-full lg:w-auto p-2 text-gray-800 text-center border border-b text-center block table-cell relative static" />
               </tr>
-              <tr className="bg-white lg:hover:bg-gray-100 flex table-row flex-row lg:flex-row flex-wrap flex-no-wrap mb-10 lg:mb-0">
+              <tr className="bg-white lg:hover:bg-gray-100 flex table-row flex-row lg:flex-row flex-wrap flex-nowrap mb-10 lg:mb-0">
                 <td className="w-full lg:w-auto p-2 text-xs text-gray-800 text-center border border-b block table-cell relative static">
                   <div className="flex-shrink w-full inline-block relative">
                     <select

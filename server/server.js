@@ -19,6 +19,7 @@ import passportJWT from './services/passport'
 import User from './model/User.model'
 import Message from './model/Message.model'
 import Html from '../client/html'
+import { isAdmin } from './utils/roles'
 
 let appVersion = 'dev'
 try {
@@ -114,8 +115,8 @@ middleware.forEach((it) => server.use(it))
 
 passport.use('jwt', passportJWT)
 
-function createToken(user) {
-  const payload = { uid: user.id }
+function createToken(user, extraPayload = {}) {
+  const payload = { uid: user.id, ...extraPayload }
   const token = jwt.sign(payload, config.secret, { expiresIn: '8760h' })
   delete user.password
   return token
@@ -127,8 +128,82 @@ async function getTokenAndUser(data) {
   return { token, user }
 }
 
+const COOKIE_OPTIONS = {
+  path: '/',
+  httpOnly: true,
+  sameSite: 'lax',
+  secure: config.env === 'production'
+}
+
 function createCookie(token, res) {
-  return res.cookie('token', token, { maxAge: 1000 * 60 * 60 * 8760 })
+  return res.cookie('token', token, { ...COOKIE_OPTIONS, maxAge: 1000 * 60 * 60 * 8760 })
+}
+
+// Public - no valid session required yet, this is how one is obtained.
+server.get('/api/v1/auth', async (req, res) => {
+  try {
+    const jwtUser = jwt.verify(req.cookies.token, config.secret, { algorithms: ['HS256'] })
+    const user = await User.findById(jwtUser.uid)
+
+    let impersonatedBy = null
+    if (jwtUser.impersonatedBy) {
+      const admin = await User.findById(jwtUser.impersonatedBy)
+      if (admin) {
+        impersonatedBy = { id: admin.id, login: admin.login }
+      }
+    }
+
+    const token = createToken(user, impersonatedBy ? { impersonatedBy: impersonatedBy.id } : {})
+    createCookie(token, res)
+    res.json({ status: 'ok', token, user, impersonatedBy })
+  } catch (err) {
+    res.json({ status: 'error', err })
+  }
+})
+
+server.post('/api/v1/auth', async (req, res) => {
+  try {
+    const { token, user } = await getTokenAndUser(req.body)
+    createCookie(token, res)
+    res.json({ status: 'ok', token, user })
+  } catch (err) {
+    res.json({ status: 'error', message: `auth error ${err}` })
+  }
+})
+
+// The token cookie is httpOnly - the client can't clear it itself on sign out,
+// so it needs this endpoint. Public so it still works with an already-expired
+// or invalid cookie.
+server.post('/api/v1/logout', (req, res) => {
+  res.clearCookie('token', COOKIE_OPTIONS)
+  res.json({ status: 'ok' })
+})
+
+// The external site posts tyre orders here without a CRM login - accept it
+// if it carries the shared secret instead of a session cookie.
+const PUBLIC_API_KEY_ROUTES = [{ method: 'POST', path: '/api/v1/tyre' }]
+
+// Everything else under /api/v1 requires a valid session from here on.
+function requireAuth(req, res, next) {
+  const requestPath = req.originalUrl.split('?')[0].replace(/\/+$/, '') || '/'
+  const publicRoute = PUBLIC_API_KEY_ROUTES.find(
+    (route) => route.method === req.method && route.path === requestPath
+  )
+  if (publicRoute) {
+    if (config.externalApiKey && req.headers['x-api-key'] === config.externalApiKey) {
+      next()
+      return
+    }
+    res.status(401).json({ status: 'error', message: 'Unauthorized' })
+    return
+  }
+
+  try {
+    req.jwtUser = jwt.verify(req.cookies.token, config.secret, { algorithms: ['HS256'] })
+    next()
+  } catch (err) {
+    res.status(401).json({ status: 'error', message: 'Unauthorized' })
+  }
 }
 
 function getFormatMessages(messages) {
@@ -196,6 +271,8 @@ if (isStudyMode) {
   server.use('/api/v1/category', categoryProxy)
 }
 
+server.use('/api/v1', requireAuth)
+
 server.use('/api/v1', placeRoutes)
 server.use('/api/v1', taskRoutes)
 server.use('/api/v1', employeeRoutes)
@@ -228,71 +305,107 @@ server.use('/api/v1', diskpaintingRoutes)
 server.use('/api/v1', diskpaintingPriceRoutes)
 server.use('/api/v1', organizationRoutes)
 
-server.get('/api/v1/auth', async (req, res) => {
-  try {
-    const jwtUser = jwt.verify(req.cookies.token, config.secret, { algorithms: ['HS256'] })
-    const user = await User.findById(jwtUser.uid)
-
-    const token = createToken(user)
-    createCookie(token, res)
-    res.json({ status: 'ok', token, user })
-  } catch (err) {
-    res.json({ status: 'error', err })
+// Account management (list/create/edit/delete/role changes) is admin-only -
+// without this, any authenticated user (including a self-registered one)
+// could edit their own account's `role` field and grant themselves admin.
+async function requireAdmin(req, res, next) {
+  const user = await User.findById(req.jwtUser.uid)
+  if (!user || !isAdmin(user.role)) {
+    res.status(403).json({ status: 'error', message: 'Forbidden' })
+    return
   }
-})
+  next()
+}
 
-server.get('/api/v1/account', async (req, res) => {
-  const list = await User.find({})
+server.get('/api/v1/account', requireAdmin, async (req, res) => {
+  const list = await User.find({}).select('-password')
   return res.json({ status: 'ok', data: list })
 })
 
-server.patch('/api/v1/account/:id', async (req, res) => {
-  let account = await User.findOneAndUpdate(
-    { _id: req.params.id },
-    { $set: req.body },
-    { upsert: false }
-  )
+server.patch('/api/v1/account/:id', requireAdmin, async (req, res) => {
+  const account = await User.findById(req.params.id)
+  // Go through .save() (not findOneAndUpdate's $set) so the password gets
+  // re-hashed by the pre('save') hook whenever it's part of the update -
+  // findOneAndUpdate would otherwise write it to MongoDB in plain text.
+  Object.assign(account, req.body)
   await account.save()
-  account = await User.findOne({ _id: req.params.id })
 
-  return res.json({ status: 'ok', data: account })
+  const data = account.toObject()
+  delete data.password
+  return res.json({ status: 'ok', data })
 })
 
-server.delete('/api/v1/account/:id', async (req, res) => {
+server.delete('/api/v1/account/:id', requireAdmin, async (req, res) => {
   await User.deleteOne({ _id: req.params.id })
   return res.json({ status: 'ok', _id: req.params.id })
 })
 
-server.post('/api/v1/account', async (req, res) => {
+server.post('/api/v1/account', requireAdmin, async (req, res) => {
   const account = new User(req.body)
   await account.save()
-  return res.json({ status: 'ok', data: account })
+  const data = account.toObject()
+  delete data.password
+  return res.json({ status: 'ok', data })
 })
 
-server.post('/api/v1/auth', async (req, res) => {
+// Was public self-registration - closed off (admin-only, same as the rest of
+// account management) since anyone could otherwise create their own account.
+// Doesn't log the caller in as the new user - the admin creating it stays
+// signed in as themselves.
+server.post('/api/v1/registration', requireAdmin, async (req, res) => {
+  const { login, password, userName } = req.body
   try {
-    const { token, user } = await getTokenAndUser(req.body)
-    createCookie(token, res)
-    res.json({ status: 'ok', token, user })
+    const newUser = new User({ login, password, userName })
+    await newUser.save()
+    const data = newUser.toObject()
+    delete data.password
+    res.json({ status: 'ok', data })
   } catch (err) {
-    res.json({ status: 'error', message: `auth error ${err}` })
+    res.json({ status: 'error', message: `registrate error ${err}` })
   }
 })
 
-server.post('/api/v1/registration', async (req, res) => {
-  const { login, password, userName } = req.body
+server.post('/api/v1/account/:id/impersonate', requireAdmin, async (req, res) => {
   try {
-    const newUser = new User({
-      login,
-      password,
-      userName
-    })
-    await newUser.save()
-    const { token, user } = await getTokenAndUser(req.body)
+    const admin = await User.findById(req.jwtUser.uid)
+
+    const target = await User.findById(req.params.id)
+    if (!target) {
+      res.status(404).json({ status: 'error', message: 'Account not found' })
+      return
+    }
+
+    const token = createToken(target, { impersonatedBy: admin.id })
     createCookie(token, res)
-    res.json({ status: 'ok', token, user })
+    res.json({
+      status: 'ok',
+      token,
+      user: target,
+      impersonatedBy: { id: admin.id, login: admin.login }
+    })
   } catch (err) {
-    res.json({ status: 'error', message: `registrate error ${err}` })
+    res.status(500).json({ status: 'error', message: `impersonate error ${err}` })
+  }
+})
+
+server.post('/api/v1/account/return-to-self', async (req, res) => {
+  try {
+    if (!req.jwtUser.impersonatedBy) {
+      res.status(400).json({ status: 'error', message: 'Not impersonating' })
+      return
+    }
+
+    const admin = await User.findById(req.jwtUser.impersonatedBy)
+    if (!admin) {
+      res.status(404).json({ status: 'error', message: 'Original account not found' })
+      return
+    }
+
+    const token = createToken(admin)
+    createCookie(token, res)
+    res.json({ status: 'ok', token, user: admin, impersonatedBy: null })
+  } catch (err) {
+    res.status(500).json({ status: 'error', message: `return-to-self error ${err}` })
   }
 })
 

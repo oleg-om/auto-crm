@@ -5,8 +5,39 @@
 
 @tailwind utilities;
 
+// shadcn/ui design tokens. Scoped to the bg-*/text-*/border-* classes those
+// components use explicitly - intentionally NOT applied globally (no `* {
+// @apply border-border }` reset), so it can't touch the existing look of
+// pages that haven't been migrated yet.
+:root {
+  --background: 0 0% 100%;
+  --foreground: 222.2 84% 4.9%;
+  --card: 0 0% 100%;
+  --card-foreground: 222.2 84% 4.9%;
+  --popover: 0 0% 100%;
+  --popover-foreground: 222.2 84% 4.9%;
+  --primary: 221 83% 53%;
+  --primary-foreground: 210 40% 98%;
+  --secondary: 210 40% 96.1%;
+  --secondary-foreground: 222.2 47.4% 11.2%;
+  --muted: 210 40% 96.1%;
+  --muted-foreground: 215.4 16.3% 46.9%;
+  --accent: 210 40% 96.1%;
+  --accent-foreground: 222.2 47.4% 11.2%;
+  --destructive: 0 84.2% 60.2%;
+  --destructive-foreground: 210 40% 98%;
+  --border: 214.3 31.8% 91.4%;
+  --input: 214.3 31.8% 91.4%;
+  --ring: 221 83% 53%;
+  --radius: 0.5rem;
+}
+
 body {
     background-color: #EDF2F7;
+    // Reserve the scrollbar's width up front so Radix locking it to
+    // `overflow: hidden` while a Dialog/AlertDialog is open doesn't change
+    // the page's content width and cause a visible horizontal jump.
+    overflow-y: scroll;
 }
 .sidebar {
   min-height: calc(100vh - 64px);
@@ -54,4 +85,84 @@ body {
   .react-calendar__tile--active {
     background: #00dc6a;
   }
+}
+
+// react-toastify skin, restyled to match the shadcn/ui tokens above (card-like
+// surface + colored left accent instead of the library's solid-color default).
+.Toastify__toast-container {
+  width: 356px;
+  padding: 0;
+}
+
+.Toastify__toast {
+  align-items: center;
+  min-height: auto;
+  padding: 14px 16px;
+  border-radius: var(--radius);
+  border: 1px solid hsl(var(--border));
+  border-left-width: 4px;
+  box-shadow:
+    0 10px 15px -3px rgba(0, 0, 0, 0.08),
+    0 4px 6px -4px rgba(0, 0, 0, 0.06);
+  font-family: inherit;
+}
+
+.Toastify__toast--default,
+.Toastify__toast--info,
+.Toastify__toast--success,
+.Toastify__toast--warning,
+.Toastify__toast--error {
+  background: hsl(var(--background));
+  color: hsl(var(--foreground));
+}
+
+.Toastify__toast--default {
+  border-left-color: hsl(var(--border));
+}
+.Toastify__toast--info {
+  border-left-color: hsl(var(--primary));
+}
+.Toastify__toast--success {
+  border-left-color: hsl(142 71% 40%);
+}
+.Toastify__toast--warning {
+  border-left-color: hsl(38 92% 50%);
+}
+.Toastify__toast--error {
+  border-left-color: hsl(var(--destructive));
+}
+
+.Toastify__toast-body {
+  margin: 0;
+  padding: 0;
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+}
+
+.Toastify__close-button {
+  align-self: center;
+  color: hsl(var(--muted-foreground));
+  opacity: 1;
+}
+.Toastify__close-button:hover,
+.Toastify__close-button:focus {
+  color: hsl(var(--foreground));
+}
+
+.Toastify__progress-bar {
+  height: 3px;
+  opacity: 1;
+  background-color: hsl(var(--muted));
+}
+.Toastify__progress-bar--info {
+  background: hsl(var(--primary));
+}
+.Toastify__progress-bar--success {
+  background: hsl(142 71% 40%);
+}
+.Toastify__progress-bar--warning {
+  background: hsl(38 92% 50%);
+}
+.Toastify__progress-bar--error {
+  background: hsl(var(--destructive));
 }

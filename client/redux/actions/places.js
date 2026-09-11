@@ -1,4 +1,5 @@
 export const GET_PLACES = 'GET_PLACES'
+export const GET_PLACES_ALL = 'GET_PLACES_ALL'
 export const CREATE_PLACE = 'CREATE_PLACE'
 export const UPDATE_PLACE = 'UPDATE_PLACE'
 export const DELETE_PLACE = 'DELETE_PLACE'

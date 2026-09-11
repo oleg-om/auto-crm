@@ -1,0 +1,468 @@
+import React, { useEffect, useState } from 'react'
+import { useSelector, useDispatch } from 'react-redux'
+import { Link, useHistory, useRouteMatch } from 'react-router-dom'
+import { toast } from 'react-toastify'
+import { ArrowDown, ArrowUp, ArrowUpDown, Check, ChevronsUpDown, Plus, X } from 'lucide-react'
+import EmployeeRow from '../../components/employees/employee'
+import EmployeeForm from '../../components/employees/employee.form'
+import { deleteEmployee, getAllEmployees } from '../../redux/reducers/employees'
+import Navbar from '../../components/Navbar'
+import Sidebar from '../../components/Sidebar'
+import { parseLegacyDate } from '../../lib/legacy-date'
+import 'react-toastify/dist/ReactToastify.css'
+import { Card, CardContent } from '../../components/ui/card'
+import { Label } from '../../components/ui/label'
+import { Input } from '../../components/ui/input'
+import { Button } from '../../components/ui/button'
+import { Badge } from '../../components/ui/badge'
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from '../../components/ui/dialog'
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle
+} from '../../components/ui/alert-dialog'
+import { cn } from '../../lib/utils'
+import {
+  Command,
+  CommandEmpty,
+  CommandGroup,
+  CommandInput,
+  CommandItem,
+  CommandList
+} from '../../components/ui/command'
+import { Popover, PopoverContent, PopoverTrigger } from '../../components/ui/popover'
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue
+} from '../../components/ui/select'
+import { Table, TableBody, TableHead, TableHeader, TableRow } from '../../components/ui/table'
+import PaginationBar from '../../components/shared/pagination-bar'
+import { usePagination } from '../../hooks/use-pagination'
+import type { IEmployee } from '../../../common/types/generated/Employee'
+import type { IPlace } from '../../../common/types/generated/Place'
+
+type ISortField = 'name' | 'date'
+
+interface ISortableTableHeadProps {
+  field: ISortField
+  label: string
+  sortField: ISortField | null
+  sortDirection: 'asc' | 'desc'
+  onSort: (field: ISortField) => void
+  className?: string
+}
+
+const SortableTableHead = ({
+  field,
+  label,
+  sortField,
+  sortDirection,
+  onSort,
+  className
+}: ISortableTableHeadProps) => {
+  const isActive = sortField === field
+  const Icon = isActive ? (sortDirection === 'asc' ? ArrowUp : ArrowDown) : ArrowUpDown
+  return (
+    <TableHead className={className}>
+      <button
+        type="button"
+        className="flex items-center gap-1 hover:text-foreground"
+        onClick={() => onSort(field)}
+      >
+        {label}
+        <Icon className={cn('h-3.5 w-3.5', isActive ? 'opacity-100' : 'opacity-40')} />
+      </button>
+    </TableHead>
+  )
+}
+
+const EmployeeList = () => {
+  toast.configure()
+  const notify = (arg: string) => {
+    toast.info(arg, { position: toast.POSITION.BOTTOM_RIGHT })
+  }
+  // No app-wide typed store yet (see client/redux/reducers/index.js) - typed
+  // just for the slices this page reads, per the IEmployee/IPlace contracts.
+  const dispatch = useDispatch<any>()
+  const history = useHistory()
+  const list = useSelector((s: { employees: { allList: IEmployee[] } }) => s.employees.allList)
+  const place = useSelector((s: { places: { list: IPlace[] } }) => s.places.list)
+
+  useEffect(() => {
+    dispatch(getAllEmployees())
+  }, [dispatch])
+  const formMatch = useRouteMatch<{ id?: string }>({
+    path: ['/employee/create', '/employee/edit/:id'],
+    exact: true
+  })
+  const isCreateMode = formMatch?.path === '/employee/create'
+  const editingEmployee = formMatch?.params.id
+    ? list.find((it) => it.id === formMatch.params.id)
+    : undefined
+  const closeForm = () =>
+    history.push({ pathname: '/employee/list', state: { preserveScroll: true } })
+  const [isOpen, setIsOpen] = useState(false)
+  const [itemId, setItemId] = useState('')
+  const [searchName, setSearchName] = useState('')
+  const [searchPlace, setSearchPlace] = useState('')
+  const [activityFilter, setActivityFilter] = useState<'all' | 'active' | 'inactive'>('all')
+  const [isPlacePickerOpen, setIsPlacePickerOpen] = useState(false)
+  const [sortField, setSortField] = useState<'name' | 'date' | null>(null)
+  const [sortDirection, setSortDirection] = useState<'asc' | 'desc'>('asc')
+
+  const toggleSort = (field: 'name' | 'date') => {
+    if (sortField !== field) {
+      setSortField(field)
+      setSortDirection('asc')
+      return
+    }
+    if (sortDirection === 'asc') {
+      setSortDirection('desc')
+      return
+    }
+    setSortField(null)
+  }
+
+  const filteredList = list.filter((it) => {
+    const fullName = `${it.name} ${it.surname}`.toLowerCase()
+    const matchesName = fullName.includes(searchName.trim().toLowerCase())
+    const matchesPlace = searchPlace === '' || it.address.includes(searchPlace)
+    const matchesActivity =
+      activityFilter === 'all' ||
+      (activityFilter === 'active' ? it.active !== false : it.active === false)
+    return matchesName && matchesPlace && matchesActivity
+  })
+
+  const sortedList = [...filteredList].sort((a, b) => {
+    if (!sortField) return 0
+    let comparison = 0
+    if (sortField === 'name') {
+      comparison = `${a.name} ${a.surname}`.localeCompare(`${b.name} ${b.surname}`, 'ru')
+    } else {
+      const aTime = parseLegacyDate(a.date)?.getTime() ?? 0
+      const bTime = parseLegacyDate(b.date)?.getTime() ?? 0
+      comparison = aTime - bTime
+    }
+    return sortDirection === 'asc' ? comparison : -comparison
+  })
+
+  const isSearchNameActive = searchName.trim() !== ''
+  const isSearchPlaceActive = searchPlace !== ''
+  const isActivityFilterActive = activityFilter !== 'all'
+  const hasActiveFilters = isSearchNameActive || isSearchPlaceActive || isActivityFilterActive
+  const resetFilters = () => {
+    setSearchName('')
+    setSearchPlace('')
+    setActivityFilter('all')
+  }
+
+  const { page, pageSize, setPage, setPageSize, totalPages, pageStart, pageEnd } = usePagination(
+    sortedList.length
+  )
+
+  useEffect(() => {
+    setPage(1)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [searchName, searchPlace, activityFilter])
+
+  const pagedList = sortedList.slice(pageStart, pageEnd)
+
+  const openAndDelete = (id: string) => {
+    setIsOpen(true)
+    setItemId(id)
+  }
+  const deleteEmployeeLocal = (id: string) => {
+    dispatch(deleteEmployee(id))
+    setIsOpen(false)
+    notify('Сотрудник удален')
+  }
+
+  return (
+    <div>
+      <Navbar />
+      <div className="flex flex-row">
+        <Sidebar />
+        <div className="container mx-auto min-w-0 px-4">
+          <div className="mb-6 flex items-center justify-between border-b py-4">
+            <h1 className="text-3xl">Список сотрудников</h1>
+            <Link to={{ pathname: '/employee/create', state: { preserveScroll: true } }}>
+              <Button type="button">
+                <Plus className="mr-2 h-4 w-4" />
+                Новый сотрудник
+              </Button>
+            </Link>
+          </div>
+          <Card className="my-3">
+            <CardContent className="p-4">
+              <div className="-mx-2 md:flex md:justify-between">
+                <div className="md:w-1/3 px-2 mb-4 md:mb-0">
+                  <Label htmlFor="searchName" className="block mb-2">
+                    Имя или фамилия
+                  </Label>
+                  <div className="relative">
+                    <Input
+                      id="searchName"
+                      value={searchName}
+                      placeholder="Введите имя или фамилию"
+                      className={cn(
+                        'pr-8',
+                        isSearchNameActive && 'border-primary ring-1 ring-primary/30'
+                      )}
+                      onChange={(e) => setSearchName(e.target.value)}
+                    />
+                    {searchName ? (
+                      <button
+                        type="button"
+                        className="absolute inset-y-0 right-0 flex items-center px-2 text-muted-foreground hover:text-foreground"
+                        onClick={() => setSearchName('')}
+                        aria-label="Очистить"
+                      >
+                        <X className="h-4 w-4" />
+                      </button>
+                    ) : null}
+                  </div>
+                </div>
+                <div className="md:w-1/3 px-2 mb-4 md:mb-0">
+                  <Label htmlFor="searchPlace" className="block mb-2">
+                    Точка
+                  </Label>
+                  <Popover open={isPlacePickerOpen} onOpenChange={setIsPlacePickerOpen}>
+                    <PopoverTrigger asChild>
+                      <Button
+                        id="searchPlace"
+                        type="button"
+                        variant="outline"
+                        role="combobox"
+                        aria-expanded={isPlacePickerOpen}
+                        className={cn(
+                          'w-full justify-between font-normal',
+                          isSearchPlaceActive && 'border-primary text-primary'
+                        )}
+                      >
+                        {searchPlace === ''
+                          ? 'Все'
+                          : place.find((it) => it.id === searchPlace)?.name ?? 'Все'}
+                        <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                      </Button>
+                    </PopoverTrigger>
+                    <PopoverContent className="w-[var(--radix-popover-trigger-width)] p-0">
+                      <Command>
+                        <CommandInput placeholder="Поиск точки..." />
+                        <CommandList>
+                          <CommandEmpty>Ничего не найдено</CommandEmpty>
+                          <CommandGroup>
+                            <CommandItem
+                              value="Все"
+                              onSelect={() => {
+                                setSearchPlace('')
+                                setIsPlacePickerOpen(false)
+                              }}
+                            >
+                              <Check
+                                className={cn(
+                                  'mr-2 h-4 w-4',
+                                  searchPlace === '' ? 'opacity-100' : 'opacity-0'
+                                )}
+                              />
+                              Все
+                            </CommandItem>
+                            {place.map((it) => (
+                              <CommandItem
+                                key={it.id}
+                                value={it.name}
+                                onSelect={() => {
+                                  setSearchPlace(it.id)
+                                  setIsPlacePickerOpen(false)
+                                }}
+                              >
+                                <Check
+                                  className={cn(
+                                    'mr-2 h-4 w-4',
+                                    searchPlace === it.id ? 'opacity-100' : 'opacity-0'
+                                  )}
+                                />
+                                {it.name}
+                              </CommandItem>
+                            ))}
+                          </CommandGroup>
+                        </CommandList>
+                      </Command>
+                    </PopoverContent>
+                  </Popover>
+                </div>
+                <div className="md:w-1/3 px-2 mb-4 md:mb-0">
+                  <Label htmlFor="activityFilter" className="block mb-2">
+                    Активность
+                  </Label>
+                  <Select
+                    value={activityFilter}
+                    onValueChange={(value) =>
+                      setActivityFilter(value as 'all' | 'active' | 'inactive')
+                    }
+                  >
+                    <SelectTrigger
+                      id="activityFilter"
+                      className={cn(isActivityFilterActive && 'border-primary text-primary')}
+                    >
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="all">Все</SelectItem>
+                      <SelectItem value="active">Активные</SelectItem>
+                      <SelectItem value="inactive">Неактивные</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+              </div>
+              {hasActiveFilters ? (
+                <div className="flex flex-wrap items-center gap-2 -mx-2 px-2 pt-3 mt-3 border-t">
+                  <span className="text-sm text-muted-foreground">
+                    Найдено: {filteredList.length}
+                  </span>
+                  {isSearchNameActive ? (
+                    <Badge variant="secondary" className="gap-1 pr-1 font-normal">
+                      Имя: {searchName.trim()}
+                      <button
+                        type="button"
+                        className="ml-0.5 rounded-full p-0.5 hover:bg-foreground/10"
+                        onClick={() => setSearchName('')}
+                        aria-label="Сбросить фильтр по имени"
+                      >
+                        <X className="h-3 w-3" />
+                      </button>
+                    </Badge>
+                  ) : null}
+                  {isSearchPlaceActive ? (
+                    <Badge variant="secondary" className="gap-1 pr-1 font-normal">
+                      Точка: {place.find((it) => it.id === searchPlace)?.name}
+                      <button
+                        type="button"
+                        className="ml-0.5 rounded-full p-0.5 hover:bg-foreground/10"
+                        onClick={() => setSearchPlace('')}
+                        aria-label="Сбросить фильтр по точке"
+                      >
+                        <X className="h-3 w-3" />
+                      </button>
+                    </Badge>
+                  ) : null}
+                  {isActivityFilterActive ? (
+                    <Badge variant="secondary" className="gap-1 pr-1 font-normal">
+                      {activityFilter === 'active' ? 'Только активные' : 'Только неактивные'}
+                      <button
+                        type="button"
+                        className="ml-0.5 rounded-full p-0.5 hover:bg-foreground/10"
+                        onClick={() => setActivityFilter('all')}
+                        aria-label="Сбросить фильтр по активности"
+                      >
+                        <X className="h-3 w-3" />
+                      </button>
+                    </Badge>
+                  ) : null}
+                  <Button
+                    type="button"
+                    variant="ghost"
+                    size="sm"
+                    className="h-6 px-2 text-xs text-muted-foreground"
+                    onClick={resetFilters}
+                  >
+                    Сбросить всё
+                  </Button>
+                </div>
+              ) : null}
+            </CardContent>
+          </Card>
+          <div className="overflow-x-auto rounded-lg relative lg:my-3 mt-1 lg:shadow">
+            <Table className="sm:min-w-[896px] table-fixed">
+              <TableHeader>
+                <TableRow className="hover:bg-transparent">
+                  <SortableTableHead
+                    field="name"
+                    label="Имя"
+                    sortField={sortField}
+                    sortDirection={sortDirection}
+                    onSort={toggleSort}
+                    className="w-[180px]"
+                  />
+                  <TableHead className="hidden sm:table-cell w-[220px]">Точка</TableHead>
+                  <TableHead className="hidden sm:table-cell w-[260px]">Должность</TableHead>
+                  <SortableTableHead
+                    field="date"
+                    label="Дата создания"
+                    sortField={sortField}
+                    sortDirection={sortDirection}
+                    onSort={toggleSort}
+                    className="hidden sm:table-cell w-[140px]"
+                  />
+                  <TableHead className="w-[96px]">Действия</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {pagedList.map((it) => (
+                  <EmployeeRow key={it.id} place={place} deleteEmployee={openAndDelete} {...it} />
+                ))}
+              </TableBody>
+            </Table>
+          </div>
+          <PaginationBar
+            page={page}
+            totalPages={totalPages}
+            onPageChange={setPage}
+            pageSize={pageSize}
+            onPageSizeChange={setPageSize}
+            totalItems={sortedList.length}
+          />
+        </div>
+        <AlertDialog open={isOpen} onOpenChange={setIsOpen}>
+          <AlertDialogContent>
+            <AlertDialogHeader>
+              <AlertDialogTitle>Удалить сотрудника?</AlertDialogTitle>
+              <AlertDialogDescription>
+                Удалив запись вы не сможете ее восстановить.
+              </AlertDialogDescription>
+            </AlertDialogHeader>
+            <AlertDialogFooter>
+              <AlertDialogCancel>Отмена</AlertDialogCancel>
+              <AlertDialogAction onClick={() => deleteEmployeeLocal(itemId)}>
+                Удалить
+              </AlertDialogAction>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialog>
+      </div>
+      <Dialog open={!!formMatch} onOpenChange={(open) => (!open ? closeForm() : undefined)}>
+        <DialogContent className="flex max-h-[85vh] flex-col gap-0 overflow-hidden p-0 sm:max-w-2xl">
+          <DialogHeader className="shrink-0 border-b px-6 py-4">
+            <DialogTitle>
+              {isCreateMode ? 'Новый сотрудник' : 'Редактировать сотрудника'}
+            </DialogTitle>
+          </DialogHeader>
+          {isCreateMode ? (
+            <EmployeeForm key="create" mode="create" onSaved={closeForm} onCancel={closeForm} />
+          ) : editingEmployee ? (
+            <EmployeeForm
+              key={editingEmployee.id}
+              mode="edit"
+              employee={editingEmployee}
+              onSaved={closeForm}
+              onCancel={closeForm}
+            />
+          ) : formMatch ? (
+            <p className="px-6 py-6 text-center text-sm text-muted-foreground">
+              Сотрудник не найден
+            </p>
+          ) : null}
+        </DialogContent>
+      </Dialog>
+    </div>
+  )
+}
+
+export default EmployeeList
