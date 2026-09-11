@@ -29,7 +29,7 @@ const PlaceRow = (props: IPlaceRowProps) => {
   return (
     <TableRow className={isInactive ? 'bg-slate-100 text-muted-foreground' : 'bg-white'}>
       <TableCell className="truncate">{props.name}</TableCell>
-      <TableCell className="text-gray-800">
+      <TableCell className="hidden sm:table-cell text-gray-800">
         <div className="flex flex-wrap gap-1">
           {services.length > 0 ? (
             services.map((it) => (
@@ -42,10 +42,12 @@ const PlaceRow = (props: IPlaceRowProps) => {
           )}
         </div>
       </TableCell>
-      <TableCell className="truncate">
+      <TableCell className="hidden sm:table-cell truncate">
         {Number(props.workTime) === 24 ? '24 часа' : '10 часов'}
       </TableCell>
-      <TableCell className="truncate">{formatLegacyDate(props.date)}</TableCell>
+      <TableCell className="hidden sm:table-cell truncate">
+        {formatLegacyDate(props.date)}
+      </TableCell>
       <TableCell className="whitespace-nowrap px-1 text-center">
         <Button asChild variant="outline" size="icon" title="Редактировать">
           <Link

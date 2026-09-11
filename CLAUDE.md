@@ -22,6 +22,15 @@ This project has no `components.json` / shadcn CLI setup - primitives were added
 - **Give roles readable helper methods.** Don't repeat raw role-string checks (`auth.roles.includes('bookkeeper')`, `role.indexOf('admin') !== -1`, etc.) inline at every call site - the codebase currently has 200+ of these. Add small named helpers (e.g. `isAdmin(roles)`, `isBookkeeper(roles)`, `hasRole(roles, Role.Admin)`) in one shared place instead, so intent is readable at the call site and the set of valid roles/logic has a single source of truth to update.
 - **Enforce roles on the server, not just the frontend.** Hiding a button, a `Sidebar` link, or a page behind a frontend role check (`!auth.roles.includes(...)`) is UX only - it does not stop a direct API call. Every protected `server/controller/*.js` handler / `server/routes/api/*.js` route that performs a privileged read or write must independently check the authenticated user's role (via the existing JWT/passport auth in `server/server.js`, which already decodes `role` off the `User`/account record) before proceeding, not rely on the client to have hidden the option.
 
+## Layout: mobile-first
+
+Build markup mobile-first, not desktop-first-with-a-mobile-patch.
+
+- Unprefixed Tailwind classes are the **base/mobile** styles; layer larger layouts on top with min-width breakpoint prefixes (`sm:`, `md:`, `lg:`, `xl:`, `2xl:` - Tailwind's defaults, unmodified in `tailwind.config.js`: 640/768/1024/1280/1536px). Don't reach for `max-*` variants to carve out a mobile view from desktop-first markup.
+- Default to a single-column/stacked layout, then switch to multi-column/row at `sm:`/`md:` and up (e.g. `flex flex-col sm:flex-row`, `grid grid-cols-1 sm:grid-cols-2`) - this is already the pattern in the redesigned screens' filter bars and form grids (`client/scenes/Materials/Materials.list.tsx`, `client/scenes/Sto.prices/Sto.prices.list.tsx`, the `*.form.tsx` files).
+- Tables that don't fit narrow screens get `overflow-x-auto` on their wrapper rather than being hidden or redesigned per-breakpoint - see the same list screens' table wrappers.
+- Keep tap targets and spacing usable at phone width when adding new interactive elements (buttons, table row actions, dropdown items) - don't rely on hover-only affordances.
+
 ## Dates: use moment
 
 For new date handling (parsing, formatting, comparing, arithmetic), use **`moment`** - it's a direct dependency (see `package.json`).

@@ -35,13 +35,13 @@ const AccountRow = (props: IAccountRowProps) => {
   return (
     <TableRow className="bg-white">
       <TableCell className="truncate">{props.login}</TableCell>
-      <TableCell className="text-gray-800">
+      <TableCell className="hidden sm:table-cell text-gray-800">
         {employeeLabel ?? <span className="text-muted-foreground">Общий аккаунт</span>}
       </TableCell>
-      <TableCell className="text-gray-800">
+      <TableCell className="hidden sm:table-cell text-gray-800">
         {place ? place.name : <span className="text-muted-foreground">Общий аккаунт</span>}
       </TableCell>
-      <TableCell className="text-gray-800">
+      <TableCell className="hidden sm:table-cell text-gray-800">
         <BadgeList values={props.role ?? []} labels={ROLE_NAMES} colors={ROLE_COLORS} />
       </TableCell>
       <TableCell className="whitespace-nowrap px-1 text-center">

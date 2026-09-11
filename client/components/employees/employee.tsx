@@ -40,7 +40,7 @@ const EmployeeRow = (props: IEmployeeRowProps) => {
       <TableCell className="truncate">
         {props.name} {props.surname}
       </TableCell>
-      <TableCell className="text-gray-800">
+      <TableCell className="hidden sm:table-cell text-gray-800">
         <div className="flex flex-wrap gap-1">
           {newPlaceArray.map((it) => (
             <Badge key={it} variant="secondary" className="max-w-full truncate">
@@ -49,10 +49,12 @@ const EmployeeRow = (props: IEmployeeRowProps) => {
           ))}
         </div>
       </TableCell>
-      <TableCell className="text-gray-800">
+      <TableCell className="hidden sm:table-cell text-gray-800">
         <BadgeList values={props.role} labels={ROLE_NAMES} colors={ROLE_COLORS} />
       </TableCell>
-      <TableCell className="truncate">{formatLegacyDate(props.date)}</TableCell>
+      <TableCell className="hidden sm:table-cell truncate">
+        {formatLegacyDate(props.date)}
+      </TableCell>
       <TableCell className="whitespace-nowrap px-1 text-center">
         <Button asChild variant="outline" size="icon" title="Редактировать">
           <Link

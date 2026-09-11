@@ -406,7 +406,7 @@ const EmployeeList = () => {
             </CardContent>
           </Card>
           <div className="overflow-x-auto rounded-lg relative lg:my-3 mt-1 lg:shadow">
-            <Table className="min-w-[896px] table-fixed">
+            <Table className="sm:min-w-[896px] table-fixed">
               <TableHeader>
                 <TableRow className="hover:bg-transparent">
                   <SortableTableHead
@@ -417,15 +417,15 @@ const EmployeeList = () => {
                     onSort={toggleSort}
                     className="w-[180px]"
                   />
-                  <TableHead className="w-[220px]">Точка</TableHead>
-                  <TableHead className="w-[260px]">Должность</TableHead>
+                  <TableHead className="hidden sm:table-cell w-[220px]">Точка</TableHead>
+                  <TableHead className="hidden sm:table-cell w-[260px]">Должность</TableHead>
                   <SortableTableHead
                     field="date"
                     label="Дата создания"
                     sortField={sortField}
                     sortDirection={sortDirection}
                     onSort={toggleSort}
-                    className="w-[140px]"
+                    className="hidden sm:table-cell w-[140px]"
                   />
                   <TableHead className="w-[96px]">Действия</TableHead>
                 </TableRow>

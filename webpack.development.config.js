@@ -43,7 +43,15 @@ const config = {
     client: {
       overlay: {
         warnings: false,
-        errors: true
+        errors: true,
+        // "ResizeObserver loop completed with undelivered notifications" is a benign browser
+        // notice (Chromium/WebKit fire it as a genuine `error` event, not a console.warn, so
+        // `warnings: false` above doesn't catch it) - it fires whenever a ResizeObserver callback
+        // itself triggers another resize in the same frame, which Radix's popper-positioning
+        // ResizeObserver can do easily (e.g. scrolling an open Select/Combobox dropdown). It's not
+        // an actual bug; browser vendors say to ignore it. Without this, it full-screens the page
+        // with a blocking dev overlay, which can make an otherwise-working interaction look broken.
+        runtimeErrors: (error) => !/ResizeObserver loop/.test(error.message)
       }
     },
     proxy: [

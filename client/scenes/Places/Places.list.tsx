@@ -360,7 +360,7 @@ const PlaceList = () => {
             </CardContent>
           </Card>
           <div className="overflow-x-auto rounded-lg relative lg:my-3 mt-1 lg:shadow">
-            <Table className="min-w-[768px] table-fixed">
+            <Table className="sm:min-w-[768px] table-fixed">
               <TableHeader>
                 <TableRow className="hover:bg-transparent">
                   <SortableTableHead
@@ -371,15 +371,15 @@ const PlaceList = () => {
                     onSort={toggleSort}
                     className="w-[220px]"
                   />
-                  <TableHead className="w-[280px]">Услуги</TableHead>
-                  <TableHead className="w-[120px]">Режим работы</TableHead>
+                  <TableHead className="hidden sm:table-cell w-[280px]">Услуги</TableHead>
+                  <TableHead className="hidden sm:table-cell w-[120px]">Режим работы</TableHead>
                   <SortableTableHead
                     field="date"
                     label="Дата создания"
                     sortField={sortField}
                     sortDirection={sortDirection}
                     onSort={toggleSort}
-                    className="w-[140px]"
+                    className="hidden sm:table-cell w-[140px]"
                   />
                   <TableHead className="w-[96px]">Действия</TableHead>
                 </TableRow>

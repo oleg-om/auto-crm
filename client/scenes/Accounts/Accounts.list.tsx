@@ -292,7 +292,7 @@ const AccountList = () => {
             </CardContent>
           </Card>
           <div className="overflow-x-auto rounded-lg relative lg:my-3 mt-1 lg:shadow">
-            <Table className="min-w-[768px] table-fixed">
+            <Table className="sm:min-w-[768px] table-fixed">
               <TableHeader>
                 <TableRow className="hover:bg-transparent">
                   <SortableTableHead
@@ -300,9 +300,9 @@ const AccountList = () => {
                     onSort={toggleSort}
                     className="w-[180px]"
                   />
-                  <TableHead className="w-[200px]">Сотрудник</TableHead>
-                  <TableHead className="w-[180px]">Точка</TableHead>
-                  <TableHead className="w-[280px]">Доступы</TableHead>
+                  <TableHead className="hidden sm:table-cell w-[200px]">Сотрудник</TableHead>
+                  <TableHead className="hidden sm:table-cell w-[180px]">Точка</TableHead>
+                  <TableHead className="hidden sm:table-cell w-[280px]">Доступы</TableHead>
                   <TableHead className="w-[96px]">Действия</TableHead>
                 </TableRow>
               </TableHeader>
