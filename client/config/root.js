@@ -76,8 +76,6 @@ import CategoryNew from '../scenes/Categorys/Categorys.create'
 import CategoryEdit from '../scenes/Categorys/Categorys.edit'
 
 import WashpriceList from '../scenes/Wash.prices/Wash.prices.list'
-import WashpriceNew from '../scenes/Wash.prices/Wash.prices.create'
-import WashpriceEdit from '../scenes/Wash.prices/Wash.prices.edit'
 import WashsList from '../scenes/Wash/Washs.list'
 import WashsListBoss from '../scenes/Wash/Washs.list.boss'
 import WashsNew from '../scenes/Wash/Washs.work.create'
@@ -391,10 +389,9 @@ const RootComponent = (props) => {
             <PrivateRoute exact path="/category/create" component={CategoryNew} />
             <PrivateRoute exact path="/category/edit/:id" component={CategoryEdit} />
             {/* wash */}
-            <PrivateRoute exact path="/washprice/list/" component={WashpriceList} />
-            <PrivateRoute exact path="/washprice/list/:type" component={WashpriceList} />
-            <PrivateRoute exact path="/washprice/create" component={WashpriceNew} />
-            <PrivateRoute exact path="/washprice/:type/edit/:id" component={WashpriceEdit} />
+            <PrivateRoute exact path="/washprice/list" component={WashpriceList} />
+            <PrivateRoute exact path="/washprice/create" component={WashpriceList} />
+            <PrivateRoute exact path="/washprice/edit/:id" component={WashpriceList} />
             <PrivateRoute exact path="/wash/list/:num" component={WashsList} />
             <PrivateRoute exact path="/wash/list" component={WashsList} />
             <PrivateRoute exact path="/washboss/list/:num" component={WashsListBoss} />

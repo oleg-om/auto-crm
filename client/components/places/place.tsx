@@ -49,7 +49,7 @@ const PlaceRow = (props: IPlaceRowProps) => {
         {formatLegacyDate(props.date)}
       </TableCell>
       <TableCell className="whitespace-nowrap px-1 text-center">
-        <Button asChild variant="outline" size="icon-sm" title="Редактировать">
+        <Button asChild variant="default" size="icon-sm" title="Редактировать">
           <Link
             to={{ pathname: `/place/edit/${props.id}`, state: { preserveScroll: true } }}
             aria-label="Редактировать"

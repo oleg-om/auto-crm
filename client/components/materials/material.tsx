@@ -31,7 +31,7 @@ const MaterialRow = (props: IMaterialRowProps) => {
       </TableCell>
       <TableCell className="truncate text-gray-800">{props.category}</TableCell>
       <TableCell className="whitespace-nowrap px-1 text-center">
-        <Button asChild variant="outline" size="icon-sm" title="Редактировать">
+        <Button asChild variant="default" size="icon-sm" title="Редактировать">
           <Link
             to={{ pathname: `/material/edit/${props.id}`, state: { preserveScroll: true } }}
             aria-label="Редактировать"

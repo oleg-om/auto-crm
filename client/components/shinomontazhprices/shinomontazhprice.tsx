@@ -41,7 +41,7 @@ const ShinomontazhpriceRow = (props: IShinomontazhpriceRowProps) => {
       <TableCell className="text-gray-800">{props.number ?? '—'}</TableCell>
       <TableCell className="text-gray-800">{props.free === 'yes' ? 'Да' : 'Нет'}</TableCell>
       <TableCell className="whitespace-nowrap px-1 text-center">
-        <Button asChild variant="outline" size="icon-sm" title="Редактировать">
+        <Button asChild variant="default" size="icon-sm" title="Редактировать">
           <Link
             to={{
               pathname: `/shinomontazhprice/edit/${props.id}`,
