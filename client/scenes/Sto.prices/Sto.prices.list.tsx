@@ -42,6 +42,7 @@ import { Table, TableBody, TableHead, TableHeader, TableRow } from '../../compon
 import { Switch } from '../../components/ui/switch'
 import PaginationBar from '../../components/shared/pagination-bar'
 import { usePagination } from '../../hooks/use-pagination'
+import { useShowPrices } from '../../hooks/use-show-prices'
 import type { IStoPrice } from '../../../common/types/generated/StoPrice'
 
 const ALL_TYPES = 'all'
@@ -109,7 +110,7 @@ const StopriceList = () => {
   const [createTab, setCreateTab] = useState<'single' | 'import'>('single')
   const [isOpen, setIsOpen] = useState(false)
   const [itemId, setItemId] = useState('')
-  const [showPrices, setShowPrices] = useState(false)
+  const [showPrices, setShowPrices] = useShowPrices()
   const [search, setSearch] = useState('')
   const [typeFilter, setTypeFilter] = useState('')
   const [sortField, setSortField] = useState<ISortField | null>(null)

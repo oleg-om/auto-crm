@@ -19,11 +19,12 @@ const PriceFieldsCell = ({ fields, item }: IPriceFieldsCellProps) => {
   return (
     <TableCell className="text-gray-800">
       {prices.length > 0 ? (
-        <div className="flex flex-wrap gap-x-2 gap-y-0.5 text-xs">
+        <div className="flex flex-col gap-0.5 py-1 text-xs leading-tight">
           {prices.map((it) => (
-            <span key={it.label} className="whitespace-nowrap">
-              <span className="text-muted-foreground">{it.label}</span> {it.value}
-            </span>
+            <div key={it.label} className="flex items-baseline justify-between gap-2">
+              <span className="truncate text-muted-foreground">{it.label}</span>
+              <span className="shrink-0 font-medium">{it.value}</span>
+            </div>
           ))}
         </div>
       ) : (

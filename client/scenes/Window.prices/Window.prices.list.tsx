@@ -28,6 +28,7 @@ import 'react-toastify/dist/ReactToastify.css'
 import windowTypeList from '../../lists/window-type-list'
 import PaginationBar from '../../components/shared/pagination-bar'
 import { usePagination } from '../../hooks/use-pagination'
+import { useShowPrices } from '../../hooks/use-show-prices'
 import { Card, CardContent } from '../../components/ui/card'
 import { Label } from '../../components/ui/label'
 import { Input } from '../../components/ui/input'
@@ -158,7 +159,7 @@ const WindowpriceList = () => {
   const [createTab, setCreateTab] = useState<'single' | 'import'>('single')
   const [isOpen, setIsOpen] = useState(false)
   const [itemId, setItemId] = useState('')
-  const [showPrices, setShowPrices] = useState(false)
+  const [showPrices, setShowPrices] = useShowPrices()
   const [search, setSearch] = useState('')
   const [typeFilter, setTypeFilter] = useState('')
   const [sortField, setSortField] = useState<ISortField | null>(null)
