@@ -40,8 +40,6 @@ import ShinomontazhsListBoss from '../scenes/Shinomontazhs/Shinomontazhs.list.bo
 import ShinomontazhsNew from '../scenes/Shinomontazhs/Shinomontazhs.work.create'
 import ShinomontazhEditFull from '../scenes/Shinomontazhs/Shinomontazhs.edit'
 import VendorList from '../scenes/Vendors/Vendors.list'
-import VendorNew from '../scenes/Vendors/Vendors.create'
-import VendorEdit from '../scenes/Vendors/Vendors.edit'
 import OrganizationList from '../scenes/Organizations/Organizations.list'
 import OrganizationNew from '../scenes/Organizations/Organizations.create'
 import OrganizationEdit from '../scenes/Organizations/Organizations.edit'
@@ -283,8 +281,8 @@ const RootComponent = (props) => {
               component={ShinomontazhpriceList}
             />
             <PrivateRoute exact path="/vendor/list" component={VendorList} />
-            <PrivateRoute exact path="/vendor/create" component={VendorNew} />
-            <PrivateRoute exact path="/vendor/edit/:id" component={VendorEdit} />
+            <PrivateRoute exact path="/vendor/create" component={VendorList} />
+            <PrivateRoute exact path="/vendor/edit/:id" component={VendorList} />
             <PrivateRoute exact path="/organization/list" component={OrganizationList} />
             <PrivateRoute exact path="/organization/create" component={OrganizationNew} />
             <PrivateRoute exact path="/organization/edit/:id" component={OrganizationEdit} />
