@@ -41,6 +41,7 @@ import {
   SelectValue
 } from '../../components/ui/select'
 import { Table, TableBody, TableHead, TableHeader, TableRow } from '../../components/ui/table'
+import { Switch } from '../../components/ui/switch'
 import type { IWashPrice } from '../../../common/types/generated/WashPrice'
 
 const ALL_TYPES = 'all'
@@ -105,6 +106,7 @@ const WashpriceList = () => {
   const [createTab, setCreateTab] = useState<'single' | 'import'>('single')
   const [isOpen, setIsOpen] = useState(false)
   const [itemId, setItemId] = useState('')
+  const [showPrices, setShowPrices] = useState(false)
   const [search, setSearch] = useState('')
   const [typeFilter, setTypeFilter] = useState('')
   const [sortField, setSortField] = useState<ISortField | null>(null)
@@ -182,14 +184,23 @@ const WashpriceList = () => {
         <div className="container mx-auto min-w-0 px-4">
           <div className="mb-6 flex flex-wrap items-center justify-between gap-2 border-b py-4">
             <h1 className="text-3xl">Мойка - цены</h1>
-            <div className="flex gap-2">
-              <WashpriceDownloadButton />
-              <Link to={{ pathname: '/washprice/create', state: { preserveScroll: true } }}>
-                <Button type="button">
-                  <Plus className="mr-2 h-4 w-4" />
-                  Новая услуга
-                </Button>
-              </Link>
+            <div className="flex flex-wrap items-center gap-4">
+              <label
+                htmlFor="showPrices"
+                className="flex items-center gap-2 text-sm text-muted-foreground"
+              >
+                <Switch id="showPrices" checked={showPrices} onCheckedChange={setShowPrices} />
+                Показывать цены
+              </label>
+              <div className="flex gap-2">
+                <WashpriceDownloadButton />
+                <Link to={{ pathname: '/washprice/create', state: { preserveScroll: true } }}>
+                  <Button type="button">
+                    <Plus className="mr-2 h-4 w-4" />
+                    Новая услуга
+                  </Button>
+                </Link>
+              </div>
             </div>
           </div>
           <Card className="my-3">
@@ -292,7 +303,7 @@ const WashpriceList = () => {
             </CardContent>
           </Card>
           <div className="overflow-x-auto rounded-lg relative lg:my-3 mt-1 lg:shadow">
-            <Table className="min-w-[720px] table-fixed">
+            <Table className={cn('table-fixed', showPrices ? 'min-w-[960px]' : 'min-w-[720px]')}>
               <TableHeader>
                 <TableRow className="hover:bg-transparent">
                   <SortableTableHead
@@ -305,6 +316,7 @@ const WashpriceList = () => {
                   />
                   <TableHead className="w-[160px]">Направление</TableHead>
                   <TableHead className="w-[180px]">Категория</TableHead>
+                  {showPrices ? <TableHead className="w-[240px]">Цены</TableHead> : null}
                   <SortableTableHead
                     field="number"
                     label="Номер"
@@ -319,7 +331,12 @@ const WashpriceList = () => {
               </TableHeader>
               <TableBody>
                 {pagedList.map((it) => (
-                  <WashpriceRow key={it.id} deleteWashprice={openAndDelete} {...it} />
+                  <WashpriceRow
+                    key={it.id}
+                    deleteWashprice={openAndDelete}
+                    showPrices={showPrices}
+                    {...it}
+                  />
                 ))}
               </TableBody>
             </Table>

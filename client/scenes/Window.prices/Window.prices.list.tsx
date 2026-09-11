@@ -54,6 +54,7 @@ import {
   SelectValue
 } from '../../components/ui/select'
 import { Table, TableBody, TableHead, TableHeader, TableRow } from '../../components/ui/table'
+import { Switch } from '../../components/ui/switch'
 import type { IWindowPrice } from '../../../common/types/generated/WindowPrice'
 
 const ALL_TYPES = 'all'
@@ -157,6 +158,7 @@ const WindowpriceList = () => {
   const [createTab, setCreateTab] = useState<'single' | 'import'>('single')
   const [isOpen, setIsOpen] = useState(false)
   const [itemId, setItemId] = useState('')
+  const [showPrices, setShowPrices] = useState(false)
   const [search, setSearch] = useState('')
   const [typeFilter, setTypeFilter] = useState('')
   const [sortField, setSortField] = useState<ISortField | null>(null)
@@ -264,16 +266,25 @@ const WindowpriceList = () => {
         <div className="container mx-auto min-w-0 px-4">
           <div className="mb-6 flex flex-wrap items-center justify-between gap-2 border-b py-4">
             <h1 className="text-3xl">{config.title}</h1>
-            <div className="flex gap-2">
-              <WindowpriceDownloadButton domain={domain} />
-              <Link
-                to={{ pathname: `/${config.basePath}/create`, state: { preserveScroll: true } }}
+            <div className="flex flex-wrap items-center gap-4">
+              <label
+                htmlFor="showPrices"
+                className="flex items-center gap-2 text-sm text-muted-foreground"
               >
-                <Button type="button">
-                  <Plus className="mr-2 h-4 w-4" />
-                  Новая услуга
-                </Button>
-              </Link>
+                <Switch id="showPrices" checked={showPrices} onCheckedChange={setShowPrices} />
+                Показывать цены
+              </label>
+              <div className="flex gap-2">
+                <WindowpriceDownloadButton domain={domain} />
+                <Link
+                  to={{ pathname: `/${config.basePath}/create`, state: { preserveScroll: true } }}
+                >
+                  <Button type="button">
+                    <Plus className="mr-2 h-4 w-4" />
+                    Новая услуга
+                  </Button>
+                </Link>
+              </div>
             </div>
           </div>
           <Card className="my-3">
@@ -376,7 +387,7 @@ const WindowpriceList = () => {
             </CardContent>
           </Card>
           <div className="overflow-x-auto rounded-lg relative lg:my-3 mt-1 lg:shadow">
-            <Table className="min-w-[720px] table-fixed">
+            <Table className={cn('table-fixed', showPrices ? 'min-w-[820px]' : 'min-w-[720px]')}>
               <TableHeader>
                 <TableRow className="hover:bg-transparent">
                   <SortableTableHead
@@ -389,6 +400,7 @@ const WindowpriceList = () => {
                   />
                   <TableHead className="w-[160px]">Направление</TableHead>
                   <TableHead className="w-[180px]">Категория</TableHead>
+                  {showPrices ? <TableHead className="w-[100px]">Цена</TableHead> : null}
                   <SortableTableHead
                     field="number"
                     label="Номер"
@@ -407,6 +419,7 @@ const WindowpriceList = () => {
                     key={it.id}
                     basePath={config.basePath}
                     onDelete={openAndDelete}
+                    showPrices={showPrices}
                     {...it}
                   />
                 ))}

@@ -5,6 +5,7 @@ import { TableRow, TableCell } from '../ui/table'
 import { Badge } from '../ui/badge'
 import { Button } from '../ui/button'
 import BooleanIcon from '../shared/boolean-icon'
+import PriceFieldsCell from '../shared/price-fields-cell'
 import windowTypeList from '../../lists/window-type-list'
 import type { IWindowPrice } from '../../../common/types/generated/WindowPrice'
 
@@ -12,9 +13,12 @@ const TYPE_NAMES: Record<string, string> = Object.fromEntries(
   (windowTypeList as { name: string; value: string }[]).map((it) => [it.value, it.name])
 )
 
+const PRICE_FIELDS = [{ key: 'price', label: 'Цена' }]
+
 interface IWindowpriceRowProps extends IWindowPrice {
   basePath: string
   onDelete: (id: string) => void
+  showPrices?: boolean
 }
 
 const WindowpriceRow = (props: IWindowpriceRowProps) => {
@@ -29,6 +33,9 @@ const WindowpriceRow = (props: IWindowpriceRowProps) => {
         <Badge variant="secondary">{TYPE_NAMES[props.type] ?? props.type}</Badge>
       </TableCell>
       <TableCell className="truncate text-gray-800">{props.category}</TableCell>
+      {props.showPrices ? (
+        <PriceFieldsCell fields={PRICE_FIELDS} item={props as unknown as Record<string, unknown>} />
+      ) : null}
       <TableCell className="text-gray-800">{props.number ?? '—'}</TableCell>
       <TableCell className="text-gray-800">
         <BooleanIcon value={props.free === 'yes'} />

@@ -5,9 +5,11 @@ import { TableRow, TableCell } from '../ui/table'
 import { Badge } from '../ui/badge'
 import { Button } from '../ui/button'
 import BooleanIcon from '../shared/boolean-icon'
+import PriceFieldsCell from '../shared/price-fields-cell'
 import shinomontazhTypeList from '../../lists/shinomontazhtype-list'
 import shinomontazhCategoryList from '../../lists/shinomontazhprice-list'
 import shinomontazhFleetCategoryList from '../../lists/shinomontazh-fleet-category-list'
+import shinomontazhPriceFieldList from '../../lists/shinomontazh-price-field-list'
 import type { IShinomontazhPrice } from '../../../common/types/generated/ShinomontazhPrice'
 
 const TYPE_NAMES: Record<string, string> = Object.fromEntries(
@@ -21,8 +23,14 @@ const CATEGORY_NAMES: Record<string, string> = Object.fromEntries(
   ].map((it) => [it.value, it.name])
 )
 
+const PRICE_FIELDS_BY_TYPE = shinomontazhPriceFieldList as Record<
+  string,
+  { key: string; label: string }[]
+>
+
 interface IShinomontazhpriceRowProps extends IShinomontazhPrice {
   deleteShinomontazhprice: (id: string, value?: string) => void
+  showPrices?: boolean
 }
 
 const ShinomontazhpriceRow = (props: IShinomontazhpriceRowProps) => {
@@ -39,6 +47,12 @@ const ShinomontazhpriceRow = (props: IShinomontazhpriceRowProps) => {
       <TableCell className="truncate text-gray-800">
         {CATEGORY_NAMES[props.category] ?? props.category}
       </TableCell>
+      {props.showPrices ? (
+        <PriceFieldsCell
+          fields={PRICE_FIELDS_BY_TYPE[props.type] ?? []}
+          item={props as unknown as Record<string, unknown>}
+        />
+      ) : null}
       <TableCell className="text-gray-800">{props.number ?? '—'}</TableCell>
       <TableCell className="text-gray-800">
         <BooleanIcon value={props.free === 'yes'} />

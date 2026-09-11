@@ -5,15 +5,20 @@ import { TableRow, TableCell } from '../ui/table'
 import { Badge } from '../ui/badge'
 import { Button } from '../ui/button'
 import BooleanIcon from '../shared/boolean-icon'
+import PriceFieldsCell from '../shared/price-fields-cell'
 import washTypeList from '../../lists/wash-type-list'
+import washPriceFieldList from '../../lists/wash-price-field-list'
 import type { IWashPrice } from '../../../common/types/generated/WashPrice'
 
 const TYPE_NAMES: Record<string, string> = Object.fromEntries(
   (washTypeList as { name: string; value: string }[]).map((it) => [it.value, it.name])
 )
 
+const PRICE_FIELDS_BY_TYPE = washPriceFieldList as Record<string, { key: string; label: string }[]>
+
 interface IWashpriceRowProps extends IWashPrice {
   deleteWashprice: (id: string, value?: string) => void
+  showPrices?: boolean
 }
 
 const WashpriceRow = (props: IWashpriceRowProps) => {
@@ -28,6 +33,12 @@ const WashpriceRow = (props: IWashpriceRowProps) => {
         <Badge variant="secondary">{TYPE_NAMES[props.type] ?? props.type}</Badge>
       </TableCell>
       <TableCell className="truncate text-gray-800">{props.category}</TableCell>
+      {props.showPrices ? (
+        <PriceFieldsCell
+          fields={PRICE_FIELDS_BY_TYPE[props.type] ?? []}
+          item={props as unknown as Record<string, unknown>}
+        />
+      ) : null}
       <TableCell className="text-gray-800">{props.number ?? '—'}</TableCell>
       <TableCell className="text-gray-800">
         <BooleanIcon value={props.free === 'yes'} />
