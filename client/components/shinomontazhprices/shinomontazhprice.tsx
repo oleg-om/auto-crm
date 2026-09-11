@@ -4,6 +4,7 @@ import { Pencil, Trash2 } from 'lucide-react'
 import { TableRow, TableCell } from '../ui/table'
 import { Badge } from '../ui/badge'
 import { Button } from '../ui/button'
+import BooleanIcon from '../shared/boolean-icon'
 import shinomontazhTypeList from '../../lists/shinomontazhtype-list'
 import shinomontazhCategoryList from '../../lists/shinomontazhprice-list'
 import shinomontazhFleetCategoryList from '../../lists/shinomontazh-fleet-category-list'
@@ -39,7 +40,9 @@ const ShinomontazhpriceRow = (props: IShinomontazhpriceRowProps) => {
         {CATEGORY_NAMES[props.category] ?? props.category}
       </TableCell>
       <TableCell className="text-gray-800">{props.number ?? '—'}</TableCell>
-      <TableCell className="text-gray-800">{props.free === 'yes' ? 'Да' : 'Нет'}</TableCell>
+      <TableCell className="text-gray-800">
+        <BooleanIcon value={props.free === 'yes'} />
+      </TableCell>
       <TableCell className="whitespace-nowrap px-1 text-center">
         <Button asChild variant="default" size="icon-sm" title="Редактировать">
           <Link

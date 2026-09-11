@@ -5,20 +5,21 @@ import { TableRow, TableCell } from '../ui/table'
 import { Badge } from '../ui/badge'
 import { Button } from '../ui/button'
 import BooleanIcon from '../shared/boolean-icon'
-import washTypeList from '../../lists/wash-type-list'
-import type { IWashPrice } from '../../../common/types/generated/WashPrice'
+import windowTypeList from '../../lists/window-type-list'
+import type { IWindowPrice } from '../../../common/types/generated/WindowPrice'
 
 const TYPE_NAMES: Record<string, string> = Object.fromEntries(
-  (washTypeList as { name: string; value: string }[]).map((it) => [it.value, it.name])
+  (windowTypeList as { name: string; value: string }[]).map((it) => [it.value, it.name])
 )
 
-interface IWashpriceRowProps extends IWashPrice {
-  deleteWashprice: (id: string, value?: string) => void
+interface IWindowpriceRowProps extends IWindowPrice {
+  basePath: string
+  onDelete: (id: string) => void
 }
 
-const WashpriceRow = (props: IWashpriceRowProps) => {
-  const removeWashprice = (e: React.MouseEvent<HTMLButtonElement>) => {
-    props.deleteWashprice(props.id as string, e.currentTarget.value)
+const WindowpriceRow = (props: IWindowpriceRowProps) => {
+  const removeItem = () => {
+    props.onDelete(props.id as string)
   }
 
   return (
@@ -35,7 +36,10 @@ const WashpriceRow = (props: IWashpriceRowProps) => {
       <TableCell className="whitespace-nowrap px-1 text-center">
         <Button asChild variant="default" size="icon-sm" title="Редактировать">
           <Link
-            to={{ pathname: `/washprice/edit/${props.id}`, state: { preserveScroll: true } }}
+            to={{
+              pathname: `/${props.basePath}/edit/${props.id}`,
+              state: { preserveScroll: true }
+            }}
             aria-label="Редактировать"
           >
             <Pencil className="h-3.5 w-3.5" />
@@ -47,7 +51,7 @@ const WashpriceRow = (props: IWashpriceRowProps) => {
           className="ml-1"
           title="Удалить"
           aria-label="Удалить"
-          onClick={removeWashprice}
+          onClick={removeItem}
         >
           <Trash2 className="h-3.5 w-3.5" />
         </Button>
@@ -56,4 +60,4 @@ const WashpriceRow = (props: IWashpriceRowProps) => {
   )
 }
 
-export default WashpriceRow
+export default WindowpriceRow

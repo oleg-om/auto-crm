@@ -4,6 +4,7 @@ import { Pencil, Trash2 } from 'lucide-react'
 import { TableRow, TableCell } from '../ui/table'
 import { Badge } from '../ui/badge'
 import { Button } from '../ui/button'
+import BooleanIcon from '../shared/boolean-icon'
 import stoTypeList from '../../lists/sto-type-list'
 import type { IStoPrice } from '../../../common/types/generated/StoPrice'
 
@@ -28,7 +29,9 @@ const StopriceRow = (props: IStopriceRowProps) => {
       </TableCell>
       <TableCell className="truncate text-gray-800">{props.category}</TableCell>
       <TableCell className="text-gray-800">{props.number ?? '—'}</TableCell>
-      <TableCell className="text-gray-800">{props.free === 'yes' ? 'Да' : 'Нет'}</TableCell>
+      <TableCell className="text-gray-800">
+        <BooleanIcon value={props.free === 'yes'} />
+      </TableCell>
       <TableCell className="whitespace-nowrap px-1 text-center">
         <Button asChild variant="default" size="icon-sm" title="Редактировать">
           <Link

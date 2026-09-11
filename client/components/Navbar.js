@@ -383,7 +383,7 @@ const Navbar = () => {
             ) : null}
             {auth.roles.includes('bookkeeper') ? (
               <NavLink
-                to="/windowprice/list/legk"
+                to="/windowprice/list"
                 className="block mt-4 lg:inline-block lg:mt-0 text-gray-800 hover:text-main-700 mr-4"
                 activeClassName="text-main-600 underline font-semibold"
               >
@@ -392,7 +392,7 @@ const Navbar = () => {
             ) : null}
             {auth.roles.includes('bookkeeper') ? (
               <NavLink
-                to="/condprice/list/legk"
+                to="/condprice/list"
                 className="block mt-4 lg:inline-block lg:mt-0 text-gray-800 hover:text-main-700 mr-4"
                 activeClassName="text-main-600 underline font-semibold"
               >
