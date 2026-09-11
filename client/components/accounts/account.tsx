@@ -45,23 +45,23 @@ const AccountRow = (props: IAccountRowProps) => {
         <BadgeList values={props.role ?? []} labels={ROLE_NAMES} colors={ROLE_COLORS} />
       </TableCell>
       <TableCell className="whitespace-nowrap px-1 text-center">
-        <Button asChild variant="outline" size="icon" title="Редактировать">
+        <Button asChild variant="outline" size="icon-sm" title="Редактировать">
           <Link
             to={{ pathname: `/account/edit/${props._id}`, state: { preserveScroll: true } }}
             aria-label="Редактировать"
           >
-            <Pencil className="h-4 w-4" />
+            <Pencil className="h-3.5 w-3.5" />
           </Link>
         </Button>
         <Button
           variant="destructive"
-          size="icon"
+          size="icon-sm"
           className="ml-1"
           title="Удалить"
           aria-label="Удалить"
           onClick={removeAccount}
         >
-          <Trash2 className="h-4 w-4" />
+          <Trash2 className="h-3.5 w-3.5" />
         </Button>
       </TableCell>
     </TableRow>

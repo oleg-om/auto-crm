@@ -35,8 +35,6 @@ import RazvalList from '../scenes/Razval/Razval.list'
 import SettingEdit from '../scenes/Settings/Settings'
 import MaterialList from '../scenes/Materials/Materials.list'
 import ShinomontazhpriceList from '../scenes/Shinomotazh.prices/Shinomotazh.prices.list'
-import ShinomontazhpriceNew from '../scenes/Shinomotazh.prices/Shinomotazh.prices.create'
-import ShinomontazhpriceEdit from '../scenes/Shinomotazh.prices/Shinomotazh.prices.edit'
 import ShinomontazhsList from '../scenes/Shinomontazhs/Shinomontazhs.list'
 import ShinomontazhsListBoss from '../scenes/Shinomontazhs/Shinomontazhs.list.boss'
 import ShinomontazhsNew from '../scenes/Shinomontazhs/Shinomontazhs.work.create'
@@ -282,12 +280,12 @@ const RootComponent = (props) => {
             <PrivateRoute exact path="/material/list" component={MaterialList} />
             <PrivateRoute exact path="/material/create" component={MaterialList} />
             <PrivateRoute exact path="/material/edit/:id" component={MaterialList} />
+            <PrivateRoute exact path="/shinomontazhprice/list" component={ShinomontazhpriceList} />
             <PrivateRoute
               exact
-              path="/shinomontazhprice/list/:type"
+              path="/shinomontazhprice/create"
               component={ShinomontazhpriceList}
             />
-            <PrivateRoute exact path="/shinomontazhprice/create" component={ShinomontazhpriceNew} />
             <PrivateRoute exact path="/vendor/list" component={VendorList} />
             <PrivateRoute exact path="/vendor/create" component={VendorNew} />
             <PrivateRoute exact path="/vendor/edit/:id" component={VendorEdit} />
@@ -296,8 +294,8 @@ const RootComponent = (props) => {
             <PrivateRoute exact path="/organization/edit/:id" component={OrganizationEdit} />
             <PrivateRoute
               exact
-              path="/shinomontazhprice/:type/edit/:id"
-              component={ShinomontazhpriceEdit}
+              path="/shinomontazhprice/edit/:id"
+              component={ShinomontazhpriceList}
             />
             <PrivateRoute exact path="/shinomontazh/list/:num" component={ShinomontazhsList} />
             <PrivateRoute exact path="/shinomontazh/list" component={ShinomontazhsList} />

@@ -356,7 +356,7 @@ const Navbar = () => {
           ) : null} */}
             {auth.roles.includes('bookkeeper') ? (
               <NavLink
-                to="/shinomontazhprice/list/legk"
+                to="/shinomontazhprice/list"
                 className="block mt-4 lg:inline-block lg:mt-0 text-gray-800 hover:text-main-700 mr-4"
                 activeClassName="text-main-600 underline font-semibold"
               >

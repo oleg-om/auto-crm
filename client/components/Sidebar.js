@@ -40,7 +40,7 @@ const Sidebar = () => {
           <SidebarLink to="/place/list" icon={MapPin} label="Адреса" />
           <SidebarLink to="/settings" icon={Settings} label="Настройки" />
           <SidebarLink to="/material/list" icon={Package} label="Материалы" />
-          <SidebarLink to="/shinomontazhprice/list/legk" icon={Disc} label="Шиномонтаж - цены" />
+          <SidebarLink to="/shinomontazhprice/list" icon={Disc} label="Шиномонтаж - цены" />
           <SidebarLink to="/stoprice/list" icon={Wrench} label="СТО - цены" />
           <SidebarLink to="/washprice/list/" icon={Droplets} label="Мойка - цены" />
           <SidebarLink to="/windowprice/list/" icon={AppWindow} label="Лобовые стекла - цены" />

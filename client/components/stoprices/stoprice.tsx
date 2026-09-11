@@ -30,23 +30,23 @@ const StopriceRow = (props: IStopriceRowProps) => {
       <TableCell className="text-gray-800">{props.number ?? '—'}</TableCell>
       <TableCell className="text-gray-800">{props.free === 'yes' ? 'Да' : 'Нет'}</TableCell>
       <TableCell className="whitespace-nowrap px-1 text-center">
-        <Button asChild variant="outline" size="icon" title="Редактировать">
+        <Button asChild variant="outline" size="icon-sm" title="Редактировать">
           <Link
             to={{ pathname: `/stoprice/edit/${props.id}`, state: { preserveScroll: true } }}
             aria-label="Редактировать"
           >
-            <Pencil className="h-4 w-4" />
+            <Pencil className="h-3.5 w-3.5" />
           </Link>
         </Button>
         <Button
           variant="destructive"
-          size="icon"
+          size="icon-sm"
           className="ml-1"
           title="Удалить"
           aria-label="Удалить"
           onClick={removeStoprice}
         >
-          <Trash2 className="h-4 w-4" />
+          <Trash2 className="h-3.5 w-3.5" />
         </Button>
       </TableCell>
     </TableRow>
