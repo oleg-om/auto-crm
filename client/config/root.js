@@ -105,8 +105,14 @@ const OnlyAnonymousRoute = ({ component: Component, ...rest }) => {
 
 const PrivateRoute = ({ component: Component, ...rest }) => {
   const auth = useSelector((s) => s.auth)
-  const func = (props) =>
-    !!auth.user && !!auth.token ? (
+  const func = (props) => {
+    if (!auth.authChecked)
+      return (
+        <div className="flex justify-center items-center min-h-screen">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-gray-900" />
+        </div>
+      )
+    return !!auth.user && !!auth.token ? (
       <Component {...props} />
     ) : (
       <Redirect
@@ -115,6 +121,7 @@ const PrivateRoute = ({ component: Component, ...rest }) => {
         }}
       />
     )
+  }
   return <Route {...rest} render={func} />
 }
 
@@ -122,6 +129,12 @@ const AdminRoute = ({ component: Component, ...rest }) => {
   const auth = useSelector((s) => s.auth)
   const authLoaded = auth.token && auth.user && Object.keys(auth.user).length > 0
   const func = (props) => {
+    if (!auth.authChecked)
+      return (
+        <div className="flex justify-center items-center min-h-screen">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-gray-900" />
+        </div>
+      )
     if (!auth.token) return <Redirect to={{ pathname: '/login' }} />
     if (!authLoaded)
       return (
@@ -142,6 +155,12 @@ const BossRoute = ({ component: Component, ...rest }) => {
   const auth = useSelector((s) => s.auth)
   const authLoaded = auth.token && auth.user && Object.keys(auth.user).length > 0
   const func = (props) => {
+    if (!auth.authChecked)
+      return (
+        <div className="flex justify-center items-center min-h-screen">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-gray-900" />
+        </div>
+      )
     if (!auth.token) return <Redirect to={{ pathname: '/login' }} />
     if (!authLoaded)
       return (
@@ -167,6 +186,13 @@ const TyresOrderDeskRoute = ({ component: Component, ...rest }) => {
       auth.roles.includes('boss') ||
       auth.roles.includes('admin'))
   const func = (props) => {
+    if (!auth.authChecked) {
+      return (
+        <div className="flex justify-center items-center min-h-screen">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-gray-900" />
+        </div>
+      )
+    }
     if (!auth.token) {
       return <Redirect to={{ pathname: '/login' }} />
     }

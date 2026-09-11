@@ -8,7 +8,11 @@ const initialState = {
   login: '',
   password: '',
   userName: '',
-  token: cookies.get('token'),
+  // The token cookie is httpOnly (can't be read from JS) - whether a session
+  // exists is only known once trySignIn()'s response comes back, tracked by
+  // authChecked below. Route guards must wait for that before redirecting.
+  token: '',
+  authChecked: false,
   user: {},
   roles: [],
   place: '',
@@ -141,6 +145,7 @@ export default function auth(state = initialState, action) {
       return {
         ...state,
         token: action.token,
+        authChecked: true,
         password: '',
         user: action.user,
         roles: action.user ? action.user.role : [],
