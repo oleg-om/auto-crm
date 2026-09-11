@@ -13,6 +13,7 @@ import Sidebar from '../../components/Sidebar'
 import OnLoad from '../Categorys/Onload'
 import 'react-toastify/dist/ReactToastify.css'
 import stoTypeList from '../../lists/sto-type-list'
+import stoPriceFieldList from '../../lists/sto-price-field-list'
 import { Card, CardContent } from '../../components/ui/card'
 import { Label } from '../../components/ui/label'
 import { Input } from '../../components/ui/input'
@@ -47,6 +48,8 @@ import type { IStoPrice } from '../../../common/types/generated/StoPrice'
 
 const ALL_TYPES = 'all'
 
+const PRICE_FIELDS_BY_TYPE = stoPriceFieldList as Record<string, { key: string; label: string }[]>
+
 type ISortField = 'name' | 'number'
 
 interface ISortableTableHeadProps {
@@ -56,6 +59,7 @@ interface ISortableTableHeadProps {
   sortDirection: 'asc' | 'desc'
   onSort: (field: ISortField) => void
   className?: string
+  rowSpan?: number
 }
 
 const SortableTableHead = ({
@@ -64,12 +68,13 @@ const SortableTableHead = ({
   sortField,
   sortDirection,
   onSort,
-  className
+  className,
+  rowSpan
 }: ISortableTableHeadProps) => {
   const isActive = sortField === field
   const Icon = isActive ? (sortDirection === 'asc' ? ArrowUp : ArrowDown) : ArrowUpDown
   return (
-    <TableHead className={className}>
+    <TableHead className={className} rowSpan={rowSpan}>
       <button
         type="button"
         className="flex items-center gap-1 hover:text-foreground"
@@ -132,6 +137,11 @@ const StopriceList = () => {
   const activeType = stoTypeList.find(
     (it: { name: string; value: string }) => it.value === typeFilter
   )
+
+  // See Shinomotazh.prices.list.tsx: prices break into their own columns only once a single
+  // Направление is selected, since each type has its own field set.
+  const priceColumnFields =
+    showPrices && activeType ? PRICE_FIELDS_BY_TYPE[activeType.value] ?? [] : null
 
   const filteredList = list.filter((it) => {
     const haystack = `${it.name} ${it.category}`.toLowerCase()
@@ -307,7 +317,16 @@ const StopriceList = () => {
             </CardContent>
           </Card>
           <div className="overflow-x-auto rounded-lg relative lg:my-3 mt-1 lg:shadow">
-            <Table className={cn('table-fixed', showPrices ? 'min-w-[960px]' : 'min-w-[720px]')}>
+            <Table
+              className="table-fixed"
+              style={{
+                minWidth: priceColumnFields
+                  ? 780 + priceColumnFields.length * 100
+                  : showPrices
+                  ? 960
+                  : 720
+              }}
+            >
               <TableHeader>
                 <TableRow className="hover:bg-transparent">
                   <SortableTableHead
@@ -316,22 +335,62 @@ const StopriceList = () => {
                     sortField={sortField}
                     sortDirection={sortDirection}
                     onSort={toggleSort}
-                    className="w-[240px]"
+                    className={cn('w-[240px]', priceColumnFields && 'align-top')}
+                    rowSpan={priceColumnFields ? 2 : undefined}
                   />
-                  <TableHead className="w-[160px]">Направление</TableHead>
-                  <TableHead className="w-[180px]">Категория</TableHead>
-                  {showPrices ? <TableHead className="w-[240px]">Цены</TableHead> : null}
+                  <TableHead
+                    className={cn('w-[160px]', priceColumnFields && 'align-top')}
+                    rowSpan={priceColumnFields ? 2 : undefined}
+                  >
+                    Направление
+                  </TableHead>
+                  <TableHead
+                    className={cn('w-[180px]', priceColumnFields && 'align-top')}
+                    rowSpan={priceColumnFields ? 2 : undefined}
+                  >
+                    Категория
+                  </TableHead>
+                  {priceColumnFields ? (
+                    <TableHead colSpan={priceColumnFields.length} className="text-center">
+                      Цены
+                    </TableHead>
+                  ) : showPrices ? (
+                    <TableHead className="w-[240px]">Цены</TableHead>
+                  ) : null}
                   <SortableTableHead
                     field="number"
                     label="Номер"
                     sortField={sortField}
                     sortDirection={sortDirection}
                     onSort={toggleSort}
-                    className="w-[100px]"
+                    className={cn('w-[100px]', priceColumnFields && 'align-top')}
+                    rowSpan={priceColumnFields ? 2 : undefined}
                   />
-                  <TableHead className="w-[100px]">Акция</TableHead>
-                  <TableHead className="w-[96px]">Действия</TableHead>
+                  <TableHead
+                    className={cn('w-[100px]', priceColumnFields && 'align-top')}
+                    rowSpan={priceColumnFields ? 2 : undefined}
+                  >
+                    Акция
+                  </TableHead>
+                  <TableHead
+                    className={cn('w-[96px]', priceColumnFields && 'align-top')}
+                    rowSpan={priceColumnFields ? 2 : undefined}
+                  >
+                    Действия
+                  </TableHead>
                 </TableRow>
+                {priceColumnFields ? (
+                  <TableRow className="hover:bg-transparent">
+                    {priceColumnFields.map((field) => (
+                      <TableHead
+                        key={field.key}
+                        className="w-[100px] break-words text-center text-xs"
+                      >
+                        {field.label}
+                      </TableHead>
+                    ))}
+                  </TableRow>
+                ) : null}
               </TableHeader>
               <TableBody>
                 {pagedList.map((it) => (
@@ -339,6 +398,7 @@ const StopriceList = () => {
                     key={it.id}
                     deleteStoprice={openAndDelete}
                     showPrices={showPrices}
+                    priceColumns={priceColumnFields}
                     {...it}
                   />
                 ))}

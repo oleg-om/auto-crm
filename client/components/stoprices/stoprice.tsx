@@ -6,6 +6,7 @@ import { Badge } from '../ui/badge'
 import { Button } from '../ui/button'
 import BooleanIcon from '../shared/boolean-icon'
 import PriceFieldsCell from '../shared/price-fields-cell'
+import PriceFieldColumns from '../shared/price-field-columns'
 import stoTypeList from '../../lists/sto-type-list'
 import stoPriceFieldList from '../../lists/sto-price-field-list'
 import type { IStoPrice } from '../../../common/types/generated/StoPrice'
@@ -19,6 +20,7 @@ const PRICE_FIELDS_BY_TYPE = stoPriceFieldList as Record<string, { key: string; 
 interface IStopriceRowProps extends IStoPrice {
   deleteStoprice: (id: string, value?: string) => void
   showPrices?: boolean
+  priceColumns?: { key: string; label: string }[] | null
 }
 
 const StopriceRow = (props: IStopriceRowProps) => {
@@ -33,7 +35,12 @@ const StopriceRow = (props: IStopriceRowProps) => {
         <Badge variant="secondary">{TYPE_NAMES[props.type] ?? props.type}</Badge>
       </TableCell>
       <TableCell className="truncate text-gray-800">{props.category}</TableCell>
-      {props.showPrices ? (
+      {props.priceColumns ? (
+        <PriceFieldColumns
+          fields={props.priceColumns}
+          item={props as unknown as Record<string, unknown>}
+        />
+      ) : props.showPrices ? (
         <PriceFieldsCell
           fields={PRICE_FIELDS_BY_TYPE[props.type] ?? []}
           item={props as unknown as Record<string, unknown>}
