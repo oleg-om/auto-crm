@@ -150,6 +150,21 @@ function clampLimit(rawLimit, fallback = 20) {
   return Math.min(Math.floor(parsed), 100)
 }
 
+// The phone filter is typed through a react-number-format masked input, so a
+// still-partial number arrives as e.g. "+7 (978) 5__-__-__" rather than just
+// "+7 (978) 5". Cut at the first mask placeholder to recover exactly what
+// the user has actually typed so far, which - unlike the padded value - is a
+// true prefix of a fully-formatted stored phone and will substring-match it.
+function stripPhoneMask(value) {
+  return String(value).split('_')[0].trim()
+}
+
+// The schema has no `date`/timestamps field, but every document's Mongo _id
+// already encodes its creation time - reuse that instead of a migration.
+function withCreatedAt(doc) {
+  return { ...doc, createdAt: doc._id.getTimestamp() }
+}
+
 exports.getFiltered = async (req, res) => {
   const { page, reg, vin, phone, organization, limit } = req.query
 
@@ -164,7 +179,7 @@ exports.getFiltered = async (req, res) => {
     if (hasTextFilters) {
       const orConditions = []
       if (phone) {
-        orConditions.push({ phone: caseInsensitiveRegex(phone) })
+        orConditions.push({ phone: caseInsensitiveRegex(stripPhoneMask(phone)) })
       }
       if (vin) {
         orConditions.push({ vinnumber: caseInsensitiveRegex(vin) })
@@ -186,11 +201,11 @@ exports.getFiltered = async (req, res) => {
     const query = andConditions.length > 0 ? { $and: andConditions } : {}
 
     const total = await Customer.countDocuments(query)
-    const posts = await Customer.find(query).sort({ id: -1 }).limit(LIMIT).skip(startIndex)
+    const posts = await Customer.find(query).sort({ id: -1 }).limit(LIMIT).skip(startIndex).lean()
 
     res.json({
       status: 'ok',
-      data: posts,
+      data: posts.map(withCreatedAt),
       currentPage: Number(page),
       numberOfPages: Math.ceil(total / LIMIT),
       total
@@ -208,11 +223,11 @@ exports.getByPage = async (req, res) => {
     const startIndex = (Number(page) - 1) * LIMIT // get the starting index of every page
 
     const total = await Customer.countDocuments({})
-    const posts = await Customer.find().sort({ id: -1 }).limit(LIMIT).skip(startIndex)
+    const posts = await Customer.find().sort({ id: -1 }).limit(LIMIT).skip(startIndex).lean()
 
     res.json({
       status: 'ok',
-      data: posts,
+      data: posts.map(withCreatedAt),
       currentPage: Number(page),
       numberOfPages: Math.ceil(total / LIMIT),
       total

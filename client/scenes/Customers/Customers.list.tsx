@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
-import { Link, useHistory, useRouteMatch } from 'react-router-dom'
+import { Link, useHistory, useLocation, useRouteMatch } from 'react-router-dom'
 import { toast } from 'react-toastify'
 import NumberFormat from 'react-number-format'
 import { Plus, X } from 'lucide-react'
@@ -48,10 +48,44 @@ const onChangeUppercaseRussian = (value: string) =>
     .replace(/\s/g, '')
     .replace(/[^а-яё0-9]/i, '')
 
+// A masked react-number-format value pads untyped digits with "_" (e.g.
+// "+7 (978) 5__-__-__"). Only used to clean up the read-only filter chip
+// below - the server does the real work of stripping this before searching
+// (see stripPhoneMask in server/controller/customer.controller.js).
+const displayPhone = (value: string) => value.split('_')[0].trim()
+
+// The list is server-paginated over ~170k rows, so filters/page live in the
+// URL (not just component state) - viewing a customer's order history
+// navigates to a different route entirely (unlike the create/edit dialog,
+// which stays on this same component), unmounting this component and
+// discarding its state. Restoring from the URL on remount is what lets the
+// browser back button and the view page's "К списку клиентов" link return
+// to the same filtered/paginated list instead of a reset one.
+const buildListSearch = (params: {
+  phone: string
+  regnumber: string
+  organizationId: string
+  page: number
+  pageSize: number
+}) => {
+  const qs = new URLSearchParams()
+  if (params.phone.trim()) qs.set('phone', params.phone)
+  if (params.regnumber.trim()) qs.set('regnumber', params.regnumber)
+  if (params.organizationId) qs.set('organization', params.organizationId)
+  if (params.page !== 1) qs.set('page', String(params.page))
+  if (params.pageSize !== DEFAULT_PAGE_SIZE_OPTIONS[1]) qs.set('pageSize', String(params.pageSize))
+  const str = qs.toString()
+  return str ? `?${str}` : ''
+}
+
 const CustomerList = () => {
   const dispatch = useDispatch<any>()
   const history = useHistory()
-  const list = useSelector((s: { customers: { list: ICustomer[] } }) => s.customers.list)
+  const location = useLocation()
+  const initialParams = useRef(new URLSearchParams(location.search)).current
+  const list = useSelector(
+    (s: { customers: { list: Array<ICustomer & { createdAt?: string }> } }) => s.customers.list
+  )
   const total = useSelector((s: { customers: { total?: number } }) => s.customers.total)
   const isLoaded = useSelector((s: { customers: { isLoaded?: boolean } }) => s.customers.isLoaded)
   const organizations = useSelector(
@@ -67,13 +101,30 @@ const CustomerList = () => {
     dispatch(getOrganizations())
   }, [dispatch])
 
-  const [phone, setPhone] = useState('')
-  const [regnumber, setRegnumber] = useState('')
-  const [organizationId, setOrganizationId] = useState('')
+  // Needed above the URL-sync effect below, which must not touch the address
+  // bar while a create/edit dialog is open on top of this same component
+  // (those routes render this component too - see the comment on
+  // buildListSearch) - otherwise it would immediately replace e.g.
+  // "/customer/create" with "/customer/list", closing the dialog it just opened.
+  const formMatch = useRouteMatch<{ id?: string }>({
+    path: ['/customer/create', '/customer/edit/:id'],
+    exact: true
+  })
 
-  // Debounced so typing doesn't fire a request against ~170k rows per keystroke.
-  const [debouncedPhone, setDebouncedPhone] = useState('')
-  const [debouncedRegnumber, setDebouncedRegnumber] = useState('')
+  const [phone, setPhone] = useState(() => initialParams.get('phone') || '')
+  const [regnumber, setRegnumber] = useState(() => initialParams.get('regnumber') || '')
+  const [organizationId, setOrganizationId] = useState(
+    () => initialParams.get('organization') || ''
+  )
+
+  // Debounced so typing doesn't fire a request against ~170k rows per
+  // keystroke. Seeded from the same restored values (not '') so a restored
+  // filter fetches the right data immediately instead of the unfiltered
+  // list flashing first for the length of one debounce window.
+  const [debouncedPhone, setDebouncedPhone] = useState(() => initialParams.get('phone') || '')
+  const [debouncedRegnumber, setDebouncedRegnumber] = useState(
+    () => initialParams.get('regnumber') || ''
+  )
   useEffect(() => {
     const timeout = setTimeout(() => setDebouncedPhone(phone), 400)
     return () => clearTimeout(timeout)
@@ -87,8 +138,10 @@ const CustomerList = () => {
   // already loaded) - customers are paginated server-side over ~170k rows,
   // so page/pageSize are just plain UI state and totalPages/total come back
   // from the API response instead of being derived locally.
-  const [page, setPage] = useState(1)
-  const [pageSize, setPageSize] = useState(DEFAULT_PAGE_SIZE_OPTIONS[1])
+  const [page, setPage] = useState(() => Number(initialParams.get('page')) || 1)
+  const [pageSize, setPageSize] = useState(
+    () => Number(initialParams.get('pageSize')) || DEFAULT_PAGE_SIZE_OPTIONS[1]
+  )
   const totalPages = useSelector(
     (s: { customers: { numberOfPages?: number } }) => s.customers.numberOfPages ?? 1
   )
@@ -97,10 +150,37 @@ const CustomerList = () => {
     setPage(1)
   }
 
+  // Skipped on mount - otherwise a page restored from the URL (e.g. page=3)
+  // would get immediately reset to 1 by this same effect right after mount.
+  const isFirstFilterRun = useRef(true)
   useEffect(() => {
+    if (isFirstFilterRun.current) {
+      isFirstFilterRun.current = false
+      return
+    }
     setPage(1)
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [debouncedPhone, debouncedRegnumber, organizationId])
+
+  // Keeps the address bar in sync so the browser back button (or the view
+  // page's "К списку клиентов" link, which just calls history.goBack())
+  // returns to this exact filtered/paginated state after this component has
+  // unmounted and remounted - see buildListSearch's comment above. Skipped
+  // while a create/edit dialog is open (see the comment on formMatch).
+  useEffect(() => {
+    if (formMatch) return
+    history.replace({
+      pathname: '/customer/list',
+      search: buildListSearch({
+        phone: debouncedPhone,
+        regnumber: debouncedRegnumber,
+        organizationId,
+        page,
+        pageSize
+      })
+    })
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [formMatch, debouncedPhone, debouncedRegnumber, organizationId, page, pageSize])
 
   useEffect(() => {
     dispatch(
@@ -117,10 +197,6 @@ const CustomerList = () => {
   const [isDeleteOpen, setIsDeleteOpen] = useState(false)
   const [itemId, setItemId] = useState('')
 
-  const formMatch = useRouteMatch<{ id?: string }>({
-    path: ['/customer/create', '/customer/edit/:id'],
-    exact: true
-  })
   const isCreateMode = formMatch?.path === '/customer/create'
   const editingId = isCreateMode ? undefined : formMatch?.params.id
   // The list only ever holds the current page's slice (customers are
@@ -139,7 +215,15 @@ const CustomerList = () => {
       .then(({ data }) => setEditingCustomer(data))
       .finally(() => setIsEditingLoading(false))
   }, [editingId])
-  const closeForm = () => history.push('/customer/list')
+  // Not a bare '/customer/list' push - the create/edit routes have no query
+  // string of their own (this component stays mounted for them, so its
+  // filter/page state is unaffected, but the address bar would otherwise
+  // lose it), so this rebuilds it from the current in-memory state.
+  const closeForm = () =>
+    history.push({
+      pathname: '/customer/list',
+      search: buildListSearch({ phone, regnumber, organizationId, page, pageSize })
+    })
 
   const openAndDelete = (id: string) => {
     setIsDeleteOpen(true)
@@ -264,7 +348,7 @@ const CustomerList = () => {
                 <span className="text-sm text-muted-foreground">Найдено: {total ?? 0}</span>
                 {isPhoneActive ? (
                   <Badge variant="secondary" className="gap-1 pr-1 font-normal">
-                    Телефон: {phone}
+                    Телефон: {displayPhone(phone)}
                     <button
                       type="button"
                       className="ml-0.5 rounded-full p-0.5 hover:bg-foreground/10"
@@ -316,12 +400,13 @@ const CustomerList = () => {
         </Card>
 
         <div className="overflow-x-auto rounded-lg relative lg:my-3 mt-1 lg:shadow">
-          <Table className="min-w-[640px] table-fixed">
+          <Table className="min-w-[760px] table-fixed">
             <TableHeader>
               <TableRow className="hover:bg-transparent">
                 <TableHead className="w-[220px]">Имя</TableHead>
                 <TableHead className="w-[180px]">Телефон</TableHead>
                 <TableHead>Авто</TableHead>
+                <TableHead className="hidden w-[130px] sm:table-cell">Дата создания</TableHead>
                 <TableHead className="w-[120px]">Действия</TableHead>
               </TableRow>
             </TableHeader>

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { Link, useParams } from 'react-router-dom'
+import { Link, useHistory, useParams } from 'react-router-dom'
 import { useSelector, useDispatch } from 'react-redux'
 import { ArrowLeft, Pencil } from 'lucide-react'
 import Navbar from '../../components/Navbar'
@@ -73,6 +73,7 @@ const initialVisible = () => ({
 
 const CustomerView = () => {
   const { id } = useParams<{ id: string }>()
+  const browserHistory = useHistory()
   const dispatch = useDispatch<any>()
   const organizations = useSelector(
     (s: { organizations: { list: IOrganization[] } }) => s.organizations.list
@@ -183,10 +184,12 @@ const CustomerView = () => {
       <div className="container mx-auto px-4 pb-24">
         <div className="mb-6 flex flex-wrap items-center justify-between gap-3 border-b py-4">
           <h1 className="text-3xl">Клиент: история заказов</h1>
-          <Button asChild variant="outline">
-            <Link to="/customer/list">
-              <ArrowLeft className="mr-2 h-4 w-4" />К списку клиентов
-            </Link>
+          {/* Not a <Link to="/customer/list"> - this page is only ever reached
+              from that list (via the row's "Просмотр" link), so going back
+              is exactly how the list's filters/page (kept in its URL, see
+              Customers.list.tsx) end up restored instead of reset. */}
+          <Button type="button" variant="outline" onClick={() => browserHistory.goBack()}>
+            <ArrowLeft className="mr-2 h-4 w-4" />К списку клиентов
           </Button>
         </div>
 

@@ -1,11 +1,16 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
+import moment from 'moment'
 import { Eye, Pencil, Trash2 } from 'lucide-react'
 import { TableRow, TableCell } from '../ui/table'
 import { Button } from '../ui/button'
 import type { ICustomer } from '../../../common/types/generated/Customer'
 
+// Not a schema field (see server/controller/customer.controller.js) - every
+// Mongo _id already encodes its creation time, so the list/page endpoints
+// derive `createdAt` from it at request time instead of needing a backfill.
 interface ICustomerRowProps extends ICustomer {
+  createdAt?: string
   deleteCustomer: (id: string, value?: string) => void
 }
 
@@ -25,6 +30,9 @@ const CustomerRow = (props: ICustomerRowProps) => {
         {props.regnumber ? (
           <span className="ml-1 text-muted-foreground">[{props.regnumber}]</span>
         ) : null}
+      </TableCell>
+      <TableCell className="hidden text-gray-800 sm:table-cell">
+        {props.createdAt ? moment(props.createdAt).format('DD.MM.YYYY') : '—'}
       </TableCell>
       <TableCell className="whitespace-nowrap px-1 text-center">
         <Button asChild variant="secondary" size="icon-sm" title="Просмотр">
