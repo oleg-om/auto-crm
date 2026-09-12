@@ -2,17 +2,19 @@ import React, { useState } from 'react'
 import { Link, NavLink } from 'react-router-dom'
 import cx from 'classnames'
 import { useSelector, useDispatch } from 'react-redux'
-import { LogOut, Undo2, User, VenetianMask } from 'lucide-react'
+import { LogOut, Settings, Undo2, User, VenetianMask } from 'lucide-react'
 // import dotenv from 'dotenv'
 import { signOut, returnToSelf } from '../redux/reducers/auth'
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
+  DropdownMenuSeparator,
   DropdownMenuTrigger
 } from './ui/dropdown-menu'
 import { Button } from './ui/button'
 import { Badge } from './ui/badge'
+import AccountSettingsDialog from './account-settings-dialog'
 
 import { socket } from '../redux/sockets/socketReceivers'
 
@@ -23,6 +25,7 @@ const Navbar = () => {
   const auth = useSelector((s) => s.auth)
   // const role = useSelector((s) => s.auth.roles)
   const [toggle, setToggle] = useState(false)
+  const [isSettingsOpen, setIsSettingsOpen] = useState(false)
   const toggleOpen = () => {
     if (toggle === false) {
       return setToggle(true)
@@ -519,6 +522,11 @@ const Navbar = () => {
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
+            <DropdownMenuItem onClick={() => setIsSettingsOpen(true)}>
+              <Settings className="h-4 w-4" />
+              Настройки
+            </DropdownMenuItem>
+            <DropdownMenuSeparator />
             {auth.impersonatedBy ? (
               <DropdownMenuItem onClick={() => dispatch(returnToSelf())}>
                 <Undo2 className="h-4 w-4" />
@@ -532,6 +540,7 @@ const Navbar = () => {
             )}
           </DropdownMenuContent>
         </DropdownMenu>
+        <AccountSettingsDialog open={isSettingsOpen} onOpenChange={setIsSettingsOpen} />
       </div>
     </nav>
   )

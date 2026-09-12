@@ -348,6 +348,31 @@ server.post('/api/v1/account', requireAdmin, async (req, res) => {
   return res.json({ status: 'ok', data })
 })
 
+// Any authenticated user changing their own password - deliberately not
+// behind requireAdmin (unlike the rest of /api/v1/account), since every user
+// needs this for themselves, and it never touches another account's record.
+server.patch('/api/v1/account/self/password', async (req, res) => {
+  try {
+    const { currentPassword, newPassword } = req.body
+    if (!currentPassword || !newPassword) {
+      res.status(400).json({ status: 'error', message: 'Заполните все поля' })
+      return
+    }
+
+    const user = await User.findById(req.jwtUser.uid)
+    if (!user || !user.passwordMatches(currentPassword)) {
+      res.status(400).json({ status: 'error', message: 'Неверный текущий пароль' })
+      return
+    }
+
+    user.password = newPassword
+    await user.save()
+    res.json({ status: 'ok' })
+  } catch (err) {
+    res.status(500).json({ status: 'error', message: `change password error ${err}` })
+  }
+})
+
 // Was public self-registration - closed off (admin-only, same as the rest of
 // account management) since anyone could otherwise create their own account.
 // Doesn't log the caller in as the new user - the admin creating it stays
