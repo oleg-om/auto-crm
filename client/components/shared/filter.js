@@ -56,36 +56,19 @@ function useFilter(num, loadItems) {
     }
   }, [currentQueryParams])
 
-  // useEffect(() => {
-  //   if (showSearch) {
-  //     const phoneArray = search.phone.split(' ')
-  //     const phoneToRest = phoneArray[phoneArray.length - 1].replace(/_/g, '')
-  //
-  //     const searchObjectWithoutPhone = { ...search, phone: null }
-  //
-  //     if (
-  //       (search.phone !== '' && phoneToRest.length > 6) ||
-  //       Object.values(searchObjectWithoutPhone).filter((key) => key)?.length > 0
-  //     ) {
-  //       dispatch(loadItems(queryParamsToApi))
-  //     }
-  //   }
-  // }, [dispatch, num, showSearch, search])
-
+  // A previous version of this guard required the phone field specifically
+  // to have more than 6 non-underscore characters before searching (to avoid
+  // sending a still-masked "+7 (978) __-__-__" value). That threshold was
+  // wrong for shorter valid inputs and, worse, silently skipped the fetch
+  // while the UI still claimed a filter was applied - leaving stale results
+  // on screen with no feedback. ServiceFilter's own "Фильтр" handler already
+  // refuses to call this at all unless at least one field is filled in, so
+  // there's nothing left to additionally guard against here.
   const applyFilter = () => {
-    // if (showSearch) {
-    const phoneArray = search.phone.split(' ')
-    const phoneToRest = phoneArray[phoneArray.length - 1].replace(/_/g, '')
-
-    const searchObjectWithoutPhone = { ...search, phone: null }
-
-    if (
-      (search.phone !== '' && phoneToRest.length > 6) ||
-      Object.values(searchObjectWithoutPhone).filter((key) => key)?.length > 0
-    ) {
+    const hasAnyFilterValue = Object.values(search).some((value) => value)
+    if (hasAnyFilterValue) {
       dispatch(loadItems(queryParamsToApi))
     }
-    // }
   }
 
   useEffect(() => {

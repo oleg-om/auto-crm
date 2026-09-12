@@ -121,6 +121,14 @@ export function returnToSelf() {
   }
 }
 
+export function changePassword(currentPassword, newPassword) {
+  return () =>
+    axios
+      .patch('/api/v1/account/self/password', { currentPassword, newPassword })
+      .then(({ data }) => data)
+      .catch((err) => err.response?.data ?? { status: 'error', message: 'Ошибка сети' })
+}
+
 export function deleteUser() {
   return {
     type: 'DELETE_USER'

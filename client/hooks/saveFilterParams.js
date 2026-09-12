@@ -52,7 +52,12 @@ function useSaveFilter(filterParams = {}) {
     }
 
     if (filterToApi.phone) {
-      filterToApi.phone = filterToApi.phone.slice(-9)
+      // The masked input pads untyped digits with "_" (e.g. "+7 (978) 4__-__-__")
+      // - strip those (but keep the dashes, which are part of the stored
+      // format) so a still-partial phone searches by whatever was actually
+      // typed instead of sending literal underscores that can never match a
+      // real stored number.
+      filterToApi.phone = filterToApi.phone.slice(-9).replace(/_/g, '')
     }
 
     return `?${new URLSearchParams(filterToApi).toString()}`
