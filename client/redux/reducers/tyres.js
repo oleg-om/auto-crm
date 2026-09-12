@@ -92,7 +92,7 @@ export function getItemsFiltered(queryParams) {
 
 export function createTyre(name) {
   return (dispatch) => {
-    fetch('/api/v1/tyre', {
+    return fetch('/api/v1/tyre', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
@@ -100,9 +100,12 @@ export function createTyre(name) {
       body: JSON.stringify(name)
     })
       .then((r) => r.json())
-      .then(({ data: tyre }) => {
-        // socket.emit('new tyre', { tyre })
-        dispatch({ type: CREATE_TYRE, tyre })
+      .then(({ status, data: tyre }) => {
+        if (status === 'ok') {
+          // socket.emit('new tyre', { tyre })
+          dispatch({ type: CREATE_TYRE, tyre })
+        }
+        return { status, data: tyre }
       })
   }
 }

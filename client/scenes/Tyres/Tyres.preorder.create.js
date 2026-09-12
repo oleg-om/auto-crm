@@ -17,13 +17,16 @@ const TyresNew = () => {
   const isOrderDesk = location.pathname.startsWith('/tyres/order-desk')
   const listPath = isOrderDesk ? '/tyres/order-desk/list' : '/tyres/order/list'
   const create = (name) => {
-    dispatch(createTyre({ ...name, fromOrderDesk: !!isOrderDesk }))
+    return dispatch(createTyre({ ...name, fromOrderDesk: !!isOrderDesk }))
   }
   const { num } = useParams(1)
   const history = useHistory()
   toast.configure()
   const notify = (arg) => {
     toast.info(arg, { position: toast.POSITION.BOTTOM_RIGHT })
+  }
+  const notifyError = (arg) => {
+    toast.error(arg, { position: toast.POSITION.BOTTOM_RIGHT })
   }
 
   const [modalIsOpen, setModalIsOpen] = useState(false)
@@ -39,16 +42,26 @@ const TyresNew = () => {
     dispatch(updateCustomer(idOfItem, name))
     setModalIsOpen(false)
     notify('Данные клиента изменены')
-    create(order)
-    history.push(listPath)
-    notify('Заказ добавлен')
+    create(order).then(({ status }) => {
+      if (status === 'ok') {
+        history.push(listPath)
+        notify('Заказ добавлен')
+      } else {
+        notifyError('Не удалось добавить заказ')
+      }
+    })
   }
 
   const disUpdateCust = () => {
     setModalIsOpen(false)
-    create(order)
-    history.push(listPath)
-    notify('Заказ добавлен')
+    create(order).then(({ status }) => {
+      if (status === 'ok') {
+        history.push(listPath)
+        notify('Заказ добавлен')
+      } else {
+        notifyError('Не удалось добавить заказ')
+      }
+    })
   }
 
   const openAndUpdate = (idOfItem, name, state) => {

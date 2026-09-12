@@ -15,6 +15,9 @@ const TyresCreate = (props) => {
   const notify = (arg) => {
     toast.info(arg, { position: toast.POSITION.BOTTOM_RIGHT })
   }
+  const notifyError = (arg) => {
+    toast.error(arg, { position: toast.POSITION.BOTTOM_RIGHT })
+  }
 
   const history = useHistory()
   const list = useSelector((s) => s.places.list)
@@ -300,10 +303,21 @@ const TyresCreate = (props) => {
     if (state.preorder.length === 0) notify('Заполните заказ')
     if (state.preorder.filter((it) => it.type === '2').length > 0 && !state.mark && !state.model)
       notify('Вы заказываете диски. Укажите марку и модель авто')
-    else if (state.employee && state.place && state.name && state.phone) {
-      props.create(state)
-      history.push(props.listPath || '/tyres/order/list')
-      notify('Заказ добавлен')
+    else if (
+      state.employee &&
+      state.place &&
+      state.name &&
+      state.phone &&
+      state.preorder.length > 0
+    ) {
+      props.create(state).then(({ status }) => {
+        if (status === 'ok') {
+          history.push(props.listPath || '/tyres/order/list')
+          notify('Заказ добавлен')
+        } else {
+          notifyError('Не удалось добавить заказ')
+        }
+      })
     }
   }
 

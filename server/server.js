@@ -189,12 +189,8 @@ function requireAuth(req, res, next) {
   const publicRoute = PUBLIC_API_KEY_ROUTES.find(
     (route) => route.method === req.method && route.path === requestPath
   )
-  if (publicRoute) {
-    if (config.externalApiKey && req.headers['x-api-key'] === config.externalApiKey) {
-      next()
-      return
-    }
-    res.status(401).json({ status: 'error', message: 'Unauthorized' })
+  if (publicRoute && config.externalApiKey && req.headers['x-api-key'] === config.externalApiKey) {
+    next()
     return
   }
 
