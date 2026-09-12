@@ -24,8 +24,6 @@ import EmployeeList from '../scenes/Employees/Employees.list'
 import AccountList from '../scenes/Accounts/Accounts.list'
 // import RegisterCommon from '../scenes/Accounts/Register.common'
 import CustomerList from '../scenes/Customers/Customers.list'
-import CustomerNew from '../scenes/Customers/Customers.create'
-import CustomerEdit from '../scenes/Customers/Customers.edit'
 import CustomerView from '../scenes/Customers/Customers.view'
 import Access from '../scenes/Access'
 import Dashboard from '../scenes/Dashboard'
@@ -292,9 +290,9 @@ const RootComponent = (props) => {
             <AdminRoute exact path="/account/edit/:id" component={AccountList} />
             <PrivateRoute exact path="/customer/list" component={CustomerList} />
             <PrivateRoute exact path="/customer/list/:num" component={CustomerList} />
-            <PrivateRoute exact path="/customer/create" component={CustomerNew} />
+            <PrivateRoute exact path="/customer/create" component={CustomerList} />
+            <PrivateRoute exact path="/customer/edit/:id" component={CustomerList} />
             <PrivateRoute exact path="/customer/view/:id" component={CustomerView} />
-            <PrivateRoute exact path="/customer/edit/:id" component={CustomerEdit} />
             <PrivateRoute exact path="/razval/list" component={RazvalList} />
             <PrivateRoute exact path="/oil/list" component={OilList} />
             <PrivateRoute exact path="/settings" component={SettingEdit} />

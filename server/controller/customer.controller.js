@@ -141,11 +141,20 @@ exports.delete = async (req, res) => {
   await Customer.deleteOne({ id: req.params.id })
   return res.json({ status: 'ok', id: req.params.id })
 }
+// Clamped so a page-size selector in the UI (10/20/50/100) can drive this
+// directly without letting a crafted `limit` value force an unbounded scan
+// over a 170k+ row collection.
+function clampLimit(rawLimit, fallback = 20) {
+  const parsed = Number(rawLimit)
+  if (!Number.isFinite(parsed) || parsed <= 0) return fallback
+  return Math.min(Math.floor(parsed), 100)
+}
+
 exports.getFiltered = async (req, res) => {
-  const { page, reg, vin, phone, organization } = req.query
+  const { page, reg, vin, phone, organization, limit } = req.query
 
   try {
-    const LIMIT = 14
+    const LIMIT = clampLimit(limit)
     const startIndex = (Number(page) - 1) * LIMIT
 
     const andConditions = []
@@ -183,7 +192,8 @@ exports.getFiltered = async (req, res) => {
       status: 'ok',
       data: posts,
       currentPage: Number(page),
-      numberOfPages: Math.ceil(total / LIMIT)
+      numberOfPages: Math.ceil(total / LIMIT),
+      total
     })
   } catch (error) {
     res.status(404).json({ message: error.message })
@@ -191,9 +201,10 @@ exports.getFiltered = async (req, res) => {
 }
 exports.getByPage = async (req, res) => {
   const { page } = req.params
+  const { limit } = req.query
 
   try {
-    const LIMIT = 14
+    const LIMIT = clampLimit(limit)
     const startIndex = (Number(page) - 1) * LIMIT // get the starting index of every page
 
     const total = await Customer.countDocuments({})
@@ -203,7 +214,8 @@ exports.getByPage = async (req, res) => {
       status: 'ok',
       data: posts,
       currentPage: Number(page),
-      numberOfPages: Math.ceil(total / LIMIT)
+      numberOfPages: Math.ceil(total / LIMIT),
+      total
     })
   } catch (error) {
     res.status(404).json({ message: error.message })

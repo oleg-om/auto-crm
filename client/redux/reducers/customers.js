@@ -19,7 +19,8 @@ export default (state = initialState, action) => {
         list: action.customers,
         isLoaded: action.isLoaded,
         currentPage: action.currentPage,
-        numberOfPages: action.numberOfPages
+        numberOfPages: action.numberOfPages,
+        total: action.total
       }
     }
     case GET_CUSTOMER: {
@@ -113,24 +114,46 @@ export function getCustomer(id) {
   }
 }
 
-export function getItemsByPage(page) {
+export function getItemsByPage(page, limit) {
   return (dispatch) => {
     dispatch({ type: GET_CUSTOMERS, isLoaded: false })
-    fetch(`/api/v1/customerbypage/${page}`)
+    const qs = limit ? `?limit=${limit}` : ''
+    fetch(`/api/v1/customerbypage/${page}${qs}`)
       .then((r) => r.json())
-      .then(({ data: customers, currentPage, numberOfPages }) => {
-        dispatch({ type: GET_CUSTOMERS, customers, currentPage, numberOfPages, isLoaded: true })
+      .then(({ data: customers, currentPage, numberOfPages, total }) => {
+        dispatch({
+          type: GET_CUSTOMERS,
+          customers,
+          currentPage,
+          numberOfPages,
+          total,
+          isLoaded: true
+        })
       })
   }
 }
 
-export function getItemsFiltered(queryParams) {
+// Accepts a plain params object (page, limit, phone, reg, organization, ...)
+// and builds the query string itself - the list scene no longer needs its
+// own query-string building for this endpoint.
+export function getItemsFiltered(params) {
   return (dispatch) => {
     dispatch({ type: GET_CUSTOMERS, isLoaded: false })
-    fetch(`/api/v1/customerfilter${queryParams}`)
+    const cleanParams = Object.fromEntries(
+      Object.entries(params).filter(([, value]) => value !== undefined && value !== '')
+    )
+    const qs = new URLSearchParams(cleanParams).toString()
+    fetch(`/api/v1/customerfilter?${qs}`)
       .then((r) => r.json())
-      .then(({ data: customers, currentPage, numberOfPages }) => {
-        dispatch({ type: GET_CUSTOMERS, customers, currentPage, numberOfPages, isLoaded: true })
+      .then(({ data: customers, currentPage, numberOfPages, total }) => {
+        dispatch({
+          type: GET_CUSTOMERS,
+          customers,
+          currentPage,
+          numberOfPages,
+          total,
+          isLoaded: true
+        })
       })
   }
 }
