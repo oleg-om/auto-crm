@@ -23,9 +23,17 @@ export interface IStoPrice {
   foreignThird?: number
   cardAmbulanceForeign?: number
   cardAmbulanceOur?: number
-  minGazel?: number
-  minLogan?: number
-  minDuster?: number
+  minKaiyiX7?: number
+  minKiaCarnival?: number
+  minLadaLargus?: number
+  minLadaGranta?: number
+  minRenaultDuster?: number
+  minRenaultLogan?: number
+  minToyotaCamry?: number
+  minVolkswagenMultivan?: number
+  minVolkswagenTouareg?: number
+  minGazelleNext?: number
+  minMoskvich3?: number
   minOther?: number
   _id?: string
   __v?: number

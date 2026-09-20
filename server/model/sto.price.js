@@ -87,15 +87,47 @@ const StoPrice = new mongoose.Schema({
     type: Number,
     required: false
   },
-  minGazel: {
+  minKaiyiX7: {
     type: Number,
     required: false
   },
-  minLogan: {
+  minKiaCarnival: {
     type: Number,
     required: false
   },
-  minDuster: {
+  minLadaLargus: {
+    type: Number,
+    required: false
+  },
+  minLadaGranta: {
+    type: Number,
+    required: false
+  },
+  minRenaultDuster: {
+    type: Number,
+    required: false
+  },
+  minRenaultLogan: {
+    type: Number,
+    required: false
+  },
+  minToyotaCamry: {
+    type: Number,
+    required: false
+  },
+  minVolkswagenMultivan: {
+    type: Number,
+    required: false
+  },
+  minVolkswagenTouareg: {
+    type: Number,
+    required: false
+  },
+  minGazelleNext: {
+    type: Number,
+    required: false
+  },
+  minMoskvich3: {
     type: Number,
     required: false
   },

@@ -10,7 +10,7 @@ const COLUMNS = [
   'R210107first',
   'foreignFirst',
   'cardAmbulanceOur',
-  'minGazel'
+  'minGazelleNext'
 ]
 
 const EXAMPLE_ROWS: string[][] = [

@@ -18,8 +18,16 @@ module.exports = [
   { name: 'УАЗ', id: 'cardAmbulanceOur', class: 'card' },
   { name: 'Ford', id: 'cardAmbulanceForeign', class: 'card' },
 
-  { name: 'Logan', id: 'minLogan', class: 'mintrans' },
-  { name: 'Duster', id: 'minDuster', class: 'mintrans' },
-  { name: 'Газель', id: 'minGazel', class: 'mintrans' },
+  { name: 'KAIYI X7', id: 'minKaiyiX7', class: 'mintrans' },
+  { name: 'KIA Carnival', id: 'minKiaCarnival', class: 'mintrans' },
+  { name: 'LADA Largus', id: 'minLadaLargus', class: 'mintrans' },
+  { name: 'LADA Granta', id: 'minLadaGranta', class: 'mintrans' },
+  { name: 'RENAULT Duster', id: 'minRenaultDuster', class: 'mintrans' },
+  { name: 'RENAULT Logan', id: 'minRenaultLogan', class: 'mintrans' },
+  { name: 'TOYOTA Camry', id: 'minToyotaCamry', class: 'mintrans' },
+  { name: 'VOLKSWAGEN Multivan', id: 'minVolkswagenMultivan', class: 'mintrans' },
+  { name: 'VOLKSWAGEN Touareg', id: 'minVolkswagenTouareg', class: 'mintrans' },
+  { name: 'ГАЗ Gazelle Next', id: 'minGazelleNext', class: 'mintrans' },
+  { name: 'МОСКВИЧ 3', id: 'minMoskvich3', class: 'mintrans' },
   { name: 'Прочее', id: 'minOther', class: 'mintrans' }
 ]
