@@ -75,6 +75,24 @@ body {
   -webkit-text-security: disc;
   text-security: disc;
 }
+
+// Chrome's date/month inputs lay out their internal fields + calendar icon in
+// a shadow-DOM row that only hugs its own content width, so `margin-left: auto`
+// on the icon has no free space to consume and does nothing - position it
+// absolutely against the input itself instead to pin it to the right edge.
+input[type='date'],
+input[type='month'] {
+  position: relative;
+
+  &::-webkit-calendar-picker-indicator {
+    position: absolute;
+    right: 0.5rem;
+    top: 50%;
+    transform: translateY(-50%);
+    margin: 0;
+    padding: 0;
+  }
+}
 .oil__icons {
   &__icon:not(:last-child) {
     margin-right: 5px;

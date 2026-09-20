@@ -2,10 +2,21 @@ import React, { useState, useEffect, useCallback, useRef } from 'react'
 import { createPortal } from 'react-dom'
 import { useSelector, useDispatch } from 'react-redux'
 import { toast } from 'react-toastify'
+import moment from 'moment'
 import Navbar from '../Navbar'
 import { getPositions } from '../../redux/reducers/positions'
 import { getEmployees } from '../../redux/reducers/employees'
+import { cn } from '../../lib/utils'
+import { Label } from '../ui/label'
+import { Input } from '../ui/input'
+import { Card, CardContent } from '../ui/card'
+import { Badge } from '../ui/badge'
+import { Tabs, TabsList, TabsTrigger } from '../ui/tabs'
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../ui/select'
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '../ui/table'
 import 'react-toastify/dist/ReactToastify.css'
+
+const NONE_EMPLOYEE = 'none'
 
 const ChecklistTooltip = ({ items, progress }) => {
   const triggerRef = useRef(null)
@@ -89,6 +100,11 @@ const BossJournal = () => {
   const [workDayData, setWorkDayData] = useState(null)
   const [loading, setLoading] = useState(false)
   const [activeTab, setActiveTab] = useState('table') // 'table', 'chart', 'kpi'
+  const [viewMode, setViewMode] = useState('day') // 'day' | 'month'
+  const [selectedMonth, setSelectedMonth] = useState(moment().format('YYYY-MM'))
+  const [monthEntries, setMonthEntries] = useState([])
+  const [monthWorkDays, setMonthWorkDays] = useState([])
+  const [monthLoading, setMonthLoading] = useState(false)
 
   useEffect(() => {
     dispatch(getPositions())
@@ -124,12 +140,51 @@ const BossJournal = () => {
   }, [selectedEmployeeId, selectedDate])
 
   useEffect(() => {
+    if (viewMode !== 'day') return
     if (selectedEmployeeId && selectedDate) {
       loadEntries()
     } else {
       setEntries([])
     }
-  }, [selectedDate, selectedEmployeeId, loadEntries])
+  }, [viewMode, selectedDate, selectedEmployeeId, loadEntries])
+
+  const loadMonthData = useCallback(async () => {
+    if (!selectedEmployeeId || !selectedMonth) {
+      setMonthEntries([])
+      setMonthWorkDays([])
+      return
+    }
+
+    setMonthLoading(true)
+    try {
+      const [entriesResponse, workDaysResponse] = await Promise.all([
+        fetch(`/api/v1/journalEntry/employee/${selectedEmployeeId}/month/${selectedMonth}`),
+        fetch(`/api/v1/workDayStart/employee/${selectedEmployeeId}/month/${selectedMonth}`)
+      ])
+
+      const entriesData = await entriesResponse.json()
+      const workDaysData = await workDaysResponse.json()
+
+      setMonthEntries(entriesData.data || [])
+      setMonthWorkDays(workDaysData.data || [])
+    } catch (error) {
+      toast.info('Ошибка при загрузке данных за месяц', { position: toast.POSITION.BOTTOM_RIGHT })
+      setMonthEntries([])
+      setMonthWorkDays([])
+    } finally {
+      setMonthLoading(false)
+    }
+  }, [selectedEmployeeId, selectedMonth])
+
+  useEffect(() => {
+    if (viewMode !== 'month') return
+    if (selectedEmployeeId && selectedMonth) {
+      loadMonthData()
+    } else {
+      setMonthEntries([])
+      setMonthWorkDays([])
+    }
+  }, [viewMode, selectedMonth, selectedEmployeeId, loadMonthData])
 
   const selectedEmployee = employees.find((emp) => emp.id === selectedEmployeeId)
   const { positionId } = selectedEmployee || {}
@@ -201,53 +256,78 @@ const BossJournal = () => {
 
         {/* Фильтры */}
         <div className="bg-white rounded-lg shadow p-6 mb-6">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             <div>
-              <label
-                htmlFor="boss-journal-date"
-                className="block text-sm font-medium text-gray-700 mb-2"
-              >
-                Дата
-              </label>
-              <input
-                id="boss-journal-date"
-                type="date"
-                value={selectedDate}
-                onChange={(e) => setSelectedDate(e.target.value)}
-                className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-main-600"
-              />
+              <Label className="block mb-2">Период</Label>
+              <Tabs value={viewMode} onValueChange={(value) => setViewMode(value)}>
+                <TabsList className="w-full">
+                  <TabsTrigger value="day" className="flex-1">
+                    День
+                  </TabsTrigger>
+                  <TabsTrigger value="month" className="flex-1">
+                    Месяц
+                  </TabsTrigger>
+                </TabsList>
+              </Tabs>
             </div>
+            {viewMode === 'day' ? (
+              <div>
+                <Label htmlFor="boss-journal-date" className="block mb-2">
+                  Дата
+                </Label>
+                <Input
+                  id="boss-journal-date"
+                  type="date"
+                  value={selectedDate}
+                  onChange={(e) => setSelectedDate(e.target.value)}
+                />
+              </div>
+            ) : (
+              <div>
+                <Label htmlFor="boss-journal-month" className="block mb-2">
+                  Месяц
+                </Label>
+                <Input
+                  id="boss-journal-month"
+                  type="month"
+                  value={selectedMonth}
+                  onChange={(e) => setSelectedMonth(e.target.value)}
+                />
+              </div>
+            )}
             <div>
-              <label
-                htmlFor="boss-journal-employee"
-                className="block text-sm font-medium text-gray-700 mb-2"
-              >
+              <Label htmlFor="boss-journal-employee" className="block mb-2">
                 Сотрудник
-              </label>
-              <select
-                id="boss-journal-employee"
-                value={selectedEmployeeId}
-                onChange={(e) => setSelectedEmployeeId(e.target.value)}
-                className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-main-600"
+              </Label>
+              <Select
+                value={selectedEmployeeId === '' ? NONE_EMPLOYEE : selectedEmployeeId}
+                onValueChange={(value) =>
+                  setSelectedEmployeeId(value === NONE_EMPLOYEE ? '' : value)
+                }
               >
-                <option value="">Выберите сотрудника</option>
-                {employees
-                  .filter((emp) => emp.positionId)
-                  .map((emp) => {
-                    const position = positions.find((p) => p.id === emp.positionId)
-                    return (
-                      <option key={emp.id} value={emp.id}>
-                        {emp.name} {emp.surname} {position ? `(${position.name})` : ''}
-                      </option>
-                    )
-                  })}
-              </select>
+                <SelectTrigger id="boss-journal-employee">
+                  <SelectValue placeholder="Выберите сотрудника" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value={NONE_EMPLOYEE}>Выберите сотрудника</SelectItem>
+                  {employees
+                    .filter((emp) => emp.positionId)
+                    .map((emp) => {
+                      const position = positions.find((p) => p.id === emp.positionId)
+                      return (
+                        <SelectItem key={emp.id} value={emp.id}>
+                          {emp.name} {emp.surname} {position ? `(${position.name})` : ''}
+                        </SelectItem>
+                      )
+                    })}
+                </SelectContent>
+              </Select>
             </div>
           </div>
         </div>
 
         {/* Вкладки */}
-        {selectedEmployeeId && selectedDate && (
+        {viewMode === 'day' && selectedEmployeeId && selectedDate && (
           <div className="mb-6 border-b border-gray-200">
             <nav className="flex space-x-8">
               <button
@@ -288,10 +368,23 @@ const BossJournal = () => {
         )}
 
         {/* Контент вкладок */}
-        {loading ? (
+        {(viewMode === 'day' ? loading : monthLoading) ? (
           <div className="text-center py-8">
             <div className="animate-spin rounded-full h-8 w-8 border-b-4 border-main-600 mx-auto" />
           </div>
+        ) : viewMode === 'month' ? (
+          selectedEmployeeId && selectedMonth ? (
+            <MonthSummaryView
+              month={selectedMonth}
+              entries={monthEntries}
+              workDays={monthWorkDays}
+              selectedPosition={selectedPosition}
+            />
+          ) : (
+            <div className="bg-white rounded-lg shadow p-8 text-center text-gray-500">
+              Выберите месяц и сотрудника для просмотра посещаемости
+            </div>
+          )
         ) : selectedEmployeeId && selectedDate ? (
           activeTab === 'table' ? (
             <div className="bg-white rounded-lg shadow overflow-hidden">
@@ -466,10 +559,9 @@ const BossJournal = () => {
                                   return '-'
                                 }
 
-                                const normText = totalNorm
-                                  ? `${Math.round(totalNorm)} мин`
-                                  : '-'
-                                const factText = totalTime !== null ? `${Math.round(totalTime)} мин` : '-'
+                                const normText = totalNorm ? `${Math.round(totalNorm)} мин` : '-'
+                                const factText =
+                                  totalTime !== null ? `${Math.round(totalTime)} мин` : '-'
 
                                 const exceedsNorm =
                                   totalNorm !== null &&
@@ -573,6 +665,173 @@ const BossJournal = () => {
           </div>
         )}
       </div>
+    </div>
+  )
+}
+
+const MonthSummaryView = ({ month, entries, workDays, selectedPosition }) => {
+  // Функция для извлечения времени из Date или строки
+  const extractTime = (timeValue) => {
+    if (!timeValue) return '-'
+    const date = typeof timeValue === 'string' ? new Date(timeValue) : timeValue
+    if (date instanceof Date && !Number.isNaN(date.getTime())) {
+      const hours = date.getHours().toString().padStart(2, '0')
+      const minutes = date.getMinutes().toString().padStart(2, '0')
+      return `${hours}:${minutes}`
+    }
+    if (typeof timeValue === 'string') {
+      const parts = timeValue.split(' ')
+      return parts.length > 1 ? parts[parts.length - 1] : timeValue
+    }
+    return timeValue
+  }
+
+  const timeStringToMinutes = (timeStr) => {
+    if (!timeStr) return null
+    const [hours, minutes] = timeStr.split(':').map(Number)
+    if (Number.isNaN(hours) || Number.isNaN(minutes)) return null
+    return hours * 60 + minutes
+  }
+
+  const checkWorkTimeViolation = (actualTime, normTime, isStart) => {
+    if (!actualTime || !normTime) return false
+    const actualMinutes = timeStringToMinutes(extractTime(actualTime))
+    const normMinutes = timeStringToMinutes(normTime)
+    if (actualMinutes === null || normMinutes === null) return false
+    return isStart ? actualMinutes > normMinutes : actualMinutes < normMinutes
+  }
+
+  const monthStart = moment(month, 'YYYY-MM')
+  const daysInMonth = monthStart.daysInMonth()
+  const days = Array.from({ length: daysInMonth }, (_, i) => monthStart.clone().date(i + 1))
+
+  const workDayByDate = {}
+  workDays.forEach((workDay) => {
+    workDayByDate[moment(workDay.date).format('YYYY-MM-DD')] = workDay
+  })
+
+  const entriesByDate = {}
+  entries.forEach((entry) => {
+    const key = moment(entry.date).format('YYYY-MM-DD')
+    if (!entriesByDate[key]) entriesByDate[key] = []
+    entriesByDate[key].push(entry)
+  })
+
+  const rows = days.map((day) => {
+    const key = day.format('YYYY-MM-DD')
+    const workDay = workDayByDate[key]
+    const dayEntries = entriesByDate[key] || []
+    const { startTime, endTime } = workDay || {}
+
+    let workedMinutes = null
+    if (startTime && endTime) {
+      const startDate = new Date(startTime)
+      const endDate = new Date(endTime)
+      if (!Number.isNaN(startDate.getTime()) && !Number.isNaN(endDate.getTime())) {
+        workedMinutes = (endDate.getTime() - startDate.getTime()) / (1000 * 60)
+      }
+    }
+
+    const startViolation =
+      !!startTime &&
+      !!selectedPosition?.workDayStartTime &&
+      checkWorkTimeViolation(startTime, selectedPosition.workDayStartTime, true)
+    const endViolation =
+      !!endTime &&
+      !!selectedPosition?.workDayEndTime &&
+      checkWorkTimeViolation(endTime, selectedPosition.workDayEndTime, false)
+
+    return {
+      key,
+      day,
+      hasAttendance: !!workDay || dayEntries.length > 0,
+      startTime,
+      endTime,
+      workedMinutes,
+      dutiesTotal: dayEntries.length,
+      dutiesCompleted: dayEntries.filter((entry) => entry.endTime).length,
+      violation: startViolation || endViolation
+    }
+  })
+
+  const presentDays = rows.filter((row) => row.hasAttendance)
+  const totalWorkedMinutes = presentDays.reduce((sum, row) => sum + (row.workedMinutes || 0), 0)
+  const violationsCount = rows.filter((row) => row.violation).length
+
+  const formatDuration = (minutes) => `${Math.floor(minutes / 60)}ч ${Math.round(minutes % 60)}м`
+
+  return (
+    <div className="space-y-4">
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+        <Card>
+          <CardContent className="p-4">
+            <div className="text-sm text-muted-foreground mb-1">Дней с посещением</div>
+            <div className="text-2xl font-bold">
+              {presentDays.length} из {daysInMonth}
+            </div>
+          </CardContent>
+        </Card>
+        <Card>
+          <CardContent className="p-4">
+            <div className="text-sm text-muted-foreground mb-1">Отработано за месяц</div>
+            <div className="text-2xl font-bold">{formatDuration(totalWorkedMinutes)}</div>
+          </CardContent>
+        </Card>
+        <Card>
+          <CardContent className="p-4">
+            <div className="text-sm text-muted-foreground mb-1">Нарушений графика</div>
+            <div className={cn('text-2xl font-bold', violationsCount > 0 && 'text-destructive')}>
+              {violationsCount}
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+
+      <Card>
+        <CardContent className="p-0 overflow-x-auto">
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHead>Дата</TableHead>
+                <TableHead>Начало</TableHead>
+                <TableHead>Окончание</TableHead>
+                <TableHead>Отработано</TableHead>
+                <TableHead>Обязанности</TableHead>
+                <TableHead>Статус</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {rows.map((row) => (
+                <TableRow
+                  key={row.key}
+                  className={!row.hasAttendance ? 'text-muted-foreground' : undefined}
+                >
+                  <TableCell className="whitespace-nowrap">
+                    {row.day.format('DD.MM.YYYY')}
+                  </TableCell>
+                  <TableCell>{row.startTime ? extractTime(row.startTime) : '-'}</TableCell>
+                  <TableCell>{row.endTime ? extractTime(row.endTime) : '-'}</TableCell>
+                  <TableCell>
+                    {row.workedMinutes !== null ? formatDuration(row.workedMinutes) : '-'}
+                  </TableCell>
+                  <TableCell>
+                    {row.dutiesTotal > 0 ? `${row.dutiesCompleted}/${row.dutiesTotal}` : '-'}
+                  </TableCell>
+                  <TableCell>
+                    {!row.hasAttendance ? (
+                      <Badge variant="outline">Нет данных</Badge>
+                    ) : row.violation ? (
+                      <Badge variant="destructive">Нарушение</Badge>
+                    ) : (
+                      <Badge variant="secondary">В норме</Badge>
+                    )}
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </CardContent>
+      </Card>
     </div>
   )
 }
@@ -831,7 +1090,8 @@ const DutyTimelineChart = ({ entries, entriesWithDutyInfo, workDayData, selected
                           !Number.isNaN(endDate.getTime())
                         ) {
                           // Вычисляем разницу в миллисекундах и переводим в минуты
-                          actualTimeMinutes = (endDate.getTime() - startDate.getTime()) / (1000 * 60)
+                          actualTimeMinutes =
+                            (endDate.getTime() - startDate.getTime()) / (1000 * 60)
                         }
                       }
 
@@ -852,7 +1112,9 @@ const DutyTimelineChart = ({ entries, entriesWithDutyInfo, workDayData, selected
 
                       // Формируем текст тултипа
                       let tooltipText =
-                        endTimeStr !== '-' ? `${startTimeStr} - ${endTimeStr}` : `Начало: ${startTimeStr}`
+                        endTimeStr !== '-'
+                          ? `${startTimeStr} - ${endTimeStr}`
+                          : `Начало: ${startTimeStr}`
 
                       // Добавляем время выполнения
                       if (actualTimeMinutes !== null && endTimeStr !== '-') {
@@ -925,7 +1187,13 @@ const DutyTimelineChart = ({ entries, entriesWithDutyInfo, workDayData, selected
   )
 }
 
-const KPIView = ({ entriesWithDutyInfo, workDayData, selectedPosition, hideKpiExplanation, hideTitle }) => {
+const KPIView = ({
+  entriesWithDutyInfo,
+  workDayData,
+  selectedPosition,
+  hideKpiExplanation,
+  hideTitle
+}) => {
   // Вычисляем полезное и бесполезное время
   const calculateKPI = () => {
     if (!workDayData || !workDayData.startTime) {
@@ -1074,7 +1342,7 @@ const KPIView = ({ entriesWithDutyInfo, workDayData, selectedPosition, hideKpiEx
     // Общий КПД = взвешенное среднее с большим весом для эффективности времени
     // Эффективность времени: 50%, Чек-листы: 25%, Рабочие часы: 25%
     const overallKPI =
-      (timeEfficiencyPercentage * 0.5 + checklistPercentage * 0.25 + workHoursPercentage * 0.25)
+      timeEfficiencyPercentage * 0.5 + checklistPercentage * 0.25 + workHoursPercentage * 0.25
 
     return {
       totalWorkDayMinutes,
@@ -1353,9 +1621,9 @@ const KPIView = ({ entriesWithDutyInfo, workDayData, selectedPosition, hideKpiEx
                 чек-листов нет, этот показатель считается как 100%
               </li>
               <li>
-                <strong>Рабочие часы</strong> — соответствие фактического времени работы нормативному
-                времени, установленному для должности. Если работал меньше нормы — процент снижается.
-                Если норма не задана, этот показатель считается как 100%
+                <strong>Рабочие часы</strong> — соответствие фактического времени работы
+                нормативному времени, установленному для должности. Если работал меньше нормы —
+                процент снижается. Если норма не задана, этот показатель считается как 100%
               </li>
               <li>
                 <strong>Общий КПД</strong> = взвешенное среднее: эффективность времени × 50% +

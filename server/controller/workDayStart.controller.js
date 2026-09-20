@@ -9,6 +9,19 @@ exports.getByEmployeeAndDate = async (req, res) => {
   return res.json({ status: 'ok', data: workDayStart })
 }
 
+// Получить начала/окончания рабочего дня за месяц для сотрудника
+exports.getByEmployeeAndMonth = async (req, res) => {
+  const { employeeId, month } = req.params
+  const [year, monthNumber] = month.split('-').map(Number)
+  const start = new Date(year, monthNumber - 1, 1)
+  const end = new Date(year, monthNumber, 1)
+  const workDayStarts = await WorkDayStart.find({
+    employeeId,
+    date: { $gte: start, $lt: end }
+  })
+  return res.json({ status: 'ok', data: workDayStarts })
+}
+
 exports.startWorkDay = async (req, res) => {
   const { employeeId, date } = req.body
 
@@ -50,4 +63,3 @@ exports.endWorkDay = async (req, res) => {
   await workDayStart.save()
   return res.json({ status: 'ok', data: workDayStart })
 }
-

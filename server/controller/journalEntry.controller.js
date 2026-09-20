@@ -51,6 +51,19 @@ exports.getByEmployeeAndDate = async (req, res) => {
   return res.json({ status: 'ok', data: entries })
 }
 
+// Получить записи за месяц для сотрудника
+exports.getByEmployeeAndMonth = async (req, res) => {
+  const { employeeId, month } = req.params
+  const [year, monthNumber] = month.split('-').map(Number)
+  const start = new Date(year, monthNumber - 1, 1)
+  const end = new Date(year, monthNumber, 1)
+  const entries = await JournalEntry.find({
+    employeeId,
+    date: { $gte: start, $lt: end }
+  })
+  return res.json({ status: 'ok', data: entries })
+}
+
 // Создать или обновить запись
 exports.upsert = async (req, res) => {
   const {
