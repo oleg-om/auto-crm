@@ -17,6 +17,8 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '.
 import 'react-toastify/dist/ReactToastify.css'
 
 const NONE_EMPLOYEE = 'none'
+// Допустимая погрешность начала/окончания рабочего дня, мин
+const WORK_TIME_TOLERANCE_MIN = 10
 
 const ChecklistTooltip = ({ items, progress }) => {
   const triggerRef = useRef(null)
@@ -273,7 +275,9 @@ const BossJournal = () => {
     if (actualMinutes === null || normMinutes === null) return false
     // Для начала: фактическое > нормы (начал позже)
     // Для конца: фактическое < нормы (закончил раньше)
-    return isStart ? actualMinutes > normMinutes : actualMinutes < normMinutes
+    return isStart
+      ? actualMinutes > normMinutes + WORK_TIME_TOLERANCE_MIN
+      : actualMinutes < normMinutes - WORK_TIME_TOLERANCE_MIN
   }
 
   // Группируем записи по обязанностям
@@ -746,7 +750,9 @@ const MonthSummaryView = ({ month, entries, workDays, selectedPosition }) => {
     const actualMinutes = timeStringToMinutes(extractTime(actualTime))
     const normMinutes = timeStringToMinutes(normTime)
     if (actualMinutes === null || normMinutes === null) return false
-    return isStart ? actualMinutes > normMinutes : actualMinutes < normMinutes
+    return isStart
+      ? actualMinutes > normMinutes + WORK_TIME_TOLERANCE_MIN
+      : actualMinutes < normMinutes - WORK_TIME_TOLERANCE_MIN
   }
 
   const monthStart = moment(month, 'YYYY-MM')
@@ -986,7 +992,9 @@ const DutyTimelineChart = ({ entries, entriesWithDutyInfo, workDayData, selected
     if (actualMinutes === null || normMinutes === null) return false
     // Для начала: фактическое > нормы (начал позже)
     // Для конца: фактическое < нормы (закончил раньше)
-    return isStart ? actualMinutes > normMinutes : actualMinutes < normMinutes
+    return isStart
+      ? actualMinutes > normMinutes + WORK_TIME_TOLERANCE_MIN
+      : actualMinutes < normMinutes - WORK_TIME_TOLERANCE_MIN
   }
 
   // Определяем диапазон времени для шкалы
