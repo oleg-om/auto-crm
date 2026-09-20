@@ -87,6 +87,54 @@ const ChecklistTooltip = ({ items, progress }) => {
   )
 }
 
+const HoverTip = ({ title, children, tip, className }) => {
+  const triggerRef = useRef(null)
+  const [visible, setVisible] = useState(false)
+  const [coords, setCoords] = useState({ top: 0, left: 0 })
+
+  const show = () => {
+    if (!triggerRef.current) return
+    const rect = triggerRef.current.getBoundingClientRect()
+    setCoords({
+      top: rect.top - 8,
+      left: Math.max(8, Math.min(rect.left, window.innerWidth - 280))
+    })
+    setVisible(true)
+  }
+
+  return (
+    <>
+      <span
+        ref={triggerRef}
+        onMouseEnter={show}
+        onMouseLeave={() => setVisible(false)}
+        className={className}
+      >
+        {children}
+      </span>
+      {visible &&
+        createPortal(
+          <div
+            className="fixed w-64"
+            style={{
+              top: coords.top,
+              left: coords.left,
+              transform: 'translateY(-100%)',
+              zIndex: 9999,
+              pointerEvents: 'none'
+            }}
+          >
+            <div className="bg-gray-900 text-white text-xs rounded-lg shadow-lg p-3">
+              <div className="font-semibold mb-2 text-purple-200">{title}</div>
+              {tip}
+            </div>
+          </div>,
+          document.body
+        )}
+    </>
+  )
+}
+
 const BossJournal = () => {
   toast.configure()
 
@@ -740,6 +788,30 @@ const MonthSummaryView = ({ month, entries, workDays, selectedPosition }) => {
       !!endTime &&
       !!selectedPosition?.workDayEndTime &&
       checkWorkTimeViolation(endTime, selectedPosition.workDayEndTime, false)
+    // Незавершённый рабочий день (не сегодня) — тоже нарушение
+    const noEndViolation = !!startTime && !endTime && day.isBefore(moment(), 'day')
+
+    const violations = []
+    if (startViolation) {
+      violations.push(
+        `Опоздание: начало в ${extractTime(startTime)}, норма ${selectedPosition.workDayStartTime}`
+      )
+    }
+    if (endViolation) {
+      violations.push(
+        `Ранний уход: окончание в ${extractTime(endTime)}, норма ${selectedPosition.workDayEndTime}`
+      )
+    }
+    if (noEndViolation) violations.push('Не проставлено окончание рабочего дня')
+
+    const duties = dayEntries.map((entry) => {
+      const duty = selectedPosition?.duties?.find((d) => String(d._id) === String(entry.dutyId))
+      return {
+        id: entry.id || entry._id,
+        name: duty?.name || 'Неизвестная обязанность',
+        done: !!entry.endTime
+      }
+    })
 
     return {
       key,
@@ -750,7 +822,9 @@ const MonthSummaryView = ({ month, entries, workDays, selectedPosition }) => {
       workedMinutes,
       dutiesTotal: dayEntries.length,
       dutiesCompleted: dayEntries.filter((entry) => entry.endTime).length,
-      violation: startViolation || endViolation
+      violation: violations.length > 0,
+      violations,
+      duties
     }
   })
 
@@ -815,13 +889,51 @@ const MonthSummaryView = ({ month, entries, workDays, selectedPosition }) => {
                     {row.workedMinutes !== null ? formatDuration(row.workedMinutes) : '-'}
                   </TableCell>
                   <TableCell>
-                    {row.dutiesTotal > 0 ? `${row.dutiesCompleted}/${row.dutiesTotal}` : '-'}
+                    {row.dutiesTotal > 0 ? (
+                      <HoverTip
+                        title={`Обязанности (${row.dutiesCompleted}/${row.dutiesTotal})`}
+                        className="text-purple-700 font-semibold cursor-help border-b border-dotted border-purple-400"
+                        tip={
+                          <ul>
+                            {row.duties.map((d, i) => (
+                              <li
+                                key={d.id || i}
+                                className={`flex items-start mb-1 ${
+                                  d.done ? 'text-green-300' : 'text-red-300'
+                                }`}
+                              >
+                                <span className="mr-1 flex-shrink-0">{d.done ? '✓' : '✗'}</span>
+                                <span>{d.name}</span>
+                              </li>
+                            ))}
+                          </ul>
+                        }
+                      >
+                        {row.dutiesCompleted}/{row.dutiesTotal}
+                      </HoverTip>
+                    ) : (
+                      '-'
+                    )}
                   </TableCell>
                   <TableCell>
                     {!row.hasAttendance ? (
                       <Badge variant="outline">Нет данных</Badge>
                     ) : row.violation ? (
-                      <Badge variant="destructive">Нарушение</Badge>
+                      <HoverTip
+                        title="Нарушения"
+                        className="cursor-help"
+                        tip={
+                          <ul>
+                            {row.violations.map((v) => (
+                              <li key={v} className="mb-1 text-red-300">
+                                • {v}
+                              </li>
+                            ))}
+                          </ul>
+                        }
+                      >
+                        <Badge variant="destructive">Нарушение</Badge>
+                      </HoverTip>
                     ) : (
                       <Badge variant="secondary">В норме</Badge>
                     )}
