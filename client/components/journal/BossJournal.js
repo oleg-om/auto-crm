@@ -364,6 +364,9 @@ const BossJournal = () => {
                   <SelectItem value={NONE_EMPLOYEE}>Выберите сотрудника</SelectItem>
                   {employees
                     .filter((emp) => emp.positionId)
+                    .sort((a, b) =>
+                      `${a.name} ${a.surname}`.localeCompare(`${b.name} ${b.surname}`, 'ru')
+                    )
                     .map((emp) => {
                       const position = positions.find((p) => p.id === emp.positionId)
                       return (
@@ -808,6 +811,7 @@ const MonthSummaryView = ({ month, entries, workDays, selectedPosition }) => {
         `Ранний уход: окончание в ${extractTime(endTime)}, норма ${selectedPosition.workDayEndTime}`
       )
     }
+    const inProgress = !!startTime && !endTime && day.isSame(moment(), 'day')
     if (noEndViolation) violations.push('Не проставлено окончание рабочего дня')
 
     const duties = dayEntries.map((entry) => {
@@ -818,6 +822,15 @@ const MonthSummaryView = ({ month, entries, workDays, selectedPosition }) => {
         done: !!entry.endTime
       }
     })
+
+    const undone = duties.filter((d) => !d.done)
+    // Для идущего дня незавершённые обязанности — норма, считаем только завершённые дни
+    const dayFinished = !!endTime || day.isBefore(moment(), 'day')
+    if (dayFinished && undone.length > 0) {
+      violations.push(
+        `Не выполнены обязанности (${duties.length - undone.length}/${duties.length})`
+      )
+    }
 
     return {
       key,
@@ -830,6 +843,7 @@ const MonthSummaryView = ({ month, entries, workDays, selectedPosition }) => {
       dutiesCompleted: dayEntries.filter((entry) => entry.endTime).length,
       violation: violations.length > 0,
       violations,
+      inProgress,
       duties
     }
   })
@@ -940,8 +954,14 @@ const MonthSummaryView = ({ month, entries, workDays, selectedPosition }) => {
                       >
                         <Badge variant="destructive">Нарушение</Badge>
                       </HoverTip>
+                    ) : row.inProgress ? (
+                      <Badge className="border-transparent bg-blue-100 text-blue-800 hover:bg-blue-100">
+                        День идёт
+                      </Badge>
                     ) : (
-                      <Badge variant="secondary">В норме</Badge>
+                      <Badge className="border-transparent bg-green-100 text-green-800 hover:bg-green-100">
+                        В норме
+                      </Badge>
                     )}
                   </TableCell>
                 </TableRow>
