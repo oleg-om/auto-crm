@@ -45,6 +45,7 @@ interface IFormState {
   category: string
   number: string
   free: string
+  time: string
   [priceField: string]: string
 }
 
@@ -54,6 +55,7 @@ const emptyState: IFormState = {
   category: '',
   number: '',
   free: '',
+  time: '',
   ...Object.fromEntries(ALL_PRICE_FIELDS.map((key) => [key, '']))
 }
 
@@ -65,6 +67,7 @@ const toFormState = (item?: IShinomontazhPrice): IFormState =>
         category: item.category,
         number: item.number != null ? String(item.number) : '',
         free: item.free ?? '',
+        time: item.time != null ? String(item.time) : '',
         ...Object.fromEntries(
           ALL_PRICE_FIELDS.map((key) => {
             const value = (item as unknown as Record<string, number | undefined>)[key]
@@ -83,6 +86,7 @@ const toPayload = (state: IFormState) => {
     category: state.category,
     number: state.number,
     free: state.free,
+    time: state.time,
     ...prices
   }
 }
@@ -265,6 +269,18 @@ const ShinomontazhpriceForm = ({ mode, item, onSaved, onCancel }: IShinomontazhp
                   <SelectItem value="no">Нет</SelectItem>
                 </SelectContent>
               </Select>
+            </Field>
+            <Field>
+              <FieldLabel htmlFor="time">Минимальное время, мин</FieldLabel>
+              <Input
+                id="time"
+                name="time"
+                type="number"
+                min={0}
+                value={state.time}
+                placeholder="Не задано"
+                onChange={onChange}
+              />
             </Field>
           </div>
 

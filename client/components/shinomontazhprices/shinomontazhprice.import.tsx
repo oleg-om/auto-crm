@@ -167,6 +167,11 @@ const ShinomontazhpriceImport = ({ onSaved, onCancel }: IShinomontazhpriceImport
                 <b className="text-foreground">free</b> — акционная позиция либо нет: yes, no
               </li>
               <li>
+                <b className="text-foreground">time</b> — минимальное время выполнения услуги в
+                минутах (необязательно). Если указано, завершить работу можно не раньше, чем пройдёт
+                это время. Для услуг без времени ожидания нет
+              </li>
+              <li>
                 Столбец цены заполняется только для той группы, что соответствует{' '}
                 <b className="text-foreground">type</b>, остальные оставляем пустыми:
                 <ul className="ml-4 mt-1 list-[circle] space-y-1">

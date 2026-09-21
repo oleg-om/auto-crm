@@ -3,7 +3,10 @@ import { useSelector } from 'react-redux'
 import * as XLSX from 'xlsx'
 import { Download } from 'lucide-react'
 import { Button } from '../ui/button'
-import { deleteKeys } from '../../scenes/Shinomotazh.prices/Shinomontazh.prices.donwload'
+import {
+  deleteKeys,
+  headersWithLast
+} from '../../scenes/Shinomotazh.prices/Shinomontazh.prices.donwload'
 import type { IStoPrice } from '../../../common/types/generated/StoPrice'
 
 const StopriceDownloadButton = () => {
@@ -26,7 +29,7 @@ const StopriceDownloadButton = () => {
         })
     }
 
-    const worksheet = XLSX.utils.json_to_sheet(array)
+    const worksheet = XLSX.utils.json_to_sheet(array, { header: headersWithLast(array, 'time') })
     const workbook = XLSX.utils.book_new()
     XLSX.utils.book_append_sheet(workbook, worksheet, 'Прайс')
 
