@@ -2,6 +2,8 @@ import React, { useState } from 'react'
 import { useDispatch } from 'react-redux'
 import { toast } from 'react-toastify'
 import * as XLSX from 'xlsx'
+import { fromExcelRows } from '../../lib/price-excel'
+import { materialExcelConfig } from '../../lib/price-excel-configs'
 import 'react-toastify/dist/ReactToastify.css'
 import LoadExample from './load-example'
 import materialList from '../../lists/material-list'
@@ -51,7 +53,7 @@ const MaterialImport = ({ onSaved, onCancel }: IMaterialImportProps) => {
         const wsname = wb.SheetNames[0]
         const ws = wb.Sheets[wsname]
         const data = XLSX.utils.sheet_to_json<Record<string, unknown>>(ws)
-        resolve(data)
+        resolve(fromExcelRows(data, materialExcelConfig))
       }
       fileReader.onerror = (error) => {
         reject(error)
@@ -137,46 +139,37 @@ const MaterialImport = ({ onSaved, onCancel }: IMaterialImportProps) => {
             <FieldDescription>Сформируйте таблицу:</FieldDescription>
             <ul className="ml-4 list-disc space-y-1 text-sm text-muted-foreground">
               <li>
-                <b className="text-foreground">name</b> — наименование
+                <b className="text-foreground">Название</b> — наименование
               </li>
               <li>
-                <b className="text-foreground">artikul</b> — артикул
+                <b className="text-foreground">Артикул</b> — артикул
               </li>
               <li>
-                <b className="text-foreground">price</b> — розничная цена
+                <b className="text-foreground">Цена</b> — розничная цена
               </li>
               <li>
-                <b className="text-foreground">quantity</b> — количество
+                <b className="text-foreground">Количество</b> — количество
               </li>
               <li>
-                <b className="text-foreground">category</b> — категория, например: Латки
+                <b className="text-foreground">Направление</b> — одно из:{' '}
+                {materialList.map((it: { name: string; value: string }) => it.name).join(', ')}
+              </li>
+              <li>
+                <b className="text-foreground">Категория</b> — категория, например: Латки
                 универсальные, Вентили для легковых автомобилей
               </li>
               <li>
-                <b className="text-foreground">free</b> — акционная позиция либо нет: yes, no
+                <b className="text-foreground">Акция</b> — акционная позиция либо нет: Да, Нет
               </li>
               <li>
-                <b className="text-foreground">plus</b> — появляется цифра 8 рядом со строкой: yes,
-                no
-              </li>
-              <li>
-                <b className="text-foreground">type</b> — направление, один из:{' '}
-                {materialList
-                  .map((it: { name: string; value: string }) => `${it.value} (${it.name})`)
-                  .join(', ')}
+                <b className="text-foreground">Цифра 8</b> — появляется цифра 8 рядом со строкой:
+                Да, Нет
               </li>
             </ul>
             <FieldDescription>
-              В таблице все указанные значения (кроме name, artikul, category) пишем английскими
-              буквами без пробелов, маленькими буквами.{' '}
-              <a
-                href="https://cloud.mail.ru/public/e9BR/CmE1RYZe6"
-                target="_blank"
-                rel="noreferrer"
-                className="underline"
-              >
-                Пример
-              </a>
+              Названия столбцов и значения пишем по-русски, как в скачанном прайсе — проще всего
+              скачать текущий прайс и отредактировать его. Прежние английские названия столбцов и
+              значений (name, type, legk, yes/no) тоже принимаются.
             </FieldDescription>
           </Field>
         </FieldGroup>

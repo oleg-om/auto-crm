@@ -1,11 +1,11 @@
 import React from 'react'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '../ui/table'
 
-const COLUMNS = ['name', 'type', 'category', 'number', 'free', 'price']
+const COLUMNS = ['Название', 'Направление', 'Категория', 'Порядковый номер', 'Акция', 'Цена']
 
 const EXAMPLE_ROWS: string[][] = [
-  ['Лобовое стекло (замена)', 'legk', 'Седан, Хетчбек', '1', 'no', '3500'],
-  ['Лобовое стекло с датчиком дождя', 'legk', 'Кроссоверы', '2', 'yes', '4200']
+  ['Лобовое стекло (замена)', 'Легковые', 'Седан, Хетчбек', '1', 'Нет', '3500'],
+  ['Лобовое стекло с датчиком дождя', 'Легковые', 'Кроссоверы', '2', 'Да', '4200']
 ]
 
 const LoadExample = () => (

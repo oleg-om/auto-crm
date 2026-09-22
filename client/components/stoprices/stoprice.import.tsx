@@ -2,6 +2,8 @@ import React, { useState } from 'react'
 import { useDispatch } from 'react-redux'
 import { toast } from 'react-toastify'
 import * as XLSX from 'xlsx'
+import { fromExcelRows } from '../../lib/price-excel'
+import { stoExcelConfig } from '../../lib/price-excel-configs'
 import 'react-toastify/dist/ReactToastify.css'
 import LoadExample from './load-example'
 import stoTypeList from '../../lists/sto-type-list'
@@ -22,6 +24,9 @@ import {
 } from '../ui/alert-dialog'
 
 const PRICE_FIELDS_BY_TYPE = stoPriceFieldList as Record<string, { key: string; label: string }[]>
+const TYPE_NAMES = Object.fromEntries(
+  (stoTypeList as { name: string; value: string }[]).map((it) => [it.value, it.name])
+)
 
 type ILoadState = '' | 'loading' | 'error' | 'finish'
 
@@ -54,7 +59,7 @@ const StopriceImport = ({ onSaved, onCancel }: IStopriceImportProps) => {
         const wsname = wb.SheetNames[0]
         const ws = wb.Sheets[wsname]
         const data = XLSX.utils.sheet_to_json<Record<string, unknown>>(ws)
-        resolve(data)
+        resolve(fromExcelRows(data, stoExcelConfig))
       }
       fileReader.onerror = (error) => {
         reject(error)
@@ -140,52 +145,43 @@ const StopriceImport = ({ onSaved, onCancel }: IStopriceImportProps) => {
             <FieldDescription>Сформируйте таблицу:</FieldDescription>
             <ul className="ml-4 list-disc space-y-1 text-sm text-muted-foreground">
               <li>
-                <b className="text-foreground">name</b> — наименование услуги
+                <b className="text-foreground">Название</b> — наименование услуги
               </li>
               <li>
-                <b className="text-foreground">type</b> — направление, один из:{' '}
-                {stoTypeList
-                  .map((it: { name: string; value: string }) => `${it.value} (${it.name})`)
-                  .join(', ')}
+                <b className="text-foreground">Направление</b> — одно из:{' '}
+                {stoTypeList.map((it: { name: string; value: string }) => it.name).join(', ')}
               </li>
               <li>
-                <b className="text-foreground">category</b> — категория (из справочника СТО)
+                <b className="text-foreground">Категория</b> — категория из справочника СТО
               </li>
               <li>
-                <b className="text-foreground">number</b> — порядковый номер
+                <b className="text-foreground">Порядковый номер</b> — порядковый номер
               </li>
               <li>
-                <b className="text-foreground">free</b> — акционная позиция либо нет: yes, no
+                <b className="text-foreground">Акция</b> — акционная позиция либо нет: Да, Нет
               </li>
               <li>
-                <b className="text-foreground">time</b> — минимальное время выполнения услуги в
-                минутах (необязательно). Если указано, завершить работу можно не раньше, чем пройдёт
-                это время. Для услуг без времени ожидания нет
+                <b className="text-foreground">Время, мин</b> — минимальное время выполнения услуги
+                в минутах (необязательно). Если указано, завершить работу можно не раньше, чем
+                пройдёт это время. Для услуг без времени ожидания нет
               </li>
               <li>
                 Столбец цены заполняется только для той группы, что соответствует{' '}
-                <b className="text-foreground">type</b>, остальные оставляем пустыми:
+                <b className="text-foreground">направлению</b>, остальные оставляем пустыми:
                 <ul className="ml-4 mt-1 list-[circle] space-y-1">
                   {Object.entries(PRICE_FIELDS_BY_TYPE).map(([type, fields]) => (
                     <li key={type}>
-                      <b className="text-foreground">{type}</b> —{' '}
-                      {fields.map((f) => f.key).join(', ')}
+                      <b className="text-foreground">{TYPE_NAMES[type] ?? type}</b> —{' '}
+                      {fields.map((f) => f.label).join(', ')}
                     </li>
                   ))}
                 </ul>
               </li>
             </ul>
             <FieldDescription>
-              В таблице все указанные значения (кроме name, category) пишем английскими буквами без
-              пробелов, маленькими буквами.{' '}
-              <a
-                href="https://cloud.mail.ru/public/e9BR/CmE1RYZe6"
-                target="_blank"
-                rel="noreferrer"
-                className="underline"
-              >
-                Пример
-              </a>
+              Названия столбцов и значения пишем по-русски, как в скачанном прайсе — проще всего
+              скачать текущий прайс и отредактировать его. Прежние английские названия столбцов и
+              значений (name, type, legk, yes/no) тоже принимаются.
             </FieldDescription>
           </Field>
         </FieldGroup>
