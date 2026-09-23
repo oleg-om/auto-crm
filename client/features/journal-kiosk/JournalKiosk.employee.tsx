@@ -2,12 +2,23 @@ import React, { useEffect, useMemo, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useHistory, useParams } from 'react-router-dom'
 import { toast } from 'react-toastify'
-import { ArrowLeft } from 'lucide-react'
+import { ArrowLeft, Briefcase, Coffee, Play, Square, Utensils } from 'lucide-react'
 import { getEmployees } from '../../redux/reducers/employees'
 import { getPositions } from '../../redux/reducers/positions'
 import { getEmployeePositionIds } from '../../lib/employee-positions'
 import standardDutiesList from '../../lists/standard-duties-list'
 import { Button } from '../../components/ui/button'
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle
+} from '../../components/ui/alert-dialog'
+import { cn } from '../../lib/utils'
 import 'react-toastify/dist/ReactToastify.css'
 import type { IEmployee } from '../../../common/types/generated/Employee'
 import type { IPosition } from '../../../common/types/generated/Position'
@@ -64,6 +75,7 @@ const JournalKioskEmployee = () => {
   const [workDayData, setWorkDayData] = useState<IWorkDayStart | null>(null)
   const [entries, setEntries] = useState<Record<string, IJournalEntry>>({})
   const [loading, setLoading] = useState(true)
+  const [isEndDayConfirmOpen, setIsEndDayConfirmOpen] = useState(false)
   const workDayStarted = !!workDayData
   const workDayEnded = !!workDayData?.endTime
 
@@ -100,6 +112,22 @@ const JournalKioskEmployee = () => {
 
   const restEntry = activeEntryFor(REST_DUTY_NAME)
   const lunchEntry = activeEntryFor(LUNCH_DUTY_NAME)
+  // Only one lunch per work day (the server enforces this too - see journalEntry.controller.js).
+  const lunchTakenToday =
+    !lunchEntry &&
+    Object.values(entries).some(
+      (entry) => dutyNameByEntry(entry)?.toLowerCase() === LUNCH_DUTY_NAME.toLowerCase()
+    )
+
+  // Kiosk flow: after any successful action go straight back to the number grid (the tablet is
+  // shared - the next person shouldn't land on this employee's screen) and confirm who is now in
+  // which state. Statuses are phrased as states ("на обеде"), not past-tense verbs, so they don't
+  // need the employee's grammatical gender.
+  const finishAndLeave = (status: string) => {
+    const fullName = [employee?.name, employee?.surname].filter(Boolean).join(' ')
+    toast.success(`${fullName}: ${status}`, { position: toast.POSITION.BOTTOM_RIGHT })
+    history.goBack()
+  }
 
   const handleStartWorkDay = async () => {
     const response = await fetch('/api/v1/workDayStart/start', {
@@ -108,10 +136,12 @@ const JournalKioskEmployee = () => {
       body: JSON.stringify({ employeeId, date: today() })
     })
     const { data } = await response.json()
-    if (data) {
-      setWorkDayData(data)
-      notify('Рабочий день начат')
+    if (!data) {
+      notify('Не удалось начать рабочий день')
+      return
     }
+    setWorkDayData(data)
+    finishAndLeave('на работе')
   }
 
   const handleEndWorkDay = async () => {
@@ -121,10 +151,12 @@ const JournalKioskEmployee = () => {
       body: JSON.stringify({ employeeId, date: today() })
     })
     const { data } = await response.json()
-    if (data) {
-      setWorkDayData(data)
-      notify('Рабочий день завершен')
+    if (!data) {
+      notify('Не удалось завершить рабочий день')
+      return
     }
+    setWorkDayData(data)
+    finishAndLeave('рабочий день завершён')
   }
 
   // Starts a break/lunch: reuses the duty already on the employee's position if one with this
@@ -179,8 +211,13 @@ const JournalKioskEmployee = () => {
         comment: null
       })
     })
-    const { data } = await response.json()
+    const { data, message } = await response.json()
+    if (!data?.id) {
+      notify(message || 'Не удалось сохранить')
+      return
+    }
     setEntries((prev) => ({ ...prev, [data.id]: data }))
+    finishAndLeave(name === LUNCH_DUTY_NAME ? 'на обеде' : 'на перерыве')
   }
 
   const finishDuty = async (entry: IJournalEntry) => {
@@ -200,7 +237,13 @@ const JournalKioskEmployee = () => {
       })
     })
     const { data } = await response.json()
+    if (!data?.id) {
+      notify('Не удалось сохранить')
+      return
+    }
     setEntries((prev) => ({ ...prev, [data.id]: data }))
+    const isLunch = dutyNameByEntry(entry)?.toLowerCase() === LUNCH_DUTY_NAME.toLowerCase()
+    finishAndLeave(isLunch ? 'обед завершён' : 'перерыв завершён')
   }
 
   const goBack = () => history.goBack()
@@ -229,7 +272,14 @@ const JournalKioskEmployee = () => {
     )
   }
 
-  const bigButtonClass = 'h-16 w-full text-lg sm:h-20 sm:text-xl'
+  const bigButtonClass = 'h-16 w-full gap-3 whitespace-normal text-lg sm:h-20 sm:text-xl'
+  const bigIconClass = 'h-6 w-6 shrink-0 sm:h-7 sm:w-7'
+  // `secondary` is the same tone as the page's bg-muted/30, so idle break buttons are drawn as
+  // white bordered cards instead to stand out from the background. An active break's "Завершить"
+  // is primary (same as "Начать рабочий день" - back to work), keeping destructive red for
+  // "Завершить рабочий день" alone.
+  const breakButtonClass = (isActive: boolean) =>
+    cn(bigButtonClass, !isActive && 'border-2 shadow-sm')
 
   return (
     <div className="flex min-h-screen flex-col bg-muted/30">
@@ -247,11 +297,12 @@ const JournalKioskEmployee = () => {
         </div>
       </header>
 
-      <main className="mx-auto flex w-full max-w-md flex-1 flex-col justify-center gap-4 px-4 py-8 sm:px-6">
+      <main className="mx-auto flex w-full max-w-lg flex-1 flex-col justify-center gap-4 px-4 py-8 sm:px-6">
         {loading ? (
           <div className="mx-auto h-8 w-8 animate-spin rounded-full border-b-4 border-primary" />
         ) : !workDayStarted ? (
           <Button type="button" className={bigButtonClass} onClick={handleStartWorkDay}>
+            <Play className={bigIconClass} />
             Начать рабочий день
           </Button>
         ) : workDayEnded ? (
@@ -266,34 +317,76 @@ const JournalKioskEmployee = () => {
             ) : null}
             <Button
               type="button"
-              variant={restEntry ? 'destructive' : 'secondary'}
-              className={bigButtonClass}
+              variant={restEntry ? 'default' : 'outline'}
+              className={breakButtonClass(!!restEntry)}
               disabled={positionIds.length === 0 || !!lunchEntry}
               onClick={() => (restEntry ? finishDuty(restEntry) : startDuty(REST_DUTY_NAME))}
             >
+              {restEntry ? (
+                <Briefcase className={bigIconClass} />
+              ) : (
+                <Coffee className={bigIconClass} />
+              )}
               {restEntry ? 'Завершить перерыв' : 'Отдых / перекур / чай-кофе / перекус'}
             </Button>
             <Button
               type="button"
-              variant={lunchEntry ? 'destructive' : 'secondary'}
-              className={bigButtonClass}
-              disabled={positionIds.length === 0 || !!restEntry}
+              variant={lunchEntry ? 'default' : 'outline'}
+              className={breakButtonClass(!!lunchEntry)}
+              disabled={positionIds.length === 0 || !!restEntry || lunchTakenToday}
               onClick={() => (lunchEntry ? finishDuty(lunchEntry) : startDuty(LUNCH_DUTY_NAME))}
             >
-              {lunchEntry ? 'Завершить обед' : 'Обед'}
+              {lunchEntry ? (
+                <Briefcase className={bigIconClass} />
+              ) : (
+                <Utensils className={bigIconClass} />
+              )}
+              {lunchEntry ? 'Завершить обед' : lunchTakenToday ? 'Обед уже был сегодня' : 'Обед'}
             </Button>
             <Button
               type="button"
               variant="destructive"
               className={bigButtonClass}
               disabled={!!restEntry || !!lunchEntry}
-              onClick={handleEndWorkDay}
+              onClick={() => setIsEndDayConfirmOpen(true)}
             >
+              <Square className={bigIconClass} />
               Завершить рабочий день
             </Button>
           </>
         )}
+        {/* Same goBack() as the header's arrow - duplicated down here so the next person at the
+            tablet doesn't have to reach for the small top-corner button. */}
+        <Button
+          type="button"
+          variant="ghost"
+          className="mt-4 h-14 w-full gap-2 text-base text-muted-foreground"
+          onClick={goBack}
+        >
+          <ArrowLeft className="h-5 w-5" />
+          Вернуться на главный экран
+        </Button>
       </main>
+      {/* Ending the day can't be undone from the kiosk, so ask first - with tablet-sized buttons. */}
+      <AlertDialog open={isEndDayConfirmOpen} onOpenChange={setIsEndDayConfirmOpen}>
+        <AlertDialogContent className="max-w-[calc(100%-2rem)] gap-6 rounded-lg sm:max-w-lg">
+          <AlertDialogHeader>
+            <AlertDialogTitle className="text-xl sm:text-2xl">
+              Вы уверены, что хотите завершить рабочий день?
+            </AlertDialogTitle>
+            <AlertDialogDescription className="text-base">
+              {employee.name} {employee.surname}
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter className="grid gap-3 sm:grid-cols-2 sm:space-x-0">
+            <AlertDialogCancel className="mt-0 h-16 text-lg">Отмена</AlertDialogCancel>
+            <AlertDialogAction className="h-16 gap-3 text-lg" onClick={handleEndWorkDay}>
+              <Square className={bigIconClass} />
+              Завершить
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   )
 }
