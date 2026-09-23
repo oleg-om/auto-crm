@@ -1,5 +1,20 @@
 const JournalEntry = require('../model/journalEntry')
+const Position = require('../model/position')
 const { toUtcDateOnly, utcMonthRange } = require('../utils/dateBucket')
+
+// Lunch ("Обед", see client/lists/standard-duties-list.js) is a per-position duty, so each position
+// has its own copy with its own _id - collect all of them to check "one lunch per work day"
+// regardless of which of the employee's positions it was logged under.
+const LUNCH_DUTY_NAME = 'обед'
+
+const getLunchDutyIds = async () => {
+  const positions = await Position.find({ 'duties.name': /^обед$/i }, { duties: 1 })
+  return positions.flatMap((pos) =>
+    pos.duties
+      .filter((duty) => duty.name?.trim().toLowerCase() === LUNCH_DUTY_NAME)
+      .map((duty) => String(duty._id))
+  )
+}
 
 exports.getAll = async (req, res) => {
   const { employeeId, date, positionId } = req.query
@@ -170,6 +185,21 @@ exports.upsert = async (req, res) => {
   }
 
   const dateObj = toUtcDateOnly(date)
+
+  const lunchDutyIds = await getLunchDutyIds()
+  if (lunchDutyIds.includes(String(dutyId))) {
+    const lunchAlreadyTaken = await JournalEntry.exists({
+      employeeId,
+      date: dateObj,
+      dutyId: { $in: lunchDutyIds }
+    })
+    if (lunchAlreadyTaken) {
+      return res.status(409).json({
+        status: 'error',
+        message: 'Обед можно взять только один раз за рабочий день'
+      })
+    }
+  }
 
   const newEntry = new JournalEntry({
     employeeId,

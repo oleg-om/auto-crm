@@ -776,7 +776,11 @@ const EmployeeJournal = () => {
         })
       })
 
-      const { data } = await response.json()
+      const { status, data, message } = await response.json()
+      if (status !== 'ok') {
+        notify(message || 'Ошибка при добавлении обязанности')
+        return
+      }
       // Используем ID записи из БД как uniqueKey
       const uniqueKey = data.id
 
@@ -863,7 +867,11 @@ const EmployeeJournal = () => {
         })
       })
 
-      const { data } = await response.json()
+      const { status, data, message } = await response.json()
+      if (status !== 'ok') {
+        notify(message || 'Ошибка при добавлении стандартной обязанности')
+        return
+      }
       const uniqueKey = data.id
 
       setEntries((prev) => ({
