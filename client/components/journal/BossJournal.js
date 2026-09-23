@@ -155,6 +155,10 @@ const BossJournal = () => {
   const [monthEntries, setMonthEntries] = useState([])
   const [monthWorkDays, setMonthWorkDays] = useState([])
   const [monthLoading, setMonthLoading] = useState(false)
+  // 'with' | 'without' | 'all' - by default only employees who actually logged something in the
+  // selected day/month are offered in the picker.
+  const [dataFilter, setDataFilter] = useState('with')
+  const [employeeIdsWithData, setEmployeeIdsWithData] = useState(null)
 
   useEffect(() => {
     dispatch(getPositions())
@@ -236,6 +240,37 @@ const BossJournal = () => {
     }
   }, [viewMode, selectedMonth, selectedEmployeeId, loadMonthData])
 
+  useEffect(() => {
+    const period = viewMode === 'day' ? `date=${selectedDate}` : `month=${selectedMonth}`
+    if (viewMode === 'day' ? !selectedDate : !selectedMonth) return undefined
+    let cancelled = false
+    setEmployeeIdsWithData(null)
+    fetch(`/api/v1/journalEntry/employees-with-data?${period}`)
+      .then((r) => r.json())
+      .then(({ status, data }) => {
+        if (!cancelled) setEmployeeIdsWithData(status === 'ok' ? data : [])
+      })
+      .catch(() => {
+        if (!cancelled) setEmployeeIdsWithData([])
+      })
+    return () => {
+      cancelled = true
+    }
+  }, [viewMode, selectedDate, selectedMonth])
+
+  const journalEmployees = employees
+    .filter((emp) => emp.positionId)
+    .sort((a, b) => `${a.name} ${a.surname}`.localeCompare(`${b.name} ${b.surname}`, 'ru'))
+  const withDataSet = new Set(employeeIdsWithData || [])
+  const withDataCount = journalEmployees.filter((emp) => withDataSet.has(emp.id)).length
+  const filteredEmployees = journalEmployees.filter((emp) => {
+    // Never hide the currently selected employee - the picker would otherwise show a blank value
+    // after switching the date/month to one where they have (or lack) data.
+    if (emp.id === selectedEmployeeId || dataFilter === 'all') return true
+    if (employeeIdsWithData === null) return dataFilter === 'without'
+    return dataFilter === 'with' ? withDataSet.has(emp.id) : !withDataSet.has(emp.id)
+  })
+
   const selectedEmployee = employees.find((emp) => emp.id === selectedEmployeeId)
   const { positionId } = selectedEmployee || {}
   const selectedPosition = positionId ? positions.find((p) => p.id === positionId) : null
@@ -308,7 +343,7 @@ const BossJournal = () => {
 
         {/* Фильтры */}
         <div className="bg-white rounded-lg shadow p-6 mb-6">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
             <div>
               <Label className="block mb-2">Период</Label>
               <Tabs value={viewMode} onValueChange={(value) => setViewMode(value)}>
@@ -348,6 +383,26 @@ const BossJournal = () => {
               </div>
             )}
             <div>
+              <Label htmlFor="boss-journal-data-filter" className="block mb-2">
+                Сотрудники
+              </Label>
+              <Select value={dataFilter} onValueChange={setDataFilter}>
+                <SelectTrigger id="boss-journal-data-filter">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="with">
+                    С данными{employeeIdsWithData ? ` (${withDataCount})` : ''}
+                  </SelectItem>
+                  <SelectItem value="without">
+                    Без данных
+                    {employeeIdsWithData ? ` (${journalEmployees.length - withDataCount})` : ''}
+                  </SelectItem>
+                  <SelectItem value="all">Все ({journalEmployees.length})</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+            <div>
               <Label htmlFor="boss-journal-employee" className="block mb-2">
                 Сотрудник
               </Label>
@@ -362,19 +417,14 @@ const BossJournal = () => {
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem value={NONE_EMPLOYEE}>Выберите сотрудника</SelectItem>
-                  {employees
-                    .filter((emp) => emp.positionId)
-                    .sort((a, b) =>
-                      `${a.name} ${a.surname}`.localeCompare(`${b.name} ${b.surname}`, 'ru')
+                  {filteredEmployees.map((emp) => {
+                    const position = positions.find((p) => p.id === emp.positionId)
+                    return (
+                      <SelectItem key={emp.id} value={emp.id}>
+                        {emp.name} {emp.surname} {position ? `(${position.name})` : ''}
+                      </SelectItem>
                     )
-                    .map((emp) => {
-                      const position = positions.find((p) => p.id === emp.positionId)
-                      return (
-                        <SelectItem key={emp.id} value={emp.id}>
-                          {emp.name} {emp.surname} {position ? `(${position.name})` : ''}
-                        </SelectItem>
-                      )
-                    })}
+                  })}
                 </SelectContent>
               </Select>
             </div>

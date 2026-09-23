@@ -1,5 +1,8 @@
 const JournalEntry = require('../model/journalEntry')
 const Position = require('../model/position')
+const WorkDayStart = require('../model/workDayStart')
+const User = require('../model/User.model').default
+const { isAdmin, isBoss } = require('../utils/roles')
 const { toUtcDateOnly, utcMonthRange } = require('../utils/dateBucket')
 
 // Lunch ("Обед", see client/lists/standard-duties-list.js) is a per-position duty, so each position
@@ -27,6 +30,34 @@ exports.getAll = async (req, res) => {
 
   const list = await JournalEntry.find(query).sort({ createdAt: -1 })
   return res.json({ status: 'ok', data: list })
+}
+
+// Which employees have any journal data (a journal entry or a started work day) in a period -
+// ?date=YYYY-MM-DD or ?month=YYYY-MM. Backs the "С данными / Без данных" filter on the boss
+// journal (client/components/journal/BossJournal.js), so it's gated to the same roles.
+exports.getEmployeesWithData = async (req, res) => {
+  const user = await User.findById(req.jwtUser?.uid)
+  if (!user || !(isBoss(user.role) || isAdmin(user.role))) {
+    return res.status(403).json({ status: 'error', message: 'Forbidden' })
+  }
+
+  const { date, month } = req.query
+  let dateQuery
+  if (month) {
+    const { start, end } = utcMonthRange(month)
+    dateQuery = { $gte: start, $lt: end }
+  } else if (date) {
+    dateQuery = toUtcDateOnly(date)
+  } else {
+    return res.status(400).json({ status: 'error', message: 'date or month is required' })
+  }
+
+  const [entryEmployeeIds, workDayEmployeeIds] = await Promise.all([
+    JournalEntry.distinct('employeeId', { date: dateQuery }),
+    WorkDayStart.distinct('employeeId', { date: dateQuery })
+  ])
+  const data = [...new Set([...entryEmployeeIds, ...workDayEmployeeIds].map(String))]
+  return res.json({ status: 'ok', data })
 }
 
 exports.getOne = async (req, res) => {
