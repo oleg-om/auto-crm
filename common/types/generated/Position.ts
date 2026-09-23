@@ -4,7 +4,7 @@
 export interface IPosition {
   name: string
   id?: string
-  duties?: Array<{ name: string; isQuantitative?: boolean; hasChecklist?: boolean; addOnlyOnce?: boolean; checklistItems?: Array<{ text: string; order?: number; _id?: string }>; completionTimeMinutes?: number; order?: number; _id?: string }>
+  duties?: Array<{ name: string; isQuantitative?: boolean; hasChecklist?: boolean; addOnlyOnce?: boolean; isRequired?: boolean; checklistItems?: Array<{ text: string; order?: number; _id?: string }>; completionTimeMinutes?: number; order?: number; _id?: string }>
   workDayStartTime?: string
   workDayEndTime?: string
   date?: string

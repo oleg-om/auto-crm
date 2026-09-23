@@ -6,7 +6,15 @@ import { addDuty, updateDuty } from '../../redux/reducers/positions'
 import { Button } from '../ui/button'
 import { Input } from '../ui/input'
 import { Checkbox } from '../ui/checkbox'
-import { Field, FieldError, FieldGroup, FieldLabel, FieldContent, FieldTitle } from '../ui/field'
+import {
+  Field,
+  FieldContent,
+  FieldDescription,
+  FieldError,
+  FieldGroup,
+  FieldLabel,
+  FieldTitle
+} from '../ui/field'
 import 'react-toastify/dist/ReactToastify.css'
 import type { IPosition } from '../../../common/types/generated/Position'
 
@@ -18,6 +26,7 @@ interface IFormState {
   isQuantitative: boolean
   hasChecklist: boolean
   addOnlyOnce: boolean
+  isRequired: boolean
   checklistItems: NonNullable<IDuty['checklistItems']>
   completionTimeMinutes: string
 }
@@ -27,6 +36,7 @@ const toFormState = (duty?: IDuty): IFormState => ({
   isQuantitative: duty?.isQuantitative ?? false,
   hasChecklist: duty?.hasChecklist ?? false,
   addOnlyOnce: duty?.addOnlyOnce ?? false,
+  isRequired: duty?.isRequired ?? false,
   checklistItems: duty?.checklistItems ?? [],
   completionTimeMinutes: duty?.completionTimeMinutes ? String(duty.completionTimeMinutes) : ''
 })
@@ -36,6 +46,7 @@ const toPayload = (state: IFormState): IDutyUpdate => ({
   isQuantitative: state.isQuantitative,
   hasChecklist: state.hasChecklist,
   addOnlyOnce: state.addOnlyOnce,
+  isRequired: state.isRequired,
   checklistItems: state.hasChecklist ? state.checklistItems : [],
   completionTimeMinutes: state.completionTimeMinutes
     ? Number(state.completionTimeMinutes)
@@ -132,7 +143,24 @@ const DutyForm = ({ positionId, mode, duty, onSaved, onCancel }: IDutyFormProps)
             <FieldError>{nameError}</FieldError>
           </Field>
 
-          <div className="grid gap-3 sm:grid-cols-3">
+          <div className="grid gap-3 sm:grid-cols-2">
+            <FieldLabel htmlFor="isRequired">
+              <Field orientation="horizontal">
+                <Checkbox
+                  id="isRequired"
+                  checked={state.isRequired}
+                  onCheckedChange={(checked) =>
+                    setState((prev) => ({ ...prev, isRequired: checked === true }))
+                  }
+                />
+                <FieldContent>
+                  <FieldTitle>Обязательная</FieldTitle>
+                  <FieldDescription>
+                    Учитывается в отчёте босса как обязательная на каждый рабочий день
+                  </FieldDescription>
+                </FieldContent>
+              </Field>
+            </FieldLabel>
             <FieldLabel htmlFor="isQuantitative">
               <Field orientation="horizontal">
                 <Checkbox

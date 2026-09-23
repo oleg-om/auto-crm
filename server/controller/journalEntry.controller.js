@@ -1,19 +1,63 @@
 const JournalEntry = require('../model/journalEntry')
+const Position = require('../model/position')
+const WorkDayStart = require('../model/workDayStart')
+const User = require('../model/User.model').default
+const { isAdmin, isBoss } = require('../utils/roles')
+const { toUtcDateOnly, utcMonthRange } = require('../utils/dateBucket')
+
+// Lunch ("Обед", see client/lists/standard-duties-list.js) is a per-position duty, so each position
+// has its own copy with its own _id - collect all of them to check "one lunch per work day"
+// regardless of which of the employee's positions it was logged under.
+const LUNCH_DUTY_NAME = 'обед'
+
+const getLunchDutyIds = async () => {
+  const positions = await Position.find({ 'duties.name': /^обед$/i }, { duties: 1 })
+  return positions.flatMap((pos) =>
+    pos.duties
+      .filter((duty) => duty.name?.trim().toLowerCase() === LUNCH_DUTY_NAME)
+      .map((duty) => String(duty._id))
+  )
+}
 
 exports.getAll = async (req, res) => {
   const { employeeId, date, positionId } = req.query
   const query = {}
   if (employeeId) query.employeeId = employeeId
   if (date) {
-    // Преобразуем строку даты в Date объект (начало дня)
-    const dateObj = new Date(date)
-    dateObj.setHours(0, 0, 0, 0)
-    query.date = dateObj
+    query.date = toUtcDateOnly(date)
   }
   if (positionId) query.positionId = positionId
 
   const list = await JournalEntry.find(query).sort({ createdAt: -1 })
   return res.json({ status: 'ok', data: list })
+}
+
+// Which employees have any journal data (a journal entry or a started work day) in a period -
+// ?date=YYYY-MM-DD or ?month=YYYY-MM. Backs the "С данными / Без данных" filter on the boss
+// journal (client/components/journal/BossJournal.js), so it's gated to the same roles.
+exports.getEmployeesWithData = async (req, res) => {
+  const user = await User.findById(req.jwtUser?.uid)
+  if (!user || !(isBoss(user.role) || isAdmin(user.role))) {
+    return res.status(403).json({ status: 'error', message: 'Forbidden' })
+  }
+
+  const { date, month } = req.query
+  let dateQuery
+  if (month) {
+    const { start, end } = utcMonthRange(month)
+    dateQuery = { $gte: start, $lt: end }
+  } else if (date) {
+    dateQuery = toUtcDateOnly(date)
+  } else {
+    return res.status(400).json({ status: 'error', message: 'date or month is required' })
+  }
+
+  const [entryEmployeeIds, workDayEmployeeIds] = await Promise.all([
+    JournalEntry.distinct('employeeId', { date: dateQuery }),
+    WorkDayStart.distinct('employeeId', { date: dateQuery })
+  ])
+  const data = [...new Set([...entryEmployeeIds, ...workDayEmployeeIds].map(String))]
+  return res.json({ status: 'ok', data })
 }
 
 exports.getOne = async (req, res) => {
@@ -44,19 +88,14 @@ exports.delete = async (req, res) => {
 // Получить записи за день для сотрудника
 exports.getByEmployeeAndDate = async (req, res) => {
   const { employeeId, date } = req.params
-  // Преобразуем строку даты в Date объект (начало дня)
-  const dateObj = new Date(date)
-  dateObj.setHours(0, 0, 0, 0)
-  const entries = await JournalEntry.find({ employeeId, date: dateObj })
+  const entries = await JournalEntry.find({ employeeId, date: toUtcDateOnly(date) })
   return res.json({ status: 'ok', data: entries })
 }
 
 // Получить записи за месяц для сотрудника
 exports.getByEmployeeAndMonth = async (req, res) => {
   const { employeeId, month } = req.params
-  const [year, monthNumber] = month.split('-').map(Number)
-  const start = new Date(year, monthNumber - 1, 1)
-  const end = new Date(year, monthNumber, 1)
+  const { start, end } = utcMonthRange(month)
   const entries = await JournalEntry.find({
     employeeId,
     date: { $gte: start, $lt: end }
@@ -176,10 +215,21 @@ exports.upsert = async (req, res) => {
     }
   }
 
-  // Преобразуем строку даты в Date объект (начало дня)
-  const dateObj = typeof date === 'string' ? new Date(date) : date
-  if (dateObj instanceof Date) {
-    dateObj.setHours(0, 0, 0, 0)
+  const dateObj = toUtcDateOnly(date)
+
+  const lunchDutyIds = await getLunchDutyIds()
+  if (lunchDutyIds.includes(String(dutyId))) {
+    const lunchAlreadyTaken = await JournalEntry.exists({
+      employeeId,
+      date: dateObj,
+      dutyId: { $in: lunchDutyIds }
+    })
+    if (lunchAlreadyTaken) {
+      return res.status(409).json({
+        status: 'error',
+        message: 'Обед можно взять только один раз за рабочий день'
+      })
+    }
   }
 
   const newEntry = new JournalEntry({

@@ -39,6 +39,13 @@ const DutySchema = new mongoose.Schema({
     required: false,
     default: false
   },
+  // Mandatory for everyone in this position every work day - the boss journal's duty totals
+  // ("x/y") and "не выполнены обязанности" violations are counted against these.
+  isRequired: {
+    type: Boolean,
+    required: false,
+    default: false
+  },
   checklistItems: {
     type: [ChecklistItemSchema],
     required: false,
@@ -96,4 +103,3 @@ const Position = new mongoose.Schema({
 Position.plugin(AutoIncrement, { inc_field: 'id_position' })
 
 module.exports = mongoose.model('positions', Position)
-

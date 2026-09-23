@@ -5,6 +5,8 @@ const workDayStartController = require('../../controller/workDayStart.controller
 const router = express.Router()
 
 router.get('/journalEntry/', journalEntryController.getAll)
+// Must stay above '/journalEntry/:id', or ':id' would swallow this path.
+router.get('/journalEntry/employees-with-data', journalEntryController.getEmployeesWithData)
 router.get('/journalEntry/:id', journalEntryController.getOne)
 router.get(
   '/journalEntry/employee/:employeeId/date/:date',

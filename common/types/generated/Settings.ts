@@ -12,6 +12,7 @@ export interface ISettings {
   tyresAndWhellsBigMonth?: string
   tyresBigSeason?: string
   tyresBigMonth?: string
+  journalWorkTimeToleranceMin?: number
   id?: string
   _id?: string
   __v?: number

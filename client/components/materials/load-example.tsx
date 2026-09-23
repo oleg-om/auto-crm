@@ -1,7 +1,16 @@
 import React from 'react'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '../ui/table'
 
-const COLUMNS = ['name', 'artikul', 'price', 'quantity', 'type', 'category', 'free', 'plus']
+const COLUMNS = [
+  'Название',
+  'Артикул',
+  'Цена',
+  'Количество',
+  'Направление',
+  'Категория',
+  'Акция',
+  'Цифра 8'
+]
 
 const EXAMPLE_ROWS: string[][] = [
   [
@@ -9,30 +18,30 @@ const EXAMPLE_ROWS: string[][] = [
     'PVR-32',
     '120',
     '8',
-    'shinomontazh',
+    'Шиномонтаж',
     'Вентили для легковых автомобилей',
-    'no',
-    'no'
+    'Нет',
+    'Нет'
   ],
   [
     'Латка унив. PU-35 (35 мм)',
     'PU-35',
     '50',
     '146',
-    'shinomontazh',
+    'Шиномонтаж',
     'Латки универсальные',
-    'yes',
-    'no'
+    'Да',
+    'Нет'
   ],
   [
     'Бутылка с пенообразователем LERATON 150мл',
     'PS-002.100',
     '50',
     '12',
-    'moika',
+    'Автомойка',
     'Химия',
-    'no',
-    'yes'
+    'Нет',
+    'Да'
   ]
 ]
 

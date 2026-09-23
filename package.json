@@ -26,7 +26,8 @@
         "watch:server": "nodemon --legacy-watch start.js --watch server --exec \"npm run lint:server  --scripts-prepend-node-path && node\"",
         "build:prod": "cross-env NODE_ENV=production BROWSERSLIST_IGNORE_OLD_DATA=1 webpack --config webpack.production.config.js --progress --profile",
         "heroku-postbuild": "yarn run build:prod",
-        "find-unused": "npx dead-exports --e=./client"
+        "find-unused": "npx dead-exports --e=./client",
+        "db:sync-from-prod": "bash scripts/sync-prod-db.sh"
     },
     "author": "",
     "license": "MIT",
@@ -104,7 +105,8 @@
         "tailwind-merge": "^3.6.0",
         "universal-cookie": "^4.0.4",
         "uuid": "^11.1.1",
-        "xlsx": "^0.18.5"
+        "xlsx": "^0.18.5",
+        "xlsx-js-style": "^1.2.0"
     },
     "devDependencies": {
         "@babel/eslint-parser": "^7.26.0",

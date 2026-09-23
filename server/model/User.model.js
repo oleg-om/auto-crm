@@ -33,6 +33,13 @@ const userSchema = new mongoose.Schema(
     post: {
       type: Number,
       required: false
+    },
+    // Selects an alternate, simplified home screen for this account (e.g. the
+    // electronic journal kiosk grid instead of the Dashboard) - see
+    // client/lists/account-kind-list.js for the possible values.
+    kind: {
+      type: String,
+      required: false
     }
   },
   {

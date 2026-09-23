@@ -1,5 +1,7 @@
 import React, { useState } from 'react'
 import * as XLSX from 'xlsx'
+import { fromExcelRows } from '../../lib/price-excel'
+import { windowExcelConfig } from '../../lib/price-excel-configs'
 import LoadExample from './load-example'
 import windowTypeList from '../../lists/window-type-list'
 import { Field, FieldDescription, FieldGroup, FieldLabel } from '../ui/field'
@@ -41,7 +43,7 @@ const WindowpriceImport = ({ onImport, onDeleteAll, onCancel }: IWindowpriceImpo
         const wsname = wb.SheetNames[0]
         const ws = wb.Sheets[wsname]
         const data = XLSX.utils.sheet_to_json<Record<string, unknown>>(ws)
-        resolve(data)
+        resolve(fromExcelRows(data, windowExcelConfig))
       }
       fileReader.onerror = (error) => {
         reject(error)
@@ -119,38 +121,29 @@ const WindowpriceImport = ({ onImport, onDeleteAll, onCancel }: IWindowpriceImpo
             <FieldDescription>Сформируйте таблицу:</FieldDescription>
             <ul className="ml-4 list-disc space-y-1 text-sm text-muted-foreground">
               <li>
-                <b className="text-foreground">name</b> — наименование услуги
+                <b className="text-foreground">Название</b> — наименование услуги
               </li>
               <li>
-                <b className="text-foreground">type</b> — направление, один из:{' '}
-                {windowTypeList
-                  .map((it: { name: string; value: string }) => `${it.value} (${it.name})`)
-                  .join(', ')}
+                <b className="text-foreground">Направление</b> — одно из:{' '}
+                {windowTypeList.map((it: { name: string; value: string }) => it.name).join(', ')}
               </li>
               <li>
-                <b className="text-foreground">category</b> — категория из справочника «Категории»
+                <b className="text-foreground">Категория</b> — категория из справочника «Категории»
               </li>
               <li>
-                <b className="text-foreground">number</b> — порядковый номер
+                <b className="text-foreground">Порядковый номер</b> — порядковый номер
               </li>
               <li>
-                <b className="text-foreground">free</b> — акционная позиция либо нет: yes, no
+                <b className="text-foreground">Акция</b> — акционная позиция либо нет: Да, Нет
               </li>
               <li>
-                <b className="text-foreground">price</b> — цена услуги
+                <b className="text-foreground">Цена</b> — цена услуги
               </li>
             </ul>
             <FieldDescription>
-              В таблице все указанные значения (кроме name) пишем английскими буквами без пробелов,
-              маленькими буквами.{' '}
-              <a
-                href="https://cloud.mail.ru/public/e9BR/CmE1RYZe6"
-                target="_blank"
-                rel="noreferrer"
-                className="underline"
-              >
-                Пример
-              </a>
+              Названия столбцов и значения пишем по-русски, как в скачанном прайсе — проще всего
+              скачать текущий прайс и отредактировать его. Прежние английские названия столбцов и
+              значений (name, type, legk, yes/no) тоже принимаются.
             </FieldDescription>
           </Field>
         </FieldGroup>

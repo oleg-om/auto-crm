@@ -558,7 +558,7 @@ const ShinomontazhsEdit = (props) => {
     if (!state.payment && !props.dateFinish) {
       if (
         props.status !== 'Новая запись' &&
-        tryBlockWorkCompletionTooSoon(props.dateStart || state.dateStart, service)
+        tryBlockWorkCompletionTooSoon(props.dateStart || state.dateStart, service, shinomontazhprices)
       ) {
         return
       }

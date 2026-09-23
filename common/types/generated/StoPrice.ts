@@ -5,6 +5,7 @@ export interface IStoPrice {
   name: string
   number?: number
   free?: string
+  time?: number
   type: string
   category: string
   date?: string

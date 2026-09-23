@@ -24,6 +24,13 @@ const Employee = new mongoose.Schema({
     type: String,
     required: false
   },
+  // Number tapped on the electronic journal kiosk grid (client/features/journal-kiosk) to open
+  // this employee's simplified journal screen - distinct from numberId above (used for tagging
+  // this employee on service order rows).
+  journalNumber: {
+    type: Number,
+    required: false
+  },
   class: {
     type: String,
     required: false
@@ -82,6 +89,13 @@ const Employee = new mongoose.Schema({
         .replace(/^(\d)$/, '0$1')}`
   }
 })
+
+// journalNumber is optional, so uniqueness only applies to employees that actually have one -
+// a plain unique index would treat every null/missing value as a duplicate.
+Employee.index(
+  { journalNumber: 1 },
+  { unique: true, partialFilterExpression: { journalNumber: { $type: 'number' } } }
+)
 
 Employee.plugin(AutoIncrement, { inc_field: 'id_employee' })
 

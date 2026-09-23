@@ -44,6 +44,7 @@ const DutyRow = ({ duty, onEdit, onDelete, onMoveUp, onMoveDown }: IDutyRowProps
     <div className="flex-1">
       <div className="flex flex-wrap items-center gap-2">
         <span className="font-medium">{duty.name}</span>
+        {duty.isRequired ? <Badge>Обязательная</Badge> : null}
         {duty.isQuantitative ? <Badge variant="secondary">Количественная</Badge> : null}
         {duty.hasChecklist ? (
           <Badge variant="secondary">Чек-лист ({duty.checklistItems?.length || 0})</Badge>

@@ -62,6 +62,10 @@ const ShinomontazhPrice = new mongoose.Schema({
     type: String,
     required: false
   },
+  time: {
+    type: Number,
+    required: false
+  },
   type: {
     type: String,
     required: true

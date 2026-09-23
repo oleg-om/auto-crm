@@ -34,6 +34,7 @@ interface IFormState {
   category: string
   number: string
   free: string
+  time: string
   [priceField: string]: string
 }
 
@@ -43,6 +44,7 @@ const emptyState: IFormState = {
   category: '',
   number: '',
   free: '',
+  time: '',
   ...Object.fromEntries(ALL_PRICE_FIELDS.map((key) => [key, '']))
 }
 
@@ -54,6 +56,7 @@ const toFormState = (stoprice?: IStoPrice): IFormState =>
         category: stoprice.category,
         number: stoprice.number != null ? String(stoprice.number) : '',
         free: stoprice.free ?? '',
+        time: stoprice.time != null ? String(stoprice.time) : '',
         ...Object.fromEntries(
           ALL_PRICE_FIELDS.map((key) => {
             const value = (stoprice as unknown as Record<string, number | undefined>)[key]
@@ -72,6 +75,7 @@ const toPayload = (state: IFormState) => {
     category: state.category,
     number: state.number,
     free: state.free,
+    time: state.time,
     ...prices
   }
 }
@@ -255,6 +259,18 @@ const StopriceForm = ({
                   <SelectItem value="no">Нет</SelectItem>
                 </SelectContent>
               </Select>
+            </Field>
+            <Field>
+              <FieldLabel htmlFor="time">Минимальное время, мин</FieldLabel>
+              <Input
+                id="time"
+                name="time"
+                type="number"
+                min={0}
+                value={state.time}
+                placeholder="Не задано"
+                onChange={onChange}
+              />
             </Field>
           </div>
 

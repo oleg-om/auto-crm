@@ -6,6 +6,8 @@ import moment from 'moment'
 import Navbar from '../Navbar'
 import { getPositions } from '../../redux/reducers/positions'
 import { getEmployees } from '../../redux/reducers/employees'
+import { isBreakDuty } from '../../lib/journal-duties'
+import { DEFAULT_JOURNAL_WORK_TIME_TOLERANCE_MIN } from '../../lib/journal-settings'
 import { cn } from '../../lib/utils'
 import { Label } from '../ui/label'
 import { Input } from '../ui/input'
@@ -17,8 +19,49 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '.
 import 'react-toastify/dist/ReactToastify.css'
 
 const NONE_EMPLOYEE = 'none'
-// Допустимая погрешность начала/окончания рабочего дня, мин
-const WORK_TIME_TOLERANCE_MIN = 10
+// Допустимая погрешность начала/окончания рабочего дня, мин - configurable on /settings
+// ("Электронный журнал: допуск ..."), falling back to the historical 10 minutes until it's set.
+const useWorkTimeTolerance = () =>
+  useSelector(
+    (s) =>
+      s.settings.list?.[0]?.journalWorkTimeToleranceMin ?? DEFAULT_JOURNAL_WORK_TIME_TOLERANCE_MIN
+  )
+
+// Expected start/end of a work day as full moments, anchored on the work day's bucket date
+// (workDayStart.date, UTC midnight - see server/utils/dateBucket.js). A shift whose norm end is
+// not after its norm start (e.g. "Ночной охранник" 18:00-08:00) ends the next day - comparing
+// bare times of day, as this file used to, made 11:59-13:06 look fine against 18:00-08:00.
+const getShiftNorms = (workDay, position) => {
+  if (!workDay?.date) return { start: null, end: null }
+  const key = moment.utc(workDay.date).format('YYYY-MM-DD')
+  const at = (time) => (time ? moment(`${key} ${time}`, 'YYYY-MM-DD HH:mm') : null)
+  const start = at(position?.workDayStartTime)
+  const end = at(position?.workDayEndTime)
+  if (start && end && !end.isAfter(start)) end.add(1, 'day')
+  return { start, end }
+}
+
+const isOvernightShift = (position) =>
+  !!position?.workDayStartTime &&
+  !!position?.workDayEndTime &&
+  position.workDayEndTime <= position.workDayStartTime
+
+// Опоздание: начал позже нормы (с допуском)
+const isLateStart = (workDay, position, toleranceMin) => {
+  const { start } = getShiftNorms(workDay, position)
+  if (!start || !workDay?.startTime) return false
+  return moment(workDay.startTime).isAfter(start.clone().add(toleranceMin, 'minutes'))
+}
+
+// Ранний уход: закончил раньше нормы (с допуском)
+const isEarlyEnd = (workDay, position, toleranceMin) => {
+  const { end } = getShiftNorms(workDay, position)
+  if (!end || !workDay?.endTime) return false
+  return moment(workDay.endTime).isBefore(end.clone().subtract(toleranceMin, 'minutes'))
+}
+
+const formatNormEnd = (position) =>
+  `${position.workDayEndTime}${isOvernightShift(position) ? ' (след. день)' : ''}`
 
 const ChecklistTooltip = ({ items, progress }) => {
   const triggerRef = useRef(null)
@@ -143,6 +186,7 @@ const BossJournal = () => {
   const dispatch = useDispatch()
   const employees = useSelector((s) => s.employees.list)
   const positions = useSelector((s) => s.positions.list)
+  const workTimeTolerance = useWorkTimeTolerance()
 
   const [selectedDate, setSelectedDate] = useState(new Date().toISOString().split('T')[0])
   const [selectedEmployeeId, setSelectedEmployeeId] = useState('')
@@ -155,6 +199,10 @@ const BossJournal = () => {
   const [monthEntries, setMonthEntries] = useState([])
   const [monthWorkDays, setMonthWorkDays] = useState([])
   const [monthLoading, setMonthLoading] = useState(false)
+  // 'with' | 'without' | 'all' - by default only employees who actually logged something in the
+  // selected day/month are offered in the picker.
+  const [dataFilter, setDataFilter] = useState('with')
+  const [employeeIdsWithData, setEmployeeIdsWithData] = useState(null)
 
   useEffect(() => {
     dispatch(getPositions())
@@ -236,6 +284,37 @@ const BossJournal = () => {
     }
   }, [viewMode, selectedMonth, selectedEmployeeId, loadMonthData])
 
+  useEffect(() => {
+    const period = viewMode === 'day' ? `date=${selectedDate}` : `month=${selectedMonth}`
+    if (viewMode === 'day' ? !selectedDate : !selectedMonth) return undefined
+    let cancelled = false
+    setEmployeeIdsWithData(null)
+    fetch(`/api/v1/journalEntry/employees-with-data?${period}`)
+      .then((r) => r.json())
+      .then(({ status, data }) => {
+        if (!cancelled) setEmployeeIdsWithData(status === 'ok' ? data : [])
+      })
+      .catch(() => {
+        if (!cancelled) setEmployeeIdsWithData([])
+      })
+    return () => {
+      cancelled = true
+    }
+  }, [viewMode, selectedDate, selectedMonth])
+
+  const journalEmployees = employees
+    .filter((emp) => emp.positionId)
+    .sort((a, b) => `${a.name} ${a.surname}`.localeCompare(`${b.name} ${b.surname}`, 'ru'))
+  const withDataSet = new Set(employeeIdsWithData || [])
+  const withDataCount = journalEmployees.filter((emp) => withDataSet.has(emp.id)).length
+  const filteredEmployees = journalEmployees.filter((emp) => {
+    // Never hide the currently selected employee - the picker would otherwise show a blank value
+    // after switching the date/month to one where they have (or lack) data.
+    if (emp.id === selectedEmployeeId || dataFilter === 'all') return true
+    if (employeeIdsWithData === null) return dataFilter === 'without'
+    return dataFilter === 'with' ? withDataSet.has(emp.id) : !withDataSet.has(emp.id)
+  })
+
   const selectedEmployee = employees.find((emp) => emp.id === selectedEmployeeId)
   const { positionId } = selectedEmployee || {}
   const selectedPosition = positionId ? positions.find((p) => p.id === positionId) : null
@@ -257,27 +336,6 @@ const BossJournal = () => {
       return parts.length > 1 ? parts[parts.length - 1] : timeValue
     }
     return timeValue
-  }
-
-  // Функция для преобразования времени в минуты (HH:MM -> минуты от начала дня)
-  const timeStringToMinutes = (timeStr) => {
-    if (!timeStr) return null
-    const [hours, minutes] = timeStr.split(':').map(Number)
-    if (Number.isNaN(hours) || Number.isNaN(minutes)) return null
-    return hours * 60 + minutes
-  }
-
-  // Функция для проверки, превышает ли фактическое время норму
-  const checkWorkTimeViolation = (actualTime, normTime, isStart) => {
-    if (!actualTime || !normTime) return false
-    const actualMinutes = timeStringToMinutes(extractTime(actualTime))
-    const normMinutes = timeStringToMinutes(normTime)
-    if (actualMinutes === null || normMinutes === null) return false
-    // Для начала: фактическое > нормы (начал позже)
-    // Для конца: фактическое < нормы (закончил раньше)
-    return isStart
-      ? actualMinutes > normMinutes + WORK_TIME_TOLERANCE_MIN
-      : actualMinutes < normMinutes - WORK_TIME_TOLERANCE_MIN
   }
 
   // Группируем записи по обязанностям
@@ -308,7 +366,7 @@ const BossJournal = () => {
 
         {/* Фильтры */}
         <div className="bg-white rounded-lg shadow p-6 mb-6">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
             <div>
               <Label className="block mb-2">Период</Label>
               <Tabs value={viewMode} onValueChange={(value) => setViewMode(value)}>
@@ -348,6 +406,26 @@ const BossJournal = () => {
               </div>
             )}
             <div>
+              <Label htmlFor="boss-journal-data-filter" className="block mb-2">
+                Сотрудники
+              </Label>
+              <Select value={dataFilter} onValueChange={setDataFilter}>
+                <SelectTrigger id="boss-journal-data-filter">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="with">
+                    С данными{employeeIdsWithData ? ` (${withDataCount})` : ''}
+                  </SelectItem>
+                  <SelectItem value="without">
+                    Без данных
+                    {employeeIdsWithData ? ` (${journalEmployees.length - withDataCount})` : ''}
+                  </SelectItem>
+                  <SelectItem value="all">Все ({journalEmployees.length})</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+            <div>
               <Label htmlFor="boss-journal-employee" className="block mb-2">
                 Сотрудник
               </Label>
@@ -362,19 +440,14 @@ const BossJournal = () => {
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem value={NONE_EMPLOYEE}>Выберите сотрудника</SelectItem>
-                  {employees
-                    .filter((emp) => emp.positionId)
-                    .sort((a, b) =>
-                      `${a.name} ${a.surname}`.localeCompare(`${b.name} ${b.surname}`, 'ru')
+                  {filteredEmployees.map((emp) => {
+                    const position = positions.find((p) => p.id === emp.positionId)
+                    return (
+                      <SelectItem key={emp.id} value={emp.id}>
+                        {emp.name} {emp.surname} {position ? `(${position.name})` : ''}
+                      </SelectItem>
                     )
-                    .map((emp) => {
-                      const position = positions.find((p) => p.id === emp.positionId)
-                      return (
-                        <SelectItem key={emp.id} value={emp.id}>
-                          {emp.name} {emp.surname} {position ? `(${position.name})` : ''}
-                        </SelectItem>
-                      )
-                    })}
+                  })}
                 </SelectContent>
               </Select>
             </div>
@@ -478,11 +551,7 @@ const BossJournal = () => {
                         <tr
                           className={`font-semibold ${
                             selectedPosition?.workDayStartTime &&
-                            checkWorkTimeViolation(
-                              workDayData.startTime,
-                              selectedPosition.workDayStartTime,
-                              true
-                            )
+                            isLateStart(workDayData, selectedPosition, workTimeTolerance)
                               ? 'bg-red-50'
                               : 'bg-blue-50'
                           }`}
@@ -498,20 +567,18 @@ const BossJournal = () => {
                           <td
                             className={`px-6 py-4 whitespace-nowrap text-sm ${
                               selectedPosition?.workDayStartTime &&
-                              checkWorkTimeViolation(
-                                workDayData.startTime,
-                                selectedPosition.workDayStartTime,
-                                true
-                              )
+                              isLateStart(workDayData, selectedPosition, workTimeTolerance)
                                 ? 'text-red-600 font-bold'
                                 : 'text-gray-900'
                             }`}
                           >
                             {extractTime(workDayData.startTime)}
                           </td>
+                          {/* 7 columns total: name + start + the remaining 5 (was 4, leaving the
+                              last column's cell - and its row tint - missing). */}
                           <td
                             className="px-6 py-4 whitespace-nowrap text-sm text-gray-500"
-                            colSpan="4"
+                            colSpan="5"
                           >
                             -
                           </td>
@@ -549,7 +616,12 @@ const BossJournal = () => {
                                 </span>
                               ) : (
                                 <span>
-                                  {entry.endTime ? (
+                                  {/* A break isn't something to "complete" - label it as such. */}
+                                  {isBreakDuty(duty?.name) ? (
+                                    <span className="text-gray-500 font-semibold">
+                                      {entry.endTime ? 'Перерыв' : 'На перерыве'}
+                                    </span>
+                                  ) : entry.endTime ? (
                                     <span className="text-green-600 font-semibold">Выполнено</span>
                                   ) : entry.isPaused ? (
                                     <span className="text-yellow-600 font-semibold">На паузе</span>
@@ -655,11 +727,7 @@ const BossJournal = () => {
                         <tr
                           className={`font-semibold ${
                             selectedPosition?.workDayEndTime &&
-                            checkWorkTimeViolation(
-                              workDayData.endTime,
-                              selectedPosition.workDayEndTime,
-                              false
-                            )
+                            isEarlyEnd(workDayData, selectedPosition, workTimeTolerance)
                               ? 'bg-red-50'
                               : 'bg-blue-50'
                           }`}
@@ -668,7 +736,7 @@ const BossJournal = () => {
                             Завершение рабочего дня
                             {selectedPosition?.workDayEndTime && (
                               <div className="text-xs font-normal text-gray-500 mt-1">
-                                Норма: {selectedPosition.workDayEndTime}
+                                Норма: {formatNormEnd(selectedPosition)}
                               </div>
                             )}
                           </td>
@@ -676,11 +744,7 @@ const BossJournal = () => {
                           <td
                             className={`px-6 py-4 whitespace-nowrap text-sm ${
                               selectedPosition?.workDayEndTime &&
-                              checkWorkTimeViolation(
-                                workDayData.endTime,
-                                selectedPosition.workDayEndTime,
-                                false
-                              )
+                              isEarlyEnd(workDayData, selectedPosition, workTimeTolerance)
                                 ? 'text-red-600 font-bold'
                                 : 'text-gray-900'
                             }`}
@@ -725,6 +789,14 @@ const BossJournal = () => {
 }
 
 const MonthSummaryView = ({ month, entries, workDays, selectedPosition }) => {
+  const workTimeTolerance = useWorkTimeTolerance()
+  // Duties flagged "Обязательная" on /electronic-journal. When the position has any, the daily
+  // "x/y" and the unfinished-duties violation are counted against them (a required duty the
+  // employee never even added counts as not done); otherwise it falls back to the duties the
+  // employee actually logged that day.
+  const requiredDuties = (selectedPosition?.duties || []).filter(
+    (d) => d.isRequired && !isBreakDuty(d.name)
+  )
   // Функция для извлечения времени из Date или строки
   const extractTime = (timeValue) => {
     if (!timeValue) return '-'
@@ -739,23 +811,6 @@ const MonthSummaryView = ({ month, entries, workDays, selectedPosition }) => {
       return parts.length > 1 ? parts[parts.length - 1] : timeValue
     }
     return timeValue
-  }
-
-  const timeStringToMinutes = (timeStr) => {
-    if (!timeStr) return null
-    const [hours, minutes] = timeStr.split(':').map(Number)
-    if (Number.isNaN(hours) || Number.isNaN(minutes)) return null
-    return hours * 60 + minutes
-  }
-
-  const checkWorkTimeViolation = (actualTime, normTime, isStart) => {
-    if (!actualTime || !normTime) return false
-    const actualMinutes = timeStringToMinutes(extractTime(actualTime))
-    const normMinutes = timeStringToMinutes(normTime)
-    if (actualMinutes === null || normMinutes === null) return false
-    return isStart
-      ? actualMinutes > normMinutes + WORK_TIME_TOLERANCE_MIN
-      : actualMinutes < normMinutes - WORK_TIME_TOLERANCE_MIN
   }
 
   const monthStart = moment(month, 'YYYY-MM')
@@ -789,16 +844,35 @@ const MonthSummaryView = ({ month, entries, workDays, selectedPosition }) => {
       }
     }
 
+    // Time spent on breaks (обед/отдых/перекур/перерыв) - only closed break entries count, an
+    // ongoing one has no end yet. Grouped by duty name for the hover breakdown.
+    const breakMinutesByName = {}
+    dayEntries.forEach((entry) => {
+      const duty = selectedPosition?.duties?.find((d) => String(d._id) === String(entry.dutyId))
+      if (!isBreakDuty(duty?.name) || !entry.startTime || !entry.endTime) return
+      const minutes =
+        (new Date(entry.endTime).getTime() - new Date(entry.startTime).getTime()) / (1000 * 60)
+      if (Number.isNaN(minutes) || minutes <= 0) return
+      breakMinutesByName[duty.name] = (breakMinutesByName[duty.name] || 0) + minutes
+    })
+    const breakMinutes = Object.values(breakMinutesByName).reduce((sum, m) => sum + m, 0)
+
     const startViolation =
       !!startTime &&
       !!selectedPosition?.workDayStartTime &&
-      checkWorkTimeViolation(startTime, selectedPosition.workDayStartTime, true)
+      isLateStart(workDay, selectedPosition, workTimeTolerance)
     const endViolation =
       !!endTime &&
       !!selectedPosition?.workDayEndTime &&
-      checkWorkTimeViolation(endTime, selectedPosition.workDayEndTime, false)
-    // Незавершённый рабочий день (не сегодня) — тоже нарушение
-    const noEndViolation = !!startTime && !endTime && day.isBefore(moment(), 'day')
+      isEarlyEnd(workDay, selectedPosition, workTimeTolerance)
+    // Незавершённый рабочий день — нарушение, как только его уже нельзя считать идущим: после
+    // нормы окончания (+ допуск), а без нормы — со следующего календарного дня. For an overnight
+    // shift the norm end is tomorrow morning, so last night's shift still counts as in progress.
+    const { end: normEnd } = getShiftNorms(workDay, selectedPosition)
+    const dayOver = normEnd
+      ? moment().isAfter(normEnd.clone().add(workTimeTolerance, 'minutes'))
+      : day.isBefore(moment(), 'day')
+    const noEndViolation = !!startTime && !endTime && dayOver
 
     const violations = []
     if (startViolation) {
@@ -808,55 +882,117 @@ const MonthSummaryView = ({ month, entries, workDays, selectedPosition }) => {
     }
     if (endViolation) {
       violations.push(
-        `Ранний уход: окончание в ${extractTime(endTime)}, норма ${selectedPosition.workDayEndTime}`
+        `Ранний уход: окончание в ${extractTime(endTime)}, норма ${formatNormEnd(selectedPosition)}`
       )
     }
-    const inProgress = !!startTime && !endTime && day.isSame(moment(), 'day')
+    const inProgress = !!startTime && !endTime && !dayOver
     if (noEndViolation) violations.push('Не проставлено окончание рабочего дня')
 
-    const duties = dayEntries.map((entry) => {
-      const duty = selectedPosition?.duties?.find((d) => String(d._id) === String(entry.dutyId))
-      return {
-        id: entry.id || entry._id,
-        name: duty?.name || 'Неизвестная обязанность',
-        done: !!entry.endTime
-      }
-    })
+    // Breaks (обед/отдых/перекур) aren't mandatory duties - leave them out of the x/y count and
+    // the "не выполнены обязанности" violation.
+    const duties = dayEntries
+      .map((entry) => {
+        const duty = selectedPosition?.duties?.find((d) => String(d._id) === String(entry.dutyId))
+        // Same checklist counting as the day KPI (see checklistPercentage below).
+        const checklistItems = duty?.hasChecklist ? duty.checklistItems || [] : []
+        const checklistProgress = entry.checklistProgress || {}
+        const checklistDone = checklistItems.filter((item) => checklistProgress[item._id]).length
+        const done = !!entry.endTime
+        return {
+          id: entry.id || entry._id,
+          dutyId: String(entry.dutyId),
+          name: duty?.name || 'Неизвестная обязанность',
+          isBreak: isBreakDuty(duty?.name),
+          done,
+          checklistTotal: checklistItems.length,
+          checklistDone,
+          // Marked finished but not every checklist box ticked - a violation on its own.
+          checklistIncomplete: done && checklistDone < checklistItems.length
+        }
+      })
+      .filter((d) => !d.isBreak)
 
-    const undone = duties.filter((d) => !d.done)
+    const hasAttendance = !!workDay || dayEntries.length > 0
     // Для идущего дня незавершённые обязанности — норма, считаем только завершённые дни
-    const dayFinished = !!endTime || day.isBefore(moment(), 'day')
-    if (dayFinished && undone.length > 0) {
-      violations.push(
-        `Не выполнены обязанности (${duties.length - undone.length}/${duties.length})`
-      )
+    const dayFinished = !!endTime || dayOver
+
+    let dutyItems
+    let dutiesTotal
+    let dutiesCompleted
+    if (requiredDuties.length > 0) {
+      const requiredIds = new Set(requiredDuties.map((d) => String(d._id)))
+      const requiredItems = requiredDuties.map((rd) => {
+        const logged = duties.filter((d) => d.dutyId === String(rd._id))
+        const doneEntry = logged.find((d) => d.done)
+        return {
+          ...(doneEntry || logged[0] || { checklistTotal: 0, checklistDone: 0 }),
+          id: `required-${rd._id}`,
+          name: rd.name,
+          done: !!doneEntry,
+          checklistIncomplete: !!doneEntry?.checklistIncomplete
+        }
+      })
+      // Non-required duties the employee logged are still listed, but don't affect x/y.
+      const extraItems = duties
+        .filter((d) => !requiredIds.has(d.dutyId))
+        .map((d) => ({ ...d, extra: true }))
+      dutyItems = [...requiredItems, ...extraItems]
+      dutiesTotal = requiredItems.length
+      dutiesCompleted = requiredItems.filter((d) => d.done).length
+      const missing = requiredItems.filter((d) => !d.done)
+      if (hasAttendance && dayFinished && missing.length > 0) {
+        violations.push(
+          `Не выполнены обязательные обязанности (${dutiesCompleted}/${dutiesTotal}): ${missing
+            .map((d) => d.name)
+            .join(', ')}`
+        )
+      }
+    } else {
+      dutyItems = duties
+      dutiesTotal = duties.length
+      dutiesCompleted = duties.filter((d) => d.done).length
+      if (dayFinished && dutiesCompleted < dutiesTotal) {
+        violations.push(`Не выполнены обязанности (${dutiesCompleted}/${dutiesTotal})`)
+      }
     }
+    // Unlike unfinished duties this doesn't wait for the day to end - the duty is already closed,
+    // so its unticked checklist items won't get ticked anymore.
+    duties
+      .filter((d) => d.checklistIncomplete)
+      .forEach((d) => {
+        violations.push(
+          `Чек-лист заполнен не полностью: ${d.name} (${d.checklistDone}/${d.checklistTotal})`
+        )
+      })
 
     return {
       key,
       day,
-      hasAttendance: !!workDay || dayEntries.length > 0,
+      hasAttendance,
       startTime,
       endTime,
       workedMinutes,
-      dutiesTotal: dayEntries.length,
-      dutiesCompleted: dayEntries.filter((entry) => entry.endTime).length,
+      breakMinutes,
+      breakMinutesByName,
+      dutiesTotal,
+      dutiesCompleted,
       violation: violations.length > 0,
       violations,
       inProgress,
-      duties
+      duties: dutyItems
     }
   })
 
   const presentDays = rows.filter((row) => row.hasAttendance)
   const totalWorkedMinutes = presentDays.reduce((sum, row) => sum + (row.workedMinutes || 0), 0)
+  const totalBreakMinutes = presentDays.reduce((sum, row) => sum + row.breakMinutes, 0)
   const violationsCount = rows.filter((row) => row.violation).length
 
   const formatDuration = (minutes) => `${Math.floor(minutes / 60)}ч ${Math.round(minutes % 60)}м`
 
   return (
     <div className="space-y-4">
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         <Card>
           <CardContent className="p-4">
             <div className="text-sm text-muted-foreground mb-1">Дней с посещением</div>
@@ -867,8 +1003,14 @@ const MonthSummaryView = ({ month, entries, workDays, selectedPosition }) => {
         </Card>
         <Card>
           <CardContent className="p-4">
-            <div className="text-sm text-muted-foreground mb-1">Отработано за месяц</div>
+            <div className="text-sm text-muted-foreground mb-1">Рабочее время за месяц</div>
             <div className="text-2xl font-bold">{formatDuration(totalWorkedMinutes)}</div>
+          </CardContent>
+        </Card>
+        <Card>
+          <CardContent className="p-4">
+            <div className="text-sm text-muted-foreground mb-1">Перерывы за месяц</div>
+            <div className="text-2xl font-bold">{formatDuration(totalBreakMinutes)}</div>
           </CardContent>
         </Card>
         <Card>
@@ -889,7 +1031,8 @@ const MonthSummaryView = ({ month, entries, workDays, selectedPosition }) => {
                 <TableHead>Дата</TableHead>
                 <TableHead>Начало</TableHead>
                 <TableHead>Окончание</TableHead>
-                <TableHead>Отработано</TableHead>
+                <TableHead>Рабочий день</TableHead>
+                <TableHead>Перерывы</TableHead>
                 <TableHead>Обязанности</TableHead>
                 <TableHead>Статус</TableHead>
               </TableRow>
@@ -909,7 +1052,28 @@ const MonthSummaryView = ({ month, entries, workDays, selectedPosition }) => {
                     {row.workedMinutes !== null ? formatDuration(row.workedMinutes) : '-'}
                   </TableCell>
                   <TableCell>
-                    {row.dutiesTotal > 0 ? (
+                    {row.breakMinutes > 0 ? (
+                      <HoverTip
+                        title="Перерывы"
+                        className="cursor-help border-b border-dotted border-gray-400"
+                        tip={
+                          <ul>
+                            {Object.entries(row.breakMinutesByName).map(([name, minutes]) => (
+                              <li key={name} className="mb-1">
+                                {name}: {formatDuration(minutes)}
+                              </li>
+                            ))}
+                          </ul>
+                        }
+                      >
+                        {formatDuration(row.breakMinutes)}
+                      </HoverTip>
+                    ) : (
+                      '-'
+                    )}
+                  </TableCell>
+                  <TableCell>
+                    {row.hasAttendance && row.dutiesTotal > 0 ? (
                       <HoverTip
                         title={`Обязанности (${row.dutiesCompleted}/${row.dutiesTotal})`}
                         className="text-purple-700 font-semibold cursor-help border-b border-dotted border-purple-400"
@@ -919,11 +1083,25 @@ const MonthSummaryView = ({ month, entries, workDays, selectedPosition }) => {
                               <li
                                 key={d.id || i}
                                 className={`flex items-start mb-1 ${
-                                  d.done ? 'text-green-300' : 'text-red-300'
+                                  d.extra && !d.checklistIncomplete
+                                    ? 'text-gray-300'
+                                    : !d.done
+                                    ? 'text-red-300'
+                                    : d.checklistIncomplete
+                                    ? 'text-amber-300'
+                                    : 'text-green-300'
                                 }`}
                               >
-                                <span className="mr-1 flex-shrink-0">{d.done ? '✓' : '✗'}</span>
-                                <span>{d.name}</span>
+                                <span className="mr-1 flex-shrink-0">
+                                  {!d.done ? '✗' : d.checklistIncomplete ? '!' : '✓'}
+                                </span>
+                                <span>
+                                  {d.name}
+                                  {d.checklistTotal > 0
+                                    ? ` (чек-лист ${d.checklistDone}/${d.checklistTotal})`
+                                    : ''}
+                                  {d.extra ? ' — доп.' : ''}
+                                </span>
                               </li>
                             ))}
                           </ul>
@@ -975,6 +1153,7 @@ const MonthSummaryView = ({ month, entries, workDays, selectedPosition }) => {
 }
 
 const DutyTimelineChart = ({ entries, entriesWithDutyInfo, workDayData, selectedPosition }) => {
+  const workTimeTolerance = useWorkTimeTolerance()
   const [tooltip, setTooltip] = useState({ entryId: null, text: '', x: 0, y: 0 })
 
   // Функция для извлечения времени из Date или строки
@@ -994,27 +1173,6 @@ const DutyTimelineChart = ({ entries, entriesWithDutyInfo, workDayData, selected
       return parts.length > 1 ? parts[parts.length - 1] : timeValue
     }
     return timeValue
-  }
-
-  // Функция для преобразования времени в минуты (HH:MM -> минуты от начала дня)
-  const timeStringToMinutes = (timeStr) => {
-    if (!timeStr) return null
-    const [hours, minutes] = timeStr.split(':').map(Number)
-    if (Number.isNaN(hours) || Number.isNaN(minutes)) return null
-    return hours * 60 + minutes
-  }
-
-  // Функция для проверки, превышает ли фактическое время норму
-  const checkWorkTimeViolation = (actualTime, normTime, isStart) => {
-    if (!actualTime || !normTime) return false
-    const actualMinutes = timeStringToMinutes(extractTime(actualTime))
-    const normMinutes = timeStringToMinutes(normTime)
-    if (actualMinutes === null || normMinutes === null) return false
-    // Для начала: фактическое > нормы (начал позже)
-    // Для конца: фактическое < нормы (закончил раньше)
-    return isStart
-      ? actualMinutes > normMinutes + WORK_TIME_TOLERANCE_MIN
-      : actualMinutes < normMinutes - WORK_TIME_TOLERANCE_MIN
   }
 
   // Определяем диапазон времени для шкалы
@@ -1136,18 +1294,10 @@ const DutyTimelineChart = ({ entries, entriesWithDutyInfo, workDayData, selected
                 <div
                   className={`relative h-12 bg-gray-50 rounded border-2 ${
                     (selectedPosition?.workDayStartTime &&
-                      checkWorkTimeViolation(
-                        workDayData.startTime,
-                        selectedPosition.workDayStartTime,
-                        true
-                      )) ||
+                      isLateStart(workDayData, selectedPosition, workTimeTolerance)) ||
                     (selectedPosition?.workDayEndTime &&
                       workDayData.endTime &&
-                      checkWorkTimeViolation(
-                        workDayData.endTime,
-                        selectedPosition.workDayEndTime,
-                        false
-                      ))
+                      isEarlyEnd(workDayData, selectedPosition, workTimeTolerance))
                       ? 'border-red-500'
                       : 'border-blue-500'
                   }`}
@@ -1156,18 +1306,10 @@ const DutyTimelineChart = ({ entries, entriesWithDutyInfo, workDayData, selected
                     <span
                       className={`text-sm font-medium ${
                         (selectedPosition?.workDayStartTime &&
-                          checkWorkTimeViolation(
-                            workDayData.startTime,
-                            selectedPosition.workDayStartTime,
-                            true
-                          )) ||
+                          isLateStart(workDayData, selectedPosition, workTimeTolerance)) ||
                         (selectedPosition?.workDayEndTime &&
                           workDayData.endTime &&
-                          checkWorkTimeViolation(
-                            workDayData.endTime,
-                            selectedPosition.workDayEndTime,
-                            false
-                          ))
+                          isEarlyEnd(workDayData, selectedPosition, workTimeTolerance))
                           ? 'text-red-700'
                           : 'text-blue-700'
                       }`}
@@ -1374,10 +1516,7 @@ const KPIView = ({
 
             // Проверяем, является ли обязанность "другим" (перекур, отдых, обед)
             const isOther =
-              duty?.name?.toLowerCase().includes('перекур') ||
-              duty?.name?.toLowerCase().includes('отдых') ||
-              duty?.name?.toLowerCase().includes('обед') ||
-              duty?.name?.toLowerCase().includes('другое')
+              isBreakDuty(duty?.name) || !!duty?.name?.toLowerCase().includes('другое')
 
             if (isOther) {
               otherIntervals.push(interval)

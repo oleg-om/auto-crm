@@ -477,7 +477,7 @@ const StosEdit = (props) => {
     if (!state.payment && !props.dateFinish) {
       if (
         type === 'sto' &&
-        tryBlockWorkCompletionTooSoon(props.dateStart || state.dateStart, service)
+        tryBlockWorkCompletionTooSoon(props.dateStart || state.dateStart, service, stoprices)
       ) {
         return
       }

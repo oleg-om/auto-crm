@@ -7,6 +7,7 @@ export interface IEmployee {
   role?: string[]
   address?: string[]
   numberId?: string
+  journalNumber?: number
   class?: string
   id?: string
   stoPercent?: number

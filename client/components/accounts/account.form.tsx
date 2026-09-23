@@ -3,6 +3,7 @@ import { useSelector, useDispatch } from 'react-redux'
 import { toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
 import accountRoleList from '../../lists/account-role-list'
+import accountKindList from '../../lists/account-kind-list'
 import { createAccount, updateAccount, deleteAccount } from '../../redux/reducers/accounts'
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '../ui/accordion'
 import {
@@ -53,6 +54,7 @@ interface IFormState {
   place: string
   requestPasswordForReport: boolean
   post: string
+  kind: string
 }
 
 const emptyState: IFormState = {
@@ -62,7 +64,8 @@ const emptyState: IFormState = {
   userName: '',
   place: '',
   requestPasswordForReport: false,
-  post: ''
+  post: '',
+  kind: ''
 }
 
 const toFormState = (account?: IUser): IFormState =>
@@ -74,7 +77,8 @@ const toFormState = (account?: IUser): IFormState =>
         userName: account.userName ?? '',
         place: account.place ?? '',
         requestPasswordForReport: account.requestPasswordForReport ?? false,
-        post: account.post != null ? String(account.post) : ''
+        post: account.post != null ? String(account.post) : '',
+        kind: account.kind ?? ''
       }
     : emptyState
 
@@ -85,7 +89,8 @@ const toPayload = (state: IFormState, mode: 'create' | 'edit') => {
     userName: state.userName,
     place: state.place,
     requestPasswordForReport: state.requestPasswordForReport,
-    post: state.post === '' ? null : Number(state.post)
+    post: state.post === '' ? null : Number(state.post),
+    kind: state.kind === '' ? null : state.kind
   }
   // Omit the key entirely when left blank on edit - the server does
   // `Object.assign(account, body)` before `.save()`, so an included empty
@@ -262,6 +267,31 @@ const AccountForm = ({ mode, account, onSaved, onCancel }: IAccountFormProps) =>
                     />
                   </Field>
                 </div>
+                <Field>
+                  <FieldLabel htmlFor="kind">Вид</FieldLabel>
+                  <Select
+                    value={state.kind === '' ? NONE : state.kind}
+                    onValueChange={(value) =>
+                      setState((prev) => ({ ...prev, kind: value === NONE ? '' : value }))
+                    }
+                  >
+                    <SelectTrigger id="kind">
+                      <SelectValue placeholder="Не выбран" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value={NONE}>Не выбран</SelectItem>
+                      {accountKindList.map((it: { name: string; value: string }) => (
+                        <SelectItem key={it.value} value={it.value}>
+                          {it.name}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                  <FieldDescription>
+                    Для «Электронный журнал (упрощенный)» у аккаунта не будет дашборда - сразу
+                    открывается сетка номеров сотрудников этой точки
+                  </FieldDescription>
+                </Field>
               </FieldGroup>
             </AccordionContent>
           </AccordionItem>
