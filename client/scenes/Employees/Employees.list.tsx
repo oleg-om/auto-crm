@@ -43,13 +43,22 @@ import {
   SelectTrigger,
   SelectValue
 } from '../../components/ui/select'
+import { Switch } from '../../components/ui/switch'
 import { Table, TableBody, TableHead, TableHeader, TableRow } from '../../components/ui/table'
 import PaginationBar from '../../components/shared/pagination-bar'
 import { usePagination } from '../../hooks/use-pagination'
+import { useStoredToggle } from '../../hooks/use-stored-toggle'
 import type { IEmployee } from '../../../common/types/generated/Employee'
 import type { IPlace } from '../../../common/types/generated/Place'
 
-type ISortField = 'name' | 'date'
+type ISortField = 'name' | 'date' | 'journalNumber'
+
+type IJournalFilter = 'all' | 'with' | 'without'
+
+const JOURNAL_FILTER_LABELS: Record<Exclude<IJournalFilter, 'all'>, string> = {
+  with: 'С номером журнала',
+  without: 'Без номера журнала'
+}
 
 interface ISortableTableHeadProps {
   field: ISortField
@@ -115,10 +124,24 @@ const EmployeeList = () => {
   const [searchPlace, setSearchPlace] = useState('')
   const [activityFilter, setActivityFilter] = useState<'all' | 'active' | 'inactive'>('all')
   const [isPlacePickerOpen, setIsPlacePickerOpen] = useState(false)
-  const [sortField, setSortField] = useState<'name' | 'date' | null>(null)
+  const [showJournalNumbers, setShowJournalNumbersState] = useStoredToggle(
+    'employees.showJournalNumbers'
+  )
+  const [journalFilter, setJournalFilter] = useState<IJournalFilter>('all')
+  const [sortField, setSortField] = useState<ISortField | null>(null)
   const [sortDirection, setSortDirection] = useState<'asc' | 'desc'>('asc')
 
-  const toggleSort = (field: 'name' | 'date') => {
+  // The journal-number filter and sort only make sense while that column is visible - drop them
+  // when it's hidden so the list isn't silently narrowed/ordered by something you can't see.
+  const setShowJournalNumbers = (value: boolean) => {
+    setShowJournalNumbersState(value)
+    if (!value) {
+      setJournalFilter('all')
+      if (sortField === 'journalNumber') setSortField(null)
+    }
+  }
+
+  const toggleSort = (field: ISortField) => {
     if (sortField !== field) {
       setSortField(field)
       setSortDirection('asc')
@@ -138,7 +161,10 @@ const EmployeeList = () => {
     const matchesActivity =
       activityFilter === 'all' ||
       (activityFilter === 'active' ? it.active !== false : it.active === false)
-    return matchesName && matchesPlace && matchesActivity
+    const hasJournalNumber = it.journalNumber != null
+    const matchesJournal =
+      journalFilter === 'all' || (journalFilter === 'with' ? hasJournalNumber : !hasJournalNumber)
+    return matchesName && matchesPlace && matchesActivity && matchesJournal
   })
 
   const sortedList = [...filteredList].sort((a, b) => {
@@ -146,6 +172,12 @@ const EmployeeList = () => {
     let comparison = 0
     if (sortField === 'name') {
       comparison = `${a.name} ${a.surname}`.localeCompare(`${b.name} ${b.surname}`, 'ru')
+    } else if (sortField === 'journalNumber') {
+      // Employees without a number always go last, regardless of direction.
+      if (a.journalNumber == null || b.journalNumber == null) {
+        return (a.journalNumber == null ? 1 : 0) - (b.journalNumber == null ? 1 : 0)
+      }
+      comparison = a.journalNumber - b.journalNumber
     } else {
       const aTime = parseLegacyDate(a.date)?.getTime() ?? 0
       const bTime = parseLegacyDate(b.date)?.getTime() ?? 0
@@ -157,11 +189,14 @@ const EmployeeList = () => {
   const isSearchNameActive = searchName.trim() !== ''
   const isSearchPlaceActive = searchPlace !== ''
   const isActivityFilterActive = activityFilter !== 'all'
-  const hasActiveFilters = isSearchNameActive || isSearchPlaceActive || isActivityFilterActive
+  const isJournalFilterActive = journalFilter !== 'all'
+  const hasActiveFilters =
+    isSearchNameActive || isSearchPlaceActive || isActivityFilterActive || isJournalFilterActive
   const resetFilters = () => {
     setSearchName('')
     setSearchPlace('')
     setActivityFilter('all')
+    setJournalFilter('all')
   }
 
   const { page, pageSize, setPage, setPageSize, totalPages, pageStart, pageEnd } = usePagination(
@@ -171,7 +206,7 @@ const EmployeeList = () => {
   useEffect(() => {
     setPage(1)
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [searchName, searchPlace, activityFilter])
+  }, [searchName, searchPlace, activityFilter, journalFilter])
 
   const pagedList = sortedList.slice(pageStart, pageEnd)
 
@@ -191,19 +226,32 @@ const EmployeeList = () => {
       <div className="flex flex-row">
         <Sidebar />
         <div className="container mx-auto min-w-0 px-4">
-          <div className="mb-6 flex items-center justify-between border-b py-4">
+          <div className="mb-6 flex flex-wrap items-center justify-between gap-2 border-b py-4">
             <h1 className="text-3xl">Список сотрудников</h1>
-            <Link to={{ pathname: '/employee/create', state: { preserveScroll: true } }}>
-              <Button type="button">
-                <Plus className="mr-2 h-4 w-4" />
-                Новый сотрудник
-              </Button>
-            </Link>
+            <div className="flex flex-wrap items-center gap-4">
+              <label
+                htmlFor="showJournalNumbers"
+                className="flex items-center gap-2 text-sm text-muted-foreground"
+              >
+                <Switch
+                  id="showJournalNumbers"
+                  checked={showJournalNumbers}
+                  onCheckedChange={setShowJournalNumbers}
+                />
+                Показывать номера электронного журнала
+              </label>
+              <Link to={{ pathname: '/employee/create', state: { preserveScroll: true } }}>
+                <Button type="button">
+                  <Plus className="mr-2 h-4 w-4" />
+                  Новый сотрудник
+                </Button>
+              </Link>
+            </div>
           </div>
           <Card className="my-3">
             <CardContent className="p-4">
               <div className="-mx-2 md:flex md:justify-between">
-                <div className="md:w-1/3 px-2 mb-4 md:mb-0">
+                <div className="md:min-w-0 md:flex-1 px-2 mb-4 md:mb-0">
                   <Label htmlFor="searchName" className="block mb-2">
                     Имя или фамилия
                   </Label>
@@ -230,7 +278,7 @@ const EmployeeList = () => {
                     ) : null}
                   </div>
                 </div>
-                <div className="md:w-1/3 px-2 mb-4 md:mb-0">
+                <div className="md:min-w-0 md:flex-1 px-2 mb-4 md:mb-0">
                   <Label htmlFor="searchPlace" className="block mb-2">
                     Точка
                   </Label>
@@ -298,7 +346,7 @@ const EmployeeList = () => {
                     </PopoverContent>
                   </Popover>
                 </div>
-                <div className="md:w-1/3 px-2 mb-4 md:mb-0">
+                <div className="md:min-w-0 md:flex-1 px-2 mb-4 md:mb-0">
                   <Label htmlFor="activityFilter" className="block mb-2">
                     Активность
                   </Label>
@@ -321,6 +369,29 @@ const EmployeeList = () => {
                     </SelectContent>
                   </Select>
                 </div>
+                {showJournalNumbers ? (
+                  <div className="md:min-w-0 md:flex-1 px-2 mb-4 md:mb-0">
+                    <Label htmlFor="journalFilter" className="block mb-2">
+                      Номер журнала
+                    </Label>
+                    <Select
+                      value={journalFilter}
+                      onValueChange={(value) => setJournalFilter(value as IJournalFilter)}
+                    >
+                      <SelectTrigger
+                        id="journalFilter"
+                        className={cn(isJournalFilterActive && 'border-primary text-primary')}
+                      >
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="all">Все</SelectItem>
+                        <SelectItem value="with">{JOURNAL_FILTER_LABELS.with}</SelectItem>
+                        <SelectItem value="without">{JOURNAL_FILTER_LABELS.without}</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+                ) : null}
               </div>
               {hasActiveFilters ? (
                 <div className="flex flex-wrap items-center gap-2 -mx-2 px-2 pt-3 mt-3 border-t">
@@ -366,6 +437,19 @@ const EmployeeList = () => {
                       </button>
                     </Badge>
                   ) : null}
+                  {isJournalFilterActive ? (
+                    <Badge variant="secondary" className="gap-1 pr-1 font-normal">
+                      {JOURNAL_FILTER_LABELS[journalFilter as Exclude<IJournalFilter, 'all'>]}
+                      <button
+                        type="button"
+                        className="ml-0.5 rounded-full p-0.5 hover:bg-foreground/10"
+                        onClick={() => setJournalFilter('all')}
+                        aria-label="Сбросить фильтр по номеру журнала"
+                      >
+                        <X className="h-3 w-3" />
+                      </button>
+                    </Badge>
+                  ) : null}
                   <Button
                     type="button"
                     variant="ghost"
@@ -383,6 +467,16 @@ const EmployeeList = () => {
             <Table className="sm:min-w-[896px] table-fixed">
               <TableHeader>
                 <TableRow className="hover:bg-transparent">
+                  {showJournalNumbers ? (
+                    <SortableTableHead
+                      field="journalNumber"
+                      label="№"
+                      sortField={sortField}
+                      sortDirection={sortDirection}
+                      onSort={toggleSort}
+                      className="w-[72px]"
+                    />
+                  ) : null}
                   <SortableTableHead
                     field="name"
                     label="Имя"
@@ -406,7 +500,13 @@ const EmployeeList = () => {
               </TableHeader>
               <TableBody>
                 {pagedList.map((it) => (
-                  <EmployeeRow key={it.id} place={place} deleteEmployee={openAndDelete} {...it} />
+                  <EmployeeRow
+                    key={it.id}
+                    place={place}
+                    deleteEmployee={openAndDelete}
+                    showJournalNumber={showJournalNumbers}
+                    {...it}
+                  />
                 ))}
               </TableBody>
             </Table>

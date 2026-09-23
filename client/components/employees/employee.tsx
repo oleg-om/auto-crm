@@ -21,6 +21,7 @@ const ROLE_COLORS: Record<string, string> = Object.fromEntries(
 interface IEmployeeRowProps extends IEmployee {
   place: IPlace[]
   deleteEmployee: (id: string, value?: string) => void
+  showJournalNumber?: boolean
 }
 
 const EmployeeRow = (props: IEmployeeRowProps) => {
@@ -37,6 +38,11 @@ const EmployeeRow = (props: IEmployeeRowProps) => {
   }, [])
   return (
     <TableRow className={isInactive ? 'bg-slate-100 text-muted-foreground' : 'bg-white'}>
+      {props.showJournalNumber ? (
+        <TableCell className="font-medium tabular-nums">
+          {props.journalNumber ?? <span className="text-muted-foreground">—</span>}
+        </TableCell>
+      ) : null}
       <TableCell className="truncate">
         {props.name} {props.surname}
       </TableCell>
