@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useHistory, useLocation } from 'react-router-dom'
-import { LogOut } from 'lucide-react'
+import { LogOut, Undo2 } from 'lucide-react'
 import { getEmployees } from '../../redux/reducers/employees'
 import { getPlaces } from '../../redux/reducers/places'
-import { signOut } from '../../redux/reducers/auth'
+import { returnToSelf, signOut } from '../../redux/reducers/auth'
 import { Button } from '../../components/ui/button'
 import {
   Select,
@@ -32,7 +32,9 @@ const JournalKioskGrid = () => {
   const dispatch = useDispatch<any>()
   const history = useHistory()
   const location = useLocation()
-  const auth = useSelector((s: { auth: { place: string } }) => s.auth)
+  const auth = useSelector(
+    (s: { auth: { place: string; impersonatedBy: string | null } }) => s.auth
+  )
   // `?? []` guards against a since-fixed auth bug (KICK_USER used to leave a stale `kind`, which
   // remounted this screen right after logout with an already-cleared session, and the ensuing
   // 401 got stored as `undefined` - see client/redux/reducers/auth.js) - kept as a cheap safety
@@ -81,7 +83,7 @@ const JournalKioskGrid = () => {
             <p className="text-sm text-muted-foreground">{effectivePlace?.name || '—'}</p>
           ) : null}
         </div>
-        <div className="flex items-center gap-3">
+        <div className="flex flex-wrap items-center gap-3">
           {!accountPlaceId ? (
             <Select value={selectedPlaceId} onValueChange={setSelectedPlaceId}>
               <SelectTrigger className="h-11 w-full min-w-[220px] sm:w-auto">
@@ -96,10 +98,20 @@ const JournalKioskGrid = () => {
               </SelectContent>
             </Select>
           ) : null}
-          <Button type="button" variant="outline" onClick={() => dispatch(signOut())}>
-            <LogOut className="mr-2 h-4 w-4" />
-            Выйти
-          </Button>
+          {/* This screen has no Navbar, so it has to offer the same way back from impersonation
+              that the Navbar's account menu does - signOut() here would end the admin's session
+              instead of returning them to their own account. */}
+          {auth.impersonatedBy ? (
+            <Button type="button" variant="outline" onClick={() => dispatch(returnToSelf())}>
+              <Undo2 className="mr-2 h-4 w-4" />
+              Вернуться к основному аккаунту
+            </Button>
+          ) : (
+            <Button type="button" variant="outline" onClick={() => dispatch(signOut())}>
+              <LogOut className="mr-2 h-4 w-4" />
+              Выйти
+            </Button>
+          )}
         </div>
       </header>
 
