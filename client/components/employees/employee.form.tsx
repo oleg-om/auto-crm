@@ -294,7 +294,7 @@ const EmployeeForm = ({ mode, employee, onSaved, onCancel }: IEmployeeFormProps)
           </AccordionItem>
 
           <AccordionItem value="position">
-            <AccordionTrigger>Должность для электронного журнала</AccordionTrigger>
+            <AccordionTrigger>Электронный журнал</AccordionTrigger>
             <AccordionContent>
               <FieldGroup>
                 <div className="grid gap-4 sm:grid-cols-2">
