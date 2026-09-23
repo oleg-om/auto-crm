@@ -16,6 +16,7 @@ const initialState = {
   user: {},
   roles: [],
   place: '',
+  kind: '',
   name: '',
   id: '',
   requestPasswordForReport: false,
@@ -158,6 +159,7 @@ export default function auth(state = initialState, action) {
         user: action.user,
         roles: action.user ? action.user.role : [],
         place: action.user ? action.user.place : '',
+        kind: action.user ? action.user.kind : '',
         name: action.user ? action.user.userName : '',
         requestPasswordForReport: action.user?.requestPasswordForReport || false,
         impersonatedBy: action.impersonatedBy || null

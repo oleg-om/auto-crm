@@ -55,6 +55,7 @@ interface IFormState {
   positionId: string
   positionIdAdditional: string
   active: boolean
+  journalNumber: string
 }
 
 const emptyState: IFormState = {
@@ -66,7 +67,8 @@ const emptyState: IFormState = {
   class: '',
   positionId: '',
   positionIdAdditional: '',
-  active: true
+  active: true,
+  journalNumber: ''
 }
 
 const toFormState = (employee?: IEmployee): IFormState =>
@@ -80,7 +82,8 @@ const toFormState = (employee?: IEmployee): IFormState =>
         class: employee.class ?? '',
         positionId: employee.positionId ?? '',
         positionIdAdditional: employee.positionIdAdditional ?? '',
-        active: employee.active ?? true
+        active: employee.active ?? true,
+        journalNumber: employee.journalNumber != null ? String(employee.journalNumber) : ''
       }
     : emptyState
 
@@ -132,11 +135,17 @@ const EmployeeForm = ({ mode, employee, onSaved, onCancel }: IEmployeeFormProps)
       notify('Заполните обязательные поля')
       return
     }
+    // journalNumber is Number in the schema - an empty string would fail Mongoose's cast, unlike
+    // numberId above (String in the schema, so the raw form string is fine as-is).
+    const payload = {
+      ...state,
+      journalNumber: state.journalNumber === '' ? null : Number(state.journalNumber)
+    }
     if (mode === 'create') {
-      dispatch(createEmployee(state))
+      dispatch(createEmployee(payload))
       notify('Запись добавлена')
     } else if (employee?.id) {
-      dispatch(updateEmployee(employee.id, state))
+      dispatch(updateEmployee(employee.id, payload))
       notify('Данные изменены')
     }
     onSaved()
@@ -304,6 +313,23 @@ const EmployeeForm = ({ mode, employee, onSaved, onCancel }: IEmployeeFormProps)
                     />
                   </Field>
                 </div>
+                <Field>
+                  <FieldLabel htmlFor="journalNumber">
+                    Номер для электронного журнала (упрощенного)
+                  </FieldLabel>
+                  <Input
+                    id="journalNumber"
+                    name="journalNumber"
+                    type="number"
+                    value={state.journalNumber}
+                    placeholder="Введите номер"
+                    onChange={onChange}
+                  />
+                  <FieldDescription>
+                    По этому номеру сотрудник находится в сетке на упрощённом экране электронного
+                    журнала (для аккаунтов вида «Электронный журнал (упрощенный)»)
+                  </FieldDescription>
+                </Field>
               </FieldGroup>
             </AccordionContent>
           </AccordionItem>

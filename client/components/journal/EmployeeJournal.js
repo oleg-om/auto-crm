@@ -7,6 +7,7 @@ import Modal from '../Modal.delete'
 import { getPositions } from '../../redux/reducers/positions'
 import { getEmployees } from '../../redux/reducers/employees'
 import standardDutiesList from '../../lists/standard-duties-list'
+import { getEmployeePositionIds } from '../../lib/employee-positions'
 import { KPIView } from './BossJournal'
 import 'react-toastify/dist/ReactToastify.css'
 
@@ -52,16 +53,6 @@ const EmployeeJournal = () => {
 
   const [selectedEmployeeId, setSelectedEmployeeId] = useState(getStoredEmployeeId())
   const [selectedPositionId, setSelectedPositionId] = useState(getStoredPositionId())
-
-  // Список должностей сотрудника: основная и при наличии — дополнительная
-  const getEmployeePositionIds = (emp) => {
-    if (!emp) return []
-    const ids = []
-    if (emp.positionId) ids.push(emp.positionId)
-    if (emp.positionIdAdditional && emp.positionIdAdditional !== emp.positionId)
-      ids.push(emp.positionIdAdditional)
-    return ids
-  }
 
   // Активная должность для фильтра: выбранная или из текущего сотрудника
   const activePositionId =

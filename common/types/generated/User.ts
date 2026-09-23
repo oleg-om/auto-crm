@@ -9,6 +9,7 @@ export interface IUser {
   place?: string
   requestPasswordForReport?: boolean
   post?: number
+  kind?: string
   _id?: string
   __v?: number
 }

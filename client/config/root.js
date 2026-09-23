@@ -87,6 +87,9 @@ import DiskpaintingEditFull from '../scenes/Diskpaintings/Diskpaintings.edit'
 import OilList from '../scenes/Razval/Oil.list'
 import ElectronicJournal from '../components/positions/ElectronicJournal'
 import EmployeeJournal from '../components/journal/EmployeeJournal'
+import JournalKioskGrid from '../features/journal-kiosk/JournalKiosk.grid'
+import JournalKioskEmployee from '../features/journal-kiosk/JournalKiosk.employee'
+import accountKindList from '../lists/account-kind-list'
 
 const OnlyAnonymousRoute = ({ component: Component, ...rest }) => {
   const auth = useSelector((s) => s.auth)
@@ -126,6 +129,18 @@ const PrivateRoute = ({ component: Component, ...rest }) => {
     )
   }
   return <Route {...rest} render={func} />
+}
+
+// "/" itself: the normal Dashboard, except for a "Электронный журнал (упрощенный)" account (see
+// client/lists/account-kind-list.js and the "Вид" select on the account form), which has no
+// dashboard - its home screen is the kiosk grid straight away.
+const Home = () => {
+  const auth = useSelector((s) => s.auth)
+  return auth.user?.kind === accountKindList.ELECTRONIC_JOURNAL_SIMPLE ? (
+    <JournalKioskGrid />
+  ) : (
+    <Dashboard />
+  )
 }
 
 const AdminRoute = ({ component: Component, ...rest }) => {
@@ -256,13 +271,13 @@ const RootComponent = (props) => {
           <ScrollToTop />
           <Switch>
             {/* <Route exact path="/" component={() => <Registration />} /> */}
-            <PrivateRoute exact path="/" component={() => <Dashboard />} />
+            <PrivateRoute exact path="/" component={() => <Home />} />
             <Route exact path="/registration" component={() => <Registration />} />
             <OnlyAnonymousRoute exact path="/login" component={() => <LoginForm />} />
             <PrivateRoute exact path="/admin" component={() => <AdminPannel />} />
             <PrivateRoute exact path="/room" component={() => <Room />} />
             <PrivateRoute exact path="/chat" component={() => <ChatView />} />
-            <PrivateRoute exact path="/" component={() => <Dashboard />} />
+            <PrivateRoute exact path="/" component={() => <Home />} />
             <Route exact path="/access" component={() => <Access />} />
             <BossRoute exact path="/boss" component={() => <Boss />} />
             <PrivateRoute exact path="/autoparts/order/list/:num" component={AutopartsList} />
@@ -280,6 +295,12 @@ const RootComponent = (props) => {
             <AdminRoute exact path="/place/edit/:id" component={PlaceList} />
             <AdminRoute exact path="/electronic-journal" component={ElectronicJournal} />
             <PrivateRoute exact path="/employee-journal" component={EmployeeJournal} />
+            <PrivateRoute exact path="/journal-kiosk" component={JournalKioskGrid} />
+            <PrivateRoute
+              exact
+              path="/journal-kiosk/:employeeId"
+              component={JournalKioskEmployee}
+            />
             <BossRoute exact path="/boss-journal" component={BossJournal} />
             <AdminRoute exact path="/employee/list" component={EmployeeList} />
             <AdminRoute exact path="/employee/create" component={EmployeeList} />

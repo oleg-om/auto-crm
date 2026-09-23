@@ -24,6 +24,13 @@ const Employee = new mongoose.Schema({
     type: String,
     required: false
   },
+  // Number tapped on the electronic journal kiosk grid (client/features/journal-kiosk) to open
+  // this employee's simplified journal screen - distinct from numberId above (used for tagging
+  // this employee on service order rows).
+  journalNumber: {
+    type: Number,
+    required: false
+  },
   class: {
     type: String,
     required: false
