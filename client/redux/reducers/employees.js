@@ -114,7 +114,7 @@ export function getAllEmployees() {
 }
 
 export function createEmployee(name) {
-  return (dispatch) => {
+  return (dispatch) =>
     fetch('/api/v1/employee', {
       method: 'POST',
       headers: {
@@ -123,14 +123,14 @@ export function createEmployee(name) {
       body: JSON.stringify(name)
     })
       .then((r) => r.json())
-      .then(({ data: employee }) => {
-        dispatch({ type: CREATE_EMPLOYEE, employee })
+      .then((res) => {
+        if (res.status === 'ok') dispatch({ type: CREATE_EMPLOYEE, employee: res.data })
+        return res
       })
-  }
 }
 
 export function updateEmployee(id, name) {
-  return (dispatch) => {
+  return (dispatch) =>
     fetch(`/api/v1/employee/${id}`, {
       method: 'PATCH',
       headers: {
@@ -139,10 +139,10 @@ export function updateEmployee(id, name) {
       body: JSON.stringify(name)
     })
       .then((r) => r.json())
-      .then(({ data: employee }) => {
-        dispatch({ type: UPDATE_EMPLOYEE, employee })
+      .then((res) => {
+        if (res.status === 'ok') dispatch({ type: UPDATE_EMPLOYEE, employee: res.data })
+        return res
       })
-  }
 }
 
 export function deleteEmployee(id) {

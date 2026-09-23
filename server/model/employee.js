@@ -90,6 +90,13 @@ const Employee = new mongoose.Schema({
   }
 })
 
+// journalNumber is optional, so uniqueness only applies to employees that actually have one -
+// a plain unique index would treat every null/missing value as a duplicate.
+Employee.index(
+  { journalNumber: 1 },
+  { unique: true, partialFilterExpression: { journalNumber: { $type: 'number' } } }
+)
+
 Employee.plugin(AutoIncrement, { inc_field: 'id_employee' })
 
 module.exports = mongoose.model('employees', Employee)

@@ -87,7 +87,7 @@ const toFormState = (employee?: IEmployee): IFormState =>
       }
     : emptyState
 
-type IFormErrors = Partial<Record<'name' | 'surname', string>>
+type IFormErrors = Partial<Record<'name' | 'surname' | 'journalNumber', string>>
 
 interface IEmployeeFormProps {
   mode: 'create' | 'edit'
@@ -99,6 +99,9 @@ interface IEmployeeFormProps {
 const EmployeeForm = ({ mode, employee, onSaved, onCancel }: IEmployeeFormProps) => {
   const places = useSelector((s: { places: { list: IPlace[] } }) => s.places.list)
   const positions = useSelector((s: { positions: { list: IPosition[] } }) => s.positions.list)
+  const allEmployees = useSelector(
+    (s: { employees: { allList: IEmployee[] } }) => s.employees.allList
+  )
   const dispatch = useDispatch<any>()
   const [isDeleteOpen, setIsDeleteOpen] = useState(false)
 
@@ -126,13 +129,24 @@ const EmployeeForm = ({ mode, employee, onSaved, onCancel }: IEmployeeFormProps)
     onSaved()
   }
 
-  const submit = () => {
+  const submit = async () => {
     const nextErrors: IFormErrors = {}
     if (!state.name.trim()) nextErrors.name = 'Введите имя'
     if (!state.surname.trim()) nextErrors.surname = 'Введите фамилию'
+    // Fast feedback from the already-loaded list; the server re-checks (409) in case it's stale.
+    const journalHolder =
+      state.journalNumber !== '' &&
+      allEmployees.find(
+        (it) => it.id !== employee?.id && it.journalNumber === Number(state.journalNumber)
+      )
+    if (journalHolder) {
+      nextErrors.journalNumber = `Номер уже занят: ${[journalHolder.name, journalHolder.surname]
+        .filter(Boolean)
+        .join(' ')}`
+    }
     setErrors(nextErrors)
     if (Object.keys(nextErrors).length > 0) {
-      notify('Заполните обязательные поля')
+      notify(nextErrors.journalNumber ?? 'Заполните обязательные поля')
       return
     }
     // journalNumber is Number in the schema - an empty string would fail Mongoose's cast, unlike
@@ -141,20 +155,26 @@ const EmployeeForm = ({ mode, employee, onSaved, onCancel }: IEmployeeFormProps)
       ...state,
       journalNumber: state.journalNumber === '' ? null : Number(state.journalNumber)
     }
-    if (mode === 'create') {
-      dispatch(createEmployee(payload))
-      notify('Запись добавлена')
-    } else if (employee?.id) {
-      dispatch(updateEmployee(employee.id, payload))
-      notify('Данные изменены')
+    let request: Promise<{ status: string; field?: string; message?: string }>
+    if (mode === 'create') request = dispatch(createEmployee(payload))
+    else if (employee?.id) request = dispatch(updateEmployee(employee.id, payload))
+    else return
+    const res = await request
+    if (res.status !== 'ok') {
+      if (res.field === 'journalNumber') {
+        setErrors((prev) => ({ ...prev, journalNumber: res.message }))
+      }
+      notify(res.message ?? 'Не удалось сохранить')
+      return
     }
+    notify(mode === 'create' ? 'Запись добавлена' : 'Данные изменены')
     onSaved()
   }
 
   const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target
     setState((prevState) => ({ ...prevState, [name]: value }))
-    if (name === 'name' || name === 'surname') {
+    if (name === 'name' || name === 'surname' || name === 'journalNumber') {
       setErrors((prevErrors) => {
         if (!prevErrors[name]) return prevErrors
         const nextErrors = { ...prevErrors }
@@ -313,7 +333,7 @@ const EmployeeForm = ({ mode, employee, onSaved, onCancel }: IEmployeeFormProps)
                     />
                   </Field>
                 </div>
-                <Field>
+                <Field data-invalid={!!errors.journalNumber}>
                   <FieldLabel htmlFor="journalNumber">
                     Номер для электронного журнала (упрощенного)
                   </FieldLabel>
@@ -323,8 +343,10 @@ const EmployeeForm = ({ mode, employee, onSaved, onCancel }: IEmployeeFormProps)
                     type="number"
                     value={state.journalNumber}
                     placeholder="Введите номер"
+                    aria-invalid={!!errors.journalNumber}
                     onChange={onChange}
                   />
+                  <FieldError>{errors.journalNumber}</FieldError>
                   <FieldDescription>
                     По этому номеру сотрудник находится в сетке на упрощённом экране электронного
                     журнала (для аккаунтов вида «Электронный журнал (упрощенный)»)
