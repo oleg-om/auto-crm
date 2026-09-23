@@ -21,6 +21,42 @@ const NONE_EMPLOYEE = 'none'
 // Допустимая погрешность начала/окончания рабочего дня, мин
 const WORK_TIME_TOLERANCE_MIN = 10
 
+// Expected start/end of a work day as full moments, anchored on the work day's bucket date
+// (workDayStart.date, UTC midnight - see server/utils/dateBucket.js). A shift whose norm end is
+// not after its norm start (e.g. "Ночной охранник" 18:00-08:00) ends the next day - comparing
+// bare times of day, as this file used to, made 11:59-13:06 look fine against 18:00-08:00.
+const getShiftNorms = (workDay, position) => {
+  if (!workDay?.date) return { start: null, end: null }
+  const key = moment.utc(workDay.date).format('YYYY-MM-DD')
+  const at = (time) => (time ? moment(`${key} ${time}`, 'YYYY-MM-DD HH:mm') : null)
+  const start = at(position?.workDayStartTime)
+  const end = at(position?.workDayEndTime)
+  if (start && end && !end.isAfter(start)) end.add(1, 'day')
+  return { start, end }
+}
+
+const isOvernightShift = (position) =>
+  !!position?.workDayStartTime &&
+  !!position?.workDayEndTime &&
+  position.workDayEndTime <= position.workDayStartTime
+
+// Опоздание: начал позже нормы (с допуском)
+const isLateStart = (workDay, position) => {
+  const { start } = getShiftNorms(workDay, position)
+  if (!start || !workDay?.startTime) return false
+  return moment(workDay.startTime).isAfter(start.clone().add(WORK_TIME_TOLERANCE_MIN, 'minutes'))
+}
+
+// Ранний уход: закончил раньше нормы (с допуском)
+const isEarlyEnd = (workDay, position) => {
+  const { end } = getShiftNorms(workDay, position)
+  if (!end || !workDay?.endTime) return false
+  return moment(workDay.endTime).isBefore(end.clone().subtract(WORK_TIME_TOLERANCE_MIN, 'minutes'))
+}
+
+const formatNormEnd = (position) =>
+  `${position.workDayEndTime}${isOvernightShift(position) ? ' (след. день)' : ''}`
+
 const ChecklistTooltip = ({ items, progress }) => {
   const triggerRef = useRef(null)
   const [visible, setVisible] = useState(false)
@@ -295,27 +331,6 @@ const BossJournal = () => {
     return timeValue
   }
 
-  // Функция для преобразования времени в минуты (HH:MM -> минуты от начала дня)
-  const timeStringToMinutes = (timeStr) => {
-    if (!timeStr) return null
-    const [hours, minutes] = timeStr.split(':').map(Number)
-    if (Number.isNaN(hours) || Number.isNaN(minutes)) return null
-    return hours * 60 + minutes
-  }
-
-  // Функция для проверки, превышает ли фактическое время норму
-  const checkWorkTimeViolation = (actualTime, normTime, isStart) => {
-    if (!actualTime || !normTime) return false
-    const actualMinutes = timeStringToMinutes(extractTime(actualTime))
-    const normMinutes = timeStringToMinutes(normTime)
-    if (actualMinutes === null || normMinutes === null) return false
-    // Для начала: фактическое > нормы (начал позже)
-    // Для конца: фактическое < нормы (закончил раньше)
-    return isStart
-      ? actualMinutes > normMinutes + WORK_TIME_TOLERANCE_MIN
-      : actualMinutes < normMinutes - WORK_TIME_TOLERANCE_MIN
-  }
-
   // Группируем записи по обязанностям
   const groupedEntries = entries.reduce((acc, entry) => {
     const { dutyId } = entry
@@ -529,11 +544,7 @@ const BossJournal = () => {
                         <tr
                           className={`font-semibold ${
                             selectedPosition?.workDayStartTime &&
-                            checkWorkTimeViolation(
-                              workDayData.startTime,
-                              selectedPosition.workDayStartTime,
-                              true
-                            )
+                            isLateStart(workDayData, selectedPosition)
                               ? 'bg-red-50'
                               : 'bg-blue-50'
                           }`}
@@ -549,11 +560,7 @@ const BossJournal = () => {
                           <td
                             className={`px-6 py-4 whitespace-nowrap text-sm ${
                               selectedPosition?.workDayStartTime &&
-                              checkWorkTimeViolation(
-                                workDayData.startTime,
-                                selectedPosition.workDayStartTime,
-                                true
-                              )
+                              isLateStart(workDayData, selectedPosition)
                                 ? 'text-red-600 font-bold'
                                 : 'text-gray-900'
                             }`}
@@ -602,7 +609,12 @@ const BossJournal = () => {
                                 </span>
                               ) : (
                                 <span>
-                                  {entry.endTime ? (
+                                  {/* A break isn't something to "complete" - label it as such. */}
+                                  {isBreakDuty(duty?.name) ? (
+                                    <span className="text-gray-500 font-semibold">
+                                      {entry.endTime ? 'Перерыв' : 'На перерыве'}
+                                    </span>
+                                  ) : entry.endTime ? (
                                     <span className="text-green-600 font-semibold">Выполнено</span>
                                   ) : entry.isPaused ? (
                                     <span className="text-yellow-600 font-semibold">На паузе</span>
@@ -708,11 +720,7 @@ const BossJournal = () => {
                         <tr
                           className={`font-semibold ${
                             selectedPosition?.workDayEndTime &&
-                            checkWorkTimeViolation(
-                              workDayData.endTime,
-                              selectedPosition.workDayEndTime,
-                              false
-                            )
+                            isEarlyEnd(workDayData, selectedPosition)
                               ? 'bg-red-50'
                               : 'bg-blue-50'
                           }`}
@@ -721,7 +729,7 @@ const BossJournal = () => {
                             Завершение рабочего дня
                             {selectedPosition?.workDayEndTime && (
                               <div className="text-xs font-normal text-gray-500 mt-1">
-                                Норма: {selectedPosition.workDayEndTime}
+                                Норма: {formatNormEnd(selectedPosition)}
                               </div>
                             )}
                           </td>
@@ -729,11 +737,7 @@ const BossJournal = () => {
                           <td
                             className={`px-6 py-4 whitespace-nowrap text-sm ${
                               selectedPosition?.workDayEndTime &&
-                              checkWorkTimeViolation(
-                                workDayData.endTime,
-                                selectedPosition.workDayEndTime,
-                                false
-                              )
+                              isEarlyEnd(workDayData, selectedPosition)
                                 ? 'text-red-600 font-bold'
                                 : 'text-gray-900'
                             }`}
@@ -801,23 +805,6 @@ const MonthSummaryView = ({ month, entries, workDays, selectedPosition }) => {
     return timeValue
   }
 
-  const timeStringToMinutes = (timeStr) => {
-    if (!timeStr) return null
-    const [hours, minutes] = timeStr.split(':').map(Number)
-    if (Number.isNaN(hours) || Number.isNaN(minutes)) return null
-    return hours * 60 + minutes
-  }
-
-  const checkWorkTimeViolation = (actualTime, normTime, isStart) => {
-    if (!actualTime || !normTime) return false
-    const actualMinutes = timeStringToMinutes(extractTime(actualTime))
-    const normMinutes = timeStringToMinutes(normTime)
-    if (actualMinutes === null || normMinutes === null) return false
-    return isStart
-      ? actualMinutes > normMinutes + WORK_TIME_TOLERANCE_MIN
-      : actualMinutes < normMinutes - WORK_TIME_TOLERANCE_MIN
-  }
-
   const monthStart = moment(month, 'YYYY-MM')
   const daysInMonth = monthStart.daysInMonth()
   const days = Array.from({ length: daysInMonth }, (_, i) => monthStart.clone().date(i + 1))
@@ -849,16 +836,31 @@ const MonthSummaryView = ({ month, entries, workDays, selectedPosition }) => {
       }
     }
 
+    // Time spent on breaks (обед/отдых/перекур/перерыв) - only closed break entries count, an
+    // ongoing one has no end yet. Grouped by duty name for the hover breakdown.
+    const breakMinutesByName = {}
+    dayEntries.forEach((entry) => {
+      const duty = selectedPosition?.duties?.find((d) => String(d._id) === String(entry.dutyId))
+      if (!isBreakDuty(duty?.name) || !entry.startTime || !entry.endTime) return
+      const minutes =
+        (new Date(entry.endTime).getTime() - new Date(entry.startTime).getTime()) / (1000 * 60)
+      if (Number.isNaN(minutes) || minutes <= 0) return
+      breakMinutesByName[duty.name] = (breakMinutesByName[duty.name] || 0) + minutes
+    })
+    const breakMinutes = Object.values(breakMinutesByName).reduce((sum, m) => sum + m, 0)
+
     const startViolation =
-      !!startTime &&
-      !!selectedPosition?.workDayStartTime &&
-      checkWorkTimeViolation(startTime, selectedPosition.workDayStartTime, true)
+      !!startTime && !!selectedPosition?.workDayStartTime && isLateStart(workDay, selectedPosition)
     const endViolation =
-      !!endTime &&
-      !!selectedPosition?.workDayEndTime &&
-      checkWorkTimeViolation(endTime, selectedPosition.workDayEndTime, false)
-    // Незавершённый рабочий день (не сегодня) — тоже нарушение
-    const noEndViolation = !!startTime && !endTime && day.isBefore(moment(), 'day')
+      !!endTime && !!selectedPosition?.workDayEndTime && isEarlyEnd(workDay, selectedPosition)
+    // Незавершённый рабочий день — нарушение, как только его уже нельзя считать идущим: после
+    // нормы окончания (+ допуск), а без нормы — со следующего календарного дня. For an overnight
+    // shift the norm end is tomorrow morning, so last night's shift still counts as in progress.
+    const { end: normEnd } = getShiftNorms(workDay, selectedPosition)
+    const dayOver = normEnd
+      ? moment().isAfter(normEnd.clone().add(WORK_TIME_TOLERANCE_MIN, 'minutes'))
+      : day.isBefore(moment(), 'day')
+    const noEndViolation = !!startTime && !endTime && dayOver
 
     const violations = []
     if (startViolation) {
@@ -868,10 +870,10 @@ const MonthSummaryView = ({ month, entries, workDays, selectedPosition }) => {
     }
     if (endViolation) {
       violations.push(
-        `Ранний уход: окончание в ${extractTime(endTime)}, норма ${selectedPosition.workDayEndTime}`
+        `Ранний уход: окончание в ${extractTime(endTime)}, норма ${formatNormEnd(selectedPosition)}`
       )
     }
-    const inProgress = !!startTime && !endTime && day.isSame(moment(), 'day')
+    const inProgress = !!startTime && !endTime && !dayOver
     if (noEndViolation) violations.push('Не проставлено окончание рабочего дня')
 
     // Breaks (обед/отдых/перекур) aren't mandatory duties - leave them out of the x/y count and
@@ -900,7 +902,7 @@ const MonthSummaryView = ({ month, entries, workDays, selectedPosition }) => {
 
     const hasAttendance = !!workDay || dayEntries.length > 0
     // Для идущего дня незавершённые обязанности — норма, считаем только завершённые дни
-    const dayFinished = !!endTime || day.isBefore(moment(), 'day')
+    const dayFinished = !!endTime || dayOver
 
     let dutyItems
     let dutiesTotal
@@ -958,6 +960,8 @@ const MonthSummaryView = ({ month, entries, workDays, selectedPosition }) => {
       startTime,
       endTime,
       workedMinutes,
+      breakMinutes,
+      breakMinutesByName,
       dutiesTotal,
       dutiesCompleted,
       violation: violations.length > 0,
@@ -969,13 +973,14 @@ const MonthSummaryView = ({ month, entries, workDays, selectedPosition }) => {
 
   const presentDays = rows.filter((row) => row.hasAttendance)
   const totalWorkedMinutes = presentDays.reduce((sum, row) => sum + (row.workedMinutes || 0), 0)
+  const totalBreakMinutes = presentDays.reduce((sum, row) => sum + row.breakMinutes, 0)
   const violationsCount = rows.filter((row) => row.violation).length
 
   const formatDuration = (minutes) => `${Math.floor(minutes / 60)}ч ${Math.round(minutes % 60)}м`
 
   return (
     <div className="space-y-4">
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         <Card>
           <CardContent className="p-4">
             <div className="text-sm text-muted-foreground mb-1">Дней с посещением</div>
@@ -986,8 +991,14 @@ const MonthSummaryView = ({ month, entries, workDays, selectedPosition }) => {
         </Card>
         <Card>
           <CardContent className="p-4">
-            <div className="text-sm text-muted-foreground mb-1">Отработано за месяц</div>
+            <div className="text-sm text-muted-foreground mb-1">Рабочее время за месяц</div>
             <div className="text-2xl font-bold">{formatDuration(totalWorkedMinutes)}</div>
+          </CardContent>
+        </Card>
+        <Card>
+          <CardContent className="p-4">
+            <div className="text-sm text-muted-foreground mb-1">Перерывы за месяц</div>
+            <div className="text-2xl font-bold">{formatDuration(totalBreakMinutes)}</div>
           </CardContent>
         </Card>
         <Card>
@@ -1008,7 +1019,8 @@ const MonthSummaryView = ({ month, entries, workDays, selectedPosition }) => {
                 <TableHead>Дата</TableHead>
                 <TableHead>Начало</TableHead>
                 <TableHead>Окончание</TableHead>
-                <TableHead>Отработано</TableHead>
+                <TableHead>Рабочий день</TableHead>
+                <TableHead>Перерывы</TableHead>
                 <TableHead>Обязанности</TableHead>
                 <TableHead>Статус</TableHead>
               </TableRow>
@@ -1026,6 +1038,27 @@ const MonthSummaryView = ({ month, entries, workDays, selectedPosition }) => {
                   <TableCell>{row.endTime ? extractTime(row.endTime) : '-'}</TableCell>
                   <TableCell>
                     {row.workedMinutes !== null ? formatDuration(row.workedMinutes) : '-'}
+                  </TableCell>
+                  <TableCell>
+                    {row.breakMinutes > 0 ? (
+                      <HoverTip
+                        title="Перерывы"
+                        className="cursor-help border-b border-dotted border-gray-400"
+                        tip={
+                          <ul>
+                            {Object.entries(row.breakMinutesByName).map(([name, minutes]) => (
+                              <li key={name} className="mb-1">
+                                {name}: {formatDuration(minutes)}
+                              </li>
+                            ))}
+                          </ul>
+                        }
+                      >
+                        {formatDuration(row.breakMinutes)}
+                      </HoverTip>
+                    ) : (
+                      '-'
+                    )}
                   </TableCell>
                   <TableCell>
                     {row.hasAttendance && row.dutiesTotal > 0 ? (
@@ -1127,27 +1160,6 @@ const DutyTimelineChart = ({ entries, entriesWithDutyInfo, workDayData, selected
       return parts.length > 1 ? parts[parts.length - 1] : timeValue
     }
     return timeValue
-  }
-
-  // Функция для преобразования времени в минуты (HH:MM -> минуты от начала дня)
-  const timeStringToMinutes = (timeStr) => {
-    if (!timeStr) return null
-    const [hours, minutes] = timeStr.split(':').map(Number)
-    if (Number.isNaN(hours) || Number.isNaN(minutes)) return null
-    return hours * 60 + minutes
-  }
-
-  // Функция для проверки, превышает ли фактическое время норму
-  const checkWorkTimeViolation = (actualTime, normTime, isStart) => {
-    if (!actualTime || !normTime) return false
-    const actualMinutes = timeStringToMinutes(extractTime(actualTime))
-    const normMinutes = timeStringToMinutes(normTime)
-    if (actualMinutes === null || normMinutes === null) return false
-    // Для начала: фактическое > нормы (начал позже)
-    // Для конца: фактическое < нормы (закончил раньше)
-    return isStart
-      ? actualMinutes > normMinutes + WORK_TIME_TOLERANCE_MIN
-      : actualMinutes < normMinutes - WORK_TIME_TOLERANCE_MIN
   }
 
   // Определяем диапазон времени для шкалы
@@ -1269,18 +1281,10 @@ const DutyTimelineChart = ({ entries, entriesWithDutyInfo, workDayData, selected
                 <div
                   className={`relative h-12 bg-gray-50 rounded border-2 ${
                     (selectedPosition?.workDayStartTime &&
-                      checkWorkTimeViolation(
-                        workDayData.startTime,
-                        selectedPosition.workDayStartTime,
-                        true
-                      )) ||
+                      isLateStart(workDayData, selectedPosition)) ||
                     (selectedPosition?.workDayEndTime &&
                       workDayData.endTime &&
-                      checkWorkTimeViolation(
-                        workDayData.endTime,
-                        selectedPosition.workDayEndTime,
-                        false
-                      ))
+                      isEarlyEnd(workDayData, selectedPosition))
                       ? 'border-red-500'
                       : 'border-blue-500'
                   }`}
@@ -1289,18 +1293,10 @@ const DutyTimelineChart = ({ entries, entriesWithDutyInfo, workDayData, selected
                     <span
                       className={`text-sm font-medium ${
                         (selectedPosition?.workDayStartTime &&
-                          checkWorkTimeViolation(
-                            workDayData.startTime,
-                            selectedPosition.workDayStartTime,
-                            true
-                          )) ||
+                          isLateStart(workDayData, selectedPosition)) ||
                         (selectedPosition?.workDayEndTime &&
                           workDayData.endTime &&
-                          checkWorkTimeViolation(
-                            workDayData.endTime,
-                            selectedPosition.workDayEndTime,
-                            false
-                          ))
+                          isEarlyEnd(workDayData, selectedPosition))
                           ? 'text-red-700'
                           : 'text-blue-700'
                       }`}
