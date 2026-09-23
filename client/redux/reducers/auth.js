@@ -136,6 +136,24 @@ export function deleteUser() {
   }
 }
 
+// Applied on both KICK_USER (self logout) and DELETE_USER (kicked by a socket event) - clears
+// every field LOGIN derives from the account (role/place/kind/...), not just user/token. Missing
+// `kind` here was the actual bug behind a "Электронный журнал (упрощенный)" account crashing
+// right after logging out: KICK_USER used to leave `state.kind` at its old value, so Home() (see
+// client/config/root.js) kept rendering JournalKioskGrid instead of switching away from it -
+// which then remounted, refetched employees/places with the session cookie already cleared,
+// got 401s, and blindly stored `undefined` as the list (see getEmployees/getPlaces below).
+const LOGGED_OUT_FIELDS = {
+  token: '',
+  user: {},
+  roles: [],
+  place: '',
+  kind: '',
+  name: '',
+  requestPasswordForReport: false,
+  impersonatedBy: null
+}
+
 export default function auth(state = initialState, action) {
   if (action.type === 'KICK_USER') {
     cookies.remove('token', { path: '/' })
@@ -168,8 +186,11 @@ export default function auth(state = initialState, action) {
     case 'UPDATE_USERNAME': {
       return { ...state, userName: action.userName }
     }
+    case 'KICK_USER': {
+      return { ...state, ...LOGGED_OUT_FIELDS, authChecked: true }
+    }
     case 'DELETE_USER': {
-      return { ...state, user: {}, token: '' }
+      return { ...state, ...LOGGED_OUT_FIELDS }
     }
     default:
       return state

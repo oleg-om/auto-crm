@@ -33,8 +33,12 @@ const JournalKioskGrid = () => {
   const history = useHistory()
   const location = useLocation()
   const auth = useSelector((s: { auth: { place: string } }) => s.auth)
-  const employees = useSelector((s: { employees: { list: IEmployee[] } }) => s.employees.list)
-  const places = useSelector((s: { places: { list: IPlace[] } }) => s.places.list)
+  // `?? []` guards against a since-fixed auth bug (KICK_USER used to leave a stale `kind`, which
+  // remounted this screen right after logout with an already-cleared session, and the ensuing
+  // 401 got stored as `undefined` - see client/redux/reducers/auth.js) - kept as a cheap safety
+  // net so a future auth hiccup degrades to an empty grid instead of crashing this screen.
+  const employees = useSelector((s: { employees: { list: IEmployee[] } }) => s.employees.list) ?? []
+  const places = useSelector((s: { places: { list: IPlace[] } }) => s.places.list) ?? []
 
   useEffect(() => {
     dispatch(getEmployees())

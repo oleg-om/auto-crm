@@ -38,8 +38,9 @@ const JournalKioskEmployee = () => {
   const dispatch = useDispatch<any>()
   const history = useHistory()
   const auth = useSelector((s: { auth: { place: string } }) => s.auth)
-  const employees = useSelector((s: { employees: { list: IEmployee[] } }) => s.employees.list)
-  const positions = useSelector((s: { positions: { list: IPosition[] } }) => s.positions.list)
+  // `?? []` - same defensive fallback as JournalKiosk.grid.tsx, see the comment there.
+  const employees = useSelector((s: { employees: { list: IEmployee[] } }) => s.employees.list) ?? []
+  const positions = useSelector((s: { positions: { list: IPosition[] } }) => s.positions.list) ?? []
 
   toast.configure()
   const notify = (arg: string) => toast.info(arg, { position: toast.POSITION.BOTTOM_RIGHT })
