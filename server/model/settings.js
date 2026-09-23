@@ -42,6 +42,13 @@ const Setting = new mongoose.Schema({
     type: String,
     required: false
   },
+  // Electronic journal: how many minutes a work day may start late / end early before the boss
+  // journal flags it as "Опоздание" / "Ранний уход" (client/components/journal/BossJournal.js).
+  journalWorkTimeToleranceMin: {
+    type: Number,
+    required: false,
+    default: 10
+  },
   id: {
     type: String,
     unique: true,

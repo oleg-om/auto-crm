@@ -7,6 +7,7 @@ import Navbar from '../Navbar'
 import { getPositions } from '../../redux/reducers/positions'
 import { getEmployees } from '../../redux/reducers/employees'
 import { isBreakDuty } from '../../lib/journal-duties'
+import { DEFAULT_JOURNAL_WORK_TIME_TOLERANCE_MIN } from '../../lib/journal-settings'
 import { cn } from '../../lib/utils'
 import { Label } from '../ui/label'
 import { Input } from '../ui/input'
@@ -18,8 +19,13 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '.
 import 'react-toastify/dist/ReactToastify.css'
 
 const NONE_EMPLOYEE = 'none'
-// Допустимая погрешность начала/окончания рабочего дня, мин
-const WORK_TIME_TOLERANCE_MIN = 10
+// Допустимая погрешность начала/окончания рабочего дня, мин - configurable on /settings
+// ("Электронный журнал: допуск ..."), falling back to the historical 10 minutes until it's set.
+const useWorkTimeTolerance = () =>
+  useSelector(
+    (s) =>
+      s.settings.list?.[0]?.journalWorkTimeToleranceMin ?? DEFAULT_JOURNAL_WORK_TIME_TOLERANCE_MIN
+  )
 
 // Expected start/end of a work day as full moments, anchored on the work day's bucket date
 // (workDayStart.date, UTC midnight - see server/utils/dateBucket.js). A shift whose norm end is
@@ -41,17 +47,17 @@ const isOvernightShift = (position) =>
   position.workDayEndTime <= position.workDayStartTime
 
 // Опоздание: начал позже нормы (с допуском)
-const isLateStart = (workDay, position) => {
+const isLateStart = (workDay, position, toleranceMin) => {
   const { start } = getShiftNorms(workDay, position)
   if (!start || !workDay?.startTime) return false
-  return moment(workDay.startTime).isAfter(start.clone().add(WORK_TIME_TOLERANCE_MIN, 'minutes'))
+  return moment(workDay.startTime).isAfter(start.clone().add(toleranceMin, 'minutes'))
 }
 
 // Ранний уход: закончил раньше нормы (с допуском)
-const isEarlyEnd = (workDay, position) => {
+const isEarlyEnd = (workDay, position, toleranceMin) => {
   const { end } = getShiftNorms(workDay, position)
   if (!end || !workDay?.endTime) return false
-  return moment(workDay.endTime).isBefore(end.clone().subtract(WORK_TIME_TOLERANCE_MIN, 'minutes'))
+  return moment(workDay.endTime).isBefore(end.clone().subtract(toleranceMin, 'minutes'))
 }
 
 const formatNormEnd = (position) =>
@@ -180,6 +186,7 @@ const BossJournal = () => {
   const dispatch = useDispatch()
   const employees = useSelector((s) => s.employees.list)
   const positions = useSelector((s) => s.positions.list)
+  const workTimeTolerance = useWorkTimeTolerance()
 
   const [selectedDate, setSelectedDate] = useState(new Date().toISOString().split('T')[0])
   const [selectedEmployeeId, setSelectedEmployeeId] = useState('')
@@ -544,7 +551,7 @@ const BossJournal = () => {
                         <tr
                           className={`font-semibold ${
                             selectedPosition?.workDayStartTime &&
-                            isLateStart(workDayData, selectedPosition)
+                            isLateStart(workDayData, selectedPosition, workTimeTolerance)
                               ? 'bg-red-50'
                               : 'bg-blue-50'
                           }`}
@@ -560,7 +567,7 @@ const BossJournal = () => {
                           <td
                             className={`px-6 py-4 whitespace-nowrap text-sm ${
                               selectedPosition?.workDayStartTime &&
-                              isLateStart(workDayData, selectedPosition)
+                              isLateStart(workDayData, selectedPosition, workTimeTolerance)
                                 ? 'text-red-600 font-bold'
                                 : 'text-gray-900'
                             }`}
@@ -720,7 +727,7 @@ const BossJournal = () => {
                         <tr
                           className={`font-semibold ${
                             selectedPosition?.workDayEndTime &&
-                            isEarlyEnd(workDayData, selectedPosition)
+                            isEarlyEnd(workDayData, selectedPosition, workTimeTolerance)
                               ? 'bg-red-50'
                               : 'bg-blue-50'
                           }`}
@@ -737,7 +744,7 @@ const BossJournal = () => {
                           <td
                             className={`px-6 py-4 whitespace-nowrap text-sm ${
                               selectedPosition?.workDayEndTime &&
-                              isEarlyEnd(workDayData, selectedPosition)
+                              isEarlyEnd(workDayData, selectedPosition, workTimeTolerance)
                                 ? 'text-red-600 font-bold'
                                 : 'text-gray-900'
                             }`}
@@ -782,6 +789,7 @@ const BossJournal = () => {
 }
 
 const MonthSummaryView = ({ month, entries, workDays, selectedPosition }) => {
+  const workTimeTolerance = useWorkTimeTolerance()
   // Duties flagged "Обязательная" on /electronic-journal. When the position has any, the daily
   // "x/y" and the unfinished-duties violation are counted against them (a required duty the
   // employee never even added counts as not done); otherwise it falls back to the duties the
@@ -850,15 +858,19 @@ const MonthSummaryView = ({ month, entries, workDays, selectedPosition }) => {
     const breakMinutes = Object.values(breakMinutesByName).reduce((sum, m) => sum + m, 0)
 
     const startViolation =
-      !!startTime && !!selectedPosition?.workDayStartTime && isLateStart(workDay, selectedPosition)
+      !!startTime &&
+      !!selectedPosition?.workDayStartTime &&
+      isLateStart(workDay, selectedPosition, workTimeTolerance)
     const endViolation =
-      !!endTime && !!selectedPosition?.workDayEndTime && isEarlyEnd(workDay, selectedPosition)
+      !!endTime &&
+      !!selectedPosition?.workDayEndTime &&
+      isEarlyEnd(workDay, selectedPosition, workTimeTolerance)
     // Незавершённый рабочий день — нарушение, как только его уже нельзя считать идущим: после
     // нормы окончания (+ допуск), а без нормы — со следующего календарного дня. For an overnight
     // shift the norm end is tomorrow morning, so last night's shift still counts as in progress.
     const { end: normEnd } = getShiftNorms(workDay, selectedPosition)
     const dayOver = normEnd
-      ? moment().isAfter(normEnd.clone().add(WORK_TIME_TOLERANCE_MIN, 'minutes'))
+      ? moment().isAfter(normEnd.clone().add(workTimeTolerance, 'minutes'))
       : day.isBefore(moment(), 'day')
     const noEndViolation = !!startTime && !endTime && dayOver
 
@@ -1141,6 +1153,7 @@ const MonthSummaryView = ({ month, entries, workDays, selectedPosition }) => {
 }
 
 const DutyTimelineChart = ({ entries, entriesWithDutyInfo, workDayData, selectedPosition }) => {
+  const workTimeTolerance = useWorkTimeTolerance()
   const [tooltip, setTooltip] = useState({ entryId: null, text: '', x: 0, y: 0 })
 
   // Функция для извлечения времени из Date или строки
@@ -1281,10 +1294,10 @@ const DutyTimelineChart = ({ entries, entriesWithDutyInfo, workDayData, selected
                 <div
                   className={`relative h-12 bg-gray-50 rounded border-2 ${
                     (selectedPosition?.workDayStartTime &&
-                      isLateStart(workDayData, selectedPosition)) ||
+                      isLateStart(workDayData, selectedPosition, workTimeTolerance)) ||
                     (selectedPosition?.workDayEndTime &&
                       workDayData.endTime &&
-                      isEarlyEnd(workDayData, selectedPosition))
+                      isEarlyEnd(workDayData, selectedPosition, workTimeTolerance))
                       ? 'border-red-500'
                       : 'border-blue-500'
                   }`}
@@ -1293,10 +1306,10 @@ const DutyTimelineChart = ({ entries, entriesWithDutyInfo, workDayData, selected
                     <span
                       className={`text-sm font-medium ${
                         (selectedPosition?.workDayStartTime &&
-                          isLateStart(workDayData, selectedPosition)) ||
+                          isLateStart(workDayData, selectedPosition, workTimeTolerance)) ||
                         (selectedPosition?.workDayEndTime &&
                           workDayData.endTime &&
-                          isEarlyEnd(workDayData, selectedPosition))
+                          isEarlyEnd(workDayData, selectedPosition, workTimeTolerance))
                           ? 'text-red-700'
                           : 'text-blue-700'
                       }`}
