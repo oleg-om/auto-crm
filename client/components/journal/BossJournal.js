@@ -6,6 +6,7 @@ import moment from 'moment'
 import Navbar from '../Navbar'
 import { getPositions } from '../../redux/reducers/positions'
 import { getEmployees } from '../../redux/reducers/employees'
+import { isBreakDuty } from '../../lib/journal-duties'
 import { cn } from '../../lib/utils'
 import { Label } from '../ui/label'
 import { Input } from '../ui/input'
@@ -559,9 +560,11 @@ const BossJournal = () => {
                           >
                             {extractTime(workDayData.startTime)}
                           </td>
+                          {/* 7 columns total: name + start + the remaining 5 (was 4, leaving the
+                              last column's cell - and its row tint - missing). */}
                           <td
                             className="px-6 py-4 whitespace-nowrap text-sm text-gray-500"
-                            colSpan="4"
+                            colSpan="5"
                           >
                             -
                           </td>
@@ -775,6 +778,13 @@ const BossJournal = () => {
 }
 
 const MonthSummaryView = ({ month, entries, workDays, selectedPosition }) => {
+  // Duties flagged "Обязательная" on /electronic-journal. When the position has any, the daily
+  // "x/y" and the unfinished-duties violation are counted against them (a required duty the
+  // employee never even added counts as not done); otherwise it falls back to the duties the
+  // employee actually logged that day.
+  const requiredDuties = (selectedPosition?.duties || []).filter(
+    (d) => d.isRequired && !isBreakDuty(d.name)
+  )
   // Функция для извлечения времени из Date или строки
   const extractTime = (timeValue) => {
     if (!timeValue) return '-'
@@ -864,37 +874,96 @@ const MonthSummaryView = ({ month, entries, workDays, selectedPosition }) => {
     const inProgress = !!startTime && !endTime && day.isSame(moment(), 'day')
     if (noEndViolation) violations.push('Не проставлено окончание рабочего дня')
 
-    const duties = dayEntries.map((entry) => {
-      const duty = selectedPosition?.duties?.find((d) => String(d._id) === String(entry.dutyId))
-      return {
-        id: entry.id || entry._id,
-        name: duty?.name || 'Неизвестная обязанность',
-        done: !!entry.endTime
-      }
-    })
+    // Breaks (обед/отдых/перекур) aren't mandatory duties - leave them out of the x/y count and
+    // the "не выполнены обязанности" violation.
+    const duties = dayEntries
+      .map((entry) => {
+        const duty = selectedPosition?.duties?.find((d) => String(d._id) === String(entry.dutyId))
+        // Same checklist counting as the day KPI (see checklistPercentage below).
+        const checklistItems = duty?.hasChecklist ? duty.checklistItems || [] : []
+        const checklistProgress = entry.checklistProgress || {}
+        const checklistDone = checklistItems.filter((item) => checklistProgress[item._id]).length
+        const done = !!entry.endTime
+        return {
+          id: entry.id || entry._id,
+          dutyId: String(entry.dutyId),
+          name: duty?.name || 'Неизвестная обязанность',
+          isBreak: isBreakDuty(duty?.name),
+          done,
+          checklistTotal: checklistItems.length,
+          checklistDone,
+          // Marked finished but not every checklist box ticked - a violation on its own.
+          checklistIncomplete: done && checklistDone < checklistItems.length
+        }
+      })
+      .filter((d) => !d.isBreak)
 
-    const undone = duties.filter((d) => !d.done)
+    const hasAttendance = !!workDay || dayEntries.length > 0
     // Для идущего дня незавершённые обязанности — норма, считаем только завершённые дни
     const dayFinished = !!endTime || day.isBefore(moment(), 'day')
-    if (dayFinished && undone.length > 0) {
-      violations.push(
-        `Не выполнены обязанности (${duties.length - undone.length}/${duties.length})`
-      )
+
+    let dutyItems
+    let dutiesTotal
+    let dutiesCompleted
+    if (requiredDuties.length > 0) {
+      const requiredIds = new Set(requiredDuties.map((d) => String(d._id)))
+      const requiredItems = requiredDuties.map((rd) => {
+        const logged = duties.filter((d) => d.dutyId === String(rd._id))
+        const doneEntry = logged.find((d) => d.done)
+        return {
+          ...(doneEntry || logged[0] || { checklistTotal: 0, checklistDone: 0 }),
+          id: `required-${rd._id}`,
+          name: rd.name,
+          done: !!doneEntry,
+          checklistIncomplete: !!doneEntry?.checklistIncomplete
+        }
+      })
+      // Non-required duties the employee logged are still listed, but don't affect x/y.
+      const extraItems = duties
+        .filter((d) => !requiredIds.has(d.dutyId))
+        .map((d) => ({ ...d, extra: true }))
+      dutyItems = [...requiredItems, ...extraItems]
+      dutiesTotal = requiredItems.length
+      dutiesCompleted = requiredItems.filter((d) => d.done).length
+      const missing = requiredItems.filter((d) => !d.done)
+      if (hasAttendance && dayFinished && missing.length > 0) {
+        violations.push(
+          `Не выполнены обязательные обязанности (${dutiesCompleted}/${dutiesTotal}): ${missing
+            .map((d) => d.name)
+            .join(', ')}`
+        )
+      }
+    } else {
+      dutyItems = duties
+      dutiesTotal = duties.length
+      dutiesCompleted = duties.filter((d) => d.done).length
+      if (dayFinished && dutiesCompleted < dutiesTotal) {
+        violations.push(`Не выполнены обязанности (${dutiesCompleted}/${dutiesTotal})`)
+      }
     }
+    // Unlike unfinished duties this doesn't wait for the day to end - the duty is already closed,
+    // so its unticked checklist items won't get ticked anymore.
+    duties
+      .filter((d) => d.checklistIncomplete)
+      .forEach((d) => {
+        violations.push(
+          `Чек-лист заполнен не полностью: ${d.name} (${d.checklistDone}/${d.checklistTotal})`
+        )
+      })
 
     return {
       key,
       day,
-      hasAttendance: !!workDay || dayEntries.length > 0,
+      hasAttendance,
       startTime,
       endTime,
       workedMinutes,
-      dutiesTotal: dayEntries.length,
-      dutiesCompleted: dayEntries.filter((entry) => entry.endTime).length,
+      dutiesTotal,
+      dutiesCompleted,
       violation: violations.length > 0,
       violations,
       inProgress,
-      duties
+      duties: dutyItems
     }
   })
 
@@ -959,7 +1028,7 @@ const MonthSummaryView = ({ month, entries, workDays, selectedPosition }) => {
                     {row.workedMinutes !== null ? formatDuration(row.workedMinutes) : '-'}
                   </TableCell>
                   <TableCell>
-                    {row.dutiesTotal > 0 ? (
+                    {row.hasAttendance && row.dutiesTotal > 0 ? (
                       <HoverTip
                         title={`Обязанности (${row.dutiesCompleted}/${row.dutiesTotal})`}
                         className="text-purple-700 font-semibold cursor-help border-b border-dotted border-purple-400"
@@ -969,11 +1038,25 @@ const MonthSummaryView = ({ month, entries, workDays, selectedPosition }) => {
                               <li
                                 key={d.id || i}
                                 className={`flex items-start mb-1 ${
-                                  d.done ? 'text-green-300' : 'text-red-300'
+                                  d.extra && !d.checklistIncomplete
+                                    ? 'text-gray-300'
+                                    : !d.done
+                                    ? 'text-red-300'
+                                    : d.checklistIncomplete
+                                    ? 'text-amber-300'
+                                    : 'text-green-300'
                                 }`}
                               >
-                                <span className="mr-1 flex-shrink-0">{d.done ? '✓' : '✗'}</span>
-                                <span>{d.name}</span>
+                                <span className="mr-1 flex-shrink-0">
+                                  {!d.done ? '✗' : d.checklistIncomplete ? '!' : '✓'}
+                                </span>
+                                <span>
+                                  {d.name}
+                                  {d.checklistTotal > 0
+                                    ? ` (чек-лист ${d.checklistDone}/${d.checklistTotal})`
+                                    : ''}
+                                  {d.extra ? ' — доп.' : ''}
+                                </span>
                               </li>
                             ))}
                           </ul>
@@ -1424,10 +1507,7 @@ const KPIView = ({
 
             // Проверяем, является ли обязанность "другим" (перекур, отдых, обед)
             const isOther =
-              duty?.name?.toLowerCase().includes('перекур') ||
-              duty?.name?.toLowerCase().includes('отдых') ||
-              duty?.name?.toLowerCase().includes('обед') ||
-              duty?.name?.toLowerCase().includes('другое')
+              isBreakDuty(duty?.name) || !!duty?.name?.toLowerCase().includes('другое')
 
             if (isOther) {
               otherIntervals.push(interval)
