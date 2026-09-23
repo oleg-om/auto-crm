@@ -1,14 +1,12 @@
 const JournalEntry = require('../model/journalEntry')
+const { toUtcDateOnly, utcMonthRange } = require('../utils/dateBucket')
 
 exports.getAll = async (req, res) => {
   const { employeeId, date, positionId } = req.query
   const query = {}
   if (employeeId) query.employeeId = employeeId
   if (date) {
-    // Преобразуем строку даты в Date объект (начало дня)
-    const dateObj = new Date(date)
-    dateObj.setHours(0, 0, 0, 0)
-    query.date = dateObj
+    query.date = toUtcDateOnly(date)
   }
   if (positionId) query.positionId = positionId
 
@@ -44,19 +42,14 @@ exports.delete = async (req, res) => {
 // Получить записи за день для сотрудника
 exports.getByEmployeeAndDate = async (req, res) => {
   const { employeeId, date } = req.params
-  // Преобразуем строку даты в Date объект (начало дня)
-  const dateObj = new Date(date)
-  dateObj.setHours(0, 0, 0, 0)
-  const entries = await JournalEntry.find({ employeeId, date: dateObj })
+  const entries = await JournalEntry.find({ employeeId, date: toUtcDateOnly(date) })
   return res.json({ status: 'ok', data: entries })
 }
 
 // Получить записи за месяц для сотрудника
 exports.getByEmployeeAndMonth = async (req, res) => {
   const { employeeId, month } = req.params
-  const [year, monthNumber] = month.split('-').map(Number)
-  const start = new Date(year, monthNumber - 1, 1)
-  const end = new Date(year, monthNumber, 1)
+  const { start, end } = utcMonthRange(month)
   const entries = await JournalEntry.find({
     employeeId,
     date: { $gte: start, $lt: end }
@@ -176,11 +169,7 @@ exports.upsert = async (req, res) => {
     }
   }
 
-  // Преобразуем строку даты в Date объект (начало дня)
-  const dateObj = typeof date === 'string' ? new Date(date) : date
-  if (dateObj instanceof Date) {
-    dateObj.setHours(0, 0, 0, 0)
-  }
+  const dateObj = toUtcDateOnly(date)
 
   const newEntry = new JournalEntry({
     employeeId,

@@ -1,20 +1,16 @@
 const WorkDayStart = require('../model/workDayStart')
+const { toUtcDateOnly, utcMonthRange } = require('../utils/dateBucket')
 
 exports.getByEmployeeAndDate = async (req, res) => {
   const { employeeId, date } = req.params
-  // Преобразуем строку даты в Date объект (начало дня)
-  const dateObj = new Date(date)
-  dateObj.setHours(0, 0, 0, 0)
-  const workDayStart = await WorkDayStart.findOne({ employeeId, date: dateObj })
+  const workDayStart = await WorkDayStart.findOne({ employeeId, date: toUtcDateOnly(date) })
   return res.json({ status: 'ok', data: workDayStart })
 }
 
 // Получить начала/окончания рабочего дня за месяц для сотрудника
 exports.getByEmployeeAndMonth = async (req, res) => {
   const { employeeId, month } = req.params
-  const [year, monthNumber] = month.split('-').map(Number)
-  const start = new Date(year, monthNumber - 1, 1)
-  const end = new Date(year, monthNumber, 1)
+  const { start, end } = utcMonthRange(month)
   const workDayStarts = await WorkDayStart.find({
     employeeId,
     date: { $gte: start, $lt: end }
@@ -25,9 +21,7 @@ exports.getByEmployeeAndMonth = async (req, res) => {
 exports.startWorkDay = async (req, res) => {
   const { employeeId, date } = req.body
 
-  // Преобразуем строку даты в Date объект (начало дня)
-  const dateObj = typeof date === 'string' ? new Date(date) : date
-  dateObj.setHours(0, 0, 0, 0)
+  const dateObj = toUtcDateOnly(date)
 
   // Проверяем, не начат ли уже рабочий день
   const existing = await WorkDayStart.findOne({ employeeId, date: dateObj })
@@ -46,9 +40,7 @@ exports.startWorkDay = async (req, res) => {
 exports.endWorkDay = async (req, res) => {
   const { employeeId, date } = req.body
 
-  // Преобразуем строку даты в Date объект (начало дня)
-  const dateObj = typeof date === 'string' ? new Date(date) : date
-  dateObj.setHours(0, 0, 0, 0)
+  const dateObj = toUtcDateOnly(date)
 
   const workDayStart = await WorkDayStart.findOne({ employeeId, date: dateObj })
   if (!workDayStart) {
